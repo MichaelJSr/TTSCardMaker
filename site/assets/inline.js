@@ -520,7 +520,7 @@ export const extend = more => { Object.assign(A, more); };
  *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast}. */
 export function install(api) {
   A = api;
-  TC.attach(api.modal, {                           // the name's, ability's and note's colours (textcolor.js): staged at once
+  TC.attach(api.modal, {                           // the name's and ability's colours on the card image (textcolor.js): staged at once
     fieldOf: el => (cur && el === cur.ctl && TC.FIELDS.includes(cur.f) ? cur.f : null),
     textOf: el => ({ text: el.value, at: 0 }),
     list: () => card?.colors || null,

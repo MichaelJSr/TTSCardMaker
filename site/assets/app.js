@@ -1,5 +1,5 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy, paintHtml } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
@@ -15,7 +15,7 @@ import * as CF from "./myfilters.js";
 import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc, AUX_KINDS, unusedTip } from "./grid.js";
 import { artHtml } from "./art.js";
 import { CARD_FLAGS, flagged, flagsHtml, hasFlag } from "./flags.js";
-import { colorRanges, statusNames, inkOf, anchorInks } from "./textcolor.js";
+import { statusNames, anchorInks, wordColors } from "./textcolor.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -89,6 +89,8 @@ const psdBadges = c => [
   c.partFlags ? `<span class="fact${c.partFlags.skipped ? " refused" : ""}" data-tip="The last bake, per text layer: a layer changed in Photoshop since the edit is skipped (redo it in Edit)">Text boxes: ${esc(Object.entries(c.partFlags).map(([k, n]) => `${n} ${k}`).join(", "))}</span>` : "",
   c.moved ? `<span class="fact" data-tip="A stars edit moved the card into its stars folder">moved to ${esc(c.moved.replace(/\/$/, "").split("/").pop())}</span>` : "",
 ].join("");
+/** card text (an ability, a note) as the site draws it: icons, badges, links and the palette's words (textcolor.js wordColors) */
+const cardText = t => S.renderer.render(t, { colors: wordColors(t, S.palette) });
 // beside PSD chips and parser notes: opens the card with Details open
 const detailsLink = c => (c.details ? `<a class="fact details-link" href="#/card/${c.id}?details" data-tip="Open the card with its PSD details">Details</a>` : "");   // a plain link: Ctrl-click opens a tab
 const psdChips = c => { const b = psdBadges(c); return b && b + detailsLink(c); };
@@ -175,9 +177,10 @@ async function init() {
     return;
   }
   S.all = S.data.cards; S.icons = S.data.icons;
-  S.statuses = statusNames(S.all);                        // status words keep the chart's colour (textcolor.js)
-  S.statusFills = Object.fromEntries([...(S.data.swatches || []).map(x => [x.name, x.color]), ...Object.entries(S.data.statusColors || {})].map(([n, c]) => [String(n).toLowerCase(), c]).filter(([n]) => S.statuses.some(s => s.toLowerCase() === n)));   // their colours as the bake prints them (the mock-up's): the chart's, else the swatch
-  anchorInks(S.all);                                      // the card's own colours follow an edit from the built text
+  S.statuses = statusNames(S.all);                        // status words keep the chart's colour on the card image (textcolor.js)
+  S.palette = S.data.palette || null;                     // the site's word colours (textcolor.js wordColors)
+  S.statusFills = Object.fromEntries(Object.entries(S.palette?.statuses || {}).map(([n, c]) => [n.toLowerCase(), c]));   // as the bake prints them (the mock-up's): the chart's, else the swatch
+  anchorInks(S.all);                                      // the card's own colours (the mock-up's) follow an edit from the built text
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
@@ -886,7 +889,7 @@ function openCard(id, showDetails = false) {
           <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div>
         <div id="versions-slot">${versionsHtml(c, verOpen)}</div></div>
       <div>
-        <h2>${paintHtml(c.name, colorRanges(c.name, c.colors, "name", null, inkOf(c, "name")))}</h2>
+        <h2>${esc(c.name)}</h2>
         ${flagsHtml(c)}
         <div class="facts">
           ${c.morgue ? `<a class="fact" href="#/cards?morgue=1" data-tip="${esc(`Retired: in MDW/The Morgue${c.retired ? ` since ${date(c.retired)}` : ""}, out of play`)}">The Morgue</a>` : ""}
@@ -908,8 +911,8 @@ function openCard(id, showDetails = false) {
         </div>
         ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, iconLow(t))}</a>`).join("")}</div>` : ""}
         ${statBars(c)}
-        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, { colors: colorRanges(c.ability, c.colors, "ability", S.statuses, inkOf(c, "ability")) })}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
-        ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, { colors: colorRanges(c.note, c.colors, "note") })}</div>` : ""}
+        ${c.ability ? `<div class="ability">${cardText(c.ability)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
+        ${c.note ? `<div class="note"><b>Note</b> ${cardText(c.note)}</div>` : ""}
         ${artHtml(c)}
         ${hasBadges(c.ability) || hasBadges(c.note) || hasCosts(c.ability) || hasCosts(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml(hasCosts(c.ability) || hasCosts(c.note))}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
@@ -1386,7 +1389,7 @@ function renderCompare(r) {
       <h3><a href="#/card/${c.id}">${esc(c.name)}</a></h3><p class="muted">${esc(KIND_LABEL[c.type] || c.type)} ${c.stars ? `· ${c.stars}★` : ""} ${c.series ? `· ${esc(c.series)}` : ""} ${c.subseries ? `· ${esc(c.subseries)}` : ""}</p>
       ${["hp", "def", "atk", "spd"].map(k => c[k] != null ? `<div>${k.toUpperCase()} <b>${c[k]}</b>${delta(c, k)}</div>` : "").join("")}
       ${c.hp != null ? `<div>Total <b>${total(c)}</b>${c === first || first.hp == null ? "" : (d => d ? ` <span class="${d > 0 ? "diff-up" : "diff-down"}">${d > 0 ? "+" : ""}${d}</span>` : "")(total(c) - total(first))}</div>` : ""}
-      ${c.ability ? `<div class="ability" style="margin-top:8px">${S.renderer.render(c.ability)}</div>` : ""}
+      ${c.ability ? `<div class="ability" style="margin-top:8px">${cardText(c.ability)}</div>` : ""}
       <p><button type="button" class="ghost" data-action="compare-remove" data-id="${c.id}">Remove</button></p></div>`).join("")}</div>`;
 }
 

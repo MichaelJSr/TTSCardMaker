@@ -185,7 +185,7 @@ ART_FIELDS, ART_MAX = ("art", "ability_art"), 500
 FLAGS, FLAG_MAX = ("hand", "bars", "name"), 300
 # text colours: [{"field", "phrase"?, "color": "#rrggbb"}], a phrase as the effect layers' ("word#n"; none: the whole
 # field); the note's never bake (textcolor.js, the bot's card_edits.valid_colors)
-COLOR_FIELDS, COLOR_PRINTED = ("name", "ability", "note"), ("name", "ability")
+COLOR_FIELDS = COLOR_PRINTED = ("name", "ability")   # the card image's alone (owner 2026-11-11: never the site's text)
 COLOR_RE, COLORS_MAX, PHRASE_MAX = re.compile(r"^#[0-9a-f]{6}\Z"), 64, 200
 SWATCHES = ("MDW/Status Effects.aco", "MDW/Attributes.aco")   # the team's status and attribute colours (Effect Layers.jsx readAco)
 
@@ -689,30 +689,28 @@ def card_inks(e, rec):
     return out or None
 
 
-# ---- the colours a card page paints, for the TTS save's Card details (textcolor.js colorRanges; tts_details) --------
+# ---- the site's word colours (owner 2026-11-11): one palette for the website's card text and TTS's Card details -----
+# never the card's own colours or Card Edits colors (the card image's: the mock-up). textcolor.js wordColors is word_colors.
+STAT_COLORS = {"hp": "#2fbf3a", "def": "#3d63ff", "atk": "#ff3b3b", "spd": "#ffd21f"}          # owner 2026-11-11
+COUNTER_COLORS = {"points": "#00ffae", "bricks": "#a0522d", "sp": "#ffff00"}                   # the TTS table's counters (text.js COSTS)
 TOKEN_RE = re.compile(r"\[[^\[\]\n]{1,52}\]")
-TTS_BACKS = {"name": ((27, 39, 64),), "ability": ((15, 23, 41),)}    # Global.lua detailsPanel: the title bar, the panel (opaque)
-TTS_SEEN = 3                                  # a colour's least contrast with them, else plain there (TTS can't outline a word)
+WORD_NUM = r"(?:[+\-\u2212]?(?:[0-9]+(?:\.[0-9]+)?%?|X)|[x\u00d7][0-9]+(?:\.[0-9]+)?)"     # textcolor.js NUM
+WORD_UNIT = re.compile(rf"(?<![A-Za-z0-9_.])(?:{WORD_NUM}[ \t]*)?(?:(hp|def|atk|spd)|(points|bricks|sp|star[ \t]+points))(?![A-Za-z0-9_])"
+                       rf"|(?<![A-Za-z0-9_.]){WORD_NUM}[ \t]*(?:(health|attack|defen[cs]e|speed)|(point|brick|star[ \t]+point))(?![A-Za-z0-9_])",
+                       re.I | re.A)                   # textcolor.js UNIT: a stat with its number; Health & co. only after one
+WORD_LONG = {"health": "hp", "attack": "atk", "defense": "def", "defence": "def", "speed": "spd"}
+TTS_BACK = (15, 23, 41)                       # Global.lua detailsPanel: the panel (opaque)
+TTS_SEEN = 3                                  # a colour's least contrast with it, else plain there (TTS can't outline a word)
 
 
-def _edge(text, i):
-    return not (0 <= i < len(text) and text[i].isascii() and text[i].isalnum())
-
-
-def color_spans(text, one):
-    """textcolor.js spansOf: [(start, end)] where one colour ({field, phrase?, color}) paints text, None when its phrase
-    isn't there: any case, any blanks between its words, whole words first, "word#n" the nth."""
-    phrase = one.get("phrase")
-    if not phrase:
-        return [(0, len(text))] if text else []
-    m = re.match(r"(.*\S)#([0-9]+)\Z", phrase)
-    words, nth = (m[1], int(m[2])) if m else (phrase, 0)
-    parts = words.replace("\x03", " ").split()
-    if not parts:
-        return None
-    found = [x.span() for x in re.finditer("[\\s\x03]+".join(map(re.escape, parts)), text, re.I) if x.end() > x.start()]
-    hits = [s for s in found if _edge(text, s[0] - 1) and _edge(text, s[1])] or found
-    return (hits[nth - 1:nth] if nth else hits) or None
+def text_palette(cards, chart=None, swatch_list=()):
+    """cards.json `palette` and tts.json's colours: the stats', the counters', and each status card's (buff, debuff;
+    app.js statusNames) in the status chart's colour (status_colors), else its swatch."""
+    fills = {str(s.get("name")).lower(): s.get("color") for s in swatch_list or () if isinstance(s, dict)}
+    fills.update({str(n).lower(): c for n, c in (chart or {}).items()})
+    names = dict.fromkeys(str(c["name"]) for c in cards if c.get("type") in ("buff", "debuff") and c.get("name"))
+    return {"stats": dict(STAT_COLORS), "counters": dict(COUNTER_COLORS),
+            "statuses": {n: fills[n.lower()] for n in names if isinstance(fills.get(n.lower()), str) and COLOR_RE.match(fills[n.lower()])}}
 
 
 def status_patterns(names):
@@ -733,23 +731,25 @@ def status_spans(text, patterns):
     return sorted((a, b) for a, b, word in taken if word and "A" <= text[a] <= "Z")
 
 
-def color_paint(text, colors, field, statuses=(), base=None):
-    """textcolor.js colorRanges, a colour or None per character of text: base (cards.json `ink`'s [[start, end, colour]])
-    first, then the field's whole-field colours, then its phrases as listed; status words (status_spans, the ability's)
-    are never painted by an edit."""
-    paint = [None] * len(text)
-    for r in base or []:
-        if isinstance(r, list) and len(r) == 3 and all(isinstance(x, int) for x in r[:2]) and isinstance(r[2], str) and COLOR_RE.match(r[2]):
-            paint[max(0, r[0]):min(r[1], len(text))] = [r[2]] * max(0, min(r[1], len(text)) - max(0, r[0]))
-    kept = {i for a, b in (status_spans(text, statuses) if field == "ability" and statuses else ()) for i in range(a, b)}
-    mine = [one for one in colors or [] if isinstance(one, dict) and one.get("field") == field and isinstance(one.get("color"), str)
-            and COLOR_RE.match(one["color"])]
-    for one in [x for x in mine if not x.get("phrase")] + [x for x in mine if x.get("phrase")]:
-        for a, b in color_spans(text, one) or ():
-            for i in range(a, b):
-                if i not in kept:
-                    paint[i] = one["color"]
-    return paint
+def word_colors(text, palette, patterns=None, drawn=None):
+    """textcolor.js wordColors: [(start, end, colour)] of the palette's words in text, in order, apart: status words
+    first, then stats with their numbers and counters; none over another or over drawn ([(start, end)]; default
+    drawn_spans, the icons and badges the site draws). patterns: status_patterns of the palette's statuses."""
+    statuses = palette.get("statuses") or {}
+    fill, out = {n.lower(): c for n, c in statuses.items()}, []
+    taken = list(drawn_spans(text) if drawn is None else drawn)
+
+    def put(a, b, colour):
+        if isinstance(colour, str) and COLOR_RE.match(colour) and not any(a < e and s < b for s, e in taken):
+            taken.append((a, b))
+            out.append((a, b, colour))
+    for a, b in status_spans(text, status_patterns(statuses) if patterns is None else patterns):
+        put(a, b, fill.get(" ".join(re.split(r"[\s\x03]+", text[a:b].lower()))))
+    for m in WORD_UNIT.finditer(text):
+        stat = m[1] or (m[3] and WORD_LONG[m[3].lower()])
+        counter = None if stat else "sp" if re.match(r"(?:sp|star)", m[2] or m[4], re.I) else "bricks" if (m[2] or m[4]).lower().startswith("brick") else "points"
+        put(*m.span(), (palette.get("stats") or {}).get(stat.lower()) if stat else (palette.get("counters") or {}).get(counter))
+    return sorted(out)
 
 
 def _contrast(c, back):
@@ -757,42 +757,39 @@ def _contrast(c, back):
     return (max(a, b) + 0.05) / (min(a, b) + 0.05)
 
 
-def tts_colors(c, statuses, icons):
-    """The card's colours in the save's Card details (owner 11-08), as its page paints them (color_paint: its own, then
-    Card Edits colors; icons and badges not): {"nc": on tts.json's n, "ac": on a (game_words)}, each [[text, colour]] in
-    order, a piece the nth find of its text after the last one when [text, colour, n] (Global.lua painted: no offsets, as
-    MoonSharp's strings aren't bytes); a colour under TTS_SEEN against the panel stays plain."""
-    out = {}
-    for key, field in (("nc", "name"), ("ac", "ability")):
-        text = c.get(field) if isinstance(c.get(field), str) else ""
-        ink = c.get("ink") if isinstance(c.get("ink"), dict) else {}
-        paint = color_paint(text, c.get("colors"), field, statuses, ink.get(field))
-        at = list(range(len(text)))
-        if field == "ability":
-            for a, b in drawn_spans(text):
-                paint[a:b] = [None] * (b - a)
-            text = game_words(text, icons, at)
-        colours = [paint[i] if i is not None else None for i in at]
-        runs = []
-        for i, col in enumerate(colours):
-            if not col or text[i].isspace():
-                continue
-            if runs and runs[-1][2] == col and not text[runs[-1][1]:i].strip():
-                runs[-1][1] = i + 1
-            else:
-                runs.append([i, i + 1, col])
-        pieces, after = [], 0
-        for a, b, col in runs:
-            if min(_contrast(col, back) for back in TTS_BACKS[field]) < TTS_SEEN:
-                continue
-            n, j = 1, text.find(text[a:b], after)
-            while j != a:
-                n, j = n + 1, text.find(text[a:b], j + 1)
-            pieces.append([text[a:b], col] + [n] * (n > 1))
-            after = b
-        if pieces:
-            out[key] = pieces
-    return out
+def tts_seen(colour):
+    """colour when TTS's Card details can show it (TTS_SEEN against the panel), else None."""
+    return colour if isinstance(colour, str) and COLOR_RE.match(colour) and _contrast(colour, TTS_BACK) >= TTS_SEEN else None
+
+
+def tts_words(text, palette, icons, patterns=None):
+    """tts.json `ac` (Global.lua painted): the ability's palette words as the site draws them (word_colors) through
+    game_words, [[text, colour]] in order, a piece the nth find of its text after the last one when [text, colour, n]
+    (found by text, as MoonSharp's strings aren't bytes). A cost's words take their counter's colour (TTS draws no badge),
+    icons and timing tags none (Global.lua withBadges); a colour tts_seen refuses stays plain."""
+    text = text or ""
+    drawn = [m.span() for m in TOKEN_RE.finditer(text)] + [m.span() for m in re.finditer(r"\((-?[0-9A-Za-z/]{2,8})\)", text) if tag_info(m.group(1), {})]
+    paint = [None] * len(text)
+    for a, b, colour in word_colors(text, palette, patterns, drawn):
+        paint[a:b] = [tts_seen(colour)] * (b - a)
+    at = []
+    shown = game_words(text, icons, at)
+    runs = []
+    for i, colour in enumerate(paint[j] if j is not None else None for j in at):
+        if not colour or shown[i].isspace():
+            continue
+        if runs and runs[-1][2] == colour and not shown[runs[-1][1]:i].strip():
+            runs[-1][1] = i + 1
+        else:
+            runs.append([i, i + 1, colour])
+    pieces, after = [], 0
+    for a, b, colour in runs:
+        n, j = 1, shown.find(shown[a:b], after)
+        while j != a:
+            n, j = n + 1, shown.find(shown[a:b], j + 1)
+        pieces.append([shown[a:b], colour] + [n] * (n > 1))
+        after = b
+    return pieces
 
 
 def join_details(cards, records, tree, edits=None):
@@ -1877,8 +1874,8 @@ STATUS_COLORS_JSON = "status_colors.json"     # each chart status's printed colo
 
 
 def status_colors(folder):
-    """The data branch's db/status_colors.json colours: {status name: "#rrggbb"} (app.js S.statusFills, the swatches'
-    fallback); {} without one. Warns, never fails."""
+    """The data branch's db/status_colors.json colours: {status name: "#rrggbb"} (text_palette's statuses, before the
+    swatches); {} without one. Warns, never fails."""
     path = os.path.join(folder, STATUS_COLORS_JSON)
     if not os.path.exists(path):
         return {}
@@ -2257,7 +2254,7 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
             return ability_text(fields[f]) != ability_text(orig.get(f))
         if f == "types":                          # any order and spelling, as psd_edit.same_types
             return type_keys(fields[f]) != type_keys(orig.get(f))
-        if f == "colors":                         # the name's and ability's; the note's never bake
+        if f == "colors":                         # the name's and ability's
             return any(one.get("field") in COLOR_PRINTED for one in fields[f])
         return entry[f] != orig.get(f)
     plain = {f for f in fields if f in PSD_FIELDS and fields[f] is not None and f not in parted and f not in site and waits(f)}
@@ -4083,19 +4080,23 @@ RULE_WORDS = (("damage-types", r"piercing|true (?:damage|dmg)|life ?steal|shockw
               ("negation", r"negat(?:e|es|ed|ing|ions?)"), ("reactions", r"react(?:s|ions?|ive|ively)?"))
 
 
-def tts_details(cards, chapters, icons, tag_table):
+def tts_details(cards, chapters, icons, tag_table, palette=None):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
     stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
     it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions;
     a [field] card's Field Cards first), its aliases not part of its name (al: Find a card's words)
-    and its name's and ability's colours (nc, ac: tts_colors); with the types', tags' and statuses' meanings (a status's
-    path: p) and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
+    and its ability's word colours (ac: tts_words, palette: text_palette's, the site's); with the types', tags' and
+    statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows on hover: x) and the
+    chapters (their numbers find the PDF's pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
-    marks = status_patterns(dict.fromkeys(str(c["name"]) for c in cards if c.get("type") in ("buff", "debuff") and c.get("name")))   # app.js S.statuses
+    palette = palette or text_palette(cards)
+    marks = status_patterns(palette["statuses"])
     types, statuses = type_meanings(chapters, icons), {}
     for c in shown:
         if c.get("type") in ("buff", "debuff") and c.get("ability") and not c.get("dup"):
-            statuses.setdefault(c["name"], {"x": game_words(c["ability"], icons), "k": c["type"], **({"p": c["png"]} if c.get("png") else {})})
+            colour = tts_seen(palette["statuses"].get(c["name"]))
+            statuses.setdefault(c["name"], {"x": game_words(c["ability"], icons), "k": c["type"], **({"p": c["png"]} if c.get("png") else {}),
+                                            **({"c": colour} if colour else {})})
     named = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(statuses, key=len, reverse=True)) + r")(?![\w'’])", re.I) \
         if statuses else None
     lower = {n.lower(): n for n in statuses}
@@ -4123,10 +4124,10 @@ def tts_details(cards, chapters, icons, tag_table):
         bars = [" ".join(f"{k.upper()} {s[k]}" for k in STAT_KEYS if s.get(k) is not None) for s in c.get("creatures") or [c]
                 if any(s.get(k) is not None for k in STAT_KEYS)]
         try:
-            colours = tts_colors(c, marks, icons)
+            colours = tts_words(text, palette, icons, marks)
         except Exception as error:                # an odd card never fails the build
             warn(f"{c['png']}: no TTS colours ({type(error).__name__}: {error})")
-            colours = {}
+            colours = []
         name = str(c["name"]).lower()
         aliases = {a.lower(): a for a in (c.get("aliases") or []) + (c.get("webAliases") or []) + (c.get("was") or []) if a.strip() and a.lower() not in name}
         out_cards[c["png"]] = {k: v for k, v in {
@@ -4135,7 +4136,7 @@ def tts_details(cards, chapters, icons, tag_table):
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
             "r": (field if "field" in map(norm, c.get("types") or []) else []) + [cid for cid, words in rule_words if words.search(text)] or None,
-            "al": list(aliases.values()), "by": c.get("author"), **colours}.items() if v}
+            "al": list(aliases.values()), "by": c.get("author"), "ac": colours}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
             "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards}
 
@@ -4880,6 +4881,8 @@ def main():
     moved = redirects(archived, used_slugs, id_of)   # renamed cards: their old ids (pages, picks, hands) go on to the new one
     retired_into(morgue, archived)
     public_decks, private_decks = read_decks(cards, moved)
+    swatch_list = swatches()
+    palette = text_palette(cards, status_colors(data_dir), swatch_list)
     data = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "source": source_time(),              # edit.js: a publish is live once this reaches its commit's date
@@ -4887,8 +4890,8 @@ def main():
         "pins": {p: pin(p) for p in CARD_BACKS if pin(p)},    # deck.js: the card backs' pinned links
         "heavy": heavy_commits(commits),      # commit links: the commits GitHub can't show
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist, "tagMeanings": tag_meanings(rulebook_chapters()[0]),
-        "swatches": swatches(),               # the editor's colour palette (textcolor.js): the status and attribute colours
-        "statusColors": status_colors(data_dir),   # the mock-up's status word colours, as the bake prints them (app.js)
+        "swatches": swatch_list,              # the editor's colour palette (textcolor.js): the status and attribute colours
+        "palette": palette,                   # the site's word colours (textcolor.js wordColors; the mock-up's status words)
         "thumbs": thumb_tags(),               # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
@@ -4995,7 +4998,7 @@ def main():
     with open(os.path.join(DIST, GAME_TXT), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(game)
     log(f"{GAME_TXT}: {len(game.encode())} bytes, about {round(len(game.split()) * 1.3)} tokens")
-    tts = json.dumps(tts_details(cards, printed_chapters(chapters), icons, tag_meanings(chapters)), ensure_ascii=False, separators=(",", ":"))
+    tts = json.dumps(tts_details(cards, printed_chapters(chapters), icons, tag_meanings(chapters), palette), ensure_ascii=False, separators=(",", ":"))
     with open(os.path.join(DIST, "data", TTS_JSON), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(tts)
     log(f"{TTS_JSON}: {len(tts.encode())} bytes")

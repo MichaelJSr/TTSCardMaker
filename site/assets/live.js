@@ -1,7 +1,7 @@
 // The Edit dialog's live preview: the card as it will look once published, from the form's op. NOTES.md §21.
 import { flagsHtml } from "./flags.js";
-import { esc, paintHtml } from "./text.js";
-import { colorRanges, printedOf, inkOf } from "./textcolor.js";
+import { esc } from "./text.js";
+import { printedOf, wordColors } from "./textcolor.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 // printed on the card image (edit.js FROM "PSD", build_site.py PSD_FIELDS): an edit there waits for the image ("PSD pending")
@@ -10,7 +10,7 @@ const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DE
 const typeKey = t => String(t).toLowerCase().replace(/[\s_]+/g, "");
 const sameValue = (f, a, b) => (f === "types" ? JSON.stringify([...(a || [])].map(typeKey).sort()) === JSON.stringify([...(b || [])].map(typeKey).sort())
   : f === "ability" ? String(a ?? "").replace(/\r/g, "").trim() === String(b ?? "").replace(/\r/g, "").trim()
-  : f === "colors" ? JSON.stringify(printedOf(a)) === JSON.stringify(printedOf(b)) : JSON.stringify(a ?? null) === JSON.stringify(b ?? null));   // the note's never bake
+  : f === "colors" ? JSON.stringify(printedOf(a)) === JSON.stringify(printedOf(b)) : JSON.stringify(a ?? null) === JSON.stringify(b ?? null));
 
 /** The published card b with the form's values: {field: value} (edit.js readForm's set, its unset fields as their PSD
  *  values), author (op.author: undefined = unchanged, null = from git). psd(f): field f's PSD value, for "PSD pending"
@@ -32,16 +32,14 @@ export function previewCard(b, values, author, psd = () => undefined, site = nul
   if (pending.size) p.pending = PSD_FIELDS.filter(f => pending.has(f)); else delete p.pending;
   return p;
 }
-/** The fields whose colours differ between two lists (the blocks the preview marks). */
-const recoloured = (a, b) => { const k = x => JSON.stringify(x ?? null), of = (l, f) => k((l || []).filter(one => one.field === f));
-  return ["name", "ability", "note"].filter(f => of(a, f) !== of(b, f)); };
-/** The fields the preview marks as changed: those in values that differ from the published card's, and the author. */
-export const changedFields = (b, values, author) => new Set([...Object.entries(values).filter(([f, v]) => (f === "colors" ? JSON.stringify(v ?? null) !== JSON.stringify(b.colors ?? null) : !sameValue(f, v, f === "aliases" ? b.webAliases : b[f])))
-  .flatMap(([f, v]) => (f === "colors" ? recoloured(b.colors, v) : [STATS.includes(f) || f === "creatures" ? "stats" : f])),
+/** The fields the preview marks as changed: those in values that differ from the published card's, and the author. Text
+ *  colours mark none: they are the card image's (its viewer shows them), never the text here. */
+export const changedFields = (b, values, author) => new Set([...Object.entries(values).filter(([f, v]) => f !== "colors" && !sameValue(f, v, f === "aliases" ? b.webAliases : b[f]))
+  .map(([f]) => (STATS.includes(f) || f === "creatures" ? "stats" : f)),
   ...(author !== undefined ? ["author"] : [])]);
 
 /** The preview's markup for card p. changed: changedFields. ctx: {render(text, name), statBars(c), iconFor(name) ->
- *  {file}, kindLabel {type: label}, image(c) -> url or ""}. */
+ *  {file}, kindLabel {type: label}, image(c) -> url or "", palette() -> cards.json palette (the text's word colours)}. */
 export function previewHtml(p, changed, ctx) {
   const mark = (f, cls = "") => `${cls}${changed.has(f) ? `${cls ? " " : ""}lp-changed` : ""}`;
   const fact = (f, html) => (html ? `<span class="fact${changed.has(f) ? " lp-changed" : ""}">${html}</span>` : "");
@@ -50,7 +48,7 @@ export function previewHtml(p, changed, ctx) {
   const pending = (p.pending || []).map(f => LABEL[f] || f).join(", "), site = (p.siteOnly || []).map(f => LABEL[f] || f).join(", ");
   return `<div class="lp-card">
     <div class="lp-top">${src ? `<img class="lp-img" src="${esc(src)}" alt="" data-preview-image>` : ""}
-      <div class="lp-head"><h2 class="${mark("name", "lp-name")}">${paintHtml(p.name, colorRanges(p.name, p.colors, "name", null, inkOf(p, "name")))}</h2>
+      <div class="lp-head"><h2 class="${mark("name", "lp-name")}">${esc(p.name)}</h2>
         ${changed.has("flags") ? `<div class="lp-changed">${flagsHtml(p) || `<p class="muted">No flags.</p>`}</div>` : flagsHtml(p)}
         <div class="facts">${fact("type", esc(ctx.kindLabel[p.type] || p.type || ""))}${fact("subtype", p.subtype ? esc(p.subtype[0].toUpperCase() + p.subtype.slice(1)) : "")}
           ${fact("stars", p.stars ? `<span class="stars">${"★".repeat(Math.min(p.stars, 10))}</span> ${p.stars}-star` : "")}${fact("series", esc(p.series || ""))}${fact("subseries", esc(p.subseries || ""))}
@@ -58,8 +56,8 @@ export function previewHtml(p, changed, ctx) {
           ${pending ? `<span class="fact pending">PSD pending: ${esc(pending)}</span>` : ""}${site ? `<span class="fact site-only" data-tip="${esc(`Website only: ${site}. The card image keeps its printed value`)}">Website only</span>` : ""}</div></div></div>
     ${types ? `<div class="${mark("types", "ctypes")}">${types}</div>` : changed.has("types") ? `<p class="muted lp-changed">No types.</p>` : ""}
     <div class="${mark("stats", "lp-stats")}">${ctx.statBars(p)}</div>
-    ${p.ability ? `<div class="${mark("ability", "ability")}">${ctx.render(p.ability, { colors: colorRanges(p.ability, p.colors, "ability", ctx.statuses?.(), inkOf(p, "ability")) })}</div>` : `<p class="muted lp-noability${changed.has("ability") ? " lp-changed" : ""}">No ability text.</p>`}
-    ${p.note ? `<div class="${mark("note", "note")}"><b>Note</b> ${ctx.render(p.note, { colors: colorRanges(p.note, p.colors, "note") })}</div>` : ""}
+    ${p.ability ? `<div class="${mark("ability", "ability")}">${ctx.render(p.ability, { colors: wordColors(p.ability, ctx.palette?.()) })}</div>` : `<p class="muted lp-noability${changed.has("ability") ? " lp-changed" : ""}">No ability text.</p>`}
+    ${p.note ? `<div class="${mark("note", "note")}"><b>Note</b> ${ctx.render(p.note, { colors: wordColors(p.note, ctx.palette?.()) })}</div>` : ""}
     ${p.aliases?.length ? `<p class="muted lp-aka${changed.has("aliases") ? " lp-changed" : ""}">Also known as: ${p.aliases.map(esc).join(", ")}</p>` : ""}
   </div>`;
 }

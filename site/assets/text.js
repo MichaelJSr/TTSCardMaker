@@ -7,8 +7,8 @@ const BOXES = { d: ["#232321", "#1a1a19"].map(lum), l: ["#f0efec", "#fcfcfb"].ma
 const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 /** " lo-d" and/or " lo-l": the themes whose boxes a colour is too close to (under 3:1), where it gets an outline (style.css). */
 export const lowOn = c => Object.entries(BOXES).map(([k, boxes]) => (boxes.some(b => ratio(b, lum(c)) < 3) ? ` lo-${k}` : "")).join("");
-/** Escaped text[a:b] with its colour runs ([{start, end, color}]: textcolor.js colorRanges) as spans; a colour is
- *  "#rrggbb" or left out, the text escaped. */
+/** Escaped text[a:b] with its colour runs ([{start, end, color}]: textcolor.js wordColors, colorRanges) as spans; a
+ *  colour is "#rrggbb" or left out, the text escaped. */
 export function paintHtml(text, ranges, a = 0, b = String(text ?? "").length) {
   text = String(text ?? "");
   let out = "", at = a;
@@ -303,7 +303,7 @@ export const LEGEND = [
   ["per game, uses and triggers", ["1PG", "2U", "OFS", "OS", "OD", "WOF"]], ["costs the creature's action", ["Action"]],
 ].map(([what, tags]) => ({ group: tagInfo(tags[0]).group, colour: COLOUR[tagInfo(tags[0]).group], what, tags }));
 const COSTS = [["Green", "points", "2 points", "#00ffae"], ["Brown", "BRICKS", "2 bricks", "#a0522d"], ["Yellow", "SP (star points)", "2 SP", "#ffff00"],
-  ["Teal", "a card's own currency", "4 souls", "#0f766e"]];   // style.css colours: the TTS table's counters
+  ["Teal", "a card's own currency", "4 souls", "#0f766e"]];   // style.css colours: the TTS table's counters (build_site COUNTER_COLORS)
 /** costs: the cost lines too */
 export const legendHtml = (costs = false) => `<ul class="badge-legend">${LEGEND.map(l => `<li><span class="badge ${l.group} swatch" aria-hidden="true"></span><b>${l.colour}:</b> ${esc(l.what)} ${l.tags.map((t, i) => `<span class="nw">${i ? "" : "("}${tagHtml(t)}${i < l.tags.length - 1 ? "," : ")."}</span>`).join(" ")}</li>`).join("")}${costs
   ? `${COSTS.map(([colour, what, eg, bg]) => `<li><span class="badge swatch" style="background:${bg}" aria-hidden="true"></span><b>${colour}:</b> ${esc(what)} <span class="nw">(${costHtml(eg)}).</span></li>`).join("")}` : ""}${RING_LINE}</ul>`;
@@ -417,7 +417,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   }
 
   /** HTML for ability text; links: false leaves card names as text (the rulebook links its own); colors: its colour
-   *  runs (textcolor.js colorRanges), on the letters only (icons and badges keep their look) */
+   *  runs (textcolor.js wordColors: the site's palette), on the letters only (icons and badges keep their look) */
   function render(text, { links: linked = true, colors = null } = {}) {
     if (!text) return "";
     const { pieces, links: found } = parse(text), links = linked ? found : [];

@@ -33,7 +33,7 @@ const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Serie
 // art: the artwork sources, a list (art.js; ability_art: the retired second field, read as the last source, never offered)
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\", \"name\": \"\"}, never baked. colors: text colours, [{\"field\": \"ability\", \"phrase\": \"Burning\", \"color\": \"#ff7a1a\"}], a phrase as the effect layers' (\"word#n\" the nth; none: the whole field); the note's never baked. Read by the website and the card sync.";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\", \"name\": \"\"}, never baked. colors: the card image's text colours (baked; never the website's text), [{\"field\": \"ability\", \"phrase\": \"Burning\", \"color\": \"#ff7a1a\"}], on the name or the ability, a phrase as the effect layers' (\"word#n\" the nth; none: the whole field). Read by the website and the card sync.";
 // true beside a name: the bake renames the card's files to it (owner 2026-10-25; build_site.py RENAME_KEY, the bot's card_edits.RENAME)
 export const RENAME_KEY = "_rename", RENAME_LABEL = "Also rename the card's files";
 /** An entry's `_rename` after an op: ticked or unticked (op.rename), and gone without a name or with a website-only one. */
@@ -1207,7 +1207,7 @@ export function createEditor(app) {
     input.focus(); input.select();
   }
   // the live preview: the card as it will look once published, from the form's op (live.js)
-  const previewCtx = { render: (t, o) => app.render(t, o), statuses: () => S.statuses, statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
+  const previewCtx = { render: (t, o) => app.render(t, o), palette: () => S.palette, statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
   function paintPreview(c, op) {
     const body = app.modal.querySelector("#lp-body"); if (!body) return;
     const b = baseOf(c), values = { ...op.set, ...Object.fromEntries((op.unset || []).map(f => [f, psdVal(b, f)])) };
@@ -1245,7 +1245,7 @@ export function createEditor(app) {
     const update = () => {
       paintSite();
       const op = readForm(c), lines = describe(op), text = partForm && !siteOn("ability") ? lastRead?.derived.ability || "" : ta.value;
-      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, { colors: TC.colorRanges(text, op.set.colors ?? (op.unset.includes("colors") ? null : c.colors), "ability", S.statuses, TC.inkOf(c, "ability", text)) }) : `<span class="muted">No ability text.</span>`;
+      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, { colors: TC.wordColors(text, S.palette) }) : `<span class="muted">No ability text.</span>`;
       const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");   // a stars edit moves the card (the bake's plan_move)
       const mv = sn && st && !siteOn("stars") ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
       if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${!partForm?.view.rec.header?.stars ? "" : P.starsKept(partForm.view.rec.header.stars, +st.value) ? "; the printed stars stay as they are" : " and redraws the printed stars"}. Tick Website only to keep the card where it is.`
@@ -1355,8 +1355,8 @@ export function createEditor(app) {
       app.toast(routed.every(([, o]) => opEmpty(o)) ? "No changes" : `Added to the batch: ${count()} unpublished`);
       app.goCard(c.id);
     });
-    colorMenu = TC.attach(form, {                   // a selection's colour (textcolor.js): into the hidden #ef-colors, as typed
-      fieldOf: el => (el.id === "ef-name" ? "name" : el.id === "ef-ability" ? "ability" : el.id === "ef-note" ? "note"
+    colorMenu = TC.attach(form, {                   // a selection's colour on the card image (textcolor.js): into the hidden #ef-colors, as typed
+      fieldOf: el => (el.id === "ef-name" ? "name" : el.id === "ef-ability" ? "ability"
         : el.dataset.part ? (view?.list.find(x => x.key === el.dataset.part)?.field || null) : null),
       textOf: el => {                              // a box: the field's boxes joined, as the site's text
         if (!el.dataset.part) return { text: el.value, at: 0 };

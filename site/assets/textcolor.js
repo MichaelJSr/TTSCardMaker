@@ -1,17 +1,18 @@
-// Text colours (Card Edits.json `colors`, owner 2026-11-07): [{field, phrase?, color}] on the name, the ability and the
-// note. A phrase matches as the effect layers' rule (AutoCroissant psd_edit.color_spans): any case, any blanks between its
+// Text colours (Card Edits.json `colors`, owner 2026-11-07): [{field, phrase?, color}] on the name and the ability, the
+// CARD IMAGE's alone (owner 2026-11-11: baked; the mock-up shows them, never the website's text or TTS's Card details).
+// A phrase matches as the effect layers' rule (AutoCroissant psd_edit.color_spans): any case, any blanks between its
 // words, whole words when it occurs as one, "word#n" the nth; no phrase: the whole field. Whole fields paint first, then
-// phrases as listed. The name's and ability's bake into the card image; the note's are the website's alone.
-// The menu (edit mode): a chip beside a selection in those fields (or the whole field, focused with none selected) opens
-// a compact palette. Everything above `attach` is DOM-free (the AutoCroissant tests run it in node).
+// phrases as listed. The menu (edit mode): a chip beside a selection in those fields (or the whole field, focused with
+// none selected) opens a compact palette. The site's own text draws one palette instead (wordColors, below). Everything
+// above `attach` is DOM-free (the AutoCroissant tests run it in node).
 import { esc, paintHtml, TAG, COST, tagInfo } from "./text.js";
 export { paintHtml };
 
-export const FIELDS = ["name", "ability", "note"];        // card_edits.COLOR_FIELDS, build_site COLOR_FIELDS
-export const PRINTED = ["name", "ability"];               // the card image's (card_edits.COLOR_PRINTED)
+export const FIELDS = ["name", "ability"];                // card_edits.COLOR_FIELDS, build_site COLOR_FIELDS
+export const PRINTED = FIELDS;                            // the card image's (card_edits.COLOR_PRINTED)
 export const COLOR = /^#[0-9a-f]{6}$/, MAX = 64, PHRASE_MAX = 200;
 export const RECENT_KEY = "text-colors-recent", RECENT_MAX = 8;
-const LABEL = { name: "Name", ability: "Ability", note: "Note" };
+const LABEL = { name: "Name", ability: "Ability" };
 const ALNUM = /[A-Za-z0-9]/;
 
 /** A `colors` value as card_edits.valid_colors takes it: one entry per field and phrase. */
@@ -44,7 +45,7 @@ export function colorsChange(a, b) {
   for (const [k, one] of was) if (!now.has(k)) out.push(`${LABEL[one.field] || one.field}${one.phrase ? `: ${phraseText(one.phrase)}` : ""} back to its own colour`);
   return out;
 }
-/** The card image's colours of a list (the note's are never baked), null when none. */
+/** The card image's colours of a list, null when none. */
 export const printedOf = v => { const p = (v || []).filter(one => PRINTED.includes(one.field)); return p.length ? p : null; };
 
 const numbered = p => { const m = /^(.*\S)#(\d+)$/.exec(p); return m ? [m[1], +m[2]] : [p, 0]; };
@@ -131,6 +132,33 @@ const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}|${COST.source
 /** [[start, end]] of what text.js draws as icons and badges (their own colours: never painted). */
 export const drawnSpans = text => [...String(text ?? "").matchAll(PIECE)].filter(m => m[1] !== undefined || m[3] !== undefined || tagInfo(m[2]))
   .map(m => [m.index, m.index + m[0].length]);
+// ---- the site's word colours (owner 2026-11-11) -------------------------------------------------------------------
+// Card text on the website and in TTS's Card details draws one palette, never the card's own colours or `colors`:
+// status words in their chart colours (statusSpans), stat words with their numbers as one unit ("+2 ATK", "3 HP",
+// "-1 SPD"; Health, Attack, Defense, Speed only after a number: alone they are verbs and mechanics), counter words
+// (points, BRICKS, SP, star points; "point", "brick" only after a number) in the counters' colours; icons and badges
+// keep theirs. palette: cards.json `palette` (build_site text_palette, tts.json's too), {stats: {hp, def, atk, spd},
+// counters: {points, bricks, sp}, statuses: {name: colour}}. build_site word_colors is this in Python.
+const NUM = "(?:[+\\-\\u2212]?(?:[0-9]+(?:\\.[0-9]+)?%?|X)|[x\\u00d7][0-9]+(?:\\.[0-9]+)?)", NO_W = "(?<![A-Za-z0-9_.])", END_W = "(?![A-Za-z0-9_])";
+const UNIT = new RegExp(`${NO_W}(?:${NUM}[ \\t]*)?(?:(hp|def|atk|spd)|(points|bricks|sp|star[ \\t]+points))${END_W}`
+  + `|${NO_W}${NUM}[ \\t]*(?:(health|attack|defen[cs]e|speed)|(point|brick|star[ \\t]+point))${END_W}`, "gi");
+const LONG = { health: "hp", attack: "atk", defense: "def", defence: "def", speed: "spd" };
+const counterOf = w => (/^(sp|star)/i.test(w) ? "sp" : /^brick/i.test(w) ? "bricks" : "points");
+const NAMES = new WeakMap();                       // a palette's status names, one array (statusSpans keeps its patterns by it)
+/** The palette's runs on text: [{start, end, color}] in order, apart; status words first, then stats and counters (none
+ *  over another or over an icon or badge, drawnSpans). */
+export function wordColors(text, palette) {
+  text = String(text ?? "");
+  if (!text || !palette) return [];
+  let names = NAMES.get(palette);
+  if (!names) NAMES.set(palette, names = Object.keys(palette.statuses || {}));
+  const fill = new Map(names.map(n => [n.toLowerCase(), palette.statuses[n]])), drawn = drawnSpans(text), out = [];
+  const put = (a, b, color) => { if (COLOR.test(color || "") && ![...drawn, ...out.map(r => [r.start, r.end])].some(([s, e]) => a < e && s < b)) out.push({ start: a, end: b, color }); };
+  for (const [a, b] of statusSpans(text, names)) put(a, b, fill.get(text.slice(a, b).toLowerCase().split(/[\s\u0003]+/).join(" ")));
+  for (const m of text.matchAll(UNIT))
+    put(m.index, m.index + m[0].length, m[1] || m[3] ? palette.stats?.[m[1] ? m[1].toLowerCase() : LONG[m[3].toLowerCase()]] : palette.counters?.[counterOf(m[2] || m[4])]);
+  return out.sort((x, y) => x.start - y.start);
+}
 /** The phrase for a selection [start, end) of text: {phrase} (undefined: the whole field), widened to whole words and
  *  numbered when the words occur more than once ("Burning#2"); null when it holds no word or can't be named. */
 export function phraseAt(text, start, end) {
@@ -261,7 +289,7 @@ function caretAt(el, pos) {
   return out;
 }
 /**
- * The colour menu on the text controls inside root. o: {fieldOf(el) -> "name" | "ability" | "note" | null, textOf(el) ->
+ * The colour menu on the text controls inside root. o: {fieldOf(el) -> "name" | "ability" | null, textOf(el) ->
  * {text, at} (the field's whole text and where el's text starts in it: a box of several), list() -> the colours now,
  * apply(list, {field, phrase, color}), rec() -> the details record or null, swatches() -> [{name, color}],
  * base(field, text) -> the card's own colours (inkOf) or null, storage}.
