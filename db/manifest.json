@@ -7,9 +7,9 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-11T10:30:36Z",
- "card_commit": "bbafbc2892123939e48a2353440e170b69607cf0",
- "card_commit_at": 1794392205.0,
+ "built_at": "2026-11-11T10:41:53Z",
+ "card_commit": "9d89df737644099b5404e6bc4ec422a9f5242943",
+ "card_commit_at": 1794393496.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 123,
@@ -19,20 +19,20 @@
   "details": 781,
   "failed": 0,
   "new": 0,
-  "versions": 1850
+  "versions": 1851
  },
  "files": {
-  "old_stats.json": "ba68eeadc2dfc8df4ebd1e25cd9fb30b04917507ed35eca04a42c0ae3789a131",
+  "old_stats.json": "89325eb5effb02f92cc30f1c65912d29b641b537aa0a83dddb2e04ab546d66e2",
   "psd_details.json": "c935b05ecdeb3fb04b3358dbbc0baa67959327767941e1f2e36f20a839737510",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "30c523eda352e057e71ad94fb05c3dd259caf633fa088bf7dee47e29b8fba3a6"
+  "stats.json": "be3980237c36dfab0dea1afed29ee1bd69d11bed4ffcc673f6564f4a36d7cde6"
  },
  "gates": {},
  "inputs": {
   "authors_blob": "5a42583c1dc70f867aa37f08129295365a6c1c35",
   "created_blob": "c300e84e3e1558427be21dec6e120ee355fdff83",
   "decks_blob": "ee9dda60fd33e7f66e9de751a1b4a0e922daafd2",
-  "edits_blob": "14b0b965d6e7d9732c2238c89efc20a1b9d91b7c",
+  "edits_blob": "33abb85529bd04e06195aede0056e779f3d5f848",
   "fonts_tree": "dc5689d821a3fbb2661826420fee97df88e3f598",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "57b028f86b5a52598b4cf606bb53b0c16ae426c7"
@@ -44,16 +44,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Omori",
-   "notes": [
-    "NO STATS FOUND: no HP, DEF, ATK or SPD bars read on this creature"
-   ],
-   "path": "Creatures/Omori/5 Stars/Omori.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43004151994",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43005753686",
  "schema": 1
 }
