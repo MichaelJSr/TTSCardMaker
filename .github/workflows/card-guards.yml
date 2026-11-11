@@ -610,6 +610,21 @@ jobs:
           [ "$have" -eq "$(wc -l < "$list")" ] || echo "::warning::$have of $(wc -l < "$list") pushed blobs fetched: the rest by REST"
           exit "$(cat "$list.done")"
 
+      # With fixes to land, in the background beside Normalise: Land's history clone (git_commit's), reading the checkout's
+      # objects too (Pushed blobs' two sides of each PSD and PNG). With those land pushes by git at any size, delta search
+      # sending only what changed (e58b8cfd's landing: 70.0 -> 6.05 MB). Failed: land clones it as before.
+      - name: History clone start
+        if: ${{ !cancelled() && steps.plan.outputs.fixes == 'true' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          h=$RUNNER_TEMP/TTSCardMaker-history.git
+          ( timeout 30 git clone -q --bare --filter=blob:none "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" "$h.part" \
+              && echo "$GITHUB_WORKSPACE/.git/objects" >> "$h.part/objects/info/alternates" && mv "$h.part" "$h" \
+              || { echo "::warning::the history clone failed: land makes its own"; rm -rf "$h.part"; }
+            touch "$h.done" ) < /dev/null > "$h.log" 2>&1 &
+          echo $! > "$h.pid"
+
       # The conversion's Types/ pixels (92 files, one fetch). The cached fonts sit outside the patterns: kept.
       - name: Types for the conversion
         id: types
@@ -660,9 +675,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT: ${{ github.event_name }}
-          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git   # git_commit's git path: past ~40 files
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git   # git_commit's (History clone start)
         run: |
           echo "ran=true" >> "$GITHUB_OUTPUT"
+          h=$AUTOCROISSANT_HISTORY_CLONE
+          [ ! -s "$h.pid" ] || while [ ! -e "$h.done" ] && kill -0 "$(cat "$h.pid")" 2> /dev/null; do sleep 0.05; done
+          cat "$h.log" 2> /dev/null || true
           args=(--plan "$OUT/plan.json" --repo "$GITHUB_REPOSITORY")
           [ "$MODE" = report ] && args+=(--dry-run)
           if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] || [ "$EVENT" != push ]; then args+=(--rerun); fi
