@@ -1148,6 +1148,20 @@ function settleAt(el) {
   for (const t of moves) addEventListener(t, stop, { passive: true, once: true });
   document.fonts.ready.then(() => { for (const t of moves) removeEventListener(t, stop); if (!moved && location.hash === at && el.isConnected) el.scrollIntoView(); });
 }
+// a link's jump aimed again once it stops (a phone's contents above fold and unfold meanwhile); not once the reader moves
+function reaim(el) {
+  const at = location.hash, moves = ["wheel", "touchstart", "keydown", "pointerdown"];
+  let last = NaN, still = 0, done = false;
+  const end = aim => {
+    if (done) return; done = true;
+    for (const t of moves) removeEventListener(t, off); removeEventListener("scrollend", on);
+    if (aim && location.hash === at && el.isConnected) el.scrollIntoView();
+  }, off = () => end(false), on = () => end(true);
+  for (const t of moves) addEventListener(t, off, { passive: true });
+  addEventListener("scrollend", on);                     // else (and no scroll at all): scrollY still for 3 x 100 ms
+  const tick = () => { if (done) return; if (scrollY === last) still++; else { last = scrollY; still = 0; } if (still >= 3) end(true); else setTimeout(tick, 100); };
+  setTimeout(tick, 100);
+}
 // the contents follow the reading: the chapter in view is marked and shows its sections
 function watchToc() {
   spy?.disconnect();
@@ -1781,9 +1795,11 @@ document.addEventListener("click", e => {
   if (ref) { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }   // a modifier: the browser opens its page
   const scroll = e.target.closest("[data-scroll]");
   if (scroll) {                                          // a rulebook page's link: its #/rules/<id> in the address bar too
-    e.preventDefault(); document.getElementById(scroll.dataset.scroll)?.scrollIntoView({ behavior: "smooth" });
+    e.preventDefault(); const el = document.getElementById(scroll.dataset.scroll);
+    el?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     const to = scroll.getAttribute("href");
     if (to?.startsWith("#/rules/") && to !== location.hash) { rulesAt = to; history.pushState(null, "", to); syncUrl(parseHash()); S.renderedHash = S.listHash = to; }
+    if (el) reaim(el);
     return;
   }
   const hashLink = e.target.closest('a[href^="#/"]');     // under <base>, on c/<id>/ the browser would load the site root afresh (a card's arrows lost the filters)
