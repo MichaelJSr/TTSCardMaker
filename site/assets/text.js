@@ -417,10 +417,13 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   }
 
   /** HTML for ability text; links: false leaves card names as text (the rulebook links its own); colors: its colour
-   *  runs (textcolor.js wordColors: the site's palette), on the letters only (icons and badges keep their look) */
+   *  runs (textcolor.js wordColors: the site's palette), on the letters only (icons and badges keep their look), none
+   *  inside another card's name ("Poison" in "Poison Circle"; build_site unlinked) */
   function render(text, { links: linked = true, colors = null } = {}) {
     if (!text) return "";
     const { pieces, links: found } = parse(text), links = linked ? found : [];
+    colors = colors?.filter(r => found.every(([i, n, card]) => r.end <= i || i + n <= r.start
+      || [card.name, card.key].some(k => fold(k) === fold(text.slice(r.start, r.end)))));
     const out = [], seg = (a, b) => (colors?.length ? paintHtml(text, colors, a, b) : esc(text.slice(a, b)));
     let last = 0;
     for (const [i, n, x] of [...pieces, ...links].sort((a, b) => a[0] - b[0])) {

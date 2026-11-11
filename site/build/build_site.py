@@ -698,9 +698,10 @@ STAT_COLORS = {"hp": "#2fbf3a", "def": "#3d63ff", "atk": "#ff3b3b", "spd": "#ffd
 COUNTER_COLORS = {"points": "#00ffae", "bricks": "#a0522d", "sp": "#ffff00"}                   # the TTS table's counters (text.js COSTS)
 TOKEN_RE = re.compile(r"\[[^\[\]\n]{1,52}\]")
 WORD_NUM = r"(?:[+\-\u2212]?(?:[0-9]+(?:\.[0-9]+)?%?|X)|[x\u00d7][0-9]+(?:\.[0-9]+)?)"     # textcolor.js NUM
-WORD_UNIT = re.compile(rf"(?<![A-Za-z0-9_.])(?:{WORD_NUM}[ \t]*)?(?:(hp|def|atk|spd)|(points|bricks|sp|star[ \t]+points))(?![A-Za-z0-9_])"
-                       rf"|(?<![A-Za-z0-9_.]){WORD_NUM}[ \t]*(?:(health|attack|defen[cs]e|speed)|(point|brick|star[ \t]+point))(?![A-Za-z0-9_])",
+WORD_UNIT = re.compile(rf"(?<![A-Za-z0-9_.])({WORD_NUM}[ \t]*)?(?:(hp|def|atk|spd)|(points|bricks|sp|star[ \t]+points))(?![A-Za-z0-9_])"
+                       rf"|(?<![A-Za-z0-9_.])({WORD_NUM})[ \t]*(?:(health|attack|defen[cs]e|speed)|(point|brick|star[ \t]+point))(?![A-Za-z0-9_])",
                        re.I | re.A)                   # textcolor.js UNIT: a stat with its number; Health & co. only after one
+WORD_TIMES = re.compile(r"[+\-\u2212]?x\s*")         # textcolor.js TIMES: "2 x DEF"'s "x" a times sign ("X" a number)
 WORD_LONG = {"health": "hp", "attack": "atk", "defense": "def", "defence": "def", "speed": "spd"}
 TTS_BACK = (15, 23, 41)                       # Global.lua detailsPanel: the panel (opaque)
 TTS_SEEN = 3                                  # a colour's least contrast with it, else plain there (TTS can't outline a word)
@@ -749,10 +750,21 @@ def word_colors(text, palette, patterns=None, drawn=None):
     for a, b in status_spans(text, status_patterns(statuses) if patterns is None else patterns):
         put(a, b, fill.get(" ".join(re.split(r"[\s\x03]+", text[a:b].lower()))))
     for m in WORD_UNIT.finditer(text):
-        stat = m[1] or (m[3] and WORD_LONG[m[3].lower()])
-        counter = None if stat else "sp" if re.match(r"(?:sp|star)", m[2] or m[4], re.I) else "bricks" if (m[2] or m[4]).lower().startswith("brick") else "points"
-        put(*m.span(), (palette.get("stats") or {}).get(stat.lower()) if stat else (palette.get("counters") or {}).get(counter))
+        times = bool(WORD_TIMES.fullmatch(m[1] or m[4] or ""))
+        if m[4] is not None and (times or ((m[5] or "").lower() == "attack" and m[4][0] not in "+-\u2212")):   # "1 attack": attacks counted
+            continue
+        stat = m[2] or (m[5] and WORD_LONG[m[5].lower()])
+        counter = None if stat else "sp" if re.match(r"(?:sp|star)", m[3] or m[6], re.I) else "bricks" if (m[3] or m[6]).lower().startswith("brick") else "points"
+        put(m.end() - len(m[2] or m[3]) if times else m.start(), m.end(),
+            (palette.get("stats") or {}).get(stat.lower()) if stat else (palette.get("counters") or {}).get(counter))
     return sorted(out)
+
+
+def unlinked(runs, text, links):
+    """runs ([(start, end, colour)]) less those over a card name (links: [(start, end, card)], name_links' spans) that
+    isn't their own word's (text.js render: "Poison" in "Poison Circle" stays plain)."""
+    return [r for r in runs if all(r[1] <= a or b <= r[0] or fold_name(text[r[0]:r[1]]) in (fold_name(card["name"]), fold_name(card.get("key")))
+                                   for a, b, card in links)]
 
 
 def _contrast(c, back):
@@ -765,15 +777,15 @@ def tts_seen(colour):
     return colour if isinstance(colour, str) and COLOR_RE.match(colour) and _contrast(colour, TTS_BACK) >= TTS_SEEN else None
 
 
-def tts_words(text, palette, icons, patterns=None):
-    """tts.json `ac` (Global.lua painted): the ability's palette words as the site draws them (word_colors) through
-    game_words, [[text, colour]] in order, a piece the nth find of its text after the last one when [text, colour, n]
-    (found by text, as MoonSharp's strings aren't bytes). A cost's words take their counter's colour (TTS draws no badge),
-    icons and timing tags none (Global.lua withBadges); a colour tts_seen refuses stays plain."""
+def tts_words(text, palette, icons, patterns=None, links=None):
+    """tts.json `ac` (Global.lua painted): the ability's palette words as the site draws them (word_colors, unlinked by
+    links: name_links') through game_words, [[text, colour]] in order, a piece the nth find of its text after the last one
+    when [text, colour, n] (found by text, as MoonSharp's strings aren't bytes). A cost's words take their counter's
+    colour (TTS draws no badge), icons and timing tags none (Global.lua withBadges); a colour tts_seen refuses stays plain."""
     text = text or ""
     drawn = [m.span() for m in TOKEN_RE.finditer(text)] + [m.span() for m in re.finditer(r"\((-?[0-9A-Za-z/]{2,8})\)", text) if tag_info(m.group(1), {})]
     paint = [None] * len(text)
-    for a, b, colour in word_colors(text, palette, patterns, drawn):
+    for a, b, colour in unlinked(word_colors(text, palette, patterns, drawn), text, links(text, spans=True) if links else ()):
         paint[a:b] = [tts_seen(colour)] * (b - a)
     at = []
     shown = game_words(text, icons, at)
@@ -4020,15 +4032,19 @@ NAME_VERB = {"buff": _STATUS_VERB, "debuff": _STATUS_VERB,                      
              "minion": re.compile(r"\b(?:summon|resummon|revive)(?:[^\S\n]+(?:a|an|the|\d+))?[^\S\n]+$", re.I)}
 
 
+def fold_name(s):
+    """text.js makeRenderer's fold: a card name for comparing (any case, either apostrophe, blanks as one)."""
+    return re.sub(r"\s+", " ", str(s or "").strip().lower().replace("‘", "'").replace("’", "'"))
+
+
 def name_links(cards, icons, tag_table):
     """text.js makeRenderer's card links, for the build: links(text) -> the cards the text names, as the site links them
-    ("summon a silithid": a lowercase one-word name after its verb; its own name too)."""
-    fold = lambda s: re.sub(r"\s+", " ", str(s or "").strip().lower().replace("‘", "'").replace("’", "'"))
+    ("summon a silithid": a lowercase one-word name after its verb; its own name too); spans: [(start, end, card)]."""
     one_word = lambda s: not re.search(r"\s", str(s or "").strip())
     by_name = {}
 
     def add(n, c):
-        if len(k := fold(n)) >= 3:
+        if len(k := fold_name(n)) >= 3:
             by_name.setdefault(k, c)
     for c in cards:
         add(c["name"], c)
@@ -4041,7 +4057,7 @@ def name_links(cards, icons, tag_table):
         if not one_word(c["name"]) and re.search(r"[^siu]s$", c["name"].strip(), re.I):
             add(c["name"].strip()[:-1], c)
     if not by_name:
-        return lambda text: []
+        return lambda text, spans=False: []
     pat = lambda k: re.escape(k).replace("'", "['‘’]").replace(r"\ ", "[ \t]+")
     names = re.compile(r"(?<![\w'‘’])(" + "|".join(pat(k) for k in sorted(by_name, key=len, reverse=True)) + r")"
                        r"((?:['‘’]s|(?<=s)['‘’]|e?s)(?![\w'‘’]))?(?![\w'‘’])", re.I)
@@ -4066,7 +4082,7 @@ def name_links(cards, icons, tag_table):
         return not (re.search(r"(?:^|[\n.!?:)])[^\S\n]*$", before)
                     and re.match(r"[^\S\n]+(?:to|the|a|an|your|its|all|any|each|it|this|that)\b", after))
 
-    def links(text):
+    def links(text, spans=False):
         flat = spaced = text or ""
         for m in re.finditer(r"\[([^\[\]\n]{1,52})\]|" + TAG_IN_TEXT.pattern, flat):
             if piece(m):
@@ -4074,9 +4090,9 @@ def name_links(cards, icons, tag_table):
                 flat, spaced = flat[:i] + "\0" * n + flat[i + n:], spaced[:i] + " " * n + spaced[i + n:]
         out = []
         for m in names.finditer(flat):
-            card = by_name[fold(m[1])]
+            card = by_name[fold_name(m[1])]
             if is_ref(m, spaced, card):
-                out.append(card)
+                out.append((*m.span(), card) if spans else card)
         return out
     return links
 
@@ -4097,15 +4113,15 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
     palette = palette or text_palette(cards)
     marks = status_patterns(palette["statuses"])
     types, statuses = type_meanings(chapters, icons), {}
+    links = name_links(shown, icons, tag_table)       # the cards a text names, as the site links them
     for c in shown:
         if c.get("type") in ("buff", "debuff") and c.get("ability") and not c.get("dup"):
-            colour, words = tts_seen(palette["statuses"].get(c["name"])), tts_words(c["ability"], palette, icons, marks)
+            colour, words = tts_seen(palette["statuses"].get(c["name"])), tts_words(c["ability"], palette, icons, marks, links)
             statuses.setdefault(c["name"], {"x": game_words(c["ability"], icons), "k": c["type"], **({"p": c["png"]} if c.get("png") else {}),
                                             **({"c": colour} if colour else {}), **({"xc": words} if words else {})})
     named = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(statuses, key=len, reverse=True)) + r")(?![\w'’])", re.I) \
         if statuses else None
     lower = {n.lower(): n for n in statuses}
-    links = name_links(shown, icons, tag_table)       # the cards a text names, as the site links them
     originals = {c["id"]: c for c in shown if c.get("id")}   # a duplicate -> its original
     out_cards, used_tags = {}, {}
     ids = {c["id"] for c in chapters}
@@ -4129,7 +4145,7 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
         bars = [" ".join(f"{k.upper()} {s[k]}" for k in STAT_KEYS if s.get(k) is not None) for s in c.get("creatures") or [c]
                 if any(s.get(k) is not None for k in STAT_KEYS)]
         try:
-            colours = tts_words(text, palette, icons, marks)
+            colours = tts_words(text, palette, icons, marks, links)
         except Exception as error:                # an odd card never fails the build
             warn(f"{c['png']}: no TTS colours ({type(error).__name__}: {error})")
             colours = []

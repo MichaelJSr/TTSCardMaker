@@ -135,13 +135,16 @@ export const drawnSpans = text => [...String(text ?? "").matchAll(PIECE)].filter
 // ---- the site's word colours (owner 2026-11-11) -------------------------------------------------------------------
 // Card text on the website and in TTS's Card details draws one palette, never the card's own colours or `colors`:
 // status words in their chart colours (statusSpans), stat words with their numbers as one unit ("+2 ATK", "3 HP",
-// "-1 SPD"; Health, Attack, Defense, Speed only after a number: alone they are verbs and mechanics), counter words
+// "-1 SPD"; Health, Defense, Speed only after a number, Attack only after a signed one: alone they are verbs and
+// mechanics, "1 attack" counts attacks; a lone "x" is a times sign, never the unit's: "2 x DEF"), counter words
 // (points, BRICKS, SP, star points; "point", "brick" only after a number) in the counters' colours; icons and badges
-// keep theirs. palette: cards.json `palette` (build_site text_palette, tts.json's too), {stats: {hp, def, atk, spd},
-// counters: {points, bricks, sp}, statuses: {name: colour}}. build_site word_colors is this in Python.
+// keep theirs; text.js render leaves a word inside another card's name plain ("Poison Circle"). palette: cards.json
+// `palette` (build_site text_palette, tts.json's too), {stats: {hp, def, atk, spd}, counters: {points, bricks, sp},
+// statuses: {name: colour}}. build_site word_colors is this in Python.
 const NUM = "(?:[+\\-\\u2212]?(?:[0-9]+(?:\\.[0-9]+)?%?|X)|[x\\u00d7][0-9]+(?:\\.[0-9]+)?)", NO_W = "(?<![A-Za-z0-9_.])", END_W = "(?![A-Za-z0-9_])";
-const UNIT = new RegExp(`${NO_W}(?:${NUM}[ \\t]*)?(?:(hp|def|atk|spd)|(points|bricks|sp|star[ \\t]+points))${END_W}`
-  + `|${NO_W}${NUM}[ \\t]*(?:(health|attack|defen[cs]e|speed)|(point|brick|star[ \\t]+point))${END_W}`, "gi");
+const UNIT = new RegExp(`${NO_W}(${NUM}[ \\t]*)?(?:(hp|def|atk|spd)|(points|bricks|sp|star[ \\t]+points))${END_W}`
+  + `|${NO_W}(${NUM})[ \\t]*(?:(health|attack|defen[cs]e|speed)|(point|brick|star[ \\t]+point))${END_W}`, "gi");
+const TIMES = /^[+\-\u2212]?x\s*$/, SIGNED = /^[+\-\u2212]/;   // "2 x DEF": "x" a times sign ("X", the variable, a number)
 const LONG = { health: "hp", attack: "atk", defense: "def", defence: "def", speed: "spd" };
 const counterOf = w => (/^(sp|star)/i.test(w) ? "sp" : /^brick/i.test(w) ? "bricks" : "points");
 const NAMES = new WeakMap();                       // a palette's status names, one array (statusSpans keeps its patterns by it)
@@ -155,8 +158,12 @@ export function wordColors(text, palette) {
   const fill = new Map(names.map(n => [n.toLowerCase(), palette.statuses[n]])), drawn = drawnSpans(text), out = [];
   const put = (a, b, color) => { if (COLOR.test(color || "") && ![...drawn, ...out.map(r => [r.start, r.end])].some(([s, e]) => a < e && s < b)) out.push({ start: a, end: b, color }); };
   for (const [a, b] of statusSpans(text, names)) put(a, b, fill.get(text.slice(a, b).toLowerCase().split(/[\s\u0003]+/).join(" ")));
-  for (const m of text.matchAll(UNIT))
-    put(m.index, m.index + m[0].length, m[1] || m[3] ? palette.stats?.[m[1] ? m[1].toLowerCase() : LONG[m[3].toLowerCase()]] : palette.counters?.[counterOf(m[2] || m[4])]);
+  for (const m of text.matchAll(UNIT)) {
+    const num = m[1] ?? m[4], times = TIMES.test(num ?? ""), end = m.index + m[0].length;
+    if (m[4] !== undefined && (times || (/^attack$/i.test(m[5] || "") && !SIGNED.test(num)))) continue;   // "1 attack": attacks counted
+    put(times ? end - (m[2] || m[3]).length : m.index, end,
+      m[2] || m[5] ? palette.stats?.[m[2] ? m[2].toLowerCase() : LONG[m[5].toLowerCase()]] : palette.counters?.[counterOf(m[3] || m[6])]);
+  }
   return out.sort((x, y) => x.start - y.start);
 }
 /** The phrase for a selection [start, end) of text: {phrase} (undefined: the whole field), widened to whole words and
