@@ -146,7 +146,6 @@ IMAGE_META_VERSION = f"3:{IMAGE_WIDTH}"       # bump the 3 when accent_color or 
 # cards whose art spills past the card into the PNG's see-through edge (by name): the card fills its frame on the website
 # and the art hangs out of it (card_body; cards.json hang)
 OVERHANG = ("Sumo Panda",)
-OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
 OG_DECK_CARDS = 6                            # cards in a deck page's link-preview montage
 CREATOR_CARDS = ("Croissant", "Michael", "Bobberlington", "The Forbidden One", "Kyle", "Tyler", "Z!!!!!")   # the site's preview fan (owner 2026-10-25; alternating warm and dark, Z!!!!! shown whole), by file key; Kyle is hdckighfkvhvgmk's
 OG_DECK_VERSION = "1"                        # bump when the montage's layout changes (its cache key)
@@ -1288,9 +1287,7 @@ def image_bytes(path, sha=None):
 
 
 def image_names(sha):
-    names = {w: f"{sha[:16]}-{w}-{tag}.avif" for w, tag in thumb_tags().items()}
-    names["og"] = f"{sha[:16]}-og.jpg"
-    return names
+    return {w: f"{sha[:16]}-{w}-{tag}.avif" for w, tag in thumb_tags().items()}
 
 
 def make_images(path, sha, known=None):
@@ -1323,14 +1320,6 @@ def make_images(path, sha, known=None):
             im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **AVIF)   # no profile: WebP never had one
             os.replace(cached[w] + ".tmp", cached[w])
     small()
-    if not os.path.exists(cached["og"]):       # from the 720 px one: no PNG download
-        with Image.open(cached[720]) as im:
-            im = im.convert("RGBA")
-            im.thumbnail((OG_WIDTH, OG_WIDTH * 3), Image.LANCZOS)
-            flat = Image.new("RGB", im.size, (13, 13, 13))
-            flat.paste(im, mask=im.getchannel("A"))
-            flat.save(cached["og"] + ".tmp", "JPEG", quality=80, optimize=True, progressive=True)
-            os.replace(cached["og"] + ".tmp", cached["og"])
     if known:
         return (sha[:16], *known)
     return sha[:16], *sized[IMAGE_WIDTH].size, accent_color(sized[240])   # the colour from the PNG: no codec noise
@@ -1430,11 +1419,6 @@ def accent_color(im):
         return None
     top = max(buckets.values(), key=len)
     return "#%02x%02x%02x" % tuple(sum(c[i] for c in top) // len(top) for i in range(3))
-
-
-def og_size(path):
-    with Image.open(path) as im:
-        return im.size
 
 
 def clip(text, limit=300):
@@ -5118,10 +5102,12 @@ def main():
         with open(os.path.join(DIST, *parts, "index.html"), "w", encoding="utf-8") as fh:
             fh.write(page)
     def og_image(c):
-        """The card's 480 px link-preview JPEG when the site has a URL, else the raw PNG."""
-        if c.get("img") and SITE_URL:
-            return f"{SITE_URL}/thumbs/{c['img']}-og.jpg", og_size(os.path.join(DIST, "thumbs", f"{c['img']}-og.jpg"))
-        return (RAW + quote(c["png"]) if c.get("png") else ""), None
+        """The card's PNG on raw GitHub at its last change (pin), else at the build's commit: a new picture, a new URL.
+        No size: the PNG isn't downloaded (link previews measure it)."""
+        if c.get("png") not in tree:
+            return "", None
+        at = pin(c["png"])
+        return (f"https://raw.githubusercontent.com/{CARD_REPO}/{at}/" if at else card_raw()) + quote(c["png"]), None
     for c in cards + morgue:
         if c.get("hidden"):
             continue
