@@ -1507,6 +1507,35 @@
    }
   ]
  },
+ "Auxiliary/Items/Unbreakable_Heart.psd": {
+  "blob": "453983856df76a3b3b24c861a746f4a9eb49415f",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg",
+    "path": "MDW/Linked/Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg",
+    "size": 252732
+   },
+   {
+    "drawn": null,
+    "name": "Unbreakable_heart - Layer 1.psb",
+    "path": "MDW/Linked/Unbreakable_heart - Layer 1.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": null,
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": null,
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
  "Auxiliary/Items/Unbreakable_Strength.psd": {
   "blob": "11578dc71662259cfec51770ba82c252be0a8aa7",
   "links": [
@@ -1521,35 +1550,6 @@
     "name": "Unbreakable_Strength - strength_waifu2x_noise0_scale4x.png",
     "path": "MDW/Linked/Unbreakable_Strength - strength_waifu2x_noise0_scale4x.png",
     "size": 426941
-   },
-   {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
-    "name": "Hk star.png",
-    "path": "Types/Stars/Hk star.png",
-    "size": 332571
-   },
-   {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
-    "name": "Equip.png",
-    "path": "Types/Equip.png",
-    "size": 83059
-   }
-  ]
- },
- "Auxiliary/Items/Unbreakable_heart.psd": {
-  "blob": "453983856df76a3b3b24c861a746f4a9eb49415f",
-  "links": [
-   {
-    "drawn": "c447d344fe6e0a6c03871bd527062ac8b849f9f8",
-    "name": "Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg",
-    "path": "MDW/Linked/Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg",
-    "size": 252732
-   },
-   {
-    "drawn": "f45a8c6a33d95fefa174150b4303a45ee440c451",
-    "name": "Unbreakable_heart - Layer 1.psb",
-    "path": "MDW/Linked/Unbreakable_heart - Layer 1.psb",
-    "size": 1048576
    },
    {
     "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
@@ -2975,23 +2975,23 @@
    }
   ]
  },
- "Auxiliary/Minions/Jack-In-The-Box_Zombie.psd": {
+ "Auxiliary/Minions/Jack-in-the-Box_Zombie.psd": {
   "blob": "69f3efab8320f3fd353b64758f681d9f1796475d",
   "links": [
    {
-    "drawn": "23d109968e9bd030377693191b73b47a27c68320",
+    "drawn": null,
     "name": "Jack-In-The-Box_Zombie - Layer 1 copy.psb",
     "path": "MDW/Linked/Jack-In-The-Box_Zombie - Layer 1 copy.psb",
     "size": 3960930
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
@@ -6409,94 +6409,94 @@
    }
   ]
  },
- "Creatures/BTD/4 Stars/Avatar_Of_Wrath.psd": {
+ "Creatures/BTD/4 Stars/Avatar_of_Wrath.psd": {
   "blob": "2d437f6e23b6b86a6bd7157c36c35af9afe8591f",
   "links": [
    {
-    "drawn": "04192392c3b262c3997d558ff928b9d5d87a62a1",
+    "drawn": null,
     "name": "Avatar_Of_Wrath - Background.jpg",
     "path": "MDW/Linked/Avatar_Of_Wrath - Background.jpg",
     "size": 36317
    },
    {
-    "drawn": "73e7270cf38eeda3892b4eb0457d23e6b2273067",
+    "drawn": null,
     "name": "Avatar_Of_Wrath - Dante.png",
     "path": "MDW/Linked/Avatar_Of_Wrath - Dante.png",
     "size": 304227
    },
    {
-    "drawn": "fd7f83a98663db13420f8723b4194887518a2d37",
+    "drawn": null,
     "name": "Avatar_Of_Wrath - Avatar.png",
     "path": "MDW/Linked/Avatar_Of_Wrath - Avatar.png",
     "size": 275940
    },
    {
-    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
+    "drawn": null,
     "name": "Ninja Star.png",
     "path": "Types/Stars/Ninja Star.png",
     "size": 14188
    },
    {
-    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
+    "drawn": null,
     "name": "Ninja Star.png",
     "path": "Types/Stars/Ninja Star.png",
     "size": 14188
    },
    {
-    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
+    "drawn": null,
     "name": "Ninja Star.png",
     "path": "Types/Stars/Ninja Star.png",
     "size": 14188
    },
    {
-    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
+    "drawn": null,
     "name": "Ninja Star.png",
     "path": "Types/Stars/Ninja Star.png",
     "size": 14188
    },
    {
-    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "drawn": null,
     "name": "fire.png",
     "path": "Types/fire.png",
     "size": 568963
    }
   ]
  },
- "Creatures/BTD/5 Stars/Prince_Of_Darkness.psd": {
+ "Creatures/BTD/5 Stars/Prince_of_Darkness.psd": {
   "blob": "c1182947e53a6635856bf721f0b9b28851e912af",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
@@ -9001,6 +9001,41 @@
    }
   ]
  },
+ "Creatures/Kirby/3 Stars/Dark_Matter.psd": {
+  "blob": "27aa8475cfdc7051eb31f3a791152bfa7fb7a6cd",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "electric.png",
+    "path": "Types/electric.png",
+    "size": 106279
+   },
+   {
+    "drawn": null,
+    "name": "darkmatter.png",
+    "path": "Types/darkmatter.png",
+    "size": 220675
+   }
+  ]
+ },
  "Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.psd": {
   "blob": "889a9188b8fadfbe50c05e69fdb455a6c838ac85",
   "links": [
@@ -9039,41 +9074,6 @@
     "name": "unknown.png",
     "path": "Types/unknown.png",
     "size": 132191
-   }
-  ]
- },
- "Creatures/Kirby/3 Stars/Dark_matter.psd": {
-  "blob": "27aa8475cfdc7051eb31f3a791152bfa7fb7a6cd",
-  "links": [
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
-    "name": "electric.png",
-    "path": "Types/electric.png",
-    "size": 106279
-   },
-   {
-    "drawn": "9842d409283e819405890ffd7f7e3bc7775145fd",
-    "name": "darkmatter.png",
-    "path": "Types/darkmatter.png",
-    "size": 220675
    }
   ]
  },
@@ -10181,6 +10181,100 @@
    }
   ]
  },
+ "Creatures/Kirby/4 Stars/Grand_Doomer.psd": {
+  "blob": "ddd674b86d291773cc1dafc61d9d635c4acf0c5d",
+  "links": [
+   {
+    "drawn": null,
+    "name": "grand_doomer - sample_857e66a44edf0e87d7e9c472726b30d4.jpg",
+    "path": "MDW/Linked/grand_doomer - sample_857e66a44edf0e87d7e9c472726b30d4.jpg",
+    "size": 670319
+   },
+   {
+    "drawn": null,
+    "name": "Mini_Doomer - Background (1).jpg",
+    "path": "MDW/Linked/Mini_Doomer - Background (1).jpg",
+    "size": 249205
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": null,
+    "name": "light.png",
+    "path": "Types/light.png",
+    "size": 474151
+   }
+  ]
+ },
+ "Creatures/Kirby/4 Stars/HR-H.psd": {
+  "blob": "fe12077f429c2f857d0d390380f6872a206d827e",
+  "links": [
+   {
+    "drawn": null,
+    "name": "hr-h - EXUjWxkU0AATqTF.jpg",
+    "path": "MDW/Linked/hr-h - EXUjWxkU0AATqTF.jpg",
+    "size": 752508
+   },
+   {
+    "drawn": null,
+    "name": "hr-h - sample_775cfbf5228ce5c613eec45100323239.jpg",
+    "path": "MDW/Linked/hr-h - sample_775cfbf5228ce5c613eec45100323239.jpg",
+    "size": 162769
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   }
+  ]
+ },
  "Creatures/Kirby/4 Stars/King_Dedede.psd": {
   "blob": "bf8496d17232d3920b786a5712612c25de589d89",
   "links": [
@@ -10356,100 +10450,6 @@
     "name": "darkmatter.png",
     "path": "Types/darkmatter.png",
     "size": 220675
-   }
-  ]
- },
- "Creatures/Kirby/4 Stars/grand_doomer.psd": {
-  "blob": "ddd674b86d291773cc1dafc61d9d635c4acf0c5d",
-  "links": [
-   {
-    "drawn": "cc0e92a74826dfb5f35bcffcb03707a52a678090",
-    "name": "grand_doomer - sample_857e66a44edf0e87d7e9c472726b30d4.jpg",
-    "path": "MDW/Linked/grand_doomer - sample_857e66a44edf0e87d7e9c472726b30d4.jpg",
-    "size": 670319
-   },
-   {
-    "drawn": "9c5678bff7f940efb17dd2f367833b1c4529fdc6",
-    "name": "Mini_Doomer - Background (1).jpg",
-    "path": "MDW/Linked/Mini_Doomer - Background (1).jpg",
-    "size": 249205
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
-    "name": "Wind.png",
-    "path": "Types/Wind.png",
-    "size": 430775
-   },
-   {
-    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
-    "name": "light.png",
-    "path": "Types/light.png",
-    "size": 474151
-   }
-  ]
- },
- "Creatures/Kirby/4 Stars/hr-h.psd": {
-  "blob": "fe12077f429c2f857d0d390380f6872a206d827e",
-  "links": [
-   {
-    "drawn": "42281a3d134392c7e7d68c450cd83cf5d49a7935",
-    "name": "hr-h - EXUjWxkU0AATqTF.jpg",
-    "path": "MDW/Linked/hr-h - EXUjWxkU0AATqTF.jpg",
-    "size": 752508
-   },
-   {
-    "drawn": "8dcbc1db9da6feaa6fa4cd9ee2abf3d68455fd59",
-    "name": "hr-h - sample_775cfbf5228ce5c613eec45100323239.jpg",
-    "path": "MDW/Linked/hr-h - sample_775cfbf5228ce5c613eec45100323239.jpg",
-    "size": 162769
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
-    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
-    "name": "machine.png",
-    "path": "Types/machine.png",
-    "size": 303679
    }
   ]
  },
@@ -11034,7 +11034,7 @@
    }
   ]
  },
- "Creatures/Mario/2 Stars/Bob-ulk.psd": {
+ "Creatures/Mario/2 Stars/Bob-Ulk.psd": {
   "blob": "5e95d412c3b9167a2a49589e8b74adef5c421aed",
   "links": [
    {
@@ -13163,6 +13163,53 @@
    }
   ]
  },
+ "Creatures/Omori/5 Stars/Omori.psd": {
+  "blob": "8aa924d3fbbc43ea5308a14026de11e5533c3afb",
+  "links": [
+   {
+    "drawn": null,
+    "name": "omori - red_space.png",
+    "path": "MDW/Linked/omori - red_space.png",
+    "size": 80133
+   },
+   {
+    "drawn": null,
+    "name": "omori - OMORI_BG_1.jpg",
+    "path": "MDW/Linked/omori - OMORI_BG_1.jpg",
+    "size": 83038
+   },
+   {
+    "drawn": null,
+    "name": "omori - Layer 3.psb",
+    "path": "MDW/Linked/omori - Layer 3.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": null,
+    "name": "omori - sorute-transformed.png",
+    "path": "MDW/Linked/omori - sorute-transformed.png",
+    "size": 630601
+   },
+   {
+    "drawn": null,
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": null,
+    "name": "omori - red_hand.png",
+    "path": "MDW/Linked/omori - red_hand.png",
+    "size": 6677
+   },
+   {
+    "drawn": null,
+    "name": "omori - red_hand.png",
+    "path": "MDW/Linked/omori - red_hand.png",
+    "size": 6677
+   }
+  ]
+ },
  "Creatures/Omori/5 Stars/The_Big_Yellow_Cat.psd": {
   "blob": "986c950ef85a63855b46f628df661a1c6845d871",
   "links": [
@@ -13213,53 +13260,6 @@
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
-   }
-  ]
- },
- "Creatures/Omori/5 Stars/omori.psd": {
-  "blob": "8aa924d3fbbc43ea5308a14026de11e5533c3afb",
-  "links": [
-   {
-    "drawn": null,
-    "name": "omori - red_space.png",
-    "path": "MDW/Linked/omori - red_space.png",
-    "size": 80133
-   },
-   {
-    "drawn": null,
-    "name": "omori - OMORI_BG_1.jpg",
-    "path": "MDW/Linked/omori - OMORI_BG_1.jpg",
-    "size": 83038
-   },
-   {
-    "drawn": null,
-    "name": "omori - Layer 3.psb",
-    "path": "MDW/Linked/omori - Layer 3.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": null,
-    "name": "omori - sorute-transformed.png",
-    "path": "MDW/Linked/omori - sorute-transformed.png",
-    "size": 630601
-   },
-   {
-    "drawn": null,
-    "name": "Omori star.png",
-    "path": "Types/Stars/Omori star.png",
-    "size": 114793
-   },
-   {
-    "drawn": null,
-    "name": "omori - red_hand.png",
-    "path": "MDW/Linked/omori - red_hand.png",
-    "size": 6677
-   },
-   {
-    "drawn": null,
-    "name": "omori - red_hand.png",
-    "path": "MDW/Linked/omori - red_hand.png",
-    "size": 6677
    }
   ]
  },
@@ -15933,123 +15933,123 @@
    }
   ]
  },
- "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_A.psd": {
+ "Creatures/Pandas/3 Stars/PANDA_Mk_A.psd": {
   "blob": "e7672c4766efce1a849c0dc277cd1e921f96994a",
   "links": [
    {
-    "drawn": "04e5ff0d24ebdb486a3186bf1f169692c7cd821b",
+    "drawn": null,
     "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "size": 394293
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
    }
   ]
  },
- "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_F.psd": {
+ "Creatures/Pandas/3 Stars/PANDA_Mk_F.psd": {
   "blob": "adac58b33bb953b7c202adc7169eb41565c8613f",
   "links": [
    {
-    "drawn": "04e5ff0d24ebdb486a3186bf1f169692c7cd821b",
+    "drawn": null,
     "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "size": 394293
    },
    {
-    "drawn": "33d415fbda41ef1e38e1aa6b80bdb3b9ec85d1a7",
+    "drawn": null,
     "name": "P.A.N.D.A._Mk_F - 3d079f143434d5ef23653e5a33db219b-transformed copy 2.png",
     "path": "MDW/Linked/P.A.N.D.A._Mk_F - 3d079f143434d5ef23653e5a33db219b-transformed copy 2.png",
     "size": 1501887
    },
    {
-    "drawn": "13c1c4e26297d64084436b6ed032d3e47195e8a4",
+    "drawn": null,
     "name": "P.A.N.D.A._Mk_F - Mk_F-transformed.png",
     "path": "MDW/Linked/P.A.N.D.A._Mk_F - Mk_F-transformed.png",
     "size": 3409230
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
    }
   ]
  },
- "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_T.psd": {
+ "Creatures/Pandas/3 Stars/PANDA_Mk_T.psd": {
   "blob": "8b2695a28662e46f6a2b33a7f50d4a5d03e6425e",
   "links": [
    {
-    "drawn": "04e5ff0d24ebdb486a3186bf1f169692c7cd821b",
+    "drawn": null,
     "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "size": 394293
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
    },
    {
-    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "drawn": null,
     "name": "machine.png",
     "path": "Types/machine.png",
     "size": 303679
@@ -16138,47 +16138,47 @@
    }
   ]
  },
- "Creatures/Pandas/3 Stars/Project_P.A.N.D.A.psd": {
+ "Creatures/Pandas/3 Stars/Project_PANDA.psd": {
   "blob": "804fca022fb19433e66788f0f2ca3fdadd9cf7a0",
   "links": [
    {
-    "drawn": "04e5ff0d24ebdb486a3186bf1f169692c7cd821b",
+    "drawn": null,
     "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "size": 394293
    },
    {
-    "drawn": "47cbb54cf0f695a78a32e5c6c71e62c773af0164",
+    "drawn": null,
     "name": "Project_P.A.N.D.A - 99f75d30-11ff-4e37-a9e0-44abfc95645d-El689J1mR-transformed.jpg",
     "path": "MDW/Linked/Project_P.A.N.D.A - 99f75d30-11ff-4e37-a9e0-44abfc95645d-El689J1mR-transformed.jpg",
     "size": 411666
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
    },
    {
-    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "drawn": null,
     "name": "machine.png",
     "path": "Types/machine.png",
     "size": 303679
@@ -17798,17 +17798,17 @@
    }
   ]
  },
- "Field/2 Stars/E._Gadd's_Garage.psd": {
+ "Field/2 Stars/E_Gadd's_Garage.psd": {
   "blob": "8cacae9dd2e9e52a9931f37f9488d4e4ede2c380",
   "links": [
    {
-    "drawn": "dd637fac2dfd2d7029340cac8471156b36b09a03",
+    "drawn": null,
     "name": "Mario Star.png",
     "path": "Types/Stars/Mario Star.png",
     "size": 523657
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "drawn": null,
     "name": "field.png",
     "path": "Types/field.png",
     "size": 20013
@@ -18000,23 +18000,23 @@
    }
   ]
  },
- "Field/2 Stars/Stingy's_Floor_And_Ceiling.psd": {
+ "Field/2 Stars/Stingy's_Floor_and_Ceiling.psd": {
   "blob": "0f0ba6480f40489bf6c0471d131fab6352e4b4b5",
   "links": [
    {
-    "drawn": "9ce57d95a6fafcf44cf402a56ecea2b396bc313a",
+    "drawn": null,
     "name": "Stingy's_Floor_And_Ceiling - Layer 3.psb",
     "path": "MDW/Linked/Stingy's_Floor_And_Ceiling - Layer 3.psb",
     "size": 1116824
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "drawn": null,
     "name": "field.png",
     "path": "Types/field.png",
     "size": 20013
@@ -18486,23 +18486,23 @@
    }
   ]
  },
- "Field/4 Stars/Cave_Of_The_Past.psd": {
+ "Field/4 Stars/Cave_of_the_Past.psd": {
   "blob": "971a00d76904edfa131aaa63631dc6e090a35338",
   "links": [
    {
-    "drawn": "986c332d0d98a7627e0c101f9338eb2d4f0915b5",
+    "drawn": null,
     "name": "Cave_Of_The_Past - d2rxp8a-f213f22d-97c4-4cd6-b833-41d8b033f1f1.png",
     "path": "MDW/Linked/Cave_Of_The_Past - d2rxp8a-f213f22d-97c4-4cd6-b833-41d8b033f1f1.png",
     "size": 85912
    },
    {
-    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "drawn": null,
     "name": "Starstorm.png",
     "path": "Types/Stars/Starstorm.png",
     "size": 324
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "drawn": null,
     "name": "field.png",
     "path": "Types/field.png",
     "size": 20013
@@ -19547,17 +19547,17 @@
    }
   ]
  },
- "Items/Counter/4 Stars/Return_To_Sender.psd": {
+ "Items/Counter/4 Stars/Return_to_Sender.psd": {
   "blob": "e3c48392d712426db29256c41ee54e91575099dc",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "23bf9264064724f83faf67776362102cbfaaa57f",
+    "drawn": null,
     "name": "Counter.png",
     "path": "Types/Counter.png",
     "size": 58570
@@ -19696,29 +19696,29 @@
    }
   ]
  },
- "Items/Equip/1 Stars/GrubSong.psd": {
+ "Items/Equip/1 Stars/Grubsong.psd": {
   "blob": "e4afbb7afb2fa30c1f465dc7ee7ca51b8afa355f",
   "links": [
    {
-    "drawn": "633255a759ce722b59f94317f308363d88dcf917",
+    "drawn": null,
     "name": "GrubSong - CHARM DEEP DIVE EP.8_ Grubsong - [Hollow Knight] 0-43 screenshot.png",
     "path": "MDW/Linked/GrubSong - CHARM DEEP DIVE EP.8_ Grubsong - [Hollow Knight] 0-43 screenshot.png",
     "size": 1839187
    },
    {
-    "drawn": "7fbcb3de6458948b536a62e8bfc3e3c93a4739a3",
+    "drawn": null,
     "name": "GrubSong - Grubsong.png",
     "path": "MDW/Linked/GrubSong - Grubsong.png",
     "size": 372221
    },
    {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "drawn": null,
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
     "size": 332571
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
@@ -20191,29 +20191,29 @@
    }
   ]
  },
- "Items/Equip/2 Stars/Thorns_Of_Agony.psd": {
+ "Items/Equip/2 Stars/Thorns_of_Agony.psd": {
   "blob": "cd7f8454c1cd0cf07797528d5135e08e75552258",
   "links": [
    {
-    "drawn": "5bd9377f55a91630aae51720760ea5c6d53ec32f",
+    "drawn": null,
     "name": "Thorns_Of_Agony - Hollow Knight 2023.10.13 - 23.51.33.13.DVR - frame at 0m25s.jpg",
     "path": "MDW/Linked/Thorns_Of_Agony - Hollow Knight 2023.10.13 - 23.51.33.13.DVR - frame at 0m25s.jpg",
     "size": 320373
    },
    {
-    "drawn": "e36c25c288c71a8a536811c46f5d93fcdb1ccd13",
+    "drawn": null,
     "name": "Thorns_Of_Agony - Thorns_of_Agony.png",
     "path": "MDW/Linked/Thorns_Of_Agony - Thorns_of_Agony.png",
     "size": 460683
    },
    {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "drawn": null,
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
     "size": 332571
    },
    {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "drawn": null,
     "name": "Fragile Equip.png",
     "path": "Types/Fragile Equip.png",
     "size": 23023
@@ -20260,17 +20260,17 @@
    }
   ]
  },
- "Items/Equip/3 Stars/Charm_Of_The_Vampire.psd": {
+ "Items/Equip/3 Stars/Charm_of_the_Vampire.psd": {
   "blob": "d749c2708da7d21cf33dcbccbfe2041c54ec9a6a",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
@@ -20780,6 +20780,23 @@
    }
   ]
  },
+ "Items/Equip/3 Stars/Steam_Sale.psd": {
+  "blob": "cc790f54fb68de3e6b145010676097b32f444371",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": null,
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
  "Items/Equip/3 Stars/Titanium_Sword.psd": {
   "blob": "3b8f4c0b1bc4ab89704c87fc6a1c557ff9d2e52e",
   "links": [
@@ -20794,23 +20811,6 @@
     "name": "Fallen_Star.png",
     "path": "Types/Stars/Fallen_Star.png",
     "size": 2480
-   },
-   {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
-    "name": "Equip.png",
-    "path": "Types/Equip.png",
-    "size": 83059
-   }
-  ]
- },
- "Items/Equip/3 Stars/steam_sale.psd": {
-  "blob": "cc790f54fb68de3e6b145010676097b32f444371",
-  "links": [
-   {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
-    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
-    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
-    "size": 134581
    },
    {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
@@ -21951,17 +21951,17 @@
    }
   ]
  },
- "Items/Heal/3 Stars/Bucket_Of_Lard.psd": {
+ "Items/Heal/3 Stars/Bucket_of_Lard.psd": {
   "blob": "dbac46ce72ef89d020e5d2866842ad444d36b4d0",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -22356,35 +22356,35 @@
    }
   ]
  },
- "Items/Infliction/3 Stars/Flower_Of_Decay.psd": {
+ "Items/Infliction/3 Stars/Flower_of_Decay.psd": {
   "blob": "325815d88c750fd8858b911b22f0db009bd93b14",
   "links": [
    {
-    "drawn": "f14f2083b3ae3098648bdb203c7f5a5588c3123b",
+    "drawn": null,
     "name": "Flower_Of_Decay - desktop-wallpaper-gothic-red-and-black-rose-gothic-flower (1).jpg",
     "path": "MDW/Linked/Flower_Of_Decay - desktop-wallpaper-gothic-red-and-black-rose-gothic-flower (1).jpg",
     "size": 252672
    },
    {
-    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "drawn": null,
     "name": "Infliction.png",
     "path": "Types/Infliction.png",
     "size": 78460
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
@@ -28282,6 +28282,35 @@
    }
   ]
  },
+ "N.M.E/Chuckya.psd": {
+  "blob": "d700a2c91ba5f4365466564858e5f840c9ec2ae3",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": null,
+    "name": "chuckya - NSMBU_Fuzzy_Artwork copy 10.png",
+    "path": "MDW/Linked/chuckya - NSMBU_Fuzzy_Artwork copy 10.png",
+    "size": 378897
+   },
+   {
+    "drawn": null,
+    "name": "Mario Star.png",
+    "path": "Types/Stars/Mario Star.png",
+    "size": 523657
+   },
+   {
+    "drawn": null,
+    "name": "support.png",
+    "path": "Types/support.png",
+    "size": 632862
+   }
+  ]
+ },
  "N.M.E/Crock_Pot.psd": {
   "blob": "98373be2a59d2f062454f403b31397fec05068d2",
   "links": [
@@ -28392,35 +28421,35 @@
    }
   ]
  },
- "N.M.E/How_To_Jump.psd": {
+ "N.M.E/How_to_Jump.psd": {
   "blob": "2e23a2d3cfb51768ba5196106bd59eda18365c56",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "684e65afeeb74b7382ea73b18ee54fc434b75315",
+    "drawn": null,
     "name": "Tainted_Eden - F4YxFTxXQAABzaz.jpg",
     "path": "MDW/Linked/Tainted_Eden - F4YxFTxXQAABzaz.jpg",
     "size": 140451
    },
    {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
    },
    {
-    "drawn": "4fb6b1d8b6485fabd2b86fa08d37ff1b69a398f7",
+    "drawn": null,
     "name": "NME.png",
     "path": "Types/NME.png",
     "size": 757779
@@ -29048,35 +29077,6 @@
     "name": "NME.png",
     "path": "Types/NME.png",
     "size": 757779
-   }
-  ]
- },
- "N.M.E/chuckya.psd": {
-  "blob": "d700a2c91ba5f4365466564858e5f840c9ec2ae3",
-  "links": [
-   {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "0242770e2d1f2c0d1667a3b38f44e64f38708e3f",
-    "name": "chuckya - NSMBU_Fuzzy_Artwork copy 10.png",
-    "path": "MDW/Linked/chuckya - NSMBU_Fuzzy_Artwork copy 10.png",
-    "size": 378897
-   },
-   {
-    "drawn": "dd637fac2dfd2d7029340cac8471156b36b09a03",
-    "name": "Mario Star.png",
-    "path": "Types/Stars/Mario Star.png",
-    "size": 523657
-   },
-   {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
-    "name": "support.png",
-    "path": "Types/support.png",
-    "size": 632862
    }
   ]
  },
