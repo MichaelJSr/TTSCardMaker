@@ -3,6 +3,7 @@ Fails when: links reset to main are reported under 'Links re-pinned (changed fil
 beside the report is missing or not one 'TTS save: ...' line (UPD-2), or a card re-added to a complete deck leaves
 its old CustomDeck key orphaned in the deck (UPD-4).
 Usage: updater_report_decks.py [save.json]    (code: $AUTOCROISSANT, run by this Python)"""
+import atexit
 import json
 import os
 import re
@@ -20,9 +21,23 @@ RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 
 save = save_arg()
 work = tempfile.mkdtemp(prefix="ttsrd_")
+atexit.register(shutil.rmtree, work, ignore_errors=True)     # a failed run leaves no copy either
 failures = []
 clone = os.path.join(work, "history.git")
-shutil.copytree(SRC_CLONE, clone)
+
+
+def link_pack(src, dest):
+    """Packs hard-linked (git never rewrites one; another disk: copied), the rest copied."""
+    if os.path.basename(os.path.dirname(src)) == "pack":
+        try:
+            return os.link(src, dest)
+        except OSError:
+            pass
+    return shutil.copy2(src, dest)
+
+
+# a fetch's lock and tmp_ files can vanish mid-copy
+shutil.copytree(SRC_CLONE, clone, ignore=shutil.ignore_patterns("*.lock", "tmp_*"), copy_function=link_pack)
 local = os.path.join(work, "local")
 for path in UPDATER_INPUTS:
     os.makedirs(os.path.dirname(os.path.join(local, path)), exist_ok=True)
@@ -95,7 +110,6 @@ print("UPD-4 deck", target["GUID"], "removed key", old_key, "orphans after re-ad
 if orphans:
     failures.append(f"UPD-4: deck {target['GUID']} keeps unused CustomDeck keys {orphans}")
 
-shutil.rmtree(work, ignore_errors=True)
 for f in failures:
     print("FAIL:", f)
 sys.exit(1 if failures else 0)
