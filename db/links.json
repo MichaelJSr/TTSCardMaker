@@ -23276,8 +23276,15 @@
   ]
  },
  "Items/Support/4 Stars/Pile_Of_Swords.psd": {
-  "blob": "67dfec146a909946cc97275c347d75b4ecebf28d",
-  "links": []
+  "blob": "8cfb467af0bf9ff96a9e84d12f7568bacc89ae5f",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Fallen_Star.png",
+    "path": "Types/Stars/Fallen_Star.png",
+    "size": 2480
+   }
+  ]
  },
  "MDW/Assets/Holders/Active.psd": {
   "blob": "130963379a1f9f8c36c1bb7f8567132f91e9f153",
