@@ -942,6 +942,7 @@ function openCard(id, showDetails = false) {
   if (c.hv && !c.history) nearby.on(["#card-changes", "#history-slot"], () => loadHistory().then(() => { fillHistory(); fillBalance(); heavyPaths(); }, () => {}));
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) nearby.on(["#card-changes"], () => loadHistory().then(() => { fillBalance(); heavyPaths(); }, () => {}));   // its original's texts
   else if (c.history || balanceOf(c).history) nearby.on(["#card-changes", "#history-slot"], heavyPaths);   // its texts in already
+  else if (hasBalance(c)) nearby.on(["#card-changes"], heavyPaths);                                      // stats changes only
   if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
   if (c.iv && !S.versions) { const box = $(".ver-box", modal);   // versions.json once the box is open (closed on a phone)
     if (!box || box.open) fillVersions(); else box.addEventListener("toggle", fillVersions, { once: true }); }
