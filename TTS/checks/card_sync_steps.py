@@ -1275,7 +1275,7 @@ def chain_cases(flow: dict) -> None:
               '  */contents/db/manifest.json*) [ -n "$FAKE_MANIFEST" ] || exit 1; echo "$FAKE_MANIFEST" ;;\n'
               '  */contents/db/bake-records.json*) [ -n "$FAKE_MERGED" ] || exit 1; echo "$FAKE_MERGED" ;;\n'
               '  */artifacts*) echo "$FAKE_ARTIFACTS" ;;\n'
-              '  */jobs) id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$path"); jq -r "$q" "$FAKE_JOBS/$id.json" ;;\n'
+              '  */jobs) [[ $path =~ /runs/([0-9]+)/jobs ]]; jq -r "$q" "$FAKE_JOBS/${BASH_REMATCH[1]}.json" ;;\n'
               'esac\n')
         write(os.path.join(fake, "sleep"), "#!/bin/bash\n")
         for name in ("gh", "sleep"):
@@ -1384,6 +1384,15 @@ def guard_cases(flow: dict) -> None:
               "guard events: found by the guarded push, the other commit's passed over, a missing one warned" + ("" if code == 0 else f"\n{text}"))
 
 
+def as_functions(fake: str, *names: str) -> dict:
+    """The fake gh (and names) as exported bash functions: a look costs no process."""
+    out = {}
+    for name in ("gh", *names):
+        body = open(os.path.join(fake, name)).read().split("\n", 1)[1]
+        out[f"BASH_FUNC_{name}%%"] = "() {\n" + (re.sub(r"\bexit\b", "return", body).strip() or ":") + "\n}"
+    return out
+
+
 def lane_cases(flow: dict) -> None:
     """One main lane per guarded push (P-2): the jobs' ifs; Guards' fixes on faked guards runs; card-guards.yml's side
     (the step names Card sync reads, Plan's fixes, Follow up's dispatch with fixes, landed or not)."""
@@ -1428,7 +1437,7 @@ def lane_cases(flow: dict) -> None:
               '[ -n "$FAKE_FAIL" ] && exit 1\n'
               'case $path in\n'
               '  */card-guards.yml/runs*) jq -r "$q" <<< "$FAKE_GUARDS" ;;\n'
-              '  */jobs) id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$path"); jq -r "$q" "$FAKE_JOBS/$id.json" ;;\n'
+              '  */jobs) [[ $path =~ /runs/([0-9]+)/jobs ]]; jq -r "$q" "$FAKE_JOBS/${BASH_REMATCH[1]}.json" ;;\n'
               '  */dispatches) printf %s "$FAKE_DISPATCH" ;;\n'
               'esac\n')
         write(os.path.join(fake, "sleep"), "#!/bin/bash\n")
@@ -1469,7 +1478,7 @@ def lane_cases(flow: dict) -> None:
             env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": want_sha, "FAKE_JOBS": jobs_dir,
                    "FAKE_GUARDS": json.dumps({"workflow_runs": runs}), "GITHUB_SERVER_URL": "https://github.com",
                    "FIXES": mark["env"]["FIXES"], "FOLLOW": mark["env"]["FOLLOW"]}
-            code, text, out = run_step(timer, "guards", tmp, env, tmp)
+            code, text, out = run_step(timer, "guards", tmp, {**env, **as_functions(fake, "sleep")}, tmp)
             asked = open(calls).read() if os.path.exists(calls) else ""
             ok = code == 0 and out.get("run", "") == want and ((f"head_sha={want_sha}" in asked) == bool(want_sha))
             ok = ok and (asked.count("/runs/57/jobs") > 50) == any(r["id"] == 57 for r in runs)     # the wait asked its check job again and again
@@ -1486,20 +1495,20 @@ def lane_cases(flow: dict) -> None:
             write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": doc}))
         for rid, seconds, ends, what in ((61, "", True, "its check job at Landed (Land and the uploads done)"),
                                          (62, "", True, "its check job ended before Landed"),
-                                         (63, "3598", False, "Land still running: 15 s looks, then the 60-minute cap"),
-                                         (64, "3598", False, "another job's Landed: not it")):
+                                         (63, "3525", False, "Land still running: 15 s looks, then the 60-minute cap"),
+                                         (64, "3525", False, "another job's Landed: not it")):
             if os.path.exists(calls):
                 os.remove(calls)
             env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": "", "RUN": str(rid), "FAKE_JOBS": jobs_dir,
                    "GITHUB_SERVER_URL": "https://github.com", "LANDED": mark["env"]["LANDED"],
                    **({"SECONDS": seconds} if seconds else {})}
-            write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" >> "{calls}.naps"\n')
-            code, text, out = run_step(timer, "guards", tmp, env, tmp)
+            write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" >> "{calls}.naps"; SECONDS=$((SECONDS + $1))\n')  # a function: the clock moves
+            code, text, out = run_step(timer, "guards", tmp, {**env, **as_functions(fake, "sleep")}, tmp)
             asked = open(calls).read() if os.path.exists(calls) else ""
             naps = open(calls + ".naps").read().split() if os.path.exists(calls + ".naps") else []
             os.remove(calls + ".naps") if naps else None
             ok = code == 0 and "run" not in out and asked.count(f"/runs/{rid}/jobs") >= 1 and "card-guards.yml/runs" not in asked
-            ok = ok and (naps == [] if ends else (naps and set(naps) == {"15"} and "not past Land in 60 minutes" in text))
+            ok = ok and (naps == [] if ends else (naps == ["15"] * 5 and "not past Land in 60 minutes" in text))
             check(ok, f"Guards' fixes, a follow-up: {what} -> goes on" + ("" if ok else f"\n{text}\n{asked}\n{naps}"))
         write(os.path.join(fake, "sleep"), "#!/bin/bash\n")
         gnames = [s.get("name") for s in guards["jobs"]["check"]["steps"]]
