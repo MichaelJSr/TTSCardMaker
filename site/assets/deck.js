@@ -17,12 +17,13 @@ export function loadDecks() {
   if (!decks.length) decks = [{ id: uid(), name: "My hand", cards: [], field: null }];
   return decks;
 }
-export function saveDecks(decks) { localStorage.setItem("decks", JSON.stringify(decks)); }
+export function saveDecks(decks) { try { localStorage.setItem("decks", JSON.stringify(decks)); } catch { /* storage blocked: this page only */ } }
+let shownId = null;                                     // storage blocked: the hand picked on this page
 export function activeDeck(decks) {
-  const id = localStorage.getItem("activeDeck");
+  let id = shownId; try { id = localStorage.getItem("activeDeck"); } catch { /* storage blocked */ }
   return decks.find(d => d.id === id) || decks[0];
 }
-export function setActive(deck) { localStorage.setItem("activeDeck", deck.id); }
+export function setActive(deck) { shownId = deck.id; try { localStorage.setItem("activeDeck", deck.id); } catch { /* storage blocked */ } }
 /** A renamed card's old id as its new one (cards.json moved), each card once. */
 export function canon(d, byId) {
   const id = x => byId.get(x)?.id || x;

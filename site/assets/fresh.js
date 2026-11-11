@@ -35,8 +35,9 @@ async function check() {
   if (!PAGE || document.visibilityState !== "visible") return;
   const live = await liveStamp();
   if (!live || live === PAGE) return;
-  if (busy() || sessionStorage.getItem(TRIED) === live) { offer(); return; }
-  sessionStorage.setItem(TRIED, live);
+  let tried = live; try { tried = sessionStorage.getItem(TRIED); } catch { /* storage blocked: offer, never a reload loop */ }
+  if (busy() || tried === live) { offer(); return; }
+  try { sessionStorage.setItem(TRIED, live); } catch { offer(); return; }
   reload();
 }
 function tick() {

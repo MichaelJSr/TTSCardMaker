@@ -253,6 +253,7 @@ const IDLE = { me: null, touches: () => false, leave() {}, deckOf: () => null, p
 let editor = IDLE, previews = null, inline = null, tray = null, editorP = null;
 const editing = () => !!editor.me;                      // edit mode = signed in: the card dialog and the grid edit in place
 const kept = k => { try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ""; } catch { return ""; } };
+const pref = k => { try { return localStorage.getItem(k); } catch { return null; } };   // storage blocked: the defaults
 const holds = s => { try { const v = JSON.parse(s); return !!v && Object.values(v).some(x => x && (typeof x !== "object" || Object.keys(x).length)); } catch { return !!s; } };
 const wantsEditor = () => !!(kept(SEALED) || kept("edit-sent") || kept("edit-show-hidden")) || holds(kept("edit-stage")) || holds(kept("card-previews"));
 function loadEditor(say = false) {                       // say: "Loading…" while it comes (a click)
@@ -547,7 +548,7 @@ function renderCards(r) {
   const fontIn = vals(p, "font"), fontOut = vals(p, "xfont"), fontCounts = S.fontUse ? count(base, fontsOf) : null;   // the Font filter
   for (const f of [...fontIn, ...fontOut]) if (!S.fontKept.includes(f)) S.fontKept.push(f);   // a font off stays listed (owner 10-26), not in the address
   const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
-  const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
+  const view_ = p.get("view") || pref("view") || "grid", size = p.get("size") || pref("size") || "m";
   const handling = csv(p, "flags").some(f => HANDLING.some(([k]) => k === f));   // Needs handling: a list with each card's flags
   const morgue = !!p.get("morgue"), edits = editing() && !morgue;      // the Morgue's cards: nothing to edit or drag
   const morgueN = S.morgue.length ? filterCards(new URLSearchParams([...(p.get("q") ? [["q", p.get("q")]] : []), ["morgue", "1"]]), { facets: false }).length : 0;
@@ -1707,7 +1708,7 @@ const actions = {
   "sort-by": el => { const p = parseHash().params; setParams({ sort: el.dataset.key, dir: p.get("sort") === el.dataset.key && p.get("dir") !== "asc" ? "asc" : "" }); },
   "set-pref": el => {
     if (el.dataset.key === "view" && el.dataset.value === "table") { S.selected.clear(); S.selecting = false; }   // the table shows no selection
-    localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value });
+    try { localStorage.setItem(el.dataset.key, el.dataset.value); } catch { /* storage blocked: the address keeps it */ } setParams({ [el.dataset.key]: el.dataset.value });
   },
   "random-from-list": () => { const l = S.list.length ? S.list : S.cards; location.hash = `#/card/${l[Math.floor(Math.random() * l.length)].id}`; },
   "deck-toggle": el => toggleDeck(el.dataset.id),
@@ -1831,7 +1832,7 @@ $("#search-form").addEventListener("submit", e => { e.preventDefault(); if (S.re
 $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax</h3><p class="muted">The bot's /query_ability syntax, plus names and aliases.</p>
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
-$("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); tint(); });
+$("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; try { localStorage.setItem("theme", t); } catch { /* this page only */ } if (parseHash().name === "stats") renderView(parseHash(), location.hash); tint(); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
   ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
   ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box (the first nine)"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
