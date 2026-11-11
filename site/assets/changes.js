@@ -1,5 +1,6 @@
 // The Changes page's Changelog, Archive and Database edits tabs (app.js renderChanges has the tab row and the other tabs), from
-// data/changelog.json (build_site.py: the card sync's events, the edit batches from git history, the archived cards).
+// data/changelog.json, archive.json and edits.json (build_site.py changelog_files: the card sync's events, the archived cards,
+// the edit events and the edit batches from git history).
 // Events are grouped by push as the Discord posts are
 // (AutoCroissant commands/changelog.py: messages(), title_of(), link_of(), SECTIONS). DOM-free: every function returns
 // HTML, every string goes through esc.

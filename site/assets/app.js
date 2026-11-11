@@ -34,6 +34,7 @@ const S = {
   distPage: {},                                            // the Stats distributions' page per stat (this session)
   season: "",                                              // the Stats SpongeBob chart's picked season (this session)
   seriesMode: "",                                          // the Stats series chart's Series / Subseries (this session)
+  changelog: {},                                           // the Changes tabs' files by name (loadChangelog)
   selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
   toTop: false,                                            // a Stats chart link was followed: the grid opens at its top
   notPick: new Set(),                                      // series, subseries, author: ≠ pressed with nothing picked yet
@@ -129,9 +130,9 @@ const loadProfile = () => (profileP ||= (early("profile.js"), import("./profile.
 // balance analytics (data/analytics.json, with charts.js): the Stats page's Balance section and the cards' Balance blocks
 let analyticsP = null;
 const loadAnalytics = () => (analyticsP ||= Promise.all([getJson("analytics.json"), loadCharts()]).then(([d]) => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
-// the Changes page's Changelog and Database edits tabs (data/changelog.json, changes.js)
-let changelogP = null;
-const loadChangelog = () => (changelogP ||= getJson("changelog.json").then(d => { S.changelog = d; }).catch(e => { changelogP = null; throw e; }));
+// the Changes page's Changelog, Archive and Database edits tabs, each its own file (NEEDS; build_site changelog_files, changes.js)
+const changelogP = {};
+const loadChangelog = file => (changelogP[file] ||= getJson(file).then(d => { S.changelog[file] = d; }).catch(e => { delete changelogP[file]; throw e; }));
 let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
 const loadContrib = () => (contribP ||= Promise.all([getJson("contributions.json"), loadProfile()]).then(([d]) => { S.contrib = d; S.titles = Pf.titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
@@ -1331,7 +1332,7 @@ function distPage(panel, step) {          // a stat distribution's pager: the ne
 // (a link to one survives a refresh), and each shows its own sections only
 const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"],
   ["parser", "Parser notes"]];
-const NEEDS = { "": "history", changelog: "changelog", archive: "changelog", edits: "changelog" };   // the data a tab loads first
+const NEEDS = { "": "history", changelog: "changelog.json", archive: "archive.json", edits: "edits.json" };   // the data a tab loads first
 function renderChanges(r = parseHash(), held = null) {   // held: the tab a loading page focused, for the loaded redraw
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
@@ -1344,9 +1345,10 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   };
   const here = () => { const now = parseHash(); return now.name === "changes" && (now.arg || "") === (r.arg || "") ? now : null; };
   const again = () => { const now = here(); if (now) renderChanges(now, held); };
-  if (NEEDS[tab] === "changelog" && !S.changelog) {
+  const file = NEEDS[tab] !== "history" && NEEDS[tab], C = file && S.changelog[file];
+  if (file && !C) {
     page(`<div class="loading">Loading the changelog…</div>`);
-    loadChangelog().then(again, e => { if (here()) page(failBox("the changelog", e)); });
+    loadChangelog(file).then(again, e => { if (here()) page(failBox("the changelog", e)); });
     return;
   }
   if (NEEDS[tab] === "history" && (!historyP || !S.history)) {
@@ -1355,9 +1357,9 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
     return;
   }
   const updated = `<p class="muted">Site updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific), the last build that changed it, from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
-  if (tab === "changelog") { page(changes.changelogHtml(S.changelog, r.params)); return; }
-  if (tab === "archive") { page(changes.archiveHtml(S.changelog?.archived || [], S.changelog?.repo, r.params)); return; }
-  if (tab === "edits") { page(changes.editsHtml(S.changelog, r.params)); return; }
+  if (tab === "changelog") { page(changes.changelogHtml(C, r.params)); return; }
+  if (tab === "archive") { page(changes.archiveHtml(C.archived || [], C.repo, r.params)); return; }
+  if (tab === "edits") { page(changes.editsHtml(C, r.params)); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
   const item = (c, diff = true) => {          // diff: the text change since the last earlier text
     const last = diff && c.history && c.history.length ? c.history[c.history.length - 1] : null;

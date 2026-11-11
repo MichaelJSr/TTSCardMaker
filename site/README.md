@@ -222,7 +222,7 @@ where links fail). The edit mock-up's fonts get WOFF2 copies in `fonts/` (every 
 computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
-People tab is opened; `changelog.json` when the Changelog, Archive or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
+People tab is opened; `changelog.json`, `archive.json` or `edits.json` when the Changelog, Archive or Database edits tab is opened (each tab its own); `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened. `tts.json` is the TTS save's: its global script
 (`TTS/Global.lua`) fetches it for the Card details, Find a card and Rules buttons (`build_site.py` `tts_details`). Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The Action ships the scripts as

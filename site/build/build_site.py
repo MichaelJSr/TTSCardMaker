@@ -60,8 +60,8 @@ original is a duplicate (the card data's duplicate_of). MDW/The Morgue's retired
 cards.json morgue, picture only, never a live card (morgue_cards).
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
-data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's Details dropdown),
+data/contributions.json, data/decks.json, data/versions.json, data/analytics.json, data/changelog.json, data/archive.json and data/edits.json (loaded when the rulebook, a card's text or image history, the
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's Details dropdown),
 data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
@@ -2921,7 +2921,7 @@ def card_revisions(found, by_png, commits, people, by_login, row_of=None):
     return out
 
 
-# ---- changelog (data/changelog.json: the Changes page's Changelog and Database edits tabs) ---------------------------
+# ---- changelog (data/changelog.json, archive.json, edits.json: the Changes page's Changelog, Archive, Database edits)
 # The card sync's events come from CARD_DATA_DIR's changelog/ (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md §12.1);
 # without it the tabs show no events. The publish batches and the archived cards: git history and db/'s old_stats.
 CHANGELOG_DAYS = 180
@@ -2934,6 +2934,16 @@ PUSH_KEYS = ("after", "before", "by", "at")
 AUTHOR_PATHS = {AUTHORS_PATH, "MDW/Card Authors.txt"}   # before the 2026-10-20 move too
 WEBSITE_SUBJECT = "Website edit"              # edit.js publish(): "Website edit: …" / "Website edits: n changes"
 BATCH_LINES = 60                              # lines kept per edit batch (Card Authors.txt's first commit credited 813 cards); the rest is `more`
+EDIT_EVENTS = ("edited", "authors")           # the Database edits tab's events (changes.js EDIT_KINDS)
+
+
+def changelog_files(changelog):
+    """One file per Changes tab: changelog.json (every event), archive.json (the archived cards), edits.json (the edit
+    events and batches); the new two carry no build facts (VOLATILE)"""
+    head = {k: changelog[k] for k in ("available", "days", "repo")}
+    return {"changelog.json": {k: v for k, v in changelog.items() if k not in ("archived", "edits")},
+            "archive.json": {**head, "archived": changelog["archived"]},
+            "edits.json": {**head, "events": [e for e in changelog["events"] if e.get("kind") in EDIT_EVENTS], "edits": changelog["edits"]}}
 
 
 def read_changelog(folder):
@@ -4978,7 +4988,7 @@ def main():
     cover_sizes, cover_files = cover_copies(rule_images)
     files = {"cards.json": data, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
-             "analytics.json": balance, "changelog.json": changelog, CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
+             "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
