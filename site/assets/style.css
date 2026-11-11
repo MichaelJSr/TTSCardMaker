@@ -777,15 +777,10 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .tile .flag.refused, .fact.refused { background: #7c1d1d; color: #ffd6d6; }
 .data td .fact, .panel li .fact, .erow label .fact { margin-left: 6px; font-size: 11px; }
 .note { background: var(--surface-2); border-left: 3px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
-/* a card's flags (flags.js), near the top of its page */
-.card-flags { display: grid; gap: 4px; margin: 8px 0 10px; }
-.card-flag { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 5px 12px; border-radius: 8px; border-left: 3px solid var(--warn);
-  background: color-mix(in srgb, var(--warn) 16%, var(--surface-2)); font-size: 14px; }
-.flag-why, .flag-note { min-width: 0; color: var(--ink-2); overflow-wrap: anywhere; }
-.flag-why[data-empty] { color: var(--muted); }
-.flag-why:has(input) { flex: 1 1 0; min-width: 12ch; }
-.flag-clear { margin-left: auto; align-self: center; padding: 0 6px; font-size: 12px; }
-@media (pointer: coarse) { .flag-clear { padding: 6px 10px; } }
+/* a card's flags as labels (flags.js): the Needs handling list; never on its page (owner 11-11) */
+.card-flags { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 10px; }
+.card-flag { padding: 2px 10px; border-radius: 8px; border-left: 3px solid var(--warn);
+  background: color-mix(in srgb, var(--warn) 16%, var(--surface-2)); font-size: 13px; }
 .needs-link { font-size: 13px; white-space: nowrap; }
 .needs-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .needs-list li { display: flex; gap: 12px; align-items: flex-start; padding: 6px; border-radius: 8px; background: var(--panel); cursor: pointer; }

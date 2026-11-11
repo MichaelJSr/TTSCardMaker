@@ -548,7 +548,7 @@ function renderCards(r) {
   for (const f of [...fontIn, ...fontOut]) if (!S.fontKept.includes(f)) S.fontKept.push(f);   // a font off stays listed (owner 10-26), not in the address
   const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
-  const handling = csv(p, "flags").some(f => HANDLING.some(([k]) => k === f));   // Needs handling: a list with each card's notes
+  const handling = csv(p, "flags").some(f => HANDLING.some(([k]) => k === f));   // Needs handling: a list with each card's flags
   const morgue = !!p.get("morgue"), edits = editing() && !morgue;      // the Morgue's cards: nothing to edit or drag
   const morgueN = S.morgue.length ? filterCards(new URLSearchParams([...(p.get("q") ? [["q", p.get("q")]] : []), ["morgue", "1"]]), { facets: false }).length : 0;
   const active = [];
@@ -819,7 +819,7 @@ function fillTable(tbody) {
   };
   if (rest.length) setTimeout(step);
 }
-// the Needs handling view: a list to scan, each card's flags and notes beside it
+// the Needs handling view: a list to scan, each card's flags beside it (labels: flags only filter, owner 11-11)
 const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="">` : ""}
   <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
@@ -890,7 +890,6 @@ function openCard(id, showDetails = false) {
         <div id="versions-slot">${versionsHtml(c, verOpen)}</div></div>
       <div>
         <h2>${esc(c.name)}</h2>
-        ${flagsHtml(c)}
         <div class="facts">
           ${c.morgue ? `<a class="fact" href="#/cards?morgue=1" data-tip="${esc(`Retired: in MDW/The Morgue${c.retired ? ` since ${date(c.retired)}` : ""}, out of play`)}">The Morgue</a>` : ""}
           ${c.morgue && c.type === "unknown" ? "" : `<a class="fact" href="#/cards?${scope}kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>`}

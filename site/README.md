@@ -238,21 +238,24 @@ downloaded or looks truncated, or if many images fail.
 
 ## Flags
 
-A card can carry three flags, each with a note: **Needs doing by hand**, **Special stat bars** and **Names differ**. They
-replace the problem cards CSV, and they are automatic: the bot's checks (AutoCroissant `commands/card_checks.py`, the Card
-checks workflow) set and clear them, each with a short note on what the issue is. `hand`: the picture says other than the
-data, old-style bars, a website edit that cannot bake. `bars`: bars that do not read like the template. `name`: the
-website's name differs from the printed title, or the printed title from the file name (exact text, underscores as
-spaces; never on a PSD's second picture), worded again at every run. The checks read only PSDs without a result, so a
-fixed card clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is told to Discord
-or a commit, and nothing is blocked. The card page shows the notes under the name; **Needs handling** at the bottom of the
-Cards filters opens a list of the cards with their notes (All, or one flag; `flags=flagged`, `flags=hand`, `flags=bars`,
-`flags=name`, excluded with `xflags=`; on a phone a link in the toolbar too); search `flag:hand`, `flag:bars`,
-`flag:name`, `flag:any`.
+A card can carry three flags: **Needs doing by hand**, **Special stat bars** and **Names differ**. They replace the problem
+cards CSV, and they are automatic: the bot's checks (AutoCroissant `commands/card_checks.py`, the Card checks workflow) set
+and clear them. `hand`: the picture says other than the data, old-style bars, a website edit that cannot bake. `bars`:
+bars that do not read like the template. `name`: the website's name differs from the printed title (exact), or the
+printed title's file form from the file name (the file-name convention, owner 2026-11-11: the title with `. : [ ] ? * "
+< > | / \` left out, spaces as underscores, small words such as of, the, to lowercase but the first and the last; their
+case alone never counts; never on a PSD's second picture). The checks read only PSDs without a result, so a fixed card
+clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is told to Discord or a
+commit, and nothing is blocked. Flags only filter (owner 2026-11-11): a card's page shows none; **Needs handling** at the
+bottom of the Cards filters opens a list of the cards with their flags' labels (All, or one flag; `flags=flagged`,
+`flags=hand`, `flags=bars`, `flags=name`, excluded with `xflags=`; on a phone a link in the toolbar too); search
+`flag:hand`, `flag:bars`, `flag:name`, `flag:any`.
 
-Any editor can add one by hand too: `+ needs doing by hand` on the card page, typing what the issue is (it needs a reason),
-click the reason, ✕ to clear, or Flags in All fields. Those go through the batch and Publish, live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": "",
-"name": "", "psd": "1a2b3c4d"}`, the PSD blob they were set on), are never baked, and go once the PSD changes and the checks are clean.
+Any editor can add one by hand too: Flags in All fields (a hand flag says what the issue is). Those go through the batch
+and Publish, live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": "", "name": "", "psd": "1a2b3c4d"}`,
+the PSD blob they were set on), are never baked, and go once the PSD changes and the checks are clean. Names that differ
+on purpose (DooPliss, OMORI): **Names differ on purpose** under Checks in All fields stores the three names
+(`"names_ok": ["website name", "printed title", "File_name"]`); the name flag stays off until one of them changes.
 
 ## Editing
 

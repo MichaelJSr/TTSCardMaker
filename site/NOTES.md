@@ -1576,3 +1576,23 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   step's `shown()` reads it too; a person's flag goes only once `name` is clean as well.
 - **Site**: `CARD_FLAGS` "Names differ" (chip, `flags=name`, `flag:name`); `+ names differ` flags at once, as bars;
   `merge_flags(..., second)` and the duplicates' copy leave it out.
+
+
+## 53. Names (2026-11-11, owner: file-name convention, renames, an "intended" marker, "flags only filter")
+- **Rule**: the name flag's file check compares the printed title's file form (the bot's `card_models.file_stem`: `. : [ ]
+  ? * " < > | / \` left out, spaces as underscores, small words lowercase but the first and the last) with the file
+  name, small words' case aside (`small_case`); the website name against the printed title stays exact. Printed titles
+  are never changed.
+- **Renames**: one silent batch (`Card-sweep: rename`, Renamed trailers) through the bake's rename followers
+  (`card_bake.follow_renames`: Card Edits keys, the old name an alias unless only its case changed, Card Authors.txt,
+  Card Creation Dates.json, Card Ratings.json, TTS/decks.json; the save at Card sync). MDW/Linked files keep their names
+  (named after their first user; a PSD's link records name them). The guards rename a pushed card PSD or PNG whose name
+  holds one of those characters the same way (`card_guards.unsafe_renames`, silent). A sweep commit's renamed events
+  are silent (`card_data.mark_sweeps`).
+- **Intended**: Card Edits `names_ok` = [website name, printed title, file stem] as marked (flags.js `namesNow`,
+  `namesOk`); the bot's `card_checks.name_note` leaves the flag off while they hold. All fields → Checks → "Names differ
+  on purpose", shown for a card the flag names or one marked; a stale mark stays unless ticked again.
+- **No notes** (§46-47 superseded there): a card's page shows no flag line, note or reason, and edit mode has no
+  in-place flags (`+ needs doing by hand`, `flag:<key>`, ✕ gone); `flagsHtml` is the labels alone (Needs handling; the
+  Edit dialog's preview shows none, as the page). People's flags are set in All fields.
+

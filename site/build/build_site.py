@@ -175,7 +175,7 @@ LOGINS_DIR = "site/logins"                    # <login>.json: a token sealed wit
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "art": list, "ability_art": str,
                "aliases": list, "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list,
-               "flags": dict, "colors": list}
+               "flags": dict, "colors": list, "names_ok": list}
 EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd", "art", "ability_art"}      # may be null
 # artwork sources: art, a list of free text (one string in older entries), each entry its own (a duplicate's never its
 # original's); the retired ability_art is read as the last source (art_list); the bot's card_edits.ART_MAX
@@ -183,6 +183,9 @@ ART_FIELDS, ART_MAX = ("art", "ability_art"), 500
 # what a card needs from a developer: {"hand": "reason", "bars": "", "name": "", "psd": "1a2b3c4d"}, each reason optional,
 # psd the PSD blob it was set on (flags.js, the bot's card_edits)
 FLAGS, FLAG_MAX = ("hand", "bars", "name"), 300
+# the name flag's "intended" (owner 2026-11-11): [website name, printed title, file stem] as someone marked them; the
+# checks leave the flag off until one changes (flags.js namesOk, the bot's card_edits.NAMES_OK)
+NAMES_OK = "names_ok"
 # text colours: [{"field", "phrase"?, "color": "#rrggbb"}], a phrase as the effect layers' ("word#n"; none: the whole
 # field); the note's never bake (textcolor.js, the bot's card_edits.valid_colors)
 COLOR_FIELDS = COLOR_PRINTED = ("name", "ability")   # the card image's alone (owner 2026-11-11: never the site's text)
@@ -1805,6 +1808,8 @@ def valid_edit(field, value):
     if field == "flags":
         return isinstance(value, dict) and any(k in FLAGS for k in value) and all(
             bool(HEX8.match(v)) if k == "psd" and isinstance(v, str) else k in FLAGS and isinstance(v, str) and len(v) <= FLAG_MAX for k, v in value.items())
+    if field == NAMES_OK:
+        return isinstance(value, list) and len(value) == 3 and all(isinstance(x, str) and 0 < len(x) <= FLAG_MAX for x in value)
     if kind is list:
         return isinstance(value, list) and all(isinstance(x, str) for x in value)
     return isinstance(value, kind)

@@ -12,7 +12,7 @@ import { soon } from "./fresh.js";
 import * as P from "./parts.js";
 import { date, dayOf, pictureNumber } from "./history.js";
 import { artList, artError, artLabel } from "./art.js";
-import { CARD_FLAGS, cleanFlags, flagError, flagsChange, flagsText, ownFlag } from "./flags.js";
+import { CARD_FLAGS, cleanFlags, flagError, flagsChange, flagsText, namesNow, namesOk, ownFlag } from "./flags.js";
 import { typeAttrs, pressToggle, readToggles, setToggles } from "./palette.js";
 import * as TC from "./textcolor.js";
 
@@ -22,18 +22,18 @@ const K = { stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", 
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
   atk: "int", spd: "int", ability: "str", parts: "parts", colors: "colors", note: "str", art: "sources", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
-  creatures: "creatures", flags: "flags" };
+  creatures: "creatures", flags: "flags", names_ok: "names" };
 const ORDER = Object.keys(FIELDS);
 const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the bot's _by (changes.js BOT)
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", colors: "Text colours", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases",
-  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures", flags: "Flags",
+  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures", flags: "Flags", names_ok: "Names differ on purpose",
   "rate-favorability": "Favorability", "rate-power": "Power" };
 // art: the artwork sources, a list (art.js; ability_art: the retired second field, read as the last source, never offered)
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\", \"name\": \"\"}, never baked. colors: the card image's text colours (baked; never the website's text), [{\"field\": \"ability\", \"phrase\": \"Burning\", \"color\": \"#ff7a1a\"}], on the name or the ability, a phrase as the effect layers' (\"word#n\" the nth; none: the whole field). Read by the website and the card sync.";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\", \"name\": \"\"}, never baked. names_ok: the website name, printed title and file name as someone marked them differing on purpose, [\"site\", \"printed\", \"File_name\"]; the name flag stays off until one changes. colors: the card image's text colours (baked; never the website's text), [{\"field\": \"ability\", \"phrase\": \"Burning\", \"color\": \"#ff7a1a\"}], on the name or the ability, a phrase as the effect layers' (\"word#n\" the nth; none: the whole field). Read by the website and the card sync.";
 // true beside a name: the bake renames the card's files to it (owner 2026-10-25; build_site.py RENAME_KEY, the bot's card_edits.RENAME)
 export const RENAME_KEY = "_rename", RENAME_LABEL = "Also rename the card's files";
 /** An entry's `_rename` after an op: ticked or unticked (op.rename), and gone without a name or with a website-only one. */
@@ -907,6 +907,7 @@ export function createEditor(app) {
         </fieldset>
         <fieldset><legend>Checks</legend>
           ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 20 is intended</label>`)}
+          ${!c.dup && (c.checks?.name || c.names_ok) ? row("names_ok", `<label class="check"><input id="ef-names_ok" type="checkbox"${namesOk(c, b) ? " checked" : ""}> the website name, printed title and file name differ on purpose</label>`) : ""}
           ${c.problems?.length || c.problems_ok ? row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`) : ""}
         </fieldset>
         <fieldset${admin ? "" : " disabled"}><legend>Admin${admin ? "" : " (admins only)"}</legend>
@@ -969,6 +970,7 @@ export function createEditor(app) {
       colors: () => { let v = null; try { v = JSON.parse(f("colors").value || "null"); } catch { /* typed by nobody */ } return TC.tidyColors(v); },
       flags: () => { const v = cleanFlags({ ...Object.fromEntries(CARD_FLAGS.filter(([k]) => f(`flag-${k}`).checked).map(([k]) => [k, f(`flag:${k}`).value])), psd: c.blob }); error ||= flagError(v); return flagsChange(c.flags, v) ? v : c.flags ?? null; },   // unchanged: its PSD stays the one it was set on
       hidden: () => f("hidden").checked, allow_high_stats: () => f("allow_high_stats").checked, problems_ok: () => f("problems_ok").checked,
+      names_ok: () => (f("names_ok").checked ? namesNow(c, b, f("name")?.value.trim() || b.name) : namesOk(c, b) ? null : c.names_ok ?? null),   // a stale one stays unless ticked
     };
     const want = Object.fromEntries(Object.entries(all).filter(([k]) => f(k === "types" ? "types" : k)).map(([k, get]) => [k, get()]));
     const box = document.getElementById("ef-creatures-box");
