@@ -97,7 +97,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   one. Card sync's main lane prints them to `TTS/Rulebook/Rulebook.pdf` (real text: searchable, selectable, bookmarks;
   `pages.json` keeps each page's pixel hash so it is printed again only when a page changes; AutoCroissant
   `commands.rulebook_pages`, once the website shows main's chapters, pictures, web fonts, icons and code: it waits up to 10
-  minutes for their deploy, else, or when the step fails, the schedule's next lane prints it), and the save's Rulebooks bag holds it as one PDF
+  minutes for their deploy, else, or when the step fails, the schedule's next lane prints it, once), and the save's Rulebooks bag holds it as one PDF
   object (the Photoshop pages are out of the save since 10-30; their files are in `MDW/Old Rules/Rulebook`). The contents' PDF button opens
   it. A rulebook push starts Card sync (the bot's `db/rulebook.json` and the PDF at once).
   A chapter titled `# Title {.web}` is on the website only: the TTS pages, data/tts.json, game.txt and the bot's

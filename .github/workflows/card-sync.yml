@@ -952,11 +952,11 @@ jobs:
       - *newest
 
       # Go for a push, a dispatch or a retry; the schedule's and a chained run's when a card input or
-      # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished (one
-      # whose rulebook PDF was not drawn passed over: UNDRAWN), or none of the last 30 runs did; else (g) a
-      # website edit the bake put off (capped, main moved): the Pending edits step; else (h) linked pictures not redrawn
-      # yet: the Linked due step. GO, EDITS and LINKED in the env. Skipped when the guards hold a push's lane (the
-      # schedule and the failure streak pass over such a lane).
+      # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished (the
+      # newest passed over when its rulebook PDF was not drawn, UNDRAWN, but not the one before it: a lag that lasts costs
+      # one extra lane), or none of the last 30 runs did; else (g) a website edit the bake put off (capped, main moved):
+      # the Pending edits step; else (h) linked pictures not redrawn yet: the Linked due step. GO, EDITS and LINKED in the
+      # env. Skipped when the guards hold a push's lane (the schedule and the failure streak pass over such a lane).
       - name: Gate
         id: gate
         if: ${{ !steps.guards.outputs.run }}
@@ -980,16 +980,18 @@ jobs:
           case $event in
             push) why+=("a push") ;;
             schedule)
-              synced=""
+              synced="" undrawn=""
               if runs=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --status completed --limit 30 \
                   --json databaseId,headSha,displayTitle \
                   --jq '.[] | select(.displayTitle != "Card sync (dry run)") | "\(.databaseId) \(.headSha)"'); then
                 while read -r id sha; do
                   [ -n "$id" ] || continue
+                  # 1: its lane finished; 2: finished, its PDF not drawn; 0: neither
                   n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[] | select(.name == \"$LANE\"
-                    and .conclusion == \"success\" and any(.steps[]?; .name == \"Gate\" and .conclusion == \"success\")
-                    and all(.steps[]?; .name != \"$UNDRAWN\" or .conclusion == \"skipped\"))] | length") || n=0
-                  if [ "${n:-0}" -gt 0 ]; then synced=$sha; break; fi
+                    and .conclusion == \"success\" and any(.steps[]?; .name == \"Gate\" and .conclusion == \"success\"))
+                    | if any(.steps[]?; .name == \"$UNDRAWN\" and .conclusion != \"skipped\") then 2 else 1 end] | min // 0") || n=0
+                  if [ "${n:-0}" = 1 ] || { [ "${n:-0}" = 2 ] && [ -n "$undrawn" ]; }; then synced=$sha; break; fi
+                  if [ "${n:-0}" = 2 ]; then undrawn=$sha; fi
                 done <<< "$runs"
               fi
               if [ -z "$synced" ] || ! git cat-file -e "$synced^{commit}" 2> /dev/null; then
@@ -1198,7 +1200,7 @@ jobs:
 
       # The PDF not drawn: the website lagged past its wait (a deploy late or failed, a font's older CDN copy) or the step
       # failed or ran out of time. The Gate of the schedule's next run (and a chained one's) passes over this lane, so its
-      # main lane goes and draws the PDF again
+      # main lane goes and draws the PDF again (once: a lane marked too is not passed over)
       - name: Rulebook PDF not drawn
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.pages.outputs.lag == 'true' || steps.pages.outcome == 'failure') }}
         run: |
