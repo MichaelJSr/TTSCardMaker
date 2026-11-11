@@ -27,14 +27,46 @@ def git(repo, *args):
     return subprocess.run(["git", "-C", repo, *args], capture_output=True, check=True).stdout.decode()
 
 
-def tree(repo, commit, paths=()):
+def tree(repo, commit):
     out = {}
-    for e in git(repo, "ls-tree", "-r", "-z", commit, "--", *paths).split("\0"):
+    for e in git(repo, "ls-tree", "-r", "-z", commit).split("\0"):
         meta, _, p = e.partition("\t")
         parts = meta.split(" ")
         if len(parts) == 3 and parts[1] == "blob":
             out[p] = parts[2]
     return out
+
+
+def files_at(repo, pins):
+    """Each (commit, path)'s file blob, None when no file is there (as ls-tree's blob filter): read down its trees in
+    one cat-file. A blobless clone has every tree: nothing is fetched."""
+    cat = subprocess.Popen(["git", "-C", repo, "cat-file", "--batch"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                           env={**os.environ, "GIT_NO_LAZY_FETCH": "1"})
+    trees = {}
+
+    def entries(name):                          # name -> {entry: (mode, id)}
+        if name not in trees:
+            cat.stdin.write(f"{name}\n".encode())
+            cat.stdin.flush()
+            head, out, i = cat.stdout.readline().split(), {}, 0
+            data = cat.stdout.read(int(head[2]) + 1)[:-1] if len(head) == 3 else b""     # else missing
+            while i < len(data):
+                sp, nul = data.index(b" ", i), data.index(b"\0", i)
+                j = nul + 1 + len(head[0]) // 2
+                out[data[sp + 1:nul].decode(errors="replace")] = (data[i:sp], data[nul + 1:j].hex())
+                i = j
+            trees[name] = out
+        return trees[name]
+
+    found = []
+    for r, p in pins:
+        mode, oid = b"40000", f"{r}^{{tree}}"
+        for part in p.split("/"):
+            mode, oid = entries(oid).get(part, (None, None)) if mode == b"40000" else (None, None)
+        found.append(oid if mode not in (None, b"40000", b"160000") else None)   # not a folder or submodule
+    cat.stdin.close()
+    cat.wait()
+    return found
 
 
 def strings(v, where=""):
@@ -103,22 +135,16 @@ def main():
     main_tree = tree(repo, head)
     rule = last_changed(repo, head)
     bad, notes = [], []
-    shas = {r for r, _ in links}
-    known = {}
-    for r in shas:
-        ok = subprocess.run(["git", "-C", repo, "cat-file", "-e", f"{r}^{{commit}}"], capture_output=True).returncode == 0
-        anc = ok and subprocess.run(["git", "-C", repo, "merge-base", "--is-ancestor", r, head],
-                                    capture_output=True).returncode == 0
-        known[r] = (ok, anc)
-    at = {}
-    by_sha = {}
-    for r, enc in links:
-        by_sha.setdefault(r, set()).add(unquote(enc))
-    for r, ps in by_sha.items():
-        if known[r][0]:
-            found = tree(repo, r, sorted(ps))
-            for p in ps:
-                at[(r, p)] = found.get(p)
+    shas = sorted({r for r, _ in links})
+    reach = set(git(repo, "rev-list", head).split())
+    kinds = subprocess.run(["git", "-C", repo, "cat-file", "--batch-check=%(objectname) %(objecttype)"],
+                           input="".join(f"{r}^{{commit}}\n" for r in shas), capture_output=True, text=True, check=True)
+    known = {}                                  # sha -> (a commit, on ref)
+    for r, line in zip(shas, kinds.stdout.splitlines()):
+        oid, _, kind = line.partition(" ")
+        known[r] = (kind == "commit", kind == "commit" and oid in reach)
+    pins = sorted({(r, unquote(enc)) for r, enc in links if known[r][0]})
+    at = dict(zip(pins, files_at(repo, pins)))
     loglast = {}
     for (r, enc), where in sorted(links.items()):
         p = unquote(enc)
