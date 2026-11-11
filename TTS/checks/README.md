@@ -27,7 +27,7 @@ updater's inputs (decks.json, Card Edits.json, Global.lua, Global.xml, pages.jso
 | Variable | Default | What |
 |---|---|---|
 | `AUTOCROISSANT` | `~/Desktop/AutoCroissant` | the updater's code (`commands/tts_save.py` and what it imports); `updater_report_decks.py` needs it at the bot's main of 2026-10-22 or later |
-| `TTS_HISTORY` | `/tmp/tts-checks/history.git` | bare blobless clone with main's full history, made or fetched on use (the checkout is shallow; under `run_all.py`, fetched once); an old save a blobless checkout lacks (`drift.py`, `contents_decks.py`) is fetched into it, never lazily |
+| `TTS_HISTORY` | `/tmp/tts-checks/history.git` | bare blobless clone with main's full history, made or fetched on use (the checkout is shallow; under `run_all.py`, fetched once); a file a blobless checkout lacks (an old save, a `TTS_REF` file) is fetched into it, never lazily |
 | `TTS_REF` | `origin/main` | the commit whose tree the rules and names checks compare with |
 | `TTS_REPO` | this repo | the TTSCardMaker checkout |
 | `TTS_CARDS` | the live website | a `cards.json` file to take the card names from |

@@ -12,7 +12,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, REPO as TC, UPDATER_INPUTS, copy_bot, ensure_history, runner_env, save_arg  # noqa: E402
+from checks_env import REF, UPDATER_INPUTS, copy_bot, ensure_history, file_at, runner_env, save_arg  # noqa: E402
 
 PY = sys.executable
 CLONE = ensure_history()
@@ -23,19 +23,14 @@ work = tempfile.mkdtemp(prefix="ttsupd_")
 failures = []
 
 
-def origin(path):
-    return subprocess.run(["git", "-C", TC, "show", f"{REF}:{path}"], capture_output=True, check=True).stdout
-
-
 def setup():
     local = os.path.join(work, "local")
     repo = os.path.dirname(os.path.dirname(save))          # the save's checkout: its files beside it, else REF's
     for path in UPDATER_INPUTS:
         os.makedirs(os.path.dirname(os.path.join(local, path)), exist_ok=True)
         mine = os.path.join(repo, path)
-        try:
-            data = open(mine, "rb").read() if os.path.exists(mine) else origin(path)
-        except subprocess.CalledProcessError:
+        data = open(mine, "rb").read() if os.path.exists(mine) else file_at(REF, path)
+        if data is None:
             continue
         open(os.path.join(local, path), "wb").write(data)
     bot = os.path.join(work, "bot")

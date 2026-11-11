@@ -147,8 +147,8 @@ def lua_rest(text):
 
 def from_file(name):
     """TTS/<name> at REF, or None"""
-    out = subprocess.run(["git", "-C", REPO, "show", f"{REF}:TTS/{name}"], capture_output=True)
-    return out.stdout.decode("utf-8").replace("\r\n", "\n") if out.returncode == 0 else None
+    data = file_at(REF, f"TTS/{name}")
+    return data.decode("utf-8").replace("\r\n", "\n") if data is not None else None
 
 
 def main(path, base_arg):

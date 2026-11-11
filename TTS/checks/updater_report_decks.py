@@ -12,7 +12,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, REPO as TC, UPDATER_INPUTS, copy_bot, ensure_history, runner_env, save_arg  # noqa: E402
+from checks_env import REF, UPDATER_INPUTS, copy_bot, ensure_history, file_at, runner_env, save_arg  # noqa: E402
 
 PY = sys.executable
 SRC_CLONE = ensure_history()
@@ -26,9 +26,9 @@ shutil.copytree(SRC_CLONE, clone)
 local = os.path.join(work, "local")
 for path in UPDATER_INPUTS:
     os.makedirs(os.path.dirname(os.path.join(local, path)), exist_ok=True)
-    r = subprocess.run(["git", "-C", TC, "show", f"{REF}:{path}"], capture_output=True)
-    if r.returncode == 0:
-        open(os.path.join(local, path), "wb").write(r.stdout)
+    data = file_at(REF, path)
+    if data is not None:
+        open(os.path.join(local, path), "wb").write(data)
 bot = os.path.join(work, "bot")
 copy_bot(bot)
 env = {**runner_env(), "AUTOCROISSANT_LOCAL_DIR": local, "AUTOCROISSANT_HISTORY_CLONE": clone}

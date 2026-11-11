@@ -9,12 +9,11 @@ Exits 1 on a failure.
 """
 import json
 import os
-import subprocess
 import sys
 from copy import deepcopy
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, REPO as CARDS, save_arg, site_cards, use_bot  # noqa: E402
+from checks_env import REF, REPO as CARDS, file_at, save_arg, site_cards, use_bot  # noqa: E402
 
 use_bot()
 import commands.tts_save as ts  # noqa: E402
@@ -40,13 +39,9 @@ def names_for(repo):
     names = ts._Names.__new__(ts._Names)
     names.repo, names.source = repo, "local"
     names.site = {c["png"]: c["name"] for c in site_cards() if c.get("png") and c.get("name")}
-    try:
-        text = subprocess.run(["git", "-C", CARDS, "show", f"{REF}:{ts.EDITS_PATH}"], check=True,
-                              capture_output=True).stdout.decode("utf-8")
-        names.edits = {CardAuthors.key(k): v for k, v in (json.loads(text).get("cards") or {}).items()
-                       if isinstance(v, dict)}
-    except subprocess.CalledProcessError:
-        names.edits = {}
+    data = file_at(REF, ts.EDITS_PATH)
+    edits = (json.loads(data).get("cards") or {}) if data is not None else {}
+    names.edits = {CardAuthors.key(k): v for k, v in edits.items() if isinstance(v, dict)}
     return names
 
 
