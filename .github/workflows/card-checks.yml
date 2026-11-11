@@ -57,7 +57,7 @@ jobs:
       contents: write   # one shard saves here
       actions: write
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.after && 112 || 90 }}   # Data wait: 22
+    timeout-minutes: ${{ inputs.after && 115 || 90 }}   # Data wait: 25
     defaults:
       run:
         shell: bash
@@ -174,10 +174,10 @@ jobs:
 
       # An early run, set up above while Card sync's data job builds: until that job's Commit data is done or the job
       # ended (site.yml's Data wait: 3 s looks for 2 minutes, then 15 s; 20 minutes at most), then main's head and the
-      # data's as they are now. Nothing is listed before the data commit.
+      # data's as they are now (3 tries, as site.yml's). Nothing is listed before the data commit.
       - name: Data wait
         if: inputs.after
-        timeout-minutes: 22
+        timeout-minutes: 25
         env:
           GH_TOKEN: ${{ github.token }}
           GIT_NO_LAZY_FETCH: "0"                                                            # the sparse files at the new head
@@ -194,7 +194,11 @@ jobs:
           if [ "$SECONDS" -ge 1200 ]; then echo "::warning::$JOB of run $RUN not past $COMMIT in 20 minutes: these checks go on"; fi
           echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN past $COMMIT (or ended) after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
           if git fetch -q --depth 1 --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
-          git -C carddata fetch -q --depth 1 origin data || { echo "::error::data not fetched again"; exit 1; }
+          for try in 1 2 3; do                                                              # 10 and 15 s apart
+            timeout 60 git -C carddata fetch -q --depth 1 origin data && break
+            [ "$try" = 3 ] && { echo "::error::data not fetched again (3 tries)"; exit 1; }
+            sleep $(( try * 5 + 5 ))
+          done
           git -C carddata reset -q --hard FETCH_HEAD
 
       # The blobs of the PSDs to check and their PNGs, fetched per shard (the guards' way): none, and the job is done
