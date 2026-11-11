@@ -11035,7 +11035,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Bob-ulk.psd": {
-  "blob": "7405f5ddb6c9da3f202cdf4d8b19ea1af36e1d0d",
+  "blob": "5e95d412c3b9167a2a49589e8b74adef5c421aed",
   "links": [
    {
     "drawn": null,
@@ -25461,17 +25461,6 @@
   "blob": "8595b23f34aad01aa46c4b980d61a22e21bcdbaf",
   "links": []
  },
- "MDW/Linked/Watermelon - Daco_35508.psb": {
-  "blob": "1af6eaf348271a8bc9a287b931abb6e136bd8ace",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
- },
  "MDW/Linked/Wendy - Layer 1.psb": {
   "blob": "b224c4d5ff034184c8136613b783ddb761adaa52",
   "links": []
@@ -25479,17 +25468,6 @@
  "MDW/Linked/Wham_Bam_Jewel - Layer 9.psb": {
   "blob": "525b6da91b7e7fb51f80a74e17efb11a50aa5a3f",
   "links": []
- },
- "MDW/Linked/Wooden_Spikes - Daco_35508.psb": {
-  "blob": "a72ddeadf0a245e80511726ca4d0bed63c789c50",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
  },
  "MDW/Linked/Yin_Yarn - Layer 1.psb": {
   "blob": "53f86bd0eb7bb8b18fce32fff3a4513f278c24d8",
@@ -26265,7 +26243,7 @@
   ]
  },
  "MDW/Templates/Creature_Template.psd": {
-  "blob": "bbe9e79c500b83c3a7812aa0c751edd798770bc6",
+  "blob": "47083c69892ddab0403702d45f518a0644287fd8",
   "links": [
    {
     "drawn": null,
