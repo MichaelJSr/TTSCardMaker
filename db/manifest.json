@@ -8,9 +8,9 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-11T18:15:18Z",
- "card_commit": "0f95fe4bc422d1eec66729b3624aa54991ae732b",
- "card_commit_at": 1794420122.0,
+ "built_at": "2026-11-11T18:29:02Z",
+ "card_commit": "b517c64dcd301f11892dc2fc06a91ef9f32e5f66",
+ "card_commit_at": 1794421705.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 124,
@@ -28,14 +28,12 @@
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
   "stats.json": "bd833996b590a9291c8c298dcdf2097726ac5c6fd3cedc3b4900c2bff0692843"
  },
- "gates": {
-  "G4": "lifted by full (approved by https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43075473381)"
- },
+ "gates": {},
  "inputs": {
   "authors_blob": "5a42583c1dc70f867aa37f08129295365a6c1c35",
   "created_blob": "c300e84e3e1558427be21dec6e120ee355fdff83",
   "decks_blob": "ee9dda60fd33e7f66e9de751a1b4a0e922daafd2",
-  "edits_blob": "4d53bcc5a3084aee5a5ab935ae332e31e64861a8",
+  "edits_blob": "7e3af0235c7243a0f395e6f9488b909f9cdaba92",
   "fonts_tree": "dc5689d821a3fbb2661826420fee97df88e3f598",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "57b028f86b5a52598b4cf606bb53b0c16ae426c7"
@@ -47,16 +45,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Omori",
-   "notes": [
-    "NO STATS FOUND: no HP, DEF, ATK or SPD bars read on this creature"
-   ],
-   "path": "Creatures/Omori/5 Stars/Omori.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43075736604",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43078165293",
  "schema": 1
 }
