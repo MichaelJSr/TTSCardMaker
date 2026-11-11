@@ -192,8 +192,20 @@
   ]
  },
  "Auxiliary/Creatures/Shadow_Queen.psd": {
-  "blob": "32626b7363c1bfd9b5bb299253d732526ae3b592",
+  "blob": "6c64d6ec5779ecd86e39dbc5788f36b4d256b040",
   "links": [
+   {
+    "drawn": "05521da168000d6e545fe1cbf3f01cc1b769fe2b",
+    "name": "Shadow_Queen - Layer 7.psb",
+    "path": "MDW/Linked/Shadow_Queen - Layer 7.psb",
+    "size": 5652058
+   },
+   {
+    "drawn": "c57f93e855655423ff8d3c841c2729ab85449fd9",
+    "name": "Shadow_Queen - Shadow queen original image cropped.psb",
+    "path": "MDW/Linked/Shadow_Queen - Shadow queen original image cropped.psb",
+    "size": 1460570
+   },
    {
     "drawn": null,
     "name": "Crystal_Star_PMTTYDNS_icon.png",
@@ -7479,13 +7491,19 @@
   ]
  },
  "Creatures/Fnaf/4 Stars/Old_Chica.psd": {
-  "blob": "c7070dba16ae82571eb6485401c8d7f55af476c1",
+  "blob": "a4b03e5f8fbd30331fb013540e34415bda2c6698",
   "links": [
    {
     "drawn": null,
     "name": "Balloon_Boy - fnaf 2.psb",
     "path": "MDW/Linked/Balloon_Boy - fnaf 2.psb",
     "size": 1984734
+   },
+   {
+    "drawn": "3857a84940039a05eed27e6adbd15ab8c233cbb1",
+    "name": "Old_Chica - 407be632b4d991b79c32e2bf492f3a71.jpg2.jpg",
+    "path": "MDW/Linked/Old_Chica - 407be632b4d991b79c32e2bf492f3a71.jpg2.jpg",
+    "size": 172810
    },
    {
     "drawn": null,
@@ -7848,7 +7866,7 @@
   ]
  },
  "Creatures/Hollow Knight/3 Stars/Dung_Defender.psd": {
-  "blob": "e15d3ab8d4f7574e13b3e917fc182c039a6e7603",
+  "blob": "d6a5bfe773c9a7725a710771f4d84d1cc8f24c69",
   "links": [
    {
     "drawn": null,
@@ -7865,7 +7883,7 @@
   ]
  },
  "Creatures/Hollow Knight/3 Stars/Hive_Knight.psd": {
-  "blob": "5fb33c275425f4d7b96b2154334723139fd4bd1f",
+  "blob": "efd9ed26b060b388598b483bd39be73037e62918",
   "links": [
    {
     "drawn": null,
@@ -7884,6 +7902,18 @@
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
+   },
+   {
+    "drawn": "3f45cc792cb17a4207d2a1d3a4579260a6339467",
+    "name": "Hive_Knight - extra.psb",
+    "path": "MDW/Linked/Hive_Knight - extra.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "752a74b2b13e3057e74f0e40bd322f59cc3713dc",
+    "name": "Hive_Knight - extra (2).psb",
+    "path": "MDW/Linked/Hive_Knight - extra (2).psb",
+    "size": 1048576
    }
   ]
  },
@@ -8501,7 +8531,7 @@
   ]
  },
  "Creatures/Isaac/2 Stars/Tainted_Lost.psd": {
-  "blob": "6116a098913682b6dcad2daad36a7bf0441603c2",
+  "blob": "09f32e62e97d245f38ac6f1739c4d6d502e699da",
   "links": [
    {
     "drawn": null,
@@ -13193,7 +13223,7 @@
   ]
  },
  "Creatures/Omori/5 Stars/omori.psd": {
-  "blob": "fefda326674f928a18605c649aa7f17c30967184",
+  "blob": "8aa924d3fbbc43ea5308a14026de11e5533c3afb",
   "links": [
    {
     "drawn": null,
@@ -25032,6 +25062,14 @@
   "blob": "9108cd62dca0976d4c022549c45ddd390259ccfb",
   "links": []
  },
+ "MDW/Linked/Hive_Knight - extra (2).psb": {
+  "blob": "752a74b2b13e3057e74f0e40bd322f59cc3713dc",
+  "links": []
+ },
+ "MDW/Linked/Hive_Knight - extra.psb": {
+  "blob": "3f45cc792cb17a4207d2a1d3a4579260a6339467",
+  "links": []
+ },
  "MDW/Linked/Infected - Layer 22.psb": {
   "blob": "62443ccf2766da7e07a91ed874aec318ae9280d6",
   "links": []
@@ -25192,8 +25230,16 @@
   "blob": "8ec31da3ca912f8d660bab3a40cd5768ac6177ba",
   "links": []
  },
+ "MDW/Linked/Shadow_Queen - Layer 7.psb": {
+  "blob": "05521da168000d6e545fe1cbf3f01cc1b769fe2b",
+  "links": []
+ },
  "MDW/Linked/Shadow_Queen - Offensive_Minion.psb": {
   "blob": "bdd59a805b6ec2c93c42a17bdcbe545a8fec0381",
+  "links": []
+ },
+ "MDW/Linked/Shadow_Queen - Shadow queen original image cropped.psb": {
+  "blob": "c57f93e855655423ff8d3c841c2729ab85449fd9",
   "links": []
  },
  "MDW/Linked/Shiny_Knife - Layer 1.psb": {
@@ -30014,6 +30060,12 @@
   "MDW/Linked/Hive_Knight - Layer 44.psb": {
    "9108cd62dca0976d4c022549c45ddd390259ccfb": 7838516
   },
+  "MDW/Linked/Hive_Knight - extra (2).psb": {
+   "752a74b2b13e3057e74f0e40bd322f59cc3713dc": 1048576
+  },
+  "MDW/Linked/Hive_Knight - extra.psb": {
+   "3f45cc792cb17a4207d2a1d3a4579260a6339467": 1048576
+  },
   "MDW/Linked/Hive_Knight - unknown (10)_auto_x2.jpg": {
    "ba4be7beb8fe2582fa1766d4b9d621c8105b7bee": 936529
   },
@@ -30618,6 +30670,9 @@
   "MDW/Linked/Old_Bonnie - Layer 21.psb": {
    "8107c213ae28e6057a79c361808efbfcbef43dd9": 2011944
   },
+  "MDW/Linked/Old_Chica - 407be632b4d991b79c32e2bf492f3a71.jpg2.jpg": {
+   "3857a84940039a05eed27e6adbd15ab8c233cbb1": 172810
+  },
   "MDW/Linked/Old_Foxy - 7a08e1a74c378f6aba1d7bab4c67c9ce (1).jpg": {
    "17ac034030a398c8eb0e1d5c6a5d86fd91817471": 189790
   },
@@ -30897,6 +30952,9 @@
   "MDW/Linked/Shadow_Queen - Ice.png": {
    "4bd977fdb629fc66b4f845db264accb62fc0123f": 272855
   },
+  "MDW/Linked/Shadow_Queen - Layer 7.psb": {
+   "05521da168000d6e545fe1cbf3f01cc1b769fe2b": 5652058
+  },
   "MDW/Linked/Shadow_Queen - Light.png": {
    "b587fa8759caf9570a8288de23675fb01e905d88": 4021783
   },
@@ -30905,6 +30963,9 @@
   },
   "MDW/Linked/Shadow_Queen - Panda.png": {
    "c6bc1f3f64f9cd4c24442c27b6e9934ff3eb5e95": 127266
+  },
+  "MDW/Linked/Shadow_Queen - Shadow queen original image cropped.psb": {
+   "c57f93e855655423ff8d3c841c2729ab85449fd9": 1460570
   },
   "MDW/Linked/Shadow_Queen - Unknown.png": {
    "aa9f767fc58d2dcdff419edbce9cb97b963e5950": 1308
@@ -32280,6 +32341,7 @@
   "0493096cda781ff11da50cc1cf2119061146bdf1": "e4394b79c7042f12ac2905f7e8ffcd02c22c2d75",
   "04e5ff0d24ebdb486a3186bf1f169692c7cd821b": "3453c8238aa6eabbb2aeb2831ff3453d56f3fd27",
   "05254bc14b40f1264eb0f2d58544f69ffc79b2e3": "c982c3600407799181ec923535d78b904ea1414b",
+  "05521da168000d6e545fe1cbf3f01cc1b769fe2b": "4c2b122d8d81ee691b959386dc92e44ba87566ec",
   "05bf527f5355a0c87a4255db3e56dfa10c8d5a79": "adba0010173f249523994efc1b8131622ce2c1c8",
   "05eebaa954991bf0297391a018044e61b7adca12": "e2032f18a40781d957e5ffacc476c1cf54586e78",
   "05f89516112f1318843b57801373557976bf685e": "f84cee3d725fd7e1f45c90935c8663e6bf3249b0",
@@ -32471,6 +32533,7 @@
   "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e": "488063d4ef8e4942d0156d5f2b23defa7b1ecf7a",
   "37ebb544a9efdffc950c9581e9c83218d3833fcd": "a3a073442d47c5f54fe4d2cdd9a7858607612ced",
   "37fbd99c3db7c085010672fe02813398c73dab9d": "7d545a799c25c318031692b862a0c76be4531ea9",
+  "3857a84940039a05eed27e6adbd15ab8c233cbb1": "8b64e71e3a3110ab713ac94988ea8c708dfcdc2b",
   "3b4e7d07de4b617ab20cf133acec6f9ca4a32b51": "cb3130479819f164f2ee3d1d222daa5ab68babec",
   "3b8244e8ba97227b4586aeffb58269e613d2a9fe": "503b48801cc7c341e267b5f83eaa014614fd7ccd",
   "3bd096735f1c6a43c35607b8b06dd971451b71bb": "776be4d27e9faf9ceba29be4b32dd0e65a073673",
@@ -32489,6 +32552,7 @@
   "3ed5091edf13b23af0498922ec6194a7d1dcc2d6": "09093d4b57a2143503f5eed4437297f8824cacf5",
   "3edb891b373333a754f52156a2da01da2ce13594": "4085cf1b23b8d7ef86535dd4f75eb0c5da3bc3ba",
   "3f426ad8c855714013a0fcadd271bafe5c3c9f32": "6d9929775b3ba7fd990b37b1768e19f1bf8e62a1",
+  "3f45cc792cb17a4207d2a1d3a4579260a6339467": "38aa3a79dc0be987a4dd13fa881b161ba7bc07ca",
   "3f58b50b0ae8aa9229d8c40f7637a84accce9094": "1d84bde78f4f74d04fe91331432d8ab159508330",
   "3fd3e3566e94d554747f6673d126bece0dc5db09": "77c1b564fcf0b9358b0bc9221d647591baefb135",
   "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5": "6421e4493bd37fa08fa3d79262e04c8ec7f72f3c",
@@ -32695,6 +32759,7 @@
   "74f287c956cdf731cec0e248e08d3ae7c2fb680a": "49250c222966c58b8931fafe2361fcadd1b132c7",
   "751025d5bd0727241e8e5ab0345dbb5f25804204": "159b78d58c56ca0cadc16074f70c39570b70b92c",
   "7528411a10c4884f78934599f1c14364ba559464": "91f859c0f6aae104f089ef58145da0e8b52d0413",
+  "752a74b2b13e3057e74f0e40bd322f59cc3713dc": "b683fb0e1469cf0f7a53f1473d9006ab47b7432a",
   "7597ac510a19795e7c6ee667c2eb57472a1559d8": "5e99c504b0b12525b3bf0afd640346d67b0bcb2c",
   "759e015ba81929f046f44a47212e8895f0ab4f50": "ca478c7fd013080d9a2a24366904b1f17c57c393",
   "75a6e84677c51338150bcaab4ad189697fdc76a5": "0159da0863c80a8cae19103b8f590eba2d91d90f",
@@ -33005,6 +33070,7 @@
   "c4b1968632b96be965e9254b04f16e076da45a1d": "3d79912919ddb1105774f0886a72d1507729567a",
   "c4d516643693a9b96fddf0792b1811808396a3cf": "daa769e15f806d2fdaa8d6426796bd534ef26474",
   "c4fe0d4fa0575125f78f78c331732550b9889be2": "5dff8648c117aa98d77cb3420d39e57d2d3a942b",
+  "c57f93e855655423ff8d3c841c2729ab85449fd9": "05ab606ff5229f303558e2251a30daabf84b7d2b",
   "c59ee277595d4574081377dc70b1b94f293abb48": "bc5bbd218f069f50766a4f6be8fc29e4272bb949",
   "c5d8cbe3aca25bc17fdf8da68f4200d5919c8f52": "bb464a2638fa5f8419460cc075a9ef1eda7d979b",
   "c5fbf76a662274dc1af6fabdffe1f5cc7c474b72": "29265f4da1c5687da6cd9097b02565fed75d181b",
