@@ -211,8 +211,8 @@ Zompanda = MichaelJSr
 
 # --- credited to Chestnut (234) ---
 Acro = Chestnut
-All Purpose Medical Kit = Chestnut
-All Purpose Medical Kit2 = Chestnut
+All-Purpose Medical Kit = Chestnut
+All-Purpose Medical Kit2 = Chestnut
 Amazing Mirror = Chestnut
 Ancient Stopwatch = Chestnut
 Bag of Evil = Chestnut
@@ -564,7 +564,7 @@ Warcraftian Warlock = hdckighfkvhvgmk
 Warcraftian Warrior = hdckighfkvhvgmk
 Water Totem = hdckighfkvhvgmk
 Whelp = hdckighfkvhvgmk
-Wokey D pronouns = hdckighfkvhvgmk
+Wokey D Pronouns = hdckighfkvhvgmk
 Wolf = hdckighfkvhvgmk
 YIIK Panda = hdckighfkvhvgmk
 You are going DOWN you Sputnik! = hdckighfkvhvgmk
