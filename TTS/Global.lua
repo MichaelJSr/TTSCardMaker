@@ -569,7 +569,7 @@ local function detailsText(card)
         local s = details.statuses[name]
         if s then
             local c = hexColour(s.c)
-            local line = "<b>" .. (c and "<color=" .. c .. ">" .. plain(name) .. "</color>" or plain(name)) .. "</b> <color=" .. DIM .. ">(" .. plain(s.k) .. ")</color>  " .. withBadges(plain(s.x))
+            local line = "<b>" .. (c and "<color=" .. c .. ">" .. plain(name) .. "</color>" or plain(name)) .. "</b> <color=" .. DIM .. ">(" .. plain(s.k) .. ")</color>  " .. withBadges(painted(s.x, s.xc))
             if #rows < STATUS_ROWS then table.insert(rows, {text = line, tip = s.x})
             else rows[#rows].text, rows[#rows].tip = rows[#rows].text .. "\n" .. line, rows[#rows].tip .. "\n" .. s.x end
         end

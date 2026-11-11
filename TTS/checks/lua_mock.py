@@ -1048,7 +1048,8 @@ def main():
 
     # ---- the palette's colours, status lines, and text that looks like rich text ----
     path = face_path(cards[0])
-    st = {"Burn": {"x": "3 DMG <hot>", "k": "debuff", "c": "#db923d"}, **{f"S{i}": {"x": f"rule {i}", "k": "buff"} for i in range(1, 7)}}
+    st = {"Burn": {"x": "3 DMG <hot>, -1 SPD", "k": "debuff", "c": "#db923d", "xc": [["-1 SPD", "#ffd21f"]]},
+          **{f"S{i}": {"x": f"rule {i}", "k": "buff"} for i in range(1, 7)}}
     odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"]], "al": ["Zqrose"],
            "a": "<i>Burn</i> a Burn, then Burn<3\nBurn", "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]],
            "x": ["Burn", "Gone", *list(st)[1:]]}
@@ -1063,10 +1064,10 @@ def main():
     check(title == "Rose <<b></b>b>Thorn<<b></b>/b> <<b></b>color=#ff0000>x" and title == plain(odd["n"]),
           f"the name plain (no nc), the card's own '<' no tag {title!r}")
     rows = [(w4.ui.values.get(f"Red_d1_s{i}") or "", w4.ui.attrs.get(f"Red_d1_s{i}", {}).get("tooltip")) for i in range(1, 7)]
-    check(rows[0] == ('<b><color=#db923d>Burn</color></b> <color=#94a3b8>(debuff)</color>  3 DMG <<b></b>hot>', "3 DMG <hot>")
+    check(rows[0] == ('<b><color=#db923d>Burn</color></b> <color=#94a3b8>(debuff)</color>  3 DMG <<b></b>hot>, <color=#ffd21f>-1 SPD</color>', "3 DMG <hot>, -1 SPD")
           and rows[1][0].startswith("<b>S1</b>") and rows[5][1] == "rule 5\nrule 6" and "\n<b>S6</b>" in rows[5][0]
           and not rows_wrong(w4.ui, "Red_d1", odd, odd_details),
-          f"each status effect its own line, in its colour, its rule on hover; one unknown left out, the last line takes "
+          f"each status effect its own line, in its colour, its rule's words in theirs, its rule on hover; one unknown left out, the last line takes "
           f"the rest {rows[:2]} {rows_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
     check("<<b></b>i>Burn<<b></b>/i> a <color=#ff0000>Burn</color>, then <color=#00ff00>Burn<<b></b>3</color>\n<color=#0000ff>Burn</color>" in text,
           "the ability in its colours: the nth find, a piece not found skipped, '<' no tag")

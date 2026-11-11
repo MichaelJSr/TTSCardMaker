@@ -4086,17 +4086,17 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
     it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions;
     a [field] card's Field Cards first), its aliases not part of its name (al: Find a card's words)
     and its ability's word colours (ac: tts_words, palette: text_palette's, the site's); with the types', tags' and
-    statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows on hover: x) and the
-    chapters (their numbers find the PDF's pages). Hidden cards left out."""
+    statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows, its words' colours too
+    (xc), and on hover: x) and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
     palette = palette or text_palette(cards)
     marks = status_patterns(palette["statuses"])
     types, statuses = type_meanings(chapters, icons), {}
     for c in shown:
         if c.get("type") in ("buff", "debuff") and c.get("ability") and not c.get("dup"):
-            colour = tts_seen(palette["statuses"].get(c["name"]))
+            colour, words = tts_seen(palette["statuses"].get(c["name"])), tts_words(c["ability"], palette, icons, marks)
             statuses.setdefault(c["name"], {"x": game_words(c["ability"], icons), "k": c["type"], **({"p": c["png"]} if c.get("png") else {}),
-                                            **({"c": colour} if colour else {})})
+                                            **({"c": colour} if colour else {}), **({"xc": words} if words else {})})
     named = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(statuses, key=len, reverse=True)) + r")(?![\w'’])", re.I) \
         if statuses else None
     lower = {n.lower(): n for n in statuses}
