@@ -366,7 +366,7 @@
         "Items/Heal/2 Stars/Pep_Drink.png": 3,
         "Items/Heal/2 Stars/Pepperoni_Pizza.png": 2,
         "Items/Heal/2 Stars/Regeneration_Potion.png": 2,
-        "Items/Heal/2 Stars/The_Chicken.png": 2,
+        "Items/Heal/2 Stars/Chicken.png": 2,
         "Items/Heal/2 Stars/Watermelon.png": 2,
         "Items/Infliction/2 Stars/Bag_of_Evil.png": 2,
         "Items/Infliction/2 Stars/Mr_Softener.png": 2,
@@ -1056,7 +1056,7 @@
         "Items/Heal/2 Stars/Pep_Drink.png": 3,
         "Items/Heal/2 Stars/Pepperoni_Pizza.png": 2,
         "Items/Heal/2 Stars/Regeneration_Potion.png": 2,
-        "Items/Heal/2 Stars/The_Chicken.png": 2,
+        "Items/Heal/2 Stars/Chicken.png": 2,
         "Items/Heal/2 Stars/Watermelon.png": 2,
         "Items/Infliction/2 Stars/Bag_of_Evil.png": 2,
         "Items/Infliction/2 Stars/Mr_Softener.png": 2,
@@ -1237,7 +1237,7 @@
         "Items/Heal/2 Stars/Regeneration_Potion2.png",
         "Items/Heal/2 Stars/Snow_Bunny.png",
         "Items/Heal/2 Stars/Strawberry_Shortcake.png",
-        "Items/Heal/2 Stars/The_Chicken.png",
+        "Items/Heal/2 Stars/Chicken.png",
         "Items/Heal/2 Stars/Thunder_Thighs.png",
         "Items/Heal/2 Stars/Watermelon.png",
         "Items/Infliction/2 Stars/Bag_of_Evil.png",
@@ -1267,7 +1267,7 @@
         "Items/Heal/2 Stars/Pep_Drink.png": 3,
         "Items/Heal/2 Stars/Pepperoni_Pizza.png": 2,
         "Items/Heal/2 Stars/Regeneration_Potion.png": 2,
-        "Items/Heal/2 Stars/The_Chicken.png": 2,
+        "Items/Heal/2 Stars/Chicken.png": 2,
         "Items/Heal/2 Stars/Watermelon.png": 2,
         "Items/Infliction/2 Stars/Bag_of_Evil.png": 2,
         "Items/Infliction/2 Stars/Mr_Softener.png": 2,
@@ -1518,7 +1518,7 @@
         "Creatures/Pandas/3 Stars/Shield_Master_Pi.png",
         "Creatures/Pandas/3 Stars/Sumo_Panda.png",
         "Creatures/Souls/3 Stars/The_Abyss_Watchers.png",
-        "Creatures/Undertale/3 Stars/Papyrus.png"
+        "Creatures/Undertale/3 Stars/The_Great_Papyrus.png"
       ]
     },
     "2a34b2": {
