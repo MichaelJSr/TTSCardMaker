@@ -56,6 +56,7 @@
    gets the main lane's extra time for the wait.
 Exits 1 when a case gets the wrong answer.
 """
+import atexit
 import json
 import os
 import re
@@ -520,8 +521,10 @@ def commit(work: str, files: dict, message: str = "c", author: str = "t") -> str
     return git(work, "rev-parse", "HEAD")
 
 
-def origin(tmp: str) -> tuple:
-    """A source repo shaped like the card repo and a bare origin served blobless: (work, origin.git)."""
+_TEMPLATE = {}                                          # one origin (and checkout) a process, copied per case
+
+
+def _fresh_origin(tmp: str) -> tuple:
     work = os.path.join(tmp, "work")
     os.makedirs(work)
     git(work, "init", "-q", "-b", "main")
@@ -536,8 +539,7 @@ def origin(tmp: str) -> tuple:
     return work, bare
 
 
-def checkout(tmp: str, bare: str, name: str = "ws") -> str:
-    """The workflow's main checkout: blobless, full history, the sparse patterns of its first step."""
+def _fresh_checkout(tmp: str, bare: str, name: str) -> str:
     ws = os.path.join(tmp, name)
     subprocess.run(["git", "clone", "-q", "--filter=blob:none", "--no-checkout", f"file://{bare}", ws], check=True)
     git(ws, "sparse-checkout", "set", "--no-cone", "/site/Card Edits.json", "/site/Card Authors.txt",
@@ -545,6 +547,44 @@ def checkout(tmp: str, bare: str, name: str = "ws") -> str:
     git(ws, "checkout", "-q", "main")
     git(ws, "config", "user.name", "t")
     git(ws, "config", "user.email", "t@t")
+    return ws
+
+
+def _copy(src: str, dest: str, old: str, new: str) -> None:
+    """src copied to dest, the old path in its git config now new."""
+    shutil.copytree(src, dest, symlinks=True)
+    for cfg in (os.path.join(dest, ".git", "config"), os.path.join(dest, "config")):
+        if os.path.isfile(cfg):
+            with open(cfg, encoding="utf-8") as fh:
+                text = fh.read()
+            with open(cfg, "w", encoding="utf-8") as fh:
+                fh.write(text.replace(old, new))
+
+
+def origin(tmp: str) -> tuple:
+    """A source repo shaped like the card repo and a bare origin served blobless: (work, origin.git)."""
+    t = _TEMPLATE
+    if not t:
+        t["dir"] = os.path.realpath(tempfile.mkdtemp(prefix="css_tpl_"))
+        atexit.register(shutil.rmtree, t["dir"], ignore_errors=True)
+        t["work"], t["bare"] = _fresh_origin(t["dir"])
+        t["refs"] = git(t["bare"], "for-each-ref")
+    os.makedirs(tmp, exist_ok=True)
+    work, bare = os.path.join(tmp, "work"), os.path.join(tmp, "origin.git")
+    _copy(t["work"], work, t["bare"], bare)
+    _copy(t["bare"], bare, t["work"], work)
+    return work, bare
+
+
+def checkout(tmp: str, bare: str, name: str = "ws") -> str:
+    """The workflow's main checkout: blobless, full history, the sparse patterns of its first step."""
+    t = _TEMPLATE
+    if not t or git(bare, "for-each-ref") != t["refs"]:                # pushed to since origin(): a clone
+        return _fresh_checkout(tmp, bare, name)
+    if "ws" not in t:
+        t["ws"] = _fresh_checkout(t["dir"], t["bare"], "ws")
+    ws = os.path.join(tmp, name)
+    _copy(t["ws"], ws, f"file://{t['bare']}", f"file://{bare}")
     return ws
 
 
