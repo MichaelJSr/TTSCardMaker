@@ -12,10 +12,10 @@ cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on
 rulebook panel and the card finder (aliases, plurals, "status effects") on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
 pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
-face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name and ability
-in the card's colours, tts.json nc and ac, every "<" of a text kept from starting a tag; every card's details at each
-size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card); each deck button a copy of the full
-deck, every card at its count in the save's piles.
+face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name plain,
+the ability in the website's palette (tts.json ac), every "<" of a text kept from starting a tag; every card's details at each
+size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card, each status effect its own line under
+the text with its rule on hover); each deck button a copy of the full deck, every card at its count in the save's piles.
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
 """
 import json
@@ -527,6 +527,45 @@ def painted(text, pieces):                                  # Global.lua painted
     return "".join(out) + plain(text[at:])
 
 
+STATUS_ROWS = 6                                             # Global.lua's: the last line takes any more
+
+
+def status_rows(card, d):                                   # Global.lua detailsText's STATUS EFFECTS lines: [(name, tip)]
+    out = []
+    for n in card.get("x") or []:
+        s = d["statuses"].get(n)
+        if s:
+            if len(out) < STATUS_ROWS:
+                out.append(([n], s["x"]))
+            else:
+                out[-1] = (out[-1][0] + [n], out[-1][1] + "\n" + s["x"])
+    return out
+
+
+def rows_wrong(ui, panel, card, d):                         # the status lines as status_rows has them, stacked under the text
+    want, wrong, y = status_rows(card, d), [], None
+    text = ui.values.get(f"{panel}_text") or ""
+    if want and not text.endswith("<b>STATUS EFFECTS</b></color>"):
+        wrong.append("no STATUS EFFECTS heading")
+    for i in range(1, STATUS_ROWS + 1):
+        rid, a = f"{panel}_s{i}", ui.attrs.get(f"{panel}_s{i}", {})
+        if i > len(want):
+            if ui.on(rid):
+                wrong.append(f"{rid} shown")
+            continue
+        names, tip = want[i - 1]
+        top = -float(a.get("offsetXY", "0 0").split()[1])
+        line = ui.values.get(rid) or ""
+        if not ui.on(rid) or a.get("tooltip") != tip or not all(f"{plain(n)}</color></b>" in line or f"<b>{plain(n)}</b>" in line for n in names):
+            wrong.append((rid, a.get("tooltip"), line[:60]))
+        if y is None and top < 6 + float(ui.attrs[f"{panel}_text"].get("height", 0)):
+            wrong.append(f"{rid} over the text")
+        if y is not None and top != y:
+            wrong.append(f"{rid} at {top}, not {y}")
+        y = top + float(a.get("height", 0))
+    return wrong
+
+
 def named_of(card, d):
     out = [(n, d["statuses"][n]["p"]) for n in card.get("x") or [] if (d["statuses"].get(n) or {}).get("p")]
     return out + [(d["cards"][p]["n"], p) for p in card.get("m") or [] if p in d["cards"]]
@@ -758,7 +797,7 @@ def main():
     check({a.get("visibility") for i, a in ui.attrs.items() if i.startswith("Red_") and "visibility" in a} == {"Red"},
           "Red's panels only Red sees")
     card = details["cards"][face_path(cards[0])]
-    check(ui.on("Red_d1") and ui.values.get("Red_d1_title") == painted(card["n"], card.get("nc")) and ui.values.get("Red_d1_text"),
+    check(ui.on("Red_d1") and ui.values.get("Red_d1_title") == plain(card["n"]) and ui.values.get("Red_d1_text"),
           f"Card details: panel 1 shows {card['n']!r}")
     rules, named = chapters_of(card, details), named_of(card, details)
     def slot(kind, i):                                      # the button of item i ("Red_d1_r2_3"), in whichever row it went
@@ -815,7 +854,7 @@ def main():
         o.is_face_down = False
         w.run(w.g.showDetails, "Red", o, what="Card details")
     names = [ui.values.get(f"Red_d{k}_title") for k in (1, 2, 3)]
-    want = [painted(c["n"], c.get("nc")) for c in (details["cards"][face_path(cards[k])] for k in (3, 1, 2))]
+    want = [plain(c["n"]) for c in (details["cards"][face_path(cards[k])] for k in (3, 1, 2))]
     check(names == want and all(ui.on(f"Red_d{k}") for k in (1, 2, 3)), f"three panels; a fourth replaces the oldest {names}")
     w.call("closeDetails", red, None, "Red_d2_close")
     check(not ui.on("Red_d2"), "X closes a panel")
@@ -1007,19 +1046,28 @@ def main():
     w.run(w.g.showDetails, "Red", stray, what="unknown card")
     check(("Red", "No details for this card.") in w.told, "a card the data lacks: no details")
 
-    # ---- the card's colours, and text that looks like rich text ----
+    # ---- the palette's colours, status lines, and text that looks like rich text ----
     path = face_path(cards[0])
-    odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"], ["x", "red"]], "al": ["Zqrose"],
-           "a": "<i>Burn</i> a Burn, then Burn<3\nBurn", "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]]}
+    st = {"Burn": {"x": "3 DMG <hot>", "k": "debuff", "c": "#db923d"}, **{f"S{i}": {"x": f"rule {i}", "k": "buff"} for i in range(1, 7)}}
+    odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"]], "al": ["Zqrose"],
+           "a": "<i>Burn</i> a Burn, then Burn<3\nBurn", "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]],
+           "x": ["Burn", "Gone", *list(st)[1:]]}
     w4 = World(script, save, zones)
     w4.seat("Red")
     w4.g.onLoad("")
     w4.wait.flush()
-    w4.respond(json.dumps({**details, "cards": {**details["cards"], path: odd}}), pages_text)
+    odd_details = {**details, "statuses": {**details["statuses"], **st}, "cards": {**details["cards"], path: odd}}
+    w4.respond(json.dumps(odd_details), pages_text)
     w4.run(w4.g.showDetails, "Red", Obj.of(w4, cards[0]), what="Card details: colours")
     title, text = w4.ui.values.get("Red_d1_title") or "", w4.ui.values.get("Red_d1_text") or ""
-    check(title == "Rose <<b></b>b><color=#ff7a1a>Thorn</color><<b></b>/b> <<b></b>color=#ff0000>x" and title == painted(odd["n"], odd["nc"]),
-          f"the name in its colours, the card's own '<' no tag {title!r}")
+    check(title == "Rose <<b></b>b>Thorn<<b></b>/b> <<b></b>color=#ff0000>x" and title == plain(odd["n"]),
+          f"the name plain (no nc), the card's own '<' no tag {title!r}")
+    rows = [(w4.ui.values.get(f"Red_d1_s{i}") or "", w4.ui.attrs.get(f"Red_d1_s{i}", {}).get("tooltip")) for i in range(1, 7)]
+    check(rows[0] == ('<b><color=#db923d>Burn</color></b> <color=#94a3b8>(debuff)</color>  3 DMG <<b></b>hot>', "3 DMG <hot>")
+          and rows[1][0].startswith("<b>S1</b>") and rows[5][1] == "rule 5\nrule 6" and "\n<b>S6</b>" in rows[5][0]
+          and not rows_wrong(w4.ui, "Red_d1", odd, odd_details),
+          f"each status effect its own line, in its colour, its rule on hover; one unknown left out, the last line takes "
+          f"the rest {rows[:2]} {rows_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
     check("<<b></b>i>Burn<<b></b>/i> a <color=#ff0000>Burn</color>, then <color=#00ff00>Burn<<b></b>3</color>\n<color=#0000ff>Burn</color>" in text,
           "the ability in its colours: the nth find, a piece not found skipped, '<' no tag")
     w4.run(w4.table_menu["Find a card"], "Red", w4.vec(10, 1, 10), what="Find a card: '<' in a name")
@@ -1043,7 +1091,7 @@ def main():
         o = Obj.of(w5, d)
         o.is_face_down = False
         w5.run(w5.g.showDetails, "Red", o, what=f"Card details: {c['n']}")
-        if not (ui5.on("Red_d1") and ui5.values.get("Red_d1_title") == painted(c["n"], c.get("nc"))):
+        if not (ui5.on("Red_d1") and ui5.values.get("Red_d1_title") == plain(c["n"])):
             bad.append((c["n"], "no panel"))
             continue
         for size in (1, 2, 3):
@@ -1057,6 +1105,7 @@ def main():
                     ws = [int(ui5.attrs[b]["preferredWidth"]) for b in (f"Red_d1_{kind[0]}{r}_{i}" for i in range(r, n + 1)) if ui5.on(b)]
                     if ws and sum(ws) + 6 * (len(ws) - 1) > int(ui5.attrs[f"Red_d1_{kind}{r}"]["width"]):
                         bad.append((c["n"], size, f"{kind}{r}", ws))
+            bad += [(c["n"], size, x) for x in rows_wrong(ui5, "Red_d1", c, details)]
         for i, (name, path) in enumerate(named[:6], 1):
             b = at("c", i, 2)
             w5.spawns.clear()
@@ -1067,7 +1116,7 @@ def main():
                 bad.append((c["n"], f"+ {name}"))
         w5.call("closeDetails", red5, None, "Red_d1_close")
     check(not bad, f"every card's details at each size ({len(cards)} cards): each chapter a whole Rules button, rows fit, "
-          f"each '+ name' spawns its card ({len(bad)} wrong) {bad[:5]}")
+          f"each '+ name' spawns its card, each status effect its line with its rule on hover ({len(bad)} wrong) {bad[:5]}")
 
     # ---- the website offline ----
     w3 = World(script, save, zones)

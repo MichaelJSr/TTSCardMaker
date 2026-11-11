@@ -99,7 +99,8 @@ end
 -- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click; cards that draw from a kind of deck (DECKS) get a
--- button per deck that spawns a shuffled copy beside the card. The name and ability keep the card's colours (painted).
+-- button per deck that spawns a shuffled copy beside the card. The ability's words in the website's palette (painted:
+-- status words, stats with their numbers, counters); each status effect's line shows its rule on hover.
 -- Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
 -- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
@@ -116,6 +117,7 @@ local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 5, 6, 40, 30
 local RULE_ROWS, CARD_ROWS = 3, 2                      -- rows the buttons may take (more than fit: names shortened)
 local DECK_BUTTONS, DECK_ROWS = 8, 3
 local DETAILS_PANELS = 3                               -- a player's card details open at once (one more replaces the oldest)
+local STATUS_ROWS = 6                                  -- STATUS EFFECTS lines, each its own text with its rule on hover (the last takes any more)
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
     {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
 
@@ -150,9 +152,15 @@ local function rows(id, prefix, n, count, onClick, colors)
 end
 
 -- one of a seat's details panels, k (its children placed by layout(), below); each a little further in than the last;
--- opaque: build_site TTS_BACKS checks the card's colours against it
+-- opaque: build_site TTS_BACK checks the palette's colours against it
 local function detailsPanel(c, k)
     local id = c .. "_d" .. k
+    local page = {{tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
+        alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}
+    for i = 1, STATUS_ROWS do
+        table.insert(page, {tag = "Text", attributes = {id = id .. "_s" .. i, rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
+            alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow", tooltipPosition = "Above", active = false}, value = ""})
+    end
     local panel = {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
         returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleRight", offsetXY = (-60 - 50 * (k - 1)) .. " " .. (-40 * (k - 1)), width = 540, height = 660,
         color = "#0f1729", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
@@ -165,9 +173,7 @@ local function detailsPanel(c, k)
         {tag = "VerticalScrollView", attributes = {id = id .. "_scroll", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 4),
             color = "#00000000", scrollSensitivity = 30, horizontalScrollbarVisibility = "AutoHideAndExpandViewport",
             verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {
-            {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = {
-                {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
-                    alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}}}}
+            {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = page}}}}}
     for _, r in ipairs(rows(id .. "_rules", id .. "_r", RULE_BUTTONS, RULE_ROWS, "openRules")) do table.insert(panel.children, r) end
     for _, r in ipairs(rows(id .. "_cards", id .. "_c", CARD_BUTTONS, CARD_ROWS, "spawnNamed", SPAWN)) do table.insert(panel.children, r) end
     for _, r in ipairs(rows(id .. "_decks", id .. "_k", DECK_BUTTONS, DECK_ROWS, "spawnDeck", DECK)) do table.insert(panel.children, r) end
@@ -401,8 +407,8 @@ local function hexColour(c)                            -- "#rrggbb", else nil
     return c
 end
 
--- text (plain) in the card's colours, as its website page paints them (tts.json nc, ac: {piece, "#rrggbb", n}, in
--- order: piece's nth find after the last one, n 1 when left out; found by text, as MoonSharp's strings aren't bytes)
+-- text (plain) in the website's palette (tts.json ac: {piece, "#rrggbb", n}, in order: piece's nth find after the last
+-- one, n 1 when left out; found by text, as MoonSharp's strings aren't bytes)
 local function painted(text, pieces)
     local out, at = {}, 1
     for _, p in ipairs(type(pieces) == "table" and pieces or {}) do
@@ -558,14 +564,18 @@ local function detailsText(card)
         if info then table.insert(typed, "<b>" .. plain(info.n) .. "</b>  " .. plain(info.x)) end
     end
     if #typed > 0 then section("TYPES") for _, line in ipairs(typed) do table.insert(out, line) end end
-    if card.x then
-        section("STATUS EFFECTS")
-        for _, name in ipairs(card.x) do
-            local s = details.statuses[name]
-            if s then table.insert(out, "<b>" .. plain(name) .. "</b> <color=" .. DIM .. ">(" .. plain(s.k) .. ")</color>  " .. withBadges(plain(s.x))) end
+    local rows = {}                                    -- the STATUS EFFECTS lines: {text, tip (its rule)}
+    for _, name in ipairs(card.x or {}) do
+        local s = details.statuses[name]
+        if s then
+            local c = hexColour(s.c)
+            local line = "<b>" .. (c and "<color=" .. c .. ">" .. plain(name) .. "</color>" or plain(name)) .. "</b> <color=" .. DIM .. ">(" .. plain(s.k) .. ")</color>  " .. withBadges(plain(s.x))
+            if #rows < STATUS_ROWS then table.insert(rows, {text = line, tip = s.x})
+            else rows[#rows].text, rows[#rows].tip = rows[#rows].text .. "\n" .. line, rows[#rows].tip .. "\n" .. s.x end
         end
     end
-    return table.concat(out, "\n")
+    if #rows > 0 then section("STATUS EFFECTS") end
+    return table.concat(out, "\n"), rows
 end
 
 -- a button's width for its text at font size f (a little more than the text: never cut off)
@@ -640,14 +650,29 @@ local function layout(color, k)
     for r = 1, CARD_ROWS do set(id .. "_cards" .. r, {offsetXY = "10 " .. (8 + (cardRows - r) * (ROW_H + 8))}) end
     for r = 1, DECK_ROWS do set(id .. "_decks" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows - r) * (ROW_H + 8))}) end
     for r = 1, RULE_ROWS do set(id .. "_rules" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows + ruleRows - r) * (ROW_H + 8))}) end
-    local text = detailsText(open.card)
-    local textW = sz.w - 44
-    local textH = lines(text, math.floor(textW / (sz.f * 0.52))) * math.ceil(sz.f * 1.32) + 12
+    local text, statusRows = detailsText(open.card)
+    local textW, lineH = sz.w - 44, math.ceil(sz.f * 1.32)
+    local perLine = math.floor(textW / (sz.f * 0.52))
+    -- the status lines under the text, each as tall as its lines; the text measured narrower above them (a line more
+    -- than the estimate leaves a gap, never an overlap)
+    local textH = lines(text, #statusRows > 0 and math.floor(textW / (sz.f * 0.58)) or perLine) * lineH + 12
+    local y = 6 + textH
+    for i = 1, STATUS_ROWS do
+        local row = statusRows[i]
+        if row then
+            local h = lines(row.text, perLine) * lineH + 4
+            set(id .. "_s" .. i, {active = "true", offsetXY = "14 -" .. y, width = textW, height = h, fontSize = sz.f, tooltip = row.tip})
+            setValue(id .. "_s" .. i, row.text)
+            y = y + h
+        else
+            set(id .. "_s" .. i, {active = "false"})
+        end
+    end
     set(id .. "_head", {width = sz.w})
     set(id .. "_title", {width = sz.w - 140, fontSize = sz.f + 3})
-    setValue(id .. "_title", painted(open.card.n or "", open.card.nc))
+    setValue(id .. "_title", plain(open.card.n or ""))
     set(id .. "_scroll", {width = sz.w - 8, height = sz.h - TITLE_H - 4 - foot})
-    set(id .. "_page", {width = sz.w - 24, height = textH})
+    set(id .. "_page", {width = sz.w - 24, height = #statusRows > 0 and y + 6 or textH})
     set(id .. "_text", {width = textW, height = textH, fontSize = sz.f})
     setValue(id .. "_text", text)
     set(id, {width = sz.w, height = sz.h, active = "true"})
