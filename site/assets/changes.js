@@ -169,8 +169,11 @@ export function eventHtml(e) {
 }
 
 // ---- one push ---------------------------------------------------------------------------------------------------
-/** A push's block: the post's title linked to the push, its sections, then the re-reads and the minor changes (folded).
-    kinds: only those (a filter) */
+let folds = [];                                           // the minor folds' events of the last tab drawn: foldHtml draws one when it opens
+/** A minor fold's lines (app.js, on its first open) */
+export const foldHtml = n => (folds[n] || []).map(eventHtml).join("");
+/** A push's block: the post's title linked to the push, its sections, then the re-reads and the minor changes (folded,
+    their lines drawn on open: foldHtml). kinds: only those (a filter) */
 export function groupHtml(group, repo, kinds = null) {
   const shown = kinds ? group.filter(e => kinds.includes(e.kind)) : group;
   if (!shown.length) return "";
@@ -183,7 +186,7 @@ export function groupHtml(group, repo, kinds = null) {
   }).join("");
   const rereads = major.filter(e => e.kind === "reparse");
   const tail = rereads.length ? `<details class="cl-sec"><summary>The parser re-read ${plural(rereads.length, "card")}</summary><ul class="cl-lines">${rereads.map(eventHtml).join("")}</ul></details>` : "";
-  const folded = minor.length ? `<details class="cl-sec cl-minor"><summary data-tip="Small picture changes and text changes in formatting only: not posted in Discord">${plural(minor.length, "minor change")}</summary><ul class="cl-lines">${minor.map(eventHtml).join("")}</ul></details>` : "";
+  const folded = minor.length ? `<details class="cl-sec cl-minor"><summary data-tip="Small picture changes and text changes in formatting only: not posted in Discord">${plural(minor.length, "minor change")}</summary><ul class="cl-lines" data-fold="${folds.push(minor) - 1}"></ul></details>` : "";
   return `<section class="panel cl-push" data-at="${esc(link || `${who} ${at}`)}"><h3>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${head}</a>` : head}<span class="muted">: ${esc(countsOf(group))}</span></h3>${secs}${tail}${folded}</section>`;
 }
 /** Groups under a heading per day (Pacific), newest first by time (a push split across builds, or one older than the
@@ -215,6 +218,7 @@ function sourceHtml(C) {
 // ---- the tabs ---------------------------------------------------------------------------------------------------
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=) */
 export function changelogHtml(C, params) {
+  folds = [];
   const events = C.events, kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
   const counts = new Map();
   for (const e of events) counts.set(e.kind, (counts.get(e.kind) || 0) + 1);
@@ -250,6 +254,7 @@ export function batchHtml(b, repo) {
 }
 /** The Database edits tab: the card sync's edited and authors events by push, and the edit batches (?via=) */
 export function editsHtml(C, params) {
+  folds = [];
   const events = C.events.filter(e => EDIT_KINDS.includes(e.kind));
   const batches = C.edits.batches, via = csv(params, "via").filter(v => VIA[v]);
   const counts = new Map();

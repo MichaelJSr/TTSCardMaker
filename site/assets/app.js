@@ -1345,6 +1345,9 @@ function distPage(panel, step) {          // a stat distribution's pager: the ne
 const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"],
   ["parser", "Parser notes"]];
 const NEEDS = { "": "history", changelog: "changelog.json", archive: "archive.json", edits: "edits.json" };   // the data a tab loads first
+// a minor fold's lines, drawn on its first open (changes.js foldHtml; capture: toggle doesn't bubble)
+document.addEventListener("toggle", e => { const ul = e.target.open && e.target.matches?.(".cl-minor") && $("ul[data-fold]", e.target);
+  if (ul && !ul.childElementCount) ul.innerHTML = changes.foldHtml(+ul.dataset.fold); }, true);
 function renderChanges(r = parseHash(), held = null) {   // held: the tab a loading page focused, for the loaded redraw
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
