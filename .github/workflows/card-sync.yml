@@ -1225,6 +1225,52 @@ jobs:
             echo
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
+      # A lane the Gate lets go: TTS save start's save and the Linked redraw's count (psd_links due) start here, on main's
+      # head, beside the bake records, the Bake and the fonts; TTS save start keeps them unless the Bake committed B
+      - name: Early save
+        id: early-save
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
+        continue-on-error: true   # TTS save start starts what this did not
+        timeout-minutes: 1
+        working-directory: bot
+        env: &save-env
+          AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
+        run: &save-sh |
+          save="TTS/Impossibility Simulator.json" bg=$RUNNER_TEMP/save ws=$GITHUB_WORKSPACE
+          head=$(git -C "$ws" rev-parse HEAD)
+          if [ -s "$bg/at" ]; then              # Early save's
+            if [ "$(cat "$bg/at")" = "$head" ]; then echo "The save and the count started after the Gate on ${head:0:8}: kept."; exit 0; fi
+            until [ -s "$bg/pid" ] || [ -s "$bg/code" ]; do sleep 0.05; done     # B: that save stopped, both made again on B
+            [ -s "$bg/code" ] || kill "$(cat "$bg/pid")" 2> /dev/null || true
+            until [ -s "$bg/code" ]; do sleep 0.05; done
+            git -C "$ws" checkout -q -- "$save"
+            rm -rf "$bg" "$ws/${save%.json}.report.md" "$ws/${save%.json}.message.txt" "$ws/$save.tmp"
+            echo "The Bake committed ${head:0:8}: the save and the count made again on it."
+          fi
+          names=()
+          if [ -f "$ws/carddata/db/stats.json" ]; then
+            names=(--names "$ws/carddata/db/stats.json")
+          else
+            echo "No card data: names from the website's cards.json."
+          fi
+          mkdir -p "$bg"
+          ( code=0
+            timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$ws/$save" "${names[@]}" \
+              > "$RUNNER_TEMP/save.md" 2> "$bg/err" &
+            echo "$!" > "$bg/pid"
+            wait "$!" || code=$?
+            echo "$code" > "$bg/code" ) < /dev/null > /dev/null 2>&1 &
+          echo "$head" > "$bg/at"
+          if [ -f commands/psd_links.py ] && [ -f "$ws/carddata/db/links.json" ]; then     # Linked redraw's, at this head
+            due=$RUNNER_TEMP/due/$head
+            mkdir -p "$due"
+            ( code=0
+              GIT_NO_LAZY_FETCH=1 timeout 300 "$RUNNER_TEMP/venv/bin/python" -m commands.psd_links due --clone "$ws" \
+                --db "$ws/carddata/db" --head "$head" > "$due/n" 2> "$due/err" || code=$?
+              echo "$code" > "$due/code" ) < /dev/null > /dev/null 2>&1 &
+          fi
+
       # The data checkout plus the bake records no data job merged yet (an earlier run's after job still pending, or
       # lost): Pending edits and the bake read these verdicts, so a card refused a run ago is not baked and told again.
       # Local only: this job never writes data.
@@ -1356,26 +1402,16 @@ jobs:
 
       # The save on the checkout (B's Card Edits.json and decks), names from the data branch's head (Card Edits.json's
       # first); with no data, the website's cards.json. In the background while the rulebook PDF prints (the save pins
-      # main before M and reads only pages.json's PDF name): TTS save waits for it (20 minutes at most).
+      # main before M and reads only pages.json's PDF name): TTS save waits for it (20 minutes at most). Early save's
+      # kept while HEAD is still main's head; else (B) stopped and made again here, the count too; started here in a lane
+      # Pending edits or Linked due let go.
       - name: TTS save start
         id: save-start
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         timeout-minutes: 1
         working-directory: bot
-        env:
-          AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
-          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
-        run: |
-          save="TTS/Impossibility Simulator.json" bg=$RUNNER_TEMP/save
-          names=()
-          if [ -f "$GITHUB_WORKSPACE/carddata/db/stats.json" ]; then
-            names=(--names "$GITHUB_WORKSPACE/carddata/db/stats.json")
-          else
-            echo "No card data: names from the website's cards.json."
-          fi
-          mkdir -p "$bg"
-          ( code=0; timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$GITHUB_WORKSPACE/$save" "${names[@]}" \
-              > "$RUNNER_TEMP/save.md" 2> "$bg/err" || code=$?; echo "$code" > "$bg/code" ) < /dev/null > /dev/null 2>&1 &
+        env: *save-env
+        run: *save-sh
 
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
       # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), once the website shows main's
@@ -1485,6 +1521,7 @@ jobs:
       # again with MDW/Fonts, those glyphs alone, and their PNGs re-exported (Card-sweep: glyphs); a card it cannot redraw
       # gets a hand flag in site/Card Edits.json instead. No card starts past minute 45 of the lane; R's bytes stay under
       # 1.5 GB less M's. Blobs come in the guards' chunks. due: cards left (Leftover work chains on it). A dry run: no R.
+      # A count of 0 at this HEAD (TTS save start's psd_links due, never under what the redraw draws): no redraw.
       - name: Linked redraw
         id: redraw
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
@@ -1505,6 +1542,15 @@ jobs:
           left=$((START + 55 * 60 - $(date +%s)))   # killed by minute 55: Commit main still pushes M before minute 60
           [ "$left" -ge 60 ] || { echo "Minute 54 of the lane passed: no redraw this run."; exit 0; }
           head=$(git -C "$ws" rev-parse HEAD)
+          due=$RUNNER_TEMP/due/$head
+          if [ -d "$due" ]; then
+            until [ -s "$due/code" ]; do sleep 0.05; done
+            if [ "$(cat "$due/code")" = 0 ] && [ "$(cat "$due/n")" = 0 ]; then
+              printf '## Linked redraw\n\n0 PSDs drawn again (none due at %s)\n' "${head:0:8}" | tee "$RUNNER_TEMP/redraw.md" | tee -a "$GITHUB_STEP_SUMMARY"
+              echo "due=0" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
           m=0                                   # M's bytes: the bake's new blobs, the save, the rulebook's pages
           if [ "$head" != "$MAIN" ]; then
             m=$(git -C "$ws" diff-tree -r --no-renames "$MAIN" "$head" | awk '$4 !~ /^0+$/ {print $4}' \
