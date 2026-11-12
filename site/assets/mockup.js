@@ -1154,6 +1154,7 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
  *  backdrop under each text layer, its layout) or null. */
 let eraseMemo = null;                                // the last draw's erase pass (draw)
 export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, fills = null, stale = () => false, plate = null }) {
+  const seq = (canvas._seq = (canvas._seq || 0) + 1);   // the newest draw on a canvas wins (one with the plate may end first)
   const img = await loadImage(src);
   if (!img || stale()) return null;
   const ours = plate?.v === 1 && plate.w === rec?.canvas?.w && (card?.variant || 1) === 1;   // picture 1's plate
@@ -1182,7 +1183,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const pasteStars = data => { putBar(data, W, H, barPixels(starImg, starCut, W / spics.vw)); out.drawn.push("stars"); todo.stars = null; };
   const kept = todo.stars && !starImg && starsKept(rec?.header?.stars, todo.stars[1]), moved = kept && starMove(card?.psd, todo.stars[1]);
   if (kept) { if (moved) out.starsKept = { why: kept, to: moved.to }; else out.refused.push(["stars", kept]); todo.stars = null; }   // the picture's stay
-  const blit = () => { if (stale()) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
+  const blit = () => { if (stale() || canvas._seq !== seq) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
   if (!tpl) {                                         // no template: the bake's stat pictures alone
     const got = Object.entries(todo.stats).map(([k, [from, to]]) => [k, barCut(pics, k, from, to)]).filter(([, c]) => c);
     const sheetImg = got.length ? await loadImage(pics.img) : null;
