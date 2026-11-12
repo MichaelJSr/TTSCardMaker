@@ -536,10 +536,27 @@ def offset_y(ui, i):
 
 
 def pool(ui, panel):                                        # the ability's plain lines, rows and each row's texts (ids)
-    al = [i for i in ui.ids if re.fullmatch(rf"{panel}_al\d+", i)]
-    rows = {i: sorted((j for j in ui.ids if re.fullmatch(rf"{i}_\d+", j)), key=lambda j: int(j.rsplit("_", 1)[1]))
-            for i in ui.ids if re.fullmatch(rf"{panel}_as\d+", i)}
-    return al, rows
+    got = getattr(ui, "_pools", None)
+    if not got or got[0] is not ui.ids:                     # ids change only with a build (a new dict)
+        got = ui._pools = (ui.ids, {})
+    if panel not in got[1]:                                 # one pass over the ids
+        al, rows, texts, pre = [], {}, {}, panel + "_a"
+        pat = re.compile(rf"({re.escape(panel)}_a([ls])\d+)(?:_(\d+))?")
+        for i in ui.ids:
+            m = pat.fullmatch(i) if i.startswith(pre) else None
+            if not m:
+                continue
+            if m.group(3):
+                if m.group(2) == "s":
+                    texts.setdefault(m.group(1), []).append(i)
+            elif m.group(2) == "l":
+                al.append(i)
+            else:
+                rows[i] = []
+        for i in rows:
+            rows[i] = sorted(texts.get(i, []), key=lambda j: int(j.rsplit("_", 1)[1]))
+        got[1][panel] = al, rows
+    return got[1][panel]
 
 
 def ability_lines(ui, panel):                               # the ability's laid-out lines, top down:
@@ -610,15 +627,26 @@ def type_words(d):                                          # creature and minio
     return out
 
 
+_PATS = {}
+
+
+def patterns(d):                                            # d's tag and type-word patterns, compiled once (d kept)
+    if id(d) not in _PATS:
+        _PATS[id(d)] = (d, [(tag, re.compile(re.escape(f"({tag})"))) for tag in d["tags"]],
+                        [(word, k, re.compile(rf"(?<![A-Za-z]){re.escape(word)}(?![A-Za-z])"))
+                         for word, k in sorted(type_words(d).items(), key=lambda x: -len(x[0]))])
+    return _PATS[id(d)]
+
+
 def badges(chars, d):                                       # drawn text's badges: [(start, end, tag)] (bold, the tag's case)
     seen = "".join(c[0] for c in chars)
-    return [(m.start(), m.end(), tag) for tag in d["tags"] for m in re.finditer(re.escape(f"({tag})"), seen) if chars[m.start()][2]]
+    return [(m.start(), m.end(), tag) for tag, pat in patterns(d)[1] for m in pat.finditer(seen) if chars[m.start()][2]]
 
 
 def type_hits(chars, d):                                    # drawn text's type words past its badges: [(start, end, type)]
     seen, out, taken = "".join(c[0] for c in chars), [], [range(s, e) for s, e, _ in badges(chars, d)]
-    for word, k in sorted(type_words(d).items(), key=lambda x: -len(x[0])):
-        for m in re.finditer(rf"(?<![A-Za-z]){re.escape(word)}(?![A-Za-z])", seen):
+    for word, k, pat in patterns(d)[2]:
+        for m in pat.finditer(seen):
             if not any(m.start() in r or m.end() - 1 in r for r in taken):
                 out.append((m.start(), m.end(), k))
                 taken.append(range(m.start(), m.end()))
