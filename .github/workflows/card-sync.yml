@@ -1719,7 +1719,7 @@ jobs:
 
       - name: Tell Discord
         if: failure() && env.DRY_RUN != 'true'
-        timeout-minutes: 3
+        timeout-minutes: 2        # Commit main's reserve covers it
         env:
           GH_TOKEN: ${{ github.token }}
           WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
