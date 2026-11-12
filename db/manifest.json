@@ -1,32 +1,17 @@
 {
  "builder": {
-  "commit": "e4807ee3b11f3f82a0efb9595b0e394799680728",
+  "commit": "cbab4c44cb388122bf180de3ccc15721154600fe",
   "details_version": 6,
-  "parser_version": 7,
-  "psd_tools": "1.26.0+cards",
-  "python": "3.14",
-  "ref": null,
-  "repo": "bobberlington/AutoCroissant"
+  "parser_version": 7
  },
- "built_at": "2026-11-12T20:42:39Z",
- "card_commit": "d253a679998fbb999ba796e23571f10207ff446d",
- "card_commit_at": 1794515462.0,
+ "built_at": "2026-11-12T22:42:07Z",
+ "card_commit": "267aca0bee825533d2566c1b473eaa483278f776",
  "card_repo": "MichaelJSr/TTSCardMaker",
- "counts": {
-  "archived": 131,
-  "baked": 0,
-  "cards": 776,
-  "changed": 0,
-  "details": 783,
-  "failed": 0,
-  "new": 0,
-  "versions": 1878
- },
  "files": {
   "old_stats.json": "3c28ede0f8cd2a98fa23dcddcc1bd01f5bffe65f9154f1ca43577ed3e3e4cec2",
-  "psd_details.json": "8c066cf4b06efedeed70857deb2262c3585a3a7cef6f9199b143da61a16901f6",
+  "psd_details.json": "6d3cd2a914ae9df4edaf068ae9f797159d443941b55c74dc8568e44780df4e49",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "d707a87767bd47556c87bef20be62fc1a9b4211ee4a5c9c5f069f784fb9bccd7"
+  "stats.json": "600f4a9e52e1f8d19fc2e0cc4540112ff32e8765bb1d92bbd306c3260e8be931"
  },
  "fonts": {
   "checked": 768,
@@ -34,24 +19,13 @@
   "missing": {}
  },
  "gates": {},
- "inputs": {
-  "authors_blob": "00b0deb5d0434aa2f10e0d2ede0602bc25d3e5fe",
-  "created_blob": "9f31dba490f73fe46c7daf32f2b4f0c50cf114b1",
-  "decks_blob": "59b019c6e2cf454a589e07fb83e4bbee0a3e236d",
-  "edits_blob": "49bbcf696b97a1a28cc7a446b5aab93752774e92",
-  "fonts_tree": "f7d8d3b2408a6f778921969a591217eaa0cc691a",
-  "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
-  "types_tree": "1a5900aadf04d5a98b8c10e0448e0d8fc751c000"
- },
- "main_commit": null,
  "pending": {
   "failed": [],
   "full": null,
-  "repin": [],
   "stale": []
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43302935945",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43322254096",
  "schema": 1
 }
