@@ -2068,7 +2068,7 @@ def valid_rating(e):
 
 
 def rating_order(entries):
-    """Oldest first: date, source (TTS sessions first), by, scale (card_edits.CardRatings.order, edit.js ratingsFile)."""
+    """Oldest first: date, source (TTS sessions first), by, scale (card_edits.CardRatings.order)."""
     return sorted(entries, key=lambda e: (e["date"], RATING_SOURCES.index(e["source"]), e["by"].lower(), RATING_SCALES.index(e["scale"])))
 
 
@@ -2118,7 +2118,7 @@ def rating_now(entries, scale, skip=None):
 
 
 def rater_shown(e, people, by_login, row_of=None):
-    """A Card Ratings.json entry as the site shows it: a login credited by another name keeps it as login. row_of:
+    """A Card Ratings.json entry as cards.json carries it: a login credited by another name keeps it as login. row_of:
     login_rows()', else credit()."""
     shown = e["by"] if e["by"] == "group" else (row_of or (lambda k: credit(k, people, by_login)))(e["by"]) or e["by"]
     return {**e, "by": shown, "login": e["by"]} if shown != e["by"] else {**e}
@@ -2126,7 +2126,7 @@ def rater_shown(e, people, by_login, row_of=None):
 
 def apply_ratings(cards, ratings, archived, people, by_login, row_of=None):
     """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source, login?}], oldest first; by stays
-    "group", a login becomes its row (row_of: login_rows(), else credit()), then kept as login (the page's own re-rating). A duplicate's
+    "group", a login becomes its row (row_of: login_rows(), else credit()), then kept as login. A duplicate's
     go to its original. A name matching an archived row goes to the card it was renamed to (renamedId), else onto the
     row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
     live, by_id = {}, {e["id"]: e for e in cards}
@@ -2137,7 +2137,7 @@ def apply_ratings(cards, ratings, archived, people, by_login, row_of=None):
     for key, (name, entries) in ratings.items():
         target = live.get(key)
         if target is not None and target.get("dup") in by_id and not target.get("variantOf"):
-            target = by_id[target["dup"]]              # a duplicate's ratings are its original's, as its page shows (a variant: its own)
+            target = by_id[target["dup"]]              # a duplicate's ratings are its original's (a variant: its own)
         if target is None and key in arch:
             target = by_id.get(arch[key].get("renamedId")) or arch[key]
         if target is None:
@@ -3253,7 +3253,7 @@ def redirect_page(target, site_url=""):
 TITLES = (("cards", "Top card maker"), ("edits", "Top editor"), ("commits", "Top committer"))   # top count per column; ties share; same list in profile.js
 OVERALL = "Top contributor"                   # the top total of the three columns; profile.js OVERALL
 RECENT_COMMITS = 10
-MIN_RATERS = 5                                # P7/P8: the fewest cards a correlation is shown for (P5: 3 of their own)
+MIN_RATERS = 5                                # P7/P8: the fewest cards a correlation is kept for (P5: 3 of their own)
 RECENT_BAL = 5                                # P1: the newest buffs and nerfs kept per person
 PAGE_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$")       # a name that can be a u/<key>/ folder
 
