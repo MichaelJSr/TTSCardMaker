@@ -992,7 +992,7 @@ jobs:
   # main lane finds nothing to commit. Other dispatches and retries skip both jobs. A push's lane holds card-main while
   # it waits for its guards: another lane queues behind it.
   timer:
-    if: github.event_name == 'schedule' || inputs.chain || (github.event_name == 'push' && github.actor != 'github-actions[bot]')
+    if: github.event_name == 'schedule' || inputs.chain || github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     defaults:
@@ -1013,18 +1013,16 @@ jobs:
         run: |
           if ! runs=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --event push --limit 20 --json databaseId,status,createdAt \
               --jq ".[] | select(.status != \"completed\" and .databaseId != ${GITHUB_RUN_ID:-0}
-                and (.createdAt | fromdate) > now - 40 * 60) | \"\\(.databaseId) \\(.status)\""); then
+                and (.createdAt | fromdate) > now - 40 * 60) | .databaseId"); then
             echo "::warning::the push runs were not read: this run goes on"
             runs=""
           fi
-          while read -r id status; do
+          while read -r id; do
             [ -n "$id" ] || continue
-            n=1                                  # a run waiting is in its window (the environment's only wait here)
-            if [ "$status" != waiting ]; then    # its lane queued, or not past its wait
-              n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
-                --jq "[.jobs[] | select(.name == \"$LANE\" and .status != \"completed\"
-                  and all(.steps[]?; .name != \"$WAIT\" or .status != \"completed\"))] | length") || n=0
-            fi
+            # its lane queued, or not past its wait
+            n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
+              --jq "[.jobs[] | select(.name == \"$LANE\" and .status != \"completed\"
+                and all(.steps[]?; .name != \"$WAIT\" or .status != \"completed\"))] | length") || n=0
             if [ "${n:-0}" -gt 0 ]; then
               echo "run=$id" >> "$GITHUB_OUTPUT"
               echo "Push run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id is about to bake and save main's head (this run's work too)." \
@@ -1046,7 +1044,7 @@ jobs:
   main:
     name: Bake and save
     needs: timer
-    if: ${{ !cancelled() && (github.event_name != 'push' || needs.timer.result != 'skipped') && !needs.timer.outputs.other && !needs.timer.outputs.guards }}
+    if: ${{ !cancelled() && !needs.timer.outputs.other && !needs.timer.outputs.guards }}
     concurrency:
       group: ${{ inputs.dry_run && format('card-main-dry-{0}', github.run_id) || 'card-main' }}   # a dry run: a lock of its own
       cancel-in-progress: false   # a running lane is never cut off
@@ -1462,7 +1460,7 @@ jobs:
       # and --missing-ok keep git from fetching the tree's blobs. Past minute 60 nothing is pushed (red): the 30 minutes left
       # cover this step's cap and every later one's, and the next run does the work. Main moved meanwhile: M and R are
       # dropped and the lane starts over once from the new head, unless another run is unfinished (it does the work: a
-      # push's in its window, a pending one). The retry is marked by inputs.retry, runs only this lane and starts no other.
+      # push's or a pending one). The retry is marked by inputs.retry, runs only this lane and starts no other.
       - name: Commit main
         id: main
         if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true' || steps.pages.outputs.changed == 'true' || steps.redraw.outputs.r != '') }}
@@ -1565,7 +1563,7 @@ jobs:
             waiting=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json databaseId,status,displayTitle \
               --jq "map(select(.status != \"completed\" and .databaseId != ${GITHUB_RUN_ID:-0} and .displayTitle != \"Card sync (dry run)\")) | length") \
               || waiting=0
-            if [ "${waiting:-0}" -gt 0 ]; then echo "Another Card sync run is unfinished (a push's in its window, or pending): it does the work."; exit 0; fi
+            if [ "${waiting:-0}" -gt 0 ]; then echo "Another Card sync run is unfinished (a push's or a pending one): it does the work."; exit 0; fi
             again=(-f dry_run=false -f force=true -f "retry=$GITHUB_EVENT_NAME" -f "builder_ref=$(git -C bot rev-parse HEAD)"
                    -f "bake=$(jq -r '.bake // "all"' <<< "$INPUTS")")
             for wait in 0 10 30; do               # tried 3 times

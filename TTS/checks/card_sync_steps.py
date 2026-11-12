@@ -26,9 +26,9 @@
    inputs), none from a retry or while another run is unfinished; past minute 60 nothing is pushed. Re-pin: the save
    run again on M, a change is a second commit on M; none when the links were current or main moved. The save starts
    in the background before the rulebook PDF; TTS save waits for it (its report, changed, its exit code).
-6. The timer: a push's and the schedule's run look for a push run about to bake (Another timer: one waiting, or with
-   its Bake and save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as
-   none) and skip their main lane when there is one (no cancel: the data lane ran); else a push's main lane sets up and
+6. The timer: a push's and the schedule's run look for a push run about to bake (Another timer: one with its Bake and
+   save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as none) and skip
+   their main lane when there is one (no cancel: the data lane ran); else a push's main lane sets up and
    waits in itself for its guards (no Quiet window job, no environment, no sleep) and the schedule's goes; a dispatch's
    at once; a follow-up's (input guards) two lanes set up, then wait for that guards run's Land, then take main's head. The data lane runs at once on every event but a retry. A chained run looks like the schedule; its main Gate is
    the schedule's.
@@ -676,9 +676,8 @@ def timer_cases(flow: dict) -> None:
           and locks == ["card-data", "card-data", "card-data-dry-77"],
           f"data: at once on a push, the schedule and a dispatch, never a retry; one group with after, a dry run's its own ({got}, {locks})")
     got = [bool(evaluate(timer["if"], ctx(e, a))) for e, a in (("push", "MichaelJSr"), ("push", "AutoCroissant"),
-                                                              ("push", "github-actions[bot]"), ("schedule", "x"),
-                                                              ("workflow_dispatch", "x"))]
-    check(got == [True, True, False, True, False],
+                                                              ("schedule", "x"), ("workflow_dispatch", "x"))]
+    check(got == [True, True, True, False],
           f"timer: a person's or the bot's push and the schedule look for a running window; dispatches never ({got})")
     t = lambda result, other="": {"result": result, "outputs": {"other": other} if result != "skipped" else {}}  # noqa: E731
     other = step(timer, "other")
@@ -687,7 +686,7 @@ def timer_cases(flow: dict) -> None:
           and other["env"]["WAIT"] == step(main, "guards")["name"],
           "no Quiet window job, no environment; Another timer looks for main's lane in its guards' wait, the main Gate for main's name")
     want = [(("push", t("success")), True), (("push", t("failure")), True),
-            (("push", t("success", "41")), False), (("push", t("skipped")), False),
+            (("push", t("success", "41")), False),
             (("schedule", t("success")), True), (("schedule", t("success", "41")), False),
             (("schedule", t("failure")), True), (("workflow_dispatch", t("skipped")), True)]
     got = [bool(evaluate(main["if"], ctx(e, timer=n))) for (e, n), _ in want]
@@ -728,15 +727,16 @@ def timer_cases(flow: dict) -> None:
         wait = other["env"]["WAIT"]
         lane = lambda status, *steps_: {"name": LANE, "status": status, "steps": [  # noqa: E731
             {"name": n, "status": "completed" if c else "in_progress", "conclusion": c} for n, c in steps_]}
-        write(os.path.join(jobs_dir, "41.json"), json.dumps({"jobs": [{"name": "timer", "status": "completed"}, lane("queued")]}))
+        for rid in (41, 43, 99):                # 43 (stuck) and 99 (this run) would ride if not passed over
+            write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": [{"name": "timer", "status": "completed"}, lane("queued")]}))
         write(os.path.join(jobs_dir, "42.json"), json.dumps({"jobs": [lane("in_progress", (wait, "success"), ("Gate", None))]}))
         write(os.path.join(jobs_dir, "44.json"), json.dumps({"jobs": [lane("in_progress", ("Python environment", "success"), (wait, None))]}))
-        cases = [([], "", "no other push run"), ([run(40, "waiting")], "40", "a run waiting on the environment"),
+        cases = [([], "", "no other push run"),
                  ([run(41, "in_progress")], "41", "a run whose lane is queued"),
                  ([run(44, "in_progress")], "44", "a run whose lane waits for its guards"),
                  ([run(42, "in_progress")], "", "a run past its guards' wait (baking)"),
-                 ([run(99, "waiting")], "", "this run itself"), ([run(43, "waiting", 50)], "", "a window stuck 50 minutes"),
-                 ([run(42, "in_progress"), run(40, "waiting")], "40", "the second of two runs")]
+                 ([run(99, "in_progress")], "", "this run itself"), ([run(43, "in_progress", 50)], "", "a run stuck 50 minutes"),
+                 ([run(42, "in_progress"), run(41, "in_progress")], "41", "the second of two runs")]
         cancelled = os.path.join(tmp, "cancelled")
         env = {}
         for runs, want, what in cases:
@@ -1101,7 +1101,7 @@ def main_cases(flow: dict) -> None:
         env["FAKE_WAITING"] = "1"
         code, text, out = run_step(job, "main", ws, env, root)
         check(code == 0 and out.get("rejected") == "true" and not gh_args(root) and "does the work" in text,
-              "main moved with another run unfinished (a push's waiting, a pending one): no retry")
+              "main moved with another run unfinished (a push's or a pending one): no retry")
 
         ws, bare, main, env, root = setup(tmp, "retry-moved")
         moved(bare)

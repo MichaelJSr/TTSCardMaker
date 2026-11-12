@@ -94,11 +94,10 @@ def glyphs(font) -> dict:
     icon is added); an SVG picture's own glyph ids left out."""
     order, glyf, hmtx = font.getGlyphOrder(), font["glyf"], font["hmtx"].metrics
     pictures = {}
-    if "SVG " in font:
-        for doc in font["SVG "].docList:
-            data, lo, hi = (doc.data, doc.startGlyphID, doc.endGlyphID) if hasattr(doc, "data") else doc
-            for gid in range(lo, hi + 1):
-                pictures[gid] = re.sub(r'id="glyph\d+"', 'id="glyph"', data)
+    for doc in font["SVG "].docList:
+        data, lo, hi = doc.data, doc.startGlyphID, doc.endGlyphID
+        for gid in range(lo, hi + 1):
+            pictures[gid] = re.sub(r'id="glyph\d+"', 'id="glyph"', data)
     return {name: (hmtx[name], glyf[name].compile(glyf), pictures.get(gid)) for gid, name in enumerate(order)}
 
 
@@ -144,8 +143,7 @@ def shaped(path: str):
 
 
 def record(tree: str) -> dict:
-    path = os.path.join(tree, RECORD)
-    return json.loads(read(path)) if os.path.exists(path) else {}
+    return json.loads(read(os.path.join(tree, RECORD)))
 
 
 def redrawn(was: dict, now: dict) -> tuple:
@@ -185,10 +183,7 @@ def badge(head: str, tree: str, repo: str) -> dict:
     """The badge font when its inputs moved since it was last committed: {path: bytes} of the woff2 (when its tables
     changed) and text.js (when its constants print otherwise), {} when it rebuilds the same; None otherwise."""
     from fontTools.ttLib import TTFont
-    if not os.path.exists(os.path.join(tree, BADGE)):
-        return None
-    since = last(repo, BADGE)
-    if not since or not git(repo, "diff", "--name-only", since, head, "--", *BADGE_INPUTS).strip():
+    if not git(repo, "diff", "--name-only", last(repo, BADGE), head, "--", *BADGE_INPUTS).strip():
         return None
     was = read(os.path.join(tree, BADGE))
     printed = subprocess.run([sys.executable, os.path.join(tree, SRC, "badge_web_font.py")], cwd=os.path.join(tree, SRC),
@@ -227,7 +222,7 @@ def main(argv=None) -> int:
     extract(repo, font_commit, base)
     manifest, kept = read(os.path.join(base, MANIFEST)), record(base)
     if build(base, os.path.join(out, "base.ttf")) != read(os.path.join(base, FONT)) \
-            or read(os.path.join(base, MANIFEST)) != manifest or record(base) != kept or not kept:
+            or read(os.path.join(base, MANIFEST)) != manifest or record(base) != kept:
         lines.append(f"This runner does not rebuild `{font_commit[:8]}`'s font byte for byte: nothing is committed.")
         write(out, lines, "")
         return 2

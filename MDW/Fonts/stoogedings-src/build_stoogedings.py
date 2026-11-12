@@ -41,7 +41,7 @@ usage: python build_stoogedings.py
 Rebuilds MDW/Fonts/stoogedings.ttf from Types/ and Types/Stars/ of the repo this script lives in. Run it after
 adding or changing icons, then commit stoogedings.ttf, stoogedings.json and stoogedings-inputs.json with the PNGs.
 stoogedings.json (token names, aliases, codepoints, per-icon tint modes) is updated in place: new PNGs get the
-next free codepoint and existing codepoints never move.
+next free codepoint, no aliases and tint "auto" (edit the JSON), and existing codepoints never move.
 Incremental (11-08): stoogedings-inputs.json records what the committed font's icons and badges were drawn from (each
 PNG's git blob id and tint mode, the letter and label fonts', RECIPE). A glyph whose inputs match is copied from the committed
 font byte for byte; only added or changed icons are drawn, the same on macOS and Linux (PNGs by libdeflate, the halo
@@ -214,31 +214,6 @@ def _gauss(sigma):
     return np.array(ints, np.float64), sum(ints)
 
 
-DEFAULT_ALIASES = {
-    "darkmatter": ["dark matter"],
-    "lightshadow": ["light shadow"],
-    "buffstack": ["buff stack"],
-    "debuffstack": ["debuff stack"],
-    "debuffupgrade": ["debuff upgrade"],
-    "nme": ["n.m.e"],
-    "warpstar": ["warp star"],
-    "yinyangultra": ["yin yang ultra", "yin yang"],
-    "sapphire_starold": ["sapphire star"],
-    "the_poorly_drawn_barnstar": ["poorly drawn barnstar", "barnstar"],
-    "thunderfury_blessed_blade_of_the_starseeker": ["thunderfury"],
-    "isaac_no_circle": ["isaac no circle"],
-    "6star": ["6 star"], "7star": ["7 star"], "8star": ["8 star"],
-}
-
-DEFAULT_TINT = {   # chosen by eye from a silhouette / auto / cut-dark / cut-light comparison of every icon
-    **{k: "silhouette" for k in ("girl", "buff", "debuff", "dark", "darkmatter", "fire", "light", "rock", "support", "water",
-                                 "6star", "7star", "8star", "bgold", "bronze", "silver", "star", "null_star", "ruby_star",
-                                 "ruby_star_pmttydns_icon", "sapphire_star_pmttydns_icon", "sapphire_starold", "dst_star",
-                                 "elden_stars", "isaac_no_circle", "yinyangultra")},
-    **{k: {"mode": "detail", "cut": "dark"} for k in ("undead", "unknown", "nebula_star", "bfables")},
-}
-
-
 # ---- config ---------------------------------------------------------------------------
 def discover(repo):
     found = {}
@@ -254,14 +229,13 @@ def discover(repo):
 
 
 def load_config(path, repo):
-    cfg = json.load(open(path)) if os.path.exists(path) else {"icons": {}}
+    cfg = json.load(open(path))
     icons = cfg["icons"]
     used = {int(v["pua"], 16) for v in icons.values()}
     nxt = max(used, default=FIRST_PUA - 1) + 1
     for key, (kind, rel) in discover(repo).items():
         if key not in icons:
-            icons[key] = {"kind": kind, "file": rel, "pua": f"{nxt:04X}", "aliases": DEFAULT_ALIASES.get(key, []),
-                          "tint": DEFAULT_TINT.get(key, "auto")}
+            icons[key] = {"kind": kind, "file": rel, "pua": f"{nxt:04X}", "aliases": [], "tint": "auto"}
             nxt += 1
         else:
             icons[key]["file"] = rel
@@ -307,9 +281,7 @@ def tint_mask(sil, rgb, opts):
     if mode == "silhouette" or sil.sum() < 400:
         return sil
     lum = (0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]).astype(np.uint8)
-    thr = opts.get("threshold") if isinstance(opts, dict) else None
-    if thr is None:
-        thr, _ = cv2.threshold(lum[sil].reshape(-1, 1), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    thr, _ = cv2.threshold(lum[sil].reshape(-1, 1), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     dark = sil & (lum <= thr)
     frac_dark = dark.sum() / sil.sum()
     cut = opts.get("cut") if isinstance(opts, dict) else None
@@ -1146,14 +1118,12 @@ def icon_glyphs(key):
 
 
 def committed(font_path, record_path):
-    """({glyph name: (glyph, metrics, svg body or None)} of the committed font, its record); ({}, {}) without either."""
-    if not (os.path.exists(font_path) and os.path.exists(record_path)):
-        return {}, {}
+    """({glyph name: (glyph, metrics, svg body or None)} of the committed font, its record)."""
     with open(font_path, "rb") as fh:
         font = TTFont(io.BytesIO(fh.read()))
     order, glyf, hmtx, bodies = font.getGlyphOrder(), font["glyf"], font["hmtx"], {}
     for doc in font["SVG "].docList:
-        data, lo, hi = (doc.data, doc.startGlyphID, doc.endGlyphID) if hasattr(doc, "data") else doc
+        data, lo, hi = doc.data, doc.startGlyphID, doc.endGlyphID
         head = f'{SVG_HEAD}<g id="glyph{lo}">'
         assert lo == hi and data.startswith(head) and data.endswith("</g></svg>"), "not this script's font"
         bodies[order[lo]] = data[len(head):-len("</g></svg>")]

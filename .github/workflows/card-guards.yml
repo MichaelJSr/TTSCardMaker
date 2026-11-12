@@ -470,8 +470,7 @@ jobs:
       # runner, an `all` dispatch reads its 813 PSDs once (twice at once would pass GITHUB_TOKEN's 1,000 requests an hour).
       # `sha`'s (or main's head's) own PSDs, or with `all` every card PSD of the tree. Each exits 0 on findings (an
       # unreadable PSD or a failed API call is one line in its report); one that breaks anyway is a warning and never
-      # stops the guards. report.md, report.json and discord.json in $RUNNER_TEMP/<check>. --clone: a PSD is fetched
-      # once into this clone, then read from it by the next one.
+      # stops the guards. --clone: a PSD is fetched once into this clone, then read from it by the next one.
       - name: Card check
         id: card-check
         if: github.event_name != 'push'
@@ -485,13 +484,10 @@ jobs:
           AFTER: ${{ inputs.sha || github.sha }}
           ALL: ${{ inputs.all }}
         run: |
-          out=$RUNNER_TEMP/$CHECK
-          mkdir -p "$out"
-          args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER" --json "$out/report.json"
-                --discord "$out/discord.json")
+          args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER")
           [ "$CHECK" = font-check ] && args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
           [ "$ALL" = true ] && args+=(--whole-tree)
-          python -m "commands.${CHECK/-/_}" "${args[@]}" | tee "$out/report.md" >> "$GITHUB_STEP_SUMMARY"
+          python -m "commands.${CHECK/-/_}" "${args[@]}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Font check
         id: font-check
@@ -506,13 +502,10 @@ jobs:
           AFTER: ${{ inputs.sha || github.sha }}
           ALL: ${{ inputs.all }}
         run: |
-          out=$RUNNER_TEMP/$CHECK
-          mkdir -p "$out"
-          args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER" --json "$out/report.json"
-                --discord "$out/discord.json")
+          args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER")
           [ "$CHECK" = font-check ] && args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
           [ "$ALL" = true ] && args+=(--whole-tree)
-          python -m "commands.${CHECK/-/_}" "${args[@]}" | tee "$out/report.md" >> "$GITHUB_STEP_SUMMARY"
+          python -m "commands.${CHECK/-/_}" "${args[@]}" >> "$GITHUB_STEP_SUMMARY"
 
       # A push: before..after. A dispatch: `sha` (or main's head) against its first parent, or with `all` every card PSD.
       # report.md is the job summary and the comment; plan.json feeds Land. Exit 1: not checked (the alert). A push's
@@ -525,13 +518,9 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BEFORE: ${{ github.event_name == 'push' && github.event.before || '' }}
-          # names an author with no GitHub account; never the dispatcher
-          AUTHOR: ${{ github.event_name == 'push' && github.actor || '' }}
           SHA: ${{ inputs.sha }}
           CARDS: ${{ inputs.cards }}
           ALL: ${{ inputs.all }}
-          CARD_BLOBS_PENDING: ${{ runner.temp }}/blobs    # Pushed blobs start's list: a blob in it is waited for
         run: |
           t=$RUNNER_TEMP/check
           if [ -s "$t.pid" ]; then
@@ -542,8 +531,6 @@ jobs:
             exit "${code:-1}"
           fi
           args=(--clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --after "${SHA:-$GITHUB_SHA}" --out "$OUT" --mode "$MODE")
-          [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
-          [ -n "$BEFORE" ] && args+=(--before "$BEFORE")
           [ -n "$CARDS" ] && args+=(--cards "$CARDS")
           [ "$ALL" = "true" ] && args+=(--whole-tree)
           python -m commands.card_guards check "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
