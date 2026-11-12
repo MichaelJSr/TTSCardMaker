@@ -42,8 +42,10 @@ export function hangVars(c, tall = 0, radius = 12) {
     `;--hc:polygon(0% 0%, ${[...top, "100% 0%", "100% 100%", ...bottom, "0% 100%"].join(", ")})`;
 }
 export const hangs = c => !!(c.hang && c.tw && c.th);
-export const iconImg = (icons, name, cls = "tok") => { const ic = icons[norm(name)];
-  return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
+/** srcset of an icon drawn at px (≤34) CSS px: its 68 px copy (build_site ICON_SMALL) up to 2x, else the 96 px file */
+export const iconSet = (ic, px) => ` srcset="${esc(ic.file.replace(/\.webp$/, ".68.webp"))} 68w, ${esc(ic.file)} 96w" sizes="${px}px"`;
+export const iconImg = (icons, name, cls = "tok", px = 0) => { const ic = icons[norm(name)];
+  return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}"${px ? iconSet(ic, px) : ""} alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 
 // [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload), when the build has dates
 export const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
@@ -128,7 +130,7 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
       : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(env.dupName(c.dup) || "")}: the same card, counted once">Duplicate</span>` : ""}
     ${small || link || c.morgue ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
     <div class="meta"><div class="name">${esc(c.name)}</div>
-    <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(env.icons, t, "")).join("")}</div></div>${link || href ? "</a>" : "</article>"}`;
+    <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(env.icons, t, "", 16)).join("")}</div></div>${link || href ? "</a>" : "</article>"}`;
 }
 
 /** the grid's toolbar; sort: the shown sort, dir: the dir param, created: the build has creation dates, tail: edit mode's

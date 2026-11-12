@@ -1096,6 +1096,11 @@ relies on:
   Not a `?v=` query: Pages ignores it, so a tab left open across a deploy got the new file for its old stamp and a
   cache kept it under that stamp, which a revert then served (scratch site-img/review/sim; fixed, site-img/fix4/sim.mjs:
   the old stamp's URL is a 404 under the next deploy and the revert serves its own bytes).
+- Small icons (11-11): `icons/<name>.<stamp>.68.webp`, made from the PNG like the 96 px one (`ICON_SMALL`). Every icon
+  drawn at ≤34 px (toolbar and editor type toggles 26, token bars 22, table rows 18, tiles 16, dialog types 34) has
+  grid.js `iconSet` (`68w, 96w`, sizes its px): the 68 px file up to 2x (68 = 2 x 34), the 96 px one above. First visit
+  of / 949 -> 902 KB at 1x, 1365 -> 1317 KB at 2x, 547 -> 535 KB on a phone at 3x (icons 142 -> 95 KB); dialogs and
+  the table then fetch no icon at 1x or 2x. A cache from before gets the 68 px files once (each from its Types/ PNG).
 - Accent colours (`color`: share pages' theme-color, embed bars) come from the PNG's 240 px resize before encoding
   (`accent_color(image)`), not the decoded thumb, so codec settings don't move them; images.json rows of the WebP builds
   (`IMAGE_META_WEBP`) are kept, so no card's colour changes with the switch (a fresh computation would move about 60 of

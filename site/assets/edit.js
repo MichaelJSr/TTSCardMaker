@@ -1,5 +1,6 @@
 // Editing: staged in a batch, published as one commit to the card repo.
 import { esc } from "./text.js";
+import { iconSet } from "./grid.js";
 import { decode as decodeDeck, encode as encodeDeck } from "./deck.js";
 import { validateProfile, profileFile, sameProfile, deckCode, profileHtml, LIMITS, PICKS, ITEM_KINDS, LOGIN_RE } from "./profile.js";
 import * as pick from "./pick.js";
@@ -813,7 +814,7 @@ export function createEditor(app) {
           ${renameRow(c, b)}
           ${row("stars", `<input id="ef-stars" type="number" min="0" max="${maxStars()}" step="1" value="${c.stars ?? ""}" placeholder="—">`)}<p class="muted part-note" id="ef-stars-note"></p>
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), n = (c.types || []).filter(x => x === t).length;
-            return `<button type="button" class="icon-toggle${n ? " on" : ""}" data-type="${esc(t)}" ${typeAttrs(n)} data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>
+            return `<button type="button" class="icon-toggle${n ? " on" : ""}" data-type="${esc(t)}" ${typeAttrs(n)} data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}"${iconSet(ic, 26)} alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>
             <p class="muted part-note">Press a type again to pick it twice.</p>`)}
           ${view && !(psdVal(b, "types") || []).length ? `<p class="muted part-note">No type icon yet: the first goes at ${esc(view.rec.template?.file ? view.rec.template.file.split("/").pop().replace(/\.psd$/i, "") : "the template")}'s spot (flagged).</p>` : ""}
         </fieldset>
@@ -828,10 +829,10 @@ export function createEditor(app) {
         <fieldset><legend>Text</legend>
           ${view ? `<div class="erow" data-row="ability"><span class="elabel">${LABEL.ability}${psdNote("ability")}</span><div class="ein parts" data-site-of="ability"><div class="site-boxes">${boxesHtml(view, "ability")}${addHtml(view, c)}</div>
             ${plain("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>`)}
-            <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}" alt="${esc(t)}"></button>` : ""; }).join("")}</div>
+            <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}"${iconSet(ic, 22)} alt="${esc(t)}"></button>` : ""; }).join("")}</div>
             <p class="muted part-join">On the site:</p><div class="ability preview" id="ef-preview"></div></div></div>`
           : row("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>
-            <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}" alt="${esc(t)}"></button>` : ""; }).join("")}</div>
+            <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}"${iconSet(ic, 22)} alt="${esc(t)}"></button>` : ""; }).join("")}</div>
             <div class="ability preview" id="ef-preview"></div>`)}
         </fieldset>
         <h3 class="egroup">Database only</h3><p class="muted egroup-note">Not on the card image: from the card's folder, or set only here.</p>

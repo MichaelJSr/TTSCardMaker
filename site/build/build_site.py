@@ -21,7 +21,8 @@ Where the data comes from:
     (nothing deployed) and site.yml saves the cache (it does after any failed build), so a full re-encode spans runs.
     Each image's size and accent color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck
     page montages in site/.og-cache; dist/ gets hardlinks (else copies).
-  * Icons: Types/ and Types/Stars/; icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json. Each icon the
+  * Icons: Types/ and Types/Stars/ as 96 px WebP plus a 68 px copy (fire.<stamp>.68.webp: grid.js iconSet's srcset for
+    icons drawn at ≤34 px); icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json. Each icon the
     font has also gets its token variants' pictures ([fire:tint], :sticker, :glow, :darkglow; dist/icons/fire.<stamp>.glow.webp),
     drawn by the font build's own icon_art (build_stoogedings.py, which needs its requirements.txt: without them,
     a warning and no variant pictures), cached by blob in site/.cache/icons; cards.json iconVariants holds how far each
@@ -137,6 +138,7 @@ def thumb_tags():
 IMAGE_BUDGET = float(os.environ.get("IMAGE_BUDGET") or 0)      # seconds for making images (0: no limit): the rest waits for the next run
 IMAGE_WIDTH = 360                            # the size whose dimensions go into cards.json (aspect ratio)
 ICON_SIZE = 96
+ICON_SMALL = 68                              # <name>.<stamp>.68.webp, grid.js iconSet: icons drawn at ≤34 px, at up to 2x
 ICON_VERSION = f"1-{ICON_SIZE}"              # in the cached icons' names: bump the 1 when build_icons' crop or WebP settings change
 # token variants drawn as images, as the font draws them ([fire:tint] ... [fire:darkglow]); [fire:no] is style.css .tok-no
 VARIANT_IMAGES = ("tint", "sticker", "glow", "darkglow")
@@ -1654,8 +1656,8 @@ def icon_ink(path):
 
 
 def build_icons(tree):
-    """Types/ icons into dist/icons as 96 px WebP (<name>.<stamp>.webp), and the variant images
-    (<name>.<stamp>.<variant>.webp) of those in the font. Returns ({normalized spelling: {file, name, kind, v: [variants with an image]}}, {variant: reach}); no
+    """Types/ icons into dist/icons as 96 px WebP (<name>.<stamp>.webp) and 68 px (<name>.<stamp>.68.webp), and the
+    variant images (<name>.<stamp>.<variant>.webp) of those in the font. Returns ({normalized spelling: {file, name, kind, v: [variants with an image]}}, {variant: reach}); no
     variant images without FONT_BUILD's packages."""
     manifest_path = os.path.join(REPO, "MDW/Fonts/stoogedings-src/stoogedings.json")
     if os.path.exists(manifest_path):
@@ -1680,15 +1682,19 @@ def build_icons(tree):
         name = stem.lower() if folder == "Types" else stem.lower().replace(" ", "_")
         kind = "type" if folder == "Types" else "star"
         cached = os.path.join(cache_dir, f"{tree[path][:16]}-{ICON_VERSION}.webp")   # by blob, like the card images
-        used.add(os.path.basename(cached))
-        if not os.path.exists(cached):
-            im = Image.open(io.BytesIO(image_bytes(path, tree[path]))).convert("RGBA")
-            box = im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
+        made = {ICON_SIZE: cached, ICON_SMALL: cached[:-len(".webp")] + f".{ICON_SMALL}.webp"}
+        used.update(os.path.basename(f) for f in made.values())
+        missing = {px: f for px, f in made.items() if not os.path.exists(f)}
+        if missing:
+            src = Image.open(io.BytesIO(image_bytes(path, tree[path]))).convert("RGBA")
+            box = src.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
             if box:
-                im = im.crop(box)
-            im.thumbnail((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
-            im.save(cached + ".tmp", "WEBP", quality=90, alpha_quality=100, method=4)   # shown at ≤34 px
-            os.replace(cached + ".tmp", cached)
+                src = src.crop(box)
+            for px, f in missing.items():            # each from the PNG: sharper and smaller than from the 96 px one
+                im = src.copy()
+                im.thumbnail((px, px), Image.LANCZOS)
+                im.save(f + ".tmp", "WEBP", quality=90, alpha_quality=100, method=4)   # shown at ≤34 px
+                os.replace(f + ".tmp", f)
         info = manifest["icons"].get(name)
         key = ""
         if script and info:                                   # the font draws every variant of every manifest icon
@@ -1699,6 +1705,7 @@ def build_icons(tree):
         stamp = hashlib.sha256(f"{tree[path]}:{ICON_VERSION}:{VARIANT_VERSION}:{key}".encode()).hexdigest()[:10]
         out_name = f"{slugify(name)}.{stamp}.webp"
         link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)
+        link_or_copy(made[ICON_SMALL], os.path.join(DIST, "icons", out_name.replace(".webp", f".{ICON_SMALL}.webp")), replace=True)
         entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
         low = icon_low(cached)
         if low:
@@ -4412,9 +4419,11 @@ def tile_html(c, eager, icons):
     load = 'fetchpriority="high"' if eager else 'loading="lazy"'
     art = (f'<img class="art" {load} decoding="async" src="{url(360)}" '
            f'srcset="{url(240)} 240w, {url(360)} 360w" sizes="{TILE_CSS}px"{dims} alt="">' if c.get("img") else '<div class="art"></div>')
-    def icon(t):
+    def icon(t):                                  # grid.js iconImg(icons, t, "", 16)
         ic = icons.get(re.sub(r"[\s_\-.'’]+", "", str(t or "").lower()))
-        return (f'<img class="" loading="lazy" src="{js_esc(ic["file"])}" alt="{js_esc(t)}" data-tip="{js_esc(t.replace("_", " "))}">'
+        small = re.sub(r"\.webp$", f".{ICON_SMALL}.webp", ic["file"]) if ic else ""
+        return (f'<img class="" loading="lazy" src="{js_esc(ic["file"])}" srcset="{js_esc(small)} {ICON_SMALL}w, '
+                f'{js_esc(ic["file"])} {ICON_SIZE}w" sizes="16px" alt="{js_esc(t)}" data-tip="{js_esc(t.replace("_", " "))}">'
                 if ic else "")
     stars = f'<span class="stars">{"★" * min(c["stars"], 10)}</span>' if c.get("stars") else ""
     href = quote(c["id"], safe="-_.!~*'()")       # encodeURIComponent
