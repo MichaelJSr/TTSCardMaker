@@ -194,8 +194,8 @@ export function contributionsHtml(p, x) {
     titleChips(p.key, x.titles),
     ...(x.people?.length > 1 ? ranksOf(p, x.people, wordiness(x.cards)) : []).map(([label, rank, of]) => `<span class="fact" data-tip="${esc(RANK_TIP[label]?.(of) || `Among ${of} people`)}">#${rank} of ${of} by ${label}</span>`),
   ].join("");
-  const fields = (p.editFields || []).slice(0, 6).map(([f, n]) => `${esc(fieldName(f))} ${n}`).join(" · ");
-  return `<div class="facts">${facts}</div>${fields ? `<p class="muted p-edited">${noted("Edited", "Fields they edited, once per card per batch; rating: their ratings on the website")}: ${fields}</p>` : ""}
+  const fields = (p.editFields || []).filter(([f]) => f !== "rating").slice(0, 6).map(([f, n]) => `${esc(fieldName(f))} ${n}`).join(" · ");   // ratings: off the site (owner 11-11)
+  return `<div class="facts">${facts}</div>${fields ? `<p class="muted p-edited">${noted("Edited", "Fields they edited, once per card per batch")}: ${fields}</p>` : ""}
     ${x.available ? "" : `<p class="muted">Commits aren't in this build; edits are counted from Card Edits.json, which keeps one batch per card.</p>`}
     ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(editorFields(c).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recentEdits?.length ? `<div class="related"><h3>Recent edit batches</h3><ul>${p.recentEdits.map(([ts, subject, sha]) => `<li>${commitLink(x.repo, sha, x.date(ts))} <span class="muted">· ${esc(subject)}</span></li>`).join("")}</ul></div>` : ""}
@@ -276,7 +276,7 @@ export function decksPanelHtml(x) {
 }
 
 // ---- person stats: pure helpers (P6 P10 P14 P15 P16 P18) from the cards in memory; the build's keys (contributions.json
-// people[]: power, bal, revisions, rework, ratings, selfBias, rater, powerVsStats, editFields, archived) in panels. NOTES.md §8.
+// people[]: power, bal, revisions, rework, editFields, archived) in panels; ratings, selfBias, rater, powerVsStats unshown. NOTES.md §8.
 export const STYLE_MIN = 3, STYLE_RATIO = 1.5, STYLE_TOP = 3;
 const memo = new WeakMap();                                                 // per cards array: route() renders twice
 const memoOf = (all, key, make) => { let m = memo.get(all); if (!m) memo.set(all, (m = new Map())); if (!m.has(key)) m.set(key, make()); return m.get(key); };
@@ -417,23 +417,6 @@ export function balancePanelHtml(p, x) {
   }
   return panel("Balance", `${facts}${pw ? `${legend}${strengthStrip(pw, x)}` : ""}${bal}`);
 }
-const RATE_TIP = scale => `Mean over their cards of others' ${scale}: each rater's latest, theirs left out`;
-/** Ratings (P4; P5, P7, P8 only with per-person ratings). x = {byId, tile(card)} */
-export function ratingsPanelHtml(p, x) {
-  const r = p.ratings, sb = p.selfBias, rt = p.rater, pv = p.powerVsStats;
-  if (!r && !sb && !rt && !pv) return "";
-  const facts = r ? `<div class="facts">${r.fav != null ? `<span class="fact" data-tip="${esc(RATE_TIP("favorability"))}">Favorability ${r.fav} · ${plural(r.favN, "card")}</span>` : ""}
-    ${r.power != null ? `<span class="fact" data-tip="${esc(RATE_TIP("power ratings"))}">Power ${r.power} · ${plural(r.powerN, "card")}</span>` : ""}</div>` : "";
-  const tiles = (label, list, tip) => { const cs = (list || []).map(([id]) => x.byId?.get(id)).filter(Boolean); return cs.length ? `<div><div class="pick-label">${noted(label, tip)}</div><div class="strip">${cs.map(x.tile).join("")}</div></div>` : ""; };
-  const picks = r ? `${tiles("Most liked", r.best, "Their cards others rate highest on favorability, up to 3")}${tiles("Least liked", r.worst, "Their cards others rate lowest on favorability, up to 3, below the most liked")}` : "";
-  const lines = [
-    sb && (sb.fav != null || sb.power != null) ? `${noted("Own cards vs others", "Their rating of their own cards minus others' average, on average; (n): cards compared")}: ${[sb.fav != null ? `favorability ${sign(sb.fav)} (${sb.n})` : "",
-      sb.power != null ? `power ${sign(sb.power)} (${sb.powerN})` : ""].filter(Boolean).join(" · ")}` : "",
-    rt ? `${noted("As a rater", "Favorability they give minus others' average on the same cards; agreement: correlation, −1 to 1")}: ${sign(rt.harsh)} vs others${rt.agree != null ? ` · agreement ${rt.agree.toFixed(2)}` : ""}${rt.twin ? ` · ${noted("taste twin", "The rater whose favorability ratings best match theirs (5+ cards rated by both)")}: ${personA(rt.twin[0])}` : ""}` : "",
-    pv ? `${noted("Power ratings vs stats", "Correlation (−1 to 1) of their power ratings with the cards' total stats vs their kind and star level")}: ${pv.r.toFixed(2)} (${plural(pv.n, "card")})` : "",
-  ].filter(Boolean);
-  return panel("Ratings", `${facts}${picks ? `<div class="p-picks">${picks}</div>` : ""}${lines.length ? `<ul class="p-list">${lines.map(l => `<li>${l}</li>`).join("")}</ul>` : ""}`);
-}
 /** Revisions (P3, P12, P13, P11). x = {byId} */
 export function revisionsPanelHtml(p, x) {
   const v = p.revisions, w = p.rework;
@@ -495,8 +478,8 @@ export function archivedPanelHtml(rows) {
   return panel(`Archived cards <span class="muted">${rows.length}</span>`, `<ul class="p-list">${rows.map(li).join("")}</ul>`);
 }
 
-/** The person page: the profile (when there is one) over the contributions, the activity chart, Balance, Ratings,
- *  Revisions, Style, the Cards panel, Archived cards and the Decks panel; a contributor without a profile gets a plain
+/** The person page: the profile (when there is one) over the contributions, the activity chart, Balance, Revisions,
+ *  Style, the Cards panel, Archived cards and the Decks panel; a contributor without a profile gets a plain
  *  header instead. x = profileHtml's x + cardsPanelHtml's x + decksPanelHtml's x + {person | null, available, since,
  *  titles, date, month, repo, people, site, mentions, starKind (the Star levels' kind)} */
 export function personHtml(x) {
@@ -505,7 +488,7 @@ export function personHtml(x) {
   const own = cardsOf(person.key, x.cards), statusIds = memoOf(x.cards, "status", () => new Set(x.cards.filter(c => c.type === "debuff" || c.type === "buff").map(c => c.id)));
   const kinds = starKinds(own, x.kindOf, x.kinds), kind = kinds.length > 1 && kinds.includes(x.starKind) ? x.starKind : "";   // ?stars=<kind>; else all
   const style = own.length ? stylePanelHtml(styleOf(own, x.cards, { mentions: x.mentions, statusIds }), mixOf(own, x.cards, x.kindOf, kind), x, own.length, { key: person.key, kinds, kind }) : "";
-  const rest = `${x.available ? activityHtml(person, x) : ""}${balancePanelHtml(person, x)}${ratingsPanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
+  const rest = `${x.available ? activityHtml(person, x) : ""}${balancePanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
     + `${cardsPanelHtml(person, x)}${archivedPanelHtml(person.archived)}${decksPanelHtml(x)}`;
   if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${rest}`;
   return `<div class="profile"><div class="panel"><h2 class="person-name">${avatarHtml(person.github, 48)}${esc(person.key)}</h2>

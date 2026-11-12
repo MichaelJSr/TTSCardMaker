@@ -860,7 +860,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   scroll-padding: focus inside the sticky tray would scroll the page to the top); past nine boxes a "Skip to cards" button (shown on
   focus) jumps past their Tab stops.
 
-## 25. Ratings (2026-10-24)
+## 25. Ratings (2026-10-24; off the website since 2026-11-11, §54: the data parts below stand, the display and Rate it parts are history)
 - File `site/Card Ratings.json` (AutoCroissant `card_edits.CardRatings`, `dump_ratings`): `{about, cards: {"Card Name": [{date
   "YYYY-MM-DD", scale "favorability" | "power", value a whole number 1-10 (owner, 2026-10-26: the 830 one-decimal values
   were rounded half up that day, 5.5 -> 6; averages keep one decimal), by "group" | <login>, source
@@ -898,7 +898,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `ratingsFile(text, ops, <Pacific day>, login)`: your entry of that day and scale replaced, others kept; `editsFile`
   skips a rating-only op, so Card Edits.json is untouched. `RATINGS_ABOUT` = `CardRatings.ABOUT`.
 
-## 26. Stats round 3: distributions, Ratings and History, the Archive (2026-10-24)
+## 26. Stats round 3: distributions, Ratings and History, the Archive (2026-10-24; Ratings gone 2026-11-11, §54)
 - Removed: Balance's "The cooldown update" (`bal-cooldown`, `WAVE`, `groupOf`) and analytics.py's `old` row flag
   (`OLD_RE`, `NEW_RE`; the log line keeps `timing tags n`). Chart texts are one short line (70 characters at most) or
   none; the Balance intro is one sentence.
@@ -1598,5 +1598,23 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   on purpose", shown for a card the flag names or one marked; a stale mark stays unless ticked again.
 - **No notes** (§46-47 superseded there): a card's page shows no flag line, note or reason, and edit mode has no
   in-place flags (`+ needs doing by hand`, `flag:<key>`, ✕ gone); `flagsHtml` is the labels alone (Needs handling; the
-  Edit dialog's preview shows none, as the page). People's flags are set in All fields.
+  Edit dialog's preview shows none, as the page). People's flags are set in All fields. The hand flag's issue: §54.
+
+## 54. Ratings off the site, Balance lower, the hand flag's issue (2026-11-11, owner: "remove the favorability and power ratings from the card browser website, but keep the data", "move balance to near the bottom, above recorded changes", "for the cards that need doing by hand, include some non intrusive way to see what the issue is")
+- **Ratings**: no display anywhere: the card page's Ratings block and Rate it, All fields' Ratings fieldset, the Stats
+  page's Ratings section and jump link, the person page's Ratings panel and the "rating" count in Edited, Missing's No
+  ratings. Gone: assets/ratings.js, insights.js `ratingsHtml` (and `dotRows`), balance.js's `diverging` export, edit.js
+  `ratingsFile`/`RATINGS_ABOUT`/`stageRating`/`op.rate`, the `rate-*` draft keys, the `.rate-*`/`.ratings`/`.p-picks`
+  CSS. Kept as they were: `site/Card Ratings.json`, AutoCroissant `tts_ratings` and `card_edits.CardRatings`, build_site
+  `parse_ratings`/`apply_ratings`/`rating_now`, cards.json `ratings`, `files.ratings`, the renames' follower. Shown by
+  nothing now, kept: contributions.json people's `ratings`, `selfBias`, `rater`, `powerVsStats` and editFields' `rating`.
+- **Balance** (`#card-balance`): after the strips and Decks using this card, just above Recorded changes (`#card-changes`),
+  then History and Details; one column the same (DOM order, no CSS order).
+- **Hand flag's issue** (Needs handling list only; flags.js `handIssue`, `flagsHtml`): the label "Needs doing by hand"
+  gets a 15 px ⓘ button (`.flag-i`, a 33 px hit area by `::before`) when the checks note it (`checks.hand`: "Automatic
+  check: …") or a person gave a reason (`flags.hand`: "Reason given: …"), both in that order. Hover: the site tooltip
+  (`data-tip`, the two joined by " · "); a click, tap or Enter (app.js action `flag-issue`, data-action wins over the
+  row's data-open) toggles `.flag-issue` under the labels (`aria-expanded`, `aria-controls`; `aria-describedby` reads it
+  on focus). Rows keep their height closed (checked against the 11-11 build: 44 rows, none moved). No mark on a card's
+  page or preview, as before. AutoCroissant `tests/test_site_flags.py`.
 

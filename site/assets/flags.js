@@ -2,7 +2,7 @@
 // automatic ones (the card data's card_checks.json), each with its note. flags: a person's (Card Edits.json {"hand": "reason",
 // "bars": "", "psd": "1a2b3c4d"}), each with a reason (a hand flag must have one); psd: the PSD blob it was set on, it goes once the
 // PSD changes and the checks are clean. Database only, never baked. Flags only filter (owner 2026-11-11): nothing on a card's
-// page or its preview, the lists their labels alone. NOTES.md §46, §52, §53.
+// page or its preview; the Needs handling list shows labels, the hand flag's issue behind a small mark. NOTES.md §46, §52-54.
 import { esc } from "./text.js";
 
 export const FLAG_MAX = 300;                           // characters a reason (build_site FLAG_MAX, the bot's card_edits.FLAG_MAX)
@@ -29,9 +29,17 @@ export const flagError = flags => { const k = CARD_FLAGS.find(([f]) => [...(flag
 export const flagsText = flags => CARD_FLAGS.filter(([k]) => typeof flags?.[k] === "string").map(([k, l]) => (flags[k] ? `${l}: ${flags[k]}` : l)).join("; ");
 /** What changed from flags a to b: "Special stat bars cleared; Needs doing by hand: the reason". */
 export const flagsChange = (a, b) => CARD_FLAGS.filter(([k]) => a?.[k] !== b?.[k]).map(([k, l]) => (typeof b?.[k] !== "string" ? `${l} cleared` : b[k] ? `${l}: ${b[k]}` : l)).join("; ");
-/** A card's flags as labels (the Needs handling list); "" when it has none. No note: flags only filter, and a card's page and its preview show none. */
-export const flagsHtml = c => (flagged(c) ? `<div class="card-flags">${CARD_FLAGS.filter(([k]) => hasFlag(c, k)).map(([, l]) =>
-  `<div class="card-flag"><b>${esc(l)}</b></div>`).join("")}</div>` : "");
+/** The hand flag's issue: the checks' note, then a person's reason ([] for none). */
+export const handIssue = c => [c.checks?.hand ? `Automatic check: ${c.checks.hand}` : "", ownFlag(c, "hand") && c.flags.hand ? `Reason given: ${c.flags.hand}` : ""].filter(Boolean);
+/** A card's flags as labels (the Needs handling list); "" when it has none. The hand flag's issue (owner 11-11): an
+ *  info mark, its tooltip on hover, a tap or Enter opens it below (app.js flag-issue). A card's page and preview show none. */
+export function flagsHtml(c) {
+  if (!flagged(c)) return "";
+  const issue = handIssue(c), id = `flag-issue-${c.id}`;
+  const mark = issue.length ? `<button type="button" class="flag-i" data-action="flag-issue" data-tip="${esc(issue.join(" · "))}" aria-label="What the issue is" aria-expanded="false" aria-controls="${esc(id)}" aria-describedby="${esc(id)}">i</button>` : "";
+  return `<div class="card-flags">${CARD_FLAGS.filter(([k]) => hasFlag(c, k)).map(([k, l]) => `<div class="card-flag"><b>${esc(l)}</b>${k === "hand" ? mark : ""}</div>`).join("")}</div>`
+    + (issue.length ? `<div class="flag-issue" id="${esc(id)}" hidden>${issue.map(t => `<p>${esc(t)}</p>`).join("")}</div>` : "");
+}
 // the name flag's "intended" (owner 2026-11-11): Card Edits names_ok, [website name, printed title, file stem] as a person
 // marked them; the checks leave the flag off until one changes (the bot's card_checks.name_note, card_edits.NAMES_OK)
 export const fileStem = c => (c.psd || "").split("/").pop().replace(/\.psd$/i, "");

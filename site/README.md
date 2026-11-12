@@ -50,7 +50,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   followed); a file that version lacks stays, and `Card Edits.json` is left as it is (its edits still show).
   Every date on the site is Pacific time, the bot's, whatever the viewer's time zone, and commits are dated when they
   landed (committer time), as the bot dates versions.
-  A creature's or minion's **Balance** line compares its total stats (HP + DEF + ATK + SPD) with the others of its star
+  A creature's or minion's **Balance** line (just above Recorded changes, owner 2026-11-11) compares its total stats (HP + DEF + ATK + SPD) with the others of its star
   level ("Total 35, in the top 10% of 4★ creatures: 92 of the 93 have a lower total"), with their median and middle 80%
   for each stat, and a line of its total over time when its stats changed. **Recorded changes** lists, newest first,
   every change the bot recorded to the card: stats (a buff raises the total, a nerf lowers it), stars, kind, item type,
@@ -67,7 +67,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   its section opens).
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`, the address bar's URL; `c` copies it) that shows a rich preview in Discord.
-- **Ratings**: each card's favorability and power, 1 to 10, over time, on its card page; signed-in editors add theirs.
+- **Ratings**: not shown (owner 2026-11-11); `site/Card Ratings.json` and cards.json `ratings` keep the data.
 - **Rulebook**: written on the website, no Photoshop. One text file per chapter in `site/rulebook/` (`NN-slug.md`: the
   number is the book's order, the slug the chapter's link, `#/rules/<slug>` and `#/rules/<slug>/<section>`), its
   pictures in `site/rulebook/img/` (the mascots, the table and reaction diagrams, taken from the Photoshop pages) and
@@ -124,14 +124,13 @@ text or image, links its commit when it is known), and the artwork sources when 
   for each star level of the starting hand; average stats per star level; stat shapes (each creature's highest stat),
   cooldowns and uses by star level, ability length by star level and kind, items by type and stars; stat distributions (0-10, with
   `‹ ›` or `←`/`→` on a stat that goes higher); and a total-stats-vs-stars chart that highlights possible balance
-  outliers. Every chart has a table view; jump links go to Balance, Ratings and History.
+  outliers. Every chart has a table view; jump links go to Balance and History.
   **Balance**: the total stats of each star level of creatures and minions (the middle 80%, the median, the lowest and
   highest, the top and bottom 10% as dots), the strongest and weakest for their star level, each star level's average
   total over time (full-history builds), power creep (by year created), buffs and nerfs by month and by stat, every
   recorded change by month (timing-tag-only changes left out), the most reworked cards. A star level with fewer than 5
   cards is compared with all cards of its kind, and so are the auxiliary creatures, with all creatures.
-  **Ratings** (once cards have ratings): favourites and least liked, most divisive (once 3 people rate a card), risers
-  and fallers. **History**: cards created per year, text freshness. The kind and series filters apply to every section.
+  **History**: cards created per year, text freshness. The kind and series filters apply to every section.
   A bar, column, cell or legend entry that stands for a set of cards opens the Cards grid with those cards (a link:
   Back returns to Stats); a single card opens the card.
 - **Changes**: a row of category tabs across the top; clicking one (or the arrow keys on a focused tab) shows that
@@ -152,7 +151,7 @@ Retired (moved to MDW/The Morgue), Unfinished (moved to MDW/Unfinished) or Delet
   their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
   (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month. Since round 3 the page
   also has their ranks and edited fields, **Balance** (their cards' strength, buffs and nerfs on them and made to others'),
-  **Ratings** (how others rate their cards), **Revisions** (who changes their cards' images, whose they change, reworks),
+  **Revisions** (who changes their cards' images, whose they change, reworks),
   **Style** (types, status effects and timing tags they use more than others, wordiness, star and kind mix) and
   **Archived cards**; the Cards panel adds their years, series, banned cards and most referenced card. All from
   `contributions.json` and the cards already loaded. The Cards tab has a **Banned (constructed)** flag.
@@ -191,7 +190,7 @@ the build never fails on it.
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
 `Card Creation Dates.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
-on 2026-10-20), as does `Card Ratings.json` (new on 2026-10-24; the build and the website's editor read it, never the bot); the build and the bot read the
+on 2026-10-20), as does `Card Ratings.json` (new on 2026-10-24; the build reads it, never the bot); the build and the bot read the
 others; the published site includes none of them. `Card Creation Dates.json`
 holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
 (dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.card_dates
@@ -203,8 +202,9 @@ cards on 2026-10-23, also with the 11 newest left out of the file). It is no edi
 counts never see it. Bad entries are skipped with a warning, never a failed build. `Card Ratings.json` holds each
 card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": a whole number 1-10, "by": "group" | <login>, "source":
 "TTS session" | "website"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m
-commands.tts_ratings`) and the website's Rate it. Only the website reads it (cards.json `ratings`, a login shown as its
-credited name); no edit either, and the bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+commands.tts_ratings`; the website's Rate it wrote "website" entries until 2026-11-11). Only the website build reads it
+(cards.json `ratings`, a login shown as its credited name; the site shows none since 2026-11-11); no edit either, and the
+bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
 the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
 batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
@@ -247,7 +247,8 @@ printed title's file form from the file name (the file-name convention, owner 20
 case alone never counts; never on a PSD's second picture). The checks read only PSDs without a result, so a fixed card
 clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is told to Discord or a
 commit, and nothing is blocked. Flags only filter (owner 2026-11-11): a card's page shows none; **Needs handling** at the
-bottom of the Cards filters opens a list of the cards with their flags' labels (All, or one flag; `flags=flagged`,
+bottom of the Cards filters opens a list of the cards with their flags' labels, a small ⓘ beside "Needs doing by hand"
+showing its issue (the checks' note, a person's reason) on hover, tap or Enter (All, or one flag; `flags=flagged`,
 `flags=hand`, `flags=bars`, `flags=name`, excluded with `xflags=`; on a phone a link in the toolbar too); search
 `flag:hand`, `flag:bars`, `flag:name`, `flag:any`.
 
@@ -309,11 +310,6 @@ bars. On the 2 and 3 creature templates' bars each creature's stats print on the
 creature; on any other card the bake leaves the list website only. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
-
-**Rate it.** Signed in, a card page's Ratings block has Favorability and Power inputs (whole numbers 1 to 10; All fields
-has them too): **Add to batch** stages your rating for today, published with the batch to `site/Card Ratings.json`
-(a rating-only batch leaves `Card Edits.json` alone). Rating again the same day replaces yours; removing one is a hand
-edit on GitHub.
 
 **Icons and timing tags as you type.** In card text (the ability and note, in place or in All fields, rulebook pages
 too) typing `[` lists the icons with their pictures, the ones the cards use most first; typing more narrows the list
@@ -482,6 +478,5 @@ editor's and the Stats page's modules (loaded on first use),
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, `tokens.js` the
 icon and timing-tag picker in card text, drag-to-assign and
 the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `login.js` the password sign-in and this browser's sealed token, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
-published decks: slugs, the file formats and their encryption, the browser and deck pages), `ratings.js` the card
-ratings (their helpers, chart and card-page block), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
+published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

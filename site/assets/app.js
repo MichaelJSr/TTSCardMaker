@@ -8,7 +8,6 @@ import * as pick from "./pick.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml, stampOf, pictureNumber } from "./history.js";
 import { deckPasses, SEALED } from "./login.js";
-import * as ratings from "./ratings.js";
 import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
 import * as CF from "./myfilters.js";
@@ -250,7 +249,7 @@ function rerender() {
 // staged or just-published edit, Show hidden or a card preview (edit.js K, login.js SEALED, preview.js KEY). Until then
 // `editor` is IDLE: nobody signed in, nothing staged.
 const IDLE = { me: null, touches: () => false, leave() {}, deckOf: () => null, pendingDecks: () => new Map(), profileOf: () => null,
-  pendingProfiles: () => new Map(), myRating: () => null };
+  pendingProfiles: () => new Map() };
 let editor = IDLE, previews = null, inline = null, tray = null, editorP = null;
 const editing = () => !!editor.me;                      // edit mode = signed in: the card dialog and the grid edit in place
 const kept = k => { try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ""; } catch { return ""; } };
@@ -820,7 +819,7 @@ function fillTable(tbody) {
   };
   if (rest.length) setTimeout(step);
 }
-// the Needs handling view: a list to scan, each card's flags beside it (labels: flags only filter, owner 11-11)
+// the Needs handling view: a list to scan, each card's flags beside it (labels; the hand flag's issue behind a mark, owner 11-11)
 const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="">` : ""}
   <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
@@ -918,13 +917,12 @@ function openCard(id, showDetails = false) {
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
-          <div id="card-balance">${balanceHtml(c)}</div>
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions, "Cards its ability text names")}${strip("Mentioned by", mentionedBy, "Cards whose ability text names this card")}${strip("Similar stats", similar(c), "The 8 cards of the same kind nearest in HP, DEF, ATK and SPD, star level weighed in")}${strip(`More from ${c.subseries || ""}`, sameSub, c.subseries && c.subseries === c.series ? `The subseries ${c.subseries}` : "")}${strip(seriesTitle, sameSeries, seriesTip)}
           <div id="decks-slot">${usingDecks(c)}</div>
+          <div id="card-balance">${balanceHtml(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
           <div id="history-slot">${historyOf(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
-          ${c.morgue ? "" : `<div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>`}
         </div>
       </div>
     </div></div>`;
@@ -1032,8 +1030,6 @@ const pngAt = (c, ref, ts) => { const vs = versionList(c); return (vs.find(v => 
 const historyOf = c => historyHtml(c, S.data.repo, S.history?._shas, canRevert(c), (ref, ts) => pngAt(c, ref, ts));
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
-const ratedOf = c => (c.variantOf ? c : balanceOf(c));                // a variant picture keeps its own ratings
-G.ratedBy(ratedOf);                                                   // the Missing filter's No ratings, as the page shows them
 const hasBalance = c => !!balanceOf(c).balance;
 function balanceHtml(c, part = "balance") {          // part: "balance" (the line) or "changes" (the recorded changes)
   if (!hasBalance(c)) return "";
@@ -1313,12 +1309,11 @@ function renderStatsView(r) {
   St.stats.renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage, season: S.season, seriesMode: S.seriesMode }, r.params);
   const ctx = { cards: S.cards };
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
-  const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History go in with it
+  const fill = (A = S.analytics) => {                    // Balance needs analytics.json; History goes in with it
     const now = parseHash(S.renderedHash);
     if (now.name !== "stats") return;
     const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
     if (A) put("stats-balance", St.balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
-    put("stats-ratings", St.insights.ratingsHtml(ctx, now.params));
     put("stats-history", St.insights.historyHtml(ctx, now.params));
   };
   const job = ++statsJob, slot = $("#stats-balance", view);
@@ -1765,6 +1760,8 @@ const actions = {
     el.disabled = true;
     (c.iv ? loadVersions().catch(() => {}) : Promise.resolve()).then(() => editor.revertCard(c, { ref, ts, then: el.dataset.path || pngAt(c, ref, ts) }))
       .catch(e => toast(`Couldn't revert (${e.message})`)).finally(() => { el.disabled = false; }); },
+  "flag-issue": el => { const box = document.getElementById(el.getAttribute("aria-controls") || ""); if (!box) return;   // Needs handling: the hand flag's issue (flags.js)
+    box.hidden = !box.hidden; el.setAttribute("aria-expanded", String(!box.hidden)); hideTip(); },
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },

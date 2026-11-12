@@ -286,9 +286,9 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 .toc a.sub { padding-left: 22px; font-size: 13px; color: var(--muted); }
 .toc a.on { background: var(--surface-2); color: var(--ink); font-weight: 600; }
 .toc .toc-tools { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
-.rb-chapter, .rb-extra, #stats-balance, #stats-ratings, #stats-history, .rb-sec { scroll-margin-top: 70px; }   /* jumped to: below the bar */
-@media (max-width: 980px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-ratings, #stats-history { scroll-margin-top: 117px; } }   /* two-row bar */
-@media (max-width: 640px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-ratings, #stats-history { scroll-margin-top: 184px; } }   /* three-row bar */
+.rb-chapter, .rb-extra, #stats-balance, #stats-history, .rb-sec { scroll-margin-top: 70px; }   /* jumped to: below the bar */
+@media (max-width: 980px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-history { scroll-margin-top: 117px; } }   /* two-row bar */
+@media (max-width: 640px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-history { scroll-margin-top: 184px; } }   /* three-row bar */
 .rb { --rb-ink: #102175; --rb-panel: #cfcfff; --rb-tab: #e4e4ff; --rb-pnum: #adadf8; --rb-paper: #fff;
   font-family: Consolas, Inconsolata, ui-monospace, Menlo, monospace; font-size: 17px; line-height: 1.45; color: var(--rb-ink); }
 /* a chapter is a page drawn to scale, as a PDF's: its text 17px on a 1108px page (a 1400px window; 1300px at most), all
@@ -787,6 +787,15 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .needs-list .thumb { flex: none; width: 64px; }
 .needs-list li > div { min-width: 0; flex: 1; }
 .needs-list .card-flags { margin: 4px 0 0; }
+/* the hand flag's issue (flags.js): a small mark in its label, a bigger tap target than it shows; opened below */
+.card-flag .flag-i { position: relative; display: inline-grid; place-items: center; width: 15px; height: 15px; margin: 0 0 0 6px; padding: 0;
+  border: 1px solid currentColor; border-radius: 50%; background: transparent; color: var(--muted); font-size: 10.5px; font-weight: 700; line-height: 1; vertical-align: 1px; }
+.card-flag .flag-i::before { content: ""; position: absolute; inset: -9px; }
+.card-flag .flag-i:hover, .card-flag .flag-i[aria-expanded="true"] { background: transparent; color: var(--accent); }
+.card-flag .flag-i:focus-visible { border-radius: 50%; }
+.flag-issue { margin: 6px 0 0; padding: 2px 0 2px 10px; border-left: 3px solid var(--warn); font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
+.flag-issue[hidden] { display: none; }
+.flag-issue p { margin: 0; }
 .art-src { margin: 4px 0; font-size: .92em; overflow-wrap: anywhere; }
 @media (max-width: 640px) { .erow { grid-template-columns: 1fr; } .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; max-width: none; } .edit-bar .bar-head { flex-wrap: wrap; } }
 .review-item .actions { align-self: flex-start; flex-wrap: nowrap; margin: 0; }
@@ -997,19 +1006,6 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 @media (prefers-reduced-motion: reduce) { .pv-spin { animation: none; } }
 .tile .pv-badge { position: absolute; top: 30px; left: 6px; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #136f2a; color: #fff; }
 .pv-badge.inline { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #136f2a; color: #fff; font-weight: 600; vertical-align: 1px; }
-/* round 3: ratings */
-.ratings { display: flex; flex-wrap: wrap; gap: 8px 24px; }
-.rate-panel { min-width: 220px; flex: 1 1 260px; max-width: 320px; }
-.rate-head b { font-size: 18px; margin-left: 4px; } .rate-sub { font-size: 12.5px; }
-.rate-chart { width: 100%; max-width: 300px; display: block; margin-top: 4px; }
-.rate-chart text.ax { fill: var(--muted); font-size: 10.5px; font-weight: 400; }
-.rate-chart .grid { stroke: var(--grid); } .rate-chart .mid { stroke: var(--axis); stroke-dasharray: 3 3; }
-.rate-chart .person { fill: var(--surface); stroke: var(--s1); stroke-width: 2; }
-.rate-chart .unpub { stroke-dasharray: 2 2; }
-.rate-table { margin-top: 6px; } .rate-table summary { cursor: pointer; color: var(--accent); font-size: 13px; }
-.rate-table table.data th { position: static; cursor: default; background: none; }
-.rate-add { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
-.rate-add input { width: 7.5em; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
 
 /* round 3: stats */
 .dist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
@@ -1037,7 +1033,6 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .p-bar .up { background: var(--good); } .p-bar .down { background: var(--danger); }
 .p-list { margin: 4px 0 8px; padding-left: 18px; } .p-list li { margin: 2px 0; }
 .p-edited { margin: -6px 0 12px; font-size: 13px; }
-.p-picks { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin: 8px 0; }
 .p-style { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 6px 0; } .p-style .pick-label { margin: 0; min-width: 100px; }
 .p-mixes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 24px; margin-top: 10px; }
 .p-mix { display: grid; grid-template-columns: 9em minmax(60px, 1fr) 8.5em; gap: 8px; align-items: center; font-size: 13px; margin: 3px 0; }
@@ -1047,7 +1042,7 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .p-track b { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--ink); }
 .p-star-kinds { margin: -2px 0 6px; }   /* the Star levels' kind */
 @media (max-width: 640px) {
-  .p-picks, .p-mixes { grid-template-columns: minmax(0, 1fr); }
+  .p-mixes { grid-template-columns: minmax(0, 1fr); }
   .p-mix { grid-template-columns: 7em minmax(40px, 1fr) 7.5em; }
   .p-style .pick-label { min-width: 0; width: 100%; }
   .p-strip { overflow-x: auto; } .p-strip svg { min-width: 760px; }   /* scroll, not shrink */

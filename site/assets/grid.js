@@ -63,8 +63,6 @@ export const byKey = (key, desc = false) => { const keys = [].concat(key), s = d
 
 const STATS = ["hp", "def", "atk", "spd"];
 // the Missing filter: [param value, label, title (no data-tip: a tap would leave it up), test]; lacking = absent, null, "" or []
-let rated = c => c;                       // the card whose ratings a card shows (app.js: a duplicate's original)
-export const ratedBy = f => { rated = f; };
 export const MISSING = [
   ["series", "No series", "", c => !c.series],
   ["subseries", "No subseries", "", c => !c.subseries],
@@ -74,7 +72,6 @@ export const MISSING = [
   ["stars", "No stars", "", c => !c.stars],
   ["stats", "No stats", "Creatures and minions missing HP, DEF, ATK or SPD", c => ["creature", "minion", "creatures"].includes(c.type) && STATS.some(k => c[k] == null)],
   ["itemtype", "No item type", "Items and auxiliary items without an item type", c => (c.type === "item" || c.type === "aux item") && !c.subtype],
-  ["ratings", "No ratings", "Not rated for power or favorability", c => !rated(c).ratings?.length],
   ["art", "No artwork source", "", c => !artList(c).length],
 ];
 

@@ -163,7 +163,7 @@ BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
 CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (AutoCroissant card_dates created; global_config.CREATED_PATH)
 CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
-RATINGS_PATH = "site/Card Ratings.json"         # dated whole-number 1-10 ratings (AutoCroissant tts_ratings, the website's Rate it; card_edits.CardRatings)
+RATINGS_PATH = "site/Card Ratings.json"         # dated whole-number 1-10 ratings (AutoCroissant tts_ratings; card_edits.CardRatings); data only, the site shows none
 RATING_SCALES = ("favorability", "power")
 RATING_SOURCES = ("TTS session", "website")
 BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (the 2026-10-22 migration's)
@@ -2103,7 +2103,7 @@ def parse_ratings():
 
 
 def rating_now(entries, scale, skip=None):
-    """ratings.js current(): the mean of each rater's latest entry of scale (skip: a rater, or raters, left out;
+    """The mean of each rater's latest entry of scale (skip: a rater, or raters, left out;
     "group" counts as one) -> {"value" (1 decimal), "raters", "date" (the newest)}, or None."""
     skip = {skip} if isinstance(skip, str) else set(skip or ())
     latest = {}
@@ -3419,7 +3419,7 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
     return res
 
 
-# ---- person stats (contributions.json people[]: the person page's Balance, Ratings, Revisions, Archived cards) ---------
+# ---- person stats (contributions.json people[]: the person page's Balance, Revisions, Archived cards) -------------------
 def psd_commits_at(commits, people, by_login, row_of=None):
     """{committer time: [(credited names, {alnum PSD file names})]} of the commits that added or changed a PSD."""
     out = {}
@@ -3469,7 +3469,8 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
     power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, shift, madeBuff, madeNerf, swing? [id, delta, ts],
     recent [[id, buff|nerf, delta, ts]]}; revisions (P3, P12, P13) {self, others, top, theirs, most?, untouched, oldest?};
     rework (P11) {n, of, most?}; ratings (P4) {fav?, favN, power?, powerN, best, worst}; selfBias (P5), rater (P7),
-    powerVsStats (P8): per-person ratings only; editFields (P21) [[field, n]]; archived (P17). NOTES.md §8."""
+    powerVsStats (P8): per-person ratings only (ratings data: the site shows none since 2026-11-11); editFields (P21) [[field, n]];
+    archived (P17). NOTES.md §8."""
     A = balance.get("cards", {})
     vis = [c for c in cards if c.get("author") and not c.get("dup") and not c.get("hidden")]
     own = defaultdict(list)

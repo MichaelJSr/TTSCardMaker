@@ -545,10 +545,10 @@ export function renderStats(root, ctx, params) {
       <label>Kind <select data-action="stats-filter" data-key="kind"><option value="">All cards</option>${kinds.map(k => `<option value="${esc(k)}"${k === kind ? " selected" : ""}>${esc(KIND_LABEL[k] || k)}</option>`).join("")}</select></label>
       <label>Series <select data-action="stats-filter" data-key="series"><option value="">All series</option>${allSeries.map(s => `<option${s === series ? " selected" : ""}>${esc(s)}</option>`).join("")}</select></label>
       <span class="muted">${pool.length} cards in scope</span>
-      <nav class="stats-jump" aria-label="Sections"><a href="#/stats" data-scroll="stats-balance">Balance</a>${cards.some(c => (c.ratings || []).some(e => !e._staged && !e._sent)) ? `<a href="#/stats" data-scroll="stats-ratings">Ratings</a>` : ""}<a href="#/stats" data-scroll="stats-history">History</a></nav></div>
+      <nav class="stats-jump" aria-label="Sections"><a href="#/stats" data-scroll="stats-balance">Balance</a><a href="#/stats" data-scroll="stats-history">History</a></nav></div>
     <div class="kpis">${kpis.map(([l, v, tip]) => `<div class="kpi"><div class="label">${noted(l, tip)}</div><div class="value${typeof v === "number" ? "" : " text"}">${esc(typeof v === "number" ? v.toLocaleString() : v)}</div></div>`).join("")}</div>
     <div class="charts">${charts.join("")}</div>
-    <div id="stats-balance"></div><div id="stats-ratings"></div><div id="stats-history"></div>`;
+    <div id="stats-balance"></div><div id="stats-history"></div>`;
 }
 
 export { columns, card as chartCard, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole };   // profile.js's activity chart, balance.js, insights.js
