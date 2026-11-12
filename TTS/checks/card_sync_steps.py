@@ -32,8 +32,11 @@
    waits in itself for its guards (no Quiet window job, no environment, no sleep) and the schedule's goes; a dispatch's
    at once; a follow-up's (input guards) two lanes set up, then wait for that guards run's Land, then take main's head. The data lane runs at once on every event but a retry. A chained run looks like the schedule; its main Gate is
    the schedule's.
-7. Tell Discord on faked runs: once per failing streak of its lane (the newest other live run where the lane ended;
-   runs that skipped it, and dry runs, passed over), once a lane per run (after sees data's failure).
+7. Tell Discord on faked runs and commit comments: once per broken push, by the marker comment on its head commit (a
+   push's run and a guards follow-up: the marker only; Card guards' marker counts); a run without a push also once per
+   failing streak of its lane (the newest other live run where the lane ended; runs that skipped it, and dry runs,
+   passed over) and once a lane per run (after sees data's failure), then the marker on its head. The post: the
+   standards webhook's, flags 4, no ping, the failed steps named; unread comments post anyway; a failed post marks nothing.
 8. The verdicts (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): Bake records keeps M's part only when M landed (the
    baked events get M), records nothing on a dry run; every data job looks for unmerged records; the data gate goes for
    records alone; Build passes them on and lists them in bake-records.json; Guard
@@ -1192,22 +1195,70 @@ def build_cases(flow: dict) -> None:
 
 
 def tell_cases(flow: dict) -> None:
-    """Tell Discord on faked runs and jobs: once per failing streak of its lane, once a lane per run."""
+    """Tell Discord on faked runs, jobs and commit comments: once per broken push (the marker on its head commit); a run
+    without a push also once per failing streak of its lane and once a lane per run, then the marker."""
     tell = step(flow["jobs"]["data"], "Tell Discord")
+    mark = "<!-- discord-failure-told -->"
+    body = f"Failure told in Discord: https://run/99\n{mark}"
+    keep = {"data": "The website and the bot keep the last good data.", "main": "Website edits wait for the next bake."}
     with tempfile.TemporaryDirectory() as tmp:
         fake = os.path.join(tmp, "bin")
         told = os.path.join(tmp, "told")
-        write(os.path.join(fake, "gh"), "#!/bin/bash\n"
-              'q=""; prev=""; for a in "$@"; do [ "$prev" = --jq ] && q=$a; prev=$a; done\n'
-              'if [ "$1" = run ]; then jq -r "$q" <<< "$FAKE_RUNS"; exit; fi\n'
-              'id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$2"); jq -r "$q" "$FAKE_JOBS/$id.json"\n')
-        write(os.path.join(fake, "curl"), f'#!/bin/bash\ncat > "{told}"\n')
-        for name in ("gh", "curl"):
+        write(os.path.join(fake, "gh"), r'''#!/bin/bash
+q=""; prev=""; path=""
+for a in "$@"; do [ "$prev" = --jq ] && q=$a; case $a in repos/*) path=$a ;; esac; prev=$a; done
+if [ "$1" = run ]; then jq -r "$q" <<< "$FAKE_RUNS"; exit; fi
+case $path in
+  */comments)                     # a commit's comments: read, or one added
+    f="$FAKE_COMMENTS/$(cut -d/ -f5 <<< "$path").json"; [ -f "$f" ] || echo "[]" > "$f"
+    if [[ " $* " == *" POST "* ]]; then b=$(cat); jq --argjson b "$b" '. + [{id: length, body: $b.body}]' "$f" > "$f.new"; mv "$f.new" "$f"
+    else echo read >> "$FAKE_COMMENTS/reads"; [ -z "$FAKE_UNREAD" ] || exit 1; jq -r "$q" "$f"; fi ;;
+  */attempts/*/jobs) jq -r "$q" "$FAKE_JOBS/attempt.json" ;;
+  */jobs) jq -r "$q" "$FAKE_JOBS/$(sed -n "s|.*/runs/\([0-9]*\)/jobs|\1|p" <<< "$path").json" ;;
+  *) jq -r "$q" "$FAKE_JOBS/run-${path##*/}.json" ;;          # a guards run
+esac
+''')
+        write(os.path.join(fake, "curl"), f'#!/bin/bash\n[ -z "$FAKE_DOWN" ] || exit 22\ncat > "{told}"\n')
+        write(os.path.join(fake, "sleep"), "#!/bin/bash\n")       # the comment reads' retries at once
+        for name in ("gh", "curl", "sleep"):
             os.chmod(os.path.join(fake, name), 0o755)
         os.makedirs(os.path.join(tmp, "runner"))
+
+        def run(this, own, others, comments=None, files=None, **extra) -> tuple:
+            """The step once: (exit code, output, the post or None, {sha: its comments}, comment reads)."""
+            box = os.path.join(tmp, f"case-{time.monotonic_ns()}")
+            jobs_dir, notes = os.path.join(box, "jobs"), os.path.join(box, "comments")
+            os.makedirs(notes)
+            for name, data in [("99", {"jobs": own}), *((str(r), {"jobs": j}) for r, j, _ in others), *(files or {}).items()]:
+                write(os.path.join(jobs_dir, f"{name}.json"), json.dumps(data))
+            for sha, bodies in (comments or {}).items():
+                write(os.path.join(notes, f"{sha}.json"), json.dumps([{"id": i, "body": b} for i, b in enumerate(bodies)]))
+            runs = [{"databaseId": 99, "displayTitle": "Card sync"}] + [
+                {"databaseId": rid, "displayTitle": "Card sync (dry run)" if dry else "Card sync"} for rid, _, dry in others]
+            if os.path.exists(told):
+                os.remove(told)
+            outcomes = "Gate=success\nBake=failure\nCommit main=skipped\n" if this == "main" else "Gate=success\nBuild=failure\nPosts=skipped\n"
+            env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_RUNS": json.dumps(runs), "FAKE_JOBS": jobs_dir,
+                   "FAKE_COMMENTS": notes, "GITHUB_RUN_ID": "99", "GITHUB_JOB": this, "GH_TOKEN": "x", "WEBHOOK": "w",
+                   "RUN_URL": "https://run/99", "RUNNER_NAME": "GitHub Actions 3", "GITHUB_EVENT_NAME": "schedule",
+                   "GITHUB_ACTOR": "github-actions[bot]", "GITHUB_SHA": "5" * 40, "OUTCOMES": outcomes, **extra}
+            code, text, _ = run_step({"steps": [tell]}, "Tell Discord", tmp, env, tmp)
+            post = json.load(open(told)) if os.path.exists(told) else None
+            state = {f[:-5]: [c["body"] for c in json.load(open(os.path.join(notes, f)))]
+                     for f in os.listdir(notes) if f.endswith(".json")}
+            reads = os.path.join(notes, "reads")
+            return code, text, post, {k: v for k, v in state.items() if v}, open(reads).read().count("read") if os.path.exists(reads) else 0
+
+        def alert(where: str, steps: str, this: str) -> dict:
+            return {"content": f"Card sync failed on {where}: {steps} https://run/99\n{keep['main' if this == 'main' else 'data']}",
+                    "flags": 4, "allowed_mentions": {"parse": []}}
+
+        def said(post) -> str:
+            return "told: " + post["content"].split("\n")[0] if post else "quiet"
+
         job = lambda name, conclusion=None: {"name": name, "conclusion": conclusion}  # noqa: E731
         D, A = "Card data", "Card data after the bake"
-        cases = [  # (what, this job, this run's jobs, the other runs [(id, jobs, dry)], want told)
+        cases = [  # runs without a push (the schedule's): (what, this job, this run's jobs, the other runs [(id, jobs, dry)], want told)
             ("main fails after a data-only run, its last main failed", "main", [job(D, "success"), job(LANE)],
              [(7, [job(D, "success"), job(LANE, "skipped")], False), (6, [job(LANE, "failure")], False)], False),
             ("main fails after a data-only run, its last main passed", "main", [job(D, "success"), job(LANE)],
@@ -1225,22 +1276,39 @@ def tell_cases(flow: dict) -> None:
              [(12, [job(D, "cancelled")], False), (6, [job(D, "failure")], False)], False),
             ("data fails, the lane never ran before", "data", [job(D)], [(6, [job(LANE, "failure")], False)], True)]
         for what, this, own, others, want in cases:
-            jobs_dir = os.path.join(tmp, f"jobs-{time.monotonic_ns()}")
-            write(os.path.join(jobs_dir, "99.json"), json.dumps({"jobs": own}))
-            for rid, jobs, _ in others:
-                write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": jobs}))
-            runs = [{"databaseId": 99, "displayTitle": "Card sync"}] + [
-                {"databaseId": rid, "displayTitle": "Card sync (dry run)" if dry else "Card sync"} for rid, _, dry in others]
-            if os.path.exists(told):
-                os.remove(told)
-            env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_RUNS": json.dumps(runs), "FAKE_JOBS": jobs_dir,
-                   "GITHUB_RUN_ID": "99", "GITHUB_JOB": this, "GH_TOKEN": "x", "WEBHOOK": "w", "RUN_URL": "https://run/99",
-                   "OUTCOMES": "gate=success build=failure bake=failure"}
-            code, text, _ = run_step({"steps": [tell]}, "Tell Discord", tmp, env, tmp)
-            sent = json.loads(open(told).read())["content"] if os.path.exists(told) else ""
-            lane = LANE if this == "main" else D
-            check(code == 0 and bool(sent) == want and (not sent or f"({lane}: " in sent),
-                  f"tell: {what} -> {'told: ' + sent if sent else 'quiet'}" + ("" if code == 0 else f"\n{text}"))
+            code, text, post, state, _ = run(this, own, others)
+            ok = (post == alert("main 55555555", "Bake" if this == "main" else "Build", this) and state == {"5" * 40: [body]}
+                  if want else post is None and not state)
+            check(code == 0 and ok, f"tell: {what} -> {said(post)}" + ("" if code == 0 else f"\n{text}"))
+
+        P, G, H = "a" * 40, "b" * 40, "c" * 40           # a push's head, a guards run's push, main's head
+        failing = [(7, [job(D, "failure"), job(LANE, "failure")], False)]       # a streak keeps a run without a push quiet
+        passed = [(7, [job(D, "success"), job(LANE, "success")], False)]
+        push = {"GITHUB_EVENT_NAME": "push", "GITHUB_ACTOR": "Croissant2", "GITHUB_SHA": P, "others": failing}
+        follow = {"GITHUB_EVENT_NAME": "workflow_dispatch", "GUARDS_RUN": "77", "GITHUB_SHA": H, "others": failing,
+                  "files": {"run-77": {"event": "push", "head_sha": G, "actor": {"login": "netverk"}}}}
+        guards = "Card guards failed on Croissant2's push aaaaaaaa: Land\n" + mark
+        me = {"status": "in_progress", "runner_name": "GitHub Actions 3", "steps": [
+            job("Gate", "success"), job("Build", "failure"), job("Commit data", "timed_out"), job("Tell Discord")]}
+        other = {"status": "in_progress", "runner_name": "GitHub Actions 4", "steps": [job("Bake", "failure")]}
+        cases = [  # (what, this job, run's keywords, want post, want comments, want comment reads)
+            ("a push's data fails in a failing streak: told, the mark on its head", "data", dict(push),
+             alert("Croissant2's push aaaaaaaa", "Build", "data"), {P: [body]}, 1),
+            ("that push's main fails too: its mark, quiet", "main", dict(push, comments={P: [body]}), None, {P: [body]}, 1),
+            ("a push Card guards told: quiet", "after", dict(push, comments={P: [guards]}), None, {P: [guards]}, 1),
+            ("a guards follow-up: told on its guards run's push, the mark there", "main", dict(follow),
+             alert("netverk's push bbbbbbbb", "Bake", "main"), {G: [body]}, 1),
+            ("a run without a push, its head told already: quiet", "data",
+             dict(GITHUB_SHA=H, others=passed, comments={H: [body]}), None, {H: [body]}, 1),
+            ("a push's comments unread 3 times: posted anyway", "data", dict(push, FAKE_UNREAD="1"),
+             alert("Croissant2's push aaaaaaaa", "Build", "data"), {P: [body]}, 3),
+            ("a push's failed steps from its job in the run's job list", "data", dict(push, files={"attempt": {"jobs": [me, other]}}),
+             alert("Croissant2's push aaaaaaaa", "Build, Commit data", "data"), {P: [body]}, 1),
+            ("a push's post fails: no mark", "data", dict(push, FAKE_DOWN="1"), None, {}, 1)]
+        for what, this, kw, want, comments, reads in cases:
+            code, text, post, state, n = run(this, [job(D), job(LANE)], **kw)
+            check(code == 0 and post == want and state == comments and n == reads,
+                  f"tell: {what} -> {said(post)}, marks {sum(map(len, state.values()))}, reads {n}" + ("" if code == 0 else f"\n{text}"))
 
 
 def save_cases(flow: dict) -> None:

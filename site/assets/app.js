@@ -819,7 +819,7 @@ function fillTable(tbody) {
   };
   if (rest.length) setTimeout(step);
 }
-// the Needs handling view: a list to scan, each card's flags beside it (labels; the hand flag's issue behind a mark, owner 11-11)
+// the Needs handling view: a list to scan, each card's flags beside it (labels; each flag's issue behind a mark, owner 11-11)
 const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="">` : ""}
   <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
@@ -1760,7 +1760,7 @@ const actions = {
     el.disabled = true;
     (c.iv ? loadVersions().catch(() => {}) : Promise.resolve()).then(() => editor.revertCard(c, { ref, ts, then: el.dataset.path || pngAt(c, ref, ts) }))
       .catch(e => toast(`Couldn't revert (${e.message})`)).finally(() => { el.disabled = false; }); },
-  "flag-issue": el => { const box = document.getElementById(el.getAttribute("aria-controls") || ""); if (!box) return;   // Needs handling: the hand flag's issue (flags.js)
+  "flag-issue": el => { const box = document.getElementById(el.getAttribute("aria-controls") || ""); if (!box) return;   // Needs handling: a flag's issue (flags.js)
     box.hidden = !box.hidden; el.setAttribute("aria-expanded", String(!box.hidden)); hideTip(); },
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
