@@ -2007,243 +2007,147 @@
   ]
  },
  "Auxiliary/Minions/Clot_Black.psd": {
-  "blob": "61f6523de24fa7c99d8652bec57fc99aefb16558",
+  "blob": "18b354058c06f28722d10c405b59c870d412e439",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "b011988b1114e99998e3026e5353a4c41c0342db",
+    "drawn": null,
     "name": "Clot_Black - Sumptorium_black_familiar.webp",
     "path": "MDW/Linked/Clot_Black - Sumptorium_black_familiar.webp",
     "size": 114
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "drawn": null,
     "name": "Defensive_Minion.png",
     "path": "Types/Defensive_Minion.png",
     "size": 25788
-   },
-   {
-    "drawn": "2e72ac90cab2285fb6fafd909e1a5aec92956439",
-    "name": "Clot_Black - 0.webp",
-    "path": "MDW/Linked/Clot_Black - 0.webp",
-    "size": 126
-   },
-   {
-    "drawn": "f42ee110f20f60d333363d7f2b522e26e2860cb3",
-    "name": "Clot_Black - 0 (2).webp",
-    "path": "MDW/Linked/Clot_Black - 0 (2).webp",
-    "size": 110
-   },
-   {
-    "drawn": "f42ee110f20f60d333363d7f2b522e26e2860cb3",
-    "name": "Clot_Black - 0 (2).webp",
-    "path": "MDW/Linked/Clot_Black - 0 (2).webp",
-    "size": 110
-   },
-   {
-    "drawn": "f42ee110f20f60d333363d7f2b522e26e2860cb3",
-    "name": "Clot_Black - 0 (2).webp",
-    "path": "MDW/Linked/Clot_Black - 0 (2).webp",
-    "size": 110
-   },
-   {
-    "drawn": "f42ee110f20f60d333363d7f2b522e26e2860cb3",
-    "name": "Clot_Black - 0 (2).webp",
-    "path": "MDW/Linked/Clot_Black - 0 (2).webp",
-    "size": 110
    }
   ]
  },
  "Auxiliary/Minions/Clot_Blood.psd": {
-  "blob": "bac75b39c0619ec7677e3e1ab60f65c02038fd58",
+  "blob": "32a540e237632531bd26087a1fdb98b715440f82",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "75a6e84677c51338150bcaab4ad189697fdc76a5",
+    "drawn": null,
     "name": "Clot_Blood - Sumptorium_red_familiar.webp",
     "path": "MDW/Linked/Clot_Blood - Sumptorium_red_familiar.webp",
     "size": 122
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "drawn": null,
     "name": "Defensive_Minion.png",
     "path": "Types/Defensive_Minion.png",
     "size": 25788
-   },
-   {
-    "drawn": "2e72ac90cab2285fb6fafd909e1a5aec92956439",
-    "name": "Clot_Black - 0.webp",
-    "path": "MDW/Linked/Clot_Black - 0.webp",
-    "size": 126
    }
   ]
  },
  "Auxiliary/Minions/Clot_Bone.psd": {
-  "blob": "b972c9bd2867a3225218683fde17f45e2cfa6704",
+  "blob": "b26da6ca068fa29f61f3720f92ac5e18a44ab0fa",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "1941d8a633ca7dcd5c5c508e5fbb588d5e2ef445",
+    "drawn": null,
     "name": "Clot_Blood - Sumptorium_bone_familiar.webp",
     "path": "MDW/Linked/Clot_Blood - Sumptorium_bone_familiar.webp",
     "size": 126
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "drawn": null,
     "name": "Defensive_Minion.png",
     "path": "Types/Defensive_Minion.png",
     "size": 25788
-   },
-   {
-    "drawn": "8421f3caf2f7afe97b26c76617722edcdb3418a7",
-    "name": "Clot_Bone - 0.webp",
-    "path": "MDW/Linked/Clot_Bone - 0.webp",
-    "size": 162
-   },
-   {
-    "drawn": "a234f6d6c25424c740844761bc7e101d8da45556",
-    "name": "Clot_Bone - 0 (2).webp",
-    "path": "MDW/Linked/Clot_Bone - 0 (2).webp",
-    "size": 162
    }
   ]
  },
  "Auxiliary/Minions/Clot_Gold.psd": {
-  "blob": "e888d5a29c44a09317658565d4e122833fb6d95f",
+  "blob": "4a70181d669fb49300c60bd80ab42a5e6bebfddd",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "cfc0193cb39482cedd74028cbb7da7ae7f5f9dff",
+    "drawn": null,
     "name": "Clot_Gold - Sumptorium_golden_familiar.webp",
     "path": "MDW/Linked/Clot_Gold - Sumptorium_golden_familiar.webp",
     "size": 132
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "drawn": null,
     "name": "Defensive_Minion.png",
     "path": "Types/Defensive_Minion.png",
     "size": 25788
-   },
-   {
-    "drawn": "52862c147973562955a86091fceabc9dfc1b9625",
-    "name": "Clot_Gold - 0.webp",
-    "path": "MDW/Linked/Clot_Gold - 0.webp",
-    "size": 132
-   },
-   {
-    "drawn": "c7fa436350e05008d81516bc8de140796aa039ee",
-    "name": "Clot_Gold - 0.png",
-    "path": "MDW/Linked/Clot_Gold - 0.png",
-    "size": 340
    }
   ]
  },
  "Auxiliary/Minions/Clot_White.psd": {
-  "blob": "22de21a3e46f3ef785f9bdff89a0758814d6a549",
+  "blob": "87f433daa745080268063d5e86d8b322209c6e6f",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "7411e48582d39bbe6164bb03eb11abd94388bd56",
+    "drawn": null,
     "name": "Clot_White - Sumptorium_eternal_familiar.webp",
     "path": "MDW/Linked/Clot_White - Sumptorium_eternal_familiar.webp",
     "size": 128
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "drawn": null,
     "name": "Defensive_Minion.png",
     "path": "Types/Defensive_Minion.png",
     "size": 25788
-   },
-   {
-    "drawn": "2e72ac90cab2285fb6fafd909e1a5aec92956439",
-    "name": "Clot_Black - 0.webp",
-    "path": "MDW/Linked/Clot_Black - 0.webp",
-    "size": 126
    }
   ]
  },
@@ -2277,34 +2181,22 @@
   ]
  },
  "Auxiliary/Minions/Dark_Esau.psd": {
-  "blob": "548bfac829df0072309f0f0cd7de1a9940c1307b",
+  "blob": "62e95da134bbb13b21db24804e1dc1c94b5d2c66",
   "links": [
    {
-    "drawn": "509295cb38a54d7eeae631be001b8ba7fe6822cd",
-    "name": "Dark_Esau - b-eve.png",
-    "path": "MDW/Linked/Dark_Esau - b-eve.png",
-    "size": 1025151
-   },
-   {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -4977,28 +4869,22 @@
   ]
  },
  "Auxiliary/Minions/Tainted_Soul.psd": {
-  "blob": "82555095c88a0f0724cb90458114d183935a02bf",
+  "blob": "c876c264e0a1a8a88db0be7443de4165828a5bc3",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -8508,10 +8394,10 @@
   ]
  },
  "Creatures/Isaac/2 Stars/Tainted_Eden.psd": {
-  "blob": "0c090bb28fcec0e193610900b2194f497c80a154",
+  "blob": "4d0342a20e9ad99e29900647f4567c7c149c1286",
   "links": [
    {
-    "drawn": "684e65afeeb74b7382ea73b18ee54fc434b75315",
+    "drawn": null,
     "name": "Tainted_Eden - F4YxFTxXQAABzaz.jpg",
     "path": "MDW/Linked/Tainted_Eden - F4YxFTxXQAABzaz.jpg",
     "size": 140451
@@ -8519,7 +8405,7 @@
   ]
  },
  "Creatures/Isaac/2 Stars/Tainted_Lost.psd": {
-  "blob": "09f32e62e97d245f38ac6f1739c4d6d502e699da",
+  "blob": "09a23a895c1eb22f8c7affabbd58cd1beebac1fa",
   "links": [
    {
     "drawn": null,
@@ -8536,22 +8422,22 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Isaac.psd": {
-  "blob": "186b580e40cdc4303394d6e2b029f96a68de7350",
+  "blob": "330fd17ef0b648e91b4a36cd2247544cabf42682",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "drawn": null,
     "name": "Frostmourne - Daco_35508.png",
     "path": "MDW/Linked/Frostmourne - Daco_35508.png",
     "size": 307074
    },
    {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
@@ -8559,28 +8445,16 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Jacob.psd": {
-  "blob": "b05a18aa4937313c9b4dd40bae4ccb995ad9fb74",
+  "blob": "cd5fde3182a9bc620ccab5c952f9758099b90f30",
   "links": [
    {
-    "drawn": "509295cb38a54d7eeae631be001b8ba7fe6822cd",
-    "name": "Dark_Esau - b-eve.png",
-    "path": "MDW/Linked/Dark_Esau - b-eve.png",
-    "size": 1025151
-   },
-   {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
@@ -8623,22 +8497,16 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Lilith.psd": {
-  "blob": "a1494b43670494936112bf787cb14664776eb955",
+  "blob": "55140e91c1ca906438b0f87b2d19143287fa6c0e",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
@@ -8646,28 +8514,22 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Magdalene.psd": {
-  "blob": "617f97107d5c22a94e6f241193b73ab39541495d",
+  "blob": "580c06450096b9e4b54b7ec0c44a97075a688f6c",
   "links": [
    {
-    "drawn": "6fbc2aeae204c8e96b1d550cf2b8427e49d2ccb6",
+    "drawn": null,
     "name": "Tainted_Magdalene - deo848c-f7dbfbe3-e403-4e7e-bbcc-4c72ac58c61a.png",
     "path": "MDW/Linked/Tainted_Magdalene - deo848c-f7dbfbe3-e403-4e7e-bbcc-4c72ac58c61a.png",
     "size": 1409754
    },
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
@@ -8752,46 +8614,40 @@
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Bethany.psd": {
-  "blob": "95fabbe1a7a55cbf96c56cf592cf6d9ee75e73ca",
+  "blob": "f30be9faee55411afe74f02ac6dbd077def7a244",
   "links": [
    {
-    "drawn": "e52e87cfd7c07db8f181df774b4cb4f967a57b2e",
-    "name": "Tainted_Bethany - Layer 2.psb",
-    "path": "MDW/Linked/Tainted_Bethany - Layer 2.psb",
-    "size": 2737330
+    "drawn": null,
+    "name": "k56kftssk4t61.png",
+    "path": "MDW/Linked/k56kftssk4t61.png",
+    "size": 4841694
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3df35f7376de25730348754b84d4a6e73924550d",
+    "drawn": null,
     "name": "Tainted_Bethany - wp (1).png",
     "path": "MDW/Linked/Tainted_Bethany - wp (1).png",
     "size": 392497
    },
    {
-    "drawn": "0f47d48bb50db28dc4041267c44606d490d50951",
+    "drawn": null,
     "name": "Tainted_Bethany - mikail-huriev-untitled-camera-2-removebg-preview (1).png",
     "path": "MDW/Linked/Tainted_Bethany - mikail-huriev-untitled-camera-2-removebg-preview (1).png",
     "size": 1175331
    },
    {
-    "drawn": "4df18587b829cf71a06652992f5d6804dcf35fb7",
+    "drawn": null,
     "name": "Tainted_Bethany - Layer 4.psb",
     "path": "MDW/Linked/Tainted_Bethany - Layer 4.psb",
     "size": 1522168
    },
    {
-    "drawn": "67ba1fd768a5a6e268812440498fdbaabf55ce60",
+    "drawn": null,
     "name": "Tainted_Bethany - HUD_heart_soul_full.webp",
     "path": "MDW/Linked/Tainted_Bethany - HUD_heart_soul_full.webp",
     "size": 152
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
@@ -8799,28 +8655,22 @@
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Eve.psd": {
-  "blob": "ef483c9fa6e585a2147b7a50d34b022dbde9f106",
+  "blob": "3118351a2075ca08f45df385a66e71643b731d58",
   "links": [
    {
-    "drawn": "509295cb38a54d7eeae631be001b8ba7fe6822cd",
+    "drawn": null,
     "name": "Dark_Esau - b-eve.png",
     "path": "MDW/Linked/Dark_Esau - b-eve.png",
     "size": 1025151
    },
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
@@ -8828,22 +8678,16 @@
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Forgotten.psd": {
-  "blob": "632426405e34292ce745e145596e73f31e25bc9d",
+  "blob": "319d4b583dabdcb0915417881367f73d6c1adff8",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
@@ -8892,22 +8736,22 @@
   ]
  },
  "Creatures/Isaac/5 Stars/Tainted_Cain.psd": {
-  "blob": "c6b2ff7727d8601615741daebb2f2ba49eb01085",
+  "blob": "037b027913d0ff425282f1ac2a956544654f2029",
   "links": [
    {
-    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "drawn": null,
     "name": "Frostmourne - Daco_35508.png",
     "path": "MDW/Linked/Frostmourne - Daco_35508.png",
     "size": 307074
    },
    {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
@@ -31996,6 +31840,9 @@
   "MDW/Linked/hr-h - sample_775cfbf5228ce5c613eec45100323239.jpg": {
    "8dcbc1db9da6feaa6fa4cd9ee2abf3d68455fd59": 162769
   },
+  "MDW/Linked/k56kftssk4t61.png": {
+   "ace850cd03b50fb4a22b789ebec1a8ea42d4a0f4": 4841694
+  },
   "MDW/Linked/omori - Layer 3.psb": {
    "f3187a834aa06eb159b7e51e15f201a0a1e8a175": 1048576
   },
@@ -33050,6 +32897,7 @@
   "ac5a747312a6e014d614b79f771b61de0c5647b1": "452f6295d75fb4deb093733cdafd5840148e4d93",
   "ac7e75122e450bcde50552a969afda2eaa6b01e7": "e8f32946c1d7be77a417e49dff7a58ef172a9dbd",
   "acda4e67db9766983f93c8c66c29e752c000c992": "7e65a146657f91c32228d88b24c2289b14dd72a8",
+  "ace850cd03b50fb4a22b789ebec1a8ea42d4a0f4": "08cbb8b407ac41e6fedf616d938adc2351a9d278",
   "ad0199dd7d8c54ee300613d22d60433edc9ae8ae": "8a89fdba0a0073085210d79953a353353cc9a821",
   "adb340bf8e00c995c1ded557dc28d71b45420f0d": "58057c997bb28196af7e81d3b7fcf9fe3d6daf7b",
   "ae0175425a95e846546cd2966c889d2513d5abb4": "0fccbd4e58e43aada1dbc66d45ba6b0847ccd8ff",
