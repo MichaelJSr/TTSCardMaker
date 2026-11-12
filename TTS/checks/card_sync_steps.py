@@ -1463,8 +1463,8 @@ def chain_cases(flow: dict) -> None:
 
 
 def guard_cases(flow: dict) -> None:
-    """Guard events: a guards commit's guard-events.json from the run of its Guarded-push (faked gh); a file naming
-    another commit is passed over; a commit with none warns."""
+    """Guard events (started in the background, joined before Build): a guards commit's guard-events.json from the run of
+    its Guarded-push (faked gh); a file naming another commit is passed over; a commit with none warns."""
     data = flow["jobs"]["data"]
     with tempfile.TemporaryDirectory() as tmp:
         work, bare = origin(tmp)
@@ -1492,8 +1492,12 @@ def guard_cases(flow: dict) -> None:
               f'  */artifacts/*/zip) cat "{arts}/$(basename "$(dirname "$2")").zip" ;;\n'
               'esac\n')
         os.chmod(os.path.join(fake, "gh"), 0o755)
-        env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "GIT_NO_LAZY_FETCH": "1", "MAIN": git(ws, "rev-parse", "HEAD")}
-        code, text, _ = run_step(data, "Guard events", ws, env, tmp)
+        env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "GIT_NO_LAZY_FETCH": "1"}
+        os.makedirs(os.path.join(tmp, "runner"), exist_ok=True)
+        start = step(data, "Guard events start")                          # in the background, joined by Guard events
+        code, text, _ = run_step(data, start["name"], ws, {**env, "EVENTS_SH": start["env"]["EVENTS_SH"]}, tmp)
+        if code == 0:
+            code, text, _ = run_step(data, "Guard events", ws, env, tmp)
         got = json.load(open(os.path.join(tmp, "runner", "guard-events.json")))
         check(code == 0 and got == [{"commit": g, "push": push, "events": [{"kind": "guard-png", "card": "One"}]}]
               and f"no guard events for the guards commit {lost[:8]}" in text and text.count("no guard events") == 1,
