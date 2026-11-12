@@ -294,7 +294,7 @@ function startEditor(M) {
   editor = ed;
   // image previews in edit mode (preview.js): the mock-up and the rendered dry-run bake, badges on the grid's tiles
   previews = M.createPreviews({ S, editor: ed, img, toast: m => toast(m), loadDetails: c => loadDetails(c), getJson: n => getJson(n),
-    signIn: () => ed.actions["edit-hub"](), badges: () => { if (editing()) previews.mountTiles(view); } });
+    badges: () => { if (editing()) previews.mountTiles(view); } });
   // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
   inline = M.inline; tray = M.tray;
   inline.install({ editor: ed, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
@@ -1373,7 +1373,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   }
   const updated = `<p class="muted">Site updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific), the last build that changed it, from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
   if (tab === "changelog") { page(changes.changelogHtml(C, r.params)); return; }
-  if (tab === "archive") { page(changes.archiveHtml(C.archived || [], C.repo, r.params)); return; }
+  if (tab === "archive") { page(changes.archiveHtml(C.archived, C.repo, r.params)); return; }
   if (tab === "edits") { page(changes.editsHtml(C, r.params)); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
   const item = (c, diff = true) => {          // diff: the text change since the last earlier text

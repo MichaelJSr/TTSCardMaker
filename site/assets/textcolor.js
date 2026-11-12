@@ -43,8 +43,8 @@ export function colorsChange(a, b) {
   for (const [k, one] of was) if (!now.has(k)) out.push(`${LABEL[one.field] || one.field}${one.phrase ? `: ${phraseText(one.phrase)}` : ""} back to its own colour`);
   return out;
 }
-/** The card image's colours of a list, null when none. */
-export const printedOf = v => { const p = (v || []).filter(one => FIELDS.includes(one.field)); return p.length ? p : null; };
+/** A colours list, null when none. */
+export const colorsOf = v => (v?.length ? v : null);
 
 const numbered = p => { const m = /^(.*\S)#(\d+)$/.exec(p); return m ? [m[1], +m[2]] : [p, 0]; };
 const edge = (text, i) => !ALNUM.test(text[i] ?? " ");

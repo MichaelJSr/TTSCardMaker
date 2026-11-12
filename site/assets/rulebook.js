@@ -114,7 +114,7 @@ function hangOf(kids) {                               // the panel's style: in b
   const k = outOf(c);                                 // that part / the panel's text width; the panel's padding .9em a side
   return `margin-${sideOf(c)}:calc((100% - 1.8em) * ${+(k / (1 + k)).toFixed(4)})`;
 }
-const holds = (kids, ctx) => kids.some(c => c.t === "img" && !placed(c) && c.attrs.cls.some(k => k === "left" || k === "right") && !ctx.shape?.(c.src));
+const holds = (kids, ctx) => kids.some(c => c.t === "img" && !placed(c) && c.attrs.cls.some(k => k === "left" || k === "right") && !ctx.shape(c.src));
 const ANCHORS = new Set(["top-left", "top", "top-right", "left", "center", "right", "bottom-left", "bottom", "bottom-right"]);   // a row's picture in its column
 const column = b => b.t === "fence" || b.t === "say" || b.t === "cards" || (b.t === "img" && !placed(b) && !b.attrs.cls.some(c => FLOATS.includes(c)));
 const holdsSection = b => b.t === "fence" && b.children.some(c => c.t === "section" || holdsSection(c));
@@ -234,7 +234,7 @@ const INLINE = new RegExp([
 /** HTML for one line of text: markup, then the site's renderer on the plain stretches */
 export function inline(text, ctx) {
   let out = "", last = 0;
-  const plain = s => (s ? stars(ctx.render ? ctx.render(s) : esc(s).replace(/\n/g, "<br>")) : "");
+  const plain = s => (s ? stars(ctx.render(s)) : "");
   text = String(text || "");
   for (const m of text.matchAll(INLINE)) {
     const g = m.groups;
@@ -242,7 +242,7 @@ export function inline(text, ctx) {
     last = m.index + m[0].length;
     if (g.esc) out += esc(g.esc.slice(1));
     else if (g.card !== undefined) {
-      const name = g.card.trim(), c = ctx.card?.(name), label = (g.label || "").trim() || name;
+      const name = g.card.trim(), c = ctx.card(name), label = (g.label || "").trim() || name;
       out += g.pic ? cardHtml(name, "", ctx, "rb-card-inline") : c ? `<a class="card-ref" href="c/${encodeURIComponent(c.id)}/" data-card="${esc(c.id)}">${esc(label)}</a>` : esc(label);
     } else if (g.src !== undefined) out += imgHtml({ alt: g.alt, src: g.src, attrs: splitAttrs(g.iattrs || "").attrs }, ctx, true);
     else if (g.span !== undefined) out += `<span class="${clsOf(splitAttrs(`{${g.cls}}`).attrs, COLOURS)}">${inline(g.span, ctx)}</span>`;
@@ -259,12 +259,12 @@ const stars = html => html.replace(/★+/g, s => `<span class="rb-stars">${s}</s
 // width=40 or 37.5 (per cent of the line) or width=6em; height=2em
 const sizeStyle = a => [a.width && `width:${/^\d+(\.\d+)?$/.test(a.width) ? `${a.width}%` : a.width}`, a.height && `height:${a.height}`].filter(Boolean).join(";").replace(/[^\w%.:;-]/g, "");
 function imgHtml(b, ctx, inLine = false) {   // --w: its width, for one without width= (drawn its size in the page's px)
-  const a = b.attrs || { cls: [] }, size = ctx.size?.(b.src), url = ctx.imgUrl ? ctx.imgUrl(b.src) : IMG_DIR + b.src, style = inLine ? sizeStyle(a) : size ? `--w:${Number(size[0])}` : "";
+  const a = b.attrs || { cls: [] }, size = ctx.size(b.src), url = ctx.imgUrl(b.src), style = inLine ? sizeStyle(a) : size ? `--w:${Number(size[0])}` : "";
   return `<img class="${inLine ? `rb-icon ${clsOf(a)}` : "rb-img"}" src="${esc(url)}" alt="${esc(b.alt)}"${wh(size)}${style ? ` style="${style}"` : ""}${lazy(ctx)}>`;
 }
 
 function cardHtml(name, label, ctx, cls = "") {
-  const c = ctx.card?.(name);
+  const c = ctx.card(name);
   if (!c) return `<span class="rb-card rb-missing ${cls}" title="No card named ${esc(name)}">${esc(label || name)}</span>`;
   return `<a class="rb-card ${cls}" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(ctx.cardImg(c))}" alt="${esc(c.name)}"${wh([c.tw, c.th])}${lazy(ctx)}>${label ? `<span>${esc(label)}</span>` : ""}</a>`;
 }
@@ -284,13 +284,13 @@ function blockInner(b, ctx) {
     case "h3": return `<h4 class="rb-sub ${clsOf(b.attrs)}">${inline(b.text, ctx)}</h4>`;
     case "section": {
       const id = ctx.id ? ` id="${esc(ctx.id)}--${slugify(titleText(b.title))}"` : "";
-      const icon = b.attrs?.icon && !b.cont ? ctx.icon?.(b.attrs.icon) : "";
+      const icon = b.attrs?.icon && !b.cont ? ctx.icon(b.attrs.icon) : "";
       const pen = ctx.editable && ctx.id && b.line != null ? ` <button type="button" class="rb-sec-edit" data-action="rb-edit" data-id="${esc(ctx.id)}" data-line="${b.line}" title="Edit this section" aria-label="Edit this section">✎</button>` : "";
       return `<section class="rb-sec ${clsOf(b.attrs)}${b.cont ? " rb-cont" : ""}${icon ? " rb-has-icon" : ""}"${b.cont ? "" : id}>${icon ? `<span class="rb-sec-icon">${icon}</span>` : ""}${b.cont ? "" : `<h3 class="rb-tab">${inline(b.title, ctx)}${pen}</h3>`}<div class="rb-panel${holds(b.children, ctx) ? " rb-holds" : ""}"${hangOf(b.children) ? ` style="${hangOf(b.children)}"` : ""}>${kidsHtml(b.children, ctx)}</div></section>`;
     }
     case "fence": return fenceHtml(b, ctx);
     case "say": {
-      const pic = b.who ? `<img class="rb-mascot" src="${esc(ctx.imgUrl ? ctx.imgUrl(b.who) : `${IMG_DIR}${b.who}.webp`)}" alt=""${wh(ctx.size?.(b.who))}${lazy(ctx)}>` : "";
+      const pic = b.who ? `<img class="rb-mascot" src="${esc(ctx.imgUrl(b.who))}" alt=""${wh(ctx.size(b.who))}${lazy(ctx)}>` : "";
       const opts = b.opts.filter(o => /^[\w-]+$/.test(o)).map(o => `rb-say-${o}`).join(" ");
       return `<aside class="rb-say ${opts}">${pic}<div class="rb-bubble">${kidsHtml(b.children, ctx)}</div></aside>`;
     }
@@ -298,7 +298,7 @@ function blockInner(b, ctx) {
       const num = v => /^-?\d+(\.\d+)?$/.test(v || "");   // {dx=10 dy=-5}: in the flow, shifted by % of its own size
       const at = placed(b) ? ["x", "y"].map((k, i) => (num(b.attrs[k]) ? `${i ? "top" : "left"}:${b.attrs[k]}%` : "")).filter(Boolean).join(";") : "";
       const shift = !placed(b) && (num(b.attrs.dx) || num(b.attrs.dy)) ? `transform:translate(${num(b.attrs.dx) ? b.attrs.dx : 0}%,${num(b.attrs.dy) ? b.attrs.dy : 0}%)` : "";
-      const outline = !placed(b) && b.attrs.cls.some(c => c === "left" || c === "right") ? ctx.shape?.(b.src) : null;   // floated: text to its edges
+      const outline = !placed(b) && b.attrs.cls.some(c => c === "left" || c === "right") ? ctx.shape(b.src) : null;   // floated: text to its edges
       const shape = /^[\d.% ,-]+$/.test(outline || "") ? `shape-outside:polygon(${outline}) content-box` : "";
       const out = outOf(b) ? `margin-${sideOf(b)}:calc(${-+(outOf(b) * 100).toFixed(3)}% - .9em)` : "";   // out=: past its panel's padding and edge
       const st = [sizeStyle(b.attrs), at, shift, shape, out].filter(Boolean).join(";");

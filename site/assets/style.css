@@ -633,7 +633,7 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 /* ---- balance (balance.js): the Stats page's Balance section and the card's Balance block ---- */
 .bal-title { margin: 28px 0 2px; font-size: 20px; } .bal-intro { margin: 0 0 12px; font-size: 13.5px; }
 .chart .band { fill: color-mix(in srgb, var(--s1) 28%, transparent); } .chart .median { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
-.chart .area, .spark .area { fill: var(--s1); fill-opacity: .12; }
+.chart .area { fill: var(--s1); fill-opacity: .12; }
 .chart .line, .spark .line { fill: none; stroke: var(--s1); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .chart .end, .spark .end { fill: var(--s1); stroke: var(--surface); stroke-width: 2; }
 .chart g.dot:hover .mark { opacity: .8; }

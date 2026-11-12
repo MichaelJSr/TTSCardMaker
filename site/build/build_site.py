@@ -3497,7 +3497,7 @@ def latest_of(entries, scale):
 
 def person_extras(rows, cards, commits, people, by_login, balance, revisions, archived, fields_by, row_of):
     """Adds to each contributions row (key K; own cards: credited to K, not duplicates, not hidden) what it has of:
-    power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, shift, madeBuff, madeNerf, swing? [id, delta, ts],
+    power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, madeBuff, madeNerf, swing? [id, delta, ts],
     recent [[id, buff|nerf, delta, ts]]}; revisions (P3, P12, P13) {self, others, top, theirs, most?, untouched, oldest?};
     rework (P11) {n, of, most?}; ratings (P4) {fav?, favN, power?, powerN, best, worst}; selfBias (P5), rater (P7),
     powerVsStats (P8): per-person ratings only (ratings data: the site shows none since 2026-11-11); editFields (P21) [[field, n]];

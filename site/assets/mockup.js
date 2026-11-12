@@ -265,7 +265,7 @@ export function alignOf(spans, x0, x1) {
  *  take the colour of the background around them (the unmasked pixels' mean per cell, cells without any filled from
  *  their neighbours, blended across cells). lines ([[x0, y0, x1, y1]] px): only edges in them (grown by `reach`) count,
  *  and gaps up to `close` px between edges on a row are filled too (a badge's pill, the inside of thick letters).
- *  Returns the colours read on the way: {bg, fill, stroke | null} as [r, g, b]. fill: the record's (textColours' known).
+ *  Returns the colours read on the way: {fill, stroke | null} as [r, g, b]. fill: the record's (textColours' known).
  *  profile (a Gradient Overlay): shades too, the old letters' colours top to bottom (shadesOf), else null. */
 export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines = null, close = 0, fill = null, profile = false } = {}) {
   const [x0, y0, x1, y1] = px(box, W, H), w = x1 - x0, h = y1 - y0;
@@ -322,7 +322,7 @@ export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines 
       data[i + k] = (at(cx, cy, k) * (1 - tx) + at(cx + 1, cy, k) * tx) * (1 - ty) + (at(cx, cy + 1, k) * (1 - tx) + at(cx + 1, cy + 1, k) * tx) * ty;
     }
   }
-  return { bg: bg.map(Math.round), ...tc, shades };
+  return { ...tc, shades };
 }
 /** A Gradient Overlay's colours over the old lines (px), top to bottom: in 8 bands, the median colour of the text's
  *  pixels (erase's masked, x and y in its box from y0) that are neither the background (at: its cells) nor the outline.
@@ -928,12 +928,12 @@ export function starPlan(stars, from, to) {
   }
   return { erase: left.map(({ u }) => u.box), draw, refused: why, boxed: false };
 }
-/** Type icons from `old` to `now` on the record's header.types, as psd_edit.plan_types does it: kept icons stay in their
+/** Type icons for `now` on the record's header.types, as psd_edit.plan_types does it: kept icons stay in their
  *  slot, removed ones are erased, a kept icon past the new count moves to the first free slot, new ones take the next free
  *  slots (spots[count] past the row). -> {erase: [box], draw: [{name, core}], refused, boxed}. A token row, no icon to line
  *  up with or no spots for the count: boxed. first: the template's spot (canvas px) when the card has no type icon; one
  *  new icon goes there. */
-export function typePlan(types, old, now, first = null) {
+export function typePlan(types, now, first = null) {
   const ty = obj(types), row = Array.isArray(ty?.row) ? ty.row : [];
   if (!ty && first && now.length === 1) return { erase: [], draw: [{ name: now[0], core: first }], refused: null, boxed: false };
   if (!ty || ty.tokens) return { erase: [], draw: [], refused: ty?.refused || null, boxed: true };
@@ -1299,7 +1299,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const icons2 = [];                                  // [label, plan] for the stars and types
   if (todo.stars) icons2.push(["stars", k ? starPlan(head?.stars, ...todo.stars) : { boxed: true, refused: null }]);
   const first = head?.types === null && tpl.first ? scaled(tpl.first).map(v => v / k) : null;   // no type icon on the card
-  if (todo.types) icons2.push(["types", k ? typePlan(head?.types, ...todo.types, first) : { boxed: true, refused: null }]);
+  if (todo.types) icons2.push(["types", k ? typePlan(head?.types, todo.types[1], first) : { boxed: true, refused: null }]);
   for (const [, plan] of icons2) if (!plan.boxed) for (const b of plan.erase) { const g = at(b); fillBox(pixels.data, W, H, [g[0] - 2, g[1] - 2, g[2] + 2, g[3] + 2], { pad: Math.max(2, Math.round(W * 0.004)) }); }
   ctx.putImageData(pixels, 0, 0);
   for (const [label, plan] of icons2) {
@@ -1680,9 +1680,9 @@ function geoOf(plate, ids, k) {
 /** Spans of the FX layers' words (fx) in text, lowercased match. */
 const fxSpans = (text, fx) => (fx || []).flatMap(w => { const out = [], t = text.toLowerCase(), k = String(w).toLowerCase(); if (!k) return out; for (let i = t.indexOf(k); i >= 0; i = t.indexOf(k, i + 1)) out.push([i, i + k.length]); return out; });
 /** A splice (geoPlan's) set as the bake would: the run's width from the line's own letters (their pen steps), else this
- *  font's scaled to the card's line; the line moved as its alignment moves it. {xa, xb, cutA, cutB, dp, ds, w, hx, z}
- *  (image px: the old run's pen ends and the cuts between its letters' ink and its neighbours', prefix and suffix
- *  shifts, the new run's width, its letters' width scale, their size) or null when it would wrap
+ *  font's scaled to the card's line; the line moved as its alignment moves it. {xa, cutA, cutB, dp, ds, hx, z}
+ *  (image px: the old run's pen start and the cuts between its letters' ink and its neighbours', prefix and suffix
+ *  shifts, its letters' width scale, their size) or null when it would wrap
  *  otherwise (past the frame, a word pulled up), is not letters only, moves an FX layer's word, or the font is far off. */
 export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity }) {
   const { was, lines: L, x: X } = R, l = L[sp.i], { a, b, run } = sp, now = was.slice(0, a) + run + was.slice(b);
@@ -1720,7 +1720,7 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
   const before = inked.filter(j => j < a).pop(), first = inked.find(j => j >= a && j < b), last = inked.filter(j => j >= a && j < b).pop(), next = inked.find(j => j >= b);
   const cut = (p, q, x) => (p != null && q != null ? (edge(p, 1) + edge(q, 0)) / 2 : x);
   const cutA = first != null ? cut(before, first, xa) : cut(before, next, xa), cutB = last != null ? cut(last, next, xb) : cutA;
-  return { xa, xb, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, w, hx, z: zl };
+  return { xa, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, hx, z: zl };
 }
 /** Rows of R's lines (image px [top, bottom)): half-way to the neighbours' ink, the first and last to box's edges. */
 function bands(L, box) {

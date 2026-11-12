@@ -203,7 +203,7 @@ export function describeItems(op, b = {}, { byId } = {}) {
   const src = k => (FROM[k] ? `the ${FROM[k]}` : "the default");
   const flagged = t => ({ item: "flags", text: `${LABEL.flags}: ${t}`, short: `${LABEL.flags}: ${clip(t)}` });
   const coloured = (a, v) => { const t = TC.colorsChange(a, v).join("; ") || `${LABEL.colors}: unchanged`;     // "Ability: 'Burning' coloured #ff7a1a"
-    return { item: "colors", text: t, short: clip(t), printed: JSON.stringify(TC.printedOf(a)) !== JSON.stringify(TC.printedOf(v)) }; };
+    return { item: "colors", text: t, short: clip(t), printed: JSON.stringify(TC.colorsOf(a)) !== JSON.stringify(TC.colorsOf(v)) }; };
   const items = Object.entries(op.set).filter(([k]) => k !== "parts").map(([k, v]) => { const from = show(value(b, k, byId)), to = show(v);
     return k === "flags" ? flagged(flagsChange(value(b, k), v)) : k === "colors" ? coloured(value(b, k), v) : { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
   const boxes = Object.keys(op.set.parts || {}).length, back = (op.unset || []).filter(k => k.startsWith(P.PART)).length;
@@ -214,7 +214,7 @@ export function describeItems(op, b = {}, { byId } = {}) {
   for (const [k, on] of Object.entries(op.site || {})) { const t = `${LABEL[k]}: ${on ? "website only (the card image keeps its text)" : "on the card image too"}`; items.push({ item: `site-${k}`, text: t, short: t }); }
   if (op.rename !== undefined) { const t = op.rename ? "Files: renamed to the name" : "Files: keep their name"; items.push({ item: "rename", text: t, short: t }); }
   const site = siteAfter(op, b);
-  return items.map(({ printed, ...x }) => ({ ...x, psd: isPsd(x.item) && !site.includes(x.item) && printed !== false }));   // a note's colour: website only
+  return items.map(({ printed, ...x }) => ({ ...x, psd: isPsd(x.item) && !site.includes(x.item) && printed !== false }));   // colours unchanged: no image change
 }
 /** The batch bar's lines, one per pending edit: cards (id, name, item, text, psd), then admins, people, profiles
  *  (kind, login) and decks (kind, key); describe(op) gives a card op's items. */
@@ -391,7 +391,7 @@ export function createEditor(app) {
     if (!fresh && pwKnown?.login === me.login) return pwKnown.file;
     const text = await readFile(loginPath(me.login), S.data.branch);
     let file = null;
-    if (text != null) { try { file = auth.checkFile(JSON.parse(text), me.login).file || { damaged: true }; } catch { file = { damaged: true }; } }
+    if (text != null) { try { file = auth.checkFile(JSON.parse(text), me.login) || { damaged: true }; } catch { file = { damaged: true }; } }
     pwKnown = { login: me.login, file };
     return file;
   }
@@ -424,7 +424,7 @@ export function createEditor(app) {
       if (e.none || !built) throw e.none ? e : new Error(`Couldn't reach GitHub (${e.message}). Try again in a few minutes, or sign in with the token.`);
       raws = [[built.login, built]]; stale = true; // GitHub unreachable or rate-limited: the site's copy
     }
-    const found = raws.map(([stem, raw]) => auth.checkFile(raw, stem).file).filter(Boolean).map(file => ({ file, login: file.login }));
+    const found = raws.map(([stem, raw]) => auth.checkFile(raw, stem)).filter(Boolean).map(file => ({ file, login: file.login }));
     if (!found.length) throw new Error(`${typed}'s password file is damaged: sign in with the token, then set a new password.`);
     return { found, stale };
   }

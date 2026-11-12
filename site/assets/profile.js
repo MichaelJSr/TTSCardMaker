@@ -10,7 +10,7 @@ import { columns, chartCard } from "./stats.js";
 export const RECENT_CARDS = 24;                                             // the person page's newest cards
 
 export { LOGIN_RE };
-export const LIMITS = { motto: 140, author: 60, facts: 12, label: 40, value: 200, deck: 2000 };
+export const LIMITS = { motto: 140, facts: 12, label: 40, value: 200, deck: 2000 };
 export const PICKS = [["favourite", "Favourite card"], ["hated", "Hated card"], ["favouriteItem", "Favourite item"], ["hatedItem", "Hated item"]];
 export const ITEM_KINDS = new Set(["item", "aux item", "nme"]);
 const line = s => String(s ?? "").split(/\s+/).filter(Boolean).join(" ");   // one line, single spaces
@@ -184,7 +184,7 @@ const titleChips = (key, titles) => (titles.get(key) || []).map(t => `<span clas
 
 /** The contributions of one person: a facts row (with their ranks, P18), the fields they edit (P21), their recent edits
  *  (cards.json editBy, the last batch per card), their recent edit batches (commits to Card Edits.json) and their recent
- *  card commits. x = {cards, available, titles (Map), date(ts), repo, people?} */
+ *  card commits. x = {cards, available, titles (Map), date(ts), repo, people} */
 export function contributionsHtml(p, x) {
   const edits = x.cards.filter(c => c.editBy && hasLogin(p, c.editBy) && editorFields(c).length).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || "")).slice(0, 10);
   const facts = [
@@ -192,7 +192,7 @@ export function contributionsHtml(p, x) {
     p.edits ? `<span class="fact" data-tip="Commits to Card Edits.json: batches published on the website, or by hand">${plural(p.edits, "edit")}</span>` : "",
     p.commits ? `<span class="fact" data-tip="Commits that added or changed a card's PSD or PNG${p.first ? "; since: their first commit or edit batch" : "; moves and rulebook pages don't count"}">${plural(p.commits, "card commit")}${p.first ? ` since ${esc(x.date(p.first))}` : ""}</span>` : "",
     titleChips(p.key, x.titles),
-    ...(x.people?.length > 1 ? ranksOf(p, x.people, wordiness(x.cards)) : []).map(([label, rank, of]) => `<span class="fact" data-tip="${esc(RANK_TIP[label]?.(of) || `Among ${of} people`)}">#${rank} of ${of} by ${label}</span>`),
+    ...(x.people.length > 1 ? ranksOf(p, x.people, wordiness(x.cards)) : []).map(([label, rank, of]) => `<span class="fact" data-tip="${esc(RANK_TIP[label]?.(of) || `Among ${of} people`)}">#${rank} of ${of} by ${label}</span>`),
   ].join("");
   const fields = (p.editFields || []).filter(([f]) => f !== "rating").slice(0, 6).map(([f, n]) => `${esc(fieldName(f))} ${n}`).join(" · ");   // ratings: off the site (owner 11-11)
   return `<div class="facts">${facts}</div>${fields ? `<p class="muted p-edited">${noted("Edited", "Fields they edited, once per card per batch")}: ${fields}</p>` : ""}
@@ -239,7 +239,7 @@ export function activityHtml(p) {
 /** The Cards panel: the person's cards by kind (chips to the Cards tab), their biggest series, the newest card (by its
  *  creation date; left out when no card has one), their years (P14), series (P15), banned cards (P9), most referenced
  *  card (P16) and the newest cards. x = {cards, kinds ([[kind, label]], app.js KINDS), kindOf, month(ts), tile(card),
- *  mentionedBy?, banned?} */
+ *  mentionedBy, banned} */
 export function cardsPanelHtml(p, x) {
   const own = cardsOf(p.key, x.cards);
   if (!own.length) return "";
@@ -247,7 +247,7 @@ export function cardsPanelHtml(p, x) {
   const label = k => (x.kinds.find(([key]) => key === k) || [k, k])[1];
   const by = `author=${encodeURIComponent(p.key)}&nodup=1`;
   const career = careerOf(own), series = seriesOf(p.key, own, x.cards), ref = mostReferenced(own, x.mentionedBy);
-  const banned = own.filter(c => x.banned?.has(c.id)).length;
+  const banned = own.filter(c => x.banned.has(c.id)).length;
   return `<div class="profile"><div class="panel"><h3>Cards <span class="muted">${own.length}</span></h3>
     <div class="chips">${f.kinds.map(([k, n]) => `<a class="chip" href="#/cards?${by}&kind=${encodeURIComponent(k)}">${esc(label(k))}<span class="n">${n}</span></a>`).join("")}</div>
     <div class="facts">
@@ -288,7 +288,7 @@ const round1 = v => Math.round(v * 10) / 10;
 function featuresOf(c, x) {
   const out = new Set();
   for (const t of c.types || []) out.add(`type:${t}`);
-  for (const id of x.mentions?.get(c.id) || []) if (x.statusIds?.has(id)) out.add(`status:${id}`);
+  for (const id of x.mentions.get(c.id) || []) if (x.statusIds.has(id)) out.add(`status:${id}`);
   for (const m of String(c.ability || "").matchAll(new RegExp(TAG.source, "g"))) { const t = tagInfo(m[1]); if (t && t.group !== "neutral") out.add(`tag:${t.tag}`); }
   return out;
 }
@@ -296,14 +296,14 @@ function featuresOf(c, x) {
  *  x = {mentions (Map id -> Set), statusIds (Set)}.
  *  -> {types, status, tags: [[key, n, ratio, all cards' share]], words, siteWords}; ratio = their share / all cards' share,
  *  kept at n >= STYLE_MIN and ratio >= STYLE_RATIO, the top STYLE_TOP per group by ratio, then n. */
-export function styleOf(own, all, x = {}) {
-  const site = memoOf(all, x.mentions || "style", () => {
+export function styleOf(own, all, x) {
+  const site = memoOf(all, x.mentions, () => {
     const feats = new Map(), n = new Map(), vis = all.filter(visible);
     for (const c of vis) { const f = featuresOf(c, x); feats.set(c.id, f); for (const k of f) n.set(k, (n.get(k) || 0) + 1); }
     return { feats, n, size: vis.length, words: mean(vis.filter(c => c.ability).map(wordCount)) };
   });
   const mine = new Map();
-  for (const c of own) for (const k of site.feats.get(c.id) || featuresOf(c, x)) mine.set(k, (mine.get(k) || 0) + 1);
+  for (const c of own) for (const k of site.feats.get(c.id)) mine.set(k, (mine.get(k) || 0) + 1);
   const rows = [...mine].filter(([k, n]) => n >= STYLE_MIN && site.n.get(k))
     .map(([k, n]) => { const share = site.n.get(k) / site.size; return [k, n, round1(n / own.length / share), share]; })
     .filter(r => r[2] >= STYLE_RATIO).sort((a, b) => b[2] - a[2] || b[1] - a[1]);
@@ -352,7 +352,7 @@ export function seriesOf(key, own, all) {
 /** P16: [card, n]: their card the most other cards name (mentionedBy: Map id -> Set), n >= 2; ties by name; else null. */
 export function mostReferenced(own, mentionedBy) {
   let best = null;
-  for (const c of own) { const n = mentionedBy?.get(c.id)?.size || 0; if (n >= 2 && (!best || n > best[1] || (n === best[1] && c.name.localeCompare(best[0].name) < 0))) best = [c, n]; }
+  for (const c of own) { const n = mentionedBy.get(c.id)?.size || 0; if (n >= 2 && (!best || n > best[1] || (n === best[1] && c.name.localeCompare(best[0].name) < 0))) best = [c, n]; }
   return best;
 }
 /** Map author -> {words (mean words per ability), n (abilities)}, from every card (cardsOf's rule). */
@@ -378,10 +378,10 @@ export function ranksOf(person, people, words = new Map()) {
   return out;
 }
 
-// ---- person stats: panels (each "" without its data, so an old contributions.json renders as before) -------------
+// ---- person stats: panels (each "" without its data) ------------------------------------------------------------
 const sign = (v, dp = 1) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(dp)}`;
 const pct = v => `${Math.round(v * 100)}%`;
-const cardA = (x, id) => { const c = x.byId?.get(id); return c ? `<a class="card-ref" href="c/${encodeURIComponent(c.id)}/" data-card="${esc(c.id)}">${esc(c.name)}</a>` : esc(id); };
+const cardA = (x, id) => { const c = x.byId.get(id); return c ? `<a class="card-ref" href="c/${encodeURIComponent(c.id)}/" data-card="${esc(c.id)}">${esc(c.name)}</a>` : esc(id); };
 const personA = name => `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>`;
 const panel = (h, body) => `<div class="profile"><div class="panel"><h3>${h}</h3>${body}</div></div>`;
 const STRIP_MAX = 3;
@@ -392,9 +392,9 @@ const twoBar = (a, b) => `<div class="p-bar-l"><span>${a[0]}</span><span>${b[0]}
 function strengthStrip(power, x) {
   const W = 940, L = 10, R = 10, H = 74, mid = 30, X = v => L + ((Math.max(-STRIP_MAX, Math.min(STRIP_MAX, v)) + STRIP_MAX) / (2 * STRIP_MAX)) * (W - L - R);
   const ticks = [-2, -1, 0, 1, 2].map(t => `<line class="gridline" x1="${X(t)}" x2="${X(t)}" y1="8" y2="${H - 18}"/><text x="${X(t)}" y="${H - 4}" text-anchor="middle">${sign(t, 0)}</text>`).join("");
-  const site = x.site?.z != null ? `<line class="p-site" x1="${X(x.site.z)}" x2="${X(x.site.z)}" y1="4" y2="${H - 18}"/><text x="${X(x.site.z) + 4}" y="12">all cards</text>` : "";
+  const site = x.site.z != null ? `<line class="p-site" x1="${X(x.site.z)}" x2="${X(x.site.z)}" y1="4" y2="${H - 18}"/><text x="${X(x.site.z) + 4}" y="12">all cards</text>` : "";
   const dots = power.dots.map(([id, z, flag], i) => {
-    const c = x.byId?.get(id), cy = mid + ((i % 5) - 2) * 5, fill = flag === "top" ? "var(--s1)" : flag === "bottom" ? "var(--s2)" : "var(--deemph)";
+    const c = x.byId.get(id), cy = mid + ((i % 5) - 2) * 5, fill = flag === "top" ? "var(--s1)" : flag === "bottom" ? "var(--s2)" : "var(--deemph)";
     return `<g class="dot" data-card="${esc(id)}" data-v="${esc(sign(z, 2))}" data-l="${esc(c ? c.name : id)}"><circle class="hit" cx="${X(z)}" cy="${cy}" r="9"/><circle class="mark" cx="${X(z)}" cy="${cy}" r="4" fill="${fill}" stroke="var(--surface)" stroke-width="1.5"/></g>`;
   }).join("");
   return `<div class="chart p-strip"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Their cards' strength, ${power.n} cards">${ticks}${site}${dots}</svg></div>`;
@@ -410,8 +410,8 @@ export function balancePanelHtml(p, x) {
   if (b) {
     const n = b.buff + b.nerf, made = [b.madeNerf ? plural(b.madeNerf, "nerf") : "", b.madeBuff ? plural(b.madeBuff, "buff") : ""].filter(Boolean).join(", ");
     const bar = n ? twoBar([plural(b.buff, "buff"), b.buff, "up"], [plural(b.nerf, "nerf"), b.nerf, "down"]) : "";
-    const rows = (b.recent || []).map(([id, kind, d, ts]) => `<li>${cardA(x, id)} · <span class="${kind === "buff" ? "diff-up" : "diff-down"}">${kind} ${sign(d, 0)}</span> <span class="muted">· ${esc(x.month ? x.month(ts) : "")}</span></li>`).join("");
-    const sw = b.swing, swing = sw ? `<p>${noted("Biggest swing", "Their card's largest single change in total stats")}: ${cardA(x, sw[0])} <span class="${sw[1] > 0 ? "diff-up" : "diff-down"}">${sign(sw[1], 0)}</span> <span class="muted">· ${esc(x.month ? x.month(sw[2]) : "")}</span></p>` : "";
+    const rows = (b.recent || []).map(([id, kind, d, ts]) => `<li>${cardA(x, id)} · <span class="${kind === "buff" ? "diff-up" : "diff-down"}">${kind} ${sign(d, 0)}</span> <span class="muted">· ${esc(x.month(ts))}</span></li>`).join("");
+    const sw = b.swing, swing = sw ? `<p>${noted("Biggest swing", "Their card's largest single change in total stats")}: ${cardA(x, sw[0])} <span class="${sw[1] > 0 ? "diff-up" : "diff-down"}">${sign(sw[1], 0)}</span> <span class="muted">· ${esc(x.month(sw[2]))}</span></p>` : "";
     bal = `<h4>${noted("Buffs and nerfs", "Recorded changes to their cards' total stats: a buff raised it, a nerf lowered it")}</h4>${n ? `${bar}${swing}<ul class="p-list">${rows}</ul>` : `<p class="muted">No buffs or nerfs recorded yet.</p>`}
       ${made ? `<p>${noted("Made", "Buffs and nerfs to other people's cards in commits credited to them")}: ${made} to others' cards</p>` : ""}`;
   }
@@ -444,10 +444,10 @@ const starTip = l => { const k = l && (l.startsWith("N.M.E.") ? l : l[0].toLower
   return k ? `Their ${k}' share at each star level vs all ${k}' share; only ones with a star level` : "Their cards' share at each star level vs all cards' share; only cards with a star level"; };
 /** The Star levels block; stars = {key (the person), kinds: starKinds(), kind (picked, "" = all)}: a kind picker past one kind. */
 function starsHtml(rows, stars, label) {
-  const kinds = stars?.kinds || [], on = stars?.kind || "";
+  const kinds = stars.kinds, on = stars.kind;
   const pick = kinds.length > 1 ? `<div class="chips p-star-kinds" role="group" aria-label="Star levels of">${[["", "All"], ...kinds.map(k => [k, label(k)])]
     .map(([k, l]) => `<button type="button" class="chip${k === on ? " on" : ""}" data-action="person-stars" data-kind="${esc(k)}" aria-pressed="${k === on}">${esc(l)}</button>`).join("")}</div>` : "";
-  return `<div class="p-stars" data-person="${esc(stars?.key || "")}" data-kind="${esc(on)}"><div class="pick-label">${noted("Star levels", starTip(on && label(on)))}</div>${pick}<div class="p-stars-rows">${starRows(rows)}</div></div>`;
+  return `<div class="p-stars" data-person="${esc(stars.key)}" data-kind="${esc(on)}"><div class="pick-label">${noted("Star levels", starTip(on && label(on)))}</div>${pick}<div class="p-stars-rows">${starRows(rows)}</div></div>`;
 }
 /** A kind picked on the Star levels block: its rows and buttons redrawn in place (nothing else on the page). */
 export function showStars(box, kind, cards, kindOf) {
@@ -459,13 +459,13 @@ export function showStars(box, kind, cards, kindOf) {
   }
 }
 /** Style (P6, P10). s = styleOf(), mix = mixOf(); x = {byId, kinds}; stars: starsHtml's */
-export function stylePanelHtml(s, mix, x, n, stars = null) {
+export function stylePanelHtml(s, mix, x, n, stars) {
   const chip = (html, [, k, ratio, share]) => `<span class="chip" data-tip="${esc(`${k} of their cards (${pct(k / n)}) vs ${pct(share)} of all cards`)}">${html} ×${ratio}</span>`;
   const row = (label, list, html) => (list.length ? `<div class="p-style"><span class="pick-label">${noted(label, STYLE_TIP[label])}</span><div class="chips">${list.map(r => chip(html(r[0]), r)).join("")}</div></div>` : "");
-  const chips = s ? row("Types", s.types, t => esc(t.replace(/_/g, " "))) + row("Status effects", s.status, id => esc(x.byId?.get(id)?.name || id)) + row("Timing tags", s.tags, t => tagHtml(t)) : "";
-  const words = s?.words != null ? `<p>${noted("Words per ability", "Mean words in their cards' ability text vs all cards' (cards with no text left out)")}: ${s.words} <span class="muted">· all cards ${s.siteWords}</span></p>` : "";
-  const label = k => (x.kinds || []).find(([key]) => key === k)?.[1] || k;
-  const mixes = mix && (mix.stars.length || mix.kinds.length) ? `<div class="p-mixes">${mix.stars.length ? starsHtml(mix.stars, stars, label) : ""}
+  const chips = row("Types", s.types, t => esc(t.replace(/_/g, " "))) + row("Status effects", s.status, id => esc(x.byId.get(id)?.name || id)) + row("Timing tags", s.tags, t => tagHtml(t));
+  const words = s.words != null ? `<p>${noted("Words per ability", "Mean words in their cards' ability text vs all cards' (cards with no text left out)")}: ${s.words} <span class="muted">· all cards ${s.siteWords}</span></p>` : "";
+  const label = k => x.kinds.find(([key]) => key === k)?.[1] || k;
+  const mixes = mix.stars.length || mix.kinds.length ? `<div class="p-mixes">${mix.stars.length ? starsHtml(mix.stars, stars, label) : ""}
     ${mix.kinds.length ? `<div><div class="pick-label">${noted("Kinds", "Their share of each kind of card vs all cards' share; duplicates and hidden cards left out")}</div>${mixRows(mix.kinds, label)}</div>` : ""}</div>` : "";
   if (!chips && !words && !mixes) return "";
   return panel("Style", `${chips}${words}${mixes}`);

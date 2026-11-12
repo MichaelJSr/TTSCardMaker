@@ -16,7 +16,7 @@ const fmt = n => { const v = Math.round(n * 10) / 10; return PLAIN && Number.isI
 // ---- links to the Cards grid: a chart element that stands for a set of cards (app.js filterCards reads the params) --
 /** "#/cards?…" for p's filters within the Stats page's scope (its kind and series; global: none); no duplicates, as Stats */
 function cardsHref(p, scope = null) {
-  const q = new URLSearchParams(), kind = scope?.get?.("kind") || p.kind, series = p.series || scope?.get?.("series");
+  const q = new URLSearchParams(), kind = scope?.get("kind") || p.kind, series = p.series || scope?.get("series");
   for (const [k, v] of Object.entries({ ...p, kind, series, nodup: 1 })) if (v != null && v !== "") q.set(k, Array.isArray(v) ? v.join(",") : v);
   return `#/cards?${q}`;
 }

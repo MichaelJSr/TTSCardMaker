@@ -1,6 +1,6 @@
 // The Edit dialog's live preview: the card as it will look once published, from the form's op. NOTES.md §21.
 import { esc } from "./text.js";
-import { printedOf, wordColors } from "./textcolor.js";
+import { colorsOf, wordColors } from "./textcolor.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 // printed on the card image (edit.js FROM "PSD", build_site.py PSD_FIELDS): an edit there waits for the image ("PSD pending")
@@ -9,7 +9,7 @@ const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DE
 const typeKey = t => String(t).toLowerCase().replace(/[\s_]+/g, "");
 const sameValue = (f, a, b) => (f === "types" ? JSON.stringify([...(a || [])].map(typeKey).sort()) === JSON.stringify([...(b || [])].map(typeKey).sort())
   : f === "ability" ? String(a ?? "").replace(/\r/g, "").trim() === String(b ?? "").replace(/\r/g, "").trim()
-  : f === "colors" ? JSON.stringify(printedOf(a)) === JSON.stringify(printedOf(b)) : JSON.stringify(a ?? null) === JSON.stringify(b ?? null));
+  : f === "colors" ? JSON.stringify(colorsOf(a)) === JSON.stringify(colorsOf(b)) : JSON.stringify(a ?? null) === JSON.stringify(b ?? null));
 
 /** The published card b with the form's values: {field: value} (edit.js readForm's set, its unset fields as their PSD
  *  values), author (op.author: undefined = unchanged, null = from git). psd(f): field f's PSD value, for "PSD pending"

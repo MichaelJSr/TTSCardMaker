@@ -216,7 +216,7 @@ const NOT_YET = "Once the card sync is running (within minutes of a card push), 
 // ---- the tabs ---------------------------------------------------------------------------------------------------
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=) */
 export function changelogHtml(C, params) {
-  const events = C?.events || [], kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
+  const events = C.events, kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
   const counts = new Map();
   for (const e of events) counts.set(e.kind, (counts.get(e.kind) || 0) + 1);
   const present = KINDS.filter(([k]) => counts.get(k));
@@ -224,8 +224,8 @@ export function changelogHtml(C, params) {
     : !events.length ? `<p class="empty">No card changes in the last ${esc(C.days)} days.</p>`
     : daysHtml(pushGroups(events), C.repo, kinds.length ? kinds : null) || `<p class="empty">No ${esc(kinds.join(", "))} changes in the last ${esc(C.days)} days.</p>`;
   return `<section class="panel"><h3>Changelog${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>
-    <p class="muted">Every card change the card sync recorded in the last ${esc(C?.days || 180)} days, one block per push, as posted in Discord (the guards' fixes only here). Times are Pacific.</p>
-    ${sourceHtml(C || {})}${present.length > 1 ? chips(present, kinds, counts, "kind") : ""}</section>
+    <p class="muted">Every card change the card sync recorded in the last ${esc(C.days)} days, one block per push, as posted in Discord (the guards' fixes only here). Times are Pacific.</p>
+    ${sourceHtml(C)}${present.length > 1 ? chips(present, kinds, counts, "kind") : ""}</section>
     ${body}`;
 }
 /** The Archive tab: cards whose PSD left the card folders, newest first, with their tag (?tag= filters) */
@@ -253,8 +253,8 @@ export function batchHtml(b, repo) {
 }
 /** The Database edits tab: the card sync's edited and authors events by push, and the edit batches (?via=) */
 export function editsHtml(C, params) {
-  const events = (C?.events || []).filter(e => EDIT_KINDS.includes(e.kind));
-  const batches = C?.edits?.batches || [], via = csv(params, "via").filter(v => VIA[v]);
+  const events = C.events.filter(e => EDIT_KINDS.includes(e.kind));
+  const batches = C.edits.batches, via = csv(params, "via").filter(v => VIA[v]);
   const counts = new Map();
   for (const b of batches) counts.set(b.via, (counts.get(b.via) || 0) + 1);
   const present = Object.keys(VIA).filter(v => counts.get(v)).map(v => [v, { website: "Website", git: "Commits" }[v]]);
@@ -266,5 +266,5 @@ export function editsHtml(C, params) {
     <h3 class="cl-day">Applied by the card sync${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>${applied}
     <h3 class="cl-day">Edit batches${batches.length ? ` <span class="muted">${batches.length}</span>` : ""}</h3>
     ${present.length > 1 ? chips(present, via, counts, "via") : ""}
-    ${shownBatches.length ? shownBatches.map(b => batchHtml(b, C.repo)).join("") : `<p class="muted">No edit batches in the last ${esc(C?.days || 180)} days.</p>`}`;
+    ${shownBatches.length ? shownBatches.map(b => batchHtml(b, C.repo)).join("") : `<p class="muted">No edit batches in the last ${esc(C.days)} days.</p>`}`;
 }

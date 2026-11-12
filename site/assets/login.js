@@ -7,7 +7,7 @@ import { b64, unb64 } from "./decks.js";
 export const KDF = "PBKDF2-SHA-256";
 export const ITER = 2_000_000;                    // ~0.2 s on an M2 Ultra (Chrome), about 1 s on a mid phone; the file is public
 export const MIN_ITER = 1_000_000, MAX_ITER = 5_000_000;      // a file outside is refused: too weak, or would hang the page
-export const LIMITS = { file: 4 * 1024, ct: 1024, salt: 16, iv: 12, tag: 16, min: 12, words: 4, max: 1024 };
+export const LIMITS = { ct: 1024, salt: 16, iv: 12, tag: 16, min: 12, words: 4, max: 1024 };
 export const DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 const FIELDS = ["v", "login", "kdf", "iterations", "salt", "iv", "ct", "at"];
 const utf8 = s => new TextEncoder().encode(s);
@@ -43,26 +43,23 @@ export function bytesOf(v, size = null) {
   let out; try { out = unb64(v.replace(/=+$/, "")); } catch { return null; }      // atob: padding optional
   return size == null || out.length === size ? out : null;
 }
-/** A login file's JSON, checked like build_site.py clean_login: {file, notes} (file null when unusable). stem: the file
- *  name's login; it must equal `login` exactly. */
+/** A login file's JSON, checked like build_site.py clean_login: the file, or null when unusable. stem: the file name's
+ *  login; it must equal `login` exactly. */
 export function checkFile(raw, stem) {
   const f = obj(raw);
-  if (!f) return { file: null, notes: ["not a JSON object"] };
-  if (f.v !== 1) return { file: null, notes: ['"v" must be 1'] };
-  if (typeof f.login !== "string" || !LOGIN_RE.test(f.login)) return { file: null, notes: ['"login" must be a GitHub login'] };
-  if (f.login !== stem) return { file: null, notes: [`login ${f.login} doesn't match the file name ${stem}`] };
-  if (f.kdf !== KDF) return { file: null, notes: [`"kdf" must be ${KDF}`] };
-  if (!Number.isInteger(f.iterations) || f.iterations < MIN_ITER || f.iterations > MAX_ITER) return { file: null, notes: [`"iterations" must be ${MIN_ITER} to ${MAX_ITER}`] };
-  if (!bytesOf(f.salt, LIMITS.salt)) return { file: null, notes: [`"salt" must be ${LIMITS.salt} bytes in base64`] };
-  if (!bytesOf(f.iv, LIMITS.iv)) return { file: null, notes: [`"iv" must be ${LIMITS.iv} bytes in base64`] };
+  if (!f) return null;
+  if (f.v !== 1) return null;
+  if (typeof f.login !== "string" || !LOGIN_RE.test(f.login)) return null;
+  if (f.login !== stem) return null;
+  if (f.kdf !== KDF) return null;
+  if (!Number.isInteger(f.iterations) || f.iterations < MIN_ITER || f.iterations > MAX_ITER) return null;
+  if (!bytesOf(f.salt, LIMITS.salt)) return null;
+  if (!bytesOf(f.iv, LIMITS.iv)) return null;
   const ct = bytesOf(f.ct);
-  if (!ct || ct.length <= LIMITS.tag || ct.length > LIMITS.ct) return { file: null, notes: [`"ct" must be AES-GCM ciphertext in base64 (at most ${LIMITS.ct} bytes)`] };
-  const notes = [], file = Object.fromEntries(FIELDS.filter(k => k !== "at").map(k => [k, f[k]]));
-  if (f.at !== undefined && !(typeof f.at === "string" && DATE_RE.test(f.at))) notes.push(`"at" isn't a date like 2026-10-23T01:45:00Z, ignored`);
-  else if (f.at) file.at = f.at;
-  const unknown = Object.keys(f).filter(k => !FIELDS.includes(k));
-  if (unknown.length) notes.push(`unknown fields ignored: ${unknown.join(", ")}`);
-  return { file, notes };
+  if (!ct || ct.length <= LIMITS.tag || ct.length > LIMITS.ct) return null;
+  const file = Object.fromEntries(FIELDS.filter(k => k !== "at").map(k => [k, f[k]]));
+  if (typeof f.at === "string" && DATE_RE.test(f.at)) file.at = f.at;
+  return file;
 }
 /** The file's text: keys sorted, 2-space indent, trailing newline (as the profiles and decks). */
 export const fileText = file => `${JSON.stringify(sortKeys(file), null, 2)}\n`;

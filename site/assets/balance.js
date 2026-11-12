@@ -73,7 +73,7 @@ const legend = items => `<div class="legend">${items.map(([color, label, href]) 
   return href ? `<a class="go" href="${esc(href)}" data-tip="Show these cards">${inner}</a>` : `<span>${inner}</span>`; }).join("")}</div>`;
 
 /** One row per cohort: the middle 80% as a band, the median as a tick, the lowest to highest as a hairline, and the
-    top and bottom 10% of the cards in scope as dots. rows: [{label, q:{p10,p50,p90}, lo, hi, dots:[{v,id,name,hot}], href?}] */
+    top and bottom 10% of the cards in scope as dots. rows: [{label, q:{p10,p50,p90}, lo, hi, dots:[{v,id,name,hot}], href}] */
 function strips(rows) {
   const W = 1000, labelW = 170, padR = 30, rowH = 40, top = 6, axisH = 26, H = top + rows.length * rowH + axisH;
   const lo = Math.floor(Math.min(...rows.map(r => r.lo))) - 1, hi = Math.ceil(Math.max(...rows.map(r => r.hi))) + 1;
@@ -96,7 +96,7 @@ function strips(rows) {
       <line class="median" x1="${X(p50)}" x2="${X(p50)}" y1="${y - 10}" y2="${y + 10}"/>
       <text class="val" x="${X(p50)}" y="${y - 13}" text-anchor="middle">${esc(fmt(p50))}</text></g>`)}${dots}`;
   }).join("");
-  return `<svg viewBox="0 0 ${W} ${H}"${svgRole(rows.some(r => r.href))} class="strips">${grid}${body}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" class="strips">${grid}${body}</svg>`;
 }
 
 /** Bars to both sides of a centre line: rows [{label, value, id?, href?}] (value > 0 right in --s1, < 0 left in --s2) */
@@ -119,7 +119,7 @@ function diverging(rows, { unit = "", labelW = 200 } = {}) {
 }
 
 /** Two bars per row from one centre line: down to the left (--s2), up to the right (--s1): rows [{label, up, down, tip,
-    upHref?, downHref?}]; with links each half of the row is one */
+    upHref, downHref}]; each half of the row is one link */
 function twoSided(rows) {
   const unit = "points", labelW = 70, rowH = 26, bar = 14, W = 560, mid = labelW + (W - labelW) / 2, half = (W - labelW) / 2 - 40;
   const max = Math.max(1, ...rows.flatMap(r => [r.up, r.down]));
@@ -129,17 +129,17 @@ function twoSided(rows) {
     const left = wd > 0 ? `<path class="mark" d="M${mid},${by}H${mid - wd + Math.min(4, wd)}Q${mid - wd},${by} ${mid - wd},${by + 4}V${by + bar - 4}Q${mid - wd},${by + bar} ${mid - wd + Math.min(4, wd)},${by + bar}H${mid}Z" fill="var(--s2)"/>` : "";
     const side = (href, x, w, n, sign) => go(n ? href : null, `${r.label} ${sign === "+" ? "raised" : "lowered"}`,
       `<rect class="hit" x="${x}" y="${y}" width="${w}" height="${rowH}" data-v="${esc(`${sign}${fmt(n)} ${unit}`)}" data-l="${esc(r.tip || r.label)}"/>`);
-    const hits = r.upHref || r.downHref ? side(r.downHref, 0, mid, r.down, "\u2212") + side(r.upHref, mid, W - mid, r.up, "+") : `<rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>`;
+    const hits = side(r.downHref, 0, mid, r.down, "\u2212") + side(r.upHref, mid, W - mid, r.up, "+");
     return `<g class="row" data-v="${esc(`+${fmt(r.up)} · \u2212${fmt(r.down)} ${unit}`)}" data-l="${esc(r.tip || r.label)}">${hits}
       <text class="lbl" x="${labelW - 8}" y="${ty}" text-anchor="end">${esc(r.label)}</text>${left}${right}
       <text class="val" x="${mid - wd - 5}" y="${ty}" text-anchor="end">\u2212${esc(fmt(r.down))}</text><text class="val" x="${mid + wu + 5}" y="${ty}">+${esc(fmt(r.up))}</text></g>`;
   });
   const H = rows.length * rowH + 4;
-  return `<svg viewBox="0 0 ${W} ${H}"${svgRole(rows.some(r => r.upHref || r.downHref))}><line class="axis" x1="${mid}" x2="${mid}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}"><line class="axis" x1="${mid}" x2="${mid}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
 }
 
-/** Columns up (a) and down (b) from one baseline, by month: [{label, up, down, tip, upHref?, downHref?}]; with links
-    each half of the column is one */
+/** Columns up (a) and down (b) from one baseline, by month: [{label, up, down, tip, upHref, downHref}]; each half of
+    the column is one link */
 function updown(cols, { every = 1 } = {}) {
   const W = 1000, padL = 36, H = 220, axisH = 26, plotH = H - axisH, mid = plotH / 2;
   const max = Math.max(1, ...cols.flatMap(c => [c.up, c.down]));
@@ -154,11 +154,11 @@ function updown(cols, { every = 1 } = {}) {
     const side = (href, y, n, what) => go(n ? href : null, `${c.label} ${what}`,
       `<rect class="hit" x="${padL + i * band}" y="${y}" width="${band}" height="${mid}" data-v="${esc(`${n} ${what}`)}" data-l="${esc(c.tip || c.label)}"/>`);
     return `<g class="col" data-v="${esc(`${c.up} up · ${c.down} down`)}" data-l="${esc(c.tip || c.label)}">
-      ${c.upHref || c.downHref ? side(c.upHref, 0, c.up, "up") + side(c.downHref, mid, c.down, "down") : `<rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${plotH}"/>`}
+      ${side(c.upHref, 0, c.up, "up") + side(c.downHref, mid, c.down, "down")}
       ${upPath ? `<path class="mark" d="${upPath}" fill="var(--s1)"/>` : ""}${downPath ? `<path class="mark" d="${downPath}" fill="var(--s2)"/>` : ""}
       ${i % every === 0 ? `<text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle">${esc(c.label)}</text>` : ""}</g>`;
   }).join("");
-  return `<svg viewBox="0 0 ${W} ${H}"${svgRole(cols.some(c => c.upHref || c.downHref))}>${grid}${parts}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}">${grid}${parts}</svg>`;
 }
 
 /** One small chart per cohort over the months: the average total as a line, the middle 80% as a band; months with
@@ -251,14 +251,14 @@ export function balanceBlock(c, A) {
 }
 
 /** The card's recorded changes, newest first: stats (buff, nerf), stars, kind, types, series, timing tags, wording */
-export function changesBlock(c, A, { texts = null, repo = "", pathAt = null } = {}) {
+export function changesBlock(c, A, { texts = null, repo = "", pathAt } = {}) {
   const a = cardData(A, c), out = [];
   if (a?.changes?.length) {
     const items = a.changes.map(r => {
       const parts = changeParts(r);
       const [i, j] = r.text || [];
       const diff = r.words && texts && texts[i] != null && texts[j] != null ? `<details class="bal-diff"><summary>Show the change</summary><div>${diffWords(texts[i], texts[j])}</div></details>` : "";
-      const sha = A.commits[r.c], link = commitLink(repo, sha, `Commit for the ${day(r.ts)} change`, sha && pathAt?.(sha, r.ts));   // r.c: index in commits
+      const sha = A.commits[r.c], link = commitLink(repo, sha, `Commit for the ${day(r.ts)} change`, sha && pathAt(sha, r.ts));   // r.c: index in commits
       const when = (r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts))) + (link && `<br>${link}`);
       return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");
@@ -269,7 +269,7 @@ export function changesBlock(c, A, { texts = null, repo = "", pathAt = null } = 
 
 // ---- the Stats page's Balance section ---------------------------------------------------------------------------------
 export function statsHtml(A, { cards, byId }, params) {
-  if (!A || (!Object.keys(A.cohorts || {}).length && !Object.keys(A.cards || {}).length)) return "";     // the build made none
+  if (!Object.keys(A.cohorts || {}).length && !Object.keys(A.cards || {}).length) return "";     // the build made none
   const kind = params.get("kind") || "", series = params.get("series") || "";
   const pool = cards.filter(c => !c.dup && (!kind || c.type === kind) && (!series || c.series === series));
   const inPool = new Set(pool.map(c => c.id));
@@ -397,7 +397,6 @@ export function statsHtml(A, { cards, byId }, params) {
         { label: "Last", tip: "Date of its newest such change (Pacific time)" }], top.map(t => [t.name, t.p.n, t.p.text, t.p.stats, t.p.stars, t.p.types, day(t.p.last)]))));
   }
 
-  if (!charts.length) return "";
   return `<h2 class="bal-title">Balance</h2>
     <p class="muted bal-intro">Creatures and minions compared within their star level.</p>
     <div class="charts">${charts.join("")}</div>`;

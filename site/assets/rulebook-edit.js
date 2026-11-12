@@ -7,7 +7,7 @@
 // and its new pictures as one commit.
 import { esc } from "./text.js";
 
-const DRAFTS = "rulebook-drafts";                  // {chapter id or "new": {source, num, base, at}}
+const DRAFTS = "rulebook-drafts";                  // {chapter id or "new": {source, num}}
 const MAKE_SPACE = "rulebook-make-space";           // "1": a picture dropped goes into the page and what's around it makes room
 const MAX_W = 1080;                                // an uploaded picture's widest (a TTS page's width)
 let M = null;                                      // the open editor's state
@@ -162,7 +162,7 @@ function onKey(e) {
   if (k === "Escape") { done(); M.selLine = null; tools(null); return; }
   if (k === "Delete" || k === "Backspace") { done(); takeOut(el, line, kind); return; }
   const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[k];
-  if (d && kind === "img") { done(); if (M.makeSpace) moveInFlow(el, line, d[0], d[1]); else nudge(el, line, d[0], d[1], e.shiftKey); return; }
+  if (d && kind === "img") { done(); if (M.makeSpace) moveInFlow(el, line, d[0], d[1]); else nudge(line, d[0], d[1], e.shiftKey); return; }
   if (["+", "=", "-", "_"].includes(k) && kind !== "say") { done(); resizeBy(el, line, k === "+" || k === "=" ? 1 : -1); }
 }
 
@@ -534,7 +534,7 @@ function moveInFlow(el, line, dx, dy) {
   lines.splice(at, 0, moved);
   setText(lines.join("\n"), offsetOf(lines, at), at, "move");
 }
-function nudge(el, line, dx, dy, far) {               // a placed picture moved (% of its container), one in the flow shifted (% of its size)
+function nudge(line, dx, dy, far) {               // a placed picture moved (% of its container), one in the flow shifted (% of its size)
   editPicture(line, a => {
     if (a.cls.includes("free")) {
       const v = (k, d) => String(pos((parseFloat(a[k]) || 0) + d * (far ? 5 : 0.5)));
@@ -615,7 +615,7 @@ function wireDrag(pane) {
     if (!pl) return "";
     const into = pl.into && pl.into === M.targetEl ? ` into ${nameOf(pl.into)}` : "";   // only the picked container is named
     return pl.kind === "shift" ? "Shift it in its column" : pl.kind === "reorder" ? "Move it here in the row"
-      : pl.kind === "column" ? `Into the row here: the row makes room` : pl.kind === "flow" ? `Into the page${into}: ${({ left: "on the left", right: "on the right" })[sideFor(pl.into, pl.cx ?? d.cx, pl.amid)] || "on a line of its own"}, the rest makes room`
+      : pl.kind === "column" ? `Into the row here: the row makes room` : pl.kind === "flow" ? `Into the page${into}: ${({ left: "on the left", right: "on the right" })[sideFor(pl.into, pl.cx, pl.amid)] || "on a line of its own"}, the rest makes room`
         : `Place it here${pl.free ? " (free)" : into}`;
   };
   // pictures: pointer drag anywhere (and the resize handle), drawn once a frame
@@ -675,7 +675,6 @@ function wireDrag(pane) {
       return;
     }
     let x = e.clientX - P.gx, y = e.clientY - P.gy;
-    P.cx = x + P.w / 2;
     const pl = plan(e.clientX, e.clientY, P);
     const sn = pl.kind === "place" ? snap(pl.into, x, y, P.w, P.rect.height, P.fig) : null;
     if (sn) ({ x, y } = sn);
@@ -730,7 +729,7 @@ function wireDrag(pane) {
   pane.addEventListener("dragover", e => {
     if (!drag && !files(e)) return;
     e.preventDefault();
-    if (free(e)) { show(plan(e.clientX, e.clientY, { boxes: drag?.boxes }), { cx: e.clientX }); return; }
+    if (free(e)) { show(plan(e.clientX, e.clientY, { boxes: drag?.boxes })); return; }
     const t = target(e);
     if (!t) { marker.hidden = true; return; }
     const p = pane.getBoundingClientRect();
@@ -892,7 +891,7 @@ function html() {
     <div class="rbe-bar" role="toolbar" aria-label="Insert">
       <details class="rbe-insert"><summary class="ghost button" title="Put a block in at the cursor">Insert</summary><div class="rbe-menu rbe-list">${INSERTS.map(([k, label, what]) => `<button type="button" class="ghost" data-ins="${k}"><b>${label}</b><span class="muted">${what}</span></button>`).join("")}</div></details>
       <input id="rbe-card" class="rbe-card" list="rbe-cards" placeholder="Card…" title="Type a card's name; Enter: its picture, Shift+Enter: a link to it" autocomplete="off">
-      <datalist id="rbe-cards">${(M.api.cards?.() || []).map(n => `<option value="${esc(n)}">`).join("")}</datalist>
+      <datalist id="rbe-cards">${M.api.cards().map(n => `<option value="${esc(n)}">`).join("")}</datalist>
       <button type="button" class="ghost" data-ins="bold"><b>B</b></button><button type="button" class="ghost" data-ins="italic"><i>I</i></button>
       <details class="rbe-colours"><summary class="ghost button" title="Colour or style the selected words">Colour</summary><div class="rbe-menu">
         <div class="rbe-swatches">${COLOUR_NAMES.map(c => `<button type="button" class="rbe-swatch rb-${c}" data-colour="${c}">${c[0].toUpperCase() + c.slice(1)}</button>`).join("")}</div>
@@ -1035,7 +1034,7 @@ function patch(a, b) {
 
 function saveDraft() {
   const same = M.source === M.base && (!M.ch || M.num === M.ch.num);
-  writeDraft(M.key, same ? null : { source: M.source, num: M.num, at: Date.now() });
+  writeDraft(M.key, same ? null : { source: M.source, num: M.num });
   const st = M.api.modal.querySelector("#rbe-state"); if (st) st.textContent = same ? "" : "Draft kept in this browser.";
 }
 
@@ -1128,7 +1127,6 @@ function onClick(e) {
 
 function close() { const { api } = M; clearTimeout(timer); clearTimeout(cutTimer); M.sized?.disconnect(); api.modal.removeEventListener("click", onClick); P = drag = M = null; api.closeModal(); }
 
-// a picture: resized to MAX_W at most, WebP (PNG kept for pixel art), a name of its own in img/
 // pictures added from this computer (the Add picture button, a paste, files dropped on the page or the text): resized to
 // MAX_W, WebP, named after the file, put at the drop's line (else the cursor), and in the picture panel for reuse
 async function upload(files, at = null) {

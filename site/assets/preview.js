@@ -10,7 +10,7 @@ import { esc } from "./text.js";
 import { sameField, value, psdValue } from "./edit.js";
 import * as mockup from "./mockup.js";
 import { partsLine } from "./parts.js";
-import { printedOf } from "./textcolor.js";
+import { colorsOf } from "./textcolor.js";
 
 /** The Action's side, in one place: change it here if card-preview.yml's inputs or files change. */
 export const CONTRACT = {
@@ -47,8 +47,8 @@ export function entryEdit(fields, get) {
   for (const f of ENTRY_FIELDS) {
     if (!fields.includes(f)) continue;
     const v = get(f);
-    if (f === "creatures" ? !(Array.isArray(v) && v.length > 1) : f === "parts" ? !(v && typeof v === "object" && Object.keys(v).length) : f === "colors" ? !printedOf(v) : v === undefined) continue;
-    out[f] = f === "types" ? [...(v || [])] : f === "colors" ? printedOf(v) : typeof v === "string" ? text(v) : v;
+    if (f === "creatures" ? !(Array.isArray(v) && v.length > 1) : f === "parts" ? !(v && typeof v === "object" && Object.keys(v).length) : f === "colors" ? !colorsOf(v) : v === undefined) continue;
+    out[f] = f === "types" ? [...(v || [])] : f === "colors" ? colorsOf(v) : typeof v === "string" ? text(v) : v;
   }
   return out;
 }
@@ -59,7 +59,7 @@ export function changedOf(cur, psd) {
   for (const f of PSD_FIELDS) {
     const v = cur[f];
     if (v === undefined || ((STATS.includes(f) || f === "stars") && v == null)) continue;
-    const same = f === "colors" ? JSON.stringify(printedOf(v)) === JSON.stringify(printedOf(psd[f]))
+    const same = f === "colors" ? JSON.stringify(colorsOf(v)) === JSON.stringify(colorsOf(psd[f]))
       : typeof v === "string" || typeof psd[f] === "string" ? text(v) === text(psd[f]) : sameField(f, v ?? null, psd[f] ?? null);
     if (!same) out[f] = v;
   }
@@ -242,7 +242,7 @@ const STATE_TEXT = {
  *  card's image (a hidden current image and the diff canvas with it), or the state's words over the dimmed original (dim);
  *  caption: the status lines, outcomes, notes and buttons. v: {card, n (fields the image would change by), hash, now,
  *  scopes, images (preview URLs: the 720 px WebP, the full PNG), current (what Diff compares with: the result's before.webp,
- *  else the site's image), mixed (current is the site's AVIF: another codec), diff}. */
+ *  else the site's image), diff}. */
 export function renderedParts(e, v) {
   const button = (label, cls = "") => `<button type="button" class="${cls}" data-pv="start"${v.n ? "" : " disabled"}>${label}</button>`;
   const scopeNote = scopeOk(v.scopes) === false ? `<p class="muted pv-note">Your token has only the public_repo scope; starting a preview needs the repo scope (or a fine-grained token with Actions: Read and write).</p>` : "";
@@ -267,10 +267,10 @@ export function renderedParts(e, v) {
   if (e.state === "expired") return { ...state, caption: `${head}<p>Its image is gone: previews are kept about a week.</p>${outcomes}<div class="actions">${button("Preview again", "ghost")}</div>` };
   const shot = alt => {                               // the preview in the stage; Diff swaps in the red differences
     const [src, full] = v.images, diff = v.diff && !!v.current;
-    return { dim: false,
+    return {
       stage: `<a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview"></a>
         ${v.current ? `<img src="${esc(v.current)}" alt="" crossorigin="anonymous" data-pv-img="current" hidden><canvas data-pv-diff role="img" aria-label="Differences between the current image and the preview, in red"${diff ? "" : " hidden"}></canvas>` : ""}`,
-      tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span>${v.mixed ? ". An older preview: compared with the site's image, another format, so faint red outlines show where nothing changed" : ""}</p>` : ""}` };
+      tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span></p>` : ""}` };
   };
   if (e.state === "baked" && v.images.length) { const s = shot("rendered preview"); return { stage: s.stage, dim: false, caption: `${head}${staleText}${s.tools}${outcomes}${notes}` }; }
   if (e.state === "baked") return { ...words("No image"), caption: `${head}${staleText}<p>The bake drew it, but no image came with the result.${runLink}</p>${outcomes}${notes}${again ? `<div class="actions">${again}</div>` : ""}` };
@@ -353,7 +353,7 @@ export function mockNote(out) {
 export const olderHtml = (list, now, shown) => (list.length > 1 ? `<div class="pv-older" role="group" aria-label="Earlier previews"><span class="muted">Earlier:</span> ${list.map((e, i) => `<button type="button" class="chip" data-pv-show="${i}" aria-pressed="${i === shown}">${i ? esc(ago(now - e.at)) : "newest"} · ${esc(STATE_TEXT[e.state] || e.state)}</button>`).join(" ")}</div>` : "");
 
 export function createPreviews(app) {
-  // app: {S, editor (me, github(path, opts), scopes, psdOf(id)), toast, loadDetails(c), getJson(name), signIn(note),
+  // app: {S, editor (me, github(path, opts), scopes, psdOf(id)), toast, loadDetails(c), getJson(name),
   // badges() (re-mark the grid's tiles)}
   const { S } = app;
   let store = readStore(localStorage.getItem(KEY));
@@ -378,8 +378,7 @@ export function createPreviews(app) {
   const rawUrl = (ref, path) => `https://raw.githubusercontent.com/${repo()}/${ref}/${path.split("/").map(encodeURIComponent).join("/")}`;
   const imagesOf = e => [e.result?.files?.webp, e.result?.files?.png].filter(Boolean).map(f => rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px WebP, the full PNG
   const current = c => app.img(c, 720);
-  // the Diff's other side: the result's before.webp (the card's PNG made as preview.webp, so unchanged pixels match);
-  // a result from before it was published has none: the site's AVIF thumb, whose codec noise shows too
+  // the Diff's other side: the result's before.webp (the card's PNG made as preview.webp, so unchanged pixels match)
   const beforeOf = e => (e?.result?.files?.before ? rawUrl(CONTRACT.branch, CONTRACT.file(e.request, e.result.files.before)) : "");
 
   // ---- the values: the card's (published + staged) or the open form's, against the PSD's
@@ -388,8 +387,8 @@ export function createPreviews(app) {
   const values = (cur, psd, edit) => ({ edit, hash: hashOf(edit), n: Object.keys(changedOf(cur, psd)).length || (cur.parts ? 1 : 0), cur, psd });   // part edits whose join reads the same still change the image
   // the parts editor: the PSD's entry (variant 1's) holds the part edits, stars, types and stats of every picture
   const withParts = (c, cur, edit, op = null) => {
-    for (const f of app.editor.siteFields?.(c.id, op || undefined) || []) cur[f] = psdOf(c)[f];   // website only: the image keeps it
-    const parts = app.editor.entryParts?.(c.id, op), first = c.variantOf && S.byId.get(c.variantOf);
+    for (const f of app.editor.siteFields(c.id, op || undefined)) cur[f] = psdOf(c)[f];   // website only: the image keeps it
+    const parts = app.editor.entryParts(c.id, op), first = c.variantOf && S.byId.get(c.variantOf);
     if (first) { const own = entryEdit(app.editor.entryFields(first.id), f => value(first, f, S.byId)); for (const f of ENTRY_FIELDS) if (f !== "name" && f !== "ability" && f in own && !(f in edit)) edit[f] = own[f]; }
     if (parts) { edit.parts = parts; cur.parts = parts; }
     return values(cur, psdOf(c), edit);
@@ -404,10 +403,9 @@ export function createPreviews(app) {
   // ---- starting one
   async function start(c, edit) {
     const ed = app.editor;
-    if (!ed.me) { app.signIn(`Sign in to preview ${c.name}'s image.`); return; }
     if (!Object.keys(edit).length) { app.toast("No changes on the card image to preview"); return; }
     if (editBytes(edit) > MAX_EDIT) { app.toast("This edit is over 16 KB: the preview takes less"); return; }
-    const request = newRequest(ed.me.login), entry = { card: c.id, key: c.key, name: c.name, request, edit, hash: hashOf(edit), base: { blob: c.blob ?? null, img: c.img ?? null }, at: Date.now(), state: "starting" };
+    const request = newRequest(ed.me.login), entry = { card: c.id, name: c.name, request, edit, hash: hashOf(edit), base: { blob: c.blob ?? null, img: c.img ?? null }, at: Date.now(), state: "starting" };
     set(remember(store, entry)); notify(c.id);
     try {
       const flow = `/repos/${repo()}/actions/workflows/${CONTRACT.workflow}`;
@@ -456,7 +454,7 @@ export function createPreviews(app) {
         try { raw = await fetchResult(e); } catch { continue; }                 // GitHub unreachable: next time
         if (raw != null) {
           const result = readResult(raw);
-          set(patch(store, e.request, { state: result.state, result, done: Date.now() }));
+          set(patch(store, e.request, { state: result.state, result }));
           notify(e.card);
           continue;
         }
@@ -512,7 +510,7 @@ export function createPreviews(app) {
       } else if (mode === "mockup") {
         alt.innerHTML = ""; cap.innerHTML = `<p class="muted">${c.img ? "No changes on the card image yet." : "This card has no image to draw on."}</p>`;
       } else if (mode === "rendered") {
-        const parts = renderedParts(e, { ...v, card: c, now: Date.now(), images: e ? imagesOf(e) : [], current: beforeOf(e) || current(c), mixed: !!e && !beforeOf(e), diff: st.diff, scopes: app.editor.scopes });
+        const parts = renderedParts(e, { ...v, card: c, now: Date.now(), images: e ? imagesOf(e) : [], current: beforeOf(e) || current(c), diff: st.diff, scopes: app.editor.scopes });
         show = parts.dim ? "dim" : "alt";
         alt.innerHTML = parts.stage; cap.innerHTML = parts.caption + olderHtml(list, Date.now(), shown);
         if (!parts.dim) wireShot(alt, cap, e);
@@ -549,7 +547,7 @@ export function createPreviews(app) {
   /** The card page: the viewer on the card image, edit mode only, for a card with PSD changes or previews. */
   function mountCard(modal, c, loaded = false) {
     if (!app.editor.me) return;
-    if (!loaded && app.editor.partsLoaded?.(c) === false) {     // the part edits come from the details records: those first
+    if (!loaded && !app.editor.partsLoaded(c)) {     // the part edits come from the details records: those first
       const iv = modal.querySelector(".detail .image-wrap .iv");
       if (iv) app.editor.loadParts(c).then(() => { if (iv.isConnected) mountCard(modal, c, true); });
       return;
