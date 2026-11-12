@@ -180,7 +180,6 @@ async function init() {
   S.statuses = statusNames(S.all);                        // status words keep the chart's colour on the card image (textcolor.js)
   S.palette = S.data.palette || null;                     // the site's word colours (textcolor.js wordColors)
   S.statusFills = Object.fromEntries(Object.entries(S.palette?.statuses || {}).map(([n, c]) => [n.toLowerCase(), c]));   // as the bake prints them (the mock-up's): the chart's, else the swatch
-  anchorInks(S.all);                                      // the card's own colours (the mock-up's) follow an edit from the built text
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
@@ -189,7 +188,7 @@ async function init() {
   for (const c of S.morgue) S.morgueById.set(c.id, c);
   for (const [old, id] of Object.entries(S.data.moved || {})) if (!S.byId.has(old) && S.byId.has(id)) S.byId.set(old, S.byId.get(id));   // a renamed card's old id: links, picks, share codes
   if (editorP) await editorP.catch(() => {});
-  if (editor !== IDLE) { editor.init(); previews.init(); }  // applies staged edits, then derive()
+  if (editor !== IDLE) { addEditFields(); editor.init(); previews.init(); }  // applies staged edits, then derive()
   else derive();
   S.ready = true;
   S.decks = D.loadDecks().map(d => D.canon(d, S.byId));
@@ -259,7 +258,9 @@ const wantsEditor = () => !!(kept(SEALED) || kept("edit-sent") || kept("edit-sho
 function loadEditor(say = false) {                       // say: "Loading…" while it comes (a click)
   const note = "Loading the editor…";
   if (!editorP && say) toast(note);
-  return (editorP ||= (early("editing.js"), import("./editing.js")).then(M => {
+  return (editorP ||= Promise.all([(early("editing.js"), import("./editing.js")), getJson("editing.json")]).then(([M, f]) => {
+    editFields = { cards: f, on: null };
+    if (S.ready) addEditFields();
     const ed = startEditor(M);
     if (S.ready) { ed.init(); previews.init(); }          // else init() does
     if (toastEl.textContent === note) toastEl.hidden = true;
@@ -267,6 +268,14 @@ function loadEditor(say = false) {                       // say: "Loading…" wh
   }).catch(e => { editorP = null; toast(failText("the editor", e, "") + (navigator.onLine === false ? "" : " Reload the page to try again.")); throw e; }));
 }
 const withEditor = fn => loadEditor(true).then(fn, () => {});
+// the fields only edit mode reads (data/editing.json, build_site EDITOR_FIELDS): onto the cards once, before any edit
+let editFields = null;
+function addEditFields() {
+  if (!editFields || editFields.on === S.all) return;
+  for (const [id, f] of Object.entries(editFields.cards || {})) { const c = S.byId.get(id); if (c) Object.assign(c, f); }
+  editFields.on = S.all;
+  anchorInks(S.all);                                      // the card's own colours (the mock-up's) follow an edit from the built text
+}
 function startEditor(M) {
   const ed = M.createEditor({
     S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,

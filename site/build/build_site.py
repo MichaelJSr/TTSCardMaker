@@ -64,6 +64,7 @@ data/contributions.json, data/decks.json, data/versions.json, data/analytics.jso
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's Details dropdown),
 data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
+data/editing.json (the card fields only edit mode reads, EDITOR_FIELDS: loaded with the editor),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
 assets (with esbuild: one bundle, assets/app.js, and its source map; else the modules one by one) and one share page per card, per person and per public deck (its preview image a montage of its cards).
@@ -1069,6 +1070,14 @@ def record_fonts(records):
 
 
 CARD_FONTS = "cardfonts.json"                # data/: the grid's Font filter, loaded on its first use
+EDITING_JSON = "editing.json"                # data/: {card id: its EDITOR_FIELDS}, out of cards.json (app.js loadEditor)
+EDITOR_FIELDS = ("blob", "webAliases", "statCaps", "creatureBars", "ink", "ratings")   # read by edit mode only; ratings by nobody (kept)
+
+
+def editor_split(cards):
+    """(cards as cards.json carries them: without EDITOR_FIELDS, {card id: its EDITOR_FIELDS} for editing.json)"""
+    side = {c["id"]: {k: c[k] for k in EDITOR_FIELDS if k in c} for c in cards if any(k in c for k in EDITOR_FIELDS)}
+    return [{k: v for k, v in c.items() if k not in EDITOR_FIELDS} for c in cards], side
 
 
 def card_fonts(cards, detail_files):
@@ -5020,7 +5029,8 @@ def main():
     os.makedirs(os.path.join(DIST, "data"))
     chapters, rule_images = rulebook_chapters()
     cover_sizes, cover_files = cover_copies(rule_images)
-    files = {"cards.json": data, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
+    shown, editing = editor_split(cards)
+    files = {"cards.json": {**data, "cards": shown}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}

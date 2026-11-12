@@ -67,7 +67,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   its section opens).
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`, the address bar's URL; `c` copies it) that shows a rich preview in Discord.
-- **Ratings**: not shown (owner 2026-11-11); `site/Card Ratings.json` and cards.json `ratings` keep the data.
+- **Ratings**: not shown (owner 2026-11-11); `site/Card Ratings.json` and data/editing.json `ratings` keep the data.
 - **Rulebook**: written on the website, no Photoshop. One text file per chapter in `site/rulebook/` (`NN-slug.md`: the
   number is the book's order, the slug the chapter's link, `#/rules/<slug>` and `#/rules/<slug>/<section>`), its
   pictures in `site/rulebook/img/` (the mascots, the table and reaction diagrams, taken from the Photoshop pages) and
@@ -203,7 +203,7 @@ counts never see it. Bad entries are skipped with a warning, never a failed buil
 card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": a whole number 1-10, "by": "group" | <login>, "source":
 "TTS session" | "website"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m
 commands.tts_ratings`; the website's Rate it wrote "website" entries until 2026-11-11). Only the website build reads it
-(cards.json `ratings`, a login shown as its credited name; the site shows none since 2026-11-11); no edit either, and the
+(data/editing.json `ratings`, a login shown as its credited name; the site shows none since 2026-11-11); no edit either, and the
 bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
 the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
@@ -223,7 +223,7 @@ computed by `site/build/analytics.py` from the same bot data) loads when the Sta
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `changelog.json`, `archive.json` or `edits.json` when the Changelog, Archive or Database edits tab is opened (each tab its own); `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
-when a card's or rulebook page's Details dropdown is first opened. `tts.json` is the TTS save's: its global script
+when a card's or rulebook page's Details dropdown is first opened; `editing.json` (the fields only edit mode reads) with the editor. `tts.json` is the TTS save's: its global script
 (`TTS/Global.lua`) fetches it for the Card details, Find a card and Rules buttons (`build_site.py` `tts_details`). Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The Action ships the scripts as
 one minified bundle, `assets/app.js`, with its source map `assets/app.js.map` (the modules' own text: browser devtools
