@@ -125,6 +125,7 @@ jobs:
         /commands/status_font.py
         /commands/psd_details.py
         /commands/png_changes.py
+        /commands/standards_post.py
     outputs:
       mode: ${{ steps.start.outputs.mode }}
       started: ${{ steps.start.outputs.started }}
