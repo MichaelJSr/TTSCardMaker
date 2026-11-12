@@ -197,9 +197,11 @@ async function init() {
   addEventListener("storage", e => { if (e.key !== "decks" && e.key !== "activeDeck") return; S.decks = D.loadDecks().map(d => D.canon(d, S.byId)); updateDeckCount(); refresh(); });   // another tab's hands: never saved over, never shown stale
   renderAccount();
   const typed = qInput.value;                            // typed before the scripts ran (route() clears an unfocused box)
+  const at = takeAt();                                   // a reload: the reader's place
+  if (at?.list && parseHash().name === "card") S.listHash = at.list;   // the list under its card dialog
   route();
   if (typed.trim() && typed !== (parseHash().params.get("q") || "")) { qInput.value = typed; runSearch(); }
-  restoreAt();                                           // a reload: the reader's place
+  restoreAt(at);
 }
 
 // everything computed from the cards; re-run after an edit
@@ -383,6 +385,7 @@ function route(e) {
   if (!S.restoring && was && was.name !== r.name) S.toTop = true;   // another section opens at its top
   closeModal();
   renderView(r, hash);
+  if (listAt) { const g = listAt; listAt = null; if (hash === g.list) settle(g); }   // a reloaded card dialog's first close (Back too): the list's place
 }
 function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
@@ -1926,11 +1929,13 @@ wireTips(document, tips, (cx, cy) => {
 }, { match: xTarget, run: el => actions["toggle-param"](el, true) });
 
 // The reader's place across a reload (a deploy's, fresh.js, or their own): sessionStorage "at" = the address, scrollY and
-// the tile or rulebook section at the window's top with its offset; restoreAt puts it back once the view is drawn.
-let atKept = -1e9;                                       // fresh.js saved it just before its reload: pagehide keeps that one
+// the tile or rulebook section at the window's top with its offset; restoreAt puts it back once the view is drawn. With a
+// card dialog open: also its scrollTop (m) and the list under it (list), whose place waits for the dialog's first close.
+let atKept = -1e9, listAt = null;                        // atKept: fresh.js saved it just before its reload, pagehide keeps that one
 function saveAt() {
+  const onCard = parseHash().name === "card" && !modal.hidden, waiting = onCard && !S.renderedHash && listAt;   // nothing drawn under the dialog yet: the place still waiting
   let pick = null;                                       // the deepest one across the top, else the first below it
-  for (const e of view.querySelectorAll("[data-open], .rb-chapter[id], .rb-chapter [id*='--'], .cl-push[data-at]")) {   // a Changes panel: its sizes are guesses until drawn
+  if (!waiting) for (const e of view.querySelectorAll("[data-open], .rb-chapter[id], .rb-chapter [id*='--'], .cl-push[data-at]")) {   // a Changes panel: its sizes are guesses until drawn
     const b = e.getBoundingClientRect();
     if (b.bottom <= 0 || !b.height) continue;
     if (pick && !pick.contains(e)) break;
@@ -1938,21 +1943,39 @@ function saveAt() {
   }
   const at = !pick ? "" : pick.dataset.open ? `[data-open="${CSS.escape(pick.dataset.open)}"]` : pick.dataset.at ? `[data-at="${CSS.escape(pick.dataset.at)}"]` : `#${CSS.escape(pick.id)}`;
   const el = at ? $(at, view) : null;                    // the one restoreAt finds: a table row, not its name link
-  try { store?.setItem("at", JSON.stringify({ u: location.href, y: Math.round(scrollY), at, off: el ? el.getBoundingClientRect().top : 0 })); } catch {}
+  const a = waiting || { y: Math.round(scrollY), at, off: el ? el.getBoundingClientRect().top : 0 };
+  try { store?.setItem("at", JSON.stringify({ ...a, u: location.href, ...(onCard && { m: Math.round(modal.scrollTop), list: S.listHash }) })); } catch {}
 }
 const keepAt = () => { saveAt(); atKept = performance.now(); };
 addEventListener("pagehide", () => { if (performance.now() - atKept > 2000) saveAt(); });
-function restoreAt() {
+function takeAt() {                                      // before route(): a card dialog's list is drawn from it
   let a = null;
   try { a = JSON.parse(store?.getItem("at") || "null"); store?.removeItem("at"); } catch {}
-  if (!a || a.u !== location.href || performance.getEntriesByType("navigation")[0]?.type !== "reload" || parseHash().name === "card") return;
+  return a?.u === location.href && performance.getEntriesByType("navigation")[0]?.type === "reload" ? a : null;
+}
+function restoreAt(a) {
+  if (!a) return;
+  if (parseHash().name !== "card" || modal.hidden) { settle(a); return; }
+  if (a.m) settle(a, true);
+  listAt = { y: a.y, at: a.at, off: a.off, list: S.listHash };   // route(): on the dialog's first close
+}
+// dialog: the card dialog's scrollTop, again while its slots fill (balance, history); else the window's place
+function settle(a, dialog = false) {
   const STOP = ["wheel", "touchstart", "keydown", "pointerdown"], t0 = performance.now();
-  let done = false, ready = 0, drawn = 0, ok = 0;
+  let done = false, ready = 0, drawn = 0, ok = 0, tall = 0;
   const stop = () => { done = true; for (const k of STOP) removeEventListener(k, stop, true); };
   for (const k of STOP) addEventListener(k, stop, { capture: true, passive: true });   // the reader moved: theirs
   const tick = () => {
     if (done) return;
-    const now = performance.now(), el = a.at ? $(a.at, view) : null;
+    const now = performance.now();
+    if (dialog) {                                        // drawn already: 1 s after it last grew (8 s at most)
+      if (modal.hidden || now - t0 > 8000) { stop(); return; }
+      if (modal.scrollHeight !== tall) { tall = modal.scrollHeight; drawn = now; }
+      if (Math.abs(modal.scrollTop - a.m) >= 1) modal.scrollTop = a.m;
+      if (now - drawn < 1000) requestAnimationFrame(tick); else stop();
+      return;
+    }
+    const el = a.at ? $(a.at, view) : null;
     if (el?.matches(".cl-push")) el.style.contentVisibility = "visible";   // its real height: the place is inside it
     if (!drawn) {                                        // the view drawn and the anchor in it (else, after 1.5 s, scrollY)
       if (!ready && view.firstElementChild && !$(".loading", view)) ready = now;

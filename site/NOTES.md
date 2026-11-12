@@ -1137,9 +1137,20 @@ relies on:
   pagehide's layout is off in the overflowing rulebook), pagehide too (a plain reload). sessionStorage `at`: the
   address, scrollY, the tile (`[data-open]`) or rulebook section at the window's top and the offset of the element
   restoreAt finds (a table row, not its name link: 25 px off before). A reload of the
-  same address (not a card dialog): once #view has no `.loading` and the anchor is in (else scrollY after 1.5 s; 8 s
+  same address: once #view has no `.loading` and the anchor is in (else scrollY after 1.5 s; 8 s
   at most), back to the offset, corrected each frame until two agree (1 s at most); a wheel, touch, key or pointer
   stops it. Rulebook, grid, Stats and Changes kept at 1400 and 390 (were 30605 -> 0, 19891 -> 1055, 4395 -> 0, 4524 -> 0).
+- A card dialog (2026-11-12): `at` also holds the dialog's scrollTop (`m`) and the list under it (`list` = S.listHash).
+  The reloaded page is the card's share page with nothing drawn under the dialog, so `takeAt()` runs before route():
+  S.listHash comes back (filters, sort, view; the dialog's Previous/Next follow it), the dialog's scrollTop is put back
+  and held until 1 s after the dialog last grew (its balance and history slots fill as they near; 8 s at most), and
+  the list's place waits in `listAt` for the dialog's first close (route(); Back too). A second reload before that
+  close saves `listAt` again. Measured (scratch s1110/cards-r16-0 deploy3.mjs, 12 cases at 1400x900 and 390x844, a
+  deploy reload): dialog 900 -> 0 and the list 2000 -> 0 on Thunderfury (both profiles); a card opened from the
+  rulebook closed onto the grid. Now the list's top tile, row or rulebook section comes back at the same offset (1 px)
+  in all 18 close cases (Esc, Back), the filters too (`?kind=creature&sort=hp` came back as `#/cards`), and the
+  dialog's scrollTop exactly in 17 of 20; the others: 21 and 82 px short (strip tiles above it loaded at another
+  height), +43 px on a phone's hand reload (pagehide). A wheel 300 ms after the load stops it.
 
 ## 30. Stats pruned, subseries in the series chart, charts link to the grid (2026-10-25, owner's rulings)
 - Removed (UI, data, code): Constructed ban reasons, Last change by month, Top subseries / "<series> by subseries"
