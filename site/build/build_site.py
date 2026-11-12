@@ -2098,7 +2098,7 @@ def rating_number(v):
 
 
 def valid_rating(e):
-    """card_edits.CardRatings.valid: {date, scale, value (a whole number 1-10), by, source}."""
+    """A rating entry: {date, scale, value (a whole number 1-10), by, source}."""
     if not isinstance(e, dict) or e.get("scale") not in RATING_SCALES or e.get("source") not in RATING_SOURCES:
         return False
     v, by, day = e.get("value"), e.get("by"), e.get("date")

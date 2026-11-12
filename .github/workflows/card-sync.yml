@@ -727,7 +727,7 @@ jobs:
           db=$GITHUB_WORKSPACE/carddata/db
           mkdir -p "$db"
           args=(--repo "$GITHUB_REPOSITORY" --checkout "$GITHUB_WORKSPACE" --head "$HEAD_SHA" --db "$db" --budget 400
-                --run "$RUN_URL" --builder-ref "$BUILDER_REF" --summary "$GITHUB_STEP_SUMMARY" --message "$RUNNER_TEMP/message.txt")
+                --run "$RUN_URL" --summary "$GITHUB_STEP_SUMMARY" --message "$RUNNER_TEMP/message.txt")
           base=$(jq -r '.card_commit // ""' "$db/manifest.json" 2> /dev/null || true)
           if [ -n "$base" ] && git -C "$GITHUB_WORKSPACE" cat-file -e "$base^{commit}" 2> /dev/null; then
             own=$(git -C "$GITHUB_WORKSPACE" log --format='%H|%an|%s' "$base..$HEAD_SHA" \
@@ -1250,7 +1250,7 @@ jobs:
           MAIN: ${{ steps.gate.outputs.main }}
         run: |
           [ -f commands/psd_links.py ] || { echo "The builder has no psd_links: nothing to redraw."; exit 0; }
-          if ! n=$("$RUNNER_TEMP/venv/bin/python" -m commands.psd_links due --repo "$GITHUB_REPOSITORY" --head "$MAIN" \
+          if ! n=$("$RUNNER_TEMP/venv/bin/python" -m commands.psd_links due --head "$MAIN" \
               --clone "$GITHUB_WORKSPACE" --db "$GITHUB_WORKSPACE/carddata/db"); then
             echo "::warning::the linked pictures due were not read: the next run looks again"
             exit 0
@@ -1436,7 +1436,7 @@ jobs:
           fi
           if [ "$SAVED" = true ]; then m=$((m + $(stat -c %s "$ws/TTS/Impossibility Simulator.json"))); fi
           if [ "$PAGES" = true ]; then m=$((m + $(du -sb "$ws/TTS/Rulebook" | cut -f1))); fi
-          args=(--repo "$GITHUB_REPOSITORY" --head "$head" --local "$ws" --db "$ws/carddata/db" --out "$RUNNER_TEMP/linked"
+          args=(--head "$head" --local "$ws" --db "$ws/carddata/db" --out "$RUNNER_TEMP/linked"
                 --deadline "$((START + 45 * 60))" --bytes "$((1500000000 - m))")
           if [ "$DRY_RUN" = true ]; then args+=(--dry-run); fi
           set +e

@@ -217,7 +217,8 @@ export const slugify = s => String(s || "").toLowerCase().normalize("NFKD").repl
 // ---- draw ---------------------------------------------------------------------------------------------------------
 // ctx: {render(text) -> html (the site's renderer: icons, badges, card names), card(name) -> card or null,
 // cardImg(card) -> url, imgUrl(file) -> url, size(file) -> [w, h] or null, shape(file) -> a transparent picture's outline
-// (polygon points in %, build_site picture_outline) or null, id: the chapter's id (section anchors)}
+// (polygon points in %, build_site picture_outline) or null, icon(name) -> html (a section's icon),
+// id: the chapter's id (section anchors)}
 const COLOURS = new Set(["red", "green", "blue", "yellow", "orange", "purple", "grey", "white", "u", "big", "small", "caps", "nowrap", "secret"]);
 const clsOf = (attrs, keep = null) => (attrs?.cls || []).filter(c => /^[\w-]+$/.test(c) && (!keep || keep.has(c))).map(c => `rb-${c}`).join(" ");
 const safeUrl = u => (/^(https?:|#|mailto:)/i.test(u) ? u : "#");

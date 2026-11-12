@@ -447,8 +447,8 @@ Both run in `.github/workflows/card-guards.yml`'s check job (their own workflows
   card without adding the ... font to MDW/Fonts, bite this user."). The fix is to add the font file to the top level of
   `MDW/Fonts/`.
 - The card check (AutoCroissant `commands/card_check.py`) reports the notes `/update_stats` would print for each pushed
-  PSD (NO STARS FOUND, MISSPELT TYPE, NO STATS FOUND, HP/DEF/ATK/SPD NOT FOUND, STATS TOO HIGH, ABILITY TEXT NOT
-  FOUND, UNKNOWN TYPE), after the card's `site/Card Edits.json` entry (`problems_ok`, `allow_high_stats`, `creatures`)
+  PSD (NO STARS FOUND, MISSPELT TYPE, NO STATS FOUND, HP/DEF/ATK/SPD NOT FOUND, STATS TOO HIGH, UNKNOWN TYPE),
+  after the card's `site/Card Edits.json` entry (`problems_ok`, `allow_high_stats`, `creatures`)
   and the bot's exclusions: the job summary, a comment on the commit and one Discord line per card in the standards
   channel, no ping ("... has pushed ... with: ..."). An unreadable PSD is one error line.
 

@@ -787,7 +787,7 @@ def gate_cases(flow: dict) -> None:
             full.append(code == 0 and git(ws, "rev-parse", "--is-shallow-repository") == "false")
             _bot(ws)
             write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
-                {"card_commit": base, "builder": {"parser_version": 2}, "pending": {"stale": [], "repin": ["x.png"]}}))
+                {"card_commit": base, "builder": {"parser_version": 2}, "pending": {"stale": []}}))
             code, text, out = run_step(data, "gate", ws, DATA_GATE, tmp)
             check(code == 0 and out.get("go") == str(want).lower(),
                   f"data gate: {message} -> go={out.get('go')} (want {str(want).lower()})" + ("" if code == 0 else f"\n{text}"))

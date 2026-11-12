@@ -307,7 +307,7 @@ jobs:
           tee -a "$GITHUB_STEP_SUMMARY" < "$RUNNER_TEMP/preview.md"
           exit "$(cat "$RUNNER_TEMP/preview.code")"
 
-      # The files to publish (none if the preview never ran); not preview.png. AVIF, or WebP from a Pillow without it.
+      # The files to publish (none if the preview never ran); not preview.png.
       - name: Hand over
         if: ${{ !cancelled() && steps.validate.outcome == 'success' }}
         uses: actions/upload-artifact@v7
@@ -317,8 +317,6 @@ jobs:
             ${{ runner.temp }}/preview/result.json
             ${{ runner.temp }}/preview/preview.avif
             ${{ runner.temp }}/preview/before.avif
-            ${{ runner.temp }}/preview/preview.webp
-            ${{ runner.temp }}/preview/before.webp
           if-no-files-found: ignore
           retention-days: 1
 

@@ -297,7 +297,7 @@ function caretAt(el, pos) {
  * The colour menu on the text controls inside root. o: {fieldOf(el) -> "name" | "ability" | null, textOf(el) ->
  * {text, at} (the field's whole text and where el's text starts in it: a box of several), list() -> the colours now,
  * apply(list, {kbd}), rec() -> the details record or null, swatches() -> [{name, color}],
- * base(field, text) -> the card's own colours (inkOf) or null}.
+ * statuses() -> the status names (S.statuses), base(field, text) -> the card's own colours (inkOf) or null}.
  * Returns {destroy}.
  */
 export function attach(root, o) {
