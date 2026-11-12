@@ -72,7 +72,7 @@ assets (with esbuild: one bundle, assets/app.js, and its source map; else the mo
 index.html carries the plain grid's first tiles (first_screen, checked against grid.js in node). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
 content and its imports' (the bundle's from its code and map), the data's from its content without the build time; build.txt digests the whole site (which build is live),
 then the page's stamp (<meta name="page">), which open pages poll for (fresh.js).
-game.txt: every visible card and rulebook chapter, the timing tags and the ban list as plain text (game_text), linked from the Rulebook.
+game.txt: every visible card and rulebook chapter and the ban list as plain text (game_text), linked from the Rulebook.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -190,8 +190,8 @@ FLAGS, FLAG_MAX = ("hand", "bars", "name"), 300
 # checks leave the flag off until one changes (flags.js namesOk, the bot's card_edits.NAMES_OK)
 NAMES_OK = "names_ok"
 # text colours: [{"field", "phrase"?, "color": "#rrggbb"}], a phrase as the effect layers' ("word#n"; none: the whole
-# field); the note's never bake (textcolor.js, the bot's card_edits.valid_colors)
-COLOR_FIELDS = COLOR_PRINTED = ("name", "ability")   # the card image's alone (owner 2026-11-11: never the site's text)
+# field) (textcolor.js, the bot's card_edits.valid_colors)
+COLOR_FIELDS = ("name", "ability")            # the card image's alone (owner 2026-11-11: never the site's text)
 COLOR_RE, COLORS_MAX, PHRASE_MAX = re.compile(r"^#[0-9a-f]{6}\Z"), 64, 200
 SWATCHES = ("MDW/Status Effects.aco", "MDW/Attributes.aco")   # the team's status and attribute colours (Effect Layers.jsx readAco)
 
@@ -231,8 +231,8 @@ def log(*args):
     print(*args, flush=True)
 
 
-def fetch(url, tries=3, accept=None):
-    headers = {"User-Agent": "card-browser-build", **({"Accept": accept} if accept else {})}
+def fetch(url, tries=3):
+    headers = {"User-Agent": "card-browser-build"}
     for attempt in range(tries):
         try:
             with urlopen(Request(url, headers=headers), timeout=60) as r:
@@ -572,7 +572,7 @@ def details_parts(rec, e, by_id, meta, tree_blob, rec_blob):
         pending[key] = {k: p[k] for k in ("field", "text", "delete", "was", "sha", "psd", "layer") if k in p}
     verdict = (meta or {}).get("_psd") or {}
     skipped = verdict.get("skipped") if tree_blob and isinstance(verdict.get("psd"), str) and tree_blob.startswith(verdict["psd"]) else None
-    return {"parts": out, "variants": parts.get("variants"), "template": parts.get("template"), "partState": state, "partEdits": pending,
+    return {"parts": out, "template": parts.get("template"), "partState": state, "partEdits": pending,
             "skipped": {k: {**v, "at": verdict.get("at")} for k, v in skipped.items() if isinstance(v, dict)} if isinstance(skipped, dict) else {},
             "psdBlob": rec_blob, "stale": bool(e.get("reparsePending") or (tree_blob and rec_blob and tree_blob != rec_blob)),
             "picture": {"n": n, "cards": [{"n": c.get("variant") or 1, "id": c["id"], "name": c["name"]} for c in group]} if len(group) > 1 else None}
@@ -945,7 +945,7 @@ def font_bytes(path):
 
 def web_fonts(tree, names):
     """
-    {font name: {"file": MDW/Fonts path, "bytes": size}} for the PSD fonts in names a top-level MDW/Fonts file supplies, as
+    {font name: {"file": MDW/Fonts path}} for the PSD fonts in names a top-level MDW/Fonts file supplies, as
     font_check decides it (a face with exactly that PostScript name; the first file by path wins), for the mock-up to
     load as a web font: .ttf / .otf up to FONT_WEB_MAX only. Face names are cached by blob sha
     in CACHE/fonts.json (a file is read, from the checkout or downloaded, only when its blob is new); never fails.
@@ -992,7 +992,7 @@ def web_fonts(tree, names):
     for name in sorted(n for n in names if isinstance(n, str) and n):
         p = exact.get(name)
         if p and p.lower().endswith(WEB_FONTS) and size.get(p, FONT_WEB_MAX + 1) <= FONT_WEB_MAX:
-            out[name] = {"file": p, "bytes": size[p]}
+            out[name] = {"file": p}
     return out
 
 
@@ -1026,7 +1026,7 @@ def woff2_bytes(data):
 def web_woff2(fonts, tree):
     """
     WOFF2 copies of the web fonts (full glyph sets) in DIST/fonts, cached in CACHE/woff2 by blob and woff2_tag; adds
-    "woff2" (its path in the site) and "wbytes" to each entry of fonts. A file that fails, or no fontTools / brotli,
+    "woff2" (its path in the site) to each entry of fonts. A file that fails, or no fontTools / brotli,
     leaves its entry without one: the mock-up loads the TTF/OTF from raw. Unused copies pruned; never fails.
     """
     try:
@@ -1059,7 +1059,7 @@ def web_woff2(fonts, tree):
         src = os.path.join(cache_dir, name) if name else None
         if src and os.path.exists(src):
             link_or_copy(src, os.path.join(DIST, "fonts", name))
-            f["woff2"], f["wbytes"] = f"fonts/{name}", os.path.getsize(src)
+            f["woff2"] = f"fonts/{name}"
     for n in set(os.listdir(cache_dir)) - set(want.values()):
         os.remove(os.path.join(cache_dir, n))
     return made
@@ -1129,10 +1129,10 @@ def renamed_into(old_stats, stats=()):
     """{card name: the names renamed into it, along the bot's archive tags' renamed_to chains}: one card's history (a name
     in stats is a card again: its own)."""
     to = {}
-    for name, versions in (old_stats or {}).items():
+    for name, versions in old_stats.items():
         if name in stats:
             continue
-        tag = getattr(versions[len(versions) - 1], "archived", None) if isinstance(versions, list) and versions else None
+        tag = getattr(versions[len(versions) - 1], "archived", None)
         if isinstance(tag, dict) and isinstance(tag.get("renamed_to"), str) and tag["renamed_to"] != name:
             to[name] = tag["renamed_to"]
     out = {}
@@ -1421,7 +1421,7 @@ def link_or_copy(src, dst, replace=False):
 def accent_color(im):
     """The card's most common vivid color, for embed bars (im: its 240 px picture before encoding)."""
     small = im.convert("RGB").resize((40, 80))
-    px = list(small.get_flattened_data() if hasattr(small, "get_flattened_data") else small.getdata())   # Pillow < 12.1
+    px = list(small.get_flattened_data())
     buckets = {}
     for r, g, b in px:
         if max(r, g, b) >= 70 and max(r, g, b) - min(r, g, b) >= 60:
@@ -1618,7 +1618,7 @@ def icon_low(path):
     lo-l)."""
     im = Image.open(path).convert("RGBA")
     im.thumbnail((32, 32))
-    seen = [_rel_lum(*p[:3]) for p in (im.get_flattened_data() if hasattr(im, "get_flattened_data") else im.getdata()) if p[3] > 128]
+    seen = [_rel_lum(*p[:3]) for p in im.get_flattened_data() if p[3] > 128]
     out = ""
     for k, box in ICON_BOXES.items():
         b = _rel_lum(*(int(box[i:i + 2], 16) for i in (1, 3, 5)))
@@ -1637,7 +1637,7 @@ def icon_ink(path):
     heaviest bin with its two neighbours); an icon of mean chroma under INK_GREY its mean colour; None when empty."""
     with Image.open(path) as im:
         im = im.convert("RGBA")
-        px = [p[:3] for p in (im.get_flattened_data() if hasattr(im, "get_flattened_data") else im.getdata()) if p[3] >= 128]
+        px = [p[:3] for p in im.get_flattened_data() if p[3] >= 128]
     if not px:
         return None
     weights, sums = [0.0] * 12, [[0.0] * 3 for _ in range(12)]
@@ -2308,7 +2308,7 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
         if f == "types":                          # any order and spelling, as psd_edit.same_types
             return type_keys(fields[f]) != type_keys(orig.get(f))
         if f == "colors":                         # the name's and ability's
-            return any(one.get("field") in COLOR_PRINTED for one in fields[f])
+            return True
         return entry[f] != orig.get(f)
     plain = {f for f in fields if f in PSD_FIELDS and fields[f] is not None and f not in parted and f not in site and waits(f)}
     pending = sorted(plain | set(parted))
@@ -2317,9 +2317,7 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if pending:
         entry["pending"] = pending
     tried = verdict.get("for")                    # a refusal: while the refused values are unchanged too
-    printed_colors = lambda v: [one for one in v or [] if one.get("field") in COLOR_PRINTED] or None   # the bake's (card_bake.psd_fields)
-    if verdict.get("state") == "refused" and tried and all((printed_colors(fields.get(f)) if f == "colors" else fields.get(f)) == v
-                                                           for f, v in tried.items()) and current \
+    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) and current \
             and any(f not in site for f in tried):    # a website-only field's old refusal stays quiet
         entry["refused"] = verdict.get("reason") or "refused"
     if fields.get("aliases"):
@@ -2753,7 +2751,6 @@ def build_branch():
 
 
 # ---- git history: one `git log --raw` over card PNGs, PSDs and Card Edits.json ----------------------------
-HISTORY_REPO = REPO                           # where git log runs (a test points it at a full-history clone)
 EDIT_PATHS = {EDITS_PATH, "MDW/Card Edits.json"}       # the website's edit batches, after and before the 2026-10-20 move
 HISTORY_PATHS = ("*.png", "*.PNG", "*.psd", "*.PSD", *sorted(EDIT_PATHS))
 BOT_AUTHOR = "AutoCroissant"                  # the bot's commits (AutoCroissant git_commit.AUTHOR) and `_by` stamps: an editor's batch, already counted
@@ -2829,11 +2826,11 @@ def git_history(last=None, renamed=None, sweeps=None):
     """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape; last, renamed and sweeps as
     there). Commit metadata and trees only, so CI's blob:none clone has it all; None in a shallow clone, which has no
     history to read."""
-    shallow = subprocess.run(["git", "-C", HISTORY_REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
+    shallow = subprocess.run(["git", "-C", REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
     if shallow == "true":
         log("warning: shallow clone, so no image versions and no commit counts (git fetch --unshallow --filter=blob:none to get them)")
         return None
-    out = subprocess.run(["git", "-C", HISTORY_REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
+    out = subprocess.run(["git", "-C", REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
                           f"--format={HISTORY_FORMAT}", "--", *HISTORY_PATHS], capture_output=True, text=True, check=True).stdout
     return parse_history(out, last, renamed, sweeps)
 
@@ -2971,7 +2968,7 @@ def card_revisions(found, by_png, commits, people, by_login, row_of=None):
 CHANGELOG_DAYS = 180
 EVENT_KINDS = {"new", "changed", "art", "reparse", "moved", "renamed", "archived", "restored", "edited", "authors", "restore",
                "baked", "bake-refused", "guard-png", "guard-fix"}   # AutoCroissant changelog.KINDS
-EVENT_KEYS = ("seq", "at", "build", "card_commit", "commit", "by", "edit_by", "kind", "card", "title", "card_type", "stars", "path",
+EVENT_KEYS = ("seq", "at", "build", "by", "edit_by", "kind", "card", "title", "card_type", "stars", "path",
               "from_path", "fields", "verdict", "buffs", "nerfs", "renamed_to", "moved_to", "restored_from",
               "reason", "line", "pngs", "minor")    # what the tabs read; blob and the rest stay in db/
 PUSH_KEYS = ("after", "before", "by", "at")
@@ -2986,7 +2983,7 @@ def changelog_files(changelog):
     events and batches); the new two carry no build facts (VOLATILE)"""
     head = {k: changelog[k] for k in ("available", "days", "repo")}
     return {"changelog.json": {k: v for k, v in changelog.items() if k not in ("archived", "edits")},
-            "archive.json": {**head, "archived": changelog["archived"]},
+            "archive.json": {"repo": changelog["repo"], "archived": changelog["archived"]},
             "edits.json": {**head, "events": [e for e in changelog["events"] if e.get("kind") in EDIT_EVENTS], "edits": changelog["edits"]}}
 
 
@@ -3049,10 +3046,10 @@ def site_events(events, id_of, since):
 def edit_history():
     """Every commit that touched Card Edits.json or Card Authors.txt (parse_history's shape), newest first; None in a
     shallow clone."""
-    shallow = subprocess.run(["git", "-C", HISTORY_REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
+    shallow = subprocess.run(["git", "-C", REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
     if shallow == "true":
         return None
-    out = subprocess.run(["git", "-C", HISTORY_REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
+    out = subprocess.run(["git", "-C", REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
                           f"--format={HISTORY_FORMAT}", "--", *sorted(EDIT_PATHS | AUTHOR_PATHS)], capture_output=True, text=True, check=True).stdout
     return parse_history(out)
 
@@ -3062,7 +3059,7 @@ def read_blobs(shas):
     shas = sorted({s for s in shas if s and s.strip("0")})
     if not shas:
         return {}
-    git, listed = ["git", "-C", HISTORY_REPO], "".join(s + "\n" for s in shas)
+    git, listed = ["git", "-C", REPO], "".join(s + "\n" for s in shas)
     check = subprocess.run(git + ["cat-file", "--batch-check"], input=listed, capture_output=True, text=True,
                            env={**os.environ, "GIT_NO_LAZY_FETCH": "1"})
     missing = [line.split()[0] for line in check.stdout.splitlines() if line.endswith(" missing")]
@@ -3236,12 +3233,12 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, autho
     bot clears it on its next save: card_models.stale_archives). tag: archive_tag(); author: a renamed card's Card Authors.txt
     line > the old name's (credited, by name, or by title when no live card has it) > the renamed card's (author_of: a card name ->
     its author) > the tag's > the last version's, through person(); created: the last version's created date, else the
-    Pacific day of its oldest version; series: the last version's."""
+    Pacific day of its oldest version."""
     out = []
-    for name, versions in (old_stats or {}).items():
+    for name, versions in old_stats.items():
         if name in stats:
             continue
-        last = versions[len(versions) - 1] if isinstance(versions, list) and versions else None
+        last = versions[len(versions) - 1]
         tag = getattr(last, "archived", None)
         if not isinstance(tag, dict):
             continue
@@ -3256,7 +3253,7 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, autho
             dated = [analytics.when(v) for v in versions if isinstance(getattr(v, "timestamp", None), (int, float))]
             made = datetime.fromtimestamp(min(dated), analytics.ZONE).strftime("%Y-%m-%d") if dated else None
         row = {"card": name, "title": title, "tag": archive_tag(tag), "card_type": getattr(last, "card_type", None),
-               "stars": getattr(last, "stars", None), "series": getattr(last, "series", None), "at": tag.get("at"),
+               "stars": getattr(last, "stars", None), "at": tag.get("at"),
                "created": made, "author": person(people or {}, listed or tag.get("author") or getattr(last, "author", None)),
                "path": tag.get("path") or getattr(last, "path", None),
                "commit": tag.get("commit"), "renamed_to": tag.get("renamed_to"), "moved_to": tag.get("moved_to")}
@@ -3342,7 +3339,7 @@ def is_card_file(path):
 
 
 def contributions(cards, people, profiles, edits, commits, balance=None, revisions=None, archived=(), fields_by=None, row_of=None):
-    """{"available", "since", "people": [{key, logins, github?, cards, edits, commits, first, last, recent, recentEdits,
+    """{"available", "since", "people": [{key, logins, github?, cards, edits, commits, first, recent, recentEdits,
     months, + person_extras' keys}], "site"?: {z}} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
     (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
@@ -3366,10 +3363,10 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
         return row_of(login) or spelled.setdefault(login.lower(), login)
 
     def rec_of(key):
-        return rec.setdefault(key, {"key": key, "cards": 0, "edits": 0, "commits": 0, "first": 0, "last": 0, "recent": [], "recentEdits": [], "months": {}})
+        return rec.setdefault(key, {"key": key, "cards": 0, "edits": 0, "commits": 0, "first": 0, "recent": [], "recentEdits": [], "months": {}})
 
     def seen(r, ts):
-        r["first"], r["last"] = min(r["first"] or ts, ts), max(r["last"], ts)
+        r["first"] = min(r["first"] or ts, ts)
 
     def tally(r, ts, i):
         m = r["months"].setdefault(datetime.fromtimestamp(ts, analytics.ZONE).strftime("%Y-%m"), [0, 0, 0])   # Pacific, as the site's dates
@@ -3546,20 +3543,21 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
         if dots:
             flags = Counter(f for c in mine for f in A.get(c["id"], {}).get("flags", ()))
             r["power"] = {"n": len(dots), "z": round(sum(d[1] for d in dots) / len(dots), 2), "top": flags["top"], "bottom": flags["bottom"], "dots": dots}
-        bal = {"buff": 0, "nerf": 0, "shift": 0, "madeBuff": made[K]["buff"], "madeNerf": made[K]["nerf"], "recent": []}
-        moves = []
+        bal = {"buff": 0, "nerf": 0, "madeBuff": made[K]["buff"], "madeNerf": made[K]["nerf"], "recent": []}
+        moves, shifts = [], 0
         for c in mine:
             for row in A.get(c["id"], {}).get("changes", ()):
-                if row.get("bal") in bal:
+                if row.get("bal") == "shift":
+                    shifts += 1
+                elif row.get("bal") in ("buff", "nerf"):
                     bal[row["bal"]] += 1
-                    if row["bal"] != "shift":
-                        old, new = row["stats"]
-                        moves.append([c["id"], row["bal"], sum(new) - sum(old), row["ts"]])
+                    old, new = row["stats"]
+                    moves.append([c["id"], row["bal"], sum(new) - sum(old), row["ts"]])
         if moves:
             swing = max(moves, key=lambda m: (abs(m[2]), m[3]))
             bal["swing"] = [swing[0], swing[2], swing[3]]
             bal["recent"] = sorted(moves, key=lambda m: -m[3])[:RECENT_BAL]
-        if dots or any(bal[k] for k in ("buff", "nerf", "shift", "madeBuff", "madeNerf")):
+        if dots or shifts or any(bal[k] for k in ("buff", "nerf", "madeBuff", "madeNerf")):
             r["bal"] = bal
         if revisions is not None:
             n = {c["id"]: sum(revisions.get(c["id"], {}).values()) for c in mine}
@@ -3733,22 +3731,6 @@ def parse_banlist(by_norm):
 # ---- game.txt: the whole game as plain text (AutoCroissant docs/Future/GAME_TXT.md) ----------------
 GAME_TXT = "game.txt"
 GAME_KINDS = ("creature", "item", "field", "minion", "nme", "aux item", "buff", "debuff", "creatures")   # app.js KINDS order
-GAME_TAGS = (                                 # the rulebook's Timing tags panel (app.js renderRules, text.js tagInfo)
-    ("On your turn", (("OYT", "On your turn"), ("1CD", "Cooldown: needs 1 turn of charge"), ("1/2CD", "Cooldown: starts with 1 of 2 turns of charge"))),
-    ("At any time", (("AAT", "At any time"), ("1GCD", "Global cooldown: needs 1 turn of charge"),
-                     ("1/2GCD", "Global cooldown: starts with 1 of 2 turns of charge"))),
-    ("Forced", (("BOT", "Beginning of turn (forced)"), ("ENDT", "End of turn (forced)"),
-                ("BOGT", "Beginning of global turn (forced)"), ("ENDGT", "End of global turn (forced)"))),
-    ("Per game & triggers", (("OFS", "On first summon"), ("OS", "On summon"), ("OD", "On death"), ("WOF", "While on field"),
-                             ("1PG", "Can only be activated once per game"))),
-    ("Uses", (("2U", "2 uses per full charge"),)),
-    ("Other tags", (("Action", "Costs the creature's action"),)),
-    ("Old system", (("1PT", "now (1CD)"),
-                                     ("E2T", "now (2CD)"),
-                                     ("FTE2T", "now (1/2CD)"),
-                                     ("1PGT", "now (1GCD)"),
-                                     ("E2GT", "now (2GCD)"))),
-)
 
 
 def game_words(text, icons, at=None):
@@ -3927,7 +3909,7 @@ def rulebook_text(source):
 
 
 def game_text(cards, rules, banlist, icons):
-    """game.txt: a header, the rulebook chapters in book order, the timing tags, the ban list, then every visible card by
+    """game.txt: a header, the rulebook chapters in book order, the ban list, then every visible card by
     kind and series; a duplicate as its own card, its text only when it differs. Stats as printed (bars). ’ as '."""
     shown = [c for c in cards if not c.get("hidden")]
     by_id = {c["id"]: c for c in shown if c.get("id")}     # a hidden original: the duplicate keeps its text
@@ -3937,9 +3919,6 @@ def game_text(cards, rules, banlist, icons):
            " | duplicate of its original. - is an empty field. The ability follows.", "", "# Rulebook", ""]
     for p in rules:
         out += [f"## {p['name']}", game_words(p.get("ability"), icons), ""]
-    out += ["# Timing tags", "X can be any number up to 20. In a pair such as (1/2CD), the first number is the charge the ability starts with: from -9 up to the second number.", ""]
-    for group, tags in GAME_TAGS:
-        out += [f"## {group}", *(f"({t}) {('Old system: ' if group.startswith('Old') else '') + meaning}" for t, meaning in tags), ""]
     out += ["# Constructed ban list", *banlist["notes"], ""]
     for g in banlist["groups"]:
         out += [f"## {g['title']}", *(e["name"] + (f" - {e['reason']}" if e["reason"] else "") for e in g["entries"]), ""]
@@ -4218,7 +4197,7 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
 IMPORT_RE = re.compile(r'((?:from\s+|import\()"\./([\w-]+\.js))"')   # a module's imports (static, dynamic), as they are stamped
 # the build's clock and facts (changelog.json's source: the data's build, run): a data commit that changes only them
 # deploys nothing
-VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("since", "source")}
+VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("source",)}
 
 
 def stamp_of(data):
@@ -4574,12 +4553,12 @@ def main():
     data_dir = os.path.abspath(CARD_DATA_DIR)
     stats, old_stats, records = load_card_data(data_dir)
     checks, cleared = load_checks(data_dir)
-    if not isinstance(stats, dict) or len(stats) < MIN_CARDS:
+    if len(stats) < MIN_CARDS:
         raise SystemExit(f"error: the card data (stats.json in {data_dir}) has "
-                         f"{len(stats) if isinstance(stats, dict) else 'no'} entries (expected at least {MIN_CARDS}); "
+                         f"{len(stats)} entries (expected at least {MIN_CARDS}); "
                          f"refusing to deploy a truncated site.")
     log(f"card data ({data_dir}): {len(stats)} entries, {len(old_stats)} with history, {len(records)} PSD records")
-    for message in bot_field_warnings(stats, old_stats if isinstance(old_stats, dict) else {}):
+    for message in bot_field_warnings(stats, old_stats):
         warn(message)
     edits = add_verdicts(parse_edits(), data_dir)
 
@@ -4589,7 +4568,7 @@ def main():
             png_by_name.setdefault(os.path.basename(path).lower(), path)
 
     cards, used_slugs = [], set()
-    into = renamed_into(old_stats if isinstance(old_stats, dict) else {}, stats)
+    into = renamed_into(old_stats, stats)
     history_of = lambda name: [v for n in into.get(name, ()) for v in old_stats.get(n) or []] + list(old_stats.get(name) or [])
 
     def unique_slug(name):
@@ -4610,8 +4589,6 @@ def main():
     seen_pngs, bot_dup_names, bot_dups = set(), {}, []
     for name, c in sorted(stats.items(), key=lambda kv: kv[0].lower()):
         path = getattr(c, "path", "") or ""
-        if getattr(c, "card_type", "") == "rulebook" or "/Rulebook/" in path:
-            continue                              # the Photoshop rule pages: the rulebook is site/rulebook now
         if getattr(c, "duplicate_of", None) and not getattr(c, "variant_of", None):     # the bot's duplicate: made below
             if getattr(c, "display_name", None):
                 bot_dup_names[name.replace(" ", "_").lower() + ".png"] = c.display_name
@@ -4654,23 +4631,17 @@ def main():
         cards.append(entry)
     link_variants(cards)
 
-    # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
-    # "Supper"). Same card, different name and art. Named by its Card Edits entry's aliases, else the original's name.
-    def add_dup(original, key, path, fallback, export=True):
-        """A duplicate of original: its data, author and history; its own name (alias, else fallback), picture and edits.
-        export: path is one of the original PSD's own PNGs (the bake redraws it)."""
+    def add_dup(original, key, path):
+        """A duplicate of original: its data, author and history; its own name (alias, else key), picture and edits."""
         names = edit_aliases(edits, key)
         name = (bot_dup_names.get(os.path.basename(path).lower())                     # alias or the PSD's hidden title
-                or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else fallback))
+                or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else key))
         dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}
         dup.update(id=unique_slug(name), name=name, key=key, png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
         date_text(dup, stats[original["key"]], history_of(original["key"]))   # its PSD's history, against its own text
-        for k in ("pending", "refused", "baked", "reparsePending") if export else ("reparsePending",):
-            # same PSD: an export's image changes with the original's; a picture-only one's never does
-            value = [f for f in original[k] if f != "name"] if k == "pending" and original.get(k) else original.get(k)
-            if value and not dup.get(k):         # not the name: a duplicate prints its own title
-                dup[k] = value
+        if original.get("reparsePending") and not dup.get("reparsePending"):   # its data's; not the bake's (its own picture)
+            dup["reparsePending"] = original["reparsePending"]
         original.setdefault("dups", []).append(dup["id"])
         cards.append(dup)
         seen_pngs.add(path)
@@ -4684,7 +4655,7 @@ def main():
         png = own if own in tree else png_by_name.get(name.replace(" ", "_").lower() + ".png")
         if original is None or not png or png in seen_pngs:
             continue                              # no original listed, no picture, or a numbered duplicate made above
-        add_dup(original, name, png, name, export=False)
+        add_dup(original, name, png)
     log(f"duplicates: {sum(1 for c in cards if c.get('dup'))} PNGs share another card's PSD")
 
     # PSDs the bot hasn't parsed yet: list them, image only
@@ -4696,7 +4667,7 @@ def main():
         if not low.endswith(".psd"):
             continue
         name = os.path.splitext(os.path.basename(path))[0].replace("_", " ")
-        if norm(name) in known or "/Rulebook/" in path:
+        if norm(name) in known:
             continue
         known.add(norm(name))
         png = png_for(path, name)
@@ -4858,7 +4829,7 @@ def main():
         if e.get("png") and pin(e["png"]):
             e["pin"] = pin(e["png"])
     found = image_versions(list(by_png), commits, renamed, pairs)
-    versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}, "minor": {}, "visible": PNG_VISIBLE}
+    versions = {"repo": CARD_REPO, "commits": [], "cards": {}, "minor": {}, "visible": PNG_VISIBLE}
     changes = load_png_changes(data_dir)
     data_key = lambda e: by_id[e["dup"]]["key"] if e.get("dup") in by_id and not e.get("variantOf") else e["key"]   # a copy: its original's
     dated = lambda name: sorted((v for v in history_of(name) if isinstance(getattr(v, "timestamp", None), (int, float))), key=analytics.when)
@@ -4892,7 +4863,6 @@ def main():
                         versions["minor"][e["id"]] = minor
                         e["ivm"] = len(minor)
         first = min((c[1] for c in versions["commits"]), default=0)
-        versions["since"] = first
         log(f"image versions: {sum(len(r) for r in versions['cards'].values())} versions of {len(versions['cards'])} cards "
             f"({sum(len(m) for m in versions['minor'].values())} minor) from {len(versions['commits'])} commits, since "
             f"{datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}; {len(changes)} picture changes measured")
@@ -4925,7 +4895,7 @@ def main():
     psd_commits = None if commits is None else {(ts, os.path.basename(path).lower()) for _, ts, _, _, _, entries, _ in commits
                                                 for status, _, _, path in entries if status != "D" and path.lower().endswith(".psd")}
     try:                                          # balance analytics: never a failed build
-        balance = analytics.build(cards, stats, old_stats if isinstance(old_stats, dict) else {}, history=commits is not None,
+        balance = analytics.build(cards, stats, old_stats, history=commits is not None,
                                   psd_commits=psd_commits, lineage=lineage, into=into)
         for message in analytics.summary(balance):
             log(message)
@@ -4951,7 +4921,7 @@ def main():
             del e[k]                          # drop empty fields to keep the JSON small
     history["_shas"] = list(shas)             # card ids never start with _
     id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
-    archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited,
+    archived = archived_cards(old_stats, id_of, stats, people=people, credited=credited,
                              author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"))
     moved = redirects(archived, used_slugs, id_of)   # renamed cards: their old ids (pages, picks, hands) go on to the new one
     retired_into(morgue, archived)
@@ -5025,7 +4995,7 @@ def main():
     log(f"contributions: {len(contrib['people'])} people, {sum(r['edits'] for r in contrib['people'])} edit batches, "
         f"{sum(r['commits'] for r in contrib['people'])} card commits" + ("" if contrib["available"] else " (no history: batches counted from the edits file)"))
 
-    changelog = {"available": events is not None, "since": since, "days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
+    changelog = {"available": events is not None, "days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
                  "events": site_events(events or [], id_of, since), "archived": archived, "edits": batches}
     log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no changelog folder)") +
         f", {len(batches['batches'])} edit batches, {len(changelog['archived'])} archived cards")
@@ -5176,7 +5146,6 @@ def main():
             continue
         desc, (image, size) = share_text(c), og_image(c)
         share_page(("c", c["id"]), [
-            f'<meta name="card" content="{c["id"]}">',
             *([f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
             *([f'<link rel="preload" as="font" type="font/woff2" href="{BADGE_FONT}" crossorigin>'] if has_badges(c.get("ability") or "") else []),   # its badges' labels
             og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
@@ -5210,7 +5179,6 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(r["key"])} · {SITE_NAME}</title>',
         ])
-    shutil.rmtree(os.path.join(CACHE, "og"), ignore_errors=True)   # montages lived here before OG_CACHE: not in the image cache
     os.makedirs(OG_CACHE, exist_ok=True)
     montages = set()
     for d in public_decks:                        # decks/<owner>/<slug>/: a montage of its first cards, else one card, else the site banner

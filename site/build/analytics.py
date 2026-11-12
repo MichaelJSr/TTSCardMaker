@@ -11,9 +11,8 @@ months are Pacific time (ZONE).
     is compared with its kind's "all stars" cohort, and so are the auxiliary creatures (no star level): they count as
     creatures. A duplicate (another PNG of the same PSD) counts once, through its original; hidden cards not at all.
     A card with several creatures counts once, by its first creature (the card's own stats).
-  * Per card: its cohort, how many cards of it have a lower or higher total, mid-rank percentiles for each stat and
-    the total, z of the total, "top" / "bottom" for the top and bottom 10%, the stat lines it had (trend, when they
-    changed) and its recorded changes, newest first, its old names' too (renamed). Both read the current card as its
+  * Per card: its cohort, how many cards of it have a lower or higher total, z of the total, "top" / "bottom" for the
+    top and bottom 10% (the total's mid-rank), the stat lines it had (trend, when they changed) and its recorded changes, newest first, its old names' too (renamed). Both read the current card as its
     page shows it. A version with the same date as the one after it is the same PSD read again by a newer parser: the
     newer reading replaces it.
   * Over time (full-history builds only, since a card's start is its first upload): each month, the total stats of
@@ -81,12 +80,6 @@ def midrank(value, ordered):
     below = sum(1 for v in ordered if v < value)
     equal = sum(1 for v in ordered if v == value)
     return 100 * (below + equal / 2) / len(ordered)
-
-
-def pct_of(rank):
-    """A mid-rank rounded half up, but never across a flag's edge: 89.5 is 89 (no "top"), 10.5 is 11."""
-    pct = int(rank + .5)
-    return TOP - 1 if TOP > rank and pct >= TOP else BOTTOM + 1 if BOTTOM < rank and pct <= BOTTOM else pct
 
 
 def month_of(ts):
@@ -162,19 +155,17 @@ def make_cohorts(members):
 
 def card_balance(line, key, groups, cohort):
     rows = groups[key]
-    columns = {k: sorted(sum(l) if k == "total" else l[i] for _, l in rows) for i, k in enumerate(KEYS)}
-    values = dict(zip(KEYS, (*line, sum(line))))
-    raw = {k: midrank(values[k], columns[k]) for k in KEYS}
-    pct = {k: pct_of(v) for k, v in raw.items()}
-    total = values["total"]
+    totals = sorted(sum(l) for _, l in rows)
+    total = sum(line)
+    rank = midrank(total, totals)
     sd = cohort["total"]["sd"]
-    out = {"cohort": key, "stats": list(line), "pct": pct, "below": sum(1 for t in columns["total"] if t < total),
-           "above": sum(1 for t in columns["total"] if t > total),
+    out = {"cohort": key, "stats": list(line), "below": sum(1 for t in totals if t < total),
+           "above": sum(1 for t in totals if t > total),
            "z_total": round((total - cohort["total"]["mean"]) / sd, 2) if sd else 0.0, "flags": []}
     if len(rows) >= MIN_COHORT:
-        if raw["total"] >= TOP:
+        if rank >= TOP:
             out["flags"].append("top")
-        elif raw["total"] <= BOTTOM:
+        elif rank <= BOTTOM:
             out["flags"].append("bottom")
     return out
 
