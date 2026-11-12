@@ -231,14 +231,15 @@ jobs:
         run: echo "names=$(find site/.cache 2>/dev/null | LC_ALL=C sort | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # An early build's images: the card PNGs the restored cache lacks (the push's pictures), made in the background once
-      # Setup start's packages are in, while Data wait runs (build_site.py early_images). Setup wait stops it (none started
-      # after) and prints its log; the build makes the rest, and those of a newer main.
+      # Setup start's packages are in, while Data wait runs (build_site.py early_images; Data wait runs it again at a newer
+      # main, as the guards' PNGs). Setup wait stops it (none started after) and prints its log; the build makes the rest.
       - name: Images start
         if: inputs.after
         run: |
           bg=$RUNNER_TEMP/setup
           at=$(git rev-parse HEAD)
           : > "$bg/images.log"
+          echo "$at" > "$bg/images.at"
           (
             code=0
             until [ -s "$bg/uv.code" ]; do sleep 0.1; done
@@ -278,9 +279,11 @@ jobs:
 
       # A Card sync data job's early build (dispatched at its start): set up above while that job builds, it waits here
       # until the job's Commit data is done or the job ended: 3 s looks for 2 minutes, then 15 s; 20 minutes at most (past
-      # that, Card sync's Site build dispatches another). Then main's head again, as Card sync's Newest; when that moved
-      # a PSD, the PSD sizes again (Setup wait waits for them). The data's head beside main's (Card checks' lines; 3 tries,
-      # ~3.5 min at most: 25 minutes for the step; the clone or those failed: checked out after Setup wait).
+      # that, Card sync's Site build dispatches another). Each look also reads main's head (follow, in the background): past
+      # the early images' commit, with those done, it fetches it and starts them again at it (same log and code). Then
+      # main's head again, as Card sync's Newest; when that moved a PSD, the PSD sizes again (Setup wait waits for them).
+      # The data's head beside main's (Card checks' lines; 3 tries, ~3.5 min at most: 25 minutes for the step; the clone
+      # or those failed: checked out after Setup wait).
       - name: Data wait
         if: inputs.after
         timeout-minutes: 25
@@ -290,15 +293,32 @@ jobs:
           JOB: ${{ inputs.job == 'after' && 'Card data after the bake' || 'Card data' }}   # card-sync.yml's job names
           COMMIT: Commit data                                                               # and its step
         run: |
+          bg=$RUNNER_TEMP/setup
+          follow() {
+            [ "$(cat "$bg/images.code" 2> /dev/null)" = 0 ] || return 0
+            new=$(timeout 5 git ls-remote origin refs/heads/main | cut -f1) || return 0
+            [ -n "$new" ] && [ "$new" != "$(cat "$bg/images.at")" ] || return 0
+            echo "$new" > "$bg/images.at"
+            rm "$bg/images.code"
+            (
+              code=0
+              if ! timeout 60 git fetch -q --no-tags --no-write-fetch-head --filter=blob:none origin "$new"; then code=fetch
+              elif [ ! -e "$bg/images.stop" ]; then python site/build/build_site.py --images "$new" "$bg/images.stop" || code=$?
+              fi
+              echo "$code" > "$bg/images.code"
+            ) >> "$bg/images.log" 2>&1 < /dev/null &
+          }
+          f=
           while [ "$SECONDS" -lt 1200 ]; do
+            { [ -n "$f" ] && kill -0 "$f" 2> /dev/null; } || { follow & f=$!; }
             n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$JOB\" and (.status == \"completed\"
               or any(.steps[]?; .name == \"$COMMIT\" and .status == \"completed\")))] | length") || n=0
             [ "${n:-0}" -gt 0 ] && break
             sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
           done
+          wait                                  # follow's last look (a run it started goes on)
           if [ "$SECONDS" -ge 1200 ]; then echo "::warning::$JOB of run $RUN not past $COMMIT in 20 minutes: this build goes on"; fi
           echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN past $COMMIT (or ended) after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
-          bg=$RUNNER_TEMP/setup
           until [ -s "$bg/data.code" ]; do sleep 0.1; done
           refetch() {   # 3 tries, 10 and 15 s apart (actions/checkout's)
             for try in 1 2 3; do
