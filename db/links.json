@@ -13008,28 +13008,28 @@
   ]
  },
  "Creatures/Other/2 Stars/Slugcat.psd": {
-  "blob": "14ae783c23f11926f8270cf7406fb519ca5d605e",
+  "blob": "c77bd980b226d2de8db873c36994671f0b64444b",
   "links": [
    {
-    "drawn": "fe7ba29008552e0ea971240541537139feee5027",
+    "drawn": null,
     "name": "Slugcat - 1660497533.blooming~lynx_shelter.jpg",
     "path": "MDW/Linked/Slugcat - 1660497533.blooming~lynx_shelter.jpg",
     "size": 244258
    },
    {
-    "drawn": "b5ae350f1884473687fabd431d898547487fbb4b",
+    "drawn": null,
     "name": "Slugcat - del-northern-rwcover2.jpg",
     "path": "MDW/Linked/Slugcat - del-northern-rwcover2.jpg",
     "size": 275432
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "99d8299f475b915a691170c03c5a2c0fe0110589",
+    "drawn": null,
     "name": "water.png",
     "path": "Types/water.png",
     "size": 121376
