@@ -787,7 +787,7 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .needs-list .thumb { flex: none; width: 64px; }
 .needs-list li > div { min-width: 0; flex: 1; }
 .needs-list .card-flags { margin: 4px 0 0; }
-/* the hand flag's issue (flags.js): a small mark in its label, a bigger tap target than it shows; opened below */
+/* a flag's issue (flags.js): a small mark in its label, a bigger tap target than it shows; opened below */
 .card-flag .flag-i { position: relative; display: inline-grid; place-items: center; width: 15px; height: 15px; margin: 0 0 0 6px; padding: 0;
   border: 1px solid currentColor; border-radius: 50%; background: transparent; color: var(--muted); font-size: 10.5px; font-weight: 700; line-height: 1; vertical-align: 1px; }
 .card-flag .flag-i::before { content: ""; position: absolute; inset: -9px; }

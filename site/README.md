@@ -247,8 +247,8 @@ printed title's file form from the file name (the file-name convention, owner 20
 case alone never counts; never on a PSD's second picture). The checks read only PSDs without a result, so a fixed card
 clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is told to Discord or a
 commit, and nothing is blocked. Flags only filter (owner 2026-11-11): a card's page shows none; **Needs handling** at the
-bottom of the Cards filters opens a list of the cards with their flags' labels, a small ⓘ beside "Needs doing by hand"
-showing its issue (the checks' note, a person's reason) on hover, tap or Enter (All, or one flag; `flags=flagged`,
+bottom of the Cards filters opens a list of the cards with their flags' labels, a small ⓘ beside each flag showing its
+issue (the checks' note, a person's reason) on hover, tap or Enter (All, or one flag; `flags=flagged`,
 `flags=hand`, `flags=bars`, `flags=name`, excluded with `xflags=`; on a phone a link in the toolbar too); search
 `flag:hand`, `flag:bars`, `flag:name`, `flag:any`.
 

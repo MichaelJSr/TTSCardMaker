@@ -1598,7 +1598,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   on purpose", shown for a card the flag names or one marked; a stale mark stays unless ticked again.
 - **No notes** (§46-47 superseded there): a card's page shows no flag line, note or reason, and edit mode has no
   in-place flags (`+ needs doing by hand`, `flag:<key>`, ✕ gone); `flagsHtml` is the labels alone (Needs handling; the
-  Edit dialog's preview shows none, as the page). People's flags are set in All fields. The hand flag's issue: §54.
+  Edit dialog's preview shows none, as the page). People's flags are set in All fields. Each flag's issue: §54.
 
 ## 54. Ratings off the site, Balance lower, the hand flag's issue (2026-11-11, owner: "remove the favorability and power ratings from the card browser website, but keep the data", "move balance to near the bottom, above recorded changes", "for the cards that need doing by hand, include some non intrusive way to see what the issue is")
 - **Ratings**: no display anywhere: the card page's Ratings block and Rate it, All fields' Ratings fieldset, the Stats
@@ -1610,11 +1610,13 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   nothing now, kept: contributions.json people's `ratings`, `selfBias`, `rater`, `powerVsStats` and editFields' `rating`.
 - **Balance** (`#card-balance`): after the strips and Decks using this card, just above Recorded changes (`#card-changes`),
   then History and Details; one column the same (DOM order, no CSS order).
-- **Hand flag's issue** (Needs handling list only; flags.js `handIssue`, `flagsHtml`): the label "Needs doing by hand"
-  gets a 15 px ⓘ button (`.flag-i`, a 33 px hit area by `::before`) when the checks note it (`checks.hand`: "Automatic
-  check: …") or a person gave a reason (`flags.hand`: "Reason given: …"), both in that order. Hover: the site tooltip
-  (`data-tip`, the two joined by " · "); a click, tap or Enter (app.js action `flag-issue`, data-action wins over the
-  row's data-open) toggles `.flag-issue` under the labels (`aria-expanded`, `aria-controls`; `aria-describedby` reads it
-  on focus). Rows keep their height closed (checked against the 11-11 build: 44 rows, none moved). No mark on a card's
-  page or preview, as before. AutoCroissant `tests/test_site_flags.py`.
+- **Each flag's issue** (Needs handling list only; flags.js `flagIssue`, `flagsHtml`; first "Needs doing by hand" alone,
+  every flag since the owner's "Yes, all flags" the same evening): a flag's label gets a 15 px ⓘ button (`.flag-i`, a
+  33 px hit area by `::before`) when the checks note it (`checks.<key>`: "Automatic check: …") or a person gave a reason
+  (`flags.<key>`: "Reason given: …"), both in that order. Hover: the site tooltip (`data-tip`, the two joined by " · ");
+  a click, tap or Enter (app.js action `flag-issue`, data-action wins over the row's data-open) toggles that flag's
+  `.flag-issue` (`flag-issue-<id>-<key>`) under the labels, in the labels' order (`aria-expanded`, `aria-controls`;
+  `aria-describedby` reads it on focus; `aria-label` "<label>: what the issue is"). Rows keep their height closed
+  (checked against the 11-11 build: 44 rows, none moved). No mark on a card's page or preview, as before.
+  AutoCroissant `tests/test_site_flags.py`.
 
