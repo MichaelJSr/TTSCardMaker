@@ -1,5 +1,5 @@
 {"version": 1,
-"cleared": {"Auxiliary/Minions/Bulborb Larva.psd": "e8ca6e94"},
+"cleared": {},
 "cards": {
 "001de4b87328f6072e5c724302eab15fb5489259": {"bars": null, "card": "Salt", "hand": null, "name": null, "notes": [], "png": "12ae3e96", "reads": {}, "style": "", "unredrawable": {}},
 "002a24356c72126d3bbcfa7ffc3404bd2602d7dc": {"bars": null, "card": "Butterfly", "hand": null, "name": null, "notes": [], "png": "162846a7", "reads": {"atk": [{"best": 4, "could": [4]}], "def": [{"best": 4, "could": [4]}], "hp": [{"best": 4, "could": [4]}], "spd": [{"best": 4, "could": [4]}]}, "style": "new", "unredrawable": {}},
@@ -618,7 +618,7 @@
 "ca501fe209e861144453ade45476c662d293db66": {"bars": null, "card": "The Hydrant", "hand": null, "name": null, "notes": [], "png": "4226bbff", "reads": {}, "style": "", "unredrawable": {}},
 "ca98f4908b34bc12bf903546c51f55f16e401c06": {"bars": null, "card": "Burst Laser II", "hand": null, "name": null, "notes": [], "png": "e497dc64", "reads": {"atk": [{"best": 2, "could": [2]}], "def": [{"best": 0, "could": [0], "flat": true}], "hp": [{"best": 2, "could": [2]}], "spd": [{"best": 6, "could": [6]}]}, "style": "new", "unredrawable": {}},
 "cacd40d917dca91357142bc73b7287401fe9c9eb": {"bars": null, "card": "Militron", "hand": null, "name": null, "notes": [], "png": "d00a5c81", "reads": {"atk": [{"best": 7, "could": [7]}], "def": [{"best": 5, "could": [5]}], "hp": [{"best": 7, "could": [7]}], "spd": [{"best": 5, "could": [5]}]}, "style": "new", "unredrawable": {}},
-"caf8408984269c7f2b21ca28c2c1eedfba44bf9e": {"bars": null, "card": "Tomorrow I'll", "hand": null, "name": null, "notes": [], "png": "7641220f", "reads": {}, "style": "", "unredrawable": {"MDW/Linked/Tomorrow_I'll - Layer 4 copy.psb": ["Layer 4 copy", "smart filters"]}},
+"caf8408984269c7f2b21ca28c2c1eedfba44bf9e": {"bars": null, "card": "Tomorrow I'll", "hand": null, "name": null, "notes": [], "png": "201f80f9", "reads": {}, "style": "", "unredrawable": {"MDW/Linked/Tomorrow_I'll - Layer 4 copy.psb": ["Layer 4 copy", "smart filters"]}},
 "cb2f43de6450d956d7727f9b19428ab6a6d712b0": {"bars": null, "card": "Isma", "hand": null, "name": null, "notes": [], "png": "b09d96b4", "reads": {"atk": [{"best": 6, "could": [6]}], "def": [{"best": 4, "could": [4]}], "hp": [{"best": 6, "could": [6]}], "spd": [{"best": 6, "could": [6]}]}, "style": "new", "unredrawable": {}},
 "cb6ddd1fa6c9ed9b0b751107c2bf507739a00f38": {"bars": null, "card": "Soul Sanctum", "hand": null, "name": null, "notes": [], "png": "734abb91", "reads": {}, "style": "", "unredrawable": {}},
 "cc00228e90abf85a25610d469ab601eeb11ef9f1": {"bars": null, "card": "Vigor", "hand": null, "name": null, "notes": [], "png": "cf6070c4", "reads": {}, "style": "", "unredrawable": {}},
