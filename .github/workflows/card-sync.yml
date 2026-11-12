@@ -477,7 +477,7 @@ jobs:
               seen=$(git -C "$lg" rev-parse main)
               t=$(GIT_NO_LAZY_FETCH=1 git -C "$lg" log --format='%(trailers:key=Guarded-push,valueonly)' main) && grep -qx "$p" <<< "$t"
             }
-            k=0 at=0 due=0 p= got= seen=
+            k=0 at=0 due=0 p='' got='' seen=''
             while [ "$SECONDS" -lt 3600 ]; do
               if [ "$due" -le 0 ]; then
                 k=$((k + 1)) due=$([ -n "$got" ] && echo 1 || echo 4)
