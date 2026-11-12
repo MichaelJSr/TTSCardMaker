@@ -778,15 +778,20 @@ def gate_cases(flow: dict) -> None:
             ({"Deep/Two/Card.PSD": "psd", "Deep/Two/Card.PNG": "png"}, "an upper-case card", "t", True),
             ({"site/Card Creation Dates.json": '{"cards":{}}'}, "creation dates", "t", True),
         ]
-        full = []
+        full, ws = [], None
         for files, message, author, want in cases:
             base = git(work, "rev-parse", "HEAD")
-            commit(work, files, message, author)
+            head = commit(work, files, message, author)
             git(work, "push", "-q", "origin", "main")
-            ws = checkout_data(tmp, bare, f"ws-{time.monotonic_ns()}", data)
-            code, text = history(data, ws, tmp)
-            full.append(code == 0 and git(ws, "rev-parse", "--is-shallow-repository") == "false")
-            _bot(ws)
+            if ws is None:                                  # one data-lane checkout, fetched forward for later cases
+                ws = checkout_data(tmp, bare, "ws-data", data)
+                code, text = history(data, ws, tmp)
+                full.append(code == 0 and git(ws, "rev-parse", "--is-shallow-repository") == "false")
+                _bot(ws)
+            else:
+                git(ws, "fetch", "-q", "origin", "main")
+                git(ws, "checkout", "-q", "-B", "main", "FETCH_HEAD")
+                full.append(git(ws, "rev-parse", "--is-shallow-repository") == "false" and git(ws, "rev-parse", "HEAD") == head)
             write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
                 {"card_commit": base, "builder": {"parser_version": 2, "details_version": 3}, "pending": {"stale": []}}))
             code, text, out = run_step(data, "gate", ws, DATA_GATE, tmp)
