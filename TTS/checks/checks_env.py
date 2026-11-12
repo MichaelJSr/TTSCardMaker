@@ -1,6 +1,7 @@
 """Paths and interpreters the TTS save checks share; each can be set from the environment (see README.md)."""
 import functools
 import glob
+import hashlib
 import json
 import os
 import shutil
@@ -26,6 +27,7 @@ def save_arg(i: int = 1) -> str:
     return os.path.abspath(sys.argv[i]) if len(sys.argv) > i and not sys.argv[i].startswith("-") else SAVE
 
 
+@functools.cache
 def ensure_history(clone: str = HISTORY) -> str:
     """A bare blobless clone with main's full history: made, or fetched. The checkout may be shallow."""
     if not os.path.exists(clone):
@@ -37,6 +39,39 @@ def ensure_history(clone: str = HISTORY) -> str:
     if shallow.stdout.strip() == "true":
         sys.exit(f"{clone} is shallow: history checks need a full clone (TTS_HISTORY)")
     return clone
+
+
+@functools.cache
+def judged_commit(save: str = SAVE) -> str:
+    """The commit links_pins and updater_idempotent judge save at: the checkout's HEAD if main has it, else its
+    merge-base with REF (a work branch), when save is that commit's save; else (an edited save) the clone's main."""
+    clone = ensure_history()
+    env = {**os.environ, "GIT_NO_LAZY_FETCH": "1"}
+
+    def git(repo, *args):
+        return subprocess.run(["git", "-C", repo, *args], capture_output=True, text=True, env=env)
+    data = open(save, "rb").read()
+    blob = hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+    rel, main = os.path.relpath(SAVE, REPO), git(clone, "rev-parse", "main").stdout.strip()
+    for c in (git(REPO, "rev-parse", "HEAD").stdout.strip(), git(REPO, "merge-base", "HEAD", REF).stdout.strip()):
+        if c and git(clone, "merge-base", "--is-ancestor", c, "main").returncode == 0:
+            return c if git(clone, "rev-parse", f"{c}:{rel}").stdout.strip() == blob else main
+    return main
+
+
+def history_at(dest: str, commit: str) -> str:
+    """A bare repo sharing the history clone's objects whose main is commit: its origin is itself, so the updater's
+    fetch leaves main there; blobs it lacks still come lazily from GitHub."""
+    clone = ensure_history()
+    subprocess.run(["git", "init", "-q", "--bare", dest], check=True)
+    with open(os.path.join(dest, "objects", "info", "alternates"), "w") as f:
+        f.write(os.path.join(os.path.abspath(clone), "objects") + "\n")
+    for k, v in (("core.repositoryformatversion", "1"), ("remote.origin.url", os.path.abspath(dest)),
+                 ("remote.gh.url", CARD_REPO_URL), ("remote.gh.promisor", "true"),
+                 ("remote.gh.partialclonefilter", "blob:none"), ("extensions.partialclone", "gh")):
+        subprocess.run(["git", "-C", dest, "config", k, v], check=True)
+    subprocess.run(["git", "-C", dest, "update-ref", "refs/heads/main", commit], check=True)
+    return dest
 
 
 @functools.cache

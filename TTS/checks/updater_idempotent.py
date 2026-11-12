@@ -13,15 +13,15 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, UPDATER_INPUTS, copy_bot, ensure_history, file_at, runner_env, save_arg  # noqa: E402
+from checks_env import REF, UPDATER_INPUTS, copy_bot, file_at, history_at, judged_commit, runner_env, save_arg  # noqa: E402
 
 PY = sys.executable
-CLONE = ensure_history()
 OK_SECTIONS = ("Nicknames kept (not on the website)", "Decks left alone")   # informational, no change
 
 save = save_arg()
 work = tempfile.mkdtemp(prefix="ttsupd_")
 atexit.register(shutil.rmtree, work, ignore_errors=True)     # a failed run leaves nothing
+CLONE = history_at(os.path.join(work, "history.git"), judged_commit(save))     # main = the commit under test
 failures = []
 
 

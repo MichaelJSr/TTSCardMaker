@@ -2,7 +2,7 @@
 The global script's links are live data on main (TTS/Global.lua; links_http.py loads them), not pinned here (its
 pages.json link goes with the Rulebooks PDF's commit: lua_mock.py checks it).
 
-    python links_pins.py [save.json] [history clone] [ref]   (defaults: $TTS_HISTORY, main)
+    python links_pins.py [save.json] [history clone] [ref]   (defaults: $TTS_HISTORY, checks_env.judged_commit)
 The clone is made (bare, blobless, full history) or fetched; the checkout is shallow, don't use it.
 Exit 1 on any defect.
 """
@@ -15,7 +15,7 @@ from os.path import expanduser
 from urllib.parse import quote, unquote
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import HISTORY, ensure_history, save_arg  # noqa: E402
+from checks_env import HISTORY, ensure_history, judged_commit, save_arg  # noqa: E402
 
 RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 LINK = re.compile(re.escape(RAW) + r"([^/\s\"\\<>]+)/([^\s\"\\<>]+)")
@@ -112,9 +112,9 @@ def last_changed(repo, head):
 def main():
     save = save_arg()
     repo = expanduser(sys.argv[2] if len(sys.argv) > 2 else HISTORY)
-    ref = sys.argv[3] if len(sys.argv) > 3 else "main"
     if repo == HISTORY:
         ensure_history()
+    ref = sys.argv[3] if len(sys.argv) > 3 else judged_commit(save) if repo == HISTORY else "main"
     if git(repo, "rev-parse", "--is-shallow-repository").strip() == "true":
         sys.exit(f"{repo} is shallow: pins can't be checked")
     head = git(repo, "rev-parse", ref).strip()
