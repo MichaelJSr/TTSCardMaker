@@ -1207,7 +1207,9 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
 - **First screen** (`first_screen`): the plain grid's toolbar (Name, Grid, M) and its first `FIRST_TILES` (8) tiles,
   the first `FIRST_EAGER` (4) loaded eagerly, in a `<template id="first">` after `<main>`. An inline script puts it in
   `#view` when the page opens on the plain grid (no hash parameters, saved view not Table: `grid_preload`'s rule), at the
-  saved tile size (S, L: `--tile`, the pictures' `sizes`, the S/M/L button); else "Loading cards…" stays and app.js draws
+  saved tile size (S, L: `--tile`, the pictures' `sizes`, the S/M/L button; M's `--tile` and the script's S and L are
+  grid.js `TILE_SIZES` as `check_first.mjs` prints them; M is `min(168px, calc(50% - 7px))`: two columns on 320-381 px
+  phones too, 11-11); else "Loading cards…" stays and app.js draws
   the visitor's own view (sort, filters, Table). Lazy tiles below the window get a blank picture (`BLANK_GIF`; no src
   drew a broken-picture icon) so they don't hold up app.js's chunk (phones: tiles 5-8; slow 4G grid -0.42 s); app.js
   redraws them (they differ, so `adoptFirst` leaves them). The tiles are plain links, `<a class="tile" href="c/<id>/">`

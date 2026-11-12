@@ -16,8 +16,8 @@ export const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "
 export const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
 export const pendingList = c => (c.pending || []).map(f => FIELD_LABEL[f] || f).join(", ");
 export const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
-// tile size: [--tile, the picture's css px (sizes)]
-export const TILE_SIZES = { s: ["130px", 160], m: ["168px", 200], l: ["230px", 270] };
+// tile size: [--tile, the picture's css px (sizes)]; m: two columns on 320-381 px phones too (build_site's first screen reads these)
+export const TILE_SIZES = { s: ["130px", 160], m: ["min(168px, calc(50% - 7px))", 200], l: ["230px", 270] };
 
 /** a card picture's URL, 96 / 240 / 360 / 720 px wide (thumbs: cards.json's tags of their settings) */
 export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w]}.avif` : "");
