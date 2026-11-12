@@ -9,11 +9,11 @@ const byName = (a, b) => { const x = a.name.toLowerCase(), y = b.name.toLowerCas
 
 /** The cards to show: those passing `filter` and the query, on the chosen kinds and stars, by name, capped.
  *  -> {list, total}; kindOf(card) groups status effects (app.js kindOf). */
-export function pickList(cards, { query = "", kinds = [], stars = [], filter = null, kindOf = c => c.type, cap = CAP } = {}) {
+export function pickList(cards, { query = "", kinds = [], stars = [], filter = null, kindOf = c => c.type } = {}) {
   const pred = compile(query);
   const list = cards.filter(c => (!filter || filter(c)) && (!pred || pred(c)) && (!kinds.length || kinds.includes(kindOf(c)))
     && (!stars.length || stars.includes(c.stars))).sort(byName);
-  return { list: list.slice(0, cap), total: list.length };
+  return { list: list.slice(0, CAP), total: list.length };
 }
 
 /** The chips: kinds (in `kinds` order, with counts) and stars (ascending) of the cards passing `filter`. */

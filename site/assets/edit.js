@@ -638,7 +638,7 @@ export function createEditor(app) {
     return first.variants?.length ? [first, ...first.variants.map(i => S.byId.get(i)).filter(Boolean)] : [c]; };
   /** Load the records the dialog needs (the card's, and its sibling pictures'), then run go. */
   function withRecs(c, go, quiet = false) {
-    const need = [c, ...groupOf(c)].filter(x => x.details && !recs.has(x.id) && app.loadDetails);
+    const need = [c, ...groupOf(c)].filter(x => x.details && !recs.has(x.id));
     if (!need.length) return go();
     let failed = false;                            // unreadable now: the joined fields this time, tried again on the next open
     Promise.all(need.map(x => app.loadDetails(x).then(d => recs.set(x.id, d), () => { failed = true; }))).then(() => {
@@ -690,12 +690,12 @@ export function createEditor(app) {
       <p class="part-gone">Will be DELETED from the PSD${fx.length ? `, with ${esc(fx.map(x => `‘${x.split("/").pop()}’`).join(", "))}` : ""}. <button type="button" class="ghost" data-part-undo="${k}">Undo</button></p>
       ${warn}${follow ? `<p class="muted part-note">${follow}</p>` : ""}</div>`;
   }
-  /** The boxes of one kind (title, ability, block), with their notes. */
+  /** The boxes of one kind (title, ability), with their notes. */
   function boxesHtml(view, kind) {
-    const list = view.list.filter(b => b.kind === kind), many = kind !== "block" && list.length > 1;
+    const list = view.list.filter(b => b.kind === kind), many = list.length > 1;
     return list.map(b => boxHtml(b, view, many)).join("");
   }
-  function addHtml(view, c) {                      // + Add an ability: a card with no Ability layer (never a rule page)
+  function addHtml(view, c) {                      // + Add an ability: a card with no Ability layer
     if (view.list.some(b => b.kind === "ability")) return "";
     const t = view.rec.template, was = view.added, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
     return `<div class="part-box part-add" data-part-box="${P.ADD}"${was ? "" : " hidden"}><div class="part-head"><label for="ef-part:${P.ADD}">New ability</label><button type="button" class="ghost" data-part-add-remove>Remove</button></div>
@@ -732,7 +732,7 @@ export function createEditor(app) {
     if (Object.keys(r.set).length) op.set.parts = r.set;
     op.unset.push(...r.unset.map(k => P.PART + k));
     if (Object.keys(r.set).length || r.unset.length) op.partsBase = Object.fromEntries([...Object.keys(r.set), ...r.unset].map(k => [k, view.rec.partEdits?.[k] ?? null]));
-    return { error: r.error, notes: r.notes, texts: r.texts, added: r.added, derived: dv };
+    return { error: r.error, notes: r.notes, texts: r.texts, derived: dv };
   }
   /** Where an op's fields go on a PSD with several pictures: part edits, stars, types and stats into the PSD's entry
    *  (variant 1's); each picture's derived name/ability into its own. -> [[card, op]] to stage (c's first). */
@@ -779,7 +779,7 @@ export function createEditor(app) {
   function renameRow(c, b) {
     if (!canRename(c, b)) return "";
     const staged = stage.cards[c.id]?.rename, on = staged === false ? false : !!c.renameFiles || !b.edited?.includes("name");
-    return `<div class="erow" data-row="rename"><span class="elabel"></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${on ? " checked" : ""}> ${RENAME_LABEL}</label>
+    return `<div class="erow"><span class="elabel"></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${on ? " checked" : ""}> ${RENAME_LABEL}</label>
       <p class="muted part-note">With a new name: the PSD and its pictures take it when the card image is updated.</p></div></div>`;
   }
   function formHtml(c) {
@@ -795,8 +795,8 @@ export function createEditor(app) {
     const siteBox = f => `<label class="check site-box"><input id="ef-site-${f}" type="checkbox" data-site="${f}"${on(f) ? " checked" : ""}> ${SITE_LABEL}</label>`;
     // a field edited as boxes (one per PSD layer): website only, one plain input instead, the boxes greyed
     const plain = (f, input) => `<div class="site-plain"${on(f) ? "" : " hidden"}>${input}<p class="muted part-note">The card image keeps its text.</p></div>${siteBox(f)}`;
-    const artBox = list => `<div id="ef-art" class="art-box" data-row="art"><div class="art-rows">${(list.length ? list : [""]).map(artRow).join("")}</div><div class="erow"><span></span><div class="ein"><button type="button" class="ghost" data-art-add>+ Add a source</button>${reset("art")}</div></div></div>`;
-    const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}${SITE_FIELDS.includes(f) ? siteBox(f) : ""}</div></div>`;
+    const artBox = list => `<div id="ef-art" class="art-box"><div class="art-rows">${(list.length ? list : [""]).map(artRow).join("")}</div><div class="erow"><span></span><div class="ein"><button type="button" class="ghost" data-art-add>+ Add a source</button>${reset("art")}</div></div></div>`;
+    const row = (f, input) => `<div class="erow"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}${SITE_FIELDS.includes(f) ? siteBox(f) : ""}</div></div>`;
     const num = f => `<input id="ef-${f}" type="number" min="0" max="${statCap(c, f) ?? 99}" step="1" value="${c[f] ?? ""}" placeholder="—">`;
     return `<div class="dialog edit-dialog has-preview" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
@@ -807,7 +807,7 @@ export function createEditor(app) {
         <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated, unless it's website only.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
         ${view ? partsTop(view, c) : ""}
         <fieldset><legend>Card</legend>
-          ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
+          ${view?.list.some(x => x.kind === "title") ? `<div class="erow"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
           ${namesLine(c)}<input type="hidden" id="ef-colors" value="${esc(c.colors?.length ? JSON.stringify(c.colors) : "")}">
           ${P.titleInPicture(view?.rec) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
@@ -827,7 +827,7 @@ export function createEditor(app) {
             <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
         </fieldset>
         <fieldset><legend>Text</legend>
-          ${view ? `<div class="erow" data-row="ability"><span class="elabel">${LABEL.ability}${psdNote("ability")}</span><div class="ein parts" data-site-of="ability"><div class="site-boxes">${boxesHtml(view, "ability")}${addHtml(view, c)}</div>
+          ${view ? `<div class="erow"><span class="elabel">${LABEL.ability}${psdNote("ability")}</span><div class="ein parts" data-site-of="ability"><div class="site-boxes">${boxesHtml(view, "ability")}${addHtml(view, c)}</div>
             ${plain("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>`)}
             <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}"${iconSet(ic, 22)} alt="${esc(t)}"></button>` : ""; }).join("")}</div>
             <p class="muted part-join">On the site:</p><div class="ability preview" id="ef-preview"></div></div></div>`
@@ -847,11 +847,11 @@ export function createEditor(app) {
           ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page" data-tokens>${esc(c.note || "")}</textarea>`)}
           ${artBox(artList(c))}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
-          <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
+          <div class="erow"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="${c.variantOf ? esc(S.byId.get(c.variantOf)?.key || "") : "not a duplicate"}"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
-        <fieldset id="ef-flags"><legend>Flags</legend>
-          ${CARD_FLAGS.map(([k, l]) => `<div class="erow" data-row="flag-${k}"><label for="ef-flag-${k}">${esc(l)}</label><div class="ein"><input id="ef-flag-${k}" type="checkbox"${ownFlag(c, k) ? " checked" : ""}>
+        <fieldset><legend>Flags</legend>
+          ${CARD_FLAGS.map(([k, l]) => `<div class="erow"><label for="ef-flag-${k}">${esc(l)}</label><div class="ein"><input id="ef-flag-${k}" type="checkbox"${ownFlag(c, k) ? " checked" : ""}>
             <input id="ef-flag:${k}" data-flag-why="${k}" value="${esc(c.flags?.[k] ?? "")}" placeholder="what is the issue?" aria-label="${esc(l)}: what is the issue?"></div></div>`).join("")}
         </fieldset>
         <fieldset><legend>Checks</legend>
@@ -860,7 +860,7 @@ export function createEditor(app) {
           ${c.problems?.length || c.problems_ok ? row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`) : ""}
         </fieldset>
         <fieldset${admin ? "" : " disabled"}><legend>Admin${admin ? "" : " (admins only)"}</legend>
-          <div class="erow" data-row="ban"><label>Banned</label><div class="ein"><label class="check"><input id="ef-banned" type="checkbox"${ban.banned ? " checked" : ""}> in constructed</label>
+          <div class="erow"><label>Banned</label><div class="ein"><label class="check"><input id="ef-banned" type="checkbox"${ban.banned ? " checked" : ""}> in constructed</label>
             <select id="ef-ban-group">${opts(S.data.banlist.groups.map(g => [g.title, g.title]), ban.group)}</select>
             <input id="ef-ban-reason" value="${esc(ban.reason)}" placeholder="reason"></div></div>
           ${row("hidden", `<label class="check"><input id="ef-hidden" type="checkbox"${c.hidden ? " checked" : ""}> hide from the website</label>`)}
@@ -1154,7 +1154,7 @@ export function createEditor(app) {
     const c = find(id);
     if (!c) return;
     if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id, { draft: restored, focus })); return; }
-    if (!skipRecs && [c, ...groupOf(c)].some(x => x.details && !recs.has(x.id) && app.loadDetails)) { withRecs(c, failed => openForm(id, { draft: restored, focus, skipRecs: !!failed })); return; }
+    if (!skipRecs && [c, ...groupOf(c)].some(x => x.details && !recs.has(x.id))) { withRecs(c, failed => openForm(id, { draft: restored, focus, skipRecs: !!failed })); return; }
     const view = partsView(c);
     colorMenu?.destroy(); colorMenu = null;
     partForm = view ? { c, view, deleted: new Set(view.list.filter(x => x.deleted).map(x => x.key)), drops: new Set(), added: !!view.added, last: null } : null;
@@ -1305,7 +1305,7 @@ export function createEditor(app) {
       swatches: () => S.data.swatches || [], statuses: () => S.statuses, base: (f, text) => TC.inkOf(c, f, text),
     });
     update();
-    app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
+    app.formOpened({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
     if (partForm) paintBoxes();
     first()?.focus();
     if (restored) autosave.run();
@@ -1384,7 +1384,7 @@ export function createEditor(app) {
   };
   const handsHtml = decks => savedHands(decks).map(h => `<button type="button" data-hand="${esc(h.id)}"${h.n ? "" : " disabled"} title="Use this saved hand">${esc(h.name)} <span class="muted">${h.n}</span></button>`).join("");
   function profilePageHtml(p, st, exists) {
-    const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="pf-${f}">${label}</label><div class="ein">${input}</div></div>`;
+    const row = (f, label, input) => `<div class="erow"><label for="pf-${f}">${label}</label><div class="ein">${input}</div></div>`;
     const own = mine(p.login), series = [...profileCtx().series].sort((a, b) => a.localeCompare(b));
     return `<div class="profile-edit">
       <form id="edit-form" class="edit-form panel" autocomplete="off" data-login="${esc(p.login)}" aria-label="Edit profile">
@@ -1939,7 +1939,6 @@ export function createEditor(app) {
   return {
     actions,
     get me() { return me; },
-    staged: id => !!stage.cards[id],
     init() {
       S.showHidden = !!localStorage.getItem(K.hidden);
       preview();
@@ -1947,8 +1946,6 @@ export function createEditor(app) {
       if (booting) restore().then(() => app.derive(), () => { token = ""; me = null; }).finally(() => { booting = false; app.rerender(); });
     },
     open: openForm,
-    refresh: preview,
-    touches: ids => [...sentOps(), ...Object.values(stage.cards)].some(op => ids.has(op.id)),   // a staged or published-not-built edit on one of ids
     profileOf, pendingProfiles, profilePage, leave: () => { carry = null; },   // another page rendered: a later editor starts fresh
     // published decks: the publish dialog for a saved hand, and the staged or just-published files for the pages
     publishDeck: id => openPublish(id), deckOf, pendingDecks,
@@ -1971,10 +1968,10 @@ export function createEditor(app) {
       const c = find(id), off = c ? siteAfter(op, baseOf(c)) : [];     // website only: never baked
       return [...f].filter(k => !off.includes(k)); },
     siteFields: (id, op = stage.cards[id]) => { const c = find(id); return c ? siteAfter(op, baseOf(c)) : []; },
-    // the parts editor: a card's boxes per field once its record is loaded ({title, ability, rule} or null: no parts), and
+    // the parts editor: a card's boxes per field once its record is loaded ({title, ability} or null: no parts), and
     // the parts its Card Edits.json entry (its PSD's: variant 1's) would hold once published, for the previews
     partsFor: c => new Promise(ok => withRecs(c, () => { const v = partsView(c); ok(v && { title: v.list.filter(x => x.kind === "title").length, ability: v.list.filter(x => x.kind === "ability").length }); })),
-    partsLoaded: c => [c, ...groupOf(c)].every(x => !x.details || recs.has(x.id) || !app.loadDetails),
+    partsLoaded: c => [c, ...groupOf(c)].every(x => !x.details || recs.has(x.id)),
     loadParts: c => new Promise(ok => withRecs(c, ok, true)),        // the previews: the records entryParts reads
     entryParts(id, op = null) {
       const c = find(id); if (!c) return null;
@@ -1986,6 +1983,5 @@ export function createEditor(app) {
     },
     names: nameEntries,
     canonical: (kind, v) => canonical(kind, v),
-    renamePlan, renameAll,
   };
 }

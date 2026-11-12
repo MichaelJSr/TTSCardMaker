@@ -32,7 +32,7 @@ export function rawOf(c, f, dupKey = "") {
   if (f === "art") return artList(c);                   // the form's list
   if (/^art:\d+$/.test(f)) return text(artList(c)[+f.slice(4) - 1] ?? "");   // one line, inline (inline.js isArt)
   if (f.startsWith("flag-")) return ownFlag(c, f.slice(5));                  // the Edit dialog's tick
-  if (f.startsWith("flag:")) return text(c.flags?.[f.slice(5)]);             // its reason (inline.js isFlag)
+  if (f.startsWith("flag:")) return text(c.flags?.[f.slice(5)]);             // its reason (the Edit dialog's #ef-flag:<k>)
   return text(c[f]);
 }
 /** Two raw values alike: text compared trimmed and without \r (what the form and the inline editors save). */
@@ -81,7 +81,6 @@ export function draftStore(storage, key = DRAFT_KEY, clock = () => Date.now()) {
   return {
     /** card id -> {at, fields, base}, or null */
     get: id => read()[id] || null,
-    ids: () => Object.keys(read()),
     /** fields typed for card id; base: the card's values they were typed over (for movedSince). whole: they are the
      *  card's whole draft (the Edit dialog's), else they join it (one inline field). Nothing typed (whole, or an empty
      *  fields) drops what there was. */
@@ -115,8 +114,6 @@ export function draftStore(storage, key = DRAFT_KEY, clock = () => Date.now()) {
       if (Object.keys(fields).length) d[id] = { at: snap?.at || e.at || clock(), fields, base }; else delete d[id];
       write(d);
     },
-    /** drop several cards' drafts (a publish, Discard all); none given: every draft */
-    dropAll(ids = null) { const d = read(); for (const id of ids || Object.keys(d)) delete d[id]; write(d); },
   };
 }
 /** fn once ms after the last run(); flush() runs a pending one now, cancel() forgets it. */

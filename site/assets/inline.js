@@ -25,7 +25,7 @@ export const withSource = (list, n, v) => { const out = [...list]; out[n - 1] = 
 const TEXT = ["name", "ability", "note", "series", "subseries", "author"];   // the fields with a text control (and isArt)
 const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note", stars: "Stars", types: "Types" };
 const labelOf = f => (isArt(f) ? artLabel(artNo(f)) : LABEL[f]);
-const starMax = () => A?.editor?.maxStars?.() ?? 10;      // the stars slider's top: the most any card has (edit.js maxStars)
+const starMax = () => A.editor.maxStars();      // the stars slider's top: the most any card has (edit.js maxStars)
 const IMAGE = "on the card image";                 // the form's "On the card image" marker (PSD fields); the rest is database only
 
 /** A click on stat cell `cell` (1-based) of a row showing `current`: that value, or one less for the top lit cell (so 0 is reachable). */
@@ -84,7 +84,7 @@ let dragged = null;                                // the ids being dragged (the
 
 // ---- the card dialog
 /** Mark the editable spots of the open card dialog (edit mode only; call after openCard). */
-export function mountCard(modal, c, api = A) {
+export function mountCard(modal, c) {
   const detail = modal.querySelector(".detail"); if (!detail) return;
   card = c; cur = null; prov = null; pal = null; offered = null; closing = false;
   const facts = detail.querySelector(".facts");
@@ -122,8 +122,7 @@ export function mountCard(modal, c, api = A) {
     mark(el, `art:${el.dataset.art}`, `Click to edit the ${artLabel(+el.dataset.art, arts.length).toLowerCase()}`);
   facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="art:${arts.length + 1}" data-empty aria-label="Add an artwork source">+ artwork source</button>`);
   const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
-  if (c.stars > starMax()) { if (starChip) starChip.dataset.tip = "Use All fields"; }
-  else if (starChip) starChip.outerHTML = starsHtml(c.stars, starMax());
+  if (starChip) starChip.outerHTML = starsHtml(c.stars, starMax());
   else facts.insertAdjacentHTML("beforeend", ghost("stars"));
   const typeRow = detail.querySelector(":scope > div:nth-child(2) > .ctypes");     // types: the row opens the palette
   if (typeRow) {
@@ -135,7 +134,7 @@ export function mountCard(modal, c, api = A) {
 // ---- drafts: what an editor holds before it is saved, kept in edit.js's draft store (drafts.js)
 const drafts = () => A.editor.drafts;
 function offer(c, detail) {                        // "Restore your unsaved edit?" over the card, when it has a draft the card doesn't show
-  const d = drafts()?.get(c.id); if (!d) return;
+  const d = drafts().get(c.id); if (!d) return;
   const now = Object.fromEntries(Object.keys(d.fields).filter(f => !f.startsWith("ban")).map(f => [f, rawOf(c, f, A.editor.value(c, "dup_of"))]));
   const fields = restorable(d.fields, now);
   if (!Object.keys(fields).length) { drafts().drop(c.id); return; }   // the batch has it already
@@ -156,19 +155,19 @@ function answer(restore) {
 const keep = (c, f, v) => later(() => {            // the editor's text as a draft, a moment after each key
   const t = (f === "types" ? pal?.ctl?.value : cur?.f === f && cur.c === c ? cur.ctl.value : null);
   if (t == null) return;
-  if (f === "types" ? JSON.stringify(t) === JSON.stringify(v) : String(t).replace(/\r/g, "").trim() === String(v).replace(/\r/g, "").trim()) drafts()?.drop(c.id, [f]);
-  else drafts()?.put(c.id, { [f]: f === "types" ? t : String(t).replace(/\r/g, "") }, false, { [f]: f === "types" ? v : String(v).replace(/\r/g, "") });
+  if (f === "types" ? JSON.stringify(t) === JSON.stringify(v) : String(t).replace(/\r/g, "").trim() === String(v).replace(/\r/g, "").trim()) drafts().drop(c.id, [f]);
+  else drafts().put(c.id, { [f]: f === "types" ? t : String(t).replace(/\r/g, "") }, false, { [f]: f === "types" ? v : String(v).replace(/\r/g, "") });
 });
 function open(el, f, text = null) {               // text: a restored draft
   if (cur && !commit(false)) { cur?.ctl.focus(); return; }                // a refused name stays open, to shorten it
   if (pal) pal.ctl.close(true);
   if (!el.isConnected || !card) return;
-  A.hideTip?.();                                   // its "Click to edit" goes with the data-tip
+  A.hideTip();                                   // its "Click to edit" goes with the data-tip
   const c = card, v = f === "author" ? (c.author || "") : isArt(f) ? (artList(c)[artNo(f) - 1] ?? "") : String(A.editor.value(c, f) ?? "");
   const swap = el.tagName === "A" || el.tagName === "BUTTON";     // a link would still navigate, a button can't hold an input
   let host = el;
   if (swap) { host = document.createElement("span"); host.className = el.className; host.dataset.inline = f; el.replaceWith(host); }
-  cur = { c, f, el, host, html: el.innerHTML, cls: el.className, tip: el.dataset.tip, ctl: null, v, save: keep(c, f, v), snap: drafts()?.snap(c.id, [f]) };
+  cur = { c, f, el, host, html: el.innerHTML, cls: el.className, tip: el.dataset.tip, ctl: null, v, save: keep(c, f, v), snap: drafts().snap(c.id, [f]) };
   if (!swap) { delete el.dataset.tip; if (el.tagName === "P") el.className = "ability"; }   // "No ability text." becomes the text box
   host.innerHTML = control(f, text ?? v);
   cur.ctl = host.querySelector("input, textarea");
@@ -180,7 +179,7 @@ function open(el, f, text = null) {               // text: a restored draft
 function cancel(refocus) {                        // Esc, or nothing changed: what was typed goes, an older draft stays as it was
   if (!cur) return;
   const { c, f, el, host, html, cls, tip, save, snap, ctl } = cur; cur = null;
-  save.cancel(); drafts()?.back(c.id, snap, [f]); A.hideTip?.(); A.closePicker?.();
+  save.cancel(); drafts().back(c.id, snap, [f]); A.hideTip(); A.closePicker();
   ctl?.blur();                                     // a native popover goes with it
   if (host !== el) host.replaceWith(el); else { el.innerHTML = html; el.className = cls; if (tip) el.dataset.tip = tip; }
   if (refocus) el.focus();
@@ -196,14 +195,14 @@ function commit(kbd) {                            // kbd: from the keyboard, so 
     if (was.host.isConnected) cur = was;           // the input and its text stay, as in the filter bar
     return false;
   }
-  was.save.cancel(); drafts()?.drop(c.id, [f]);    // in the batch now
-  A.closePicker?.();
+  was.save.cancel(); drafts().drop(c.id, [f]);    // in the batch now
+  A.closePicker();
   refresh(c, f, kbd);
   return true;
 }
 function refresh(c, f, kbd) {                      // the dialog again (as the form does), scrolled as it was; after a mouse action
   const scroll = A.modal.scrollTop;                // focus stays off (openCard blurs so the shortcuts work), after a key it comes back
-  A.hideTip?.();
+  A.hideTip();
   if (closing) { closing = false; return; }        // the dialog is closing: its click closes it (a redraw now would eat that click)
   A.goCard(c.id); A.modal.scrollTop = scroll;
   if (kbd) A.modal.querySelector(`[data-inline="${f}"]`)?.focus();
@@ -235,8 +234,8 @@ const sameTypes = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([..
 function openTypes(el, initial = null) {          // initial: a restored draft
   if (cur && !commit(false)) { cur?.ctl.focus(); return; }
   if (pal || !card || !el.isConnected) return;
-  A.hideTip?.();
-  const c = card, start = [...(c.types || [])].sort(), vocab = typeVocab(A.icons?.());
+  A.hideTip();
+  const c = card, start = [...(c.types || [])].sort(), vocab = typeVocab(A.icons());
   let row = el, temp = false;
   if (!el.classList.contains("ctypes")) {          // "+ types"
     A.modal.querySelector(".detail .facts").insertAdjacentHTML("afterend", `<div class="ctypes editing" data-inline="types"></div>`);
@@ -245,8 +244,8 @@ function openTypes(el, initial = null) {          // initial: a restored draft
   const html = row.innerHTML, tip = row.dataset.tip, on = initial ? [...initial].sort() : start;
   delete row.dataset.tip; row.classList.add("editing");
   if (initial || temp) row.innerHTML = rowHtml(on, vocab);
-  const p = pal = { c, row, html, tip, temp, save: keep(c, "types", start), ctl: null, snap: drafts()?.snap(c.id, ["types"]) };
-  const done = staged => { pal = null; p.save.cancel(); if (staged) drafts()?.drop(c.id, ["types"]); else drafts()?.back(c.id, p.snap, ["types"]); A.hideTip?.(); };   // not saved: an older draft stays
+  const p = pal = { c, row, html, tip, temp, save: keep(c, "types", start), ctl: null, snap: drafts().snap(c.id, ["types"]) };
+  const done = staged => { pal = null; p.save.cancel(); if (staged) drafts().drop(c.id, ["types"]); else drafts().back(c.id, p.snap, ["types"]); A.hideTip(); };   // not saved: an older draft stays
   p.ctl = mountPalette(row, { vocab, on, first: start,
     onChange: list => { row.innerHTML = rowHtml(list, vocab); p.save.run(); },
     onSave: (list, kbd) => { const ok = !sameTypes(list, start) && A.editor.stageField(c.id, "types", list); done(ok); if (ok) refresh(c, "types", kbd); else putBack(p, kbd); },
@@ -283,10 +282,10 @@ function onClick(e) {
  *  the Edit dialog at that field, one box per layer (PARTS_EDITOR.md §5). */
 function openText(el, f, text = null) {          // text: a restored draft (the dialog drops a joined one on several boxes)
   const c = card;
-  if ((f !== "name" && f !== "ability") || !c?.details || !A.editor.partsFor || (c.siteOnly || []).includes(f)) { open(el, f, text); return; }   // website only: one plain value
+  if ((f !== "name" && f !== "ability") || !c?.details || (c.siteOnly || []).includes(f)) { open(el, f, text); return; }   // website only: one plain value
   A.editor.partsFor(c).then(n => {
     if (card !== c || !el.isConnected) return;
-    if (n && (n.rule || n[f === "name" ? "title" : "ability"] !== 1)) A.editor.open(c.id, { focus: f, ...(text != null ? { draft: { [f]: text } } : {}) }); else open(el, f, text);
+    if (n && n[f === "name" ? "title" : "ability"] !== 1) A.editor.open(c.id, { focus: f, ...(text != null ? { draft: { [f]: text } } : {}) }); else open(el, f, text);
   });
 }
 function onDblClick(e) {
@@ -353,10 +352,10 @@ export function markTiles(root, selected) {
  *  grid, the tiles turn draggable and drop lists go under the selects (every series, subseries and author), shown only
  *  while a drag is on (body.dragging-cards). p: the rendered list's params, renderCards' r.params
  *  (with the card dialog open the list is S.listHash's, not the hash's). */
-export function mountGrid(view, p, api = A) {
+export function mountGrid(view, p) {
   const filters = view.querySelector(".browse .filters"); if (!filters) return;
   naming = null; listParams = p;
-  const grid = view.querySelector(".browse .grid"), opts = api.editor.options(), b = opts.buckets;
+  const grid = view.querySelector(".browse .grid"), opts = A.editor.options(), b = opts.buckets;
   const sel = key => filters.querySelector(`select[data-key="${key}"]`);
   const at = key => sel(key)?.closest(".sel-row") || sel(key);            // after the select's ≠ toggle
   if (!sel("subseries")) at("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries" aria-label="Subseries"><option value="">All subseries</option></select>`);
@@ -368,8 +367,8 @@ export function mountGrid(view, p, api = A) {
   const subs = (p.get("sub") || "").split(",").filter(Boolean), subChips = filters.querySelector('[data-key="sub"]')?.closest(".chips");
   if (subs.length === 1 && subChips) subChips.insertAdjacentHTML("afterend", renameButton("subtype", subs[0], "ghost rename-value", `⇄ Rename “${subs[0]}”…`));
   if (!grid) return;
-  markTiles(grid, api.selected);
-  reflect(view, api.selected);
+  markTiles(grid, A.selected);
+  reflect(view, A.selected);
   for (const [key, list, news] of [["series", opts.series, b.series], ["subseries", opts.subseries, b.subseries], ["author", opts.authors, b.author]])
     at(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
@@ -507,8 +506,8 @@ export function install(api) {
     list: () => card?.colors || null,
     apply: (list, { kbd } = {}) => { const c = card, f = cur?.f; if (!c || !f || !commit(false)) return;    // the text first, as Enter saves it
       if (A.editor.stageField(c.id, "colors", list)) refresh(c, f, kbd); },
-    rec: () => (card ? A.editor.recOf?.(card.id) : null),
-    swatches: () => A.editor.swatches?.() || [], statuses: () => A.editor.statuses?.() || null,
+    rec: () => (card ? A.editor.recOf(card.id) : null),
+    swatches: () => A.editor.swatches() || [], statuses: () => A.editor.statuses() || null,
     base: (f, text) => (card ? TC.inkOf(card, f, text) : null),
   });
   const flush = () => { cur?.save.flush(); pal?.save.flush(); };    // closing the tab: the draft now, not in a moment

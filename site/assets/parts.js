@@ -140,10 +140,10 @@ export function starMove(path, stars, paths = []) {
   return { to, created: !paths.some(p => String(p || "").toLowerCase().startsWith(low)) };
 }
 /** Why a bake keeps the printed stars at n (header.stars' refusal, "*" every count; psd_details._star_header), or null:
- *  it redraws them, or the record can't tell. An older record's "the folder sets them": the card moves, they're redrawn. */
+ *  it redraws them, or the record can't tell. */
 export function starsKept(stars, n) {
   const r = stars && typeof stars === "object" && stars.refused && typeof stars.refused === "object" ? stars.refused[n] ?? stars.refused["*"] : null;
-  return r && !/folder sets them/.test(r) ? String(r) : null;
+  return r ? String(r) : null;
 }
 // the title drawn into the picture: no title layer, no text in the title region (of the Text group): a new title is
 // website only (the bot's psd_edit.title_in_picture; TITLE_REGION is psd_parser.TITLE_REGION_RATIO); a Text/Name smart
@@ -174,7 +174,7 @@ export function sharedHtml(part, picture) {
   return `<span class="part-shared">⚠ shared: changes ${names.length === arr(picture.cards).length ? "every variant" : "these pictures"} (${esc(names.join(", "))})</span>`;
 }
 /** The FX layers that go with a deleted box's layer (the record's fx list: "Ability FX: Blazing"). */
-export const fxOf = (rec, part) => arr(rec?.fx).map(x => (typeof x === "string" ? x : x?.layer)).filter(x => typeof x === "string" && x.split(" FX: ")[0].split("/").pop() === baseName(part.layer) && x.includes(" FX: "));
+export const fxOf = (rec, part) => arr(rec?.fx).filter(x => typeof x === "string" && x.split(" FX: ")[0].split("/").pop() === baseName(part.layer) && x.includes(" FX: "));
 /** When, for a skipped edit's note, Pacific time like the rest of the site: "10-25 14:30". */
 export const when = at => { const d = new Date(at); if (Number.isNaN(+d)) return "";
   const p = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(d).map(x => [x.type, x.value]));

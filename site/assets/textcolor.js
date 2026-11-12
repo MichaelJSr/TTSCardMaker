@@ -5,11 +5,9 @@
 // phrases as listed. The menu (edit mode): a chip beside a selection in those fields (or the whole field, focused with
 // none selected) opens a compact palette. The site's own text draws one palette instead (wordColors, below). Everything
 // above `attach` is DOM-free (the AutoCroissant tests run it in node).
-import { esc, paintHtml, TAG, COST, tagInfo } from "./text.js";
-export { paintHtml };
+import { esc, TAG, COST, tagInfo } from "./text.js";
 
 export const FIELDS = ["name", "ability"];                // card_edits.COLOR_FIELDS, build_site COLOR_FIELDS
-export const PRINTED = FIELDS;                            // the card image's (card_edits.COLOR_PRINTED)
 export const COLOR = /^#[0-9a-f]{6}$/, MAX = 64, PHRASE_MAX = 200;
 export const RECENT_KEY = "text-colors-recent", RECENT_MAX = 8;
 const LABEL = { name: "Name", ability: "Ability" };
@@ -46,7 +44,7 @@ export function colorsChange(a, b) {
   return out;
 }
 /** The card image's colours of a list, null when none. */
-export const printedOf = v => { const p = (v || []).filter(one => PRINTED.includes(one.field)); return p.length ? p : null; };
+export const printedOf = v => { const p = (v || []).filter(one => FIELDS.includes(one.field)); return p.length ? p : null; };
 
 const numbered = p => { const m = /^(.*\S)#(\d+)$/.exec(p); return m ? [m[1], +m[2]] : [p, 0]; };
 const edge = (text, i) => !ALNUM.test(text[i] ?? " ");
@@ -299,11 +297,11 @@ function caretAt(el, pos) {
  * The colour menu on the text controls inside root. o: {fieldOf(el) -> "name" | "ability" | null, textOf(el) ->
  * {text, at} (the field's whole text and where el's text starts in it: a box of several), list() -> the colours now,
  * apply(list, {field, phrase, color}), rec() -> the details record or null, swatches() -> [{name, color}],
- * base(field, text) -> the card's own colours (inkOf) or null, storage}.
- * Returns {close, destroy}.
+ * base(field, text) -> the card's own colours (inkOf) or null}.
+ * Returns {destroy}.
  */
 export function attach(root, o) {
-  const doc = root.ownerDocument, store = o.storage ?? globalThis.localStorage;
+  const doc = root.ownerDocument, store = globalThis.localStorage;
   const chip = doc.createElement("button");
   chip.type = "button"; chip.className = "tc-chip"; chip.hidden = true; chip.setAttribute("aria-haspopup", "dialog"); chip.setAttribute("aria-expanded", "false");
   chip.innerHTML = `<span class="tc-dot"></span><span class="tc-a" aria-hidden="true">A</span>`;
@@ -338,7 +336,7 @@ export function attach(root, o) {
   }
   function show(sel) {
     cur = sel;
-    const now = colorAt(o.list(), sel.field, sel.text, sel.start, sel.end, o.statuses?.(), o.base?.(sel.field, sel.text));
+    const now = colorAt(o.list(), sel.field, sel.text, sel.start, sel.end, o.statuses(), o.base(sel.field, sel.text));
     chip.querySelector(".tc-dot").style.cssText = now ? `background:${now}` : "";
     chip.classList.toggle("set", !!now);
     chip.setAttribute("aria-label", `Text colour of ${what(sel)}`); chip.title = `Text colour of ${what(sel)}`;
@@ -355,11 +353,11 @@ export function attach(root, o) {
   }
   function open() {
     if (!cur) return;
-    const sel = cur, list = o.list(), now = colorAt(list, sel.field, sel.text, sel.start, sel.end, o.statuses?.(), o.base?.(sel.field, sel.text));
-    const st = sel.field === "ability" ? statusIn(sel.text, sel.start, sel.end, o.statuses?.()) : "";   // they keep the chart's colour
+    const sel = cur, list = o.list(), now = colorAt(list, sel.field, sel.text, sel.start, sel.end, o.statuses(), o.base(sel.field, sel.text));
+    const st = sel.field === "ability" ? statusIn(sel.text, sel.start, sel.end, o.statuses()) : "";   // they keep the chart's colour
     const set = JSON.stringify(withColor(list, sel.field, sel.phrase, null, sel.text)) !== JSON.stringify(list?.length ? list : null);
-    pop.innerHTML = paletteHtml([["On this card", cardColors(o.rec?.(), list).map(color => ({ color }))], ["Recent", recent().map(color => ({ color }))],
-      ["Status colours", (o.swatches?.() || []).filter(x => COLOR.test(x.color)), true]], now, `Colour ${what(sel)}`,
+    pop.innerHTML = paletteHtml([["On this card", cardColors(o.rec(), list).map(color => ({ color }))], ["Recent", recent().map(color => ({ color }))],
+      ["Status colours", (o.swatches() || []).filter(x => COLOR.test(x.color)), true]], now, `Colour ${what(sel)}`,
     { note: st ? STATUS_NOTE : "", bare: st === "only", reset: st !== "only" || set });
     pop.setAttribute("aria-label", `Colour ${what(sel)}`);
     pop.hidden = false; chip.setAttribute("aria-expanded", "true"); placePop();
@@ -428,11 +426,9 @@ export function attach(root, o) {
   doc.addEventListener("scroll", onScroll, true);
   addEventListener("resize", onScroll);
   return {
-    close: () => close(false),
     destroy() {
       doc.removeEventListener("selectionchange", onSel); doc.removeEventListener("pointerdown", away, true); doc.removeEventListener("scroll", onScroll, true);
       removeEventListener("resize", onScroll); chip.remove(); pop.remove();
     },
-    owns: el => !!el && (el === chip || chip.contains(el) || pop.contains(el)),
   };
 }

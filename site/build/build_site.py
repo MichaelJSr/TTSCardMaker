@@ -556,10 +556,10 @@ def details_parts(rec, e, by_id, meta, tree_blob, rec_blob):
         q = {**p, "shared": [name for k, name in sorted(pictures.items()) if k != n and (v is None or k in v)] if len(pictures) > 1 else [],
              "follow": [{"layer": f.get("layer"), "how": f.get("how")} for f in follow if p.get("id") in (f.get("of") or []) and shows(f)]}
         return q
-    out = {k: [view(p) for p in parts.get(k) or [] if isinstance(p, dict) and shows(p)] for k in ("title", "ability", "blocks")}
+    out = {k: [view(p) for p in parts.get(k) or [] if isinstance(p, dict) and shows(p)] for k in ("title", "ability")}
     out["follow"] = [f for f in follow if shows(f)]
-    every = {str(p.get("id")) for k in ("title", "ability", "blocks") for p in parts.get(k) or [] if isinstance(p, dict)}
-    shas = {str(p.get("id")): p.get("sha") for k in ("title", "ability", "blocks") for p in parts.get(k) or [] if isinstance(p, dict)}
+    every = {str(p.get("id")) for k in ("title", "ability") for p in parts.get(k) or [] if isinstance(p, dict)}
+    shas = {str(p.get("id")): p.get("sha") for k in ("title", "ability") for p in parts.get(k) or [] if isinstance(p, dict)}
     state, pending = {}, {}
     for key, p in ((meta or {}).get("parts") or {}).items():
         if key == "+ability":
@@ -857,7 +857,7 @@ def join_details(cards, records, tree, edits=None):
             parts = details_parts(rec, e, by_id, found[1] if found else None, tree.get(path), blob_of.get(id(rec)))
             if parts is not None:
                 out[e["id"]].update(parts)
-                shown = {str(p.get("id")) for k in ("title", "ability", "blocks") for p in parts["parts"][k]}
+                shown = {str(p.get("id")) for k in ("title", "ability") for p in parts["parts"][k]}
                 here = {p["field"] for k, p in parts["partEdits"].items() if "field" in p and (k == "+ability" or k in shown
                         or (parts["partState"].get(k) == "gone" and first is e))} - set(e.get("siteOnly") or [])
                 pending = sorted(set((e.get("pending") or []) if plain is None else plain) | here)   # a part's field: on the pictures showing its layer

@@ -46,7 +46,7 @@ export function previewHtml(p, changed, ctx) {
   const types = (p.types || []).map(t => { const ic = ctx.iconFor(t); return ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}" title="${esc(t.replace(/_/g, " "))}">` : `<span class="fact">${esc(t)}</span>`; }).join("");
   const pending = (p.pending || []).map(f => LABEL[f] || f).join(", "), site = (p.siteOnly || []).map(f => LABEL[f] || f).join(", ");
   return `<div class="lp-card">
-    <div class="lp-top">${src ? `<img class="lp-img" src="${esc(src)}" alt="" data-preview-image>` : ""}
+    <div class="lp-top">${src ? `<img class="lp-img" src="${esc(src)}" alt="">` : ""}
       <div class="lp-head"><h2 class="${mark("name", "lp-name")}">${esc(p.name)}</h2>
         <div class="facts">${fact("type", esc(ctx.kindLabel[p.type] || p.type || ""))}${fact("subtype", p.subtype ? esc(p.subtype[0].toUpperCase() + p.subtype.slice(1)) : "")}
           ${fact("stars", p.stars ? `<span class="stars">${"★".repeat(Math.min(p.stars, 10))}</span> ${p.stars}-star` : "")}${fact("series", esc(p.series || ""))}${fact("subseries", esc(p.subseries || ""))}

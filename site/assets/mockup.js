@@ -848,7 +848,7 @@ export function statSite(rec, k, to) {
 export function partJobs(rec, parts, { colors = null, was = null, statuses = null } = {}) {
   const p = obj(rec?.parts);
   if (!p || !obj(parts)) return [];
-  const list = [...(p.title || []).map(x => ["name", x]), ...(p.ability || []).map(x => ["ability", x]), ...(p.blocks || []).map(x => ["ability", x])];
+  const list = [...(p.title || []).map(x => ["name", x]), ...(p.ability || []).map(x => ["ability", x])];
   const add = obj(parts["+ability"]), tb = rec?.template?.ability?.box, plus = add?.text && !(p.ability || []).length ? { id: "+ability" } : null;
   const textOf = part => { const e = obj(parts[String(part?.id)]); return e ? (e.delete ? null : String(e.text ?? "")) : part?.text; };
   const layers = { name: [], ability: plus ? [plus] : [] };
@@ -864,8 +864,8 @@ export function partJobs(rec, parts, { colors = null, was = null, statuses = nul
   return out;
 }
 
-/** A field's record parts that picture 1 prints: the title's, or the Ability's and blocks'. */
-const printed = (p, f) => (f === "name" ? p.title || [] : [...(p.ability || []), ...(p.blocks || [])]).filter(x => !(Array.isArray(x?.variants) && !x.variants.includes(1)));
+/** A field's record parts that picture 1 prints: the title's, or the Ability's. */
+const printed = (p, f) => (f === "name" ? p.title || [] : p.ability || []).filter(x => !(Array.isArray(x?.variants) && !x.variants.includes(1)));
 
 /** The colours the bake refuses as painted over (AutoCroissant psd_edit plan_colors, _painted_over, _solid_overlay):
  *  [{one, label, why}]. Refused when an enabled Color, Gradient or Pattern Overlay, the part's own or a group's above it,

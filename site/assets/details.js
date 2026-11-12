@@ -1,5 +1,5 @@
 // The card page's Details dropdown: the PSD's structure as the bot read it (data/details/<id>.json, built from
-// AutoCroissant's psd_details.json), on the card page and on each rulebook page. DOM-free at import: app.js renders
+// AutoCroissant's psd_details.json), on the card page. DOM-free at import: app.js renders
 // detailsHtml() and mount()s it.
 import { editorFields } from "./changes.js";
 import { esc, noted } from "./text.js";
@@ -141,9 +141,8 @@ export function bodyHtml(rec, card, extras, state = {}) {
  * open, and render the layer tree only when its section opens.
  * @param el the <details class="psd-details"> element
  * @param load () => promise of the record (memoised by the caller, so a reopened dialog doesn't fetch again)
- * @param outer false: the dropdown itself isn't remembered (rulebook pages: one per page)
  */
-export function mount(el, { card, load, storage, extras, outer = true }) {
+export function mount(el, { card, load, storage, extras }) {
   const state = readState(storage);
   let rec = null, loading = null, echo = el.open;      // the browser may fire toggle for the open it was rendered with
   const body = () => el.querySelector(".psd-body");
@@ -153,7 +152,7 @@ export function mount(el, { card, load, storage, extras, outer = true }) {
     const t = e.target, ds = t.dataset || {};
     const first = t === el && echo && t.open;           // a one-off open (a Details link) isn't remembered
     if (t === el) echo = false;
-    const key = t === el ? (outer && !first ? "details" : "") : ds.sec || (ds.font != null ? `font:${ds.font}` : "");
+    const key = t === el ? (!first ? "details" : "") : ds.sec || (ds.font != null ? `font:${ds.font}` : "");
     if (key) { state[key] = !!t.open; remember(storage, key, t.open); }
     if (t === el) { if (t.open) render(); return; }
     if (key === "tree" && t.open && rec && !t.dataset.done) { t.dataset.done = "1"; const slot = t.querySelector(".tree-slot"); if (slot) slot.innerHTML = part(rec.tree, treeHtml); }

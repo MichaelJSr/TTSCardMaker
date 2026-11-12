@@ -1,37 +1,21 @@
 // Types in place (edit mode): a palette of the type icons under the type row, with a search. NOTES.md §21.
 import { esc, norm } from "./text.js";
 
-/** The type icons, one entry each, by name: [{name, file, keys}] from cards.json icons ({spelling: {file, name, kind}});
- *  keys: its other spellings (aliases), normalized. The token picker's vocabulary() of kind "type". */
+/** The type icons, one entry each, by name: [{name, file}] from cards.json icons ({spelling: {file, name, kind}}). The
+ *  token picker's vocabulary() of kind "type". */
 export function typeVocab(icons) {
   const by = new Map();
-  for (const [key, ic] of Object.entries(icons || {})) {
+  for (const ic of Object.values(icons || {})) {
     if (ic?.kind !== "type" || !ic.name) continue;
-    if (!by.has(ic.file)) by.set(ic.file, { name: ic.name, file: ic.file, keys: [] });
-    if (key !== norm(ic.name)) by.get(ic.file).keys.push(key);
+    if (!by.has(ic.file)) by.set(ic.file, { name: ic.name, file: ic.file });
   }
   return [...by.values()].sort((a, b) => a.name.localeCompare(b.name));
 }
-/** The entries matching q, best first: the name or an alias exactly, a name prefix, an alias prefix, then (2+ letters)
- *  inside a name, inside an alias; ties by name. All of them for an empty q. */
-export function findTypes(vocab, q) {
-  const k = norm(q);
-  if (!k) return [...vocab];
-  const out = [];
-  for (const e of vocab) {
-    const n = norm(e.name), long = k.length > 1;
-    const tier = n === k || e.keys.includes(k) ? 0 : n.startsWith(k) ? 1 : e.keys.some(x => x.startsWith(k)) ? 2
-      : long && n.includes(k) ? 3 : long && e.keys.some(x => x.includes(k)) ? 4 : -1;
-    if (tier >= 0) out.push([tier, e]);
-  }
-  return out.sort((a, b) => a[0] - b[0] || a[1].name.localeCompare(b[1].name)).map(([, e]) => e);
-}
-let search = findTypes;
-/** The palette's search: fn(vocab, q) -> entries best first; none given: findTypes. For the token picker's, once on main. */
-export const useSearch = fn => { search = fn || findTypes; };
+let search = () => [];
+/** The palette's search: fn(vocab, q) -> entries best first (app.js startEditor: pickerSearch). */
+export const useSearch = fn => { search = fn; };
 /** The token picker's ranking as the palette's search (its typo slips and most-used order too): suggest = tokens.js
- *  suggest, all() = its vocabulary (app.js S.vocab). Its plain type rows, mapped back to the palette's entries by name.
- *  Once tokens.js is on main, in app.js: palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || [])). */
+ *  suggest, all() = its vocabulary (app.js vocabOf). Its plain type rows, mapped back to the palette's entries by name. */
 export const pickerSearch = (suggest, all) => (vocab, q) => {
   const by = new Map(vocab.map(e => [e.name, e]));
   return suggest({ type: "icon", base: q, variant: null }, all()).filter(r => r.kind === "type" && !r.variant)

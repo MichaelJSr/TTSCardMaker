@@ -43,8 +43,6 @@ export function tipController({ fill, show, hide }) {
     down(target) { if (src && touch && (tipGone(src) || !src.contains(target))) off(); },
     scrolled() { if (src && touch) off(); },
     hide: off,
-    get source() { return src; },
-    get touch() { return touch; },
   };
 }
 

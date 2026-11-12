@@ -4,7 +4,7 @@
 // the text fields marked data-tokens (edit.js, inline.js). The same list suggests known names in the fields marked
 // data-suggest="series|subseries|author|font" (suggestNames), whose whole value is the query; a pick fires "suggest-pick".
 // Edit mode loads it (editing.js); the grid's Font box loads it for everyone (app.js loadTokens): one install either way.
-import { esc, norm, tagInfo, tagHtml, BADGE_TAGS, VARIANT_NAMES, variantFile } from "./text.js";
+import { esc, norm, tagInfo, tagHtml, BADGE_TAGS, VARIANT_NAMES } from "./text.js";
 
 export const MAX_TOKEN = 52;                     // text.js PIECE: [thunderfury blessed blade of the starseeker:darkglow]
 export const VARIANTS = ["tint", "sticker", "no", "glow", "darkglow"];   // the font's (AutoCroissant ICON_VARIANTS)
@@ -16,11 +16,11 @@ const LIMIT = 120;                               // rows at most (91 icons, an e
 export const TAGS = BADGE_TAGS.filter(t => tagInfo(t));
 
 /** The icons as one entry each, from cards.json icons ({normalized spelling: {file, name, kind, v}}): [{name, kind,
- *  file, v, keys, uses}], keys = its other spellings (aliases), normalized; uses = its tokens in texts (the cards'). */
+ *  keys, uses}], keys = its other spellings (aliases), normalized; uses = its tokens in texts (the cards'). */
 export function vocabulary(icons, texts = []) {
   const by = new Map();
   for (const [key, ic] of Object.entries(icons || {})) {
-    if (!by.has(ic.file)) by.set(ic.file, { name: ic.name, kind: ic.kind, file: ic.file, v: ic.v || [], keys: [], uses: 0 });
+    if (!by.has(ic.file)) by.set(ic.file, { name: ic.name, kind: ic.kind, keys: [], uses: 0 });
     if (key !== norm(ic.name)) by.get(ic.file).keys.push(key);
   }
   for (const t of texts) for (const m of String(t || "").matchAll(/\[([^\[\]\n:]{1,52})(?::[a-z]*)?\]/gi)) {
@@ -102,15 +102,15 @@ function rank(vocab, q) {
     || (b.e.uses || 0) - (a.e.uses || 0) || a.e.name.localeCompare(b.e.name));
 }
 
-/** A row: {token, label (its plain name), kind ("type", "star", "timing tag"), image (a picture's file; none for a
- *  tag), variant, note (what the variant does, or the tag's meaning), tag, group, old}. */
+/** A row: {token, label (its plain name), kind ("type", "star", "timing tag"), variant, note (what the variant does, or
+ *  the tag's meaning), tag}. */
 function iconItem(e, v = "") {
   return { token: `[${e.name}${v ? `:${v}` : ""}]`, label: e.name.replace(/_/g, " "), kind: e.kind, variant: v,
-    note: v ? VARIANT_NAMES[v] : "", image: v && e.v.includes(v) ? variantFile(e, v) : e.file };
+    note: v ? VARIANT_NAMES[v] : "" };
 }
 function tagItem(tag) {
   const t = tagInfo(tag);
-  return { token: `(${t.tag})`, label: t.meaning, kind: "timing tag", image: "", note: "", tag: t.tag, group: t.group, old: !!t.old };
+  return { token: `(${t.tag})`, label: t.meaning, kind: "timing tag", note: "", tag: t.tag };
 }
 const variantsLike = q => [...VARIANTS.filter(v => v.startsWith(q)), ...VARIANTS.filter(v => !v.startsWith(q) && v.includes(q))];
 
@@ -271,7 +271,7 @@ function refresh(el, typed) {
 function names(el, typed) {                      // a name field: its whole value is the query; a caret move changes nothing
   if (!typed) return;
   dismissed = null;                              // Esc shut it until the next key
-  const found = suggestNames(el.value, A.names?.(el) || []);
+  const found = suggestNames(el.value, A.names(el) || []);
   if (found.length) show(el, { type: "name", start: 0, end: el.value.length, close: el.value.length, text: el.value }, found, true);
   else if (field === el) close();
 }

@@ -20,8 +20,6 @@ export function cleanFlags(v) {
   if (v.psd) out.psd = v.psd;
   return out;
 }
-/** flags with k's reason set on PSD blob psd, null clearing the flag. */
-export const withFlag = (flags, k, reason, psd) => cleanFlags({ ...flags, [k]: reason, psd });
 /** The flags' error ("" when fine): a hand flag says what its issue is (owner 11-07); at most FLAG_MAX characters a reason, an emoji counting one (Python's len). */
 export const flagError = flags => { const k = CARD_FLAGS.find(([f]) => [...(flags?.[f] || "")].length > FLAG_MAX);
   return flags?.hand === "" ? `${flagLabel("hand")}: say what the issue is` : k ? `${k[1]}: at most ${FLAG_MAX} characters` : ""; };

@@ -69,8 +69,8 @@ const CANON = Object.fromEntries(Object.keys(FIXED).map(k => [k.toUpperCase(), k
 const canon = tag => { const up = String(tag).toUpperCase(); return CANON[up] ?? up; };
 const times = n => (n === "X" ? "X times" : n === "1" ? "once" : `${n} times`);
 const count = (n, one, many = one + "s") => `${n} ${n === "1" || n === "-1" ? one : many}`;
-const old = (group, meaning, multi = false) => ({ group, meaning: `Old system: ${meaning}`, multi, old: true });
-/** {tag (canonical case), group, meaning, multi, old} or null. The meaning is the Timing Tags chapter's when it lists
+const old = (group, meaning) => ({ group, meaning: `Old system: ${meaning}`, old: true });
+/** {tag (canonical case), group, meaning, old} or null. The meaning is the Timing Tags chapter's when it lists
  *  the tag, or its family with X ("XCD" for (3CD): X is 3, "turn(s)" agrees); else the one below. */
 export function tagInfo(typed) {
   const tag = canon(typed), info = KNOWN.has(tag.toUpperCase()) && tagMeaning(tag);
@@ -88,7 +88,7 @@ function chapterMeaning(tag) {
   return text ? text.replace(/\bX\b/g, n).replace(/\b(-?\d+) (\w+)\(s\)/g, (_, k, w) => `${k} ${k === "1" || k === "-1" ? w : `${w}s`}`) : "";
 }
 function tagMeaning(tag) {
-  if (FIXED[tag]) return { group: FIXED[tag][0], meaning: FIXED[tag][1], multi: false };
+  if (FIXED[tag]) return { group: FIXED[tag][0], meaning: FIXED[tag][1] };
   let m;
   if ((m = /^(\d+|X)CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: ${count(m[1], "turn")}` };
   if ((m = /^(\d+|X)GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: ${count(m[1], "global turn")}` };
@@ -98,9 +98,9 @@ function tagMeaning(tag) {
   if ((m = /^(\d+|X)PG$/.exec(tag))) return { group: "trigger", meaning: `Can only be activated ${times(m[1])} per game` };
   if ((m = /^([1-9X])PGT$/.exec(tag))) return old("any", `usable ${times(m[1])} per global turn (at any time)`);
   if ((m = /^([1-9X])PT$/.exec(tag))) return old("turn", `usable ${times(m[1])} per turn (on your turn)`);
-  if ((m = /^FTE([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on your 1st turn (multi-turn)`, true);
-  if ((m = /^E([1-9X])GT$/.exec(tag))) return old("any", `every ${m[1]} global turns (at any time, multi-turn)`, true);
-  if ((m = /^E([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on turn ${m[1]} (multi-turn)`, true);
+  if ((m = /^FTE([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on your 1st turn (multi-turn)`);
+  if ((m = /^E([1-9X])GT$/.exec(tag))) return old("any", `every ${m[1]} global turns (at any time, multi-turn)`);
+  if ((m = /^E([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on turn ${m[1]} (multi-turn)`);
   return null;
 }
 export const badgeHtml = (tag, tip = true, ring = "") => {   // tip false: the note is the parent's (a "3CD+" head); ring: its left end
@@ -189,7 +189,7 @@ export function cooldownOf(typed) {
 }
 /** The ring of a cooldown ({cap, start}: cooldownOf) as {parts: [[paint, SVG path data]] in drawing order in its 22-unit
  *  box (paint body, rim, green, red, hollow, faint, or one (salt): ink), number: [[path, x, y, k]] (Roboto Black outlines,
- *  each at its origin and scale), colour (the number's), ready}; one: the salt drawing, in one colour inside the pill's
+ *  each at its origin and scale), colour (the number's)}; one: the salt drawing, in one colour inside the pill's
  *  outline, no body or rim (build_stoogedings ring_parts, ring_number). The web draws the body and rim as circles. */
 export function ringParts({ cap, start, y }, one = false) {
   const full = cap === "X" && start === "X" && !y, unknown = (cap === "X" || start === "X") && !full;   // (X/XCD): fully charged, a green 0
@@ -222,7 +222,7 @@ export function ringParts({ cap, start, y }, one = false) {
   const x0 = xs[0] + g[0][1] * k, x1 = xs[xs.length - 1] + g[g.length - 1][3] * k, y0 = Math.min(...g.map(c => c[2])) * k, y1 = Math.max(...g.map(c => c[4])) * k;
   const dx = 11 - (x0 + x1) / 2 + oneNudge(t, t.length > 1 ? 5.7 : 7.8), base = 11 - (y0 + y1) / 2;      // the ink box centred in the ring
   const number = g.map((c, i) => [c[5], dx + xs[i], base, k]);
-  return { parts, number, colour: ready ? RING_NUMBER[0] : start !== "X" && start < 0 ? RING_NUMBER[1] : RING_NUMBER[2], ready };
+  return { parts, number, colour: ready ? RING_NUMBER[0] : start !== "X" && start < 0 ? RING_NUMBER[1] : RING_NUMBER[2] };
 }
 export const RING_PAINT = { body: RING_BODY, green: RING_GREEN, red: RING_RED, hollow: RING_HOLLOW, faint: RING_FAINT, rim: RING_RIM };
 /** The ring in words: its tip. The turn its first full charge comes on, as the rulebook counts it ((2CD): its 2nd). */

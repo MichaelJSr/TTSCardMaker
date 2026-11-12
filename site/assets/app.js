@@ -1,5 +1,5 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
@@ -26,7 +26,7 @@ const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("
 const store = (() => { try { return sessionStorage; } catch { return null; } })();   // storage blocked: the Details dropdown just forgets its state
 
 const S = {
-  data: null, cards: [], rules: [], byId: new Map(), banned: new Map(), icons: {}, renderer: null,
+  data: null, cards: [], byId: new Map(), banned: new Map(), icons: {}, renderer: null,
   mentions: new Map(), mentionedBy: new Map(), list: [], decks: [], compare: [],
   renderedHash: null, listHash: "#/cards", shared: null, rev: 0,   // rev: bumped by derive()
   selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
@@ -61,8 +61,8 @@ const BUILD = document.querySelector('meta[name="build"]')?.content || "";
 const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // same URLs as the preload hints in index.html
 const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 96 / 240 / 360 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
-/** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density, 96 too at 64 px or less */
-const imgAttrs = (c, css, big = false) => G.imgAttrs(S.data.thumbs, c, css, big);
+/** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 px by screen density, 96 too at 64 px or less */
+const imgAttrs = (c, css) => G.imgAttrs(S.data.thumbs, c, css);
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
@@ -247,7 +247,7 @@ function rerender() {
 // ---- edit mode, loaded on first use (editing.js): a sign-in, an Edit button, or at boot when this browser keeps a sign-in, a
 // staged or just-published edit, Show hidden or a card preview (edit.js K, login.js SEALED, preview.js KEY). Until then
 // `editor` is IDLE: nobody signed in, nothing staged.
-const IDLE = { me: null, touches: () => false, leave() {}, deckOf: () => null, pendingDecks: () => new Map(), profileOf: () => null,
+const IDLE = { me: null, leave() {}, deckOf: () => null, pendingDecks: () => new Map(), profileOf: () => null,
   pendingProfiles: () => new Map() };
 let editor = IDLE, previews = null, inline = null, tray = null, editorP = null;
 const editing = () => !!editor.me;                      // edit mode = signed in: the card dialog and the grid edit in place
@@ -279,7 +279,7 @@ function addEditFields() {
 function startEditor(M) {
   const ed = M.createEditor({
     S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
-    openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
+    closeModal: () => closeModal(), showDialog: h => showDialog(h),
     statBars: c => statBars(c), imageOf: (c, w = 360) => img(c, w),   // the form's live preview; 720: the Edit viewer
     iconFor: n => iconFor(n), render: (t, o) => S.renderer.render(t, o),
     users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
@@ -417,7 +417,7 @@ function tint() {
 }
 // what a card dialog can change under it (edits, hands, the comparison, sign-in, the theme): a dialog closes without a redraw while this holds
 function viewSig() { return `${S.rev}|${S.compare.join(",")}|${JSON.stringify(S.decks)}|${editor.me?.login || ""}|${document.documentElement.dataset.theme}`; }
-function setParams(updates, { replace = true } = {}) {
+function setParams(updates) {
   const r = parseHash();
   const p = r.params;
   for (const [k, v] of Object.entries(updates)) {
@@ -426,7 +426,7 @@ function setParams(updates, { replace = true } = {}) {
   }
   const hash = `#/${r.name === "card" ? "cards" : r.name}${r.arg ? "/" + r.arg : ""}${p.toString() ? "?" + p : ""}`;
   const was = r.name === "cards" && S.list;
-  if (replace) { history.replaceState(history.state, "", hash); renderView(parseHash(), hash); toResults(was); } else location.hash = hash;
+  history.replaceState(history.state, "", hash); renderView(parseHash(), hash); toResults(was);
 }
 // another list (search, filters, sort) drawn while scrolled into the old one: its top under the bar (the scroll had clamped)
 function toResults(was) {
