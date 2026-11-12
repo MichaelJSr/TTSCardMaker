@@ -1018,6 +1018,8 @@ export function plateCuts(data, W, H, k, plate, read, ids, old = "", text = "", 
   }
   return cuts;
 }
+/** Whether old holds a word of the FX layers on layers ids (the plate's crops without them). */
+const fxIn = (plate, ids, old) => plate.crops.some(c => Array.isArray(c.fx) && ids.some(id => String(c.id) === String(id)) && c.fx.some(w => count(old, w)));
 /** A stat's label: "HP", or "HP (creature 2)" for "hp@2". */
 const statLabel = k => { const [s, n] = k.split("@"); return s.toUpperCase() + (n ? ` (creature ${n})` : ""); };
 /** A stat's picture in the plate's bars (card_plates.bar_sheet: the bake's merge at the site's card view, per value
@@ -1052,6 +1054,11 @@ export function putBar(data, W, H, [x0, y0, w, h, p]) {
 }
 function putCuts(data, W, cuts) {
   for (const [x0, y0, w, h, p] of cuts) for (let y = 0; y < h; y++) data.set(p.subarray(y * w * 4, (y + 1) * w * 4), ((y0 + y) * W + x0) * 4);
+}
+/** putCuts on ctx; false without cuts. */
+function pasteCuts(ctx, W, cuts) {
+  if (!cuts) return false;
+  const im = ctx.getImageData(0, 0, W, ctx.canvas.height); putCuts(im.data, W, cuts); ctx.putImageData(im, 0, 0); return true;
 }
 /** The record's box (image px) for a text layer: text[].box ([x0, y0, x1, y1] in canvas px) scaled to the image. */
 export function recordBox(rec, layer, W) {
@@ -1286,7 +1293,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
     else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: cardPx,
-      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null });
+      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null,
+      bare: plans[k].plated && fxIn(plate, idsOf(specs[k], k), old) ? () => plateCuts(cardPx, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, "", wiping) : null });   // the crop without its FX layers
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
   if (!reuse) eraseMemo = { sig, rec, icons, sheet, plans, data: pixels.data.slice(), card: cardPx };
@@ -1583,8 +1591,9 @@ function drawText(ctx, job, imgs, W) {
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
-  job.lined = plan ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, measure, z: size, grow: !over && z === size, only: role === "name", icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades }, pitch: pitch0, W }) : "";
+  job.lined = plan ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name", icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
+  if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
   paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
@@ -1795,11 +1804,14 @@ function runPieces(paras, text, a, b, measure, z, hx) {
  *  the card's first or last ones there kept too); kept lines are the card's pixels (moveInk, onto the plate's wiped
  *  ones: moved as the bake moves them). "splice" | "lines", or "" when neither holds (drawText's way then). box: the
  *  layer's plate crop (image px); z: its set size; grow: room for more lines at it (drawText's roomBelow); only: a splice
- *  or "" (a title); look: paintLines' options. */
-export function geoDraw(ctx, { R, plan, card, box, fx, measure, z, grow, only = false, icons, paras, text, look, pitch, W }) {
+ *  or "" (a title); look: paintLines' options. bare: () => the crop's cuts without its FX layers, pasted when an FX
+ *  layer's word moves or is redrawn (the bake moves the layer with it). */
+export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, grow, only = false, icons, paras, text, look, pitch, W }) {
   const H = ctx.canvas.height, L = R.lines, now = String(text ?? "").replace(/\r/g, ""), B = bands(L, box);
   const gaps = L.slice(1).map((l, j) => l.base - L[j].base).filter(g => g > 0), step = gaps.length ? median(gaps) : pitch;
-  const fit = plan.splice && spliceFit(R, plan.splice, { measure, z, icons, fx, W });
+  let fit = plan.splice && spliceFit(R, plan.splice, { measure, z, icons, fx, W }), useBare = false;
+  if (!fit && plan.splice && bare && fx?.length && !fxSpans(R.was, fx).some(([s, e]) => s < plan.splice.b && plan.splice.a < e)) {   // FX words shift, unedited
+    fit = spliceFit(R, plan.splice, { measure, z, icons, fx: [], W }); useBare = !!fit; }
   let drawn = null, x0 = box[0], x1 = box[2];
   if (!fit && only) return "";
   if (fit) {
@@ -1812,18 +1824,20 @@ export function geoDraw(ctx, { R, plan, card, box, fx, measure, z, grow, only = 
     for (let q = qa; q < qb; q++) sel.push((paras[q] || []).filter((_, c) => { const s = spans.find(([p, k]) => p === q && k === c); return s && (q > qa || s[2] >= plan.from); }));
     const lines = layout(sel, R.frame ? R.frame[1] - R.frame[0] : Infinity, z, measure), dy = (lines.length - plan.gone.length) * step;
     if (dy > 0 && !grow) return "";                 // more lines where the bake would shrink the text
-    if (dy && fxSpans(R.was, fx).some(([s, e]) => plan.after.some(j => L[j].s < e && s < L[j].e))) return "";   // an FX layer's word would move
+    const fxs = fxSpans(R.was, fx), moving = j => fxs.some(([s, e]) => L[j].s < e && s < L[j].e);   // a line with an FX layer's word
+    if (dy && !bare && plan.after.some(moving)) return "";   // that word would move: no plate without its layer
     const ref = L[plan.gone[0] ?? plan.keep[plan.keep.length - 1] ?? plan.after[0]], G = plan.gone;
     const base = G.length ? ref.base : plan.keep.length ? ref.base + step : ref.base;
     const at = ref.just === 1 || ref.just === 4 ? l => ref.right - l.w : ref.just === 2 || ref.just === 5 ? l => (ref.left + ref.right) / 2 - l.w / 2 : () => ref.left;
     const flat = s => s.replace(/\s+/g, " ").trim(), was = G.map(j => flat(R.was.slice(L[j].s, L[j].e))), got = lines.map(l => flat(l.pieces.map(p => p.text ?? p.src ?? "").join("")));
-    const moving = j => fxSpans(R.was, fx).some(([s, e]) => L[j].s < e && s < L[j].e);
     let h = 0; while (h < G.length && h < lines.length && was[h] && got[h] === was[h]) h++;   // wrapped as the card's: its own lines
-    let k = 0; while (k < G.length - h && k < lines.length - h && was[G.length - 1 - k] && got[lines.length - 1 - k] === was[G.length - 1 - k] && !(dy && moving(G[G.length - 1 - k]))) k++;
+    let k = 0; while (k < G.length - h && k < lines.length - h && was[G.length - 1 - k] && got[lines.length - 1 - k] === was[G.length - 1 - k] && !(dy && !bare && moving(G[G.length - 1 - k]))) k++;
     const from = h ? L[G[h - 1]].base + step : base, tail = G.slice(G.length - k).map((j, n) => [j, from + (lines.length - h - k + n) * step - L[j].base]);
+    useBare = !!bare && [...tail.filter(([, d]) => d).map(([j]) => j), ...(dy ? plan.after : []), ...G.slice(h, G.length - k)].some(moving);   // moved or redrawn
     drawn = { lines: lines.slice(h, lines.length - k), at, base: from, hx: look.hx, z,
       moves: [...[...plan.keep, ...G.slice(0, h)].map(j => [[x0, B[j][0], x1, B[j][1]], 0, 0]), ...tail.map(([j, d]) => [[x0, B[j][0], x1, B[j][1]], 0, d]), ...plan.after.map(j => [[x0, B[j][0], x1, B[j][1]], 0, dy])] };
   }
+  if (useBare && !pasteCuts(ctx, W, bare())) return "";   // FX layers off: moveInk moves their ink as letters
   const ya = clamp(Math.floor(Math.min(...drawn.moves.map(([r, , d]) => r[1] + Math.min(0, d)))), 0, H), yb = clamp(Math.ceil(Math.max(...drawn.moves.map(([r, , d]) => r[3] + Math.max(0, d)))) + 1, ya, H);
   if (yb > ya) {                                     // the rows the moves touch
     const img = ctx.getImageData(0, ya, W, yb - ya), wiped = img.data.slice();
