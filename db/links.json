@@ -6849,10 +6849,16 @@
   ]
  },
  "Creatures/Everhood/3 Stars/Zigg.psd": {
-  "blob": "0b52156b6ad72cf45a7e387c943da73c1785608f",
+  "blob": "f277d50a9a974f5b33b46eaae824012b2cbda79b",
   "links": [
    {
-    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+    "drawn": null,
+    "name": "Sun.webp",
+    "path": "Types/Stars/Sun.webp",
+    "size": 354
+   },
+   {
+    "drawn": null,
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
@@ -6860,8 +6866,15 @@
   ]
  },
  "Creatures/Everhood/4 Stars/Green_Mage.psd": {
-  "blob": "40bf444f3857c9c7a9fb8aa878e447494756d53b",
-  "links": []
+  "blob": "dc41f3d52b0f826c4b05fd47fc2299bae1d43de0",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Sun.webp",
+    "path": "Types/Stars/Sun.webp",
+    "size": 354
+   }
+  ]
  },
  "Creatures/Everhood/4 Stars/Rasta_Beast.psd": {
   "blob": "0647999aecd05397873722660750ef5d9ebb1bb4",
@@ -6875,16 +6888,22 @@
   ]
  },
  "Creatures/Everhood/5 Stars/Chris_&_Jordi.psd": {
-  "blob": "80fcd38d84b9da57865df78345bcabe1ae378539",
+  "blob": "adb8ab8719983b5c5d9812deabc44d4a9e028e97",
   "links": [
    {
-    "drawn": "23fe043161f28bbc633d7cb0a4bb84f147c94d50",
+    "drawn": null,
     "name": "Chris_&_Jordi - Chris And Jordi (1).png",
     "path": "MDW/Linked/Chris_&_Jordi - Chris And Jordi (1).png",
     "size": 2172583
    },
    {
-    "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
+    "drawn": null,
+    "name": "Sun.webp",
+    "path": "Types/Stars/Sun.webp",
+    "size": 354
+   },
+   {
+    "drawn": null,
     "name": "electric.png",
     "path": "Types/electric.png",
     "size": 106279
@@ -26097,7 +26116,7 @@
   ]
  },
  "MDW/Templates/Creature_Template.psd": {
-  "blob": "47083c69892ddab0403702d45f518a0644287fd8",
+  "blob": "faf7ac3f57168d161ec61f56c0bfb9be1f207cae",
   "links": [
    {
     "drawn": null,
@@ -26356,6 +26375,12 @@
     "name": "undertale.png",
     "path": "Types/Stars/undertale.png",
     "size": 28256
+   },
+   {
+    "drawn": null,
+    "name": "Sun.webp",
+    "path": "Types/Stars/Sun.webp",
+    "size": 354
    },
    {
     "drawn": null,
@@ -32129,6 +32154,9 @@
   },
   "Types/Stars/Stuffed_Star.png": {
    "1c50b498609fd74af1cbf664c833b48c7b3e7407": 710
+  },
+  "Types/Stars/Sun.webp": {
+   "a75480dc71ea8f84113f011c6d95d96da4b28193": 354
   },
   "Types/Stars/The_Poorly_Drawn_Barnstar.png": {
    "f3c52a3886e575db85a6a24506a7a6ffae925927": 6921
