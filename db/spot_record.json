@@ -263,7 +263,7 @@
 ]
 }
 },
-"Auxiliary/Items/Unbreakable_heart.psd": {
+"Auxiliary/Items/Unbreakable_Heart.psd": {
 "950": {
 "content": "50302c92-2540-5a08-90f9-a46b54b5c446",
 "core": [
@@ -1033,7 +1033,7 @@
 ]
 }
 },
-"Creatures/Kirby/3 Stars/Dark_matter.psd": {
+"Creatures/Kirby/3 Stars/Dark_Matter.psd": {
 "332": {
 "content": "d24da3f7-691f-532b-8420-4da8b1531e26",
 "core": [
@@ -1405,6 +1405,50 @@
 ]
 }
 },
+"Creatures/Kirby/4 Stars/Grand_Doomer.psd": {
+"1248": {
+"content": "e60f7dba-cf5c-59ec-abdd-d211920d5e7a",
+"core": [
+171,
+33,
+276,
+134
+],
+"link": "Types/light.png",
+"trnf": [
+153.311,
+13.312,
+293.0,
+13.312,
+293.0,
+153.0,
+153.311,
+153.0
+]
+}
+},
+"Creatures/Kirby/4 Stars/HR-H.psd": {
+"1245": {
+"content": "d4055d83-931c-57a9-9579-6c0649165a21",
+"core": [
+25,
+23,
+212,
+205
+],
+"link": "Types/machine.png",
+"trnf": [
+24.0,
+23.0,
+212.0,
+23.0,
+212.0,
+205.0,
+24.0,
+205.0
+]
+}
+},
 "Creatures/Kirby/4 Stars/Meta_Knight.psd": {
 "876": {
 "content": "3f9d6378-4a15-5f7a-bf6a-33790a337a6d",
@@ -1446,50 +1490,6 @@
 170.085,
 135.812,
 170.085
-]
-}
-},
-"Creatures/Kirby/4 Stars/grand_doomer.psd": {
-"1248": {
-"content": "e60f7dba-cf5c-59ec-abdd-d211920d5e7a",
-"core": [
-171,
-33,
-276,
-134
-],
-"link": "Types/light.png",
-"trnf": [
-153.311,
-13.312,
-293.0,
-13.312,
-293.0,
-153.0,
-153.311,
-153.0
-]
-}
-},
-"Creatures/Kirby/4 Stars/hr-h.psd": {
-"1245": {
-"content": "d4055d83-931c-57a9-9579-6c0649165a21",
-"core": [
-25,
-23,
-212,
-205
-],
-"link": "Types/machine.png",
-"trnf": [
-24.0,
-23.0,
-212.0,
-23.0,
-212.0,
-205.0,
-24.0,
-205.0
 ]
 }
 },
@@ -1973,7 +1973,7 @@
 ]
 }
 },
-"Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_A.psd": {
+"Creatures/Pandas/3 Stars/PANDA_Mk_A.psd": {
 "869": {
 "content": "f33d33e3-8a73-57ec-a17e-f3cfd821c45f",
 "core": [
@@ -1995,7 +1995,7 @@
 ]
 }
 },
-"Creatures/Pandas/3 Stars/Project_P.A.N.D.A.psd": {
+"Creatures/Pandas/3 Stars/Project_PANDA.psd": {
 "1432": {
 "content": "95fae3ae-0adc-5f53-af00-cecfc6c3e8c7",
 "core": [
@@ -2497,7 +2497,7 @@
 ]
 }
 },
-"Items/Counter/4 Stars/Return_To_Sender.psd": {
+"Items/Counter/4 Stars/Return_to_Sender.psd": {
 "1488": {
 "content": "b3495d65-5f79-5e00-97b3-b8296846b05f",
 "core": [
@@ -2585,7 +2585,7 @@
 ]
 }
 },
-"Items/Equip/1 Stars/GrubSong.psd": {
+"Items/Equip/1 Stars/Grubsong.psd": {
 "223": {
 "content": "db2b464c-5e70-53a3-bfc7-48635acceb17",
 "core": [
@@ -2937,7 +2937,7 @@
 ]
 }
 },
-"Items/Equip/2 Stars/Man_Serpent_Shield.psd": {
+"Items/Equip/2 Stars/Man-Serpent's_Shield.psd": {
 "855": {
 "content": "4ea8fb6e-09e4-5b1a-a860-034a57bb1c98",
 "core": [
@@ -2981,7 +2981,7 @@
 ]
 }
 },
-"Items/Equip/2 Stars/Thorns_Of_Agony.psd": {
+"Items/Equip/2 Stars/Thorns_of_Agony.psd": {
 "909": {
 "content": "b623895d-fcf4-5d2b-969c-eb5df655cd35",
 "core": [
@@ -3025,7 +3025,7 @@
 ]
 }
 },
-"Items/Equip/3 Stars/Charm_Of_The_Vampire.psd": {
+"Items/Equip/3 Stars/Charm_of_the_Vampire.psd": {
 "1018": {
 "content": "75864d65-9944-5337-842e-4f0fbda7ab60",
 "core": [
@@ -3311,6 +3311,28 @@
 ]
 }
 },
+"Items/Equip/3 Stars/Steam_Sale.psd": {
+"869": {
+"content": "762f62f9-9b79-5a34-aec2-a3d31e4b6b37",
+"core": [
+82,
+33,
+216,
+153
+],
+"link": "Types/Equip.png",
+"trnf": [
+81.582,
+30.975,
+230.918,
+30.975,
+230.918,
+158.478,
+81.582,
+158.478
+]
+}
+},
 "Items/Equip/3 Stars/Titanium_Sword.psd": {
 "1020": {
 "content": "3a7e85ee-33c1-599b-8fc4-9da465e2ae7e",
@@ -3330,28 +3352,6 @@
 226.807,
 21.0,
 226.807
-]
-}
-},
-"Items/Equip/3 Stars/steam_sale.psd": {
-"869": {
-"content": "762f62f9-9b79-5a34-aec2-a3d31e4b6b37",
-"core": [
-82,
-33,
-216,
-153
-],
-"link": "Types/Equip.png",
-"trnf": [
-81.582,
-30.975,
-230.918,
-30.975,
-230.918,
-158.478,
-81.582,
-158.478
 ]
 }
 },
@@ -3641,7 +3641,7 @@
 ]
 }
 },
-"Items/Infliction/3 Stars/Flower_Of_Decay.psd": {
+"Items/Infliction/3 Stars/Flower_of_Decay.psd": {
 "1058": {
 "content": "ddbc5dae-57a1-5788-aea8-4c57d37956cf",
 "core": [
