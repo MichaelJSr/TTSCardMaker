@@ -13405,7 +13405,7 @@
   ]
  },
  "Creatures/Other/3 Stars/Pizza.psd": {
-  "blob": "ed29dc12586b1e1993963cf21bcf532ca578073e",
+  "blob": "ccc4d3bca3a90aaf0ff0a749f909e41dfc989dd6",
   "links": [
    {
     "drawn": null,
@@ -14602,376 +14602,136 @@
   ]
  },
  "Creatures/Other/5 Stars/Tyler.psd": {
-  "blob": "fbaf6459c705551c94d77dd3f4e0f4d4cad90a77",
+  "blob": "cfe42e607bb21877d22c6a9e6dfa95202d8f488b",
   "links": [
    {
-    "drawn": "68b6f9cc4bdd22d7b1f10fc0f192bcf6d948e76a",
+    "drawn": null,
     "name": "Tyler - stoogedies.jpg",
     "path": "MDW/Linked/Tyler - stoogedies.jpg",
     "size": 225201
    },
    {
-    "drawn": "ae0175425a95e846546cd2966c889d2513d5abb4",
+    "drawn": null,
     "name": "Tyler - JJzZPmE.png",
     "path": "MDW/Linked/Tyler - JJzZPmE.png",
     "size": 1660702
    },
    {
-    "drawn": "2c1f8e433ea61717fd6b90927692aaca0cf0148e",
+    "drawn": null,
     "name": "Tyler - Zao.png",
     "path": "MDW/Linked/Tyler - Zao.png",
     "size": 18251
    },
    {
-    "drawn": "376b90a1b0a95a3612b5f42819e12b80f21b482f",
+    "drawn": null,
     "name": "Tyler - Mao Zedong Full.png",
     "path": "MDW/Linked/Tyler - Mao Zedong Full.png",
     "size": 85075
    },
    {
-    "drawn": "493e7914aaf3bdb6dd6c470ffb339eeb14a7c198",
+    "drawn": null,
     "name": "Tyler - tylerdiesirl.png",
     "path": "MDW/Linked/Tyler - tylerdiesirl.png",
     "size": 1572031
    },
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "63c477536867c3aa5ca86cc53c97a0a5dd6d03c1",
+    "drawn": null,
     "name": "Tyler - Arrow.png",
     "path": "MDW/Linked/Tyler - Arrow.png",
     "size": 1383
    },
    {
-    "drawn": "7ea9e031bb8f3a5ef5c3c5ea7d428772551524de",
+    "drawn": null,
     "name": "Tyler - Bow.png",
     "path": "MDW/Linked/Tyler - Bow.png",
     "size": 1626
    },
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "63c477536867c3aa5ca86cc53c97a0a5dd6d03c1",
+    "drawn": null,
     "name": "Tyler - Arrow.png",
     "path": "MDW/Linked/Tyler - Arrow.png",
     "size": 1383
    },
    {
-    "drawn": "7ea9e031bb8f3a5ef5c3c5ea7d428772551524de",
+    "drawn": null,
     "name": "Tyler - Bow.png",
     "path": "MDW/Linked/Tyler - Bow.png",
     "size": 1626
    },
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "63c477536867c3aa5ca86cc53c97a0a5dd6d03c1",
+    "drawn": null,
     "name": "Tyler - Arrow.png",
     "path": "MDW/Linked/Tyler - Arrow.png",
     "size": 1383
    },
    {
-    "drawn": "7ea9e031bb8f3a5ef5c3c5ea7d428772551524de",
+    "drawn": null,
     "name": "Tyler - Bow.png",
     "path": "MDW/Linked/Tyler - Bow.png",
     "size": 1626
    },
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "63c477536867c3aa5ca86cc53c97a0a5dd6d03c1",
+    "drawn": null,
     "name": "Tyler - Arrow.png",
     "path": "MDW/Linked/Tyler - Arrow.png",
     "size": 1383
    },
    {
-    "drawn": "7ea9e031bb8f3a5ef5c3c5ea7d428772551524de",
+    "drawn": null,
     "name": "Tyler - Bow.png",
     "path": "MDW/Linked/Tyler - Bow.png",
     "size": 1626
    },
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "63c477536867c3aa5ca86cc53c97a0a5dd6d03c1",
+    "drawn": null,
     "name": "Tyler - Arrow.png",
     "path": "MDW/Linked/Tyler - Arrow.png",
     "size": 1383
    },
    {
-    "drawn": "7ea9e031bb8f3a5ef5c3c5ea7d428772551524de",
+    "drawn": null,
     "name": "Tyler - Bow.png",
     "path": "MDW/Linked/Tyler - Bow.png",
     "size": 1626
    },
    {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "02e41fd78e3fb017f2ae9b0a58856ba4d8166b51",
-    "name": "Tyler - Beary.webp",
-    "path": "MDW/Linked/Tyler - Beary.webp",
-    "size": 226
-   },
-   {
-    "drawn": "bc981179cff8a8045d559c5529eb193293373347",
+    "drawn": null,
     "name": "Tyler - Name.png",
     "path": "MDW/Linked/Tyler - Name.png",
     "size": 38435
    },
    {
-    "drawn": "f843941f77995d0149ece2372726b6bcc9b281ac",
+    "drawn": null,
     "name": "Tyler - Name Alt.png",
     "path": "MDW/Linked/Tyler - Name Alt.png",
     "size": 25428
