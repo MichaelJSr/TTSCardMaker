@@ -103,7 +103,8 @@ end
 -- then the ability, its words in the website's palette (painted: status words, stats with their numbers, counters; a
 -- colour too dark for the panel in a lighter shade: build_site tts_seen). An ability with a status word, a timing tag
 -- or a type's word is laid out line by line (abilityLines), each its own text with its rule on hover (no rule sections
--- below it). A button whose name is cut short shows the whole name on hover, clear of the buttons. Hover boxes: TIP.
+-- below it); a type's word in its type's own colour (tts.json types ic: its icon's). A button whose name is cut short
+-- shows the whole name on hover, clear of the buttons. Hover boxes: TIP.
 -- Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
 -- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
@@ -553,6 +554,7 @@ local function typeWordList()
 end
 
 local function letter(ch) return (ch >= "a" and ch <= "z") or (ch >= "A" and ch <= "Z") end
+local function typeInk(key) return hexColour((details.types[key] or {}).ic) end
 
 -- t's type words, whole words, in order: {start, end, type}
 local function typeSpans(t)
@@ -574,7 +576,8 @@ local function typeSpans(t)
 end
 
 -- the ability as painted and withBadges draw it, in runs {text, colour, bold, tip, n}: a hover (a status word: a piece
--- naming a status, all of it; a timing tag; a type word) its tip (tipOf) and occurrence n; and whether it has one
+-- naming a status, all of it; a timing tag; a type word, in its type's colour) its tip (tipOf) and occurrence n; and
+-- whether it has one
 local function abilityRuns(text, pieces)
     local runs, at, occ, spans = {}, 1, 0, typeSpans(text)
     local function hover(t, c, bold, tip)
@@ -590,7 +593,7 @@ local function abilityRuns(text, pieces)
                 local s, e = sp[1] - base + 1, sp[2] - base + 1
                 if s >= i and e <= j then
                     if s > i then table.insert(runs, {t:sub(i, s - 1), c, false}) end
-                    hover(t:sub(s, e), c, false, tipOf("t", sp[3]))
+                    hover(t:sub(s, e), typeInk(sp[3]) or c, false, tipOf("t", sp[3]))
                     i = e + 1
                 end
             end

@@ -16,9 +16,10 @@ face down (at the pointer on a seat without one, once the card has gone), Rules 
 the ability in the website's palette (tts.json ac), every "<" of a text kept from starting a tag; every card's details at each
 size: the text only the kind line, the stats and the ability (no rule sections), each chapter a whole Rules button, rows
 fit, each "+ name" spawns its card; the ability laid out line by line as one text would draw it, each status word, timing
-tag and creature or minion type word with its rule on hover (wrapped to the text's width); a button's tooltip only on a
-name cut short (its whole name), above every row of buttons; every tooltip in the opaque style (TIP)); each deck button a
-copy of the full deck, every card at its count in the save's piles.
+tag and creature or minion type word with its rule on hover (wrapped to the text's width), a type word in its type's
+colour (tts.json types ic); a button's tooltip only on a name cut short (its whole name), above every row of buttons;
+every tooltip in the opaque style (TIP)); each deck button a copy of the full deck, every card at its count in the save's
+piles.
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
 """
 import json
@@ -609,18 +610,37 @@ def type_words(d):                                          # creature and minio
     return out
 
 
-def hovers(chars, card, d):                                 # the hovers drawn text ([(char, colour, bold)]) holds, in
-    seen, out, taken = "".join(c[0] for c in chars), [], []  # order: [(at, label, rule)]
-    for tag, t in d["tags"].items():                        # its badges: bold, the tag's own case
-        for m in re.finditer(re.escape(f"({tag})"), seen):
-            if chars[m.start()][2]:
-                out.append((m.start(), f"({tag})", t.get("m") or ""))
-                taken.append(range(m.start(), m.end()))
+def badges(chars, d):                                       # drawn text's badges: [(start, end, tag)] (bold, the tag's case)
+    seen = "".join(c[0] for c in chars)
+    return [(m.start(), m.end(), tag) for tag in d["tags"] for m in re.finditer(re.escape(f"({tag})"), seen) if chars[m.start()][2]]
+
+
+def type_hits(chars, d):                                    # drawn text's type words past its badges: [(start, end, type)]
+    seen, out, taken = "".join(c[0] for c in chars), [], [range(s, e) for s, e, _ in badges(chars, d)]
     for word, k in sorted(type_words(d).items(), key=lambda x: -len(x[0])):
         for m in re.finditer(rf"(?<![A-Za-z]){re.escape(word)}(?![A-Za-z])", seen):
             if not any(m.start() in r or m.end() - 1 in r for r in taken):
-                out.append((m.start(), d["types"][k].get("n") or k, d["types"][k].get("x") or ""))
+                out.append((m.start(), m.end(), k))
                 taken.append(range(m.start(), m.end()))
+    return sorted(out)
+
+
+def ink(d, k):                                              # Global.lua typeInk: a type's colour (ic), else None
+    c = (d["types"].get(k) or {}).get("ic")
+    return c if isinstance(c, str) and re.fullmatch(r"#[0-9a-f]{6}", c) else None
+
+
+def inked(chars, d):                                        # Global.lua abilityRuns: each type word in its type's colour
+    out = list(chars)
+    for s, e, k in type_hits(chars, d):
+        out[s:e] = [(ch, ink(d, k) or colour, bold) for ch, colour, bold in out[s:e]]
+    return out
+
+
+def hovers(chars, card, d):                                 # the hovers drawn text ([(char, colour, bold)]) holds, in
+    out = [(s, f"({tag})", d["tags"][tag].get("m") or "") for s, _, tag in badges(chars, d)]   # order: [(at, label, rule)]
+    out += [(s, d["types"][k].get("n") or k, d["types"][k].get("x") or "") for s, _, k in type_hits(chars, d)]
+    seen = "".join(c[0] for c in chars)
     for p in card.get("ac") or []:                          # status words: a piece naming a status, in its colour
         if isinstance(p, list) and len(p) > 1 and p[0] in d["statuses"]:
             for w in p[0].split():
@@ -642,7 +662,7 @@ def advance_table(script):                                  # Global.lua glyphW:
 
 def ability_wrong(ui, panel, card, d, wide, f=None, width=None):   # an ability with a hover laid out, drawn as one text
     lines = ability_lines(ui, panel)                        # would; each hover its rule (wrapped to the text's width);
-    want = drawn(with_badges(painted(card.get("a") or "", card.get("ac")), d))   # lines stacked
+    want = inked(drawn(with_badges(painted(card.get("a") or "", card.get("ac")), d)), d)   # lines stacked; type words inked
     if not lines:
         return ["not laid out"] if hovers(want, card, d) else []
     wrong = []
@@ -1218,10 +1238,10 @@ def main():
     tags = {"1CD": {"g": "turn", "m": "Cooldown: needs 1 turn of charge"}, "OS": {"g": "trigger", "m": "On summon"},
             "BOGT": {"g": "forced", "m": "Beginning of global turn (forced)"}}
     long_rule = " ".join(["Immune to Corruption and every other long word in this rule"] * 6)
-    types = {"fire": {"n": "Fire", "x": "Immune to Smoldering, Burning, Blazing", "c": "creature-types"},
-             "darkmatter": {"n": "Dark Matter", "x": long_rule, "c": "creature-types"},
-             "offensiveminion": {"n": "Offensive Minion", "x": "Offensive minions occupy the same field.", "c": "minions"},
-             "attack": {"n": "Attack", "x": "These items do damage.", "c": "item-types"}}
+    types = {"fire": {"n": "Fire", "x": "Immune to Smoldering, Burning, Blazing", "c": "creature-types", "ic": "#f8af1e"},
+             "darkmatter": {"n": "Dark Matter", "x": long_rule, "c": "creature-types", "ic": "blue"},
+             "offensiveminion": {"n": "Offensive Minion", "x": "Offensive minions occupy the same field.", "c": "minions", "ic": "#826545"},
+             "attack": {"n": "Attack", "x": "These items do damage.", "c": "item-types", "ic": "#686460"}}
     odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"]], "al": ["Zqrose"],
            "a": "<i>Burn</i> a Burn, then Burn<3\nBurn\n(1cd) offensive minion: fire, darkmatter; (OS)/(BOGT) not Fire, firework or attack",
            "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]],
@@ -1257,6 +1277,20 @@ def main():
           and all(not tip for t, tip in tips.items() if any(w in t for w in ("Fire,", "firework", "attack"))),
           f"a creature or minion type's word its rule on hover, a long one in lines the text's width; 'Fire', 'firework' "
           f"and an item type's word none {tips}")
+    inks = {}
+    for _, els, _ in laid:
+        for t, _ in els:
+            ch = drawn(t)
+            for word in ("fire", "offensive minion", "darkmatter", "Fire", "firework", "attack", "Burn<3", "(1CD)"):
+                for m in re.finditer(rf"(?<![A-Za-z]){re.escape(word)}(?![A-Za-z])", "".join(c[0] for c in ch)):
+                    inks.setdefault(word, set()).update(c[1:] for c in ch[m.start():m.end()])
+            inks.setdefault("after fire", set()).update(c[1:] for c in ch[4:] if "".join(c[0] for c in ch).startswith("fire,"))
+    check(inks.get("fire") == {("#f8af1e", False)} and inks.get("offensive minion") == {("#826545", False)}
+          and inks.get("after fire") == {(None, False)} and inks.get("darkmatter") == {(None, False)}
+          and all(inks.get(w) == {(None, False)} for w in ("Fire", "firework", "attack"))
+          and inks.get("Burn<3") == {("#00ff00", False)} and inks.get("(1CD)") == {(BADGE["turn"], True)},
+          f"a type's word in its type's colour (ic), the rest of its text plain; one whose ic isn't #rrggbb plain; 'Fire', "
+          f"'firework' and an item type's word plain; status words and badges in their own colours {inks}")
     burn = next((f"Red_d1_c{r}_1" for r in range(1, 3) if w4.ui.on(f"Red_d1_c{r}_1")), None)
     check(burn and w4.ui.text(burn) == "+ Burn" and not w4.ui.attrs[burn].get("tooltip"), f"'+ Burn': no rule on hover {burn and w4.ui.attrs[burn]}")
     w4.run(w4.table_menu["Find a card"], "Red", w4.vec(10, 1, 10), what="Find a card: '<' in a name")
@@ -1271,7 +1305,7 @@ def main():
     w5.g.onLoad("")
     w5.wait.flush()
     w5.respond(details_raw, pages_text)
-    ui5, red5, bad, cut, laid_n, width = w5.ui, w5.players["Red"], [], 0, 0, advance_table(script)
+    ui5, red5, bad, cut, laid_n, width, inked_n = w5.ui, w5.players["Red"], [], 0, 0, advance_table(script), 0
     def at(kind, i, rows):
         return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, rows + 1) if ui5.on(f"Red_d1_{kind}{r}_{i}")), None)
     for d in cards:
@@ -1298,6 +1332,8 @@ def main():
             cut += sum(1 for b in ui5.attrs if re.fullmatch(r"Red_d1_[rck]\d_\d", b) and ui5.on(b) and ui5.attrs[b].get("tooltip"))
             bad += [(c["n"], size, x) for x in ability_wrong(ui5, "Red_d1", c, details, (440, 540, 660)[size - 1] - 44, (14, 16, 18)[size - 1], width)]
             laid_n += bool(ability_lines(ui5, "Red_d1"))
+            for ch in (drawn(t) for _, els, _ in ability_lines(ui5, "Red_d1") for t, _ in els):
+                inked_n += sum(1 for s, e, k in type_hits(ch, details) if ink(details, k) and all(x[1] == ink(details, k) for x in ch[s:e]))
         for i, (name, path) in enumerate(named[:6], 1):
             b = at("c", i, 2)
             w5.spawns.clear()
@@ -1310,7 +1346,7 @@ def main():
     check(not bad and cut, f"every card's details at each size ({len(cards)} cards): the text the kind line, stats and ability "
           f"(no rule sections), each chapter a whole Rules button, rows fit, each '+ name' spawns its card; a button's tooltip "
           f"only on a name cut short ({cut}), above the buttons; every tooltip in TIP's style; {laid_n} card sizes' abilities "
-          f"line by line, drawn as one text would, each hover its rule ({len(bad)} wrong) {bad[:5]}")
+          f"line by line, drawn as one text would (type words in their colours: {inked_n}), each hover its rule ({len(bad)} wrong) {bad[:5]}")
 
     # ---- the website offline ----
     w3 = World(script, save, zones)
