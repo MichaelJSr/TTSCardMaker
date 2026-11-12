@@ -567,7 +567,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   can't tell). Custom and item bars, the Isaac bars, a stat past 10 and template bars `isBar` may miss (2026-11-11):
   the plate's `bars` (AutoCroissant `card_plates.with_bars`: the bake's own picture of every value it takes, at the
   site's view, `vw` px wide, only the pixels it moves) are pasted (`barCut`, `putBar`) instead of the cells, on every
-  card shape; a value with none (the bake refuses it) draws nothing.
+  card shape; a value with none (the bake refuses it) draws nothing. Stars (2026-11-12): the plate's `icons`
+  (`card_plates.with_stars`: the bake's stars at every count 1-7, a folder card's in its "N Stars" folder) are pasted
+  the same way, no erase and no `starPlan`; a count with none takes section 23's way.
   A title in the picture (parts.js `titleInPicture`, the dialog's note) isn't drawn either. Stars and types: section 23.
   - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
     is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`

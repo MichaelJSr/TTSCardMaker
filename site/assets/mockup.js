@@ -1,6 +1,7 @@
 // The quick image mock-up: the edited name, text, stats, stars and type icons drawn over the card image in a canvas, at
 // once, in the browser (the Edit dialog and the card page, edit mode). Never the real image: the bake draws that (preview.js).
-// Stars and type icons go where the bake would put them (the details record's header: starPlan, typePlan), else in a box.
+// Stars: the bake's own picture from the card's plate (card_plates.with_stars), else, as type icons, where the bake would
+// put them (the details record's header: starPlan, typePlan), else in a box.
 // Layout: the PSD's text boxes when the details record has them (text[].box, canvas px), else the card template's
 // (TEMPLATES, measured on the PSDs, below the stat bars) narrowed to where the image shows text: the block of lines
 // (textBlocks) whose size and line count fit the old text (calibrate). That block is erased with the card's own
@@ -1145,6 +1146,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const ours = plate?.v === 1 && plate.w === rec?.canvas?.w && (card?.variant || 1) === 1;   // picture 1's plate
   const sheet = ours && Array.isArray(plate.crops) && plate.crops.length ? await loadImage(plate.img) : null;
   const pics = ours && plate.bars?.vw > 0 && Array.isArray(plate.bars.cuts) ? plate.bars : null;   // the bake's stat pictures
+  const spics = ours && plate.icons?.vw > 0 && Array.isArray(plate.icons.cuts) ? plate.icons : null;   // its stars pictures
   const readPlate = (c, w, h) => { const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
     const g = cv.getContext("2d", { willReadFrequently: true }); g.drawImage(sheet, ...c.at, 0, 0, w, h); return g.getImageData(0, 0, w, h).data; };
   const W = img.naturalWidth, H = img.naturalHeight, shape = shapeOf(W, H), tpl = TEMPLATES[shape];
@@ -1162,16 +1164,20 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     else if (compBar(rec, k) && psd[k] >= 1 && psd[k] <= 10 && edit[k] > 10 && edit[k] <= 20) todo.stats[k] = [psd[k], edit[k]];   // its comps' two half rows; from 0: no lit cell to copy
   }                                                   // else not drawn, nothing said (owner 11-11)
   if (todo.name != null && titleInPicture(rec)) { out.site.push(["name", "title"]); todo.name = null; }   // the dialog's note
-  const kept = todo.stars && starsKept(rec?.header?.stars, todo.stars[1]), moved = kept && starMove(card?.psd, todo.stars[1]);
+  const starCut = todo.stars && barCut(spics, "stars", ...todo.stars), starImg = starCut ? await loadImage(spics.img) : null;
+  if (stale()) return null;
+  const pasteStars = data => { putBar(data, W, H, barPixels(starImg, starCut, W / spics.vw)); out.drawn.push("stars"); todo.stars = null; };
+  const kept = todo.stars && !starImg && starsKept(rec?.header?.stars, todo.stars[1]), moved = kept && starMove(card?.psd, todo.stars[1]);
   if (kept) { if (moved) out.starsKept = { why: kept, to: moved.to }; else out.refused.push(["stars", kept]); todo.stars = null; }   // the picture's stay
   const blit = () => { if (stale()) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
   if (!tpl) {                                         // no template: the bake's stat pictures alone
     const got = Object.entries(todo.stats).map(([k, [from, to]]) => [k, barCut(pics, k, from, to)]).filter(([, c]) => c);
     const sheetImg = got.length ? await loadImage(pics.img) : null;
     if (stale()) return null;
-    if (sheetImg) {
+    if (sheetImg || starImg) {
       const px = ctx.getImageData(0, 0, W, H);
-      for (const [k, c] of got) { putBar(px.data, W, H, barPixels(sheetImg, c, W / pics.vw)); out.drawn.push(k.toUpperCase()); }
+      if (sheetImg) for (const [k, c] of got) { putBar(px.data, W, H, barPixels(sheetImg, c, W / pics.vw)); out.drawn.push(k.toUpperCase()); }
+      if (starImg) pasteStars(px.data);
       ctx.putImageData(px, 0, 0);
     }
     out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", todo.stars && "stars", todo.types && "types"].filter(Boolean));   // stats: nothing said (owner 11-11)
@@ -1295,6 +1301,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     else (to > row.cells ? paintComp : paintCells)(pixels.data, W, H, row, from, to);
     shown[k] = to; out.drawn.push(k.toUpperCase());
   }
+  if (starImg) pasteStars(pixels.data);              // the bake's stars: no erase, no starPlan
   const head = obj(rec?.header), k = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0, at = b => b.map(v => v * k);
   const icons2 = [];                                  // [label, plan] for the stars and types
   if (todo.stars) icons2.push(["stars", k ? starPlan(head?.stars, ...todo.stars) : { boxed: true, refused: null }]);
