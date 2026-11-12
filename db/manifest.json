@@ -8,9 +8,9 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-12T02:33:30Z",
- "card_commit": "cf0b0bd0c0c8d759c6554ca2ae372af7805cb1c7",
- "card_commit_at": 1794450766.0,
+ "built_at": "2026-11-12T02:34:05Z",
+ "card_commit": "b3931ee781490fcffcb41cb45462398c96416a59",
+ "card_commit_at": 1794450829.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 131,
@@ -24,9 +24,9 @@
  },
  "files": {
   "old_stats.json": "c69cfd107f5f436f65e5d6f230e90ac7e7e2612d43cb82ac9c23ef3ca3b8566c",
-  "psd_details.json": "e3d11e77348427b4aaef639451e9808a77e567a0c43e716f4e5481c8c4e0e258",
+  "psd_details.json": "65e808535667bbbd2db7eb7ce89173c2e6bd9f318ab341005979cd5bd6880d45",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "64df7852f9ffbc1de6857a505f5604d7b676e4f245f1262072bb290c887c69d6"
+  "stats.json": "762685dbb52ca505ba957666720ab0cb8c05a3d4ee670c3632eb7d592d934f48"
  },
  "fonts": {
   "checked": 768,
@@ -52,6 +52,6 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43142217959",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43142269325",
  "schema": 1
 }
