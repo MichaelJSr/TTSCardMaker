@@ -40,6 +40,7 @@ AUX = "creatures"                          # auxiliary creatures: no star level,
 MIN_COHORT = 5                             # a smaller star level is compared with its kind's "all stars" cohort
 OFF_SCALE = 40                             # a total above this is off the scale (stats.js offChart): Tainted Lazarus' old 110s
 STATS_UNKNOWN = ("NO STATS FOUND", "OUT OF RANGE: stats")   # a reading's problems that leave its stats unknown
+STAT_MAX, RAID_STARS, RANGE_PARSER = 20, 6, 2   # AutoCroissant card_history: from parser 2, over 20 needs an allowance
 TOP, BOTTOM = 90, 10                       # flags: the top and bottom 10% of a cohort's totals
 STATS = (("hp", "hp"), ("def", "defense"), ("atk", "attack"), ("spd", "speed"))
 KEYS = tuple(k for k, _ in STATS) + ("total",)
@@ -305,10 +306,12 @@ def renames_followed(old_stats, stats, into):
 
 
 def shown(e, current):
-    """The current card as its page shows it (Card Edits.json applied), with the bot card's date, blob, path and problems."""
+    """The current card as its page shows it (Card Edits.json applied), with the bot card's date, blob, path, problems and
+    allow_high_stats."""
     return SimpleNamespace(timestamp=current.timestamp, version=getattr(current, "version", None),
                            blob_sha=getattr(current, "blob_sha", None), path=getattr(current, "path", None),
-                           problems=getattr(current, "problems", None), stats=SimpleNamespace(**{attr: e.get(k) for k, attr in STATS}),
+                           problems=getattr(current, "problems", None), allow_high_stats=getattr(current, "allow_high_stats", False),
+                           stats=SimpleNamespace(**{attr: e.get(k) for k, attr in STATS}),
                            stars=e.get("stars"), card_type=e.get("type"), subtype=e.get("subtype"), series=e.get("series"),
                            types=e.get("types") or [], creatures=e.get("creatures") or [], ability=e.get("ability"))
 
@@ -347,13 +350,24 @@ def text_key(text):
     return "".join(PUNCT.sub("", words).replace("'", "").replace("\u2019", "").replace("\u2018", "").replace("_", "").split())
 
 
+def unread(v, line):
+    """Whether a reading's stats failed (AutoCroissant card_history.unknown): none read or set unknown (its problems), or
+    from parser 2 on (the current card: today's) a stat over STAT_MAX without allow_high_stats or 6+ stars."""
+    if line is None and any(str(p).startswith(STATS_UNKNOWN) for p in getattr(v, "problems", None) or []):
+        return True
+    if (getattr(v, "parser_version", RANGE_PARSER) or 0) < RANGE_PARSER or getattr(v, "allow_high_stats", False) \
+            or (getattr(v, "stars", None) or 0) >= RAID_STARS:
+        return False
+    stats = getattr(v, "stats", None)
+    return any(isinstance(x, int) and x > STAT_MAX for x in (getattr(stats, attr, None) for _, attr in STATS))
+
+
 def change(a, b, texts):
     """What changed from version a to version b ({} for nothing a page shows: art, a move, a re-read of the same text, a
     value one reading never recorded or failed to read).
     texts = the card's history.json texts plus its current text: "text" holds their indices for the diff."""
     row = {}
     la, lb = line_of(getattr(a, "stats", None)), line_of(getattr(b, "stats", None))
-    unread = lambda v, line: line is None and any(str(p).startswith(STATS_UNKNOWN) for p in getattr(v, "problems", None) or [])
     if la != lb and not unread(a, la) and not unread(b, lb):     # a side whose stats failed: unknown
         row["stats"] = [list(la) if la else None, list(lb) if lb else None]
         if la and lb and sum(la) <= OFF_SCALE and sum(lb) <= OFF_SCALE:

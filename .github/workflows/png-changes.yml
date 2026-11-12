@@ -3,7 +3,7 @@
 # batches fetched into a scratch store and dropped (never the history's pictures on disk at once). The record is committed
 # to `data` after each round (12 minutes at most), so a run cut short loses one round: dispatch again and it resumes where
 # the record stops. Past changelog events with no mark yet are measured first and marked minor as Card sync marks new
-# ones (--events; every seq kept). By hand only (Card sync measures each run's own changes); the data writers' lock: no
+# ones, and lose stat lines a misread gave (--events; every seq kept). By hand only (Card sync measures each run's own changes); the data writers' lock: no
 # Card sync data job meanwhile. Then the site is rebuilt (it reads the record: a change under the share folds as minor).
 name: Picture changes
 
