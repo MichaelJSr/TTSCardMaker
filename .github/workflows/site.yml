@@ -426,8 +426,9 @@ jobs:
             echo "deploy=true" >> "$GITHUB_OUTPUT"
           fi
 
-      # upload-pages-artifact@v5's two steps (its tar minus -v), the zip deflated as its own: stored ones (~3 s faster)
-      # stuck in syncing_files after an idle hour (5 of 9 on 11-09/10; deflated 0 of 40).
+      # upload-pages-artifact@v5's two steps (its tar minus -v), the zip deflated at level 1, not its 6 (the upload waits
+      # on deflate: ~1.5 s sooner). Never stored: those stuck in syncing_files after an idle hour (5 of 9 on 11-09/10;
+      # deflated 0 of 40).
       - if: steps.changed.outputs.deploy == 'true'
         run: tar --dereference --hard-dereference --directory site/dist -cf "$RUNNER_TEMP/artifact.tar" --exclude=.git --exclude=.github --exclude='.[^/]*' .
 
@@ -439,6 +440,7 @@ jobs:
           path: ${{ runner.temp }}/artifact.tar
           retention-days: 1
           if-no-files-found: error
+          compression-level: 1        # never 0
 
       # deploy-pages' calls (OIDC token, pages/deployments, its status), each try under a version of its own: Pages answers
       # a version it has deployed with that old deployment (deploy-pages sends GITHUB_SHA: a second build at a commit went
