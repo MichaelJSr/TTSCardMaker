@@ -1616,6 +1616,33 @@ def icon_low(path):
     return out
 
 
+INK_GREY = 0.05                               # an icon's mean chroma under this: no hue of its own (black, grey, white)
+
+
+def icon_ink(path):
+    """An icon's own colour (a cached WebP; owner 11-11: TTS's type words): of its opaque pixels (alpha >= 128), the
+    dominant hue's chroma-weighted mean colour (chroma: max - min channel, summed in 30° hue bins centred on red; the
+    heaviest bin with its two neighbours); an icon of mean chroma under INK_GREY its mean colour; None when empty."""
+    with Image.open(path) as im:
+        im = im.convert("RGBA")
+        px = [p[:3] for p in (im.get_flattened_data() if hasattr(im, "get_flattened_data") else im.getdata()) if p[3] >= 128]
+    if not px:
+        return None
+    weights, sums = [0.0] * 12, [[0.0] * 3 for _ in range(12)]
+    chroma = [(max(p) - min(p)) / 255 for p in px]
+    if sum(chroma) < INK_GREY * len(px):
+        return "#%02x%02x%02x" % tuple(round(sum(p[i] for p in px) / len(px)) for i in range(3))
+    for p, c in zip(px, chroma):
+        if c:
+            k = round(colorsys.rgb_to_hsv(*(x / 255 for x in p))[0] * 12) % 12
+            weights[k] += c
+            sums[k] = [s + x * c for s, x in zip(sums[k], p)]
+    top = max(range(12), key=lambda k: weights[k - 1] + weights[k] + weights[(k + 1) % 12])
+    near = [(top + d) % 12 for d in (-1, 0, 1)]
+    total = sum(weights[k] for k in near)
+    return "#%02x%02x%02x" % tuple(round(sum(sums[k][i] for k in near) / total) for i in range(3))
+
+
 def build_icons(tree):
     """Types/ icons into dist/icons as 96 px WebP (<name>.<stamp>.webp), and the variant images
     (<name>.<stamp>.<variant>.webp) of those in the font. Returns ({normalized spelling: {file, name, kind, v: [variants with an image]}}, {variant: reach}); no
@@ -4111,11 +4138,15 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
     a [field] card's Field Cards first), its aliases not part of its name (al: Find a card's words)
     and its ability's word colours (ac: tts_words, palette: text_palette's, the site's); with the types', tags' and
     statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows, its words' colours too
-    (xc), and on hover: x) and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
+    (xc), and on hover: x), a type's own colour (ic: its icon's in dist, icon_ink, in tts_seen's shade) and the chapters
+    (their numbers find the PDF's pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
     palette = palette or text_palette(cards)
     marks = status_patterns(palette["statuses"])
     types, statuses = type_meanings(chapters, icons), {}
+    for k, t in types.items():
+        if (f := icons[k].get("file")) and os.path.isfile(path := os.path.join(DIST, f)) and (ink := tts_seen(icon_ink(path))):
+            t["ic"] = ink
     links = name_links(shown, icons, tag_table)       # the cards a text names, as the site links them
     for c in shown:
         if c.get("type") in ("buff", "debuff") and c.get("ability") and not c.get("dup"):
