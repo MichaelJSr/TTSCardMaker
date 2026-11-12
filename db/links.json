@@ -1857,8 +1857,15 @@
   ]
  },
  "Auxiliary/Minions/Bulborb Larva.psd": {
-  "blob": "e8ca6e94e4f133eee39a86f5e7488cf88a07d013",
-  "links": []
+  "blob": "4c23f98e18b21cf74643cd39f7b68b2820eb29e1",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
  },
  "Auxiliary/Minions/Burst_Laser_II.psd": {
   "blob": "ca98f4908b34bc12bf903546c51f55f16e401c06",
@@ -13518,7 +13525,7 @@
   ]
  },
  "Creatures/Other/3 Stars/Empress Bulblax.psd": {
-  "blob": "2cd5948619245c5b215997cade58d1b519feefb3",
+  "blob": "96f361033a8dda154e595cd9574a87193585d8e3",
   "links": []
  },
  "Creatures/Other/3 Stars/Grimora.psd": {
