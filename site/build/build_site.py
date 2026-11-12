@@ -1617,6 +1617,7 @@ def icon_low(path):
 
 
 INK_GREY = 0.05                               # an icon's mean chroma under this: no hue of its own (black, grey, white)
+TYPE_INK = {"light": "#ffe680"}               # by hand over the icon's (owner 11-11: light's icon is white): pale gold
 
 
 def icon_ink(path):
@@ -4138,14 +4139,14 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
     a [field] card's Field Cards first), its aliases not part of its name (al: Find a card's words)
     and its ability's word colours (ac: tts_words, palette: text_palette's, the site's); with the types', tags' and
     statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows, its words' colours too
-    (xc), and on hover: x), a type's own colour (ic: its icon's in dist, icon_ink, in tts_seen's shade) and the chapters
-    (their numbers find the PDF's pages). Hidden cards left out."""
+    (xc), and on hover: x), a type's own colour (ic: its icon's in dist, icon_ink, or TYPE_INK's, in tts_seen's shade)
+    and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
     palette = palette or text_palette(cards)
     marks = status_patterns(palette["statuses"])
     types, statuses = type_meanings(chapters, icons), {}
     for k, t in types.items():
-        if (f := icons[k].get("file")) and os.path.isfile(path := os.path.join(DIST, f)) and (ink := tts_seen(icon_ink(path))):
+        if (f := icons[k].get("file")) and os.path.isfile(path := os.path.join(DIST, f)) and (ink := tts_seen(TYPE_INK.get(k) or icon_ink(path))):
             t["ic"] = ink
     links = name_links(shown, icons, tag_table)       # the cards a text names, as the site links them
     for c in shown:
