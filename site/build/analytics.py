@@ -39,6 +39,7 @@ KINDS = ("creature", "minion")             # cohorts: creatures and minions by s
 AUX = "creatures"                          # auxiliary creatures: no star level, compared with all creatures
 MIN_COHORT = 5                             # a smaller star level is compared with its kind's "all stars" cohort
 OFF_SCALE = 40                             # a total above this is off the scale (stats.js offChart): Tainted Lazarus' old 110s
+STATS_UNKNOWN = ("NO STATS FOUND", "OUT OF RANGE: stats")   # a reading's problems that leave its stats unknown
 TOP, BOTTOM = 90, 10                       # flags: the top and bottom 10% of a cohort's totals
 STATS = (("hp", "hp"), ("def", "defense"), ("atk", "attack"), ("spd", "speed"))
 KEYS = tuple(k for k, _ in STATS) + ("total",)
@@ -304,12 +305,12 @@ def renames_followed(old_stats, stats, into):
 
 
 def shown(e, current):
-    """The current card as its page shows it (Card Edits.json applied), with the bot card's date, blob and path."""
+    """The current card as its page shows it (Card Edits.json applied), with the bot card's date, blob, path and problems."""
     return SimpleNamespace(timestamp=current.timestamp, version=getattr(current, "version", None),
                            blob_sha=getattr(current, "blob_sha", None), path=getattr(current, "path", None),
-                           stats=SimpleNamespace(**{attr: e.get(k) for k, attr in STATS}), stars=e.get("stars"), card_type=e.get("type"),
-                           subtype=e.get("subtype"), series=e.get("series"), types=e.get("types") or [],
-                           creatures=e.get("creatures") or [], ability=e.get("ability"))
+                           problems=getattr(current, "problems", None), stats=SimpleNamespace(**{attr: e.get(k) for k, attr in STATS}),
+                           stars=e.get("stars"), card_type=e.get("type"), subtype=e.get("subtype"), series=e.get("series"),
+                           types=e.get("types") or [], creatures=e.get("creatures") or [], ability=e.get("ability"))
 
 
 def page_chain(e, stats, old_stats):
@@ -347,17 +348,19 @@ def text_key(text):
 
 
 def change(a, b, texts):
-    """What changed from version a to version b ({} for nothing a page shows: art, a move, a re-read of the same text).
+    """What changed from version a to version b ({} for nothing a page shows: art, a move, a re-read of the same text, a
+    value one reading never recorded or failed to read).
     texts = the card's history.json texts plus its current text: "text" holds their indices for the diff."""
     row = {}
     la, lb = line_of(getattr(a, "stats", None)), line_of(getattr(b, "stats", None))
-    if la != lb and (la or lb):
+    unread = lambda v, line: line is None and any(str(p).startswith(STATS_UNKNOWN) for p in getattr(v, "problems", None) or [])
+    if la != lb and not unread(a, la) and not unread(b, lb):     # a side whose stats failed: unknown
         row["stats"] = [list(la) if la else None, list(lb) if lb else None]
         if la and lb and sum(la) <= OFF_SCALE and sum(lb) <= OFF_SCALE:
             row["bal"] = "buff" if sum(lb) > sum(la) else "nerf" if sum(lb) < sum(la) else "shift"
     for field, key in (("stars", "stars"), ("card_type", "kind"), ("subtype", "sub"), ("series", "series")):
         va, vb = getattr(a, field, None), getattr(b, field, None)
-        if va != vb:
+        if va != vb and None not in (va, vb) and "unknown" not in (va, vb):   # never recorded: unknown
             row[key] = [va, vb]
     ta, tb = Counter(getattr(a, "types", None) or []), Counter(getattr(b, "types", None) or [])
     legacy = any(getattr(v, "parser_version", 0) is None for v in (a, b))    # types before parser 2: unknown (shown: parsed)
