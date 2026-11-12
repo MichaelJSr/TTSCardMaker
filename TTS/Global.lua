@@ -101,7 +101,7 @@ end
 -- (status effects and others) spawn beside the card with a click; cards that draw from a kind of deck (DECKS) get a
 -- button per deck that spawns a shuffled copy beside the card. The ability's words in the website's palette (painted:
 -- status words, stats with their numbers, counters; a colour too dark for the panel in a lighter shade: build_site
--- tts_seen); each status effect's line, and its "+ name" button, shows its rule on hover.
+-- tts_seen). A button whose name is cut short shows the whole name on hover, opaque and clear of the buttons (TIP).
 -- Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
 -- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
@@ -118,7 +118,6 @@ local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 5, 6, 40, 30
 local RULE_ROWS, CARD_ROWS = 3, 2                      -- rows the buttons may take (more than fit: names shortened)
 local DECK_BUTTONS, DECK_ROWS = 8, 3
 local DETAILS_PANELS = 3                               -- a player's card details open at once (one more replaces the oldest)
-local STATUS_ROWS = 6                                  -- STATUS EFFECTS lines, each its own text with its rule on hover (the last takes any more)
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
     {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
 
@@ -133,6 +132,8 @@ end
 local BUTTON = "#c7d2fe|#e0e7ff|#a5b4fc|#c7d2fe80"     -- light lavender (normal|hover|pressed|disabled), dark text
 local SPAWN = "#bbf7d0|#dcfce7|#86efac|#bbf7d080"      -- the spawn buttons: light green
 local DECK = "#fde68a|#fef3c7|#fcd34d|#fde68a80"       -- the deck buttons: light amber
+local TIP = {tooltipPosition = "Above", tooltipBackgroundColor = "#0f1729", tooltipTextColor = "#e8edf5",
+    tooltipBorderColor = "#3b4b6b"}                    -- hover text as the details panel (TTS's own is see-through)
 local function button(id, label, onClick, attrs)
     local a = {id = id, onClick = onClick, fontSize = 13, textColor = "#0f172a", colors = BUTTON}
     for k, v in pairs(attrs or {}) do a[k] = v end
@@ -146,8 +147,11 @@ local function rows(id, prefix, n, count, onClick, colors)
     for r = 1, count do
         local row = {tag = "HorizontalLayout", attributes = {id = id .. r, rectAlignment = "LowerLeft", height = ROW_H, spacing = 6,
             childForceExpandWidth = false, childAlignment = "MiddleLeft", active = false}, children = {}}
-        for i = r, n do table.insert(row.children, button(prefix .. r .. "_" .. i, "", onClick, {preferredWidth = 120, active = false,
-            colors = colors or BUTTON, tooltipPosition = "Above"})) end
+        for i = r, n do
+            local a = {preferredWidth = 120, active = false, colors = colors or BUTTON}
+            for k, v in pairs(TIP) do a[k] = v end
+            table.insert(row.children, button(prefix .. r .. "_" .. i, "", onClick, a))
+        end
         table.insert(out, row)
     end
     return out
@@ -157,12 +161,6 @@ end
 -- opaque: build_site TTS_BACK checks the palette's colours against it
 local function detailsPanel(c, k)
     local id = c .. "_d" .. k
-    local page = {{tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
-        alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}
-    for i = 1, STATUS_ROWS do
-        table.insert(page, {tag = "Text", attributes = {id = id .. "_s" .. i, rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
-            alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow", tooltipPosition = "Above", active = false}, value = ""})
-    end
     local panel = {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
         returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleRight", offsetXY = (-60 - 50 * (k - 1)) .. " " .. (-40 * (k - 1)), width = 540, height = 660,
         color = "#0f1729", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
@@ -175,7 +173,9 @@ local function detailsPanel(c, k)
         {tag = "VerticalScrollView", attributes = {id = id .. "_scroll", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 4),
             color = "#00000000", scrollSensitivity = 30, horizontalScrollbarVisibility = "AutoHideAndExpandViewport",
             verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {
-            {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = page}}}}}
+            {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = {
+                {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
+                    alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}}}}
     for _, r in ipairs(rows(id .. "_rules", id .. "_r", RULE_BUTTONS, RULE_ROWS, "openRules")) do table.insert(panel.children, r) end
     for _, r in ipairs(rows(id .. "_cards", id .. "_c", CARD_BUTTONS, CARD_ROWS, "spawnNamed", SPAWN)) do table.insert(panel.children, r) end
     for _, r in ipairs(rows(id .. "_decks", id .. "_k", DECK_BUTTONS, DECK_ROWS, "spawnDeck", DECK)) do table.insert(panel.children, r) end
@@ -487,12 +487,12 @@ local function chaptersOf(card)
     return out
 end
 
--- the cards a card's text names, to spawn: its status effects, then the others ({name, path, a status's rule})
+-- the cards a card's text names, to spawn: its status effects, then the others ({name, path})
 local function namedOf(card)
     local out = {}
     for _, name in ipairs(card.x or {}) do
         local s = details.statuses[name]
-        if s and s.p then table.insert(out, {name, s.p, s.x}) end
+        if s and s.p then table.insert(out, {name, s.p}) end
     end
     for _, path in ipairs(card.m or {}) do
         local c = details.cards[path]
@@ -566,21 +566,17 @@ local function detailsText(card)
         if info then table.insert(typed, "<b>" .. plain(info.n) .. "</b>  " .. plain(info.x)) end
     end
     if #typed > 0 then section("TYPES") for _, line in ipairs(typed) do table.insert(out, line) end end
-    local rows = {}                                    -- the STATUS EFFECTS lines: {text, tip (its rule)}
+    local statuses = {}
     for _, name in ipairs(card.x or {}) do
         local s = details.statuses[name]
         if s then
             local c = hexColour(s.c)
-            local line = "<b>" .. (c and "<color=" .. c .. ">" .. plain(name) .. "</color>" or plain(name)) .. "</b> <color=" .. DIM .. ">(" .. plain(s.k) .. ")</color>  " .. withBadges(painted(s.x, s.xc))
-            if #rows < STATUS_ROWS then table.insert(rows, {text = line, tip = s.x})
-            else rows[#rows].text, rows[#rows].tip = rows[#rows].text .. "\n" .. line, rows[#rows].tip .. "\n" .. s.x end
+            table.insert(statuses, "<b>" .. (c and "<color=" .. c .. ">" .. plain(name) .. "</color>" or plain(name)) .. "</b> <color=" .. DIM .. ">("
+                .. plain(s.k) .. ")</color>  " .. withBadges(painted(s.x, s.xc)))
         end
     end
-    if #rows > 0 then                                  -- the heading tops the first line: the text's slack falls above it
-        table.insert(out, "")
-        rows[1].text = "<color=" .. HEAD .. "><b>STATUS EFFECTS</b></color>\n" .. rows[1].text
-    end
-    return table.concat(out, "\n"), rows
+    if #statuses > 0 then section("STATUS EFFECTS") for _, line in ipairs(statuses) do table.insert(out, line) end end
+    return table.concat(out, "\n")
 end
 
 -- a button's width for its text at font size f (a little more than the text: never cut off)
@@ -600,16 +596,15 @@ local function layout(color, k)
     if not open then return end
     local id, sz = color .. "_d" .. k, SIZES[open.size]
     local rules, named = chaptersOf(open.card), namedOf(open.card)
-    local rowW = sz.w - 20
+    local rowW, f = sz.w - 20, sz.f - 2
     -- list's buttons left to right on up to count rows, a new row when the next would pass the row's width; when they
-    -- overflow the last row they are spread evenly over the rows instead, and a row still too wide has its widest names
-    -- shortened to one width that fits, ending in "...", the whole name on hover (11 of 772 cards' spawn buttons
-    -- overflow one row at the default size), and tip's text under it (a status's rule); returns the rows used
-    local function pack(rowsId, prefix, list, n, count, label, tip)
-        local f, items, byRow, used, x = sz.f - 2, {}, {}, 0, 0
+    -- overflow the last row they are spread evenly over the rows instead; returns {i, text, w, row} per button and the
+    -- rows used
+    local function plan(list, n, count, label)
+        local items, used, x = {}, 0, 0
         for i = 1, math.min(n, #list) do
             local text = label(list[i])
-            items[i] = {i = i, text = text, w = widthOf(text, f), tip = tip and tip(list[i])}
+            items[i] = {i = i, text = text, w = widthOf(text, f)}
             if used == 0 or (x + 6 + items[i].w > rowW and used < count) then used, x = used + 1, items[i].w else x = x + 6 + items[i].w end
             items[i].row = used
         end
@@ -617,6 +612,13 @@ local function layout(color, k)
             local per = math.ceil(#items / used)
             for i, it in ipairs(items) do it.row = math.ceil(i / per) end
         end
+        return items, used
+    end
+    -- the planned buttons into their rows; a row still too wide has its widest names shortened to one width that fits,
+    -- ending in "...", the whole name on hover (11 of 772 cards' spawn buttons overflow one row at the default size),
+    -- above the rows over it (above: rows over row 1): never over a button
+    local function fill(rowsId, prefix, items, n, count, above)
+        local byRow = {}
         for _, it in ipairs(items) do byRow[it.row] = byRow[it.row] or {} table.insert(byRow[it.row], it) end
         for r = 1, count do
             local items, cap, at = byRow[r] or {}, nil, {}
@@ -637,49 +639,35 @@ local function layout(color, k)
                 local it = at[i]
                 if it then
                     local short = cap and it.w > cap
-                    local hover = short and it.text or ""
-                    if it.tip then hover = short and it.text .. "\n" .. it.tip or it.tip end
                     set(prefix .. r .. "_" .. i, {active = "true", text = plain(short and shorten(it.text, cap, f) or it.text),
-                        tooltip = hover, preferredWidth = short and cap or it.w, fontSize = f})
+                        tooltip = short and it.text or "", preferredWidth = short and cap or it.w, fontSize = f,
+                        tooltipFontSize = sz.f, tooltipOffset = (above + r - 1) * (ROW_H + 8) + 8})
                 else
                     set(prefix .. r .. "_" .. i, {active = "false"})
                 end
             end
         end
-        return used
     end
-    local ruleRows = pack(id .. "_rules", id .. "_r", rules, RULE_BUTTONS, RULE_ROWS, function(ch) return "Rules: " .. details.chapters[ch].title end)
-    local cardRows = pack(id .. "_cards", id .. "_c", named, CARD_BUTTONS, CARD_ROWS, function(n) return "+ " .. n[1] end, function(n) return n[3] end)
     local decks = DECKS[open.card.n] or {}
-    local deckRows = pack(id .. "_decks", id .. "_k", decks, DECK_BUTTONS, DECK_ROWS, function(d) return "+ " .. d[1] end)
+    local ruleItems, ruleRows = plan(rules, RULE_BUTTONS, RULE_ROWS, function(ch) return "Rules: " .. details.chapters[ch].title end)
+    local cardItems, cardRows = plan(named, CARD_BUTTONS, CARD_ROWS, function(n) return "+ " .. n[1] end)
+    local deckItems, deckRows = plan(decks, DECK_BUTTONS, DECK_ROWS, function(d) return "+ " .. d[1] end)
+    fill(id .. "_rules", id .. "_r", ruleItems, RULE_BUTTONS, RULE_ROWS, 0)
+    fill(id .. "_decks", id .. "_k", deckItems, DECK_BUTTONS, DECK_ROWS, ruleRows)
+    fill(id .. "_cards", id .. "_c", cardItems, CARD_BUTTONS, CARD_ROWS, ruleRows + deckRows)
     open.rules, open.named, open.decks = rules, named, decks
     local foot = (ruleRows + deckRows + cardRows) * (ROW_H + 8) + 8
     for r = 1, CARD_ROWS do set(id .. "_cards" .. r, {offsetXY = "10 " .. (8 + (cardRows - r) * (ROW_H + 8))}) end
     for r = 1, DECK_ROWS do set(id .. "_decks" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows - r) * (ROW_H + 8))}) end
     for r = 1, RULE_ROWS do set(id .. "_rules" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows + ruleRows - r) * (ROW_H + 8))}) end
-    local text, statusRows = detailsText(open.card)
-    local textW, lineH = sz.w - 44, math.ceil(sz.f * 1.32)
-    local perLine = math.floor(textW / (sz.f * 0.52))
-    -- the status lines under the text, each as tall as its lines; the text measured narrower above them (a line more
-    -- than the estimate leaves a gap above the STATUS EFFECTS heading, never an overlap)
-    local textH = lines(text, #statusRows > 0 and math.floor(textW / (sz.f * 0.58)) or perLine) * lineH + 12
-    local y = 6 + textH
-    for i = 1, STATUS_ROWS do
-        local row = statusRows[i]
-        if row then
-            local h = lines(row.text, perLine) * lineH + 4
-            set(id .. "_s" .. i, {active = "true", offsetXY = "14 -" .. y, width = textW, height = h, fontSize = sz.f, tooltip = row.tip})
-            setValue(id .. "_s" .. i, row.text)
-            y = y + h
-        else
-            set(id .. "_s" .. i, {active = "false"})
-        end
-    end
+    local text = detailsText(open.card)
+    local textW = sz.w - 44
+    local textH = lines(text, math.floor(textW / (sz.f * 0.52))) * math.ceil(sz.f * 1.32) + 12
     set(id .. "_head", {width = sz.w})
     set(id .. "_title", {width = sz.w - 140, fontSize = sz.f + 3})
     setValue(id .. "_title", plain(open.card.n or ""))
     set(id .. "_scroll", {width = sz.w - 8, height = sz.h - TITLE_H - 4 - foot})
-    set(id .. "_page", {width = sz.w - 24, height = #statusRows > 0 and y + 6 or textH})
+    set(id .. "_page", {width = sz.w - 24, height = textH})
     set(id .. "_text", {width = textW, height = textH, fontSize = sz.f})
     setValue(id .. "_text", text)
     set(id, {width = sz.w, height = sz.h, active = "true"})
