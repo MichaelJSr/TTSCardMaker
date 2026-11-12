@@ -73,6 +73,7 @@ env:
     /requirements-cards.txt
     /commands/psd_links.py
     /commands/card_plates.py
+    /commands/psd_details.py
 
 jobs:
   check:

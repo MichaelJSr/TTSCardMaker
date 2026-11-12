@@ -1013,6 +1013,36 @@ export function plateCuts(data, W, H, k, plate, read, ids, old = "", text = "", 
   }
   return cuts;
 }
+/** A stat's picture in the plate's bars (card_plates.bar_sheet: the bake's merge at the site's card view, per value
+ *  the pixels it moves): its cut [x, y, w, h, sheet x, sheet y] (view px) for from -> to; null when the plate
+ *  pictures the card's bars but not that value (the bake refuses it, or it moves nothing); undefined when it has no
+ *  say (no bars there, or the card's value isn't the plate's: the cells then). */
+export function barCut(bars, k, from, to) {
+  if (!bars || !Array.isArray(bars.cuts)) return undefined;
+  const s = bars.bars?.[k];
+  if (!s) return null;
+  if (s.at !== from) return undefined;
+  const cut = bars.cuts[s.to?.[String(to)]];
+  return Array.isArray(cut) && cut.length === 6 ? cut : null;
+}
+/** A bar cut's pixels from its sheet at k image px per view px: [x, y, w, h, rgba] (image px). */
+function barPixels(img, [x, y, w, h, sx, sy], k) {
+  const X = Math.round(x * k), Y = Math.round(y * k), w2 = Math.max(1, Math.round((x + w) * k) - X), h2 = Math.max(1, Math.round((y + h) * k) - Y);
+  const cv = document.createElement("canvas"); cv.width = w2; cv.height = h2;
+  const g = cv.getContext("2d", { willReadFrequently: true });
+  if (k !== 1) g.imageSmoothingEnabled = false;
+  g.drawImage(img, sx, sy, w, h, 0, 0, w2, h2);
+  return [X, Y, w2, h2, g.getImageData(0, 0, w2, h2).data];
+}
+/** A bar cut's pixels onto the image's (W x H): those it holds (alpha 128 or more), opaque; the rest left as they are. */
+export function putBar(data, W, H, [x0, y0, w, h, p]) {
+  for (let y = Math.max(0, -y0); y < h && y0 + y < H; y++) for (let x = Math.max(0, -x0); x < w && x0 + x < W; x++) {
+    const j = (y * w + x) * 4;
+    if (p[j + 3] < 128) continue;
+    const i = ((y0 + y) * W + x0 + x) * 4;
+    data[i] = p[j]; data[i + 1] = p[j + 1]; data[i + 2] = p[j + 2]; data[i + 3] = 255;
+  }
+}
 function putCuts(data, W, cuts) {
   for (const [x0, y0, w, h, p] of cuts) for (let y = 0; y < h; y++) data.set(p.subarray(y * w * 4, (y + 1) * w * 4), ((y0 + y) * W + x0) * 4);
 }
@@ -1112,7 +1142,9 @@ let eraseMemo = null;                                // the last draw's erase pa
 export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, fills = null, stale = () => false, plate = null }) {
   const img = await loadImage(src);
   if (!img || stale()) return null;
-  const sheet = plate?.v === 1 && Array.isArray(plate.crops) && plate.w === rec?.canvas?.w && (card?.variant || 1) === 1 ? await loadImage(plate.img) : null;
+  const ours = plate?.v === 1 && plate.w === rec?.canvas?.w && (card?.variant || 1) === 1;   // picture 1's plate
+  const sheet = ours && Array.isArray(plate.crops) && plate.crops.length ? await loadImage(plate.img) : null;
+  const pics = ours && plate.bars?.vw > 0 && Array.isArray(plate.bars.cuts) ? plate.bars : null;   // the bake's stat pictures
   const readPlate = (c, w, h) => { const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
     const g = cv.getContext("2d", { willReadFrequently: true }); g.drawImage(sheet, ...c.at, 0, 0, w, h); return g.getImageData(0, 0, w, h).data; };
   const W = img.naturalWidth, H = img.naturalHeight, shape = shapeOf(W, H), tpl = TEMPLATES[shape];
@@ -1125,15 +1157,26 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null, plated: [], lined: [] };
   for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
-    if (why) out.site.push([`${label} ${edit[k]}`, why]);
+    if (barCut(pics, k, psd[k], edit[k])) todo.stats[k] = [psd[k], edit[k]];   // the bake's picture of it
+    else if (why) out.site.push([`${label} ${edit[k]}`, why]);
     else if (compBar(rec, k) && psd[k] >= 1 && psd[k] <= 10 && edit[k] > 10 && edit[k] <= 20) todo.stats[k] = [psd[k], edit[k]];   // its comps' two half rows; from 0: no lit cell to copy
-    else out.skipped.push(label);
-  }
+  }                                                   // else not drawn, nothing said (owner 11-11)
   if (todo.name != null && titleInPicture(rec)) { out.site.push(["name", "title"]); todo.name = null; }   // the dialog's note
   const kept = todo.stars && starsKept(rec?.header?.stars, todo.stars[1]), moved = kept && starMove(card?.psd, todo.stars[1]);
   if (kept) { if (moved) out.starsKept = { why: kept, to: moved.to }; else out.refused.push(["stars", kept]); todo.stars = null; }   // the picture's stay
   const blit = () => { if (stale()) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
-  if (!tpl) { out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", ...Object.keys(todo.stats).map(k => k.toUpperCase()), todo.stars && "stars", todo.types && "types"].filter(Boolean)); return blit(); }
+  if (!tpl) {                                         // no template: the bake's stat pictures alone
+    const got = Object.entries(todo.stats).map(([k, [from, to]]) => [k, barCut(pics, k, from, to)]).filter(([, c]) => c);
+    const sheetImg = got.length ? await loadImage(pics.img) : null;
+    if (stale()) return null;
+    if (sheetImg) {
+      const px = ctx.getImageData(0, 0, W, H);
+      for (const [k, c] of got) { putBar(px.data, W, H, barPixels(sheetImg, c, W / pics.vw)); out.drawn.push(k.toUpperCase()); }
+      ctx.putImageData(px, 0, 0);
+    }
+    out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", todo.stars && "stars", todo.types && "types"].filter(Boolean));   // stats: nothing said (owner 11-11)
+    return blit();
+  }
   const pixels = ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
   const family = async (role, label, path = "", id = "") => {   // path, id: a part's own layer (a split title's share a path)
     const mine = t => t && (id && t.id != null ? String(t.id) === id : t.layer === path) && (t.lf || !ICON_FONT.test(String(t.font || "")));
@@ -1238,9 +1281,16 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (!reuse) eraseMemo = { sig, rec, icons, sheet, plans, data: pixels.data.slice(), card: cardPx };
   for (const t of tints) if (t) tintInPlace(pixels.data, W, H, kc, t, readPlate);   // after the memo: it never holds tinted pixels
   const shown = { ...psd };                            // the values the rows show as they are redrawn
-  for (const [k, [from, to]] of Object.entries(todo.stats)) {
+  const cuts = Object.entries(todo.stats).map(([k, [from, to]]) => barCut(pics, k, from, to));
+  const picsImg = cuts.some(Boolean) ? await loadImage(pics.img) : null;
+  if (stale()) return null;
+  for (const [n, [k, [from, to]]] of Object.entries(todo.stats).entries()) {
+    if (cuts[n] !== undefined) {                      // the card's pictured bars: the bake's picture, or none (it refuses the value)
+      if (cuts[n] && picsImg) { putBar(pixels.data, W, H, barPixels(picsImg, cuts[n], W / pics.vw)); shown[k] = to; out.drawn.push(k.toUpperCase()); }
+      continue;
+    }
     const row = bars.find(r => r.k === k);
-    if (!row) { out.skipped.push(k.toUpperCase()); continue; }
+    if (!row) continue;                               // no row found: not drawn, nothing said (owner 11-11)
     const lit = from === 0 && to <= row.cells ? bars.filter(r => r !== row && shown[r.k] >= 1 && shown[r.k] <= r.cells).sort((a, b) => Math.abs(a.box[1] - row.box[1]) - Math.abs(b.box[1] - row.box[1])).map(r => ({ row: r, v: shown[r.k] })) : [];
     if (lit.length) paintLit(pixels.data, W, H, row, lit, to);   // no lit cell on the row: another row's
     else (to > row.cells ? paintComp : paintCells)(pixels.data, W, H, row, from, to);
