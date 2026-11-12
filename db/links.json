@@ -7976,7 +7976,7 @@
   ]
  },
  "Creatures/Hollow Knight/5 Stars/Ze'mer.psd": {
-  "blob": "d729ca9ac1dc8674f3cb7a4dbcc810371ec50afa",
+  "blob": "721a92aa0f6be0640fb2294c9e88a2acdf92f212",
   "links": [
    {
     "drawn": null,
@@ -7995,12 +7995,6 @@
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
-   },
-   {
-    "drawn": null,
-    "name": "Ze'mer - flower_floor_Zemer_floor_1_1 copy 10.png",
-    "path": "MDW/Linked/Ze'mer - flower_floor_Zemer_floor_1_1 copy 10.png",
-    "size": 67182
    }
   ]
  },
