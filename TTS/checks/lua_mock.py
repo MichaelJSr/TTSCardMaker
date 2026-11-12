@@ -9,8 +9,9 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel and the card finder (aliases, plurals, "status effects") on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
-pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save writes it into the save; the seated
+rulebook panel and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food") on the
+website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or pinned to the commit of the Rulebooks bag's
+PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name plain,
 the ability in the website's palette (tts.json ac), every "<" of a text kept from starting a tag; every card's details at each
@@ -1243,6 +1244,19 @@ def main():
     one = finder_rows()
     w.call("finderSearch", red, "5 stars")
     check(one[0] != "No card found" and finder_rows() == one, f"a plural finds what its singular does: '5 stars' {finder_rows()[0]!r}, '5 star' {one[0]!r}")
+    ones = [c for c in details["cards"].values() if c.get("st") is not None and int(c["st"]) == 1]
+    w.call("finderSearch", red, "1 star")
+    title, rows = finder_rows()
+    check(rows and all(r.endswith(" 1★") for r in rows) and title.split()[0] == str(len(ones)),
+          f"'1 star' lists the 1★ cards only, not every '1' ((1CD)): {title!r}, {len(ones)}")
+    words = lambda c: " ".join([c.get("n", ""), c.get("k", "")] + [(details["types"].get(t) or {}).get("n", "") for t in c.get("t") or []] + list(c.get("al") or [])).lower()
+    w.call("finderSearch", red, "1 star creature")
+    title, rows = finder_rows()
+    check(all(r.endswith(" 1★") for r in rows) and (title == "No card found") == (not any("creature" in words(c) for c in ones)),
+          f"'1 star creature': 1★ creatures only ({title!r})")
+    foods = sum("food" in (c.get("t") or []) for c in details["cards"].values())
+    w.call("finderSearch", red, "food")
+    check(foods and ui.values.get("Red_fc_title").split()[0] == str(foods), f"'food' finds every food-typed card ({ui.values.get('Red_fc_title')!r}, {foods})")
     w.call("finderSearch", red, "status effects")
     statuses, title = sum(c.get("k") in ("Buff", "Debuff") for c in details["cards"].values()), ui.values.get("Red_fc_title")
     check(statuses and title.split()[0] == str(statuses), f"'status effects' finds every buff and debuff ({title!r}, {statuses})")

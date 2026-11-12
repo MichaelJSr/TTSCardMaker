@@ -1337,8 +1337,9 @@ function rulebookSearch(player, value)
     listPages(player.color, value)
 end
 
--- the card finder: every word must be in a card's name, kind, stars ("5" or "5★"), types, timing tags or aliases (a plural: or its
--- singular); names that start with the search come first; a click spawns the card where the table was right-clicked (several: side by side)
+-- the card finder: every word must be in a card's name, kind, types (or their keys: "food"), timing tags or aliases (a plural: or
+-- its singular); a digit 1-9 or "5★" (a "star(s)" after it dropped) is the card's stars; names that start with the search come
+-- first; a click spawns the card where the table was right-clicked (several: side by side)
 local fcOpen, fcFound, searchList = {}, {}, nil
 local function listCards(color, query)
     if not searchList then                             -- each card's words, once, in name order (no sort per keystroke)
@@ -1346,10 +1347,11 @@ local function listCards(color, query)
         for path, c in pairs(details.cards) do
             local bits = {c.n or "", c.k or "", c.st and (math.floor(c.st) .. "★ " .. math.floor(c.st) .. " star") or ""}
             if c.k == "Buff" or c.k == "Debuff" then table.insert(bits, "status effect") end   -- the website's kind name
-            for _, t in ipairs(c.t or {}) do table.insert(bits, (details.types[t] or {}).n or t) end
+            for _, t in ipairs(c.t or {}) do table.insert(bits, ((details.types[t] or {}).n or "") .. " " .. t) end
             for _, g in ipairs(c.g or {}) do table.insert(bits, "(" .. g .. ")") end
             for _, a in ipairs(c.al or {}) do table.insert(bits, a) end      -- the website's aliases ("Sans" for snas.)
-            table.insert(searchList, {path = path, name = (c.n or ""):lower(), all = table.concat(bits, " "):lower()})
+            table.insert(searchList, {path = path, name = (c.n or ""):lower(), all = table.concat(bits, " "):lower(),
+                st = c.st and math.floor(c.st)})
         end
         table.sort(searchList, function(a, b) return a.name < b.name end)
     end
@@ -1360,15 +1362,25 @@ local function listCards(color, query)
         if sp > start then table.insert(words, q:sub(start, sp - 1)) end
         start = sp + 1
     end
+    local stars                                        -- "2", "2★", "2 stars": the card's stars, not every "2" ("(1/2CD)")
+    for i = #words, 1, -1 do
+        local wd = words[i]
+        local n = (#wd == 1 or wd:sub(2) == "★") and tonumber(wd:sub(1, 1))
+        if n and n > 0 then
+            stars = (not stars or stars == n) and n or 0
+            if words[i + 1] == "star" or words[i + 1] == "stars" then table.remove(words, i + 1) end
+            table.remove(words, i)
+        end
+    end
     local first, rest = {}, {}
-    if #words > 0 then
+    if #words > 0 or stars then
         for _, w in ipairs(searchList) do
-            local ok = true
-            for _, word in ipairs(words) do
+            local ok = not stars or w.st == stars
+            for _, word in ipairs(ok and words or {}) do
                 local hit = w.all:find(word, 1, true) or #word > 4 and word:sub(-1) == "s" and w.all:find(word:sub(1, -2), 1, true)
                 if not hit then ok = false break end                 -- "5 stars", "creatures": the singular too
             end
-            if ok then table.insert(w.name:find(words[1], 1, true) == 1 and first or rest, w.path) end
+            if ok then table.insert(words[1] and w.name:find(words[1], 1, true) == 1 and first or rest, w.path) end
         end
     end
     for _, p in ipairs(rest) do table.insert(first, p) end
@@ -1380,7 +1392,7 @@ local function listCards(color, query)
             or {active = "false"})
     end
     set(id .. "_list", {height = math.max(40, math.min(#first, RESULTS) * 33 + 10)})
-    setValue(id .. "_title", #words == 0 and "Find a card" or (#first == 0 and "No card found"
+    setValue(id .. "_title", #words == 0 and not stars and "Find a card" or (#first == 0 and "No card found"
         or (#first .. (#first == 1 and " card" or " cards") .. (#first > RESULTS and (" (the first " .. RESULTS .. ")") or ""))))
 end
 
