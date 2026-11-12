@@ -4437,265 +4437,25 @@
   ]
  },
  "Auxiliary/Minions/Skeleton_Mate.psd": {
-  "blob": "385e8cb9d7f5c3816f46f2f89e25a1da82471a20",
+  "blob": "273e6431fe5963e77ee30772c1812b763e085f96",
   "links": [
    {
-    "drawn": "016ba23edefa3f8f2382bc787eb18b98ed17c387",
+    "drawn": null,
     "name": "Skeleton_Mate - Layer 4.psb",
     "path": "MDW/Linked/Skeleton_Mate - Layer 4.psb",
     "size": 89260
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
-    "name": "Skeleton_Mate - 2.png",
-    "path": "MDW/Linked/Skeleton_Mate - 2.png",
-    "size": 4779
-   },
-   {
-    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
-    "name": "Skeleton_Mate - 3.png",
-    "path": "MDW/Linked/Skeleton_Mate - 3.png",
-    "size": 4827
-   },
-   {
-    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
-    "name": "Skeleton_Mate - 4.png",
-    "path": "MDW/Linked/Skeleton_Mate - 4.png",
-    "size": 4758
-   },
-   {
-    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
-    "name": "Skeleton_Mate - 5.png",
-    "path": "MDW/Linked/Skeleton_Mate - 5.png",
-    "size": 4784
-   },
-   {
-    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
-    "name": "Skeleton_Mate - 6.png",
-    "path": "MDW/Linked/Skeleton_Mate - 6.png",
-    "size": 4802
-   },
-   {
-    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
-    "name": "Skeleton_Mate - 7.png",
-    "path": "MDW/Linked/Skeleton_Mate - 7.png",
-    "size": 4826
-   },
-   {
-    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
-    "name": "Skeleton_Mate - 8.png",
-    "path": "MDW/Linked/Skeleton_Mate - 8.png",
-    "size": 4823
-   },
-   {
-    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
-    "name": "Skeleton_Mate - 9.png",
-    "path": "MDW/Linked/Skeleton_Mate - 9.png",
-    "size": 4769
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
-    "name": "Skeleton_Mate - 2.png",
-    "path": "MDW/Linked/Skeleton_Mate - 2.png",
-    "size": 4779
-   },
-   {
-    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
-    "name": "Skeleton_Mate - 3.png",
-    "path": "MDW/Linked/Skeleton_Mate - 3.png",
-    "size": 4827
-   },
-   {
-    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
-    "name": "Skeleton_Mate - 4.png",
-    "path": "MDW/Linked/Skeleton_Mate - 4.png",
-    "size": 4758
-   },
-   {
-    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
-    "name": "Skeleton_Mate - 5.png",
-    "path": "MDW/Linked/Skeleton_Mate - 5.png",
-    "size": 4784
-   },
-   {
-    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
-    "name": "Skeleton_Mate - 6.png",
-    "path": "MDW/Linked/Skeleton_Mate - 6.png",
-    "size": 4802
-   },
-   {
-    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
-    "name": "Skeleton_Mate - 7.png",
-    "path": "MDW/Linked/Skeleton_Mate - 7.png",
-    "size": 4826
-   },
-   {
-    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
-    "name": "Skeleton_Mate - 8.png",
-    "path": "MDW/Linked/Skeleton_Mate - 8.png",
-    "size": 4823
-   },
-   {
-    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
-    "name": "Skeleton_Mate - 9.png",
-    "path": "MDW/Linked/Skeleton_Mate - 9.png",
-    "size": 4769
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
-    "name": "Skeleton_Mate - 2.png",
-    "path": "MDW/Linked/Skeleton_Mate - 2.png",
-    "size": 4779
-   },
-   {
-    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
-    "name": "Skeleton_Mate - 3.png",
-    "path": "MDW/Linked/Skeleton_Mate - 3.png",
-    "size": 4827
-   },
-   {
-    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
-    "name": "Skeleton_Mate - 4.png",
-    "path": "MDW/Linked/Skeleton_Mate - 4.png",
-    "size": 4758
-   },
-   {
-    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
-    "name": "Skeleton_Mate - 5.png",
-    "path": "MDW/Linked/Skeleton_Mate - 5.png",
-    "size": 4784
-   },
-   {
-    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
-    "name": "Skeleton_Mate - 6.png",
-    "path": "MDW/Linked/Skeleton_Mate - 6.png",
-    "size": 4802
-   },
-   {
-    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
-    "name": "Skeleton_Mate - 7.png",
-    "path": "MDW/Linked/Skeleton_Mate - 7.png",
-    "size": 4826
-   },
-   {
-    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
-    "name": "Skeleton_Mate - 8.png",
-    "path": "MDW/Linked/Skeleton_Mate - 8.png",
-    "size": 4823
-   },
-   {
-    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
-    "name": "Skeleton_Mate - 9.png",
-    "path": "MDW/Linked/Skeleton_Mate - 9.png",
-    "size": 4769
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
-    "name": "Skeleton_Mate - 2.png",
-    "path": "MDW/Linked/Skeleton_Mate - 2.png",
-    "size": 4779
-   },
-   {
-    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
-    "name": "Skeleton_Mate - 3.png",
-    "path": "MDW/Linked/Skeleton_Mate - 3.png",
-    "size": 4827
-   },
-   {
-    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
-    "name": "Skeleton_Mate - 4.png",
-    "path": "MDW/Linked/Skeleton_Mate - 4.png",
-    "size": 4758
-   },
-   {
-    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
-    "name": "Skeleton_Mate - 5.png",
-    "path": "MDW/Linked/Skeleton_Mate - 5.png",
-    "size": 4784
-   },
-   {
-    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
-    "name": "Skeleton_Mate - 6.png",
-    "path": "MDW/Linked/Skeleton_Mate - 6.png",
-    "size": 4802
-   },
-   {
-    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
-    "name": "Skeleton_Mate - 7.png",
-    "path": "MDW/Linked/Skeleton_Mate - 7.png",
-    "size": 4826
-   },
-   {
-    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
-    "name": "Skeleton_Mate - 8.png",
-    "path": "MDW/Linked/Skeleton_Mate - 8.png",
-    "size": 4823
-   },
-   {
-    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
-    "name": "Skeleton_Mate - 9.png",
-    "path": "MDW/Linked/Skeleton_Mate - 9.png",
-    "size": 4769
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
    }
   ]
  },
@@ -7743,16 +7503,16 @@
   ]
  },
  "Creatures/Hollow Knight/2 Stars/False_Knight.psd": {
-  "blob": "7c7d6c5ac972ad2ca8624377f3018ce3d5a7ae7c",
+  "blob": "3b750d972c1d09a0913c1ace9fcef9fe8d53f27d",
   "links": [
    {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "drawn": null,
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
     "size": 332571
    },
    {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "drawn": null,
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
     "size": 332571
@@ -7777,7 +7537,7 @@
   ]
  },
  "Creatures/Hollow Knight/3 Stars/Hive_Knight.psd": {
-  "blob": "2780e25297d990d1508e3f3e8225a638ab5bd6bb",
+  "blob": "d951ec7f78bb2abc5a1e16411a916a036b253404",
   "links": [
    {
     "drawn": null,
@@ -7798,13 +7558,13 @@
     "size": 430775
    },
    {
-    "drawn": "3f45cc792cb17a4207d2a1d3a4579260a6339467",
+    "drawn": null,
     "name": "Hive_Knight - extra.psb",
     "path": "MDW/Linked/Hive_Knight - extra.psb",
     "size": 1048576
    },
    {
-    "drawn": "752a74b2b13e3057e74f0e40bd322f59cc3713dc",
+    "drawn": null,
     "name": "Hive_Knight - extra (2).psb",
     "path": "MDW/Linked/Hive_Knight - extra (2).psb",
     "size": 1048576
@@ -8721,40 +8481,40 @@
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Keeper.psd": {
-  "blob": "e4d2bb9408c86c3741278f7efddddd2941b8f4ce",
+  "blob": "79e1716afc4aa6536b6c434df5d70366cc576e3d",
   "links": [
    {
-    "drawn": "774032dfce933811b580b92f5682dbfed2e4e4be",
+    "drawn": null,
     "name": "Tainted_Keeper - Layer 1 copy 6.psb",
     "path": "MDW/Linked/Tainted_Keeper - Layer 1 copy 6.psb",
     "size": 4527462
    },
    {
-    "drawn": "c24d05854109f425614c6799a70fbae18441f274",
+    "drawn": null,
     "name": "Tainted_Keeper - Layer 4.psb",
     "path": "MDW/Linked/Tainted_Keeper - Layer 4.psb",
     "size": 4267390
    },
    {
-    "drawn": "9f63c2837b888a3d5a13c50c20cbe3102fdd37b1",
+    "drawn": null,
     "name": "Tainted_Keeper - extra.webp",
     "path": "MDW/Linked/Tainted_Keeper - extra.webp",
     "size": 114
    },
    {
-    "drawn": "91552c1f1ed94e89eeb340fdd69902a8061fbd0c",
+    "drawn": null,
     "name": "Tainted_Keeper - extra (2).webp",
     "path": "MDW/Linked/Tainted_Keeper - extra (2).webp",
     "size": 144
    },
    {
-    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "drawn": null,
     "name": "isaac.png",
     "path": "Types/Stars/isaac.png",
     "size": 1181
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
@@ -13548,253 +13308,13 @@
   "links": []
  },
  "Creatures/Other/3 Stars/Grimora.psd": {
-  "blob": "3edeff8d4eaa96f6afb6824c140eff31a8aa02b5",
+  "blob": "8823e80ed65ce404048e381009d06380e6f37ad4",
   "links": [
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
-    "name": "Skeleton_Mate - 2.png",
-    "path": "MDW/Linked/Skeleton_Mate - 2.png",
-    "size": 4779
-   },
-   {
-    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
-    "name": "Skeleton_Mate - 3.png",
-    "path": "MDW/Linked/Skeleton_Mate - 3.png",
-    "size": 4827
-   },
-   {
-    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
-    "name": "Skeleton_Mate - 4.png",
-    "path": "MDW/Linked/Skeleton_Mate - 4.png",
-    "size": 4758
-   },
-   {
-    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
-    "name": "Skeleton_Mate - 5.png",
-    "path": "MDW/Linked/Skeleton_Mate - 5.png",
-    "size": 4784
-   },
-   {
-    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
-    "name": "Skeleton_Mate - 6.png",
-    "path": "MDW/Linked/Skeleton_Mate - 6.png",
-    "size": 4802
-   },
-   {
-    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
-    "name": "Skeleton_Mate - 7.png",
-    "path": "MDW/Linked/Skeleton_Mate - 7.png",
-    "size": 4826
-   },
-   {
-    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
-    "name": "Skeleton_Mate - 8.png",
-    "path": "MDW/Linked/Skeleton_Mate - 8.png",
-    "size": 4823
-   },
-   {
-    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
-    "name": "Skeleton_Mate - 9.png",
-    "path": "MDW/Linked/Skeleton_Mate - 9.png",
-    "size": 4769
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
-    "name": "Skeleton_Mate - 2.png",
-    "path": "MDW/Linked/Skeleton_Mate - 2.png",
-    "size": 4779
-   },
-   {
-    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
-    "name": "Skeleton_Mate - 3.png",
-    "path": "MDW/Linked/Skeleton_Mate - 3.png",
-    "size": 4827
-   },
-   {
-    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
-    "name": "Skeleton_Mate - 4.png",
-    "path": "MDW/Linked/Skeleton_Mate - 4.png",
-    "size": 4758
-   },
-   {
-    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
-    "name": "Skeleton_Mate - 5.png",
-    "path": "MDW/Linked/Skeleton_Mate - 5.png",
-    "size": 4784
-   },
-   {
-    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
-    "name": "Skeleton_Mate - 6.png",
-    "path": "MDW/Linked/Skeleton_Mate - 6.png",
-    "size": 4802
-   },
-   {
-    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
-    "name": "Skeleton_Mate - 7.png",
-    "path": "MDW/Linked/Skeleton_Mate - 7.png",
-    "size": 4826
-   },
-   {
-    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
-    "name": "Skeleton_Mate - 8.png",
-    "path": "MDW/Linked/Skeleton_Mate - 8.png",
-    "size": 4823
-   },
-   {
-    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
-    "name": "Skeleton_Mate - 9.png",
-    "path": "MDW/Linked/Skeleton_Mate - 9.png",
-    "size": 4769
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
-    "name": "Skeleton_Mate - 2.png",
-    "path": "MDW/Linked/Skeleton_Mate - 2.png",
-    "size": 4779
-   },
-   {
-    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
-    "name": "Skeleton_Mate - 3.png",
-    "path": "MDW/Linked/Skeleton_Mate - 3.png",
-    "size": 4827
-   },
-   {
-    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
-    "name": "Skeleton_Mate - 4.png",
-    "path": "MDW/Linked/Skeleton_Mate - 4.png",
-    "size": 4758
-   },
-   {
-    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
-    "name": "Skeleton_Mate - 5.png",
-    "path": "MDW/Linked/Skeleton_Mate - 5.png",
-    "size": 4784
-   },
-   {
-    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
-    "name": "Skeleton_Mate - 6.png",
-    "path": "MDW/Linked/Skeleton_Mate - 6.png",
-    "size": 4802
-   },
-   {
-    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
-    "name": "Skeleton_Mate - 7.png",
-    "path": "MDW/Linked/Skeleton_Mate - 7.png",
-    "size": 4826
-   },
-   {
-    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
-    "name": "Skeleton_Mate - 8.png",
-    "path": "MDW/Linked/Skeleton_Mate - 8.png",
-    "size": 4823
-   },
-   {
-    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
-    "name": "Skeleton_Mate - 9.png",
-    "path": "MDW/Linked/Skeleton_Mate - 9.png",
-    "size": 4769
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
-   },
-   {
-    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
-    "name": "Skeleton_Mate - 2.png",
-    "path": "MDW/Linked/Skeleton_Mate - 2.png",
-    "size": 4779
-   },
-   {
-    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
-    "name": "Skeleton_Mate - 3.png",
-    "path": "MDW/Linked/Skeleton_Mate - 3.png",
-    "size": 4827
-   },
-   {
-    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
-    "name": "Skeleton_Mate - 4.png",
-    "path": "MDW/Linked/Skeleton_Mate - 4.png",
-    "size": 4758
-   },
-   {
-    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
-    "name": "Skeleton_Mate - 5.png",
-    "path": "MDW/Linked/Skeleton_Mate - 5.png",
-    "size": 4784
-   },
-   {
-    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
-    "name": "Skeleton_Mate - 6.png",
-    "path": "MDW/Linked/Skeleton_Mate - 6.png",
-    "size": 4802
-   },
-   {
-    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
-    "name": "Skeleton_Mate - 7.png",
-    "path": "MDW/Linked/Skeleton_Mate - 7.png",
-    "size": 4826
-   },
-   {
-    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
-    "name": "Skeleton_Mate - 8.png",
-    "path": "MDW/Linked/Skeleton_Mate - 8.png",
-    "size": 4823
-   },
-   {
-    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
-    "name": "Skeleton_Mate - 9.png",
-    "path": "MDW/Linked/Skeleton_Mate - 9.png",
-    "size": 4769
-   },
-   {
-    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
-    "name": "Skeleton_Mate - 1.png",
-    "path": "MDW/Linked/Skeleton_Mate - 1.png",
-    "size": 4771
    }
   ]
  },
@@ -15571,22 +15091,22 @@
   ]
  },
  "Creatures/Pandas/2 Stars/Minecraft_Panda.psd": {
-  "blob": "014b63363a21b6eee249ef7903718a96c99c958b",
+  "blob": "f6ef9dc5c172a4c38a6340e40dffbbc360846df0",
   "links": [
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
