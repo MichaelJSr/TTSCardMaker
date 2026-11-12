@@ -48,7 +48,7 @@ export function renameTick(op, b, ticked) {
   return op;
 }
 // an entry's website-only fields (build_site.py SITE_KEY, the bot's card_edits.SITE): differ from the card image on purpose, never baked
-export const SITE = "_site", SITE_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures", "colors"];
+export const SITE = "_site", SITE_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures"];
 const SITE_LABEL = "Website only (don't change the card image)";
 /** The website-only fields after an op's ticks (op.site: {field: true | false}) over the published ones. */
 export function siteAfter(op, b = {}) {

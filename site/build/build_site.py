@@ -214,14 +214,13 @@ PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability", "c
 # true beside a name: the bake renames the card's files to it (owner 2026-10-25; edit.js RENAME, the bot's card_edits.RENAME)
 RENAME_KEY = "_rename"
 # an entry's website-only fields: printed differently on purpose, never baked (edit.js SITE, the bot's card_edits.SITE)
-SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures", "colors")
+SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures")
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
 FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT FOUND",), "spd": ("SPD NOT FOUND",),
-            "ability": ("ABILITY TEXT NOT FOUND", "NO ABILITY LAYER"), "stars": ("NO STARS FOUND",),
-            "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",), "allow_high_stats": ("STATS TOO HIGH",),
-            "creatures": ("NO STATS FOUND",)}
+            "stars": ("NO STARS FOUND",), "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",),
+            "allow_high_stats": ("STATS TOO HIGH",), "creatures": ("NO STATS FOUND",)}
 FIXED_BY_ALL = {("hp", "def", "atk", "spd"): ("NO STATS FOUND",)}    # answered once every one has a value
 SKIP_PARTS = ("MDW", "Markers")
 MORGUE = "MDW/The Morgue/"                    # retired cards (owner 11-08): cards.json morgue, picture only, never a live card
@@ -2910,12 +2909,11 @@ def heavy_commits(commits):
 MASS_PASS = 20                                # a commit changing more card images than this is a mass pass (a template or token pass)
 
 
-def commit_keys(row, people, by_login, row_of=None):
+def commit_keys(row, people, by_login, row_of):
     """A commit's (parse_history row) credited names: who() of its author; a bot commit (BOT_AUTHOR) -> the row of each
-    Edit-by login (row_of: login_rows(), else credit()), else the login; [] without trailers."""
+    Edit-by login (row_of: login_rows()), else the login; [] without trailers."""
     _, _, name, email, _, _, editors = row
     if name.lower() == BOT_AUTHOR.lower():
-        row_of = row_of or (lambda k: credit(k, people, by_login))
         return list(dict.fromkeys(row_of(e) or e for e in editors))
     key = who(name, email, people, by_login)
     return [key] if key else []
@@ -2947,7 +2945,7 @@ def mass_passes(found):
     return {sha for sha, n in size.items() if n > MASS_PASS}
 
 
-def card_revisions(found, by_png, commits, people, by_login, row_of=None):
+def card_revisions(found, by_png, commits, people, by_login, row_of):
     """{card id: {credited name: image changes after its first upload}} (found: image_versions, newest first, so its last
     row is the upload): mass passes left out, credited by commit_keys(); every card id of the PNG gets the counts (a
     duplicate's are its original's). None without history."""
@@ -3121,7 +3119,7 @@ def stamp_groups(fields, meta):
     return out
 
 
-def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields_by=None, row_of=None):
+def edit_batches(commits, people, by_login, edits, id_of, name_of, since, row_of, fields_by=None):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
     Authors.txt line (a website publish batch, a commit by hand). The bot's bakes (they write verdicts
@@ -3135,7 +3133,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
     fields_by: filled with {credited name: {field: lines}} over every line (BATCH_LINES doesn't cut it; a Card Authors.txt
     line is "author", but not in the commit that created the file: 813 imported credits); the bot left out. row_of:
-    login_rows(), else credit().
+    login_rows().
     """
     def card(key, name):
         row = {"key": name or key, "name": name_of(name or key)}       # name: as written, when the site lacks the card
@@ -3147,7 +3145,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
     def shown(by):
         """The credited name"""
         by = str(by or "")
-        return (row_of(by) if row_of else credit(by, people, by_login)) or by
+        return row_of(by) or by
 
     def tally(names, fields):
         if fields_by is None:
@@ -3216,21 +3214,13 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
     return {"available": True, "batches": out}
 
 
-ARCHIVED_PERSON = ("card", "title", "tag", "renamed_to", "renamedId", "moved_to", "at", "created")       # contributions.json people[].archived
-
-
-def archive_tag(tag):
-    """The bot's archived tag -> renamed (renamed_to), unfinished (moved_to MDW/Unfinished), retired (moved_to elsewhere
-    in MDW: The Morgue) or deleted."""
-    moved = tag.get("moved_to") or ""
-    return "renamed" if tag.get("renamed_to") else "unfinished" if moved.startswith("MDW/Unfinished/") \
-        else "retired" if moved else "deleted"
+ARCHIVED_PERSON = ("card", "title", "renamed_to", "renamedId", "moved_to", "at", "created")       # contributions.json people[].archived
 
 
 def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, author_of=None):
     """The cards whose PSD left the card repo: old_stats names whose last version carries the bot's `archived` tag
-    {at, path, blob, commit, renamed_to?, moved_to?, author?, backfill?} (moved_to: the PSD moved into MDW, retired), newest first. A name in stats is back, whatever its tag says (the
-    bot clears it on its next save: card_models.stale_archives). tag: archive_tag(); author: a renamed card's Card Authors.txt
+    {at, path, blob, commit, renamed_to?, moved_to?, author?, backfill?} (moved_to: the PSD moved into MDW, retired; changes.js archiveTag tells the tag from these), newest first. A name in stats is back, whatever its tag says (the
+    bot clears it on its next save: card_models.stale_archives). author: a renamed card's Card Authors.txt
     line > the old name's (credited, by name, or by title when no live card has it) > the renamed card's (author_of: a card name ->
     its author) > the tag's > the last version's, through person(); created: the last version's created date, else the
     Pacific day of its oldest version."""
@@ -3252,7 +3242,7 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, autho
         if not made:
             dated = [analytics.when(v) for v in versions if isinstance(getattr(v, "timestamp", None), (int, float))]
             made = datetime.fromtimestamp(min(dated), analytics.ZONE).strftime("%Y-%m-%d") if dated else None
-        row = {"card": name, "title": title, "tag": archive_tag(tag), "card_type": getattr(last, "card_type", None),
+        row = {"card": name, "title": title, "card_type": getattr(last, "card_type", None),
                "stars": getattr(last, "stars", None), "at": tag.get("at"),
                "created": made, "author": person(people or {}, listed or tag.get("author") or getattr(last, "author", None)),
                "path": tag.get("path") or getattr(last, "path", None),
@@ -3461,7 +3451,7 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
 
 
 # ---- person stats (contributions.json people[]: the person page's Balance, Revisions, Archived cards) -------------------
-def psd_commits_at(commits, people, by_login, row_of=None):
+def psd_commits_at(commits, people, by_login, row_of):
     """{committer time: [(credited names, {alnum PSD file names})]} of the commits that added or changed a PSD."""
     out = {}
     for row in commits or ():
@@ -3505,7 +3495,7 @@ def latest_of(entries, scale):
     return out
 
 
-def person_extras(rows, cards, commits, people, by_login, balance, revisions, archived, fields_by, row_of=None):
+def person_extras(rows, cards, commits, people, by_login, balance, revisions, archived, fields_by, row_of):
     """Adds to each contributions row (key K; own cards: credited to K, not duplicates, not hidden) what it has of:
     power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, shift, madeBuff, madeNerf, swing? [id, delta, ts],
     recent [[id, buff|nerf, delta, ts]]}; revisions (P3, P12, P13) {self, others, top, theirs, most?, untouched, oldest?};
@@ -4586,12 +4576,10 @@ def main():
             return guess
         return png_by_name.get(name.replace(" ", "_").lower() + ".png")
 
-    seen_pngs, bot_dup_names, bot_dups = set(), {}, []
+    seen_pngs, bot_dups = set(), []
     for name, c in sorted(stats.items(), key=lambda kv: kv[0].lower()):
         path = getattr(c, "path", "") or ""
         if getattr(c, "duplicate_of", None) and not getattr(c, "variant_of", None):     # the bot's duplicate: made below
-            if getattr(c, "display_name", None):
-                bot_dup_names[name.replace(" ", "_").lower() + ".png"] = c.display_name
             bot_dups.append((name, c))
             continue
         variant = getattr(c, "variant", None)
@@ -4633,9 +4621,8 @@ def main():
 
     def add_dup(original, key, path):
         """A duplicate of original: its data, author and history; its own name (alias, else key), picture and edits."""
-        names = edit_aliases(edits, key)
-        name = (bot_dup_names.get(os.path.basename(path).lower())                     # alias or the PSD's hidden title
-                or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else key))
+        names = edit_aliases(edits, key)              # its longest, as the bot's _duplicate_name
+        name = " ".join(w[:1].upper() + w[1:] for w in max(names, key=len).replace("_", " ").split()) if names else key
         dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}
         dup.update(id=unique_slug(name), name=name, key=key, png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
@@ -4971,7 +4958,7 @@ def main():
         warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
     fields_by = {}                                # the person pages' edits by field: all time
     try:
-        every = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, 0, fields_by=fields_by, row_of=row_of)
+        every = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, 0, row_of, fields_by=fields_by)
         batches = {**every, "batches": [b for b in every["batches"] if b["at"] >= since]}
     except Exception as e:                        # never a failed build
         warn(f"no edit batches: {type(e).__name__}: {e}")

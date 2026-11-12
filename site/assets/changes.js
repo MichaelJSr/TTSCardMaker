@@ -135,10 +135,10 @@ export function fieldsHtml(fields) {
 const VERDICT = { buff: ["diff-up", "buff"], nerf: ["diff-down", "nerf"], mixed: ["muted", "buffs and nerfs"] };
 const verdictHtml = e => { const v = VERDICT[e.verdict]; const why = [...(e.buffs || []), ...(e.nerfs || [])].join("; "); return v ? ` <span class="${v[0]}"${why ? ` data-tip="${esc(why)}"` : ""}>(${v[1]})</span>` : ""; };
 const folder = p => String(p || "").split("/").slice(0, -1).join("/");
-// an archived card's tag: [key, label] (build_site archive_tag)
+// an archived card's tag: [key, label]
 export const ARCHIVE_TAGS = [["renamed", "Renamed"], ["retired", "Retired"], ["unfinished", "Unfinished"], ["deleted", "Deleted"]];
-/** The tag's key: the build's, else from the fields (renamed_to, moved_to: its PSD moved into MDW) */
-export const archiveTag = r => (ARCHIVE_TAGS.some(([k]) => k === r.tag) ? r.tag : r.renamed_to ? "renamed"
+/** The tag's key from the fields (renamed_to, moved_to: its PSD moved into MDW) */
+export const archiveTag = r => (r.renamed_to ? "renamed"
   : (r.moved_to || "").startsWith("MDW/Unfinished/") ? "unfinished" : r.moved_to ? "retired" : "deleted");
 /** The tag as a pill; its tip: where the PSD was (and went) */
 export function archiveTagHtml(r) {

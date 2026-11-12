@@ -163,9 +163,9 @@ function updown(cols, { every = 1 } = {}) {
 }
 
 /** One small chart per cohort over the months: the average total as a line, the middle 80% as a band; months with
-    fewer than `min` cards are left out. panels: [{label, points: [[n, mean, p10, p50, p90] | null]}] */
+    fewer than `min` cards are left out. panels: [{label, points: [[n, mean, p10, p90] | null]}] */
 function multiples(months, panels, min) {
-  const vals = panels.flatMap(p => p.points.filter(x => x && x[0] >= min).flatMap(x => [x[2], x[4]]));
+  const vals = panels.flatMap(p => p.points.filter(x => x && x[0] >= min).flatMap(x => [x[2], x[3]]));
   if (!vals.length) return "";
   const lo = Math.floor(Math.min(...vals) / 5) * 5, hi = Math.max(lo + 5, Math.ceil(Math.max(...vals) / 5) * 5);
   const W = 320, H = 150, padL = 28, padR = 34, axisH = 20, plotH = H - axisH - 8;
@@ -176,10 +176,10 @@ function multiples(months, panels, min) {
     const runs = [];
     for (const pt of ok) { if (!pt) { if (runs.length && runs[runs.length - 1].length) runs.push([]); continue; } if (!runs.length) runs.push([]); runs[runs.length - 1].push(pt); }
     const segs = runs.filter(r => r.length);
-    const band = segs.map(r => `<path class="area" d="M${r.map(([i, x]) => `${X(i)},${Y(x[4])}`).join("L")}L${r.slice().reverse().map(([i, x]) => `${X(i)},${Y(x[2])}`).join("L")}Z"/>`).join("");
+    const band = segs.map(r => `<path class="area" d="M${r.map(([i, x]) => `${X(i)},${Y(x[3])}`).join("L")}L${r.slice().reverse().map(([i, x]) => `${X(i)},${Y(x[2])}`).join("L")}Z"/>`).join("");
     const line = segs.map(r => `<path class="line" d="M${r.map(([i, x]) => `${X(i)},${Y(x[1])}`).join("L")}"/>`).join("");
     const last = ok.filter(Boolean).pop();
-    const hits = ok.map((pt, i) => (pt ? `<rect class="hit" x="${X(i) - (W - padL - padR) / Math.max(1, months.length - 1) / 2}" y="0" width="${(W - padL - padR) / Math.max(1, months.length - 1)}" height="${H - axisH}" data-v="${esc(`average ${fmt(pt[1][1])}`)}" data-l="${esc(`${monthLabel(months[i])} · ${p.label}: ${pt[1][0]} cards, middle 80% ${fmt(pt[1][2])}–${fmt(pt[1][4])}`)}"/>` : "")).join("");
+    const hits = ok.map((pt, i) => (pt ? `<rect class="hit" x="${X(i) - (W - padL - padR) / Math.max(1, months.length - 1) / 2}" y="0" width="${(W - padL - padR) / Math.max(1, months.length - 1)}" height="${H - axisH}" data-v="${esc(`average ${fmt(pt[1][1])}`)}" data-l="${esc(`${monthLabel(months[i])} · ${p.label}: ${pt[1][0]} cards, middle 80% ${fmt(pt[1][2])}–${fmt(pt[1][3])}`)}"/>` : "")).join("");
     const grid = ticks.map(t => `<line class="gridline" x1="${padL}" x2="${W - padR}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${padL - 5}" y="${Y(t) + 4}" text-anchor="end">${t}</text>`).join("");
     const xl = months.length ? `<text x="${padL}" y="${H - 4}">${esc(monthLabel(months[0]))}</text><text x="${W - padR}" y="${H - 4}" text-anchor="end">${esc(monthLabel(months[months.length - 1]))}</text>` : "";
     const end = last ? `<circle class="end" cx="${X(last[0])}" cy="${Y(last[1][1])}" r="4"/><text class="val" x="${X(last[0]) + 7}" y="${Y(last[1][1]) + 4}">${esc(fmt(last[1][1]))}</text>` : "";

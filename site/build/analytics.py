@@ -16,7 +16,7 @@ months are Pacific time (ZONE).
     page shows it. A version with the same date as the one after it is the same PSD read again by a newer parser: the
     newer reading replaces it.
   * Over time (full-history builds only, since a card's start is its first upload): each month, the total stats of
-    each cohort's cards as they were then.
+    each star cohort's cards as they were then.
 
 PSDs are never read here; everything comes from the bot's data.
 """
@@ -424,7 +424,7 @@ def point(v):
 
 
 def over_time(cards, stats, old_stats, sizes, now):
-    """{months: [...], series: {cohort key: [[n, mean, p10, p50, p90] or None per month]}}: at each month's end, the
+    """{months: [...], series: {star cohort key: [[n, mean, p10, p90] or None per month]}}: at each month's end, the
     creatures and minions there were then with the stars and stats they had then. A card's start is its image's first
     upload (fs, full-history builds only) or its oldest version, whichever is earlier; an archived card ends at its tag."""
     lives = []
@@ -456,18 +456,14 @@ def over_time(cards, stats, old_stats, sizes, now):
                 continue
             then = [p for p in points if p[0] < t]
             _, kind, stars, line = then[-1] if then else points[0]       # before its first version: as first read
-            if kind == AUX:
-                kind, stars = "creature", None
             if kind not in KINDS or line is None or sum(line) > OFF_SCALE:
                 continue
             key = cohort_key(kind, stars, sizes)
-            if not key.endswith("|all"):
+            if not key.endswith("|all"):          # star cohorts only: balance.js draws no |all panel
                 groups[key].append(sum(line))
-            groups[f"{kind}|all"].append(sum(line))
         for key, totals in groups.items():
             ordered = sorted(totals)
-            series[key][i] = [len(ordered), round(sum(ordered) / len(ordered), 2),
-                              quantile(ordered, .1), quantile(ordered, .5), quantile(ordered, .9)]
+            series[key][i] = [len(ordered), round(sum(ordered) / len(ordered), 2), quantile(ordered, .1), quantile(ordered, .9)]
     return {"months": months, "series": dict(series)}
 
 
