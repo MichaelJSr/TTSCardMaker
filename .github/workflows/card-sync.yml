@@ -1270,7 +1270,7 @@ jobs:
         continue-on-error: true   # TTS save start starts what this did not
         timeout-minutes: 1
         working-directory: bot
-        env: &save-env
+        env:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
           AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
         run: &save-sh |
@@ -1447,7 +1447,9 @@ jobs:
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         timeout-minutes: 1
         working-directory: bot
-        env: *save-env
+        env:
+          AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
         run: *save-sh
 
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
