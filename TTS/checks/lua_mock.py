@@ -14,8 +14,11 @@ pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save write
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name plain,
 the ability in the website's palette (tts.json ac), every "<" of a text kept from starting a tag; every card's details at each
-size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card, the STATUS EFFECTS in the text; a tooltip only
-on a name cut short (its whole name), opaque and above every row of buttons); each deck button a copy of the full deck, every card at its count in the save's piles.
+size: the text only the kind line, the stats and the ability (no rule sections), each chapter a whole Rules button, rows
+fit, each "+ name" spawns its card; the ability laid out line by line as one text would draw it, each status word, timing
+tag and creature or minion type word with its rule on hover (wrapped to the text's width); a button's tooltip only on a
+name cut short (its whole name), above every row of buttons; every tooltip in the opaque style (TIP)); each deck button a
+copy of the full deck, every card at its count in the save's piles.
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
 """
 import json
@@ -527,37 +530,33 @@ def painted(text, pieces):                                  # Global.lua painted
     return "".join(out) + plain(text[at:])
 
 
-STATUS_HEAD = "\n<color=#7dd3fc><b>STATUS EFFECTS</b></color>\n"   # Global.lua detailsText's section
-
-
-def status_line(n, s):                                      # Global.lua detailsText: a STATUS EFFECTS line's start
-    name = f"<color={s['c']}>{plain(n)}</color>" if re.fullmatch(r"#[0-9a-f]{6}", str(s.get("c"))) else plain(n)
-    return f"<b>{name}</b> <color=#94a3b8>({plain(s['k'])})</color>  "
-
-
 def offset_y(ui, i):
     return -float(ui.attrs[i].get("offsetXY", "0 0").split()[1])
 
 
+def pool(ui, panel):                                        # the ability's plain lines, rows and each row's texts (ids)
+    al = [i for i in ui.ids if re.fullmatch(rf"{panel}_al\d+", i)]
+    rows = {i: sorted((j for j in ui.ids if re.fullmatch(rf"{i}_\d+", j)), key=lambda j: int(j.rsplit("_", 1)[1]))
+            for i in ui.ids if re.fullmatch(rf"{panel}_as\d+", i)}
+    return al, rows
+
+
 def ability_lines(ui, panel):                               # the ability's laid-out lines, top down:
-    out = []                                                # [(y, [(text, tooltip)])], a plain line one text
-    for i in range(1, 11):
-        if ui.on(f"{panel}_al{i}"):
-            out.append((offset_y(ui, f"{panel}_al{i}"), [(ui.values.get(f"{panel}_al{i}") or "", "")]))
-    for i in range(1, 7):
-        row = f"{panel}_as{i}"
+    out, (al, rows) = [], pool(ui, panel)                   # [(y, [(text, tooltip)], row id or None)]
+    for i in al:
+        if ui.on(i):
+            out.append((offset_y(ui, i), [(ui.values.get(i) or "", "")], None))
+    for row, texts in rows.items():
         if ui.on(row):
-            out.append((offset_y(ui, row), [(ui.values.get(f"{row}_{j}") or "", ui.attrs[f"{row}_{j}"].get("tooltip") or "")
-                                            for j in range(1, 8) if ui.on(f"{row}_{j}")]))
+            out.append((offset_y(ui, row), [(ui.values.get(j) or "", ui.attrs[j].get("tooltip") or "") for j in texts if ui.on(j)], row))
     return sorted(out)
 
 
 def panel_text(ui, panel):                                  # the details as one text (the ability's lines joined)
     head, lines = ui.values.get(f"{panel}_text") or "", ability_lines(ui, panel)
-    if not lines and not ui.on(f"{panel}_rest"):
+    if not lines:
         return head
-    rest = ui.values.get(f"{panel}_rest") or "" if ui.on(f"{panel}_rest") else ""
-    return head + "\n\n" + "\n".join(" ".join(t for t, _ in els) for _, els in lines) + ("\n" + rest if rest else "")
+    return head + "\n\n" + "\n".join(" ".join(t for t, _ in els) for _, els, _ in lines)
 
 
 RICH = re.compile(r"<color=(#[0-9a-fA-F]{6})>|</color>|<b>|</b>")
@@ -601,48 +600,106 @@ def with_badges(text, d):                                   # Global.lua withBad
             i = o + 1
 
 
-def ability_wrong(ui, panel, card, d, wide):                # laid out, the ability draws as one text would;
-    lines = ability_lines(ui, panel)                        # each status word its rule on hover; lines stacked, fit
+def type_words(d):                                          # creature and minion types' words (lowercase): {word: type}
+    out = {}
+    for k, t in d["types"].items():
+        if t.get("c") in ("creature-types", "minions"):
+            out[k] = k
+            out.setdefault(str(t.get("n") or k).lower(), k)
+    return out
+
+
+def hovers(chars, card, d):                                 # the hovers drawn text ([(char, colour, bold)]) holds, in
+    seen, out, taken = "".join(c[0] for c in chars), [], []  # order: [(at, label, rule)]
+    for tag, t in d["tags"].items():                        # its badges: bold, the tag's own case
+        for m in re.finditer(re.escape(f"({tag})"), seen):
+            if chars[m.start()][2]:
+                out.append((m.start(), f"({tag})", t.get("m") or ""))
+                taken.append(range(m.start(), m.end()))
+    for word, k in sorted(type_words(d).items(), key=lambda x: -len(x[0])):
+        for m in re.finditer(rf"(?<![A-Za-z]){re.escape(word)}(?![A-Za-z])", seen):
+            if not any(m.start() in r or m.end() - 1 in r for r in taken):
+                out.append((m.start(), d["types"][k].get("n") or k, d["types"][k].get("x") or ""))
+                taken.append(range(m.start(), m.end()))
+    for p in card.get("ac") or []:                          # status words: a piece naming a status, in its colour
+        if isinstance(p, list) and len(p) > 1 and p[0] in d["statuses"]:
+            for w in p[0].split():
+                at = next((m.start() for m in re.finditer(re.escape(w), seen)
+                           if all(c[1] == p[1] for c in chars[m.start():m.end()])), None)
+                if at is not None:
+                    out.append((at, p[0], d["statuses"][p[0]].get("x") or ""))
+                    break
+    return sorted(set(out))
+
+
+def advance_table(script):                                  # Global.lua glyphW: Arial advances, whole pixels at size f
+    rows = {b: [int(x) for x in re.search(rf'local ARIAL_{b} = "([0-9,]+)"', script).group(1).split(",")] for b in "RB"}
+    more = {ch: int(u) for ch, u in re.findall(r'\["(.)"\] = (\d+)', re.search(r"local ARIAL_MORE = \{(.*?)\}", script).group(1))}
+    def width(text, f):
+        return sum(int((rows["R"][ord(ch) - 32] if 32 <= ord(ch) <= 126 else more.get(ch, 1139)) * f / 2048 + 0.5) for ch in text)
+    return width
+
+
+def ability_wrong(ui, panel, card, d, wide, f=None, width=None):   # an ability with a hover laid out, drawn as one text
+    lines = ability_lines(ui, panel)                        # would; each hover its rule (wrapped to the text's width);
+    want = drawn(with_badges(painted(card.get("a") or "", card.get("ac")), d))   # lines stacked
     if not lines:
-        return []
+        return ["not laid out"] if hovers(want, card, d) else []
     wrong = []
-    want = drawn(with_badges(painted(card.get("a") or "", card.get("ac")), d))
-    got = drawn("\n".join(" ".join(t for t, _ in els) for _, els in lines))
+    got = drawn("\n".join(" ".join(t for t, _ in els) for _, els, _ in lines))
     if [c for c in want if not c[0].isspace()] != [c for c in got if not c[0].isspace()] \
             or "".join(c[0] for c in want).split() != "".join(c[0] for c in got).split():
         wrong.append("ability drawn differently")
-    for _, els in lines:
+    flat = lambda t: re.sub(r"\s+", " ", t).strip()
+    for _, els, _ in lines:
         for t, tip in els:
-            seen = "".join(c[0] for c in drawn(t))
-            words = re.split(r"[\s,.()/]+", seen)
-            names = sorted({p[0] for p in card.get("ac") or [] if isinstance(p, list) and p and p[0] in d["statuses"]
-                            and set(words) & set(p[0].split())}, key=lambda n: min(words.index(w) for w in n.split() if w in words))
-            ok = {d["statuses"][n]["x"] for n in names} | {"\n".join(f"{n}: {d['statuses'][n]['x']}" for n in names)}
-            if tip and tip not in ok:
+            found = hovers(drawn(t), card, d)
+            ok = {flat(r) for _, _, r in found} | {flat("\n".join(f"{n}: {r}" for _, n, r in found))}
+            if tip and flat(tip) not in ok:
                 wrong.append(f"tooltip {tip!r} on {t!r}")
-            if names and len(els) > 1 and not tip and len(els) < 7:
+            if found and not tip:
                 wrong.append(f"no tooltip on {t!r}")
-    ys = [y for y, _ in lines]
-    if any(b - a <= 0 for a, b in zip(ys, ys[1:])) or (ui.on(f"{panel}_rest") and offset_y(ui, f"{panel}_rest") < ys[-1]):
+            if tip and width and f and any(" " in x and width(x, f) > wide for x in tip.split("\n")):
+                wrong.append(f"tooltip wider than the text {tip!r}")
+    ys = [y for y, _, _ in lines]
+    if any(b - a <= 0 for a, b in zip(ys, ys[1:])):
         wrong.append(f"lines overlap {ys}")
     if any(float(ui.attrs[i]["width"]) != wide for i in ui.attrs if i.startswith(f"{panel}_a") and ui.on(i) and "width" in ui.attrs[i]):
         wrong.append("a line not the text's width")
     return wrong
 
 
-def status_wrong(ui, panel, card, d):                       # the STATUS EFFECTS lines in the text, last, in order
-    want = [status_line(n, d["statuses"][n]) for n in card.get("x") or [] if n in d["statuses"]]
-    text = panel_text(ui, panel)
-    at = text.find(STATUS_HEAD)
-    if not want:
-        return ["a STATUS EFFECTS heading"] if at >= 0 else []
-    if at < 0:
-        return ["no STATUS EFFECTS heading"]
-    lines = text[at + len(STATUS_HEAD):].split("\n")
-    return [f"status line {i}" for i, w in enumerate(want) if not any(x.startswith(w) for x in lines)]
+def text_wrong(ui, panel, card, d):                         # the text: the kind line, the stats, the ability; no sections
+    bits = " · ".join([card.get("k") or ""] + ([f"{int(card['st'])}★"] if card.get("st") else []) + ([f"by {card['by']}"] if card.get("by") else []))
+    head = f"<color=#94a3b8>{plain(bits)}</color>" + (f"\n<b>{plain(card['s'])}</b>" if card.get("s") else "")
+    text, wrong = ui.values.get(f"{panel}_text") or "", []
+    if ability_lines(ui, panel):
+        if text != head:
+            wrong.append(f"text before the ability {text[:80]!r}")
+    elif text != head + (f"\n\n{with_badges(painted(card['a'], card.get('ac')), d)}" if card.get("a") else ""):
+        wrong.append(f"text {text[-80:]!r}")
+    if any(h in panel_text(ui, panel) for h in ("TIMING TAGS", "TYPES", "STATUS EFFECTS")):
+        wrong.append("a rule section")
+    return wrong
 
 
-TIP = {"tooltipPosition": "Above", "tooltipBackgroundColor": "#0f1729", "tooltipTextColor": "#e8edf5", "tooltipBorderColor": "#3b4b6b"}
+# Global.lua TIP: every tooltip opaque (no sprite, no fade), lighter than the panel, light border, white text, above
+TIP = {"tooltipPosition": "Above", "tooltipBackgroundColor": "#1b2740", "tooltipBackgroundImage": "none", "tooltipBorderColor": "#7dd3fc",
+       "tooltipTextColor": "#ffffff", "tooltipFadeTime": "0"}
+
+
+def style_wrong(ui, panel):                                 # every element that can show a tooltip: TIP, its size's font
+    wrong = []
+    for i, a in ui.attrs.items():
+        if not i.startswith(panel + "_") or not ("tooltip" in a or re.fullmatch(rf"{panel}_(as\d+_\d+|[rck]\d_\d)", i)):
+            continue
+        if any(a.get(k) != v for k, v in TIP.items()):
+            wrong.append((i, "style"))
+        if a.get("tooltip") and not a.get("tooltipFontSize"):
+            wrong.append((i, "no font size"))
+        if re.fullmatch(rf"{panel}_as\d+_\d+", i) and a.get("tooltipOffset") != "6":
+            wrong.append((i, "offset", a.get("tooltipOffset")))
+    return wrong
 
 
 def tip_wrong(ui, panel):                                   # a tooltip only on a name cut short: the whole name, as the
@@ -1154,36 +1211,52 @@ def main():
     w.run(w.g.showDetails, "Red", stray, what="unknown card")
     check(("Red", "No details for this card.") in w.told, "a card the data lacks: no details")
 
-    # ---- the palette's colours, status lines, and text that looks like rich text ----
+    # ---- the palette's colours, hovers (status words, timing tags, type words), and text that looks like rich text ----
     path = face_path(cards[0])
     st = {"Burn": {"x": "3 DMG <hot>, -1 SPD", "k": "debuff", "c": "#db923d", "xc": [["-1 SPD", "#ffd21f"]], "p": path},
           **{f"S{i}": {"x": f"rule {i}", "k": "buff"} for i in range(1, 7)}}
+    tags = {"1CD": {"g": "turn", "m": "Cooldown: needs 1 turn of charge"}, "OS": {"g": "trigger", "m": "On summon"},
+            "BOGT": {"g": "forced", "m": "Beginning of global turn (forced)"}}
+    long_rule = " ".join(["Immune to Corruption and every other long word in this rule"] * 6)
+    types = {"fire": {"n": "Fire", "x": "Immune to Smoldering, Burning, Blazing", "c": "creature-types"},
+             "darkmatter": {"n": "Dark Matter", "x": long_rule, "c": "creature-types"},
+             "offensiveminion": {"n": "Offensive Minion", "x": "Offensive minions occupy the same field.", "c": "minions"},
+             "attack": {"n": "Attack", "x": "These items do damage.", "c": "item-types"}}
     odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"]], "al": ["Zqrose"],
-           "a": "<i>Burn</i> a Burn, then Burn<3\nBurn", "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]],
+           "a": "<i>Burn</i> a Burn, then Burn<3\nBurn\n(1cd) offensive minion: fire, darkmatter; (OS)/(BOGT) not Fire, firework or attack",
+           "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]],
            "x": ["Burn", "Gone", *list(st)[1:]]}
     w4 = World(script, save, zones)
     w4.seat("Red")
     w4.g.onLoad("")
     w4.wait.flush()
-    odd_details = {**details, "statuses": {**details["statuses"], **st}, "cards": {**details["cards"], path: odd}}
+    odd_details = {**details, "statuses": {**details["statuses"], **st}, "tags": {**details["tags"], **tags},
+                   "types": {**details["types"], **types}, "cards": {**details["cards"], path: odd}}
     w4.respond(json.dumps(odd_details), pages_text)
     w4.run(w4.g.showDetails, "Red", Obj.of(w4, cards[0]), what="Card details: colours")
     title, text = w4.ui.values.get("Red_d1_title") or "", panel_text(w4.ui, "Red_d1")
     check(title == "Rose <<b></b>b>Thorn<<b></b>/b> <<b></b>color=#ff0000>x" and title == plain(odd["n"]),
           f"the name plain (no nc), the card's own '<' no tag {title!r}")
-    tail = text[text.find(STATUS_HEAD):]
-    check(tail == STATUS_HEAD + '<b><color=#db923d>Burn</color></b> <color=#94a3b8>(debuff)</color>  3 DMG <<b></b>hot>, <color=#ffd21f>-1 SPD</color>'
-          + "".join(f"\n<b>S{i}</b> <color=#94a3b8>(buff)</color>  rule {i}" for i in range(1, 7))
-          and not status_wrong(w4.ui, "Red_d1", odd, odd_details) and "Red_d1_s1" not in w4.ui.ids
-          and not any(w4.ui.attrs.get(i, {}).get("tooltip") for i in w4.ui.ids if i.startswith("Red_d1_") and ("_text" in i or "_rest" in i)),
-          f"STATUS EFFECTS last in the text, each its line in its colour, its rule's words in theirs, no tooltip; one unknown left "
-          f"out {tail[:160]!r} {status_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
+    check(not text_wrong(w4.ui, "Red_d1", odd, odd_details) and not w4.ui.attrs["Red_d1_text"].get("tooltip"),
+          f"the text: the kind line, the stats, the ability; no TIMING TAGS, TYPES or STATUS EFFECTS; no tooltip on it "
+          f"{text_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
     check("<<b></b>i>Burn<<b></b>/i> a <color=#ff0000>Burn</color>, then <color=#00ff00>Burn<<b></b>3</color>\n<color=#0000ff>Burn</color>" in text,
           "the ability in its colours: the nth find, a piece not found skipped, '<' no tag")
     laid = ability_lines(w4.ui, "Red_d1")
-    check([[tip for _, tip in els] for _, els in laid] == [["", st["Burn"]["x"], ""], [st["Burn"]["x"]]]
-          and all(w4.ui.attrs["Red_d1_as1_2"].get(k) == v for k, v in TIP.items()) and not ability_wrong(w4.ui, "Red_d1", odd, odd_details, 496),
-          f"the ability line by line, each status word its rule on hover, as the panel; the rest no tooltip {laid}")
+    tips = {"".join(c[0] for c in drawn(t)): tip for _, els, _ in laid for t, tip in els}
+    width = advance_table(script)
+    dm = tips.get("darkmatter;", "")
+    check([[tip for _, tip in els] for _, els, _ in laid[:2]] == [["", st["Burn"]["x"], ""], [st["Burn"]["x"]]]
+          and not ability_wrong(w4.ui, "Red_d1", odd, odd_details, 496, 16, width) and not style_wrong(w4.ui, "Red_d1"),
+          f"the ability line by line, each status word its rule on hover, as the panel, the rest no tooltip "
+          f"{ability_wrong(w4.ui, 'Red_d1', odd, odd_details, 496, 16, width) + style_wrong(w4.ui, 'Red_d1')} {laid[:2]}")
+    check(tips.get("(1CD)") == tags["1CD"]["m"] and tips.get("(OS)/(BOGT)") == "(OS): On summon\n(BOGT): Beginning of global turn (forced)",
+          f"a timing tag its meaning on hover (as written: '1cd'); two in a word, each 'tag: meaning' {tips}")
+    check(tips.get("fire,") == types["fire"]["x"] and tips.get("offensive minion:") == types["offensiveminion"]["x"]
+          and "\n" in dm and dm.replace("\n", " ") == long_rule and all(width(x, 16) <= 496 for x in dm.split("\n"))
+          and all(not tip for t, tip in tips.items() if any(w in t for w in ("Fire,", "firework", "attack"))),
+          f"a creature or minion type's word its rule on hover, a long one in lines the text's width; 'Fire', 'firework' "
+          f"and an item type's word none {tips}")
     burn = next((f"Red_d1_c{r}_1" for r in range(1, 3) if w4.ui.on(f"Red_d1_c{r}_1")), None)
     check(burn and w4.ui.text(burn) == "+ Burn" and not w4.ui.attrs[burn].get("tooltip"), f"'+ Burn': no rule on hover {burn and w4.ui.attrs[burn]}")
     w4.run(w4.table_menu["Find a card"], "Red", w4.vec(10, 1, 10), what="Find a card: '<' in a name")
@@ -1198,7 +1271,7 @@ def main():
     w5.g.onLoad("")
     w5.wait.flush()
     w5.respond(details_raw, pages_text)
-    ui5, red5, bad, cut, laid_n = w5.ui, w5.players["Red"], [], 0, 0
+    ui5, red5, bad, cut, laid_n, width = w5.ui, w5.players["Red"], [], 0, 0, advance_table(script)
     def at(kind, i, rows):
         return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, rows + 1) if ui5.on(f"Red_d1_{kind}{r}_{i}")), None)
     for d in cards:
@@ -1221,9 +1294,9 @@ def main():
                     ws = [int(ui5.attrs[b]["preferredWidth"]) for b in (f"Red_d1_{kind[0]}{r}_{i}" for i in range(r, n + 1)) if ui5.on(b)]
                     if ws and sum(ws) + 6 * (len(ws) - 1) > int(ui5.attrs[f"Red_d1_{kind}{r}"]["width"]):
                         bad.append((c["n"], size, f"{kind}{r}", ws))
-            bad += [(c["n"], size, x) for x in status_wrong(ui5, "Red_d1", c, details) + tip_wrong(ui5, "Red_d1")]
+            bad += [(c["n"], size, x) for x in text_wrong(ui5, "Red_d1", c, details) + tip_wrong(ui5, "Red_d1") + style_wrong(ui5, "Red_d1")]
             cut += sum(1 for b in ui5.attrs if re.fullmatch(r"Red_d1_[rck]\d_\d", b) and ui5.on(b) and ui5.attrs[b].get("tooltip"))
-            bad += [(c["n"], size, x) for x in ability_wrong(ui5, "Red_d1", c, details, (440, 540, 660)[size - 1] - 44)]
+            bad += [(c["n"], size, x) for x in ability_wrong(ui5, "Red_d1", c, details, (440, 540, 660)[size - 1] - 44, (14, 16, 18)[size - 1], width)]
             laid_n += bool(ability_lines(ui5, "Red_d1"))
         for i, (name, path) in enumerate(named[:6], 1):
             b = at("c", i, 2)
@@ -1234,9 +1307,10 @@ def main():
                     or face_path(w5.spawns[0]["data"]) != path:
                 bad.append((c["n"], f"+ {name}"))
         w5.call("closeDetails", red5, None, "Red_d1_close")
-    check(not bad and cut, f"every card's details at each size ({len(cards)} cards): each chapter a whole Rules button, rows fit, "
-          f"each '+ name' spawns its card, the STATUS EFFECTS in the text; a tooltip only on a name cut short ({cut}), as the panel, "
-          f"above the buttons; {laid_n} card sizes' abilities line by line, drawn as one text would ({len(bad)} wrong) {bad[:5]}")
+    check(not bad and cut, f"every card's details at each size ({len(cards)} cards): the text the kind line, stats and ability "
+          f"(no rule sections), each chapter a whole Rules button, rows fit, each '+ name' spawns its card; a button's tooltip "
+          f"only on a name cut short ({cut}), above the buttons; every tooltip in TIP's style; {laid_n} card sizes' abilities "
+          f"line by line, drawn as one text would, each hover its rule ({len(bad)} wrong) {bad[:5]}")
 
     # ---- the website offline ----
     w3 = World(script, save, zones)

@@ -99,11 +99,11 @@ end
 -- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click; cards that draw from a kind of deck (DECKS) get a
--- button per deck that spawns a shuffled copy beside the card. The ability's words in the website's palette (painted:
--- status words, stats with their numbers, counters; a colour too dark for the panel in a lighter shade: build_site
--- tts_seen). A button whose name is cut short shows the whole name on hover, opaque and clear of the buttons (TIP).
--- An ability with status words is laid out line by line (abilityLines), each status word its own text with the status's
--- rule on hover.
+-- button per deck that spawns a shuffled copy beside the card. The panel's text: the kind, stars and author, the stats,
+-- then the ability, its words in the website's palette (painted: status words, stats with their numbers, counters; a
+-- colour too dark for the panel in a lighter shade: build_site tts_seen). An ability with a status word, a timing tag
+-- or a type's word is laid out line by line (abilityLines), each its own text with its rule on hover (no rule sections
+-- below it). A button whose name is cut short shows the whole name on hover, clear of the buttons. Hover boxes: TIP.
 -- Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
 -- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
@@ -114,13 +114,14 @@ local RAW_PREFIX = "https://raw.githubusercontent.com/"
 local RAW_MAIN = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/"
 local SEATS = {"White", "Brown", "Red", "Orange", "Yellow", "Green", "Teal", "Blue", "Purple", "Pink", "Grey", "Black"}
 local BADGE = {turn = "#60a5fa", any = "#a78bfa", forced = "#f87171", trigger = "#fbbf24", neutral = "#cbd5e1"}
-local DIM, HEAD = "#94a3b8", "#7dd3fc"
+local DIM = "#94a3b8"
 local SIZES = {{w = 440, h = 540, f = 14}, {w = 540, h = 660, f = 16}, {w = 660, h = 800, f = 18}}
 local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 5, 6, 40, 30
 local RULE_ROWS, CARD_ROWS = 3, 2                      -- rows the buttons may take (more than fit: names shortened)
 local DECK_BUTTONS, DECK_ROWS = 8, 3
 local DETAILS_PANELS = 3                               -- a player's card details open at once (one more replaces the oldest)
-local ABILITY_LINES, STATUS_LINES, LINE_SLOTS = 10, 6, 7   -- per panel: plain ability lines, lines with a status word, texts in one
+local ABILITY_LINES = 14                               -- per panel: plain ability lines
+local ROW_SLOTS = {8, 7, 5, 4, 4, 3, 3}                -- per panel: rows for lines with a hover, each its texts (widest first)
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
     {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
 
@@ -135,8 +136,11 @@ end
 local BUTTON = "#c7d2fe|#e0e7ff|#a5b4fc|#c7d2fe80"     -- light lavender (normal|hover|pressed|disabled), dark text
 local SPAWN = "#bbf7d0|#dcfce7|#86efac|#bbf7d080"      -- the spawn buttons: light green
 local DECK = "#fde68a|#fef3c7|#fcd34d|#fde68a80"       -- the deck buttons: light amber
-local TIP = {tooltipPosition = "Above", tooltipBackgroundColor = "#0f1729", tooltipTextColor = "#e8edf5",
-    tooltipBorderColor = "#3b4b6b"}                    -- hover text as the details panel (TTS's own is see-through)
+-- every hover box, on each element that has one (TTS's tooltip is one box that keeps the last element's style): a plain
+-- box (no sprite) with no fade-in (XmlLayout's stops short of full alpha), so opaque; a shade lighter than the panel,
+-- a light border, white text; above what is hovered
+local TIP = {tooltipPosition = "Above", tooltipBackgroundColor = "#1b2740", tooltipBackgroundImage = "none",
+    tooltipBorderColor = "#7dd3fc", tooltipTextColor = "#ffffff", tooltipFadeTime = "0"}
 local function button(id, label, onClick, attrs)
     local a = {id = id, onClick = onClick, fontSize = 13, textColor = "#0f172a", colors = BUTTON}
     for k, v in pairs(attrs or {}) do a[k] = v end
@@ -160,8 +164,8 @@ local function rows(id, prefix, n, count, onClick, colors)
     return out
 end
 
--- a panel's page: the details text, the ability's lines when laid out by layout() (plain lines, then lines with a status
--- word: a row of texts, each status word its own with its rule on hover), the text after the ability
+-- a panel's page: the details text, the ability's lines when laid out by layout() (plain lines, then lines with a hover:
+-- a row of texts, each status word, timing tag and type word its own with its rule on hover)
 local function abilityPool(id)
     local function text(tid, attrs)
         local a = {id = tid, rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5", alignment = "UpperLeft",
@@ -169,13 +173,13 @@ local function abilityPool(id)
         for k, v in pairs(attrs or {}) do a[k] = v end
         return {tag = "Text", attributes = a, value = ""}
     end
-    local page = {text(id .. "_text", {horizontalOverflow = "Wrap", active = true}), text(id .. "_rest", {horizontalOverflow = "Wrap"})}
+    local page = {text(id .. "_text", {horizontalOverflow = "Wrap", active = true})}
     for i = 1, ABILITY_LINES do table.insert(page, text(id .. "_al" .. i)) end
-    for i = 1, STATUS_LINES do
+    for i, slots in ipairs(ROW_SLOTS) do
         local row = {tag = "HorizontalLayout", attributes = {id = id .. "_as" .. i, rectAlignment = "UpperLeft", offsetXY = "14 -6",
             childForceExpandWidth = false, childForceExpandHeight = true, childAlignment = "UpperLeft", active = false}, children = {}}
-        for j = 1, LINE_SLOTS do
-            local a = {flexibleWidth = 0}                  -- as wide as its text (Unity's own measure)
+        for j = 1, slots do
+            local a = {flexibleWidth = 0, tooltipOffset = 6}   -- as wide as its text (Unity's own measure); the box just above
             for k, v in pairs(TIP) do a[k] = v end
             table.insert(row.children, text(id .. "_as" .. i .. "_" .. j, a))
         end
@@ -293,10 +297,9 @@ local function rebuild()
             for k = 1, DETAILS_PANELS do
                 local id = c .. "_d" .. k
                 for i = 1, ABILITY_LINES do uiNow[id .. "_al" .. i] = {active = "false"} end
-                uiNow[id .. "_rest"] = {active = "false"}
-                for i = 1, STATUS_LINES do
+                for i, slots in ipairs(ROW_SLOTS) do
                     uiNow[id .. "_as" .. i] = {active = "false"}
-                    for j = 1, LINE_SLOTS do uiNow[id .. "_as" .. i .. "_" .. j] = {active = "false"} end
+                    for j = 1, slots do uiNow[id .. "_as" .. i .. "_" .. j] = {active = "false"} end
                 end
             end
         end
@@ -516,14 +519,83 @@ local function glyphW(ch, bold, f)
     return math.floor(u * f / 2048 + 0.5)
 end
 
--- the ability as painted and withBadges draw it, in runs {text, colour, bold, status, n}: a status word (a piece naming a
--- status) its status and occurrence n; and whether it has one
+-- a hover's {label, rule}, one table per status, timing tag or type (the same one each time: a word's hovers compared)
+local tipsOf, tipsFor = {}, nil
+local function tipOf(kind, name)
+    if tipsFor ~= details then tipsOf, tipsFor = {}, details end
+    local key = kind .. name
+    if not tipsOf[key] then
+        if kind == "s" then tipsOf[key] = {name, details.statuses[name].x or ""}
+        elseif kind == "g" then tipsOf[key] = {"(" .. name .. ")", details.tags[name].m or ""}
+        else tipsOf[key] = {details.types[name].n or name, details.types[name].x or ""} end
+    end
+    return tipsOf[key]
+end
+
+-- creature and minion types' words as an ability prints their icons ([fire] -> fire, [offensive_minion] -> offensive
+-- minion), {word, type}, longest first: lowercase only (abilities write them so only by their icons); item and status
+-- types' words (attack, equip, buff) are everyday words there, left out
+local TYPE_CHAPTERS = {["creature-types"] = true, ["minions"] = true}
+local typeWords, typeWordsFor = {}, nil
+local function typeWordList()
+    if typeWordsFor ~= details then
+        typeWords, typeWordsFor = {}, details
+        for key, info in pairs(details.types or {}) do
+            if TYPE_CHAPTERS[info.c] then
+                local name = type(info.n) == "string" and info.n:lower() or key
+                table.insert(typeWords, {key, key})
+                if name ~= key then table.insert(typeWords, {name, key}) end
+            end
+        end
+        table.sort(typeWords, function(a, b) return #a[1] > #b[1] or (#a[1] == #b[1] and a[1] < b[1]) end)
+    end
+    return typeWords
+end
+
+local function letter(ch) return (ch >= "a" and ch <= "z") or (ch >= "A" and ch <= "Z") end
+
+-- t's type words, whole words, in order: {start, end, type}
+local function typeSpans(t)
+    local spans = {}
+    for _, tw in ipairs(typeWordList()) do
+        local from = 1
+        while true do
+            local s = t:find(tw[1], from, true)
+            if not s then break end
+            local e = s + #tw[1] - 1
+            local free = not letter(t:sub(s - 1, s - 1)) and not letter(t:sub(e + 1, e + 1))
+            for _, sp in ipairs(spans) do if free and s <= sp[2] and e >= sp[1] then free = false end end
+            if free then table.insert(spans, {s, e, tw[2]}) end
+            from = s + 1
+        end
+    end
+    table.sort(spans, function(a, b) return a[1] < b[1] end)
+    return spans
+end
+
+-- the ability as painted and withBadges draw it, in runs {text, colour, bold, tip, n}: a hover (a status word: a piece
+-- naming a status, all of it; a timing tag; a type word) its tip (tipOf) and occurrence n; and whether it has one
 local function abilityRuns(text, pieces)
-    local runs, at, occ = {}, 1, 0
-    local function add(t, c, st)
+    local runs, at, occ, spans = {}, 1, 0, typeSpans(text)
+    local function hover(t, c, bold, tip)
+        occ = occ + 1
+        table.insert(runs, {t, c, bold, tip, occ})
+    end
+    local function add(t, c, st, base)                 -- t: text from base on
         if t == "" then return end
         local n
         if st then occ = occ + 1 n = occ end
+        local function words(i, j)                     -- t's i..j (no tag): its type words apart (in a status word: none)
+            for _, sp in ipairs(st and {} or spans) do
+                local s, e = sp[1] - base + 1, sp[2] - base + 1
+                if s >= i and e <= j then
+                    if s > i then table.insert(runs, {t:sub(i, s - 1), c, false}) end
+                    hover(t:sub(s, e), c, false, tipOf("t", sp[3]))
+                    i = e + 1
+                end
+            end
+            if i <= j then table.insert(runs, {t:sub(i, j), c, false, st, n}) end
+        end
         local i, from = 1, 1
         while true do
             local open = t:find("(", from, true)
@@ -531,15 +603,16 @@ local function abilityRuns(text, pieces)
             local close = t:find(")", open + 1, true)
             local tag = close and close - open <= 8 and tagCase[t:sub(open + 1, close - 1):upper()]
             if tag then
-                if open > i then table.insert(runs, {t:sub(i, open - 1), c, false, st, n}) end
-                local g = details.tags[tag]
-                table.insert(runs, {"(" .. tag .. ")", BADGE[g and g.g] or BADGE.neutral, true, st, n})
+                words(i, open - 1)
+                local g, badge = details.tags[tag], "(" .. tag .. ")"
+                local colour = BADGE[g and g.g] or BADGE.neutral
+                if st then table.insert(runs, {badge, colour, true, st, n}) else hover(badge, colour, true, tipOf("g", tag)) end
                 i, from = close + 1, close + 1
             else
                 from = open + 1
             end
         end
-        if i <= #t then table.insert(runs, {t:sub(i), c, false, st, n}) end
+        words(i, #t)
     end
     for _, p in ipairs(type(pieces) == "table" and pieces or {}) do
         local piece, c, s = type(p) == "table" and p[1], type(p) == "table" and hexColour(p[2]), nil
@@ -552,19 +625,19 @@ local function abilityRuns(text, pieces)
             end
         end
         if s then
-            add(text:sub(at, s - 1))
-            add(piece, c, details.statuses[piece] and piece or nil)
+            add(text:sub(at, s - 1), nil, nil, at)
+            add(piece, c, details.statuses[piece] and tipOf("s", piece) or nil, s)
             at = s + #piece
         end
     end
-    add(text:sub(at))
+    add(text:sub(at), nil, nil, at)
     return runs, occ > 0
 end
 
 -- the ability's lines as Unity wraps a Text w wide at size f (at spaces, greedy; a newline ends a line), each word's
--- width from ARIAL; per line its texts {text (rich), sts (its statuses)}: a status occurrence's words one text (a word
--- naming several, "(Softened/Thinned)", one text with them all), the words between two of them one (with their spaces: a
--- line's texts joined by spaces are painted's text); the space between two texts is the row's spacing
+-- width from ARIAL; per line its texts {text (rich), tips (its hovers)}: a hover occurrence's words one text (a word
+-- with several, "(Softened/Thinned)", "(OS)/(BOGT)", one text with them all), the words between two of them one (with
+-- their spaces: a line's texts joined by spaces are painted's text); the space between two texts is the row's spacing
 local function abilityLines(runs, w, f)
     local lines, line, x, word, ww, gap = {}, {}, 0, {}, 0, nil
     local space = glyphW(" ", false, f)
@@ -587,17 +660,17 @@ local function abilityLines(runs, w, f)
         if #word > 0 then
             if #line > 0 and x + space + ww > w then table.insert(lines, line) line = {} end
             x = #line == 0 and ww or x + space + ww
-            local n, sts = nil, {}
+            local n, tips = nil, {}
             for _, frag in ipairs(word) do
                 n = n or frag.r[5]
-                if frag.r[4] and frag.r[4] ~= sts[#sts] then table.insert(sts, frag.r[4]) end
+                if frag.r[4] and frag.r[4] ~= tips[#tips] then table.insert(tips, frag.r[4]) end
             end
             local last = line[#line]
             if last and last.n == n then
                 table.insert(last.frags, gap)
                 for _, frag in ipairs(word) do table.insert(last.frags, frag) end
             else
-                table.insert(line, {frags = word, n = n, sts = sts})
+                table.insert(line, {frags = word, n = n, tips = tips})
             end
             word, ww = {}, 0
         end
@@ -626,11 +699,33 @@ local function abilityLines(runs, w, f)
     return lines
 end
 
--- a status text's hover: its rule; several: each "name: rule"
-local function rulesOf(sts)
-    if #sts == 1 then return details.statuses[sts[1]].x or "" end
+-- a text's hover: its rule; several: each "name: rule"
+local function rulesOf(tips)
+    if #tips == 1 then return tips[1][2] end
     local out = {}
-    for _, st in ipairs(sts) do table.insert(out, st .. ": " .. (details.statuses[st].x or "")) end
+    for _, tip in ipairs(tips) do table.insert(out, tip[1] .. ": " .. tip[2]) end
+    return table.concat(out, "\n")
+end
+
+-- a hover's text in lines at most w wide at size f (at spaces; TTS's box takes its text's width, it wraps nothing)
+local function tipText(text, w, f)
+    local out, i, space = {}, 1, glyphW(" ", false, f)
+    while i <= #text + 1 do
+        local nl = text:find("\n", i, true) or #text + 1
+        local line, x, j = {}, 0, i
+        while j < nl do
+            local sp = text:find(" ", j, true)
+            if not sp or sp > nl then sp = nl end
+            local word, ww = text:sub(j, sp - 1), 0
+            for k = 1, #word do ww = ww + glyphW(word:sub(k, k), false, f) end
+            if #line > 0 and x + space + ww > w then table.insert(out, table.concat(line, " ")) line, x = {}, 0 end
+            x = #line == 0 and ww or x + space + ww
+            table.insert(line, word)
+            j = sp + 1
+        end
+        table.insert(out, table.concat(line, " "))
+        i = nl + 1
+    end
     return table.concat(out, "\n")
 end
 
@@ -728,36 +823,14 @@ local function deckPaths(deck)
     return out
 end
 
+-- the text before the ability (kind, stars, author; the stats), and its lines as runs (abilityLines)
 local function detailsText(card)
     local bits = {card.k}
     if card.st then table.insert(bits, math.floor(card.st) .. "★") end
     if card.by then table.insert(bits, "by " .. card.by) end
     local head = {"<color=" .. DIM .. ">" .. plain(table.concat(bits, " · ")) .. "</color>"}
     if card.s then table.insert(head, "<b>" .. plain(card.s) .. "</b>") end
-    local out = {}
-    local function section(title) table.insert(out, "\n<color=" .. HEAD .. "><b>" .. title .. "</b></color>") end
-    if card.g then
-        section("TIMING TAGS")
-        for _, tag in ipairs(card.g) do table.insert(out, badge(tag) .. "  " .. plain(details.tags[tag].m)) end
-    end
-    local typed = {}
-    for _, t in ipairs(card.t or {}) do
-        local info = details.types[t]
-        if info then table.insert(typed, "<b>" .. plain(info.n) .. "</b>  " .. plain(info.x)) end
-    end
-    if #typed > 0 then section("TYPES") for _, line in ipairs(typed) do table.insert(out, line) end end
-    local statuses = {}
-    for _, name in ipairs(card.x or {}) do
-        local s = details.statuses[name]
-        if s then
-            local c = hexColour(s.c)
-            table.insert(statuses, "<b>" .. (c and "<color=" .. c .. ">" .. plain(name) .. "</color>" or plain(name)) .. "</b> <color=" .. DIM .. ">("
-                .. plain(s.k) .. ")</color>  " .. withBadges(painted(s.x, s.xc)))
-        end
-    end
-    if #statuses > 0 then section("STATUS EFFECTS") for _, line in ipairs(statuses) do table.insert(out, line) end end
-    -- the text before the ability, after it, and the first's lines as runs (abilityLines)
-    return table.concat(head, "\n"), table.concat(out, "\n"), {{table.concat(bits, " · ")}, card.s and {card.s, nil, true}}
+    return table.concat(head, "\n"), {{table.concat(bits, " · ")}, card.s and {card.s, nil, true}}
 end
 
 -- a button's width for its text at font size f (a little more than the text: never cut off)
@@ -841,40 +914,45 @@ local function layout(color, k)
     for r = 1, CARD_ROWS do set(id .. "_cards" .. r, {offsetXY = "10 " .. (8 + (cardRows - r) * (ROW_H + 8))}) end
     for r = 1, DECK_ROWS do set(id .. "_decks" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows - r) * (ROW_H + 8))}) end
     for r = 1, RULE_ROWS do set(id .. "_rules" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows + ruleRows - r) * (ROW_H + 8))}) end
-    local head, rest, headRuns = detailsText(open.card)
+    local head, headRuns = detailsText(open.card)
     local textW, card = sz.w - 44, open.card
     local perLine, lineH = math.floor(textW / (sz.f * 0.52)), math.ceil(sz.f * 1.32)
-    -- an ability with a status word: its lines in the pools (plain lines and status rows), between the text before it
-    -- and the text after it, at Arial's line pitch; else (or when the pools are too few) all in one text
-    local runs, hasStatus = abilityRuns(card.a or "", card.ac)
-    local laid = hasStatus and abilityLines(runs, textW, sz.f)
+    -- an ability with a hover: its lines in the pools (plain lines; rows, the widest to the lines with most texts), below
+    -- the text before it, at Arial's line pitch; else (or when the pools are too few) all in one text
+    local runs, hasTip = abilityRuns(card.a or "", card.ac)
+    local laid = hasTip and abilityLines(runs, textW, sz.f)
+    local rowOf, rowsN = {}, 0
     if laid then
-        local plainN, statusN = 0, 0
-        for _, line in ipairs(laid) do
-            if #line > 1 or (line[1] and #line[1].sts > 0) then statusN = statusN + 1 else plainN = plainN + 1 end
+        local plainN, rows = 0, {}
+        for k, line in ipairs(laid) do
+            if #line > 1 or (line[1] and #line[1].tips > 0) then table.insert(rows, k) else plainN = plainN + 1 end
         end
-        if plainN > ABILITY_LINES or statusN > STATUS_LINES then laid = nil end
+        table.sort(rows, function(a, b) return #laid[a] > #laid[b] or (#laid[a] == #laid[b] and a < b) end)
+        for i, k in ipairs(rows) do rowOf[k] = i end
+        rowsN = #rows
+        if plainN > ABILITY_LINES or rowsN > #ROW_SLOTS then laid = nil end
     end
     local pageH
     if laid then
         local pitch = math.floor(sz.f * 1.15 + 0.5)
         local headN = 0
         for _, r in ipairs(headRuns) do headN = headN + #abilityLines({r}, textW, sz.f) end
-        local y, al, as = 6 + (headN + 1) * pitch, 0, 0
-        for _, line in ipairs(laid) do
-            if #line > 1 or (line[1] and #line[1].sts > 0) then
-                as = as + 1
-                local row = id .. "_as" .. as
+        local y, al = 6 + (headN + 1) * pitch, 0
+        for k, line in ipairs(laid) do
+            local as = rowOf[k]
+            if as then
+                local row, slots = id .. "_as" .. as, ROW_SLOTS[as]
                 set(row, {active = "true", offsetXY = "14 -" .. y, width = textW, height = pitch, spacing = glyphW(" ", false, sz.f)})
-                for j = 1, LINE_SLOTS do
+                for j = 1, slots do
                     local el = line[j]
-                    if el and j == LINE_SLOTS and line[j + 1] then      -- more than a row holds: the rest in its last text
+                    if el and j == slots and line[j + 1] then          -- more than a row holds: the rest in its last text
                         local more = {}
                         for m = j, #line do table.insert(more, line[m].text) end
-                        el = {text = table.concat(more, " "), sts = {}}
+                        el = {text = table.concat(more, " "), tips = {}}
                     end
                     if el then
-                        set(row .. "_" .. j, {active = "true", fontSize = sz.f, tooltip = #el.sts > 0 and rulesOf(el.sts) or "", tooltipFontSize = sz.f})
+                        set(row .. "_" .. j, {active = "true", fontSize = sz.f, tooltip = #el.tips > 0 and tipText(rulesOf(el.tips), textW, sz.f) or "",
+                            tooltipFontSize = sz.f})
                         setValue(row .. "_" .. j, el.text)
                     else
                         set(row .. "_" .. j, {active = "false"})
@@ -888,19 +966,15 @@ local function layout(color, k)
             y = y + pitch
         end
         for i = al + 1, ABILITY_LINES do set(id .. "_al" .. i, {active = "false"}) end
-        for i = as + 1, STATUS_LINES do set(id .. "_as" .. i, {active = "false"}) end
-        local restH = lines(rest, perLine) * lineH + 12
+        for i = rowsN + 1, #ROW_SLOTS do set(id .. "_as" .. i, {active = "false"}) end
         set(id .. "_text", {width = textW, height = (headN + 1) * pitch, fontSize = sz.f})
         setValue(id .. "_text", head)
-        set(id .. "_rest", {active = rest ~= "" and "true" or "false", offsetXY = "14 -" .. y, width = textW, height = restH, fontSize = sz.f})
-        setValue(id .. "_rest", rest)
-        pageH = y + restH + 6
+        pageH = y + 12
     else
-        local text = head .. (card.a and "\n\n" .. withBadges(painted(card.a, card.ac)) or "") .. (rest ~= "" and "\n" .. rest or "")
+        local text = head .. (card.a and "\n\n" .. withBadges(painted(card.a, card.ac)) or "")
         pageH = lines(text, perLine) * lineH + 12
         for i = 1, ABILITY_LINES do set(id .. "_al" .. i, {active = "false"}) end
-        for i = 1, STATUS_LINES do set(id .. "_as" .. i, {active = "false"}) end
-        set(id .. "_rest", {active = "false"})
+        for i = 1, #ROW_SLOTS do set(id .. "_as" .. i, {active = "false"}) end
         set(id .. "_text", {width = textW, height = pageH, fontSize = sz.f})
         setValue(id .. "_text", text)
     end
