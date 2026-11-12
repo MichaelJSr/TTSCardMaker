@@ -996,12 +996,43 @@ local function panelOf(color, id)
     return tonumber(us and rest:sub(1, us - 1) or rest)
 end
 
+-- a name without case or punctuation ("Zess T. Deluxe" -> "zesstdeluxe")
+local function bare(name)
+    local out, low = {}, name:lower()
+    for i = 1, #low do
+        local b = low:byte(i)
+        if b >= 128 or (b >= 48 and b <= 57) or (b >= 97 and b <= 122) then out[#out + 1] = low:sub(i, i) end
+    end
+    return table.concat(out)
+end
+
+-- a card by its name, else an alias (old names), indexed once; a name two cards share: the first path's
+local named, namedFor = {}, nil
+local function byName(name)
+    if namedFor ~= details then
+        named, namedFor = {}, details
+        local paths = {}
+        for path in pairs(details.cards) do table.insert(paths, path) end
+        table.sort(paths)
+        for pass = 1, 2 do
+            for _, path in ipairs(paths) do
+                local c = details.cards[path]
+                for _, n in ipairs(pass == 1 and {c.n or ""} or c.al or {}) do
+                    local k = bare(n)
+                    if k ~= "" and not named[k] then named[k] = c end
+                end
+            end
+        end
+    end
+    return named[bare(name or "")]
+end
+
 -- in the panel already showing this card, else a closed one, else the one opened longest ago
 function showDetails(color, obj)
     ensureData()
     if not details then broadcastToColor("Card details are still loading.", color, {1, 0.6, 0.6}) return end
     local path = cardPath(obj, color)
-    local card = path and details.cards[path]
+    local card = path and (details.cards[path] or byName(obj.getName()))   -- renamed since this copy: by its name
     if not card then broadcastToColor("No details for this card.", color, {1, 0.6, 0.6}) return end
     ensurePanels(color, function()
         local mine = shown[color] or {}

@@ -1278,6 +1278,19 @@ def main():
     w.told.clear()
     w.run(w.g.showDetails, "Red", stray, what="unknown card")
     check(("Red", "No details for this card.") in w.told, "a card the data lacks: no details")
+    bare = lambda s: "".join(ch for ch in s.lower() if ch.isalnum())    # noqa: E731
+    names = {bare(c["n"]) for c in details["cards"].values()}
+    old, alias = next((c, a) for c in details["cards"].values() for a in c.get("al") or [] if bare(a) not in names)
+    for nick in (old["n"].upper() + ".", alias):            # an older copy's card, renamed since (its picture gone)
+        stray._name, stray.is_face_down = nick, False
+        for k in (1, 2, 3):
+            w.call("closeDetails", red, None, f"Red_d{k}_close")
+        w.told.clear()
+        w.run(w.g.showDetails, "Red", stray, what=f"renamed card {nick!r}")
+        check(not w.told and ui.values.get("Red_d1_title") == plain(old["n"]), f"a renamed card ({nick!r}): its details by name")
+    stray.is_face_down = True
+    w.run(w.g.showDetails, "Red", stray, what="renamed card face down")
+    check(("Red", "No details for this card.") in w.told, "a renamed card face down: no details")
 
     # ---- the palette's colours, hovers (status words, timing tags, type words), and text that looks like rich text ----
     path = face_path(cards[0])
