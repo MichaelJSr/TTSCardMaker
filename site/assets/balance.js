@@ -315,10 +315,10 @@ export function statsHtml(A, { cards, byId }, params) {
     const months = A.time?.months || [];
     const panels = keys.filter(k => !k.endsWith("|all") && A.time?.series?.[k]).map(k => ({ key: k, label: cohortName(k), points: A.time.series[k] }));
     const multi = months.length && panels.length ? multiples(months, panels, A.minCohort) : "";
-    charts.push(card("bal-time", "Average total by star level over time", multi ? "Average total per star level, by month." : "",
-      multi ? `<div class="multiples">${multi}</div>` : `<p class="muted">Needs a full-history build.</p>`,
-      multi ? table(["Month", ...panels.map(p => ({ label: p.label, tip: "Average total that month (cards counted); — under 5 cards" }))], months.map((m, i) => [monthLabel(m), ...panels.map(p => (p.points[i] && p.points[i][0] >= A.minCohort ? `${fmt(p.points[i][1])} (${p.points[i][0]})` : "—"))]), 1) : "",
-      { wide: true, tip: multi ? "At each month's end, the cards as they were then (deleted ones too); totals over 40 left out" : "" }));
+    if (multi) charts.push(card("bal-time", "Average total by star level over time", "Average total per star level, by month.",
+      `<div class="multiples">${multi}</div>`,
+      table(["Month", ...panels.map(p => ({ label: p.label, tip: "Average total that month (cards counted); — under 5 cards" }))], months.map((m, i) => [monthLabel(m), ...panels.map(p => (p.points[i] && p.points[i][0] >= A.minCohort ? `${fmt(p.points[i][1])} (${p.points[i][0]})` : "—"))]), 1),
+      { wide: true, tip: "At each month's end, the cards as they were then (deleted ones too); totals over 40 left out" }));
   }
 
   // power creep (by year created): a card's total minus its star level's median, as built

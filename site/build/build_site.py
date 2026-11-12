@@ -533,7 +533,8 @@ def link_variants(cards):
 def details_parts(rec, e, by_id, meta, tree_blob, rec_blob):
     """The details record's VERSION 2 `parts` as one card's editor needs them (PARTS_EDITOR.md §2.5): the parts its picture
     shows, each with `shared` (the other pictures' names that show it) and `follow`; partState and the pending part edits
-    from Card Edits.json; skipped edits (_psd.skipped, while that PSD is current); `stale` when the record isn't the PSD at HEAD."""
+    from Card Edits.json; skipped edits (_psd.skipped, while that PSD is current); `stale` when the record isn't the PSD at HEAD.
+    `partsTemplate`: the parts' template (a first ability or type icon); the record's own `template` stays."""
     parts = rec.get("parts")
     if not isinstance(parts, dict):
         return None
@@ -567,7 +568,7 @@ def details_parts(rec, e, by_id, meta, tree_blob, rec_blob):
         pending[key] = {k: p[k] for k in ("field", "text", "delete", "was", "sha", "psd", "layer") if k in p}
     verdict = (meta or {}).get("_psd") or {}
     skipped = verdict.get("skipped") if tree_blob and isinstance(verdict.get("psd"), str) and tree_blob.startswith(verdict["psd"]) else None
-    return {"parts": out, "template": parts.get("template"), "partState": state, "partEdits": pending,
+    return {"parts": out, "partsTemplate": parts.get("template"), "partState": state, "partEdits": pending,
             "skipped": {k: {**v, "at": verdict.get("at")} for k, v in skipped.items() if isinstance(v, dict)} if isinstance(skipped, dict) else {},
             "psdBlob": rec_blob, "stale": bool(e.get("reparsePending") or (tree_blob and rec_blob and tree_blob != rec_blob)),
             "picture": {"n": n, "cards": [{"n": c.get("variant") or 1, "id": c["id"], "name": c["name"]} for c in group]} if len(group) > 1 else None}
@@ -2860,7 +2861,7 @@ EDIT_EVENTS = ("edited", "authors")           # the Database edits tab's events 
 def changelog_files(changelog):
     """One file per Changes tab: changelog.json (every event), archive.json (the archived cards), edits.json (the edit
     events and batches); the new two carry no build facts (VOLATILE)"""
-    head = {k: changelog[k] for k in ("available", "days", "repo")}
+    head = {k: changelog[k] for k in ("days", "repo")}
     return {"changelog.json": {k: v for k, v in changelog.items() if k not in ("archived", "edits")},
             "archive.json": {"repo": changelog["repo"], "archived": changelog["archived"]},
             "edits.json": {**head, "events": [e for e in changelog["events"] if e.get("kind") in EDIT_EVENTS], "edits": changelog["edits"]}}
@@ -4678,7 +4679,7 @@ def main():
     log(f"contributions: {len(contrib['people'])} people, {sum(r['edits'] for r in contrib['people'])} edit batches, "
         f"{sum(r['commits'] for r in contrib['people'])} card commits")
 
-    changelog = {"available": events is not None, "days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
+    changelog = {"days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
                  "events": site_events(events or [], id_of, since), "archived": archived, "edits": batches}
     log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no changelog folder)") +
         f", {len(batches['batches'])} edit batches, {len(changelog['archived'])} archived cards")

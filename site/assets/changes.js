@@ -211,7 +211,6 @@ function sourceHtml(C) {
   const commit = s.card_commit ? ` from <a href="https://github.com/${esc(C.repo)}/commit/${esc(s.card_commit)}" target="_blank" rel="noopener">${esc(C.repo.split("/").pop())}@${short(s.card_commit)}</a>` : "";
   return `<p class="muted">Card data built ${esc(at)} (Pacific)${commit}${s.run ? ` (<a href="${esc(s.run)}" target="_blank" rel="noopener">run</a>)` : ""}.</p>`;
 }
-const NOT_YET = "Once the card sync is running (within minutes of a card push), it will record each card change here and post it in Discord, one post per push. Until then this tab has no events.";
 
 // ---- the tabs ---------------------------------------------------------------------------------------------------
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=) */
@@ -220,8 +219,7 @@ export function changelogHtml(C, params) {
   const counts = new Map();
   for (const e of events) counts.set(e.kind, (counts.get(e.kind) || 0) + 1);
   const present = KINDS.filter(([k]) => counts.get(k));
-  const body = !C?.available ? `<p class="empty">No changelog yet. ${esc(NOT_YET)}</p>`
-    : !events.length ? `<p class="empty">No card changes in the last ${esc(C.days)} days.</p>`
+  const body = !events.length ? `<p class="empty">No card changes in the last ${esc(C.days)} days.</p>`
     : daysHtml(pushGroups(events), C.repo, kinds.length ? kinds : null) || `<p class="empty">No ${esc(kinds.join(", "))} changes in the last ${esc(C.days)} days.</p>`;
   return `<section class="panel"><h3>Changelog${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>
     <p class="muted">Every card change the card sync recorded in the last ${esc(C.days)} days, one block per push, as posted in Discord (the guards' fixes only here). Times are Pacific.</p>
@@ -258,8 +256,7 @@ export function editsHtml(C, params) {
   for (const b of batches) counts.set(b.via, (counts.get(b.via) || 0) + 1);
   const present = Object.keys(VIA).filter(v => counts.get(v)).map(v => [v, { website: "Website", git: "Commits" }[v]]);
   const shownBatches = via.length ? batches.filter(b => via.includes(b.via)) : batches;
-  const applied = !C?.available ? `<p class="muted">${esc(NOT_YET)}</p>`
-    : events.length ? daysHtml(pushGroups(events), C.repo, EDIT_KINDS) : `<p class="muted">No database edits in the last ${esc(C.days)} days.</p>`;
+  const applied = events.length ? daysHtml(pushGroups(events), C.repo, EDIT_KINDS) : `<p class="muted">No database edits in the last ${esc(C.days)} days.</p>`;
   return `<section class="panel"><h3>Database edits</h3>
     <p class="muted">Edits to the card data that don't come from a PSD: the website's Edit button (Discord's /update_metadata and /alias until 2026-10-25), and commits to Card Edits.json or Card Authors.txt. Times are Pacific.</p></section>
     <h3 class="cl-day">Applied by the card sync${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>${applied}

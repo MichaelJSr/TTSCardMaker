@@ -7,7 +7,7 @@
 //   ::: kind "Title" {.cls}      a fence up to its ":::" (fences nest): panel (a "Title" gives it a tab), row (side by
 //   :::                          side; "::: row 3 1" sets the widths), stack, box, small, center, ability (a card's ability
 //                                box, "1." a numbered bubble), contents (the chapters' list)
-//   > [!kirby top] text          a mascot (any picture in img/) says it; top: above the bubble, right: floated
+//   > [!kirby top] text          a mascot (any picture in img/) says it; top: above the bubble
 //   ![alt](file.webp){.right width=30}   a picture: .left .right float it (text wraps around it: a see-through one's
 //                                        edges, its outline from build_site; out=45: that % of it hangs out of its
 //                                        panel's side), .end puts it at the right edge, width in %;
@@ -380,7 +380,7 @@ const hasPlaced = b => placed(b) || (kidsOf(b) || []).some(k => typeof k === "ob
 function hangs(box) {
   const flow = [...box.children].filter(n => { const s = getComputedStyle(n); return s.float === "none" && s.position !== "absolute" && s.display !== "none"; });
   const end = flow.length ? flow[flow.length - 1].getBoundingClientRect().bottom : box.getBoundingClientRect().top;   // none: all of it
-  return [...box.querySelectorAll(".rb-fig, .rb-say")].some(f => {
+  return [...box.querySelectorAll(".rb-fig")].some(f => {
     if (getComputedStyle(f).float === "none") return false;
     const r = f.getBoundingClientRect();                // the page drawn shrunk: its margin too
     return r.bottom + parseFloat(getComputedStyle(f).marginBottom) * (r.width / (f.offsetWidth || 1)) > end + 0.5;

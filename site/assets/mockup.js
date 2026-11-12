@@ -854,7 +854,7 @@ export function partJobs(rec, parts, { colors = null, was = null, statuses = nul
   const p = obj(rec?.parts);
   if (!p || !obj(parts)) return [];
   const list = [...(p.title || []).map(x => ["name", x]), ...(p.ability || []).map(x => ["ability", x])];
-  const add = obj(parts["+ability"]), tb = rec?.template?.ability?.box, plus = add?.text && !(p.ability || []).length ? { id: "+ability" } : null;
+  const add = obj(parts["+ability"]), tb = rec?.partsTemplate?.ability?.box, plus = add?.text && !(p.ability || []).length ? { id: "+ability" } : null;
   const textOf = part => { const e = obj(parts[String(part?.id)]); return e ? (e.delete ? null : String(e.text ?? "")) : part?.text; };
   const layers = { name: [], ability: plus ? [plus] : [] };
   for (const [role, part] of list) if (textOf(part) != null && !(Array.isArray(part?.variants) && !part.variants.includes(1))) layers[role].push(part);

@@ -102,8 +102,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   it. A rulebook push starts Card sync (the bot's `db/rulebook.json` and the PDF at once).
   A chapter titled `# Title {.web}` is on the website only: the TTS pages, data/tts.json, game.txt and the bot's
   `db/rulebook.json` leave it out, so it prints nothing.
-  Also the badge colors, the timing-tag glossary and the constructed ban list. Old page links
-  (`#/rules/07-stats3`, `#/rules?q=07 Stats3`) open their chapter.
+  Also the badge colors, the timing-tag glossary and the constructed ban list.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
   printable proxies, and a Tabletop Simulator saved-object download. Signed in, **Publish…** on a saved hand makes it a
@@ -127,7 +126,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   outliers. Every chart has a table view; jump links go to Balance and History.
   **Balance**: the total stats of each star level of creatures and minions (the middle 80%, the median, the lowest and
   highest, the top and bottom 10% as dots), the strongest and weakest for their star level, each star level's average
-  total over time (full-history builds), power creep (by year created), buffs and nerfs by month and by stat, every
+  total over time, power creep (by year created), buffs and nerfs by month and by stat, every
   recorded change by month (timing-tag-only changes left out), the most reworked cards. A star level with fewer than 5
   cards is compared with all cards of its kind, and so are the auxiliary creatures, with all creatures.
   **History**: cards created per year, text freshness. The kind and series filters apply to every section.

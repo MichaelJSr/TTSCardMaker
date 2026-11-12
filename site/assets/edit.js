@@ -697,7 +697,7 @@ export function createEditor(app) {
   }
   function addHtml(view) {                         // + Add an ability: a card with no Ability layer
     if (view.list.some(b => b.kind === "ability")) return "";
-    const t = view.rec.template, was = view.added, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
+    const t = view.rec.partsTemplate, was = view.added, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
     return `<div class="part-box part-add" data-part-box="${P.ADD}"${was ? "" : " hidden"}><div class="part-head"><label for="ef-part:${P.ADD}">New ability</label><button type="button" class="ghost" data-part-add-remove>Remove</button></div>
       <textarea id="ef-part:${P.ADD}" class="part-text" rows="3" spellcheck="true" data-tokens data-part="${P.ADD}">${esc(was?.text || "")}</textarea>
       <p class="muted part-note">New layer ‘Ability’ from ${esc(file)} (box, font, size); the bake flags it for a look.${was?.state === "stale" ? " ⚠ The card has an Ability layer now (added in Photoshop): this one will be skipped." : ""}</p></div>
@@ -816,7 +816,7 @@ export function createEditor(app) {
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), n = (c.types || []).filter(x => x === t).length;
             return `<button type="button" class="icon-toggle${n ? " on" : ""}" data-type="${esc(t)}" ${typeAttrs(n)} data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}"${iconSet(ic, 26)} alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>
             <p class="muted part-note">Press a type again to pick it twice.</p>`)}
-          ${view && !(psdVal(b, "types") || []).length ? `<p class="muted part-note">No type icon yet: the first goes at ${esc(view.rec.template?.file ? view.rec.template.file.split("/").pop().replace(/\.psd$/i, "") : "the template")}'s spot (flagged).</p>` : ""}
+          ${view && !(psdVal(b, "types") || []).length ? `<p class="muted part-note">No type icon yet: the first goes at ${esc(view.rec.partsTemplate?.file ? view.rec.partsTemplate.file.split("/").pop().replace(/\.psd$/i, "") : "the template")}'s spot (flagged).</p>` : ""}
         </fieldset>
         <fieldset><legend>Stats</legend>
           <div class="estats" id="ef-single"${c.creatures?.length > 1 ? " hidden" : ""}>${STATS.map(f => row(f, num(f))).join("")}</div>

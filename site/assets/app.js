@@ -54,7 +54,7 @@ const HANDLING = [["flagged", "All", "Needs handling"], ...CARD_FLAGS.map(([k, l
 const flagName = f => FLAGS.find(x => x[0] === f)?.[1] ?? HANDLING.find(x => x[0] === f)?.[2];
 const others = (ids, c) => { for (const id of ids || []) if (id !== c.id) return true; return false; };   // a card naming itself doesn't count
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
-const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // a shallow build: Name
+const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // no creation dates: Name
 
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
 const BUILD = document.querySelector('meta[name="build"]')?.content || "";
@@ -181,7 +181,7 @@ async function init() {
   S.statusFills = Object.fromEntries(Object.entries(S.palette?.statuses || {}).map(([n, c]) => [n.toLowerCase(), c]));   // as the bake prints them (the mock-up's): the chart's, else the swatch
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
-  S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
+  S.created = S.all.some(c => c.created);                 // creation dates (none: no Created sort)
   for (const c of S.all) S.byId.set(c.id, c);
   S.morgue = S.data.morgue;
   for (const c of S.morgue) S.morgueById.set(c.id, c);
@@ -1109,10 +1109,6 @@ function renderRules(r) {
   const q = (r.params.get("q") || "").trim().toLowerCase();
   if (document.activeElement !== qInput) qInput.value = "";
   const chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
-  // a Photoshop page's old link (#/rules/07-stats3, the changelog's #/rules?q=07 Stats3): its chapter by number
-  const was = t => { const m = /^(\d{2})[-_ ]/.exec(t || ""); return m && chapters.find(c => c.num === m[1]); };
-  const gone = r.arg && !chapters.some(c => c.id === r.arg.split("/")[0]) ? was(r.arg) : q && !shown.length ? was(q) : null;
-  if (gone) { location.replace(`#/rules/${gone.id}`); return; }
   const banned = S.data.banlist, can = editing();
   const label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;
   view.innerHTML = `<div class="rules">
