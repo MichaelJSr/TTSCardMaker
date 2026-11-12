@@ -67,7 +67,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   its section opens).
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`, the address bar's URL; `c` copies it) that shows a rich preview in Discord.
-- **Ratings**: not shown (owner 2026-11-11); `site/Card Ratings.json` and data/editing.json `ratings` keep the data.
+- **Ratings**: not shown (owner 2026-11-11); `site/Card Ratings.json` keeps the data (the build reads it no more since 2026-11-12).
 - **Rulebook**: written on the website, no Photoshop. One text file per chapter in `site/rulebook/` (`NN-slug.md`: the
   number is the book's order, the slug the chapter's link, `#/rules/<slug>` and `#/rules/<slug>/<section>`), its
   pictures in `site/rulebook/img/` (the mascots, the table and reaction diagrams, taken from the Photoshop pages) and
@@ -190,7 +190,7 @@ the build never fails on it.
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
 `Card Creation Dates.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
-on 2026-10-20), as does `Card Ratings.json` (new on 2026-10-24; the build reads it, never the bot); the build and the bot read the
+on 2026-10-20), as does `Card Ratings.json` (new on 2026-10-24; data only: neither the build nor the bot reads it); the build and the bot read the
 others; the published site includes none of them. `Card Creation Dates.json`
 holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand"}` (dates only,
 imported once from a Discord archive that is gone now; a date is set or fixed by hand with `"from": "hand"`).
@@ -201,12 +201,11 @@ cards on 2026-10-23, also with the 11 newest left out of the file). It is no edi
 counts never see it. Bad entries are skipped with a warning, never a failed build. `Card Ratings.json` holds each
 card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": a whole number 1-10, "by": "group", "source":
 "TTS session"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m commands.tts_ratings`).
-Only the website build reads it (data/editing.json `ratings`; the site shows none since 2026-11-11); no edit either,
-and the bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+Neither the site (none shown since 2026-11-11; its build stopped copying it on 2026-11-12) nor the bot reads it; a card
+rename renames its entries; no edit either. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
-the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
-batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
-`git fetch --unshallow --filter=blob:none` fixes that).
+the build needs full history (CI fetches it; a shallow local clone stops the build: `git fetch --unshallow
+--filter=blob:none` fixes that).
 
 Each card PNG becomes three AVIF images (240 and 360 px for the grid, 720 px for the card view; quality 60/55/50
 at 240/360/720, `IMAGE_SIZES` and NOTES §28; 4:4:4, speed 6; AVIF only, so a browser without AVIF, Safari before 16, shows no card pictures), cached by git blob

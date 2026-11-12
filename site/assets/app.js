@@ -1539,7 +1539,7 @@ function renderUser(r) {
   const owners = new Set([login, person?.github, ...(person?.logins || [])].filter(Boolean).map(s => s.toLowerCase())), theirs = deckList().filter(d => owners.has(d.owner.toLowerCase()));
   view.innerHTML = Pf.personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
-    available: !!S.contrib.available, repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
+    repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
     people, site: S.contrib.site || {}, mentions: S.mentions, starKind: r.params.get("stars") || "", mentionedBy: S.mentionedBy, banned: S.banned,
     decks: { public: decks.sortDecks(theirs.filter(d => !d.private)), private: decks.sortDecks(theirs.filter(d => d.private)) }, deckTile: d => decks.deckTileHtml(d, deckCtx()) });
   if (r.params.get("stars") && !$(".p-stars", view)?.dataset.kind) personStars({ name: "u", arg: login, params: r.params }, "");   // an unknown kind: all, out of the address
@@ -1556,7 +1556,7 @@ function renderUsers() {
   if (!usersReady("users", renderUsers)) return;
   const me = editor.me, rows = Pf.peopleRows(S.contrib.people || [], Pf.mergeUsers(S.users, editor.pendingProfiles()));
   view.innerHTML = Pf.peopleHtml(rows, { me, hasOwn: !!me && rows.some(r => r.profile && r.profile.login.toLowerCase() === me.login.toLowerCase()),
-    available: !!S.contrib.available, since: S.contrib.since, titles: S.titles, date, decks: deckList() });
+    since: S.contrib.since, titles: S.titles, date, decks: deckList() });
   updatePeopleCount(rows.length);
 }
 // the People tab's counter: the build's count until the table has been made here (pending profiles included)

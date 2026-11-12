@@ -184,7 +184,7 @@ const titleChips = (key, titles) => (titles.get(key) || []).map(t => `<span clas
 
 /** The contributions of one person: a facts row (with their ranks, P18), the fields they edit (P21), their recent edits
  *  (cards.json editBy, the last batch per card), their recent edit batches (commits to Card Edits.json) and their recent
- *  card commits. x = {cards, available, titles (Map), date(ts), repo, people} */
+ *  card commits. x = {cards, titles (Map), date(ts), repo, people} */
 export function contributionsHtml(p, x) {
   const edits = x.cards.filter(c => c.editBy && hasLogin(p, c.editBy) && editorFields(c).length).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || "")).slice(0, 10);
   const facts = [
@@ -196,7 +196,6 @@ export function contributionsHtml(p, x) {
   ].join("");
   const fields = (p.editFields || []).slice(0, 6).map(([f, n]) => `${esc(fieldName(f))} ${n}`).join(" · ");
   return `<div class="facts">${facts}</div>${fields ? `<p class="muted p-edited">${noted("Edited", "Fields they edited, once per card per batch")}: ${fields}</p>` : ""}
-    ${x.available ? "" : `<p class="muted">Commits aren't in this build; edits are counted from Card Edits.json, which keeps one batch per card.</p>`}
     ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(editorFields(c).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recentEdits?.length ? `<div class="related"><h3>Recent edit batches</h3><ul>${p.recentEdits.map(([ts, subject, sha]) => `<li>${commitLink(x.repo, sha, x.date(ts))} <span class="muted">· ${esc(subject)}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recent?.length ? `<div class="related"><h3>Recent card commits</h3><ul>${p.recent.map(([ts, subject, n]) => `<li>${esc(x.date(ts))} <span class="muted">· ${esc(subject)} · ${plural(n, "card")}</span></li>`).join("")}</ul></div>` : ""}`;
@@ -276,7 +275,7 @@ export function decksPanelHtml(x) {
 }
 
 // ---- person stats: pure helpers (P6 P10 P14 P15 P16 P18) from the cards in memory; the build's keys (contributions.json
-// people[]: power, bal, revisions, rework, editFields, archived) in panels; ratings unshown. NOTES.md §8.
+// people[]: power, bal, revisions, rework, editFields, archived) in panels. NOTES.md §8.
 export const STYLE_MIN = 3, STYLE_RATIO = 1.5, STYLE_TOP = 3;
 const memo = new WeakMap();                                                 // per cards array: route() renders twice
 const memoOf = (all, key, make) => { let m = memo.get(all); if (!m) memo.set(all, (m = new Map())); if (!m.has(key)) m.set(key, make()); return m.get(key); };
@@ -480,15 +479,15 @@ export function archivedPanelHtml(rows) {
 
 /** The person page: the profile (when there is one) over the contributions, the activity chart, Balance, Revisions,
  *  Style, the Cards panel, Archived cards and the Decks panel; a contributor without a profile gets a plain
- *  header instead. x = profileHtml's x + cardsPanelHtml's x + decksPanelHtml's x + {person | null, available,
- *  titles, date, month, repo, people, site, mentions, starKind (the Star levels' kind)} */
+ *  header instead. x = profileHtml's x + cardsPanelHtml's x + decksPanelHtml's x + {person | null, titles, date,
+ *  month, repo, people, site, mentions, starKind (the Star levels' kind)} */
 export function personHtml(x) {
   const { person, profile } = x;
   if (!person) return `${profileHtml(x)}${decksPanelHtml(x)}`;
   const own = cardsOf(person.key, x.cards), statusIds = memoOf(x.cards, "status", () => new Set(x.cards.filter(c => c.type === "debuff" || c.type === "buff").map(c => c.id)));
   const kinds = starKinds(own, x.kindOf, x.kinds), kind = kinds.length > 1 && kinds.includes(x.starKind) ? x.starKind : "";   // ?stars=<kind>; else all
   const style = own.length ? stylePanelHtml(styleOf(own, x.cards, { mentions: x.mentions, statusIds }), mixOf(own, x.cards, x.kindOf, kind), x, own.length, { key: person.key, kinds, kind }) : "";
-  const rest = `${x.available ? activityHtml(person) : ""}${balancePanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
+  const rest = `${activityHtml(person)}${balancePanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
     + `${cardsPanelHtml(person, x)}${archivedPanelHtml(person.archived)}${decksPanelHtml(x)}`;
   if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${rest}`;
   return `<div class="profile"><div class="panel"><h2 class="person-name">${avatarHtml(person.github, 48)}${esc(person.key)}</h2>
@@ -508,18 +507,18 @@ export function deckCount(r, decks) {
   return decks.filter(d => !d.private && owners.has(lc(d.owner))).length;
 }
 
-/** rows = peopleRows(...); x = {me, hasOwn, available, since, titles (Map), date(ts), decks (decks.js entries; public ones count)} */
+/** rows = peopleRows(...); x = {me, hasOwn, since, titles (Map), date(ts), decks (decks.js entries; public ones count)} */
 export function peopleHtml(rows, x) {
   const n = rows.length, link = r => (r.profile ? r.profile.login : r.key), decks = x.decks || [];
   const face = r => { const gh = githubOf(r); return gh && githubUrl(gh) ? `<a class="face" href="${githubUrl(gh)}" target="_blank" rel="noopener" title="${esc(gh)} on GitHub">${avatarHtml(gh, 20)}</a>` : `<span class="face"></span>`; };
   const row = r => `<tr><td>${face(r)}<a href="#/u/${encodeURIComponent(link(r))}">${esc(link(r))}</a>${r.person && link(r) !== r.key ? ` <span class="muted">${esc(r.key)}</span>` : ""} ${stateFact(r.state)}</td>
     <td class="num">${r.person?.cards || ""}</td><td class="num">${r.person?.edits || ""}</td><td class="num">${r.person?.commits || ""}</td><td class="num">${deckCount(r, decks) || ""}</td>
     <td>${titleChips(r.key, x.titles)}</td><td class="muted">${esc(r.profile?.motto || "")}</td></tr>`;
-  const scope = x.available ? (x.since ? ` · ${noted(`since ${x.date(x.since)}`, "Date of the earliest card commit or edit batch in the card repo's history")}` : "") : ` · <span class="muted" data-tip="This build has no git history, so card commits are missing and edits are counted from Card Edits.json">commits not in this build</span>`;
+  const scope = x.since ? ` · ${noted(`since ${x.date(x.since)}`, "Date of the earliest card commit or edit batch in the card repo's history")}` : "";
   return `<div class="profile">
     <div class="toolbar"><span class="result-count">${n} ${n === 1 ? "person" : "people"}${scope}</span>
       ${x.me ? (x.hasOwn ? "" : `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>`) : `<span class="muted">Sign in (top right) to make your profile.</span>`}</div>
-    ${n ? `<div class="scroll-x"><table class="data people"><thead><tr><th>Person</th><th class="num">Cards</th><th class="num">${noted("Edits", x.available ? "Commits to Card Edits.json: batches published on the website, or by hand" : "Edit batches in Card Edits.json, which keeps each card's last one")}</th><th class="num">${noted("Card commits", "Commits that added or changed a card's PSD or PNG; moves and rulebook pages don't count")}</th><th class="num">${noted("Decks", "Their public decks in the deck browser; private ones aren't counted")}</th><th>Titles</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table></div>`
+    ${n ? `<div class="scroll-x"><table class="data people"><thead><tr><th>Person</th><th class="num">Cards</th><th class="num">${noted("Edits", "Commits to Card Edits.json: batches published on the website, or by hand")}</th><th class="num">${noted("Card commits", "Commits that added or changed a card's PSD or PNG; moves and rulebook pages don't count")}</th><th class="num">${noted("Decks", "Their public decks in the deck browser; private ones aren't counted")}</th><th>Titles</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table></div>`
       : `<div class="empty">Nobody yet.</div>`}
     <p class="muted">Cards credited · edits: Card Edits batches · card commits: PSD/PNG changes · decks: public ones.</p></div>`;
 }

@@ -15,8 +15,8 @@ months are Pacific time (ZONE).
     top and bottom 10% (the total's mid-rank), the stat lines it had (trend, when they changed) and its recorded changes, newest first, its old names' too (renamed). Both read the current card as its
     page shows it. A version with the same date as the one after it is the same PSD read again by a newer parser: the
     newer reading replaces it.
-  * Over time (full-history builds only, since a card's start is its first upload): each month, the total stats of
-    each star cohort's cards as they were then.
+  * Over time (a card's start is its first upload): each month, the total stats of each star cohort's cards as they
+    were then.
 
 PSDs are never read here; everything comes from the bot's data.
 """
@@ -426,7 +426,7 @@ def point(v):
 def over_time(cards, stats, old_stats, sizes, now):
     """{months: [...], series: {star cohort key: [[n, mean, p10, p90] or None per month]}}: at each month's end, the
     creatures and minions there were then with the stars and stats they had then. A card's start is its image's first
-    upload (fs, full-history builds only) or its oldest version, whichever is earlier; an archived card ends at its tag."""
+    upload (fs) or its oldest version, whichever is earlier; an archived card ends at its tag."""
     lives = []
     for e in cards:
         if e.get("dup") or e.get("hidden") or e.get("parsed") is False or e.get("key") not in stats:
@@ -468,10 +468,9 @@ def over_time(cards, stats, old_stats, sizes, now):
 
 
 # ---- the file ----------------------------------------------------------------------------------------------------
-def build(cards, stats, old_stats, now=None, history=True, psd_commits=None, lineage=None, into=None):
-    """data/analytics.json for the site's card entries (before their history is moved to history.json). history = the
-    build read the git history (fs is set): without it, no over-time series (cards would start at their last commit).
-    psd_commits = {(commit time, PSD file name in lower case)} from that history: an older record dated by one is exact.
+def build(cards, stats, old_stats, now=None, psd_commits=None, lineage=None, into=None):
+    """data/analytics.json for the site's card entries (before their history is moved to history.json).
+    psd_commits = {(commit time, PSD file name in lower case)} from the git history: an older record dated by one is exact.
     lineage = psd_lineage of it: each change row's "c", an index into "commits" (version_commit). into: renamed cards'
     old names (renames_followed)."""
     now = now or datetime.now(timezone.utc).timestamp()
@@ -503,7 +502,7 @@ def build(cards, stats, old_stats, now=None, history=True, psd_commits=None, lin
             r["c"] = table.setdefault(sha, len(table))
     counts = Counter(e.get("type") for e, _, _ in members)
     return {"cohorts": cohorts, "cards": out_cards, "counts": dict(counts), "versions": versions,
-            "time": over_time(cards, stats, old_stats, sizes, now) if history else {"months": [], "series": {}},
+            "time": over_time(cards, stats, old_stats, sizes, now),
             "minCohort": MIN_COHORT, "commits": list(table)}
 
 

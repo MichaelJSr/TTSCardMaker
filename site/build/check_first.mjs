@@ -1,5 +1,5 @@
-// The first screen index.html carries, as the site's own code draws it (build_site.py first_screen checks its markup
-// against this). node check_first.mjs <assets dir>, stdin {cards, icons, thumbs, n, eager}; prints {ids, tiles, toolbar, sizes}:
+// The first screen index.html carries, as the site's own code draws it (build_site.py first_screen writes this markup).
+// node check_first.mjs <assets dir>, stdin {cards, icons, thumbs, n, eager}; prints {ids, tiles, toolbar, sizes}:
 // the default grid's first n cards (app.js listOf with no params: the cards not hidden, Name order), each as a link tile
 // (grid.js tileHtml, link: true, the first `eager` loaded eagerly), the toolbar (Name, Grid, M) and grid.js TILE_SIZES.
 import { readFileSync } from "node:fs";

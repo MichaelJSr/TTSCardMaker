@@ -185,7 +185,7 @@ jobs:
       # uv, no cache: ~2 s from PyPI where pip took 5-7 s after a 155 MB pip cache restore. uv itself: setup-uv's download,
       # its sha256 pinned, else the GitHub release; neither: pip.
       # esbuild bundles the JS (app.js and the chunks loaded on first use) with source maps and minifies the CSS
-      # (build_site.py bundle, minify); node checks index.html's first screen against grid.js (first_screen). Exact
+      # (build_site.py bundle, minify); node draws index.html's first screen with grid.js (first_screen). Exact
       # version: same source, same bytes.
       # The PSDs' sizes (the PSD size sort): one trees API call, since the blobless clone has no blob sizes.
       # The deploy's versions: the version job's hand-over, 3 minutes at most (the deploy waits for it, Setup wait not);

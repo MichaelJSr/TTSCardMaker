@@ -48,8 +48,7 @@ Where the data comes from:
     when one PNG of that file name was deleted; not the bot's lossless recompressions, named in its Recompressed
     trailers), gives each card its first upload (fs: created's fallback), and counts
     per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
-    Edits.json). Needs full history: a shallow clone gets no image versions, no fs, and counts edit batches from the
-    file's _by/_at stamps instead.
+    Edits.json). Needs full history: a shallow clone stops the build.
   * Creation dates: site/Card Creation Dates.json, each card's first Discord post; a card's created is the earlier of that
     and fs (a hand-set date wins): the Cards tab's created sort, the card page's "created" fact, the person pages' newest
     cards and activity chart. Bad entries skipped.
@@ -166,9 +165,6 @@ BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
 CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (global_config.CREATED_PATH)
 CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
-RATINGS_PATH = "site/Card Ratings.json"         # dated whole-number 1-10 ratings (AutoCroissant tts_ratings; card_edits.CardRatings); data only, the site shows none
-RATING_SCALES = ("favorability", "power")
-RATING_SOURCES = ("TTS session",)
 BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (the 2026-10-22 migration's)
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
@@ -1072,7 +1068,7 @@ def record_fonts(records):
 
 CARD_FONTS = "cardfonts.json"                # data/: the grid's Font filter, loaded on its first use
 EDITING_JSON = "editing.json"                # data/: {card id: its EDITOR_FIELDS}, out of cards.json (app.js loadEditor)
-EDITOR_FIELDS = ("blob", "webAliases", "statCaps", "creatureBars", "ink", "ratings")   # read by edit mode only; ratings by nobody (kept)
+EDITOR_FIELDS = ("blob", "webAliases", "statCaps", "creatureBars", "ink")   # read by edit mode only
 
 
 def editor_split(cards):
@@ -2090,102 +2086,6 @@ def parse_created():
     return out
 
 
-def rating_number(v):
-    """One decimal, as JS Math.round(v * 10) / 10; whole values as int (JSON.stringify writes 7, not 7.0)."""
-    v = int(v * 10 + 0.5) / 10
-    return int(v) if v == int(v) else v
-
-
-def valid_rating(e):
-    """A rating entry: {date, scale, value (a whole number 1-10), by, source}."""
-    if not isinstance(e, dict) or e.get("scale") not in RATING_SCALES or e.get("source") not in RATING_SOURCES:
-        return False
-    v, by, day = e.get("value"), e.get("by"), e.get("date")
-    if not isinstance(v, int) or isinstance(v, bool) or not 1 <= v <= 10 or not isinstance(by, str) or not by or len(by) > 100:
-        return False
-    try:
-        return isinstance(day, str) and date.fromisoformat(day).isoformat() == day
-    except ValueError:
-        return False
-
-
-def rating_order(entries):
-    """Oldest first: date, source, by, scale (card_edits.CardRatings.order)."""
-    return sorted(entries, key=lambda e: (e["date"], RATING_SOURCES.index(e["source"]), e["by"].lower(), RATING_SCALES.index(e["scale"])))
-
-
-def parse_ratings():
-    """site/Card Ratings.json -> {card_key: (name, [entry])}; bad entries are skipped. Warns, never fails."""
-    path = os.path.join(REPO, RATINGS_PATH)
-    if not os.path.exists(path):
-        log(f"no {RATINGS_PATH}: no ratings")
-        return {}
-    try:
-        data = json.load(open(path, encoding="utf-8"))
-    except ValueError as e:
-        warn(f"{RATINGS_PATH} isn't valid JSON, no ratings: {e}")
-        return {}
-    cards = data.get("cards") if isinstance(data, dict) else None
-    if not isinstance(cards, dict):
-        warn(f"{RATINGS_PATH} has no \"cards\" object, no ratings")
-        return {}
-    out, bad = {}, []
-    for name, entries in cards.items():
-        entries = entries if isinstance(entries, list) else [None]
-        kept = [{"date": e["date"], "scale": e["scale"], "value": e["value"], "by": e["by"], "source": e["source"]}
-                for e in entries if valid_rating(e)]
-        if len(kept) < len(entries):
-            bad.append(name)
-        if kept:
-            got = out.setdefault(card_key(name), (name, []))
-            got[1].extend(kept)
-    if bad:
-        warn(f"{RATINGS_PATH}: entries skipped on {len(bad)} cards (expected {{date, scale, value: a whole number 1-10, by, source}}): {', '.join(bad[:10])}")
-    return out
-
-
-def rating_now(entries, scale, skip=None):
-    """The mean of each rater's latest entry of scale (skip: a rater, or raters, left out;
-    "group" counts as one) -> {"value" (1 decimal), "raters", "date" (the newest)}, or None."""
-    skip = {skip} if isinstance(skip, str) else set(skip or ())
-    latest = {}
-    for e in entries or ():                       # oldest first: a later one replaces
-        if e.get("scale") == scale and e["by"] not in skip:
-            if e["by"] not in latest or e["date"] >= latest[e["by"]]["date"]:
-                latest[e["by"]] = e
-    if not latest:
-        return None
-    values = [e["value"] for e in latest.values()]
-    return {"value": rating_number(sum(values) / len(values)), "raters": len(latest), "date": max(e["date"] for e in latest.values())}
-
-
-def apply_ratings(cards, ratings, archived):
-    """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source}], oldest first. A duplicate's
-    go to its original. A name matching an archived row goes to the card it was renamed to (renamedId), else onto the
-    row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
-    live, by_id = {}, {e["id"]: e for e in cards}
-    for e in cards:
-        live.setdefault(card_key(e["key"]), e)
-    arch = {card_key(r["card"]): r for r in archived}
-    got, rows, counts = {}, {id(r) for r in archived}, {"entries": 0, "cards": 0, "archived": 0, "unmatched": []}
-    for key, (name, entries) in ratings.items():
-        target = live.get(key)
-        if target is not None and target.get("dup") in by_id and not target.get("variantOf"):
-            target = by_id[target["dup"]]              # a duplicate's ratings are its original's (a variant: its own)
-        if target is None and key in arch:
-            target = by_id.get(arch[key].get("renamedId")) or arch[key]
-        if target is None:
-            counts["unmatched"].append(name)
-            continue
-        target.setdefault("ratings", []).extend({**e} for e in entries)
-        got[id(target)] = target
-        counts["entries"] += len(entries)
-    for target in got.values():
-        target["ratings"] = rating_order(target["ratings"])
-        counts["archived" if id(target) in rows else "cards"] += 1
-    return counts
-
-
 def created_ts(e):
     """A card's created day as epoch seconds (noon UTC), else its first upload (fs), else None."""
     if e.get("created"):
@@ -2810,12 +2710,10 @@ def parse_history(text, last=None, renamed=None, sweeps=None):
 
 def git_history(last=None, renamed=None, sweeps=None):
     """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape; last, renamed and sweeps as
-    there). Commit metadata and trees only, so CI's blob:none clone has it all; None in a shallow clone, which has no
-    history to read."""
+    there). Commit metadata and trees only, so CI's blob:none clone has it all; a shallow clone stops the build."""
     shallow = subprocess.run(["git", "-C", REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
     if shallow == "true":
-        log("warning: shallow clone, so no image versions and no commit counts (git fetch --unshallow --filter=blob:none to get them)")
-        return None
+        raise SystemExit("error: shallow clone: the build needs the full history (git fetch --unshallow --filter=blob:none)")
     out = subprocess.run(["git", "-C", REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
                           f"--format={HISTORY_FORMAT}", "--", *HISTORY_PATHS], capture_output=True, text=True, check=True).stdout
     return parse_history(out, last, renamed, sweeps)
@@ -2828,9 +2726,7 @@ def image_versions(paths, commits, renamed=None, pairs=None):
     deleted and added in one commit), a move that also changed the image when that commit deleted exactly one PNG
     of the same file name (alnum, any case) and added only this one, and a rename the bake told (renamed: parse_history's,
     a card renamed and redrawn in one commit). pairs (a dict): filled with {(current path, sha): (blob before or None,
-    blob after)}. None without history."""
-    if commits is None:
-        return None
+    blob after)}."""
     tracked = {p: p for p in paths}               # path at the commit being read -> current path
     versions = {p: [] for p in paths}
     pairs = {} if pairs is None else pairs
@@ -2887,8 +2783,8 @@ HEAVY_PSDS = 45                               # card PSDs in a commit from which
 
 def heavy_commits(commits):
     """12-char shas of the commits changing HEAVY_PSDS card PSDs or more (cards.json heavy: text.js commitLink links the
-    card's history from there instead); [] without history."""
-    return sorted(sha[:12] for sha, _, _, _, _, entries, _ in commits or ()
+    card's history from there instead)."""
+    return sorted(sha[:12] for sha, _, _, _, _, entries, _ in commits
                   if sum(path.lower().endswith(".psd") and is_card_file(path) for _, _, _, path in entries) >= HEAVY_PSDS)
 
 
@@ -2915,7 +2811,7 @@ def pass_commits(commits, found):
     in batches). Maintenance for "updated" (set_updated)."""
     size = Counter(sha for vs in found.values() for (sha, *_), _ in vs)
     out, run = set(), []
-    for sha, ts, author, *_ in reversed(commits or ()):
+    for sha, ts, author, *_ in reversed(commits):
         if run and (author != run[-1][2] or ts - run[-1][1] > PASS_GAP):
             if sum(size[c[0]] for c in run) > MASS_PASS:
                 out.update(c[0] for c in run)
@@ -2935,10 +2831,8 @@ def mass_passes(found):
 def card_revisions(found, by_png, commits, people, by_login, row_of):
     """{card id: {credited name: image changes after its first upload}} (found: image_versions, newest first, so its last
     row is the upload): mass passes left out, credited by commit_keys(); every card id of the PNG gets the counts (a
-    duplicate's are its original's). None without history."""
-    if found is None:
-        return None
-    mass, rows, out = mass_passes(found), {c[0]: c for c in commits or ()}, {}
+    duplicate's are its original's)."""
+    mass, rows, out = mass_passes(found), {c[0]: c for c in commits}, {}
     for png, vs in found.items():
         got = Counter(k for (sha, *_), _ in vs[:-1] if sha not in mass and sha in rows for k in commit_keys(rows[sha], people, by_login, row_of))
         if got:
@@ -3029,11 +2923,7 @@ def site_events(events, id_of, since):
 
 
 def edit_history():
-    """Every commit that touched Card Edits.json or Card Authors.txt (parse_history's shape), newest first; None in a
-    shallow clone."""
-    shallow = subprocess.run(["git", "-C", REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
-    if shallow == "true":
-        return None
+    """Every commit that touched Card Edits.json or Card Authors.txt (parse_history's shape), newest first."""
     out = subprocess.run(["git", "-C", REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
                           f"--format={HISTORY_FORMAT}", "--", *sorted(EDIT_PATHS | AUTHOR_PATHS)], capture_output=True, text=True, check=True).stdout
     return parse_history(out)
@@ -3094,28 +2984,15 @@ def edit_changes(before, after):
     return out
 
 
-def stamp_groups(fields, meta):
-    """An entry's edited fields by the stamp they are credited to: {(_by, _at): {field: value}}. Its _by takes the fields
-    not in _bot; the bot's are nobody's."""
-    out = {}
-    bot = meta.get(BOT_FIELDS, ())
-    for f, v in fields.items():
-        stamp = None if f in bot else (meta.get("_by"), meta.get("_at"))
-        if stamp and stamp[0] and stamp[1] and stamp[0].lower() != BOT_AUTHOR.lower():
-            out.setdefault(stamp, {})[f] = v
-    return out
-
-
-def edit_batches(commits, people, by_login, edits, id_of, name_of, since, row_of, fields_by=None):
+def edit_batches(commits, people, by_login, id_of, name_of, since, row_of, fields_by=None):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
     Authors.txt line (a website publish batch, a commit by hand). The bot's bakes (they write verdicts
     and delete the baked entries; the card sync's changed event shows the bake), a pure move and a change of the file's
     notes are none. A batch is credited to the stamps it wrote (_by), else its Edit-by trailers, else its author.
-    Without history: the current file's entries grouped by their _by/_at stamps (each card's last batch only, `stamped`).
 
     Returns:
-        {"available": bool, "batches": [{sha?, at, via: website|git, by: [credited name], subject?, stamped?,
+        {"batches": [{sha, at, via: website|git, by: [credited name], subject,
           cards: [{key, name, id?, fields: {field: [old, new]}}], authors: [{key, name, id?, from, to}],
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
     fields_by: filled with {credited name: {field: lines}} over every line (BATCH_LINES doesn't cut it; a Card Authors.txt
@@ -3143,24 +3020,6 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, row_of
                 for f in fields:
                     mine[f] = mine.get(f, 0) + 1
 
-    if commits is None:
-        groups = {}
-        for key, (fields, meta) in edits.items():
-            for (by, at), mine in stamp_groups(fields, meta).items():
-                groups.setdefault((by, at), {}).setdefault(key, {}).update(mine)
-        out = []
-        for (by, at), rows in groups.items():
-            try:
-                ts = int(datetime.fromisoformat(at.replace("Z", "+00:00")).timestamp())
-            except ValueError:
-                continue
-            if ts < since:
-                continue
-            tally([shown(by)], [f for fields in rows.values() for f in fields])
-            out.append({"at": ts, "via": "website", "by": [shown(by)], "stamped": True,
-                        "cards": [{**card(k, None), "fields": {f: [None, v] for f, v in sorted(fields.items())}} for k, fields in sorted(rows.items())],
-                        "authors": [], "people": []})
-        return {"available": False, "batches": sorted(out, key=lambda b: -b["at"])}
     wanted = [c for c in commits if c[1] >= since]
     blobs = read_blobs([s for c in wanted for _, old, new, path in c[5] if path in EDIT_PATHS | AUTHOR_PATHS for s in (old, new)])
     text = lambda sha: blobs.get(sha, "") if sha and sha.strip("0") else ""
@@ -3198,7 +3057,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, row_of
         if more:
             row["more"] = more
         out.append(row)
-    return {"available": True, "batches": out}
+    return {"batches": out}
 
 
 ARCHIVED_PERSON = ("card", "title", "renamed_to", "renamedId", "moved_to", "at", "created")       # contributions.json people[].archived
@@ -3278,7 +3137,7 @@ PAGE_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$")       # a name th
 def login_rows(commits, people, by_login):
     """A login -> its row, or None: credit(), else the name its noreply commits (not the bot's) credit most."""
     noreply = {}                                  # a noreply email's login -> {credited name: commits}
-    for _, _, name, email, _, _, _ in commits or ():
+    for _, _, name, email, _, _, _ in commits:
         m = NOREPLY_RE.match(email or "")
         if m and name.lower() != BOT_AUTHOR.lower():
             c = noreply.setdefault(m.group(1).lower(), {})
@@ -3315,11 +3174,10 @@ def is_card_file(path):
 
 
 def contributions(cards, people, profiles, edits, commits, balance=None, revisions=None, archived=(), fields_by=None, row_of=None):
-    """{"available", "since", "people": [{key, logins, github?, cards, edits, commits, first, recent, recentEdits,
+    """{"since", "people": [{key, logins, github?, cards, edits, commits, first, recent, recentEdits,
     months, + person_extras' keys}], "site"?: {z}} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
-    (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
-    one batch per card; a `_bot` field counts for nobody). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
+    (a hand commit counts, a pure move doesn't). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
     added, isn't a change), one however many files. The bot's own commits and stamps are left out, but a bake (a bot
     commit changing a card, with Edit-by trailers, one per card and editor) is one card commit of each editor it names,
     its recent entry counting their trailers as cards, never an edit (their batch already counted). A login is the row credit() names, else the row its noreply commits credit most, else its own (any
@@ -3359,55 +3217,46 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
             r["cards"] += 1
             if c.get("created") or c.get("fs"):
                 tally(r, created_ts(c), 0)
-    if commits is not None:
-        for sha, ts, name, email, subject, entries, editors in commits:
-            bot = name.lower() == BOT_AUTHOR.lower()
-            key = who(name, email, people, by_login)
-            if not bot and (not key or key.lower() == BOT_AUTHOR.lower()):
-                continue
-            gone = {old for s, old, _, _ in entries if s == "D"}
-            changed = lambda s, new: s == "M" or (s == "A" and new not in gone)       # not a blob moved from another path
-            touched = {os.path.splitext(os.path.basename(p))[0].lower() for s, _, new, p in entries if changed(s, new) and is_card_file(p)}
-            if bot:                               # a bake: the card commit of each editor named
-                named = {}                        # row -> [login as first spelled, their cards: one trailer per card]
-                for login in [e for e in editors if LOGIN_RE.match(e)] if touched else ():
-                    named.setdefault(key_of(login), [login, 0])[1] += 1      # one commit per row named
-                for k, (login, n) in named.items():
-                    if k.lower() == BOT_AUTHOR.lower():
-                        continue
-                    r = rec_of(k)
-                    known(k, login)
-                    seen(r, ts)
-                    r["commits"] += 1
-                    tally(r, ts, 2)
-                    if len(r["recent"]) < RECENT_COMMITS:
-                        r["recent"].append([ts, subject, n])
-                continue
-            edited = any(p in EDIT_PATHS and changed(s, new) for s, _, new, p in entries)
-            if not touched and not edited:
-                continue
-            r = rec_of(key)
-            m = NOREPLY_RE.match(email or "")
-            known(key, m and m.group(1))
-            seen(r, ts)
-            if edited:
-                r["edits"] += 1
-                tally(r, ts, 1)
-                if len(r["recentEdits"]) < RECENT_COMMITS:
-                    r["recentEdits"].append([ts, subject, sha])
-            if touched:
+    for sha, ts, name, email, subject, entries, editors in commits:
+        bot = name.lower() == BOT_AUTHOR.lower()
+        key = who(name, email, people, by_login)
+        if not bot and (not key or key.lower() == BOT_AUTHOR.lower()):
+            continue
+        gone = {old for s, old, _, _ in entries if s == "D"}
+        changed = lambda s, new: s == "M" or (s == "A" and new not in gone)       # not a blob moved from another path
+        touched = {os.path.splitext(os.path.basename(p))[0].lower() for s, _, new, p in entries if changed(s, new) and is_card_file(p)}
+        if bot:                               # a bake: the card commit of each editor named
+            named = {}                        # row -> [login as first spelled, their cards: one trailer per card]
+            for login in [e for e in editors if LOGIN_RE.match(e)] if touched else ():
+                named.setdefault(key_of(login), [login, 0])[1] += 1      # one commit per row named
+            for k, (login, n) in named.items():
+                if k.lower() == BOT_AUTHOR.lower():
+                    continue
+                r = rec_of(k)
+                known(k, login)
+                seen(r, ts)
                 r["commits"] += 1
                 tally(r, ts, 2)
                 if len(r["recent"]) < RECENT_COMMITS:
-                    r["recent"].append([ts, subject, len(touched)])
-    else:
-        for by, at in {stamp for fields, meta in edits.values() for stamp in stamp_groups(fields, meta)}:   # a field's own editor
-            r = rec_of(key_of(by))
+                    r["recent"].append([ts, subject, n])
+            continue
+        edited = any(p in EDIT_PATHS and changed(s, new) for s, _, new, p in entries)
+        if not touched and not edited:
+            continue
+        r = rec_of(key)
+        m = NOREPLY_RE.match(email or "")
+        known(key, m and m.group(1))
+        seen(r, ts)
+        if edited:
             r["edits"] += 1
-            try:
-                seen(r, int(datetime.fromisoformat(at.replace("Z", "+00:00")).timestamp()))
-            except ValueError:
-                pass
+            tally(r, ts, 1)
+            if len(r["recentEdits"]) < RECENT_COMMITS:
+                r["recentEdits"].append([ts, subject, sha])
+        if touched:
+            r["commits"] += 1
+            tally(r, ts, 2)
+            if len(r["recent"]) < RECENT_COMMITS:
+                r["recent"].append([ts, subject, len(touched)])
     for _, meta in edits.values():                # website logins: one per batch stamp
         by = meta.get("_by")
         if by and by.lower() != BOT_AUTHOR.lower():
@@ -3428,7 +3277,7 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
         r["months"] = [[k, *v] for k, v in sorted(r["months"].items())]
         out.append(r)
     out.sort(key=lambda r: (-r["cards"], -r["commits"], -r["edits"], r["key"].lower()))
-    res = {"available": commits is not None, "since": min((r["first"] for r in out if r["first"]), default=0), "people": out}
+    res = {"since": min((r["first"] for r in out if r["first"]), default=0), "people": out}
     zs = [v["z_total"] for v in (balance or {}).get("cards", {}).values() if "z_total" in v]
     if zs:
         res["site"] = {"z": round(sum(zs) / len(zs), 2)}
@@ -3440,7 +3289,7 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
 def psd_commits_at(commits, people, by_login, row_of):
     """{committer time: [(credited names, {alnum PSD file names})]} of the commits that added or changed a PSD."""
     out = {}
-    for row in commits or ():
+    for row in commits:
         names = {alnum(os.path.splitext(os.path.basename(p))[0]) for s, _, _, p in row[5] if s != "D" and p.lower().endswith(".psd")}
         if names:
             out.setdefault(row[1], []).append((commit_keys(row, people, by_login, row_of), names))
@@ -3461,8 +3310,7 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
     """Adds to each contributions row (key K; own cards: credited to K, not duplicates, not hidden) what it has of:
     power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, madeBuff, madeNerf, swing? [id, delta, ts],
     recent [[id, buff|nerf, delta, ts]]}; revisions (P3, P12, P13) {self, others, top, theirs, most?, untouched, oldest?};
-    rework (P11) {n, of, most?}; ratings (P4) {fav?, favN, power?, powerN, best, worst} (the site shows none since
-    2026-11-11); editFields (P21) [[field, n]]; archived (P17). NOTES.md §8."""
+    rework (P11) {n, of, most?}; editFields (P21) [[field, n]]; archived (P17). NOTES.md §8."""
     A = balance.get("cards", {})
     vis = [c for c in cards if c.get("author") and not c.get("dup") and not c.get("hidden")]
     own = defaultdict(list)
@@ -3527,19 +3375,6 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
             most = min(hit, key=lambda i: (-reworks[i][0], reworks[i][1]))
             if reworks[most][0] >= 2:
                 r["rework"]["most"] = [most, reworks[most][0]]
-        others = lambda c, scale: rating_now(c.get("ratings"), scale, skip=K)      # everyone's but K's
-        fv, pv = ([(c["id"], v["value"]) for c in mine for v in [others(c, scale)] if v] for scale in ("favorability", "power"))
-        if fv or pv:
-            rat = {"favN": len(fv), "powerN": len(pv)}
-            for short, vals in (("fav", fv), ("power", pv)):
-                if vals:
-                    rat[short] = rating_number(sum(v for _, v in vals) / len(vals))
-            if len(fv) >= 2:                      # best takes up to half, worst the rest below it: never the same card or value
-                order = sorted(fv, key=lambda x: (-x[1], x[0]))
-                k = min(3, (len(fv) + 1) // 2)
-                rat["best"] = [list(x) for x in order[:k]]
-                rat["worst"] = [list(x) for x in order[k:][::-1][:3] if x[1] < order[k - 1][1]]
-            r["ratings"] = rat
         fields = Counter(fields_by.get(K, {}))
         if fields:
             r["editFields"] = [[f, n] for f, n in sorted(fields.items(), key=lambda kv: (-kv[1], kv[0]))]
@@ -4293,13 +4128,6 @@ def inline_css(page, css, what="index.html"):
 FIRST_TILES, FIRST_EAGER = 8, 4               # index.html's pre-written grid: tiles, and of them loaded eagerly
 BLANK_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"   # 1x1, see-through
 FIRST_CHECK = os.path.join(os.path.dirname(os.path.abspath(__file__)), "check_first.mjs")
-# grid.js's, for the first screen (check_first.mjs fails the build on any difference)
-TILE_KIND = {**KIND_LABEL, "unknown": "Other"}
-TILE_CSS = 200                                # TILE_SIZES.m: the default tile's picture, css px
-TILE_TITLE = ' title="Tile size"'
-SORTS = [("name", "Name"), ("stars", "Stars"), ("total", "Total stats"), ("hp", "HP"), ("def", "DEF"), ("atk", "ATK"), ("spd", "SPD"),
-         ("new", "Recently updated"), ("created", "Newest created", ""), ("created", "Oldest created", "asc"), ("series", "Series"),
-         ("type", "Kind"), ("mentioned", "Most referenced"), ("psd", "PSD size")]
 
 
 def js_esc(s):
@@ -4307,56 +4135,15 @@ def js_esc(s):
     return re.sub(r"[&<>\"']", lambda m: {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[m.group()], "" if s is None else str(s))
 
 
-def tile_html(c, eager, icons):
-    """grid.js tileHtml(c, {link: true, eager, css: TILE_CSS}): a plain link to the card's page"""
-    def url(w):
-        return f"thumbs/{c['img']}-{w}-{thumb_tag(w)}.avif"
-    dims = f' width="{c["tw"]}" height="{c["th"]}"' if c.get("tw") else ""
-    load = 'fetchpriority="high"' if eager else 'loading="lazy"'
-    art = (f'<img class="art" {load} decoding="async" src="{url(360)}" '
-           f'srcset="{url(240)} 240w, {url(360)} 360w" sizes="{TILE_CSS}px"{dims} alt="">' if c.get("img") else '<div class="art"></div>')
-    def icon(t):                                  # grid.js iconImg(icons, t, "", 16)
-        ic = icons.get(re.sub(r"[\s_\-.'’]+", "", str(t or "").lower()))
-        small = re.sub(r"\.webp$", f".{ICON_SMALL}.webp", ic["file"]) if ic else ""
-        return (f'<img class="" loading="lazy" src="{js_esc(ic["file"])}" srcset="{js_esc(small)} {ICON_SMALL}w, '
-                f'{js_esc(ic["file"])} {ICON_SIZE}w" sizes="16px" alt="{js_esc(t)}" data-tip="{js_esc(t.replace("_", " "))}">'
-                if ic else "")
-    stars = f'<span class="stars">{"★" * min(c["stars"], 10)}</span>' if c.get("stars") else ""
-    href = quote(c["id"], safe="-_.!~*'()")       # encodeURIComponent
-    return (f'<a class="tile" href="c/{href}/" aria-label="{js_esc(c["name"])}">\n    {art}\n    \n    \n'
-            f'    <div class="meta"><div class="name">{js_esc(c["name"])}</div>\n'
-            f'    <div class="sub">{stars}<span>{js_esc(TILE_KIND.get(c["type"]) or c["type"])}</span>'
-            f'{"".join(icon(t) for t in (c.get("types") or [])[:3])}</div></div></a>')
-
-
-def toolbar_html(count, created, needs=0):
-    """grid.js toolbarHtml for the default grid: Name, Grid, M; needs: the flagged cards"""
-    opts = "".join(f'<option value="{v}"{f" data-dir={json.dumps(d[0])}" if d else ""}{" selected" if v == "name" and not d else ""}>{label}</option>'
-                   for v, label, *d in SORTS if v != "created" or created)
-    seg = lambda key, pairs, on, extra="": "".join(f'<button type="button" class="{"on" if v == on else ""}" data-action="set-pref" data-key="{key}" '
-                                                   f'data-value="{v}"{extra}>{label}</button>' for v, label in pairs)
-    link = f'<a class="mobile-only needs-link" href="#/cards?flags=flagged">Needs handling ({needs})</a>' if needs else ""
-    return ('<div class="toolbar">\n'
-            f'        <span class="result-count">{count:,} card{"" if count == 1 else "s"}</span>{link}\n'
-            '        <button type="button" class="mobile-only" data-action="toggle-filters">Filters</button>\n'
-            f'        <label class="muted">Sort <select data-action="select-param" data-key="sort">{opts}</select></label>\n'
-            '        <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>\n'
-            f'        <span class="seg">{seg("view", (("grid", "Grid"), ("table", "Table")), "grid")}</span>\n'
-            f'        <span class="seg">{seg("size", (("s", "S"), ("m", "M"), ("l", "L")), "m", TILE_TITLE)}</span>\n'
-            '        <button type="button" class="ghost" data-action="random-from-list" title="Random result">Random</button>\n'
-            '        \n'
-            '      </div>')
-
-
 def first_screen(cards, icons):
     """index.html's first screen: the plain grid's toolbar and first FIRST_TILES tiles as links to the cards' pages, in a
     <template> a script puts in the view when the page opens on the plain grid (grid_preload's rule) at the saved tile
     size; app.js redraws the view when it runs. Lazy tiles below the window get a blank picture there, so theirs don't
-    hold up the scripts (app.js draws them). The cards and the markup are checked against the site's own code in
-    node (check_first.mjs): a difference fails the build. (html, ids), or None without node."""
+    hold up the scripts (app.js draws them). The cards and the markup are the site's own code's (grid.js, run in node
+    by check_first.mjs). (html, ids), or None without node."""
     exe = os.environ.get("NODE") or shutil.which("node")
     if not exe:
-        log("first screen: no node to check it with, index.html goes without")
+        log("first screen: no node to draw it with, index.html goes without")
         return None
     src = os.path.join(SITE, "assets")
     try:
@@ -4371,17 +4158,8 @@ def first_screen(cards, icons):
                                   encoding="utf-8", check=True, timeout=300)
         got = json.loads(done.stdout)
     except (OSError, ValueError, subprocess.SubprocessError) as e:
-        raise SystemExit(f"error: the first screen's check didn't run: {getattr(e, 'stderr', '') or e}")
-    by_id = {c["id"]: c for c in cards}
-    tiles = [tile_html(by_id[i], k < FIRST_EAGER, icons) for k, i in enumerate(got["ids"])]
-    shown = [c for c in cards if not c.get("hidden")]
-    toolbar = toolbar_html(len(shown), any(c.get("created") for c in cards), sum(1 for c in shown if c.get("flags") or c.get("checks")))
-    for what, mine, theirs in [*((f"tile {i}", t, j) for i, t, j in zip(got["ids"], tiles, got["tiles"])), ("toolbar", toolbar, got["toolbar"])]:
-        if mine != theirs:
-            at = next((k for k, (a, b) in enumerate(zip(mine, theirs)) if a != b), min(len(mine), len(theirs)))
-            raise SystemExit(f"error: index.html's first screen differs from grid.js ({what}) at {at}:\n"
-                             f"  build_site: {mine[max(0, at - 60):at + 60]!r}\n  grid.js:    {theirs[max(0, at - 60):at + 60]!r}")
-    sizes = got["sizes"]                          # grid.js TILE_SIZES: M here, S and L by the script
+        raise SystemExit(f"error: the first screen's node run failed: {getattr(e, 'stderr', '') or e}")
+    tiles, toolbar, sizes = got["tiles"], got["toolbar"], got["sizes"]   # sizes: grid.js TILE_SIZES, M here, S and L by the script
     page = ('<template id="first"><div class="browse">\n    <aside class="filters" aria-label="Filters"></aside>\n    <section>\n      '
             f'{toolbar}\n      <div id="deck-hits"></div>\n      <div class="grid" style="--tile:{sizes["m"][0]};min-height:200vh;align-content:start">{"".join(tiles)}</div>\n    </section></div></template>\n'
             "<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
@@ -4392,7 +4170,7 @@ def first_screen(cards, icons):
             "  const far = [...document.querySelectorAll('#view .grid img.art[loading=\"lazy\"]')].filter(i => i.getBoundingClientRect().top > innerHeight);\n"
             f"  for (const i of far) {{ i.removeAttribute(\"srcset\"); i.src = \"{BLANK_GIF}\"; }}\n"   # no src at all draws a broken-picture icon
             "} catch { /* storage blocked: app.js draws the view */ } })();</script>")
-    log(f"first screen: {len(tiles)} tiles, the same as grid.js draws them")
+    log(f"first screen: {len(tiles)} tiles from grid.js")
     return page, got["ids"]
 
 
@@ -4805,12 +4583,11 @@ def main():
 
     if analytics.ZONE_MISSING:
         warn("no tz database: balance days and months in UTC, not Pacific time as balance.js shows them")
-    lineage = analytics.psd_lineage(commits, renamed) if commits is not None else None    # each version's commit
-    psd_commits = None if commits is None else {(ts, os.path.basename(path).lower()) for _, ts, _, _, _, entries, _ in commits
-                                                for status, _, _, path in entries if status != "D" and path.lower().endswith(".psd")}
+    lineage = analytics.psd_lineage(commits, renamed)    # each version's commit
+    psd_commits = {(ts, os.path.basename(path).lower()) for _, ts, _, _, _, entries, _ in commits
+                   for status, _, _, path in entries if status != "D" and path.lower().endswith(".psd")}
     try:                                          # balance analytics: never a failed build
-        balance = analytics.build(cards, stats, old_stats, history=commits is not None,
-                                  psd_commits=psd_commits, lineage=lineage, into=into)
+        balance = analytics.build(cards, stats, old_stats, psd_commits=psd_commits, lineage=lineage, into=into)
         for message in analytics.summary(balance):
             log(message)
     except Exception as e:
@@ -4854,8 +4631,7 @@ def main():
         "thumbs": thumb_tags(),               # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
-                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR,
-                                            "ratings": RATINGS_PATH},
+                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR},
         "admins": parse_admins(),
         "decks": {"public": len(public_decks), "private": len(private_decks)},     # the Deck builder page shows the public count; the list is decks.json
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
@@ -4867,16 +4643,9 @@ def main():
     by_login = {p["login"].lower(): p for p in profiles}
     name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
     row_of = login_rows(commits, people, by_login)   # a login's row, as contributions keys it
-    rated = apply_ratings(cards, parse_ratings(), archived)
-    line = f"ratings: {rated['entries']} entries on {rated['cards']} cards ({rated['archived']} archived)"
-    if rated["unmatched"]:
-        warn(f"{line}, {len(rated['unmatched'])} names match no card: {', '.join(rated['unmatched'][:10])}")
-    elif rated["entries"]:
-        log(line)
     revs = card_revisions(found, by_png, commits, people, by_login, row_of=row_of)
-    if revs is not None:
-        log(f"revisions: {sum(n for v in revs.values() for n in v.values())} card image changes on {len(revs)} cards "
-            f"({len(mass_passes(found))} mass-pass commits left out)")
+    log(f"revisions: {sum(n for v in revs.values() for n in v.values())} card image changes on {len(revs)} cards "
+        f"({len(mass_passes(found))} mass-pass commits left out)")
 
     # the Changes page's Changelog and Database edits tabs: the card sync's events, the edit batches, archived cards
     since = int(time.time()) - CHANGELOG_DAYS * 86400
@@ -4885,11 +4654,11 @@ def main():
         warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
     fields_by = {}                                # the person pages' edits by field: all time
     try:
-        every = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, 0, row_of, fields_by=fields_by)
-        batches = {**every, "batches": [b for b in every["batches"] if b["at"] >= since]}
+        every = edit_batches(edit_history(), people, by_login, id_of, name_of, 0, row_of, fields_by=fields_by)
+        batches = {"batches": [b for b in every["batches"] if b["at"] >= since]}
     except Exception as e:                        # never a failed build
         warn(f"no edit batches: {type(e).__name__}: {e}")
-        batches = {"available": False, "batches": []}
+        batches = {"batches": []}
         fields_by.clear()
     contrib = contributions(cards, people, profiles, edits, commits, balance=balance, revisions=revs, archived=archived, fields_by=fields_by, row_of=row_of)
     titles = titles_of(contrib["people"])
@@ -4907,7 +4676,7 @@ def main():
     contrib["previews"] = previews
     data["peopleCount"] = people_count(contrib["people"], profiles)      # the People tab's counter
     log(f"contributions: {len(contrib['people'])} people, {sum(r['edits'] for r in contrib['people'])} edit batches, "
-        f"{sum(r['commits'] for r in contrib['people'])} card commits" + ("" if contrib["available"] else " (no history: batches counted from the edits file)"))
+        f"{sum(r['commits'] for r in contrib['people'])} card commits")
 
     changelog = {"available": events is not None, "days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
                  "events": site_events(events or [], id_of, since), "archived": archived, "edits": batches}

@@ -248,7 +248,6 @@ export function batchHtml(b, repo) {
   const people = (b.people || []).map(([git, from, to]) => `<li><span class="muted">People:</span> ${esc(git)} ${to ? `shown as ${esc(to)}` : "removed"}${from && to ? ` <span class="muted">(was ${esc(from)})</span>` : ""}</li>`);
   const n = cards.length + authors.length + people.length + (b.more || 0);
   return `<section class="panel cl-push" data-at="${esc(b.sha || String(b.at))}"><h3>${who}, ${esc(when(b.at))}<span class="muted">: ${plural(n, "change")} ${esc(VIA[b.via] || "")}${commit}</span></h3>
-    ${b.stamped ? `<p class="muted">From the edit stamps (this build has no git history): each card's last edit only, its new values.</p>` : ""}
     <ul class="cl-lines">${[...cards, ...authors, ...people].join("")}${b.more ? `<li class="muted">and ${esc(b.more)} more${b.sha && repo ? ` in the <a href="https://github.com/${esc(repo)}/commit/${esc(b.sha)}" target="_blank" rel="noopener">commit</a>` : ""}</li>` : ""}</ul></section>`;
 }
 /** The Database edits tab: the card sync's edited and authors events by push, and the edit batches (?via=) */
