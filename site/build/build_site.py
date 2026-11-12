@@ -50,9 +50,9 @@ Where the data comes from:
     per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
     Edits.json). Needs full history: a shallow clone gets no image versions, no fs, and counts edit batches from the
     file's _by/_at stamps instead.
-  * Creation dates: site/Card Creation Dates.json (AutoCroissant's `python -m commands.card_dates created`), each card's
-    first Discord post; a card's created is the earlier of that and fs (a hand-set date wins): the Cards tab's created
-    sort, the card page's "created" fact, the person pages' newest cards and activity chart. Bad entries skipped.
+  * Creation dates: site/Card Creation Dates.json, each card's first Discord post; a card's created is the earlier of that
+    and fs (a hand-set date wins): the Cards tab's created sort, the card page's "created" fact, the person pages' newest
+    cards and activity chart. Bad entries skipped.
   * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
     (one more `git log` over Card Edits.json and Card Authors.txt, their versions read in one batch) and the archived
     cards (old_stats tags).
@@ -164,7 +164,7 @@ CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
 AUTHORS_PATH = "site/Card Authors.txt"
 BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
-CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (AutoCroissant card_dates created; global_config.CREATED_PATH)
+CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (global_config.CREATED_PATH)
 CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
 RATINGS_PATH = "site/Card Ratings.json"         # dated whole-number 1-10 ratings (AutoCroissant tts_ratings; card_edits.CardRatings); data only, the site shows none
 RATING_SCALES = ("favorability", "power")
@@ -2059,7 +2059,7 @@ def add_verdicts(edits, folder):
 
 
 def parse_created():
-    """site/Card Creation Dates.json -> {card_key: {"date", "from"[, "provisional"]}}; bad entries are skipped. Warns, never fails."""
+    """site/Card Creation Dates.json -> {card_key: {"date", "from"}}; bad entries are skipped. Warns, never fails."""
     path = os.path.join(REPO, CREATED_PATH)
     if not os.path.exists(path):
         log(f"no {CREATED_PATH}: cards are dated by their first upload")
@@ -2077,12 +2077,11 @@ def parse_created():
     for name, entry in cards.items():
         day = entry.get("date") if isinstance(entry, dict) else None
         try:
-            ok = isinstance(day, str) and date.fromisoformat(day).isoformat() == day and entry.get("from") in CREATED_FROM \
-                and isinstance(entry.get("provisional", False), bool)
+            ok = isinstance(day, str) and date.fromisoformat(day).isoformat() == day and entry.get("from") in CREATED_FROM
         except ValueError:
             ok = False
         if ok:
-            out[card_key(name)] = {"date": day, "from": entry["from"], **({"provisional": True} if entry.get("provisional") else {})}
+            out[card_key(name)] = {"date": day, "from": entry["from"]}
         else:
             bad.append(name)
     if bad:
@@ -2204,9 +2203,8 @@ def created_ts(e):
 
 def apply_created(cards, created):
     """created (UTC day) per card: the earliest evidence, its first Discord post (the file) or its first upload (fs); a hand
-    entry wins. createdFrom says which; createdAbout marks a date an open ruling may still move. Logs, never fails. The
-    bot keeps the same rule (AutoCroissant card_edits.CardDates.created) with its own first upload: the earliest version
-    its database holds."""
+    entry wins. createdFrom says which. Logs, never fails. The bot keeps the same rule (AutoCroissant
+    card_edits.CardDates.created) with its own first upload: the earliest version its database holds."""
     used, later, today = set(), 0, datetime.now(timezone.utc).date().isoformat()
     for e in cards:
         found = created.get(card_key(e["key"]))
@@ -2215,21 +2213,18 @@ def apply_created(cards, created):
             used.add(card_key(e["key"]))
         if found and (found["from"] == "hand" or not upload or found["date"] <= upload):
             e["created"], e["createdFrom"] = found["date"], found["from"]
-            if found.get("provisional"):
-                e["createdAbout"] = True
         elif upload:
             e["created"], e["createdFrom"] = upload, "git"
             later += bool(found)
     dated = [e for e in cards if e.get("created")]
     by = {f: sum(1 for e in dated if e["createdFrom"] == f) for f in CREATED_FROM}
     log(f"created: {len(dated)} of {len(cards)} cards dated ({by['discord']} first Discord post, {by['git']} first upload, "
-        f"{by['hand']} by hand; {sum(1 for e in dated if e.get('createdAbout'))} provisional)")
+        f"{by['hand']} by hand)")
     if later:
         log(f"created: {later} dates in {CREATED_PATH} are after the card's first upload; the upload's used")
     missing = sorted(e["key"] for e in dated if card_key(e["key"]) not in created)
     if created and missing:
-        log(f"created: {len(missing)} cards not in {CREATED_PATH}, dated by their first upload until it has them "
-            f"(AutoCroissant's `python -m commands.card_dates created`): {', '.join(missing[:10])}")
+        log(f"created: {len(missing)} cards not in {CREATED_PATH}, dated by their first upload: {', '.join(missing[:10])}")
     if len(created) > len(used):
         log(f"created: {len(created) - len(used)} names in {CREATED_PATH} match no card: "
             f"{', '.join(sorted(k for k in created if k not in used)[:10])}")

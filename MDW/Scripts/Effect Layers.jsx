@@ -6,12 +6,10 @@
 //               it above the text's group so the group's stroke/shadow don't outline the effect.
 //   Update all: after editing the text, run the script again and press Update all. Every FX layer is rebuilt from
 //               the current text and keeps its layer style, opacity, fill and blend mode.
-//   Convert overlays: shown when the card still has hand-placed overlay text layers; turns them into effect layers.
 // The words keep the font and size of the text layer. Status colors and styles come from the status chart,
 // MDW/Croissant's Special Folder/Satus Effect Colors.psd (one text layer per status, in its color, with its style):
 // Add colors the words like the chart and can copy the chart's style. Without the chart, the swatches in
 // MDW/Status Effects.aco / Attributes.aco and the Styles panel are used instead. Change colors in the text, then Update all.
-// "Effect Layers - All Cards.jsx" does all of this for every card in the repo.
 // AutoCroissant flags cards whose FX layers no longer line up with their text.
 // Badges and icons get no FX layer (Add and Update all refuse them): under a Color, Gradient or Pattern Overlay, turn on
 // Stylistic Alternates for them (Character panel menu > OpenType), which draws them in one colour.
@@ -104,6 +102,14 @@ function phraseRanges(text, phrases) {
     if (spec.nth) found = spec.nth <= found.length ? [found[spec.nth - 1]] : [];
     out = out.concat(found);
   }
+  return out;
+}
+/* the gaps between ranges, over text of `length` */
+function complementRanges(ranges, length) {
+  var out = [], last = 0;
+  ranges.sort(function (a, b) { return a[0] - b[0]; });
+  for (var i = 0; i < ranges.length; i++) { out.push([last, ranges[i][0]]); last = ranges[i][1]; }
+  out.push([last, length + 1]);
   return out;
 }
 /* copy of the text with style runs outside `keep` changed by modify(textStyle) and those inside by modifyKept;
@@ -436,14 +442,13 @@ function applyStyle(doc, layer, name) {
   t.putEnumerated(cID("Lyr "), cID("Ordn"), cID("Trgt")); d.putReference(cID("T   "), t);
   executeAction(cID("ASty"), d, DialogModes.NO);
 }
-/* new FX layer above the text's group. style: {kind: "none" | "chart" | "clipboard" | "preset" | "layer", name, layer}
-   ("chart": the chart's style for `name`; "clipboard": a style already copied). recolor: color the words first */
+/* new FX layer above the text's group. style: {kind: "none" | "clipboard" | "preset" | "layer", name, layer}
+   ("clipboard": a style already copied, e.g. the chart's). recolor: color the words first */
 function addFx(doc, base, phrases, style, recolor) {
-  if (style && style.kind == "chart" && !copyChartStyle(style.name)) style = null;
   if (recolor) colorWords(doc, base, phrases);
   var fx = buildFx(doc, base, phrases), top = topGroup(base);
   if (top != base) fx.move(top, ElementPlacement.PLACEBEFORE);
-  if (style && (style.kind == "chart" || style.kind == "clipboard")) pasteStyle(doc, fx);
+  if (style && style.kind == "clipboard") pasteStyle(doc, fx);
   else if (style && style.kind == "preset") applyStyle(doc, fx, style.name);
   else if (style && style.kind == "layer") copyStyle(doc, style.layer, fx);
   doc.activeLayer = fx;
@@ -469,121 +474,6 @@ function updateAll(doc) {
     try { updateFx(doc, layers[i]); done.push(name); } catch (e) { failed.push(name + ": " + e.message); }
   }
   return { done: done, failed: failed };
-}
-
-/* is the FX layer off its text? Its pixels are copies of the text's, so pixels left after subtracting the
-   text's mean the text moved (same test as AutoCroissant's EFFECT LAYER OUT OF DATE: over 5% left) */
-function isStale(doc, fx) {
-  var spec = parseFxName(fx.name), base = findBase(doc, fx, spec.base);
-  if (!base) return false;                               // nothing to rebuild from; Update all reports it
-  selectTransparency(fx);
-  if (!hasSelection(doc)) return false;
-  var total = hardenSelection(doc);
-  selectTransparency(fx); subtractTransparency(base);
-  var left = hasSelection(doc) ? hardenSelection(doc) : 0;
-  doc.selection.deselect();
-  return total > 0 && left > 0.05 * total;
-}
-function updateStale(doc) {
-  var layers = allLayers(doc, []), done = [], failed = [];
-  for (var i = 0; i < layers.length; i++) {
-    if (!isFx(layers[i]) || !layers[i].visible || !isStale(doc, layers[i])) continue;
-    var label = layers[i].name;
-    try { updateFx(doc, layers[i]); done.push(label); } catch (e) { failed.push(label + ": " + e.message); }
-  }
-  return { done: done, failed: failed };
-}
-
-// ---------- old overlays ----------
-function abilityLayer(doc) {
-  var layers = allLayers(doc, []);
-  for (var i = 0; i < layers.length; i++) if (isText(layers[i]) && layers[i].name.toLowerCase() == "ability" && layers[i].visible) return layers[i];
-  return null;
-}
-/* hand-placed effect overlays: short visible text layers over the Ability text whose words are in it.
-   Returns [{phrase, layers}] grouped by phrase (the same word overlaid twice is one group) */
-var NOT_OVERLAYS = { "ability": 1, "name": 1, "health": 1, "defense": 1, "attack": 1, "speed": 1, "hp": 1, "def": 1, "atk": 1, "spd": 1 };
-function box(l) { try { return l.boundsNoEffects; } catch (e) { return l.bounds; } }
-function insideShare(a, b) {                             // share of a's box inside b's box, effects not counted
-  var x = box(a), y = box(b);
-  var w = Math.min(x[2].as("px"), y[2].as("px")) - Math.max(x[0].as("px"), y[0].as("px"));
-  var h = Math.min(x[3].as("px"), y[3].as("px")) - Math.max(x[1].as("px"), y[1].as("px"));
-  var area = (x[2].as("px") - x[0].as("px")) * (x[3].as("px") - x[1].as("px"));
-  return w > 0 && h > 0 && area > 0 ? w * h / area : 0;
-}
-function findOverlays(doc, ability) {
-  var layers = allLayers(doc, []), text = cleanText(doc, ability), groups = {}, order = [];
-  for (var i = 0; i < layers.length; i++) {
-    var l = layers[i];
-    if (!isText(l) || l == ability || !l.visible || NOT_OVERLAYS[l.name.toLowerCase()]) continue;
-    var t = norm(l.textItem.contents);
-    if (!t || t.length > 40 || insideShare(l, ability) < 0.8 || !phraseRanges(text, [t]).length) continue;
-    var k = t.toLowerCase();
-    if (!groups[k]) { groups[k] = { phrase: t, layers: [] }; order.push(k); }
-    groups[k].layers.push(l);
-  }
-  var out = [];
-  for (var i = 0; i < order.length; i++) out.push(groups[order[i]]);
-  return out;
-}
-function complementRanges(ranges, length) {
-  var out = [], last = 0;
-  ranges.sort(function (a, b) { return a[0] - b[0]; });
-  for (var i = 0; i < ranges.length; i++) { out.push([last, ranges[i][0]]); last = ranges[i][1]; }
-  out.push([last, length + 1]);
-  return out;
-}
-/* overlay -> effect layer: the words take the overlay's color in the text, the effect layer takes the overlay's
-   style, opacity, blend mode and place in the layer stack, and the overlay is deleted */
-/* the phrase's occurrences the overlays sit on, as "phrase#n" (all of them: just "phrase") */
-function coveredOccurrences(doc, ability, phrase, overlays) {
-  var n = phraseRanges(cleanText(doc, ability), [phrase]).length;
-  if (n <= overlays.length) return [phrase];
-  var picked = [];
-  for (var k = 1; k <= n; k++) {
-    var probe = buildFx(doc, ability, [phrase + "#" + k]), hit = false;
-    for (var j = 0; j < overlays.length; j++) if (overlaps(probe, overlays[j])) hit = true;
-    probe.remove();
-    if (hit) picked.push(phrase + "#" + k);
-  }
-  return picked.length ? picked : [phrase];
-}
-/* the overlay's color: its first style run that draws something (Mr_Krabs's "\r2T": the return red, "2T" yellow) */
-function overlayColor(doc, ov) {
-  var tk = withoutBom(textKey(doc, ov)), txt = tk.getString(sID("textKey")), st = tk.getList(sID("textStyleRange")), first = null;
-  for (var i = 0; i < st.count; i++) {
-    var r = st.getObjectValue(i), ts = r.getObjectValue(sID("textStyle"));
-    if (!ts.hasKey(sID("color"))) continue;
-    if (!first) first = ts.getObjectValue(sID("color"));
-    var s = txt.substring(r.getInteger(sID("from")), Math.min(r.getInteger(sID("to")), txt.length));
-    if (/\S/.test(s.replace(/\u0003/g, ""))) return ts.getObjectValue(sID("color"));
-  }
-  if (!first) throw new Error("overlay \"" + ov.name + "\" has no text color");
-  return first;
-}
-function convertOverlays(doc, ability, notes) {
-  var groups = findOverlays(doc, ability), made = [];
-  for (var g = 0; g < groups.length; g++) {
-    var ov = groups[g].layers[0], phrases = coveredOccurrences(doc, ability, groups[g].phrase, groups[g].layers);
-    var color = overlayColor(doc, ov);
-    var want = statusColor(groups[g].phrase);
-    if (want && notes) {
-      var own = { r: Math.round(color.getDouble(cID("Rd  "))), g: Math.round(color.getDouble(cID("Grn "))), b: Math.round(color.getDouble(cID("Bl  "))) };
-      if (Math.abs(own.r - want.r) > 2 || Math.abs(own.g - want.g) > 2 || Math.abs(own.b - want.b) > 2)
-        notes.push("kept the overlay's color " + hex(own) + " for " + groups[g].phrase + " (the status chart has " + hex(want) + ")");
-    }
-    var everyLine = layoutMode(doc, ability);
-    if (everyLine === null) throw new Error("\"" + ability.name + "\": " + LAYOUT_MSG);
-    var text = cleanText(doc, ability);
-    setTextKey(doc, ability, restyle(textKey(doc, ability), complementRanges(phraseRanges(text, phrases), text.length), function (st) { st.putObject(sID("color"), cID("RGBC"), color); }, everyLine));
-    var fx = buildFx(doc, ability, phrases);
-    fx.move(ov, ElementPlacement.PLACEBEFORE);
-    copyStyle(doc, ov, fx);
-    fx.opacity = ov.opacity; fx.fillOpacity = ov.fillOpacity; fx.blendMode = ov.blendMode;
-    for (var j = 0; j < groups[g].layers.length; j++) groups[g].layers[j].remove();
-    made.push(fx.name);
-  }
-  return made;
 }
 
 // ---------- dialog ----------
@@ -630,15 +520,7 @@ function ask(doc) {
   list.alignChildren = "left";
   list.add("statictext", undefined, fxLayers.length ? fxLayers.length + " (Update all rebuilds them from the current text)" : "None yet");
   for (var i = 0; i < fxLayers.length && i < 8; i++) list.add("statictext", undefined, "  " + fxLayers[i].name);
-  var ability = abilityLayer(doc), overlays = ability ? findOverlays(doc, ability) : [];
-  if (overlays.length) {
-    var ovPanel = w.add("panel", undefined, "Old overlay layers");
-    ovPanel.alignChildren = "left";
-    var names = []; for (var i = 0; i < overlays.length; i++) names.push(overlays[i].phrase);
-    ovPanel.add("statictext", undefined, overlays.length + " hand-placed: " + names.join(", ").substr(0, 70));
-  }
   var buttons = w.add("group"); buttons.alignment = "right";
-  var convertButton = overlays.length ? buttons.add("button", undefined, "Convert overlays") : null;
   var addButton = buttons.add("button", undefined, "Add"), updateButton = buttons.add("button", undefined, "Update all");
   buttons.add("button", undefined, "Cancel", { name: "cancel" });
   addButton.enabled = !!base; updateButton.enabled = fxLayers.length > 0;
@@ -648,7 +530,6 @@ function ask(doc) {
     if (phrases.length) { job = { action: "add", base: base, phrases: phrases, style: kinds[pick.selection.index], recolor: recolor.value }; w.close(1); }
   };
   updateButton.onClick = function () { job = { action: "update" }; w.close(1); };
-  if (convertButton) convertButton.onClick = function () { job = { action: "convert", base: ability }; w.close(1); };
   w.show();
   return job;
 }
@@ -657,9 +538,6 @@ function doJob() {
   var doc = app.activeDocument, job = EFFECT_LAYERS_JOB;
   if (job.action == "add") {
     try { addFx(doc, job.base, job.phrases, job.style, job.recolor); } catch (e) { job.error = e.message; }
-  } else if (job.action == "convert") {
-    job.notes = [];
-    try { job.converted = convertOverlays(doc, job.base, job.notes); } catch (e) { job.error = e.message; }
   } else job.result = updateAll(doc);
 }
 function main() {
@@ -677,7 +555,6 @@ function main() {
     app.displayDialogs = dialogs;
     var job = EFFECT_LAYERS_JOB;
     if (job.error) alert("Effect Layers: " + job.error);
-    if (job.converted) alert("Converted " + job.converted.length + " overlay(s):\n" + job.converted.join("\n") + (job.notes.length ? "\n\n" + job.notes.join("\n") : ""));
     if (job.result) alert("Updated " + job.result.done.length + " effect layer(s)." +
       (job.result.failed.length ? "\n\nCouldn't update:\n" + job.result.failed.join("\n") : ""));
   } finally { closeChart(); app.preferences.rulerUnits = units; app.displayDialogs = dialogs; }

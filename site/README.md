@@ -18,7 +18,7 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
   column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
   (`site/Card Creation Dates.json`, below) and the first upload of its image (from the git history); the card page
-  shows it as "created <date>" ("created about <date>" while a Discord post awaiting review may still move it).
+  shows it as "created <date>".
   **PSD size** (`sort=psd`, largest first; the table's PSD column too) sorts by the card's PSD file, ties by name; a
   duplicate or variant picture has its PSD's size, also on the card page ("PSD 34.7 MB"). site.yml reads the sizes
   with one trees API call (`PSD_TREE`).
@@ -192,9 +192,8 @@ bot's data; `[people]` maps git names to the names shown. The hand-kept files `C
 `Card Creation Dates.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
 on 2026-10-20), as does `Card Ratings.json` (new on 2026-10-24; the build reads it, never the bot); the build and the bot read the
 others; the published site includes none of them. `Card Creation Dates.json`
-holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
-(dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.card_dates
-created` (re-run after rulings and archive updates; it keeps `"from": "hand"` entries, the way to set a date by hand).
+holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand"}` (dates only,
+imported once from a Discord archive that is gone now; a date is set or fixed by hand with `"from": "hand"`).
 A card it misses (one made since) is dated by its first upload, with a build log line naming it. The bot reads the file by
 the same rule (AutoCroissant `CardDates.created`), its first upload being the earliest version its database holds: the
 same day for the cards first uploaded since 2026-02, so `/query_ability created>=…` and the search agree (770 of 770

@@ -67,9 +67,8 @@ const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
-/** "about 13 Oct 2023" for a date a Discord post awaiting review may still move */
-const createdText = c => (c.created ? `${c.createdAbout ? "about " : ""}${day(c.created)}` : "");
-const createdTip = c => `${CREATED_TIP[c.createdFrom] || "Created"}${c.createdAbout ? "; provisional: a Discord post awaiting review may still move it" : ""}`;
+const createdText = c => day(c.created);
+const createdTip = c => CREATED_TIP[c.createdFrom] || "Created";
 const isStatus = c => c.type === "debuff" || c.type === "buff";
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
