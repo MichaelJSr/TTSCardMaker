@@ -102,6 +102,8 @@ end
 -- button per deck that spawns a shuffled copy beside the card. The ability's words in the website's palette (painted:
 -- status words, stats with their numbers, counters; a colour too dark for the panel in a lighter shade: build_site
 -- tts_seen). A button whose name is cut short shows the whole name on hover, opaque and clear of the buttons (TIP).
+-- An ability with status words is laid out line by line (abilityLines), each status word its own text with the status's
+-- rule on hover.
 -- Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
 -- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
@@ -118,6 +120,7 @@ local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 5, 6, 40, 30
 local RULE_ROWS, CARD_ROWS = 3, 2                      -- rows the buttons may take (more than fit: names shortened)
 local DECK_BUTTONS, DECK_ROWS = 8, 3
 local DETAILS_PANELS = 3                               -- a player's card details open at once (one more replaces the oldest)
+local ABILITY_LINES, STATUS_LINES, LINE_SLOTS = 10, 6, 7   -- per panel: plain ability lines, lines with a status word, texts in one
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
     {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
 
@@ -157,6 +160,30 @@ local function rows(id, prefix, n, count, onClick, colors)
     return out
 end
 
+-- a panel's page: the details text, the ability's lines when laid out by layout() (plain lines, then lines with a status
+-- word: a row of texts, each status word its own with its rule on hover), the text after the ability
+local function abilityPool(id)
+    local function text(tid, attrs)
+        local a = {id = tid, rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5", alignment = "UpperLeft",
+            horizontalOverflow = "Overflow", verticalOverflow = "Overflow", active = false}
+        for k, v in pairs(attrs or {}) do a[k] = v end
+        return {tag = "Text", attributes = a, value = ""}
+    end
+    local page = {text(id .. "_text", {horizontalOverflow = "Wrap", active = true}), text(id .. "_rest", {horizontalOverflow = "Wrap"})}
+    for i = 1, ABILITY_LINES do table.insert(page, text(id .. "_al" .. i)) end
+    for i = 1, STATUS_LINES do
+        local row = {tag = "HorizontalLayout", attributes = {id = id .. "_as" .. i, rectAlignment = "UpperLeft", offsetXY = "14 -6",
+            childForceExpandWidth = false, childForceExpandHeight = true, childAlignment = "UpperLeft", active = false}, children = {}}
+        for j = 1, LINE_SLOTS do
+            local a = {flexibleWidth = 0}                  -- as wide as its text (Unity's own measure)
+            for k, v in pairs(TIP) do a[k] = v end
+            table.insert(row.children, text(id .. "_as" .. i .. "_" .. j, a))
+        end
+        table.insert(page, row)
+    end
+    return page
+end
+
 -- one of a seat's details panels, k (its children placed by layout(), below); each a little further in than the last;
 -- opaque: build_site TTS_BACK checks the palette's colours against it
 local function detailsPanel(c, k)
@@ -173,9 +200,7 @@ local function detailsPanel(c, k)
         {tag = "VerticalScrollView", attributes = {id = id .. "_scroll", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 4),
             color = "#00000000", scrollSensitivity = 30, horizontalScrollbarVisibility = "AutoHideAndExpandViewport",
             verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {
-            {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = {
-                {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
-                    alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}}}}
+            {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = abilityPool(id)}}}}}
     for _, r in ipairs(rows(id .. "_rules", id .. "_r", RULE_BUTTONS, RULE_ROWS, "openRules")) do table.insert(panel.children, r) end
     for _, r in ipairs(rows(id .. "_cards", id .. "_c", CARD_BUTTONS, CARD_ROWS, "spawnNamed", SPAWN)) do table.insert(panel.children, r) end
     for _, r in ipairs(rows(id .. "_decks", id .. "_k", DECK_BUTTONS, DECK_ROWS, "spawnDeck", DECK)) do table.insert(panel.children, r) end
@@ -263,6 +288,19 @@ local function rebuild()
         end
     end
     UI.setXmlTable(xml)
+    for _, c in ipairs(SEATS) do                       -- the ability pools start hidden: nothing sent to hide them
+        if built[c] then
+            for k = 1, DETAILS_PANELS do
+                local id = c .. "_d" .. k
+                for i = 1, ABILITY_LINES do uiNow[id .. "_al" .. i] = {active = "false"} end
+                uiNow[id .. "_rest"] = {active = "false"}
+                for i = 1, STATUS_LINES do
+                    uiNow[id .. "_as" .. i] = {active = "false"}
+                    for j = 1, LINE_SLOTS do uiNow[id .. "_as" .. i .. "_" .. j] = {active = "false"} end
+                end
+            end
+        end
+    end
 end
 
 -- the fetched data, decoded once it is in (prepare) or when first needed
@@ -454,6 +492,148 @@ local function withBadges(text)
     return table.concat(out)
 end
 
+-- Arial (TTS's UI font) advance widths in font units (2048 em), ASCII 32..126, regular and bold; Unity draws each glyph
+-- a whole number of pixels wide
+local ARIAL_R = "569,569,727,1139,1139,1821,1366,391,682,682,797,1196,569,682,569,569,1139,1139,1139,1139,1139,1139,1139,1139,1139,1139,569,569,1196,1196,1196,1139,2079,1366,1366,1479,1479,1366,1251,1593,1479,569,1024,1366,1139,1706,1479,1593,1366,1593,1479,1366,1251,1479,1366,1933,1366,1366,1251,569,569,569,961,1139,682,1139,1139,1024,1139,1139,569,1139,1139,455,455,1024,455,1706,1139,1139,1139,1139,682,1024,569,1139,1024,1479,1024,1024,1024,684,532,684,1196"
+local ARIAL_B = "569,682,971,1139,1139,1821,1479,487,682,682,797,1196,569,682,569,569,1139,1139,1139,1139,1139,1139,1139,1139,1139,1139,682,682,1196,1196,1196,1251,1997,1479,1479,1479,1479,1366,1251,1593,1479,569,1139,1479,1251,1706,1479,1593,1366,1593,1479,1366,1251,1479,1366,1933,1366,1366,1251,682,569,682,1196,1139,682,1139,1251,1139,1251,1139,682,1251,1251,569,569,1139,569,1821,1251,1251,1251,1251,797,1139,682,1251,1139,1593,1139,1139,1024,797,573,797,1196"
+local ARIAL_MORE = {["★"] = 1671, ["·"] = 682, ["∞"] = 1460, ["™"] = 2048}
+local function advances(list)
+    local t, i, c = {}, 1, 32
+    while i <= #list do
+        local comma = list:find(",", i, true) or #list + 1
+        t[string.char(c)] = tonumber(list:sub(i, comma - 1))
+        i, c = comma + 1, c + 1
+    end
+    return t
+end
+local ADVANCE = {[false] = advances(ARIAL_R), [true] = advances(ARIAL_B)}
+local function glyphW(ch, bold, f)
+    local u = ADVANCE[bold == true][ch] or ARIAL_MORE[ch]
+    if not u then
+        local b = ch:byte() or 0
+        u = (b >= 128 and b < 192) and 0 or 1139       -- a UTF-8 continuation byte (plain Lua), else a digit's width
+    end
+    return math.floor(u * f / 2048 + 0.5)
+end
+
+-- the ability as painted and withBadges draw it, in runs {text, colour, bold, status, n}: a status word (a piece naming a
+-- status) its status and occurrence n; and whether it has one
+local function abilityRuns(text, pieces)
+    local runs, at, occ = {}, 1, 0
+    local function add(t, c, st)
+        if t == "" then return end
+        local n
+        if st then occ = occ + 1 n = occ end
+        local i, from = 1, 1
+        while true do
+            local open = t:find("(", from, true)
+            if not open then break end
+            local close = t:find(")", open + 1, true)
+            local tag = close and close - open <= 8 and tagCase[t:sub(open + 1, close - 1):upper()]
+            if tag then
+                if open > i then table.insert(runs, {t:sub(i, open - 1), c, false, st, n}) end
+                local g = details.tags[tag]
+                table.insert(runs, {"(" .. tag .. ")", BADGE[g and g.g] or BADGE.neutral, true, st, n})
+                i, from = close + 1, close + 1
+            else
+                from = open + 1
+            end
+        end
+        if i <= #t then table.insert(runs, {t:sub(i), c, false, st, n}) end
+    end
+    for _, p in ipairs(type(pieces) == "table" and pieces or {}) do
+        local piece, c, s = type(p) == "table" and p[1], type(p) == "table" and hexColour(p[2]), nil
+        if type(piece) == "string" and piece ~= "" and c then
+            local from = at
+            for _ = 1, math.max(1, math.floor(tonumber(p[3]) or 1)) do
+                s = text:find(piece, from, true)
+                if not s then break end
+                from = s + 1
+            end
+        end
+        if s then
+            add(text:sub(at, s - 1))
+            add(piece, c, details.statuses[piece] and piece or nil)
+            at = s + #piece
+        end
+    end
+    add(text:sub(at))
+    return runs, occ > 0
+end
+
+-- the ability's lines as Unity wraps a Text w wide at size f (at spaces, greedy; a newline ends a line), each word's
+-- width from ARIAL; per line its texts {text (rich), sts (its statuses)}: a status occurrence's words one text (a word
+-- naming several, "(Softened/Thinned)", one text with them all), the words between two of them one (with their spaces: a
+-- line's texts joined by spaces are painted's text); the space between two texts is the row's spacing
+local function abilityLines(runs, w, f)
+    local lines, line, x, word, ww, gap = {}, {}, 0, {}, 0, nil
+    local space = glyphW(" ", false, f)
+    local function render(frags)                       -- {r, s, e} pieces of runs as rich text, one tag per style
+        local out, i = {}, 1
+        while i <= #frags do
+            local r, parts, j = frags[i].r, {}, i
+            while j <= #frags and frags[j].r[2] == r[2] and frags[j].r[3] == r[3] do
+                table.insert(parts, frags[j].r[1]:sub(frags[j].s, frags[j].e))
+                j = j + 1
+            end
+            local t = plain(table.concat(parts))
+            if r[3] then t = "<b>" .. t .. "</b>" end
+            table.insert(out, r[2] and "<color=" .. r[2] .. ">" .. t .. "</color>" or t)
+            i = j
+        end
+        return table.concat(out)
+    end
+    local function endWord(nextGap)
+        if #word > 0 then
+            if #line > 0 and x + space + ww > w then table.insert(lines, line) line = {} end
+            x = #line == 0 and ww or x + space + ww
+            local n, sts = nil, {}
+            for _, frag in ipairs(word) do
+                n = n or frag.r[5]
+                if frag.r[4] and frag.r[4] ~= sts[#sts] then table.insert(sts, frag.r[4]) end
+            end
+            local last = line[#line]
+            if last and last.n == n then
+                table.insert(last.frags, gap)
+                for _, frag in ipairs(word) do table.insert(last.frags, frag) end
+            else
+                table.insert(line, {frags = word, n = n, sts = sts})
+            end
+            word, ww = {}, 0
+        end
+        gap = nextGap
+    end
+    for _, r in ipairs(runs) do
+        local t = r[1]
+        for i = 1, #t do
+            local ch = t:sub(i, i)
+            if ch == " " then
+                endWord({r = r, s = i, e = i})
+            elseif ch == "\n" then
+                endWord(nil)
+                table.insert(lines, line)
+                line = {}
+            else
+                local frag = word[#word]
+                if frag and frag.r == r and frag.e == i - 1 then frag.e = i else table.insert(word, {r = r, s = i, e = i}) end
+                ww = ww + glyphW(ch, r[3], f)
+            end
+        end
+    end
+    endWord(nil)
+    table.insert(lines, line)
+    for _, l in ipairs(lines) do for _, el in ipairs(l) do el.text = render(el.frags) end end
+    return lines
+end
+
+-- a status text's hover: its rule; several: each "name: rule"
+local function rulesOf(sts)
+    if #sts == 1 then return details.statuses[sts[1]].x or "" end
+    local out = {}
+    for _, st in ipairs(sts) do table.insert(out, st .. ": " .. (details.statuses[st].x or "")) end
+    return table.concat(out, "\n")
+end
+
 local function visibleLength(line)                     -- without <tags>
     local n, i = 0, 1
     while true do
@@ -552,9 +732,9 @@ local function detailsText(card)
     local bits = {card.k}
     if card.st then table.insert(bits, math.floor(card.st) .. "★") end
     if card.by then table.insert(bits, "by " .. card.by) end
-    local out = {"<color=" .. DIM .. ">" .. plain(table.concat(bits, " · ")) .. "</color>"}
-    if card.s then table.insert(out, "<b>" .. plain(card.s) .. "</b>") end
-    if card.a then table.insert(out, "\n" .. withBadges(painted(card.a, card.ac))) end
+    local head = {"<color=" .. DIM .. ">" .. plain(table.concat(bits, " · ")) .. "</color>"}
+    if card.s then table.insert(head, "<b>" .. plain(card.s) .. "</b>") end
+    local out = {}
     local function section(title) table.insert(out, "\n<color=" .. HEAD .. "><b>" .. title .. "</b></color>") end
     if card.g then
         section("TIMING TAGS")
@@ -576,7 +756,8 @@ local function detailsText(card)
         end
     end
     if #statuses > 0 then section("STATUS EFFECTS") for _, line in ipairs(statuses) do table.insert(out, line) end end
-    return table.concat(out, "\n")
+    -- the text before the ability, after it, and the first's lines as runs (abilityLines)
+    return table.concat(head, "\n"), table.concat(out, "\n"), {{table.concat(bits, " · ")}, card.s and {card.s, nil, true}}
 end
 
 -- a button's width for its text at font size f (a little more than the text: never cut off)
@@ -660,16 +841,74 @@ local function layout(color, k)
     for r = 1, CARD_ROWS do set(id .. "_cards" .. r, {offsetXY = "10 " .. (8 + (cardRows - r) * (ROW_H + 8))}) end
     for r = 1, DECK_ROWS do set(id .. "_decks" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows - r) * (ROW_H + 8))}) end
     for r = 1, RULE_ROWS do set(id .. "_rules" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows + ruleRows - r) * (ROW_H + 8))}) end
-    local text = detailsText(open.card)
-    local textW = sz.w - 44
-    local textH = lines(text, math.floor(textW / (sz.f * 0.52))) * math.ceil(sz.f * 1.32) + 12
+    local head, rest, headRuns = detailsText(open.card)
+    local textW, card = sz.w - 44, open.card
+    local perLine, lineH = math.floor(textW / (sz.f * 0.52)), math.ceil(sz.f * 1.32)
+    -- an ability with a status word: its lines in the pools (plain lines and status rows), between the text before it
+    -- and the text after it, at Arial's line pitch; else (or when the pools are too few) all in one text
+    local runs, hasStatus = abilityRuns(card.a or "", card.ac)
+    local laid = hasStatus and abilityLines(runs, textW, sz.f)
+    if laid then
+        local plainN, statusN = 0, 0
+        for _, line in ipairs(laid) do
+            if #line > 1 or (line[1] and #line[1].sts > 0) then statusN = statusN + 1 else plainN = plainN + 1 end
+        end
+        if plainN > ABILITY_LINES or statusN > STATUS_LINES then laid = nil end
+    end
+    local pageH
+    if laid then
+        local pitch = math.floor(sz.f * 1.15 + 0.5)
+        local headN = 0
+        for _, r in ipairs(headRuns) do headN = headN + #abilityLines({r}, textW, sz.f) end
+        local y, al, as = 6 + (headN + 1) * pitch, 0, 0
+        for _, line in ipairs(laid) do
+            if #line > 1 or (line[1] and #line[1].sts > 0) then
+                as = as + 1
+                local row = id .. "_as" .. as
+                set(row, {active = "true", offsetXY = "14 -" .. y, width = textW, height = pitch, spacing = glyphW(" ", false, sz.f)})
+                for j = 1, LINE_SLOTS do
+                    local el = line[j]
+                    if el and j == LINE_SLOTS and line[j + 1] then      -- more than a row holds: the rest in its last text
+                        local more = {}
+                        for m = j, #line do table.insert(more, line[m].text) end
+                        el = {text = table.concat(more, " "), sts = {}}
+                    end
+                    if el then
+                        set(row .. "_" .. j, {active = "true", fontSize = sz.f, tooltip = #el.sts > 0 and rulesOf(el.sts) or "", tooltipFontSize = sz.f})
+                        setValue(row .. "_" .. j, el.text)
+                    else
+                        set(row .. "_" .. j, {active = "false"})
+                    end
+                end
+            else
+                al = al + 1
+                set(id .. "_al" .. al, {active = "true", offsetXY = "14 -" .. y, width = textW, height = pitch, fontSize = sz.f})
+                setValue(id .. "_al" .. al, line[1] and line[1].text or "")
+            end
+            y = y + pitch
+        end
+        for i = al + 1, ABILITY_LINES do set(id .. "_al" .. i, {active = "false"}) end
+        for i = as + 1, STATUS_LINES do set(id .. "_as" .. i, {active = "false"}) end
+        local restH = lines(rest, perLine) * lineH + 12
+        set(id .. "_text", {width = textW, height = (headN + 1) * pitch, fontSize = sz.f})
+        setValue(id .. "_text", head)
+        set(id .. "_rest", {active = rest ~= "" and "true" or "false", offsetXY = "14 -" .. y, width = textW, height = restH, fontSize = sz.f})
+        setValue(id .. "_rest", rest)
+        pageH = y + restH + 6
+    else
+        local text = head .. (card.a and "\n\n" .. withBadges(painted(card.a, card.ac)) or "") .. (rest ~= "" and "\n" .. rest or "")
+        pageH = lines(text, perLine) * lineH + 12
+        for i = 1, ABILITY_LINES do set(id .. "_al" .. i, {active = "false"}) end
+        for i = 1, STATUS_LINES do set(id .. "_as" .. i, {active = "false"}) end
+        set(id .. "_rest", {active = "false"})
+        set(id .. "_text", {width = textW, height = pageH, fontSize = sz.f})
+        setValue(id .. "_text", text)
+    end
     set(id .. "_head", {width = sz.w})
     set(id .. "_title", {width = sz.w - 140, fontSize = sz.f + 3})
     setValue(id .. "_title", plain(open.card.n or ""))
     set(id .. "_scroll", {width = sz.w - 8, height = sz.h - TITLE_H - 4 - foot})
-    set(id .. "_page", {width = sz.w - 24, height = textH})
-    set(id .. "_text", {width = textW, height = textH, fontSize = sz.f})
-    setValue(id .. "_text", text)
+    set(id .. "_page", {width = sz.w - 24, height = pageH})
     set(id, {width = sz.w, height = sz.h, active = "true"})
 end
 

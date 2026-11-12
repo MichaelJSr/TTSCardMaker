@@ -535,9 +535,104 @@ def status_line(n, s):                                      # Global.lua details
     return f"<b>{name}</b> <color=#94a3b8>({plain(s['k'])})</color>  "
 
 
+def offset_y(ui, i):
+    return -float(ui.attrs[i].get("offsetXY", "0 0").split()[1])
+
+
+def ability_lines(ui, panel):                               # the ability's laid-out lines, top down:
+    out = []                                                # [(y, [(text, tooltip)])], a plain line one text
+    for i in range(1, 11):
+        if ui.on(f"{panel}_al{i}"):
+            out.append((offset_y(ui, f"{panel}_al{i}"), [(ui.values.get(f"{panel}_al{i}") or "", "")]))
+    for i in range(1, 7):
+        row = f"{panel}_as{i}"
+        if ui.on(row):
+            out.append((offset_y(ui, row), [(ui.values.get(f"{row}_{j}") or "", ui.attrs[f"{row}_{j}"].get("tooltip") or "")
+                                            for j in range(1, 8) if ui.on(f"{row}_{j}")]))
+    return sorted(out)
+
+
+def panel_text(ui, panel):                                  # the details as one text (the ability's lines joined)
+    head, lines = ui.values.get(f"{panel}_text") or "", ability_lines(ui, panel)
+    if not lines and not ui.on(f"{panel}_rest"):
+        return head
+    rest = ui.values.get(f"{panel}_rest") or "" if ui.on(f"{panel}_rest") else ""
+    return head + "\n\n" + "\n".join(" ".join(t for t, _ in els) for _, els in lines) + ("\n" + rest if rest else "")
+
+
+RICH = re.compile(r"<color=(#[0-9a-fA-F]{6})>|</color>|<b>|</b>")
+
+
+def drawn(rich):                                            # rich text as drawn: [(char, colour, bold)], tags gone
+    out, colours, bold, i = [], [None], 0, 0
+    while i < len(rich):
+        m = RICH.match(rich, i) if rich[i] == "<" else None
+        if m:
+            t = m.group(0)
+            if m.group(1):
+                colours.append(m.group(1))
+            elif t == "</color>":
+                colours.pop() if len(colours) > 1 else None
+            else:
+                bold += 1 if t == "<b>" else -1
+            i = m.end()
+        else:
+            out.append((rich[i], colours[-1], bold > 0))
+            i += 1
+    return out
+
+
+BADGE = {"turn": "#60a5fa", "any": "#a78bfa", "forced": "#f87171", "trigger": "#fbbf24", "neutral": "#cbd5e1"}
+
+
+def with_badges(text, d):                                   # Global.lua withBadges: a known "(tag)" in its group's colour
+    case, out, i = {t.upper(): t for t in d["tags"]}, [], 0
+    while True:
+        o = text.find("(", i)
+        if o < 0:
+            return "".join(out) + text[i:]
+        c = text.find(")", o + 1)
+        tag = case.get(text[o + 1:c].upper()) if c >= 0 and c - o <= 8 else None
+        if tag:
+            out += [text[i:o], f"<color={BADGE.get(d['tags'][tag].get('g'), BADGE['neutral'])}><b>({tag})</b></color>"]
+            i = c + 1
+        else:
+            out.append(text[i:o + 1])
+            i = o + 1
+
+
+def ability_wrong(ui, panel, card, d, wide):                # laid out, the ability draws as one text would;
+    lines = ability_lines(ui, panel)                        # each status word its rule on hover; lines stacked, fit
+    if not lines:
+        return []
+    wrong = []
+    want = drawn(with_badges(painted(card.get("a") or "", card.get("ac")), d))
+    got = drawn("\n".join(" ".join(t for t, _ in els) for _, els in lines))
+    if [c for c in want if not c[0].isspace()] != [c for c in got if not c[0].isspace()] \
+            or "".join(c[0] for c in want).split() != "".join(c[0] for c in got).split():
+        wrong.append("ability drawn differently")
+    for _, els in lines:
+        for t, tip in els:
+            seen = "".join(c[0] for c in drawn(t))
+            words = re.split(r"[\s,.()/]+", seen)
+            names = sorted({p[0] for p in card.get("ac") or [] if isinstance(p, list) and p and p[0] in d["statuses"]
+                            and set(words) & set(p[0].split())}, key=lambda n: min(words.index(w) for w in n.split() if w in words))
+            ok = {d["statuses"][n]["x"] for n in names} | {"\n".join(f"{n}: {d['statuses'][n]['x']}" for n in names)}
+            if tip and tip not in ok:
+                wrong.append(f"tooltip {tip!r} on {t!r}")
+            if names and len(els) > 1 and not tip and len(els) < 7:
+                wrong.append(f"no tooltip on {t!r}")
+    ys = [y for y, _ in lines]
+    if any(b - a <= 0 for a, b in zip(ys, ys[1:])) or (ui.on(f"{panel}_rest") and offset_y(ui, f"{panel}_rest") < ys[-1]):
+        wrong.append(f"lines overlap {ys}")
+    if any(float(ui.attrs[i]["width"]) != wide for i in ui.attrs if i.startswith(f"{panel}_a") and ui.on(i) and "width" in ui.attrs[i]):
+        wrong.append("a line not the text's width")
+    return wrong
+
+
 def status_wrong(ui, panel, card, d):                       # the STATUS EFFECTS lines in the text, last, in order
     want = [status_line(n, d["statuses"][n]) for n in card.get("x") or [] if n in d["statuses"]]
-    text = ui.values.get(f"{panel}_text") or ""
+    text = panel_text(ui, panel)
     at = text.find(STATUS_HEAD)
     if not want:
         return ["a STATUS EFFECTS heading"] if at >= 0 else []
@@ -1073,18 +1168,22 @@ def main():
     odd_details = {**details, "statuses": {**details["statuses"], **st}, "cards": {**details["cards"], path: odd}}
     w4.respond(json.dumps(odd_details), pages_text)
     w4.run(w4.g.showDetails, "Red", Obj.of(w4, cards[0]), what="Card details: colours")
-    title, text = w4.ui.values.get("Red_d1_title") or "", w4.ui.values.get("Red_d1_text") or ""
+    title, text = w4.ui.values.get("Red_d1_title") or "", panel_text(w4.ui, "Red_d1")
     check(title == "Rose <<b></b>b>Thorn<<b></b>/b> <<b></b>color=#ff0000>x" and title == plain(odd["n"]),
           f"the name plain (no nc), the card's own '<' no tag {title!r}")
     tail = text[text.find(STATUS_HEAD):]
     check(tail == STATUS_HEAD + '<b><color=#db923d>Burn</color></b> <color=#94a3b8>(debuff)</color>  3 DMG <<b></b>hot>, <color=#ffd21f>-1 SPD</color>'
           + "".join(f"\n<b>S{i}</b> <color=#94a3b8>(buff)</color>  rule {i}" for i in range(1, 7))
           and not status_wrong(w4.ui, "Red_d1", odd, odd_details) and "Red_d1_s1" not in w4.ui.ids
-          and not any(w4.ui.attrs.get(i, {}).get("tooltip") for i in w4.ui.ids if i.startswith("Red_d1_") and "_text" in i),
+          and not any(w4.ui.attrs.get(i, {}).get("tooltip") for i in w4.ui.ids if i.startswith("Red_d1_") and ("_text" in i or "_rest" in i)),
           f"STATUS EFFECTS last in the text, each its line in its colour, its rule's words in theirs, no tooltip; one unknown left "
           f"out {tail[:160]!r} {status_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
     check("<<b></b>i>Burn<<b></b>/i> a <color=#ff0000>Burn</color>, then <color=#00ff00>Burn<<b></b>3</color>\n<color=#0000ff>Burn</color>" in text,
           "the ability in its colours: the nth find, a piece not found skipped, '<' no tag")
+    laid = ability_lines(w4.ui, "Red_d1")
+    check([[tip for _, tip in els] for _, els in laid] == [["", st["Burn"]["x"], ""], [st["Burn"]["x"]]]
+          and all(w4.ui.attrs["Red_d1_as1_2"].get(k) == v for k, v in TIP.items()) and not ability_wrong(w4.ui, "Red_d1", odd, odd_details, 496),
+          f"the ability line by line, each status word its rule on hover, as the panel; the rest no tooltip {laid}")
     burn = next((f"Red_d1_c{r}_1" for r in range(1, 3) if w4.ui.on(f"Red_d1_c{r}_1")), None)
     check(burn and w4.ui.text(burn) == "+ Burn" and not w4.ui.attrs[burn].get("tooltip"), f"'+ Burn': no rule on hover {burn and w4.ui.attrs[burn]}")
     w4.run(w4.table_menu["Find a card"], "Red", w4.vec(10, 1, 10), what="Find a card: '<' in a name")
@@ -1099,7 +1198,7 @@ def main():
     w5.g.onLoad("")
     w5.wait.flush()
     w5.respond(details_raw, pages_text)
-    ui5, red5, bad, cut = w5.ui, w5.players["Red"], [], 0
+    ui5, red5, bad, cut, laid_n = w5.ui, w5.players["Red"], [], 0, 0
     def at(kind, i, rows):
         return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, rows + 1) if ui5.on(f"Red_d1_{kind}{r}_{i}")), None)
     for d in cards:
@@ -1123,7 +1222,9 @@ def main():
                     if ws and sum(ws) + 6 * (len(ws) - 1) > int(ui5.attrs[f"Red_d1_{kind}{r}"]["width"]):
                         bad.append((c["n"], size, f"{kind}{r}", ws))
             bad += [(c["n"], size, x) for x in status_wrong(ui5, "Red_d1", c, details) + tip_wrong(ui5, "Red_d1")]
-            cut += sum(1 for b in ui5.attrs if b.startswith("Red_d1_") and ui5.on(b) and ui5.attrs[b].get("tooltip"))
+            cut += sum(1 for b in ui5.attrs if re.fullmatch(r"Red_d1_[rck]\d_\d", b) and ui5.on(b) and ui5.attrs[b].get("tooltip"))
+            bad += [(c["n"], size, x) for x in ability_wrong(ui5, "Red_d1", c, details, (440, 540, 660)[size - 1] - 44)]
+            laid_n += bool(ability_lines(ui5, "Red_d1"))
         for i, (name, path) in enumerate(named[:6], 1):
             b = at("c", i, 2)
             w5.spawns.clear()
@@ -1135,7 +1236,7 @@ def main():
         w5.call("closeDetails", red5, None, "Red_d1_close")
     check(not bad and cut, f"every card's details at each size ({len(cards)} cards): each chapter a whole Rules button, rows fit, "
           f"each '+ name' spawns its card, the STATUS EFFECTS in the text; a tooltip only on a name cut short ({cut}), as the panel, "
-          f"above the buttons ({len(bad)} wrong) {bad[:5]}")
+          f"above the buttons; {laid_n} card sizes' abilities line by line, drawn as one text would ({len(bad)} wrong) {bad[:5]}")
 
     # ---- the website offline ----
     w3 = World(script, save, zones)
