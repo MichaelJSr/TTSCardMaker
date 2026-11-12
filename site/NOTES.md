@@ -608,7 +608,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     em, empty cells from their neighbours, bilinear), so the art keeps its texture outside the letters. The new text's
     fill and outline are read from the old text's pixels on the way (`textColours`: the brightest on a dark background,
     the darkest as the outline when darker than it), else the record's colour; one colour (the card's coloured words
-    aren't kept).
+    aren't kept). A record's `stroke` (psd_details VERSION 7: the layer's or its nearest group's solid, Normal, 100%,
+    outside Stroke) sets the letters' outline colour and width (2 x its size) instead; badges keep their own widths.
   - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; a timing tag text.js knows is a badge,
     any case, drawn as its pill in the site's colours; another bracket or parenthesis stays text; no break inside
     "[ice]."). Under an overlay (`oneColour(rec, layer)`: an enabled ColorOverlay, GradientOverlay or PatternOverlay in
