@@ -948,12 +948,12 @@ function openCard(id, showDetails = false) {
   const fillVersions = () => loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c, versionsOpen(c.id));
     if (S.data.heavy?.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
   const heavyPaths = () => { if (S.data.heavy?.length && c.iv && !S.versions) fillVersions(); };
-  nearby.disconnect();                                   // history.json once its slots are within a screen (phones: far down)
+  nearby.disconnect();                                   // history.json, analytics.json once their slots are within a screen (phones: far down)
   if (c.hv && !c.history) nearby.on(["#card-changes", "#history-slot"], () => loadHistory().then(() => { fillHistory(); fillBalance(); heavyPaths(); }, () => {}));
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) nearby.on(["#card-changes"], () => loadHistory().then(() => { fillBalance(); heavyPaths(); }, () => {}));   // its original's texts
   else if (c.history || balanceOf(c).history) nearby.on(["#card-changes", "#history-slot"], heavyPaths);   // its texts in already
   else if (hasBalance(c)) nearby.on(["#card-changes"], heavyPaths);                                      // stats changes only
-  if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
+  if (hasBalance(c) && !S.analytics) nearby.on(["#card-balance", "#card-changes"], () => loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; }));
   if (c.iv && !S.versions) { const box = $(".ver-box", modal);   // versions.json once the box is open (closed on a phone)
     if (!box || box.open) fillVersions(); else box.addEventListener("toggle", fillVersions, { once: true }); }
   const dd = $(".psd-details", modal);
@@ -964,15 +964,15 @@ function openCard(id, showDetails = false) {
 
 // the card dialog's loads that wait until their slot is within a screen of the view (the dialog scrolls: root modal)
 const nearby = (() => {
-  let io = null; const todo = new Map();                // slot -> its load
+  let io = null; const todo = new Map();                // slot -> the loads waiting on it
   return {
     disconnect: () => { io?.disconnect(); io = null; todo.clear(); },
     on(sels, load) {
       const els = sels.map(sel => $(sel, modal)).filter(Boolean);
       if (!els.length) { load(); return; }
-      io ||= new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) todo.get(e.target)?.(); }, { root: modal, rootMargin: "100% 0px" });
-      const go = () => { for (const el of els) { io?.unobserve(el); todo.delete(el); } load(); };   // the first slot near: once
-      for (const el of els) { todo.set(el, go); io.observe(el); }
+      io ||= new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) for (let f; (f = todo.get(e.target)?.[0]);) f(); }, { root: modal, rootMargin: "100% 0px" });
+      const go = () => { for (const el of els) { const fs = todo.get(el)?.filter(f => f !== go); if (fs?.length) todo.set(el, fs); else { io?.unobserve(el); todo.delete(el); } } load(); };   // the first slot near: once
+      for (const el of els) { todo.set(el, [...todo.get(el) || [], go]); io.observe(el); }
     },
   };
 })();
