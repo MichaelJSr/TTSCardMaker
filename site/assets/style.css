@@ -545,7 +545,7 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rb-diff tr.dd del { background: color-mix(in srgb, #e5534b 45%, transparent); text-decoration: none; border-radius: 2px; }
 .rb-diff tr.da ins { background: color-mix(in srgb, #2ea043 45%, transparent); text-decoration: none; border-radius: 2px; }
 @media (max-width: 760px) { .rbh-cols { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .rbh-list { max-height: 30vh; } }
-/* the TTS sheets (#/rules/print): 1080x1920 pages; the export screenshots one at a time (?sheet=N). A sheet's page
+/* the TTS sheets (#/rules/print): 1080x1920 pages. A sheet's page
    (.rb-page) is the chapter's page as the website draws it (.rb-chapter at 1108px: 17px text, --rb-px 1px, its padding,
    font and line height) shrunk to the sheet's 1080px, so every line, panel and placed picture comes out as on the
    website; the heading above, the page number in the foot */
@@ -570,9 +570,6 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rb-sheet .rb-card img { box-shadow: none; }
 .rb-sheet a { color: inherit; text-decoration: none; }
 .rb-sheet.rb-cover-sheet > .rb-page { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body { margin: 0; padding: 0; } .rb-sheet.rb-cover-sheet .rb-body img { display: block; width: 100%; height: 100%; object-fit: cover; }
-body.rb-shot { margin: 0; background: #fff; overflow: hidden; } body.rb-shot > :not(main) { display: none !important; } body.rb-shot main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
-body.rb-shot .rb-sheets { display: block; } body.rb-shot .rb-sheets .rb-sheet { zoom: 1; box-shadow: none; } body.rb-shot .rb-sheets .rb-sheet:not(.rb-shown) { display: none; }
-body.rb-shot .rb-print-bar { display: none; }
 .badge-legend { list-style: none; margin: 8px 0; padding: 0; font-size: 14px; line-height: 1.9; }
 .badge-legend .nw { white-space: nowrap; }   /* "(" and "," stay with their badge */
 .badge-legend .swatch { width: .8em; min-width: 0; height: .8em; padding: 0; margin: 0 6px 0 0; vertical-align: -.05em; cursor: default; }
@@ -863,9 +860,7 @@ body.dragging-cards .drop-list { display: flex; }
 .lp-pane .lp-title { margin: 0 0 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); } .lp-pane .lp-title .muted, .lp-toggle .muted { text-transform: none; letter-spacing: 0; font-weight: 400; }
 .lp-toggle { display: none; }
 .lp-card h2 { margin: 0 0 4px; font-size: 21px; line-height: 1.15; }
-.lp-top { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; align-items: start; margin-bottom: 8px; }
-.lp-top:not(:has(.lp-img)) { grid-template-columns: minmax(0, 1fr); }
-.lp-img { width: 100%; height: auto; border-radius: 8px; display: block; background: var(--surface-2); }
+.lp-top { display: grid; grid-template-columns: minmax(0, 1fr); margin-bottom: 8px; }
 .lp-card .facts { margin: 6px 0 4px; }
 .lp-card .ability { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; }
 .lp-card .statbars { margin: 6px 0 12px; }
@@ -875,8 +870,7 @@ body.dragging-cards .drop-list { display: flex; }
 @media (max-width: 1000px) {   /* one column: a bar pinned to the top of the dialog (the modal's 32px padding above it), open = a short preview */
   .edit-cols { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .lp-pane { order: -1; top: -33px; z-index: 3; margin: 0 0 12px; padding: 0; max-height: none; overflow: visible; background: var(--surface); box-shadow: 0 6px 14px -10px rgba(0,0,0,.6); }
-  .lp-pane .lp-title, .lp-pane .lp-img { display: none; }
-  .lp-top { grid-template-columns: minmax(0, 1fr); }
+  .lp-pane .lp-title { display: none; }
   .lp-toggle { display: flex; gap: 8px; align-items: baseline; width: 100%; padding: 8px 12px; border-radius: 12px; text-align: left; font-weight: 700; min-width: 0; }
   .lp-toggle .muted { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .lp-toggle .lp-caret { margin-left: auto; }

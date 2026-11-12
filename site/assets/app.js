@@ -83,7 +83,7 @@ const iconLow = name => { const lo = S.icons[norm(name)]?.lo; return /^[dl]{1,2}
 const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
-  c.siteOnly?.length ? `<span class="fact site-only" data-tip="${esc(`Website only: ${c.siteOnly.map(f => FIELD_LABEL[f] || f).join(", ")}. The card image keeps its printed value`)}">Website only</span>` : "",
+  c.siteOnly?.length ? `<span class="fact" data-tip="${esc(`Website only: ${c.siteOnly.map(f => FIELD_LABEL[f] || f).join(", ")}. The card image keeps its printed value`)}">Website only</span>` : "",
   c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the card data was built; the next card sync reads it">Re-parse pending</span>` : "",
   c.baked && !c.refused ? `<span class="fact" data-tip="The bot regenerated the card image from the edit; its notes say what it drew best-effort">Image baked: ${esc(c.baked)}</span>` : "",
   c.partFlags ? `<span class="fact${c.partFlags.skipped ? " refused" : ""}" data-tip="The last bake, per text layer: a layer changed in Photoshop since the edit is skipped (redo it in Edit)">Text boxes: ${esc(Object.entries(c.partFlags).map(([k, n]) => `${n} ${k}`).join(", "))}</span>` : "",
@@ -1028,7 +1028,7 @@ function showVersion(c, i) {
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
     ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
-    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
+    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
       <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }
@@ -1106,8 +1106,7 @@ function renderRules(r) {
     whenLoaded(loadBook(), "the rulebook", () => { if (parseHash().name === "rules") renderRules(parseHash()); });
     return;
   }
-  if (r.arg === "print") { renderSheets(r); return; }
-  document.body.classList.remove("rb-shot");
+  if (r.arg === "print") { renderSheets(); return; }
   const q = (r.params.get("q") || "").trim().toLowerCase();
   if (document.activeElement !== qInput) qInput.value = "";
   const chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
@@ -1119,7 +1118,7 @@ function renderRules(r) {
   const label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;
   view.innerHTML = `<div class="rules">
     <nav class="toc" aria-label="Rulebook chapters"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
-      ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div class="subs" data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
+      ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
       <a href="#/rules" data-scroll="banlist" data-toc="banlist">Constructed ban list</a>
       <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
         <button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button></div></nav>
@@ -1181,13 +1180,11 @@ function watchToc() {
   }, { rootMargin: "-80px 0px -40% 0px", threshold: [0, .1, .3, .6, 1] });
   for (const el of $$(".rb-chapter", view)) spy.observe(el);
 }
-// #/rules/print: the TTS pages (rulebook.js paginate), all of them small; ?sheet=N alone at full size, nothing else on the
-// page. #rb-sheet-list holds the pages and every chapter, {.web} ones too: the TTS export (AutoCroissant
-// commands/rulebook_pages.py) checks those against main's before it screenshots the pages
-async function renderSheets(r) {
-  const shot = r.params.get("sheet"), solo = shot !== null && shot !== "";
-  document.body.classList.toggle("rb-shot", solo);
-  view.innerHTML = `<p class="rb-print-bar muted">The rulebook's pages as the Tabletop Simulator save's PDF shows them (1080×1920; the next save update prints them). <a href="${esc(pdfUrl())}" target="_blank" rel="noopener">The PDF</a> · <a href="#/rules">Back to the rulebook</a></p><div class="rb-measure"></div>`;
+// #/rules/print: the TTS pages (rulebook.js paginate), all of them small. #rb-sheet-list holds the pages and every
+// chapter, {.web} ones too: the TTS export (AutoCroissant commands/rulebook_pages.py) checks those against main's before
+// it screenshots the pages
+async function renderSheets() {
+  view.innerHTML = `<p class="muted">The rulebook's pages as the Tabletop Simulator save's PDF shows them (1080×1920; the next save update prints them). <a href="${esc(pdfUrl())}" target="_blank" rel="noopener">The PDF</a> · <a href="#/rules">Back to the rulebook</a></p><div class="rb-measure"></div>`;
   const host = $(".rb-measure", view), chapters = RB.printed(S.book.chapters), ctx = bookCtx({ eager: true, chapters });
   const warm = document.createElement("div");             // every picture loaded first: the pages measure them
   warm.className = "rb"; warm.style.cssText = "position:absolute;left:-20000px;top:0;width:1080px";
@@ -1202,7 +1199,6 @@ async function renderSheets(r) {
   await Promise.all([...host.querySelectorAll("img")].map(i => i.decode().catch(() => {})));
   if ([...host.querySelectorAll(".rb-body")].some(b => b.scrollHeight > b.clientHeight + 1)) sheets = RB.paginate(host, chapters, ctx, cover);   // a picture late: cut again
   host.className = "rb-sheets";
-  if (solo) sheets.forEach((x, i) => x.el.classList.toggle("rb-shown", i === +shot));
   const list = Object.assign(document.createElement("script"), { type: "application/json", id: "rb-sheet-list" });
   list.textContent = JSON.stringify({ sheets: sheets.map(x => ({ name: x.name, num: x.num, ch: x.ch, n: x.n })), chapters: S.book.chapters.map(c => [c.file, c.source]) });
   view.append(list);
@@ -1572,7 +1568,7 @@ function personAt(name) {
   return { profile, state: pending?.state || "", person: Pf.findPerson(name, people) || (profile && Pf.personOf(profile, people)) };
 }
 function openUserShare(name) {
-  const { profile, person, state } = personAt(name), fav = S.byId.get(profile?.favourite || "");
+  const { profile, state } = personAt(name), fav = S.byId.get(profile?.favourite || "");
   showDialog(Pf.shareDialogHtml({ name, url: userUrl(name), text: S.contrib?.previews?.[name] || "", state, native: !!navigator.share,
     image: fav?.img ? img(fav, 360) : "og.jpg", color: fav?.color }));
   $("#share-url").addEventListener("focus", e => e.target.select());

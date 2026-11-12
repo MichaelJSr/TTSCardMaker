@@ -304,7 +304,7 @@ export function attach(root, o) {
   const doc = root.ownerDocument, store = globalThis.localStorage;
   const chip = doc.createElement("button");
   chip.type = "button"; chip.className = "tc-chip"; chip.hidden = true; chip.setAttribute("aria-haspopup", "dialog"); chip.setAttribute("aria-expanded", "false");
-  chip.innerHTML = `<span class="tc-dot"></span><span class="tc-a" aria-hidden="true">A</span>`;
+  chip.innerHTML = `<span class="tc-dot"></span><span aria-hidden="true">A</span>`;
   const pop = doc.createElement("div");
   pop.className = "tc-pop"; pop.hidden = true; pop.setAttribute("role", "dialog");
   let cur = null;                                    // {el, field, phrase, start, end, text}
@@ -338,7 +338,6 @@ export function attach(root, o) {
     cur = sel;
     const now = colorAt(o.list(), sel.field, sel.text, sel.start, sel.end, o.statuses(), o.base(sel.field, sel.text));
     chip.querySelector(".tc-dot").style.cssText = now ? `background:${now}` : "";
-    chip.classList.toggle("set", !!now);
     chip.setAttribute("aria-label", `Text colour of ${what(sel)}`); chip.title = `Text colour of ${what(sel)}`;
     if (chip.previousElementSibling !== sel.el) sel.el.after(chip, pop);    // next in the tab order; in the control's box (inline.js's host)
     chip.hidden = false; place();

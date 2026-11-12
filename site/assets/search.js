@@ -108,14 +108,14 @@ export function exactFirst(list, query) {
 }
 
 /** Closest card names for "did you mean" (bigram similarity). */
-export function suggest(query, cards, n = 5) {
+export function suggest(query, cards) {
   const grams = s => { s = ` ${s.toLowerCase()} `; const g = new Set(); for (let i = 0; i < s.length - 1; i++) g.add(s.slice(i, i + 2)); return g; };
   const qg = grams(query);
   return cards.map(c => {
     const cg = grams(c.name); let inter = 0;
     for (const g of qg) if (cg.has(g)) inter++;
     return [2 * inter / (qg.size + cg.size), c];
-  }).filter(([s]) => s > 0.35).sort((a, b) => b[0] - a[0]).slice(0, n).map(([, c]) => c);
+  }).filter(([s]) => s > 0.35).sort((a, b) => b[0] - a[0]).slice(0, 5).map(([, c]) => c);
 }
 
 export const SEARCH_HELP = [

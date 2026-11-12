@@ -34,16 +34,16 @@ export function read(container) {
 
 /** Render the picker into `container` (replacing its contents) and focus the search box (unless `focus` is false; touch
  *  screens scroll to it instead, as the keyboard would cover the cards).
- *  {cards (or a function returning them: read on each search), filter(card), onChoose(id), placeholder, tile(card, {href: false}) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf,
+ *  {cards (or a function returning them: read on each search), filter(card), onChoose(id), tile(card, {href: false}) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf,
  *  initial: {query, kinds, stars} (read() of an earlier panel)} */
-export function mount(container, { cards, filter = null, onChoose, placeholder = "Search… (the search box's syntax)", tile, kinds = [], kindOf = c => c.type, initial = null, focus = true }) {
+export function mount(container, { cards, filter = null, onChoose, tile, kinds = [], kindOf = c => c.type, initial = null, focus = true }) {
   const all = typeof cards === "function" ? cards : () => cards;
   const f = facets(all(), { filter, kinds, kindOf });
   const state = { query: initial?.query || "", kinds: new Set((initial?.kinds || []).filter(k => f.kinds.some(([x]) => x === k))),   // only chips shown
     stars: new Set((initial?.stars || []).filter(s => f.stars.includes(s))) };
   const chip = (attr, v, set, label) => `<button type="button" class="chip${set.has(v) ? " on" : ""}" data-${attr}="${esc(v)}" aria-pressed="${set.has(v)}">${label}</button>`;
   container.innerHTML = `<div class="pick">
-    <input type="search" class="pick-q" placeholder="${esc(placeholder)}" value="${esc(state.query)}" aria-label="Search cards" autocomplete="off">
+    <input type="search" class="pick-q" placeholder="Search… (the search box's syntax)" value="${esc(state.query)}" aria-label="Search cards" autocomplete="off">
     ${f.kinds.length > 1 ? `<div class="chips">${f.kinds.map(([k, label, n]) => chip("kind", k, state.kinds, `${esc(label)}<span class="n">${n}</span>`)).join("")}</div>` : ""}
     ${f.stars.length > 1 ? `<div class="chips">${f.stars.map(s => chip("star", s, state.stars, `${s}★`)).join("")}</div>` : ""}
     <p class="muted pick-note" aria-live="polite"></p>

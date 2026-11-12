@@ -18,11 +18,11 @@ export function straighten(box) {
   return true;
 }
 
-/** The record's parts when it has boxes ({title, ability, follow}), else null (the editor works as before). */
+/** The record's parts when it has boxes ({title, ability}), else null (the editor works as before). */
 export function partsOf(d) {
   const p = d?.parts;
   if (!p || typeof p !== "object" || Array.isArray(p)) return null;
-  const out = { title: arr(p.title), ability: arr(p.ability), follow: arr(p.follow) };
+  const out = { title: arr(p.title), ability: arr(p.ability) };
   return out.title.length || out.ability.length ? out : null;
 }
 /** The card's name from its title boxes: each line break read as a space (the name stays one line). */

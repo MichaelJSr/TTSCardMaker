@@ -35,7 +35,7 @@ export function remember(storage, key, open) {
 }
 
 /** The dropdown: closed unless `open` (the card page: the session left it open); the body is fetched on first open. */
-export const detailsHtml = (state, open = !!state.details, id = "") => `<details class="psd-details"${id ? ` data-id="${esc(id)}"` : ""}${open ? " open" : ""}><summary>Details</summary><div class="psd-body"><p class="muted">Loading…</p></div></details>`;
+export const detailsHtml = (state, open, id) => `<details class="psd-details" data-id="${esc(id)}"${open ? " open" : ""}><summary>Details</summary><div class="psd-body"><p class="muted">Loading…</p></div></details>`;
 
 const fontsHtml = (fonts, state = {}) => {
   const names = Object.keys(obj(fonts));

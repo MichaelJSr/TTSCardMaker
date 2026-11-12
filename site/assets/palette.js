@@ -51,12 +51,12 @@ export const typesWords = on => (on.length ? `${on.length} type${on.length === 1
 /** The chips for entries; on: the chosen names. */
 export const chipsHtml = (list, on) => list.map(e => `<button type="button" class="chip pal-type${on.includes(e.name) ? " on" : ""}" data-type="${esc(e.name)}" ${typeAttrs(countOf(on, e.name))}><img src="${esc(e.file)}" alt="">${esc(label(e.name))}</button>`).join("");
 /** The palette for the chosen names on. */
-export const paletteHtml = (vocab, on, q = "") => {
-  const list = paletteOrder(vocab, on, q);
+export const paletteHtml = (vocab, on) => {
+  const list = paletteOrder(vocab, on, "");
   return `<div class="type-palette" role="group" aria-label="Types">
-    <div class="pal-bar"><input type="search" class="pal-search" placeholder="Find a type" aria-label="Find a type: Enter toggles the first match, Enter on an empty box saves, Esc cancels" autocomplete="off" value="${esc(q)}">
+    <div class="pal-bar"><input type="search" class="pal-search" placeholder="Find a type" aria-label="Find a type: Enter toggles the first match, Enter on an empty box saves, Esc cancels" autocomplete="off">
       <span class="pal-status muted" aria-live="polite">${esc(typesWords(on))}</span></div>
-    <div class="pal-chips">${list.length ? chipsHtml(list, on) : `<span class="muted">No type matches “${esc(q)}”</span>`}</div>
+    <div class="pal-chips">${chipsHtml(list, on)}</div>
     <div class="actions"><button type="button" class="primary" data-pal="save">Save</button><button type="button" class="ghost" data-pal="cancel">Cancel</button>
       <span class="muted pal-note">Press again to pick a type twice · On the card image</span></div></div>`;
 };
@@ -64,7 +64,7 @@ export const paletteHtml = (vocab, on, q = "") => {
 export const rowHtml = (on, vocab) => on.map(t => { const e = vocab.find(x => x.name === t); return e ? `<img src="${esc(e.file)}" alt="${esc(t)}">` : `<span class="fact">${esc(label(t))}</span>`; }).join("");
 
 /** In the browser: the palette after element `after`. on: the chosen names to start from. onChange(list) on each toggle,
- *  onSave(list, kbd) / onCancel(kbd) once (kbd: from the keyboard, so the focus goes back to the row). -> {el, close(save)} */
+ *  onSave(list, kbd) / onCancel(kbd) once (kbd: from the keyboard, so the focus goes back to the row). -> {close(save), value} */
 export function mountPalette(after, { vocab, on, first = on, onChange = () => {}, onSave, onCancel }) {
   after.insertAdjacentHTML("afterend", paletteHtml(vocab, on));
   const el = after.nextElementSibling, q = el.querySelector(".pal-search"), chips = el.querySelector(".pal-chips"), status = el.querySelector(".pal-status");
@@ -113,5 +113,5 @@ export function mountPalette(after, { vocab, on, first = on, onChange = () => {}
   document.addEventListener("pointerdown", outside, true);        // a click or tap away saves
   document.addEventListener("pointerup", up, true);
   q.focus({ preventScroll: true }); el.scrollIntoView({ block: "nearest" });
-  return { el, close: save => finish(save, false), get value() { return sel; } };
+  return { close: save => finish(save, false), get value() { return sel; } };
 }

@@ -208,7 +208,7 @@ def fold_art(fields):
         fields["art"] = art_list(fields.get("art"), fields.pop("ability_art", None)) or None
     return fields
 # printed on the card image, so an edit waits for the pipeline ("PSD pending"). The same set lives in edit.js FROM, app.js
-# FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures: on a bar per
+# FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + ICON_FIELDS. creatures: on a bar per
 # creature; the bake makes any other list website only
 PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures", "colors"}   # colors: the name's and ability's
 # true beside a name: the bake renames the card's files to it (owner 2026-10-25; edit.js RENAME, the bot's card_edits.RENAME)

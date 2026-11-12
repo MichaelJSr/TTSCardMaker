@@ -2,8 +2,8 @@
 // and drag onto a Series, Subseries or Author value, and the filter bar's selects make new ones. A DOM upgrade after
 // app.js has rendered (attributes and listeners, no template change), so view mode is untouched. Staging goes through
 // the editor's single-field ops (edit.js stageField/stageAuthor), the same batch the form fills. Helpers above
-// `install` are pure; node checks under /tmp exercise them. Stars (stars.js) and types (palette.js) edit in place too;
-// what is typed is kept as a draft until it is saved (drafts.js), and offered back when the card opens again.
+// `install` are pure. Stars (stars.js) and types (palette.js) edit in place too; what is typed is kept as a draft until
+// it is saved (drafts.js), and offered back when the card opens again.
 import { esc } from "./text.js";
 import { starsHtml, paintStars, stepValue } from "./stars.js";
 import { typeVocab, mountPalette, rowHtml } from "./palette.js";

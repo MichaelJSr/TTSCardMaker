@@ -65,7 +65,7 @@ const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 export const sameField = (f, a, b) => (f === "types" && Array.isArray(a) && Array.isArray(b) ? same([...a].sort(), [...b].sort()) : same(a, b));
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
 // where a field's unedited value comes from: the PSD (the set also in build_site.py PSD_FIELDS, app.js FIELD_LABEL, the bot's
-// CardEdits.KIND and psd_edit STAT_FIELDS/TEXT_FIELDS/NOT_YET), the card's folder, or nowhere (a database-only default)
+// CardEdits.KIND and psd_edit STAT_FIELDS/TEXT_FIELDS/ICON_FIELDS), the card's folder, or nowhere (a database-only default)
 const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD", parts: "PSD",
   creatures: "PSD", colors: "PSD", type: "folder", subtype: "folder", series: "folder" };
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
@@ -283,7 +283,7 @@ export function createEditor(app) {
   // the token: in memory; kept sealed under this browser's device key (login.js vault), never in plain text
   const device = auth.vault();
   let token = "";
-  let me = null;                                   // { login, admin, push }
+  let me = null;                                   // { login, admin }
   let scopes = null;                               // the token's classic scopes (x-oauth-scopes); null: unknown (fine-grained)
   // profiles: login -> profile, or null to remove the file; decks: "<owner>/<slug>" -> the deck file object (decks.js fileOf /
   // encrypt), or null to remove it; deckNames: the same keys -> name, for the bar (a private file holds its name encrypted)
@@ -361,7 +361,7 @@ export function createEditor(app) {
     if (has != null && !/\b(public_)?repo\b/.test(has)) throw new Error("This token can't write: give it the public_repo scope.");
     const p = (await gh(`/repos/${S.data.repo}`)).permissions || {};
     if (!p.push) throw new Error(`${user.login} can't push to ${S.data.repo}. Ask an admin to add you.`);
-    me = { login: user.login, admin: !!p.admin || isAdmin(user.login), push: true }; scopes = has;
+    me = { login: user.login, admin: !!p.admin || isAdmin(user.login) }; scopes = has;
     keptHere = !!keep;
     if (store) await remember(keep);
     app.onAuth();
@@ -545,7 +545,7 @@ export function createEditor(app) {
     }
     c[op._sent ? "_sent" : "_staged"] = true;
   }
-  function sentRecord() {                          // {at, committed, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
+  function sentRecord() {                          // {at, committed, ops, profiles, decks, people, deckNames}: published, until the site has rebuilt with it
     const sent = load(K.sent, null);
     if (!sent) return null;
     // built from its commit or a later one (commit dates, GitHub's)
@@ -695,7 +695,7 @@ export function createEditor(app) {
     const list = view.list.filter(b => b.kind === kind), many = list.length > 1;
     return list.map(b => boxHtml(b, view, many)).join("");
   }
-  function addHtml(view, c) {                      // + Add an ability: a card with no Ability layer
+  function addHtml(view) {                         // + Add an ability: a card with no Ability layer
     if (view.list.some(b => b.kind === "ability")) return "";
     const t = view.rec.template, was = view.added, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
     return `<div class="part-box part-add" data-part-box="${P.ADD}"${was ? "" : " hidden"}><div class="part-head"><label for="ef-part:${P.ADD}">New ability</label><button type="button" class="ghost" data-part-add-remove>Remove</button></div>
@@ -779,7 +779,7 @@ export function createEditor(app) {
   function renameRow(c, b) {
     if (!canRename(c, b)) return "";
     const staged = stage.cards[c.id]?.rename, on = staged === false ? false : !!c.renameFiles || !b.edited?.includes("name");
-    return `<div class="erow"><span class="elabel"></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${on ? " checked" : ""}> ${RENAME_LABEL}</label>
+    return `<div class="erow"><span></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${on ? " checked" : ""}> ${RENAME_LABEL}</label>
       <p class="muted part-note">With a new name: the PSD and its pictures take it when the card image is updated.</p></div></div>`;
   }
   function formHtml(c) {
@@ -788,14 +788,14 @@ export function createEditor(app) {
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set([...Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name), ...(c.types || [])])].sort();   // a name no icon has: a toggle too, so it reads back
     // the card's names side by side (Z!!!!! 10-30): the site's now, its file's (the key edits are filed under is the file's name)
-    const namesLine = x => `<p class="muted part-note ef-names">On the site now: “${esc(x.name)}” · File: <span class="kbd">${esc((x.psd || x.png || "").split("/").pop())}</span></p>`;
+    const namesLine = x => `<p class="muted part-note">On the site now: “${esc(x.name)}” · File: <span class="kbd">${esc((x.psd || x.png || "").split("/").pop())}</span></p>`;
     const reset = f => { const p = psdVal(b, f), src = FROM[f]; return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
     const on = f => (c.siteOnly || []).includes(f);
     const psdNote = f => (b.pending?.includes(f) && !on(f) ? `<span class="fact pending" data-tip="${app.PSD_TIP}">PSD pending</span>` : "");   // website only: its ticked box says so
     const siteBox = f => `<label class="check site-box"><input id="ef-site-${f}" type="checkbox" data-site="${f}"${on(f) ? " checked" : ""}> ${SITE_LABEL}</label>`;
     // a field edited as boxes (one per PSD layer): website only, one plain input instead, the boxes greyed
     const plain = (f, input) => `<div class="site-plain"${on(f) ? "" : " hidden"}>${input}<p class="muted part-note">The card image keeps its text.</p></div>${siteBox(f)}`;
-    const artBox = list => `<div id="ef-art" class="art-box"><div class="art-rows">${(list.length ? list : [""]).map(artRow).join("")}</div><div class="erow"><span></span><div class="ein"><button type="button" class="ghost" data-art-add>+ Add a source</button>${reset("art")}</div></div></div>`;
+    const artBox = list => `<div id="ef-art"><div class="art-rows">${(list.length ? list : [""]).map(artRow).join("")}</div><div class="erow"><span></span><div class="ein"><button type="button" class="ghost" data-art-add>+ Add a source</button>${reset("art")}</div></div></div>`;
     const row = (f, input) => `<div class="erow"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}${SITE_FIELDS.includes(f) ? siteBox(f) : ""}</div></div>`;
     const num = f => `<input id="ef-${f}" type="number" min="0" max="${statCap(c, f) ?? 99}" step="1" value="${c[f] ?? ""}" placeholder="—">`;
     return `<div class="dialog edit-dialog has-preview" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
@@ -807,7 +807,7 @@ export function createEditor(app) {
         <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated, unless it's website only.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
         ${view ? partsTop(view, c) : ""}
         <fieldset><legend>Card</legend>
-          ${view?.list.some(x => x.kind === "title") ? `<div class="erow"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
+          ${view?.list.some(x => x.kind === "title") ? `<div class="erow"><span>${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
           ${namesLine(c)}<input type="hidden" id="ef-colors" value="${esc(c.colors?.length ? JSON.stringify(c.colors) : "")}">
           ${P.titleInPicture(view?.rec) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
@@ -827,7 +827,7 @@ export function createEditor(app) {
             <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
         </fieldset>
         <fieldset><legend>Text</legend>
-          ${view ? `<div class="erow"><span class="elabel">${LABEL.ability}${psdNote("ability")}</span><div class="ein parts" data-site-of="ability"><div class="site-boxes">${boxesHtml(view, "ability")}${addHtml(view, c)}</div>
+          ${view ? `<div class="erow"><span>${LABEL.ability}${psdNote("ability")}</span><div class="ein parts" data-site-of="ability"><div class="site-boxes">${boxesHtml(view, "ability")}${addHtml(view)}</div>
             ${plain("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>`)}
             <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}"${iconSet(ic, 22)} alt="${esc(t)}"></button>` : ""; }).join("")}</div>
             <p class="muted part-join">On the site:</p><div class="ability preview" id="ef-preview"></div></div></div>`
@@ -1063,7 +1063,7 @@ export function createEditor(app) {
   }
   // ---- Rename everywhere: `from` -> the typed name on every card carrying it (hidden ones too), each card's own edit
   // (stageField / stageAuthor). Onto a known name: merged, in its spelling; an item type: an Items/ folder; a duplicate's
-  // author follows its original; an author's [people] lines move too (replace_author did), cards they carry need no edit.
+  // author follows its original; an author's [people] lines move too, cards they carry need no edit.
   // -> null (nothing typed), {error}, or {name, change (ids to edit), cards (changing), people {git: name}, others, dups}
   function renamePlan(key, from, typed) {
     const cards = carrying(S.all, key, from), ids = new Set(cards.map(c => c.id));
@@ -1142,7 +1142,7 @@ export function createEditor(app) {
     input.focus(); input.select();
   }
   // the live preview: the card as it will look once published, from the form's op (live.js)
-  const previewCtx = { render: (t, o) => app.render(t, o), palette: () => S.palette, statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
+  const previewCtx = { render: (t, o) => app.render(t, o), palette: () => S.palette, statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL };
   function paintPreview(c, op) {
     const body = app.modal.querySelector("#lp-body"); if (!body) return;
     const b = baseOf(c), values = { ...op.set, ...Object.fromEntries((op.unset || []).map(f => [f, psdVal(b, f)])) };
@@ -1661,7 +1661,7 @@ export function createEditor(app) {
     const got = {}, sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`), got);
     if (sha && clashes.size) app.toast(`Someone else edited ${clashes.size === 1 ? "this box" : "these boxes"} meanwhile; yours replaced theirs: ${[...clashes].map(([w, t]) => `${w} (theirs: “${t.length > 40 ? `${t.slice(0, 38)}…` : t}”)`).join(" · ")}`);
     const sent = sentRecord() || {};
-    if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, committed: got.date, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
+    if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, committed: got.date, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
       decks: { ...sentDecks(), ...decksOut }, people: { ...sentPeople(), ...people }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));   // no commit: no rebuild to wait for (the site already has it)
     if (sha) soon();                                   // reloads when its build is live (fresh.js)
     if (stage.admins) S.data.admins = stage.admins;

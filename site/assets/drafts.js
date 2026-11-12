@@ -116,11 +116,11 @@ export function draftStore(storage, key = DRAFT_KEY, clock = () => Date.now()) {
     },
   };
 }
-/** fn once ms after the last run(); flush() runs a pending one now, cancel() forgets it. */
-export function later(fn, ms = DELAY) {
+/** fn once DELAY ms after the last run(); flush() runs a pending one now, cancel() forgets it. */
+export function later(fn) {
   let t = null;
   const fire = () => { t = null; fn(); };
-  return { run() { clearTimeout(t); t = setTimeout(fire, ms); }, flush() { if (t !== null) { clearTimeout(t); fire(); } }, cancel() { clearTimeout(t); t = null; } };
+  return { run() { clearTimeout(t); t = setTimeout(fire, DELAY); }, flush() { if (t !== null) { clearTimeout(t); fire(); } }, cancel() { clearTimeout(t); t = null; } };
 }
 
 // ---- the Edit dialog's inputs (#edit-form): every #ef-<field> input, select and textarea, the type toggles and the
