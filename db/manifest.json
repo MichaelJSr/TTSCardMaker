@@ -8,25 +8,25 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-12T07:39:20Z",
- "card_commit": "90b2f475f6dd704dc92f6ae5ff835b0bfcb63554",
- "card_commit_at": 1794469138.0,
+ "built_at": "2026-11-12T07:48:42Z",
+ "card_commit": "78756b52a36c489dc3f6f0b0269d8c832836a92f",
+ "card_commit_at": 1794469678.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 131,
   "baked": 0,
   "cards": 776,
-  "changed": 0,
+  "changed": 2,
   "details": 783,
   "failed": 0,
   "new": 0,
-  "versions": 1874
+  "versions": 1876
  },
  "files": {
-  "old_stats.json": "620500df00288e4db3d57b01a15ed7869b36d81ccb0d5713d71cb5d0ca6736a1",
-  "psd_details.json": "24a9c697df02badffebf489e6429db98346699d1a03da3e014868f3f6649a2da",
+  "old_stats.json": "632bc6d4a68a60914461de6cb883ee44d95a80eca7457868c0e47a539717f892",
+  "psd_details.json": "93431709c0d7ddbdc849c2daa0a9c5346769f199a8a51beac3d28288feed9434",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "f161bcb878c77b5d98fd776137dcf2bf2a7ee30fe56d34b99892deeb7abbbff9"
+  "stats.json": "60af9d720bb5799145eb10bcdb6befebe5b066663456267c518a80850fea2ab6"
  },
  "fonts": {
   "checked": 768,
@@ -50,26 +50,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Pizza",
-   "notes": [
-    "NO STATS FOUND: no HP, DEF, ATK or SPD bars read on this creature"
-   ],
-   "path": "Creatures/Other/3 Stars/Pizza.psd"
-  },
-  {
-   "card": "Tyler",
-   "notes": [
-    "DEF NOT FOUND",
-    "ATK NOT FOUND",
-    "SPD NOT FOUND",
-    "STATS TOO HIGH"
-   ],
-   "path": "Creatures/Other/5 Stars/Tyler.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43176789996",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43177952832",
  "schema": 1
 }
