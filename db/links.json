@@ -2007,7 +2007,7 @@
   ]
  },
  "Auxiliary/Minions/Clot_Black.psd": {
-  "blob": "18b354058c06f28722d10c405b59c870d412e439",
+  "blob": "a42dff1a64fd737f6539b6d4538efd37e8f6f501",
   "links": [
    {
     "drawn": null,
@@ -2036,7 +2036,7 @@
   ]
  },
  "Auxiliary/Minions/Clot_Blood.psd": {
-  "blob": "32a540e237632531bd26087a1fdb98b715440f82",
+  "blob": "43f4596afb22f0501360e96b0a09663eface11b9",
   "links": [
    {
     "drawn": null,
@@ -2065,7 +2065,7 @@
   ]
  },
  "Auxiliary/Minions/Clot_Bone.psd": {
-  "blob": "b26da6ca068fa29f61f3720f92ac5e18a44ab0fa",
+  "blob": "7ead92c9112edf8c18aa14ab84d03dae04fad634",
   "links": [
    {
     "drawn": null,
@@ -2094,7 +2094,7 @@
   ]
  },
  "Auxiliary/Minions/Clot_Gold.psd": {
-  "blob": "4a70181d669fb49300c60bd80ab42a5e6bebfddd",
+  "blob": "3f7040af67a5f605e0220b79051da3d0f9b43e57",
   "links": [
    {
     "drawn": null,
@@ -2123,7 +2123,7 @@
   ]
  },
  "Auxiliary/Minions/Clot_White.psd": {
-  "blob": "87f433daa745080268063d5e86d8b322209c6e6f",
+  "blob": "3681f7f327b19b14b73dc7c7e526fa52cad46711",
   "links": [
    {
     "drawn": null,
@@ -2181,8 +2181,14 @@
   ]
  },
  "Auxiliary/Minions/Dark_Esau.psd": {
-  "blob": "62e95da134bbb13b21db24804e1dc1c94b5d2c66",
+  "blob": "2db8d13368ecab2ed5bc25eb234720ea3d8b6af7",
   "links": [
+   {
+    "drawn": "abcdceacf94e94922814576a7071a979ed7f0437",
+    "name": "Dark_Esau - tainted_jacob_by_thegreatrouge_dejzs75-pre.jpg",
+    "path": "MDW/Linked/Dark_Esau - tainted_jacob_by_thegreatrouge_dejzs75-pre.jpg",
+    "size": 103640
+   },
    {
     "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
@@ -4869,7 +4875,7 @@
   ]
  },
  "Auxiliary/Minions/Tainted_Soul.psd": {
-  "blob": "c876c264e0a1a8a88db0be7443de4165828a5bc3",
+  "blob": "032e49046c473ffdb27eeeef940cceda8d121a65",
   "links": [
    {
     "drawn": null,
@@ -8394,7 +8400,7 @@
   ]
  },
  "Creatures/Isaac/2 Stars/Tainted_Eden.psd": {
-  "blob": "4d0342a20e9ad99e29900647f4567c7c149c1286",
+  "blob": "8670bac18328f6d975d6c9cc3a5381aab7ad871a",
   "links": [
    {
     "drawn": null,
@@ -8405,7 +8411,7 @@
   ]
  },
  "Creatures/Isaac/2 Stars/Tainted_Lost.psd": {
-  "blob": "09a23a895c1eb22f8c7affabbd58cd1beebac1fa",
+  "blob": "684c40bfa959a59099191a812c2a25f0924b5f82",
   "links": [
    {
     "drawn": null,
@@ -8422,7 +8428,7 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Isaac.psd": {
-  "blob": "330fd17ef0b648e91b4a36cd2247544cabf42682",
+  "blob": "50a0c46fc5f9dc384642f0ff94be3779acb966af",
   "links": [
    {
     "drawn": null,
@@ -8445,8 +8451,14 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Jacob.psd": {
-  "blob": "cd5fde3182a9bc620ccab5c952f9758099b90f30",
+  "blob": "24baa87d4c6c66d84fbd134007ed64681c3be43c",
   "links": [
+   {
+    "drawn": "abcdceacf94e94922814576a7071a979ed7f0437",
+    "name": "Dark_Esau - tainted_jacob_by_thegreatrouge_dejzs75-pre.jpg",
+    "path": "MDW/Linked/Dark_Esau - tainted_jacob_by_thegreatrouge_dejzs75-pre.jpg",
+    "size": 103640
+   },
    {
     "drawn": null,
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
@@ -8497,7 +8509,7 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Lilith.psd": {
-  "blob": "55140e91c1ca906438b0f87b2d19143287fa6c0e",
+  "blob": "aece5796bcf233ba47a901c78cf17643ce8bd678",
   "links": [
    {
     "drawn": null,
@@ -8514,7 +8526,7 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Magdalene.psd": {
-  "blob": "580c06450096b9e4b54b7ec0c44a97075a688f6c",
+  "blob": "33bd5cd5fc4808ebe4cea31a2a622efb3df3db3b",
   "links": [
    {
     "drawn": null,
@@ -8614,7 +8626,7 @@
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Bethany.psd": {
-  "blob": "f30be9faee55411afe74f02ac6dbd077def7a244",
+  "blob": "51c26257843e1af355c3171359140872529e635e",
   "links": [
    {
     "drawn": null,
@@ -8655,7 +8667,7 @@
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Eve.psd": {
-  "blob": "3118351a2075ca08f45df385a66e71643b731d58",
+  "blob": "467017c15260d0374ac528a7ae5d682ff5d4e239",
   "links": [
    {
     "drawn": null,
@@ -8678,7 +8690,7 @@
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Forgotten.psd": {
-  "blob": "319d4b583dabdcb0915417881367f73d6c1adff8",
+  "blob": "450df429590660812149e1b8bc0daff2f4880e31",
   "links": [
    {
     "drawn": null,
@@ -8736,7 +8748,7 @@
   ]
  },
  "Creatures/Isaac/5 Stars/Tainted_Cain.psd": {
-  "blob": "037b027913d0ff425282f1ac2a956544654f2029",
+  "blob": "efdeec629bb9d4e51d0123a8e06a13509ffa1af4",
   "links": [
    {
     "drawn": null,
@@ -25208,10 +25220,6 @@
   "blob": "c01cb1b5c6c64bb50ad7f035f058346c73d0e7fd",
   "links": []
  },
- "MDW/Linked/Tainted_Bethany - Layer 2.psb": {
-  "blob": "e52e87cfd7c07db8f181df774b4cb4f967a57b2e",
-  "links": []
- },
  "MDW/Linked/Tainted_Bethany - Layer 4.psb": {
   "blob": "4df18587b829cf71a06652992f5d6804dcf35fb7",
   "links": []
@@ -29507,6 +29515,9 @@
   "MDW/Linked/Dark_Esau - b-eve.png": {
    "509295cb38a54d7eeae631be001b8ba7fe6822cd": 1025151
   },
+  "MDW/Linked/Dark_Esau - tainted_jacob_by_thegreatrouge_dejzs75-pre.jpg": {
+   "abcdceacf94e94922814576a7071a979ed7f0437": 103640
+  },
   "MDW/Linked/Dark_Matter_Swordsman - image.psb": {
    "4d29feddd114d18dca17858efa0042955ec9f065": 6220370
   },
@@ -32893,6 +32904,7 @@
   "aad50cc83ddad723a6c6824784eeeac3d136afdf": "6f9fb5f3f6f4879a5f82c6cc012df26ca8d773b2",
   "aaf2357bfebf07549f2f6c4d7f60913fa442b429": "5499aecd36362752a8aced47002533274b21c0a6",
   "ab64561d220ef8cab3359d963d6bec546191a18c": "f869f3f74ac36ca423b6b607ebc90125ee55d585",
+  "abcdceacf94e94922814576a7071a979ed7f0437": "4c6a4613bbbaa2974b2e395404ba46d7546a7af1",
   "ac0686172f1486c07dbf36a7a27b361c8af61017": "abf3912c2676f6863e4783c3f4bfb350a7088f84",
   "ac5a747312a6e014d614b79f771b61de0c5647b1": "452f6295d75fb4deb093733cdafd5840148e4d93",
   "ac7e75122e450bcde50552a969afda2eaa6b01e7": "e8f32946c1d7be77a417e49dff7a58ef172a9dbd",
