@@ -1119,6 +1119,36 @@ jobs:
         if: steps.fonts-first.outcome == 'success' && steps.fonts-first-cache.outputs.cache-hit != 'true'
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
+      # Fonts first's lanes: Rulebook PDF's look in the background from here, once main's history is in (site_settled reads
+      # it), beside the guards' wait, Newest and the bake; into $RUNNER_TEMP/pdf/out (--out: Newest's reset wipes the
+      # checkout), its report, err and exit code beside it. Rulebook PDF keeps it unless main's head moved its inputs
+      # since (out/inputs); stopped when the lane does not go.
+      - name: Rulebook PDF start
+        id: pdf-start
+        if: steps.fonts-first.outcome == 'success' && steps.venv.outcome == 'success'
+        timeout-minutes: 1
+        working-directory: bot
+        run: |
+          bg=$RUNNER_TEMP/pdf
+          mkdir -p "$bg"
+          ( code=0
+            until [ -s "$RUNNER_TEMP/history.code" ] || [ -e "$bg/stop" ]; do sleep 0.05; done
+            if [ -e "$bg/stop" ] || [ "$(git -C "$GITHUB_WORKSPACE" rev-parse --is-shallow-repository)" != false ]; then
+              code=2                              # History wait fetches again: Rulebook PDF looks itself
+            else
+              if ! fc-list | grep -qi 'color emoji'; then       # as Rulebook PDF's
+                sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null 2>&1 \
+                  || { sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null; } || echo "::warning::no emoji font"
+              fi
+              CHROME=$(command -v google-chrome || command -v chromium || true) timeout -k 10 690 \
+                "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" --out "$bg/out" \
+                > "$bg/report.md" 2> "$bg/err" &
+              echo "$!" > "$bg/pid"
+              if [ -e "$bg/stop" ]; then kill "$!" 2> /dev/null || true; fi      # timeout ends its process group
+              wait "$!" || code=$?
+            fi
+            echo "$code" > "$bg/code" ) < /dev/null > "$bg/log" 2>&1 &
+
       # A push's guards or a follow-up's (above), then main's history (joined), its head and the data's as they are now
       # (not when held)
       - *guards
@@ -1262,6 +1292,14 @@ jobs:
             echo "No linked picture or icon glyph due." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
+      # Rulebook PDF start's look stopped: the guards hold the lane, or it does not go
+      - name: Rulebook PDF stop
+        if: ${{ !cancelled() && steps.pdf-start.outcome == 'success' && env.GO != 'true' }}
+        run: |
+          bg=$RUNNER_TEMP/pdf
+          touch "$bg/stop"
+          if [ -s "$bg/pid" ]; then kill "$(cat "$bg/pid")" 2> /dev/null || true; fi
+
       # Fonts first's lanes: the miss path again only when Newest moved MDW/Fonts (a restore it outdated removed first)
       - *fonts
       - id: font-cache
@@ -1346,25 +1384,63 @@ jobs:
       # failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key or pre alone (M takes it
       # only when made for something else); lag: exit 3, the website lagged past the wait (the step below marks the lane,
       # as it does a failure).
-      # The schedule's run: Chrome looks even when the pre-key held (--full).
+      # The schedule's run: Chrome looks even when the pre-key held (--full). Rulebook PDF start's look (Fonts first's
+      # lanes) is kept unless main's head moved its inputs since (then stopped), it failed or lagged: then looked again
+      # here (after a lag, once).
       - name: Rulebook PDF
         id: pages
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         continue-on-error: true
         timeout-minutes: 12
         working-directory: bot
+        env:
+          STARTED: ${{ steps.pdf-start.outcome }}
         run: |
-          if ! fc-list | grep -qi 'color emoji'; then        # the chapters' 🕐 and ⏳; apt-get update only when the image's lists fail
-            sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null 2>&1 \
-              || { sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null; } || echo "::warning::no emoji font"
+          code=0 bg=$RUNNER_TEMP/pdf ws=$GITHUB_WORKSPACE kept=false again=()
+          if [ "$STARTED" = success ]; then
+            until [ -s "$bg/out/inputs" ] || [ -s "$bg/code" ]; do sleep 0.05; done
+            moved=false
+            if [ -s "$bg/out/inputs" ]; then
+              inputs=()
+              { read -r at; while IFS= read -r p; do inputs+=("$p"); done; } < "$bg/out/inputs"
+              GIT_NO_LAZY_FETCH=1 git -C "$ws" diff-tree --quiet -r "$at" HEAD -- "${inputs[@]}" || moved=true
+            fi
+            if [ "$moved" = true ]; then
+              until [ -s "$bg/pid" ] || [ -s "$bg/code" ]; do sleep 0.05; done
+              [ -s "$bg/code" ] || kill "$(cat "$bg/pid")" 2> /dev/null || true
+              echo "Rulebook PDF: main's head moved what the look read at ${at:0:8}: looked at again."
+            else
+              until [ -s "$bg/code" ]; do sleep 0.05; done
+              [ ! -s "$bg/log" ] || cat "$bg/log"
+              [ ! -s "$bg/err" ] || cat "$bg/err" >&2
+              code=$(cat "$bg/code")
+              if [ "$code" = 0 ]; then
+                mkdir -p "$ws/TTS/Rulebook"
+                for f in pages.json Rulebook.pdf; do      # what it changed (git status re-reads a copied PDF)
+                  [ ! -f "$bg/out/$f" ] || cmp -s "$bg/out/$f" "$ws/TTS/Rulebook/$f" || cp "$bg/out/$f" "$ws/TTS/Rulebook/"
+                done
+                tee "$RUNNER_TEMP/pages.md" < "$bg/report.md"
+                kept=true
+              else
+                [ ! -s "$bg/report.md" ] || cat "$bg/report.md"
+                echo "Rulebook PDF: the look in the background exited $code: looked at again."
+                if [ "$code" = 3 ]; then again=(--wait 0); fi      # it waited for the website: one more look
+                code=0
+              fi
+            fi
           fi
-          code=0
-          CHROME=$(command -v google-chrome || command -v chromium || true) \
-            "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" \
-            ${{ github.event_name == 'schedule' && '--full' || '' }} | tee "$RUNNER_TEMP/pages.md" || code=$?
+          if [ "$kept" = false ]; then
+            if ! fc-list | grep -qi 'color emoji'; then        # the chapters' 🕐 and ⏳; apt-get update only when the image's lists fail
+              sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null 2>&1 \
+                || { sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null; } || echo "::warning::no emoji font"
+            fi
+            CHROME=$(command -v google-chrome || command -v chromium || true) \
+              "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$ws" --site "$SITE_URL" "${again[@]}" \
+              ${{ github.event_name == 'schedule' && '--full' || '' }} | tee "$RUNNER_TEMP/pages.md" || code=$?
+          fi
           [ "$code" = 0 ] || [ "$code" = 3 ] || exit "$code"
           echo "lag=$([ "$code" = 3 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
-          ws=$GITHUB_WORKSPACE list=TTS/Rulebook/pages.json changed=false key=false
+          list=TTS/Rulebook/pages.json changed=false key=false
           if [ -n "$(git -C "$ws" status --porcelain -- TTS/Rulebook ":!$list")" ]; then
             changed=true
           elif [ -n "$(git -C "$ws" status --porcelain -- "$list")" ]; then
