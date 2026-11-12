@@ -1,7 +1,8 @@
 """Runs the bot's TTS save updater on a copy of the save as Card sync's TTS save step does (--names: $TTS_DATA_REF's
 db/stats.json); it must report no changes and leave the bytes identical. Also: perturbed copies must converge back.
 Usage: updater_idempotent.py [save.json]
-Rules: decks.json beside the save, else TTSCardMaker origin/main. Card Edits: ../site/Card Edits.json, else origin/main.
+Inputs (decks.json, Card Edits, Global.lua/.xml, pages.json): a commit's own save, that commit's; else beside the save,
+else TTSCardMaker origin/main.
 Code: $AUTOCROISSANT's updater modules (copied; its repo_history.json is never touched), run by this Python."""
 import atexit
 import json
@@ -22,7 +23,9 @@ DATA_REF = os.environ.get("TTS_DATA_REF", "origin/data")                    # Ca
 save = save_arg()
 work = tempfile.mkdtemp(prefix="ttsupd_")
 atexit.register(shutil.rmtree, work, ignore_errors=True)     # a failed run leaves nothing
-CLONE = history_at(os.path.join(work, "history.git"), judged_commit(save))     # main = the commit under test
+JUDGED = judged_commit(save)
+CLONE = history_at(os.path.join(work, "history.git"), JUDGED)     # main = the commit under test
+SAVED = file_at(JUDGED, "TTS/Impossibility Simulator.json") == open(save, "rb").read()    # that commit's own save
 failures = []
 
 
@@ -32,7 +35,10 @@ def setup():
     for path in UPDATER_INPUTS:
         os.makedirs(os.path.dirname(os.path.join(local, path)), exist_ok=True)
         mine = os.path.join(repo, path)
-        data = open(mine, "rb").read() if os.path.exists(mine) else file_at(REF, path)
+        if SAVED:                                           # its commit's inputs: a fixed point there
+            data = file_at(JUDGED, path)
+        else:
+            data = open(mine, "rb").read() if os.path.exists(mine) else file_at(REF, path)
         if data is None:
             continue
         open(os.path.join(local, path), "wb").write(data)

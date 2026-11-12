@@ -1,7 +1,7 @@
 """The global script (TTS/Global.lua, as written into the save) against a mock TTS API (lupa, Lua 5.2), on the save's own
 objects and hand zones, with adversarial cases.
 
-    lua_mock.py [save.json] [script.lua]     (script.lua: test it instead of the save's LuaScript)
+    lua_mock.py [save.json] [script.lua]     (the repo's save: the checkout's Global.lua; script.lua: that instead)
 
 Checks: Lua 5.2 / MoonSharp syntax only; no Lua patterns (every find, match, gmatch and gsub with a magic character and
 no plain flag is caught as it runs: MoonSharp fails long ones with "pattern too complex"); handlers are TTS events, none
@@ -32,7 +32,7 @@ from urllib.parse import unquote
 from urllib.request import urlopen
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REPO, SITE_URL, need_lupa, save_arg  # noqa: E402
+from checks_env import REPO, SAVE, SITE_URL, need_lupa, save_arg  # noqa: E402
 
 need_lupa()
 import lupa.lua52 as lupa  # noqa: E402
@@ -797,6 +797,12 @@ def main():
     with open(save_arg(), encoding="utf-8") as f:
         save = json.load(f)
     script = save.get("LuaScript") or ""
+    lua = os.path.join(REPO, "TTS", "Global.lua")
+    if save_arg() == SAVE and os.path.exists(lua):     # the repo's save: Global.lua as Card sync writes it in
+        with open(lua, encoding="utf-8") as f:
+            text = f.read()
+        now, mine = LUA_TABLE.search(script), LUA_TABLE.search(text)
+        script = text[:mine.start(2)] + now.group(2) + text[mine.end(2):] if now and mine else text
     if len(sys.argv) > 2:
         with open(sys.argv[2], encoding="utf-8") as f:
             script = f.read()
