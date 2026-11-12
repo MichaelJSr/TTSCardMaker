@@ -808,7 +808,8 @@ export function cellPlan(from, to, cells = 10) {
 }
 
 /** The fields the mock-up redraws: those of `edit` that differ from the image's (`psd`), as {name, ability, stats: {k: [from,
- *  to]}, stars: [from, to] | null, types: [old, new] | null (not a reorder), skipped: [labels]} (stats above 10 aren't drawn). */
+ *  to]}, stars: [from, to] | null, types: [old, new] | null (not a reorder), skipped: [labels]} (stats above 10 aren't drawn;
+ *  "<k>@<n>": creature n's own, n 2 or more, drawn from the plate's pictures only). */
 export function changes(edit, psd) {
   const out = { name: null, ability: null, stats: {}, stars: null, types: null, skipped: [], colors: null };
   const text = s => String(s ?? "").replace(/\r/g, "").trim();
@@ -818,6 +819,9 @@ export function changes(edit, psd) {
     if (edit[k] == null || psd[k] == null || edit[k] > 10 || psd[k] > 10) out.skipped.push(k.toUpperCase());
     else out.stats[k] = [psd[k], edit[k]];
   }
+  if (Array.isArray(edit.creatures) && Array.isArray(psd.creatures) && edit.creatures.length === psd.creatures.length)
+    edit.creatures.forEach((one, i) => { if (i) for (const k of STATS) { const a = psd.creatures[i]?.[k], v = one?.[k];
+      if (Number.isInteger(a) && Number.isInteger(v) && a !== v) out.stats[`${k}@${i + 1}`] = [a, v]; } });
   if ("stars" in edit && edit.stars != null && edit.stars !== psd.stars) out.stars = [psd.stars ?? 0, edit.stars];
   if ("types" in edit && JSON.stringify([...(edit.types || [])].map(norm).sort()) !== JSON.stringify([...(psd.types || [])].map(norm).sort())) out.types = [[...(psd.types || [])], [...(edit.types || [])]];
   const of = (list, f) => JSON.stringify((list || []).filter(one => one.field === f));
@@ -1014,6 +1018,8 @@ export function plateCuts(data, W, H, k, plate, read, ids, old = "", text = "", 
   }
   return cuts;
 }
+/** A stat's label: "HP", or "HP (creature 2)" for "hp@2". */
+const statLabel = k => { const [s, n] = k.split("@"); return s.toUpperCase() + (n ? ` (creature ${n})` : ""); };
 /** A stat's picture in the plate's bars (card_plates.bar_sheet: the bake's merge at the site's card view, per value
  *  the pixels it moves): its cut [x, y, w, h, sheet x, sheet y] (view px) for from -> to; null when the plate
  *  pictures the card's bars but not that value (the bake refuses it, or it moves nothing); undefined when it has no
@@ -1176,7 +1182,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (stale()) return null;
     if (sheetImg || starImg) {
       const px = ctx.getImageData(0, 0, W, H);
-      if (sheetImg) for (const [k, c] of got) { putBar(px.data, W, H, barPixels(sheetImg, c, W / pics.vw)); out.drawn.push(k.toUpperCase()); }
+      if (sheetImg) for (const [k, c] of got) { putBar(px.data, W, H, barPixels(sheetImg, c, W / pics.vw)); out.drawn.push(statLabel(k)); }
       if (starImg) pasteStars(px.data);
       ctx.putImageData(px, 0, 0);
     }
@@ -1291,11 +1297,11 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (stale()) return null;
   for (const [n, [k, [from, to]]] of Object.entries(todo.stats).entries()) {
     if (cuts[n] !== undefined) {                      // the card's pictured bars: the bake's picture, or none (it refuses the value)
-      if (cuts[n] && picsImg) { putBar(pixels.data, W, H, barPixels(picsImg, cuts[n], W / pics.vw)); shown[k] = to; out.drawn.push(k.toUpperCase()); }
+      if (cuts[n] && picsImg) { putBar(pixels.data, W, H, barPixels(picsImg, cuts[n], W / pics.vw)); shown[k] = to; out.drawn.push(statLabel(k)); }
       continue;
     }
     const row = bars.find(r => r.k === k);
-    if (!row) continue;                               // no row found: not drawn, nothing said (owner 11-11)
+    if (!row) continue;                               // no row found (a creature's past 1: never cells): not drawn, nothing said (owner 11-11)
     const lit = from === 0 && to <= row.cells ? bars.filter(r => r !== row && shown[r.k] >= 1 && shown[r.k] <= r.cells).sort((a, b) => Math.abs(a.box[1] - row.box[1]) - Math.abs(b.box[1] - row.box[1])).map(r => ({ row: r, v: shown[r.k] })) : [];
     if (lit.length) paintLit(pixels.data, W, H, row, lit, to);   // no lit cell on the row: another row's
     else (to > row.cells ? paintComp : paintCells)(pixels.data, W, H, row, from, to);
