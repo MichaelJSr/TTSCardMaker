@@ -1546,14 +1546,17 @@ export function steadyPitch(lines) {
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
  *  record's frame and px (box text) wraps at the frame at its set size, as the bake; with px and no frame (point
- *  text) each paragraph is one line (pointLayout). */
+ *  text) each paragraph is one line (pointLayout), re-laid at a size it shrank to past the old text's (fit_below). */
 function drawText(ctx, job, imgs, W) {
   let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo } = job;
-  const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink, null, fills), region = area.box;
-  if (role === "ability" && Array.isArray(layer?.badges)) {   // kept badges at their own size and tracking, typed ones tracked as the card's
-    const looks = badgeLooks(text, old, layer.badges); let i = 0;
-    for (const para of paras) for (const chunk of para) for (const p of chunk) if (p.badge) Object.assign(p, looks[i++] || {});
-  }
+  const looked = (ps, s) => {                         // kept badges at their own size and tracking, typed ones tracked as the card's
+    if (role === "ability" && Array.isArray(layer?.badges)) {
+      const looks = badgeLooks(s, old, layer.badges); let i = 0;
+      for (const para of ps) for (const chunk of para) for (const p of chunk) if (p.badge) Object.assign(p, looks[i++] || {});
+    }
+    return ps;
+  };
+  const paras = looked(colourize(tokenize(text, icons), text, colors, role, statuses, ink, null, fills), text), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = role === "name" ? layer?.just === 0 : found.align === "left";   // a title: left set in the PSD (psd_details just)
   const frame = role === "ability" && kc && Array.isArray(layer?.frame) && layer.frame.length === 4 ? layer.frame.map(v => v * kc) : null;   // box text's frame: Photoshop wraps there
@@ -1586,8 +1589,9 @@ function drawText(ctx, job, imgs, W) {
     for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
   }
+  const reach = left ? W - found.box[0] : 2 * Math.min(mid, W - mid);   // point text: off the card's sides past this
   let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tokenize(old).length, found, maxW, size, measure, W, left)
-    : point ? pointLayout(paras, size, left ? W - found.box[0] : 2 * Math.min(mid, W - mid), measure) : fit(paras, maxW, Infinity, size, measure);
+    : point ? pointLayout(paras, size, reach, measure) : fit(paras, maxW, Infinity, size, measure);
   if (role !== "name" && !roomBelow()) {              // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
     while (need(z) > room2 && z > size * 0.4) { z *= 0.94; lines = layout(paras, maxW, z, measure); }
@@ -1604,7 +1608,8 @@ function drawText(ctx, job, imgs, W) {
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = own ? own.slice(0, 3) : colours?.stroke, strokeW = own ? 2 * own[3] * (kc || W / 1200) : 0;
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
-  job.lined = plan ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name", icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades }, pitch: pitch0, W }) : "";
+  const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid
+  job.lined = plan && !shrunk ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name", icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
