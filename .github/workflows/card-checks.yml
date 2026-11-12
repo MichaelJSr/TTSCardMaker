@@ -318,7 +318,7 @@ jobs:
             seen=$(git -C carddata rev-parse FETCH_HEAD)
             wait "$m" && [[ $(git -C carddata log -1 --format=%s FETCH_HEAD) == "Card data"* ]]
           }
-          i=0 got= seen=
+          i=0 got='' seen=''
           while [ "$SECONDS" -lt 1200 ]; do
             look && { got=1; break; }
             if [ $(( i++ % 4 )) = 0 ]; then
