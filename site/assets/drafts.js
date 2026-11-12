@@ -8,7 +8,7 @@ import { readToggles, setToggles } from "./palette.js";
 export const DRAFT_KEY = "edit-drafts";
 export const DELAY = 400;                          // ms after the last key
 const STATS = ["hp", "def", "atk", "spd"];
-const CHECKS = new Set(["hidden", "allow_high_stats", "problems_ok", "banned"]);
+const CHECKS = new Set(["hidden", "allow_high_stats", "problems_ok"]);
 // the offer's words for the form's keys (edit.js LABEL, plus the ban row's three inputs)
 const NAMES = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP",
   def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",

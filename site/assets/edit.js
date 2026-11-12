@@ -302,7 +302,7 @@ export function createEditor(app) {
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
   const files = () => S.data.files;
-  const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
+  const isAdmin = login => S.data.admins.some(a => a.toLowerCase() === login.toLowerCase());
   const find = id => S.byId.get(id);
 
   // ---- GitHub API
@@ -565,7 +565,7 @@ export function createEditor(app) {
     pristine.clear(); based.clear();
     if (pristineBan) S.data.banlist = structuredClone(pristineBan); else pristineBan = structuredClone(S.data.banlist);
     for (const op of sentOps()) applyOp({ ...op, _sent: true });
-    movePeople(S.data.peopleMap || {}, sentPeople(), "_sent");
+    movePeople(S.data.peopleMap, sentPeople(), "_sent");
     for (const id of pristine.keys()) based.set(id, structuredClone(S.byId.get(id)));
     for (const op of Object.values(stage.cards)) applyOp(op);
     movePeople({ ...S.data.peopleMap, ...sentPeople() }, stage.people, "_staged");
@@ -588,7 +588,7 @@ export function createEditor(app) {
   const pending = () => Object.fromEntries(["series", "subseries", "author"].map(f => [f, buckets[f].filter(v => !carries(f, v))]));
   const subseriesList = () => [...new Set([...uniq(c => c.subseries), ...buckets.subseries])].sort((a, b) => a.localeCompare(b));   // every series'
   const seriesList = () => [...new Set([...uniq(c => c.series), ...buckets.series])].sort((a, b) => a.localeCompare(b));
-  const authorList = () => [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean), ...buckets.author])].sort((a, b) => a.localeCompare(b));
+  const authorList = () => [...new Set([...S.data.people, ...S.all.map(c => c.author).filter(Boolean), ...buckets.author])].sort((a, b) => a.localeCompare(b));
   // the name autofill's entries (tokens.js suggestNames): [{value, n (cards), note, kind}]
   function nameEntries(kind, el) {                 // el: the field; the profile's subseries offers its series' (data-series-from)
     const cards = n => (n ? `${n} card${n === 1 ? "" : "s"}` : "no cards yet"), count = new Map();
@@ -614,8 +614,8 @@ export function createEditor(app) {
     for (const v of buckets[kind] || []) add(v, 0);
     const out = [...rank].map(([v, r]) => [v, v, r]);
     if (kind === "author") {                       // a [people] line wins: the bot resolves a name through it the same way
-      for (const p of S.data.people || []) out.push([p, p, 0]);
-      for (const [git, shown] of Object.entries(S.data.peopleMap || {})) out.push([git, shown, Infinity]);
+      for (const p of S.data.people) out.push([p, p, 0]);
+      for (const [git, shown] of Object.entries(S.data.peopleMap)) out.push([git, shown, Infinity]);
     }
     return out;
   }
@@ -1082,7 +1082,7 @@ export function createEditor(app) {
     if (key === "author") {                        // every line showing from, and "from = name" when from is a name without one
       const lines = { ...S.data.peopleMap, ...sentPeople(), ...stage.people }, low = from.toLowerCase();
       for (const [g, v] of Object.entries(lines)) if (nameKey(v) === nameKey(from) && v !== name) people[g] = name;
-      if (!Object.keys(lines).some(g => g.toLowerCase() === low) && (S.data.people || []).some(x => x.toLowerCase() === low)) people[from] = name;
+      if (!Object.keys(lines).some(g => g.toLowerCase() === low) && S.data.people.some(x => x.toLowerCase() === low)) people[from] = name;
       const now = new Map(Object.entries({ ...lines, ...people }).map(([g, v]) => [g.toLowerCase(), v]));
       const raw = c => (stage.cards[c.id]?.author !== undefined ? stage.cards[c.id].author : baseOf(c).author);   // the name its line credits
       change = moved.filter(c => !raw(c) || now.get(raw(c).toLowerCase()) !== name);
@@ -1302,7 +1302,7 @@ export function createEditor(app) {
       list: () => { try { return JSON.parse(document.getElementById("ef-colors")?.value || "null"); } catch { return null; } },
       apply: list => { const el = document.getElementById("ef-colors"); if (!el) return; el.value = list?.length ? JSON.stringify(list) : ""; el.dispatchEvent(new Event("input", { bubbles: true })); },
       rec: () => recs.get(c.id) || view?.rec || null,
-      swatches: () => S.data.swatches || [], statuses: () => S.statuses, base: (f, text) => TC.inkOf(c, f, text),
+      swatches: () => S.data.swatches, statuses: () => S.statuses, base: (f, text) => TC.inkOf(c, f, text),
     });
     update();
     app.formOpened({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
@@ -1328,7 +1328,7 @@ export function createEditor(app) {
   const profileCtx = () => {
     const subseries = new Map();                   // name -> the series its cards are in
     for (const c of S.cards) if (c.subseries) subseries.set(c.subseries, (subseries.get(c.subseries) || new Set()).add(c.series));
-    return { cards: new Map(S.cards.map(c => [c.id, c])), series: new Set(S.cards.map(c => c.series).filter(Boolean)), subseries, people: S.data.people || [] };
+    return { cards: new Map(S.cards.map(c => [c.id, c])), series: new Set(S.cards.map(c => c.series).filter(Boolean)), subseries, people: S.data.people };
   };
   const mine = login => login.toLowerCase() === me.login.toLowerCase();
   const findKey = (obj, login) => Object.keys(obj).find(k => k.toLowerCase() === login.toLowerCase());
@@ -1776,14 +1776,14 @@ export function createEditor(app) {
       <h4>Password</h4><div id="hub-pw"><p class="muted">Checking for your password…</p></div>
       ${me.admin ? `<h4>People</h4><p class="muted">How each git name is shown.</p><form id="people-form" class="people">${peopleRows()}<div class="actions"><button type="submit">Add to batch</button></div></form>
         <h4>Admins</h4><p class="muted">GitHub logins, one per line. The repo owner is always an admin.</p>
-        <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins || []).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>
+        <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>
         <h4>Password files</h4><p class="muted">Admins may remove anyone's (${esc(files().logins)}/).</p><div class="actions"><button type="button" class="ghost" data-action="pw-list">Show them</button></div><div id="pw-list"></div>` : ""}
       <p class="muted"><a href="https://github.com/${esc(S.data.repo)}/commits/${esc(S.data.branch)}/${esc(files().edits)}" target="_blank" rel="noopener">Edit history</a> ·
         <a href="https://github.com/${esc(S.data.repo)}/blob/${esc(S.data.branch)}/${esc(files().edits)}" target="_blank" rel="noopener">${esc(files().edits)}</a></p>
       <div class="actions"><button type="button" class="ghost" data-action="edit-signout">Sign out</button></div>`;
   }
   function peopleRows() {
-    const map = S.data.peopleMap || {};
+    const map = S.data.peopleMap;
     return Object.keys(map).map(g => `<label class="erow"><span>${esc(g)}</span><input data-git="${esc(g)}" value="${esc(stage.people[g] ?? map[g])}"></label>`).join("");
   }
   function openHub(note = "", then = null) {         // then: what to open once signed in
@@ -1851,13 +1851,13 @@ export function createEditor(app) {
     document.getElementById("admins-form")?.addEventListener("submit", e => {
       e.preventDefault();
       const list = [...new Set(document.getElementById("admins-list").value.split(/[\s,]+/).map(s => s.trim()).filter(Boolean))];
-      stage.admins = same(list, S.data.admins || []) ? null : list;
+      stage.admins = same(list, S.data.admins) ? null : list;
       save(); openHub(`${count()} unpublished change${count() === 1 ? "" : "s"}`);
     });
     document.getElementById("people-form")?.addEventListener("submit", e => {
       e.preventDefault();
       for (const input of e.target.querySelectorAll("[data-git]")) {
-        const g = input.dataset.git, v = input.value.trim() || g, was = (S.data.peopleMap || {})[g] ?? g;
+        const g = input.dataset.git, v = input.value.trim() || g, was = S.data.peopleMap[g] ?? g;
         if (v === was) delete stage.people[g]; else stage.people[g] = v;
       }
       save(); openHub(`${count()} unpublished change${count() === 1 ? "" : "s"}`);
@@ -1951,7 +1951,7 @@ export function createEditor(app) {
     publishDeck: id => openPublish(id), deckOf, pendingDecks,
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists; the drafts
     stageField, stageAuthor, stageMany, value: val, drafts: cardDrafts, maxStars,
-    recOf: id => recs.get(id) || null, swatches: () => S.data.swatches || [], statuses: () => S.statuses,     // the colour menu's (textcolor.js)
+    recOf: id => recs.get(id) || null, swatches: () => S.data.swatches, statuses: () => S.statuses,     // the colour menu's (textcolor.js)
     // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
     options: () => ({ series: seriesList(), subseries: subseriesList(), authors: authorList(), buckets: pending() }),
     addBucket,

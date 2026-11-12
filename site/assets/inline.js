@@ -432,7 +432,7 @@ function onDragLeave(e) {
 function onDrop(e) {
   const t = dragging() && boxOf(e.target.closest?.(DROP)); if (!t) return;
   e.preventDefault();
-  const ids = dragged?.length ? dragged : (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean);
+  const ids = dragged;
   dragOff();
   dropOn(ids, targetOf(t));
 }

@@ -84,7 +84,7 @@ const templateHtml = (t, parts) => {
 /** What cards.json already says: the parser's notes and the PSD-vs-edited values (same wording as the card page);
     "Also edited" names an editor's fields only (changes.editorFields), the bot's own (its entries, _bot) go apart. */
 const parserHtml = (card, extras) => {
-  const c = obj(card), labels = obj(extras?.labels), orig = obj(c.orig);
+  const c = obj(card), labels = obj(extras.labels), orig = obj(c.orig);
   const problems = arr(c.problems), edited = arr(c.edited), mine = editorFields(c);
   const fields = edited.filter(f => f in orig && f in labels), other = mine.filter(f => !fields.includes(f));
   const bot = edited.filter(f => !fields.includes(f) && !mine.includes(f));
@@ -94,7 +94,7 @@ const parserHtml = (card, extras) => {
   if (fields.length) parts.push(`<table><tr><th>Field</th><th>On the card (PSD)</th><th>Edited</th></tr>${fields.map(f => `<tr><td>${esc(labels[f])}</td><td class="wrap">${esc(show(orig[f]))}</td><td class="wrap">${esc(show(c[f]))}</td></tr>`).join("")}</table>`);
   if (other.length) parts.push(`<p class="muted">Also edited: ${other.map(esc).join(", ")}</p>`);
   if (bot.length) parts.push(`<p class="muted">Set by AutoCroissant: ${bot.map(esc).join(", ")}</p>`);
-  if (extras?.badges) parts.push(`<div class="facts">${extras.badges}</div>`);
+  if (extras.badges) parts.push(`<div class="facts">${extras.badges}</div>`);
   return parts.join("") || `<p class="muted">No parser notes; nothing edited.</p>`;
 };
 /** The compact layer tree [name, kind, visible, children?], children bottom to top as Photoshop stacks them. */

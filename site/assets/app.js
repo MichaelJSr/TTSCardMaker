@@ -110,7 +110,7 @@ const failBox = (what, e) => `<div class="empty load-error">${esc(failText(what,
 // older versions of card text
 let historyP = null, versionsP = null, RB = null, bookP = null;
 const loadBook = () => (bookP ||= Promise.all([getJson("rules.json"), (early("rulebook.js"), import("./rulebook.js"))]).then(([d, m]) => {
-  RB = m; S.book = { images: d.images || {}, built: d.chapters || [], cover: d.cover || [] };
+  RB = m; S.book = { images: d.images, built: d.chapters, cover: d.cover || [] };
   bookChapters();
 }).catch(e => { bookP = null; throw e; }));
 const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
@@ -178,13 +178,13 @@ async function init() {
   }
   S.all = S.data.cards; S.icons = S.data.icons;
   S.statuses = statusNames(S.all);                        // status words keep the chart's colour on the card image (textcolor.js)
-  S.palette = S.data.palette || null;                     // the site's word colours (textcolor.js wordColors)
+  S.palette = S.data.palette;                             // the site's word colours (textcolor.js wordColors)
   S.statusFills = Object.fromEntries(Object.entries(S.palette?.statuses || {}).map(([n, c]) => [n.toLowerCase(), c]));   // as the bake prints them (the mock-up's): the chart's, else the swatch
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
-  S.morgue = S.data.morgue || [];
+  S.morgue = S.data.morgue;
   for (const c of S.morgue) S.morgueById.set(c.id, c);
   for (const [old, id] of Object.entries(S.data.moved || {})) if (!S.byId.has(old) && S.byId.has(id)) S.byId.set(old, S.byId.get(id));   // a renamed card's old id: links, picks, share codes
   if (editorP) await editorP.catch(() => {});
@@ -280,7 +280,7 @@ function startEditor(M) {
   const ed = M.createEditor({
     S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
     closeModal: () => closeModal(), showDialog: h => showDialog(h),
-    statBars: c => statBars(c), imageOf: (c, w = 360) => img(c, w),   // the form's live preview; 720: the Edit viewer
+    statBars: c => statBars(c), imageOf: (c, w) => img(c, w),   // the Edit dialog's viewer (edit.js: 720)
     iconFor: n => iconFor(n), render: (t, o) => S.renderer.render(t, o),
     users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
     // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
@@ -946,8 +946,8 @@ function openCard(id, showDetails = false) {
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
   const fillHistory = () => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyOf(c); };
   const fillVersions = () => loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c, versionsOpen(c.id));
-    if (S.data.heavy?.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
-  const heavyPaths = () => { if (S.data.heavy?.length && c.iv && !S.versions) fillVersions(); };
+    if (S.data.heavy.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
+  const heavyPaths = () => { if (S.data.heavy.length && c.iv && !S.versions) fillVersions(); };
   nearby.disconnect();                                   // history.json, analytics.json once their slots are within a screen (phones: far down)
   if (c.hv && !c.history) nearby.on(["#card-changes", "#history-slot"], () => loadHistory().then(() => { fillHistory(); fillBalance(); heavyPaths(); }, () => {}));
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) nearby.on(["#card-changes"], () => loadHistory().then(() => { fillBalance(); heavyPaths(); }, () => {}));   // its original's texts
@@ -989,7 +989,7 @@ function placeholderOf(c) {
 const versionList = c => {
   const rows = S.versions && S.versions.cards[c.id];
   if (!rows) return [];
-  const minor = new Set(S.versions.minor?.[c.id] || []);       // build_site: a picture change under the share that shows, no data change
+  const minor = new Set(S.versions.minor[c.id] || []);        // build_site: a picture change under the share that shows, no data change
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; });
 };
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
@@ -1008,7 +1008,7 @@ function versionsHtml(c, open) {
   const item = (v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
         <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`;
   const rows = vs.map((v, i) => [v, i]), major = rows.filter(([v]) => !v.minor), minor = rows.filter(([v]) => v.minor);
-  const share = Math.round((S.versions.visible || 0.05) * 100);
+  const share = Math.round(S.versions.visible * 100);
   // minor changes (owner 11-09): folded, never dropped (versions.json visible: AutoCroissant png_changes.VISIBLE)
   const folded = minor.length ? `<details class="ver-minor"><summary data-tip="${esc(`Changes to under ${share}% of the card's pixels, with no change to its data`)}">${minor.length} minor change${minor.length > 1 ? "s" : ""}</summary><div class="ver-list" role="group" aria-label="Minor image versions, newest first">${minor.map(([v, i]) => item(v, i)).join("")}</div></details>` : "";
   return box(major.length, `
@@ -1098,7 +1098,7 @@ function chapterHtml(c, ctx) {
 // the built cover's smaller copies (build_site cover_copies), for its 260 px in the book view
 const coverSet = ctx => { const k = bookFile("cover"), im = S.book.images[k];
   return im && S.book.cover.length ? ` srcset="${S.book.cover.map(([w, f]) => `${RB.IMG_DIR}${encodeURIComponent(f)} ${w}w`).join(", ")}, ${esc(ctx.imgUrl(k))} ${im[0]}w" sizes="260px"` : ""; };
-const pdfUrl = () => `https://github.com/${S.data.repo}/blob/${S.data.branch || "main"}/TTS/Rulebook/Rulebook.pdf`;   // AutoCroissant rulebook_pages
+const pdfUrl = () => `https://github.com/${S.data.repo}/blob/${S.data.branch}/TTS/Rulebook/Rulebook.pdf`;   // AutoCroissant rulebook_pages
 let rulesAt = "", spy = null;                            // the rulebook hash last scrolled to: a re-render stays put
 function renderRules(r) {
   if (!S.book) {
@@ -1200,7 +1200,7 @@ async function renderSheets() {
   if ([...host.querySelectorAll(".rb-body")].some(b => b.scrollHeight > b.clientHeight + 1)) sheets = RB.paginate(host, chapters, ctx, cover);   // a picture late: cut again
   host.className = "rb-sheets";
   const list = Object.assign(document.createElement("script"), { type: "application/json", id: "rb-sheet-list" });
-  list.textContent = JSON.stringify({ sheets: sheets.map(x => ({ name: x.name, num: x.num, ch: x.ch, n: x.n })), chapters: S.book.chapters.map(c => [c.file, c.source]) });
+  list.textContent = JSON.stringify({ sheets: sheets.map(x => ({ name: x.name, num: x.num })), chapters: S.book.chapters.map(c => [c.file, c.source]) });
   view.append(list);
   document.body.dataset.sheets = String(sheets.length);    // the export waits for this
 }
@@ -1540,7 +1540,7 @@ function renderUser(r) {
   const owners = new Set([login, person?.github, ...(person?.logins || [])].filter(Boolean).map(s => s.toLowerCase())), theirs = deckList().filter(d => owners.has(d.owner.toLowerCase()));
   view.innerHTML = Pf.personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
-    available: !!S.contrib.available, since: S.contrib.since, repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
+    available: !!S.contrib.available, repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
     people, site: S.contrib.site || {}, mentions: S.mentions, starKind: r.params.get("stars") || "", mentionedBy: S.mentionedBy, banned: S.banned,
     decks: { public: decks.sortDecks(theirs.filter(d => !d.private)), private: decks.sortDecks(theirs.filter(d => d.private)) }, deckTile: d => decks.deckTileHtml(d, deckCtx()) });
   if (r.params.get("stars") && !$(".p-stars", view)?.dataset.kind) personStars({ name: "u", arg: login, params: r.params }, "");   // an unknown kind: all, out of the address
@@ -1633,7 +1633,7 @@ let rbEditP = null;
 function openBookEditor(id, line = null) {
   if (!editing()) { act("edit-hub"); return; }
   withEditor(ed => (rbEditP ||= (early("rulebook-edit.js"), import("./rulebook-edit.js")).catch(e => { rbEditP = null; throw e; })).then(m => m.open({
-    id, line, RB, book: S.book, ctx: bookCtx, editor: ed, repo: S.data.repo, branch: S.data.branch || "main", modal, toast, closeModal,
+    id, line, RB, book: S.book, ctx: bookCtx, editor: ed, repo: S.data.repo, branch: S.data.branch, modal, toast, closeModal,
     cards: () => S.all.filter(c => !c.hidden).map(c => c.name),
     published: sent => { localStorage.setItem(RB_SENT, JSON.stringify(sent)); bookChapters(); rerender(); },
   })).catch(e => toast(`Couldn't open the rulebook editor (${e.message})`)));
@@ -1677,7 +1677,7 @@ function banList(text) {
 const actions = {
   "rb-edit": el => openBookEditor(el.dataset.id, el.dataset.line != null ? +el.dataset.line : null),
   "rb-new": () => openBookEditor(""),
-  "rb-history": el => RB.openHistory({ repo: S.data.repo, branch: S.data.branch || "main", path: el.dataset.path, title: el.dataset.title, modal,
+  "rb-history": el => RB.openHistory({ repo: S.data.repo, branch: S.data.branch, path: el.dataset.path, title: el.dataset.title, modal,
     closeModal, dateText: bookDate, revert: bookRevert(el.dataset.path, el.dataset.title) }),
   "rb-bans": () => {                                     // the constructed ban list's editor (admins; rulebook-edit.js openBans)
     if (!editing()) { act("edit-hub"); return; }

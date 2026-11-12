@@ -813,9 +813,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - **Drops staged nothing in Safari (item 18).** The drop targets cancelled `dragover` only. In the HTML drag model
   (Safari, Firefox) an uncancelled `dragenter` makes `<body>` the current target, its `dragover` isn't cancelled, so no
   `drop` fires; Chrome is lenient. Now `dragenter` runs the same handler. Also: the tile drags, not its `<img>`
-  (`draggable=false`), so the drag carries no image URL; the ids are kept in `dragged` (dataTransfer only as a fallback);
-  `body.dragging-cards` is added a frame later (a layout change inside `dragstart` cancels the drag). Checked in Chrome
-  by replaying the spec's order (`check18.mjs`), and a trusted drag still stages; not in Safari here (no WebKit tooling).
+  (`draggable=false`), so the drag carries no image URL; the ids are kept in `dragged` (the dataTransfer's copy only
+  lets Firefox start the drag); `body.dragging-cards` is added a frame later (a layout change inside `dragstart` cancels
+  the drag). Checked in Chrome by replaying the spec's order (`check18.mjs`), and a trusted drag still stages; not in
+  Safari here (no WebKit tooling).
 - **`inline.dropOn(ids, {key, value, series})`** is the one staging path: a filter-bar value (`targetOf` reads its
   list's `data-drop`/`data-series`), a pinned box (`data-pin-k/v/s`: `data-v` would be a chart tooltip), a tap on a box, a number key.
 - **The stuck "+" box (item 3).** Reproduced: `+ stars` swapped its chip for a slider at none, and nothing put the chip

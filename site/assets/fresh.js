@@ -46,7 +46,7 @@ function tick() {
 }
 /** Start checking (app.js, once the data is in); save() runs right before a reload. */
 export function watch(save) {
-  if (save) keep = save;
+  keep = save;
   if (!PAGE) return;
   check();
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") check(); });

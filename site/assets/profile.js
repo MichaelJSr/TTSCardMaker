@@ -480,7 +480,7 @@ export function archivedPanelHtml(rows) {
 
 /** The person page: the profile (when there is one) over the contributions, the activity chart, Balance, Revisions,
  *  Style, the Cards panel, Archived cards and the Decks panel; a contributor without a profile gets a plain
- *  header instead. x = profileHtml's x + cardsPanelHtml's x + decksPanelHtml's x + {person | null, available, since,
+ *  header instead. x = profileHtml's x + cardsPanelHtml's x + decksPanelHtml's x + {person | null, available,
  *  titles, date, month, repo, people, site, mentions, starKind (the Star levels' kind)} */
 export function personHtml(x) {
   const { person, profile } = x;

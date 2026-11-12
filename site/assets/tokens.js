@@ -167,7 +167,7 @@ export function suggestNames(q, entries) {
     }
   }
   return out.sort((a, b) => a.tier - b.tier || a.w - b.w || (b.e.n || 0) - (a.e.n || 0) || a.e.value.localeCompare(b.e.value))
-    .slice(0, LIMIT).map(({ e }) => ({ token: e.value, label: e.value, kind: e.kind || "", note: e.note || "", plain: true, value: e.value }));
+    .slice(0, LIMIT).map(({ e }) => ({ token: e.value, kind: e.kind || "", note: e.note || "", plain: true, value: e.value }));
 }
 
 // ---- the dropdown, in the browser

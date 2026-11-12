@@ -296,7 +296,7 @@ function caretAt(el, pos) {
 /**
  * The colour menu on the text controls inside root. o: {fieldOf(el) -> "name" | "ability" | null, textOf(el) ->
  * {text, at} (the field's whole text and where el's text starts in it: a box of several), list() -> the colours now,
- * apply(list, {field, phrase, color}), rec() -> the details record or null, swatches() -> [{name, color}],
+ * apply(list, {kbd}), rec() -> the details record or null, swatches() -> [{name, color}],
  * base(field, text) -> the card's own colours (inkOf) or null}.
  * Returns {destroy}.
  */
@@ -378,7 +378,7 @@ export function attach(root, o) {
     const sel = cur; if (!sel) return;
     if (color) { try { store?.setItem(RECENT_KEY, JSON.stringify(recentWith(recent(), color))); } catch { /* full or blocked */ } }
     pop.hidden = true; chip.setAttribute("aria-expanded", "false"); chip.hidden = true; cur = null;
-    o.apply(withColor(o.list(), sel.field, sel.phrase, color, sel.text), { field: sel.field, phrase: sel.phrase, color, el: sel.el, start: sel.start, end: sel.end, kbd });
+    o.apply(withColor(o.list(), sel.field, sel.phrase, color, sel.text), { kbd });
     if (sel.el.isConnected) { sel.el.focus({ preventScroll: true }); update(); }
   }
   const keep = e => { if (e.pointerType !== "touch" || e.target === chip || chip.contains(e.target)) e.preventDefault(); };   // the control keeps its focus and selection
