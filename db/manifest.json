@@ -8,25 +8,25 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-12T05:08:19Z",
- "card_commit": "cf80568654aa0785af7de45a698d36a0e73c8c6b",
- "card_commit_at": 1794460078.0,
+ "built_at": "2026-11-12T05:20:47Z",
+ "card_commit": "a7b787f01f9ca2051b05736eb87d1c96f224823b",
+ "card_commit_at": 1794460814.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 131,
   "baked": 0,
   "cards": 776,
-  "changed": 0,
+  "changed": 1,
   "details": 783,
   "failed": 0,
   "new": 0,
-  "versions": 1871
+  "versions": 1872
  },
  "files": {
-  "old_stats.json": "2fc7ae36caa5ca5b0d416e8ed1fda96e41cbde49b3fb44abc540d750370626bf",
-  "psd_details.json": "11963bccd210eaf406c36c7eb4896cb70dae6822f7e4669bae2ca1593a03c865",
+  "old_stats.json": "68a0ecd775acc3320bdba0de6abf55d57daa8ae9204953876f3257ca8cfca82b",
+  "psd_details.json": "59b0d6d084e38140088d3b1e9de754d898dfa938abadfa7c39d6ade06b3ca82a",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "a64f5ab0235cff5ae7796637f67bde401a7375d138945eff4f153c51777f8180"
+  "stats.json": "98d455a8a5c146e7ab4a912fedac338bc26669bcf4fafd5a82dff9eea8c5cf64"
  },
  "fonts": {
   "checked": 768,
@@ -50,19 +50,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Chris & Jordi",
-   "notes": [
-    "DEF NOT FOUND",
-    "ATK NOT FOUND",
-    "SPD NOT FOUND",
-    "STATS TOO HIGH"
-   ],
-   "path": "Creatures/Everhood/5 Stars/Chris_&_Jordi.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43159280533",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43160743727",
  "schema": 1
 }
