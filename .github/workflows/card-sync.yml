@@ -444,7 +444,10 @@ jobs:
       # skips its Gate and the rest). Runs that cannot be read count as none (the main lane goes on). A follow-up (guards:
       # the run whose check job started this one, before Land) waits in both lanes after their setup until that check
       # job reaches Landed (Land and its guard-events and guard-records uploads done) or ends: 3 s looks for 2 minutes,
-      # then 15 s, 60 at most (the check job's own cap); it holds nothing.
+      # then 15 s, 60 at most (the check job's own cap); it holds nothing. With a first attempt's push P (the first
+      # look's): main by git beside it every 0.5 s (2.5 s after 2 minutes), the jobs API every 4th; a commit naming P
+      # in its Guarded-push trailer (the landing, in main's top 20): Bake and save goes at once (it reads none of the
+      # guards' artifacts), Card data asks the jobs API at every look (0.5 s apart) until Landed.
       - &guards
         name: Guards' fixes
         id: guards
@@ -461,17 +464,41 @@ jobs:
           RUN: ${{ inputs.guards }}   # a follow-up's guards run
         run: |
           if [ -n "$RUN" ]; then
-            k=0 at=0
+            lg=$RUNNER_TEMP/landing.git
+            start() {                 # main's commits, no trees
+              rm -rf "$lg" && git init -q --bare "$lg" && git -C "$lg" config include.path "$RUNNER_TEMP/carddata-credentials.config" \
+                && git -C "$lg" remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+            }
+            look() {                  # 0: main moved and names P
+              new=$(timeout 5 git -C "$lg" ls-remote origin refs/heads/main) || return 1
+              new=${new%%[[:space:]]*}
+              [ -n "$new" ] && [ "$new" != "$seen" ] || return 1
+              timeout 10 git -C "$lg" fetch -q --depth 20 --filter=tree:0 --no-tags origin +refs/heads/main:refs/heads/main || return 1
+              seen=$(git -C "$lg" rev-parse main)
+              t=$(GIT_NO_LAZY_FETCH=1 git -C "$lg" log --format='%(trailers:key=Guarded-push,valueonly)' main) && grep -qx "$p" <<< "$t"
+            }
+            k=0 at=0 due=0 p= got= seen=
             while [ "$SECONDS" -lt 3600 ]; do
-              k=$((k + 1))
-              at=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"check\" and (.status == \"completed\"
-                or any(.steps[]?; .name == \"$LANDED\" and (.status == \"in_progress\" or .status == \"completed\"))))] | length") || at=0
-              [ "${at:-0}" -gt 0 ] && break
-              if [ $((k % 5)) = 0 ] && [ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN" --jq .status || true)" = completed ]; then break; fi
-              sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
+              if [ "$due" -le 0 ]; then
+                k=$((k + 1)) due=$([ -n "$got" ] && echo 1 || echo 4)
+                out=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"check\")] | \"\(map(select(.status == \"completed\"
+                  or any(.steps[]?; .name == \"$LANDED\" and (.status == \"in_progress\" or .status == \"completed\")))) | length) \(.[0].head_sha) \(.[0].run_attempt)\"") || out=0
+                read -r at sha try <<< "$out"
+                [ "${at:-0}" -gt 0 ] && break
+                if [ $((k % 5)) = 0 ] && [ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN" --jq .status || true)" = completed ]; then break; fi
+                if [ -z "$p" ] && [ "$try" = 1 ] && [ "${#sha}" = 40 ] && start; then p=$sha; fi   # a re-run's may find an earlier landing
+              fi
+              if [ -n "$p" ] && [ -z "$got" ] && look; then
+                got=1 due=1
+                [ "$GITHUB_JOB" != main ] || break
+              fi
+              if [ -z "$p" ]; then due=0; sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
+              else due=$((due - 1)); sleep "$([ "$SECONDS" -lt 120 ] && echo 0.5 || echo 2.5)"; fi
             done
             if [ "$SECONDS" -ge 3600 ]; then echo "::warning::guards run $RUN not past Land in 60 minutes: this run goes on"; fi
-            echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN is past Land (or ended): this run goes on from main's head." \
+            how="is past Land (or ended)"
+            [ -z "$got" ] || [ "${at:-0}" -gt 0 ] || how="landed ${seen:0:8} on main"
+            echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN $how after $SECONDS s: this run goes on from main's head." \
               | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
