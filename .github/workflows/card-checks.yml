@@ -294,9 +294,10 @@ jobs:
           code=$(cat "$RUNNER_TEMP/help.code")
           [ "$code" = 0 ] || { cat "$RUNNER_TEMP/help.log"; echo "::error::commands.card_checks --help failed (exit $code)"; exit 1; }
 
-      # An early run, set up above while Card sync's data job builds: until that job's Commit data is done or the job
-      # ended (site.yml's Data wait: 3 s looks for 2 minutes, then 15 s; 20 minutes at most), then main's head and the
-      # data's as they are now (3 tries, as site.yml's). Nothing is listed before the data commit.
+      # An early run, set up above while Card sync's data job builds: until that job's data commit is in or the job ended
+      # (site.yml's Data wait: git looks every 0.5 s, the jobs API every 4th; 20 minutes at most), then main's head and the
+      # data's as they are now, side by side (3 tries, as site.yml's; a look that saw the data commit fetched both).
+      # Nothing is listed before the data commit.
       - name: Data wait
         if: inputs.after
         timeout-minutes: 25
@@ -307,20 +308,41 @@ jobs:
           JOB: ${{ inputs.job == 'after' && 'Card data after the bake' || 'Card data' }}   # card-sync.yml's job names
           COMMIT: Commit data                                                               # and its step
         run: |
+          look() {                              # site.yml's, by the data's head alone (cloned already)
+            new=$(timeout 5 git ls-remote origin refs/heads/data) || return 1
+            new=${new%%[[:space:]]*}
+            [ -n "$seen" ] || seen=$(git -C carddata rev-parse HEAD) || return 1
+            [ -n "$new" ] && [ "$new" != "$seen" ] || return 1
+            timeout 60 git fetch -q --depth 1 --filter=blob:none origin main & m=$!
+            timeout 60 git -C carddata fetch -q --depth 1 origin data || { wait "$m"; return 1; }
+            seen=$(git -C carddata rev-parse FETCH_HEAD)
+            wait "$m" && [[ $(git -C carddata log -1 --format=%s FETCH_HEAD) == "Card data"* ]]
+          }
+          i=0 got= seen=
           while [ "$SECONDS" -lt 1200 ]; do
-            n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$JOB\" and (.status == \"completed\"
-              or any(.steps[]?; .name == \"$COMMIT\" and .status == \"completed\")))] | length") || n=0
-            [ "${n:-0}" -gt 0 ] && break
-            sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
+            look && { got=1; break; }
+            if [ $(( i++ % 4 )) = 0 ]; then
+              n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$JOB\" and (.status == \"completed\"
+                or any(.steps[]?; .name == \"$COMMIT\" and .status == \"completed\")))] | length") || n=0
+              [ "${n:-0}" -gt 0 ] && break
+            fi
+            sleep "$([ "$SECONDS" -lt 120 ] && echo 0.5 || echo 3.5)"
           done
           if [ "$SECONDS" -ge 1200 ]; then echo "::warning::$JOB of run $RUN not past $COMMIT in 20 minutes: these checks go on"; fi
-          echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN past $COMMIT (or ended) after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
-          if git fetch -q --depth 1 --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
-          for try in 1 2 3; do                                                              # 10 and 15 s apart
-            timeout 60 git -C carddata fetch -q --depth 1 origin data && break
-            [ "$try" = 3 ] && { echo "::error::data not fetched again (3 tries)"; exit 1; }
-            sleep $(( try * 5 + 5 ))
-          done
+          how="past $COMMIT (or ended)"
+          [ -z "$got" ] || how="committed $(git -C carddata rev-parse --short FETCH_HEAD) to data"
+          echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN $how after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
+          refetch() {                           # 10 and 15 s apart
+            for try in 1 2 3; do
+              timeout 60 git -C carddata fetch -q --depth 1 origin data && return
+              [ "$try" = 3 ] || sleep $(( try * 5 + 5 ))
+            done
+            return 1
+          }
+          data=
+          [ -n "$got" ] || { refetch & data=$!; }
+          if [ -n "$got" ] || git fetch -q --depth 1 --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
+          [ -z "$data" ] || wait "$data" || { echo "::error::data not fetched again (3 tries)"; exit 1; }
           git -C carddata reset -q --hard FETCH_HEAD
 
       # The blobs of the PSDs to check and their PNGs, fetched per shard (the guards' way): none, and the job is done

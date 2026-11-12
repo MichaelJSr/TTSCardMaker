@@ -334,8 +334,11 @@ jobs:
         run: echo "names=$(ls site/.og-cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # A Card sync data job's early build (dispatched at its start): set up above while that job builds, it waits here
-      # until the job's Commit data is done or the job ended: 3 s looks for 2 minutes, then 15 s; 20 minutes at most (past
-      # that, Card sync's Site build dispatches another). Each look also reads main's head (follow, in the background): past
+      # until the job's data commit is in or the job ended: a look every 0.5 s (3.5 s after 2 minutes) reads main's and the
+      # data's heads by git; data past the clone's head is fetched, main beside it, and a "Card data" commit ends the wait
+      # (only Card sync's data jobs write those, one at a time; Card checks' say "Card checks"). Every 4th look also asks
+      # the jobs API whether its Commit data is done or the job ended (~3 s, ~15 s after 2 minutes); 20 minutes at most
+      # (past that, Card sync's Site build dispatches another), and hands main's head to follow (in the background): past
       # the early images' commit, with those done, it fetches it and starts them again at it (same log and code). Then
       # main's head again, as Card sync's Newest; when that moved a PSD, the PSD sizes again (Setup wait waits for them).
       # The data's head beside main's (Card checks' lines; 3 tries, ~3.5 min at most: 25 minutes for the step; the clone
@@ -350,31 +353,46 @@ jobs:
           COMMIT: Commit data                                                               # and its step
         run: |
           bg=$RUNNER_TEMP/setup
-          follow() {
+          follow() {                            # main's head from the last look
             [ "$(cat "$bg/images.code" 2> /dev/null)" = 0 ] || return 0
-            new=$(timeout 5 git ls-remote origin refs/heads/main | cut -f1) || return 0
-            [ -n "$new" ] && [ "$new" != "$(cat "$bg/images.at")" ] || return 0
-            echo "$new" > "$bg/images.at"
+            [ -n "$main" ] && [ "$main" != "$(cat "$bg/images.at")" ] || return 0
+            echo "$main" > "$bg/images.at"
             rm "$bg/images.code"
             (
               code=0
-              if ! timeout 60 git fetch -q --no-tags --no-write-fetch-head --filter=blob:none origin "$new"; then code=fetch
-              elif [ ! -e "$bg/images.stop" ]; then python site/build/build_site.py --images "$new" "$bg/images.stop" || code=$?
+              if ! timeout 60 git fetch -q --no-tags --no-write-fetch-head --filter=blob:none origin "$main"; then code=fetch
+              elif [ ! -e "$bg/images.stop" ]; then python site/build/build_site.py --images "$main" "$bg/images.stop" || code=$?
               fi
               echo "$code" > "$bg/images.code"
             ) >> "$bg/images.log" 2>&1 < /dev/null &
           }
-          f=
+          look() {                              # 0: the data at a newer "Card data" commit, fetched, and main beside it
+            refs=$(timeout 5 git ls-remote origin refs/heads/main refs/heads/data) || return 1
+            new=
+            while read -r sha ref; do case $ref in refs/heads/main) main=$sha ;; refs/heads/data) new=$sha ;; esac; done <<< "$refs"
+            [ -n "$seen" ] || { [ "$(cat "$bg/data.code" 2> /dev/null)" = 0 ] && seen=$(git -C carddata rev-parse HEAD); } || return 1
+            [ -n "$new" ] && [ "$new" != "$seen" ] || return 1
+            timeout 60 git fetch -q --filter=blob:none origin main & m=$!
+            timeout 60 git -C carddata fetch -q --depth 1 origin data || { wait "$m"; return 1; }
+            seen=$(git -C carddata rev-parse FETCH_HEAD)
+            wait "$m" && [[ $(git -C carddata log -1 --format=%s FETCH_HEAD) == "Card data"* ]]
+          }
+          i=0 f= got= seen= main=
           while [ "$SECONDS" -lt 1200 ]; do
-            { [ -n "$f" ] && kill -0 "$f" 2> /dev/null; } || { follow & f=$!; }
-            n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$JOB\" and (.status == \"completed\"
-              or any(.steps[]?; .name == \"$COMMIT\" and .status == \"completed\")))] | length") || n=0
-            [ "${n:-0}" -gt 0 ] && break
-            sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
+            look && { got=1; break; }
+            if [ $(( i++ % 4 )) = 0 ]; then
+              { [ -n "$f" ] && kill -0 "$f" 2> /dev/null; } || { follow & f=$!; }
+              n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$JOB\" and (.status == \"completed\"
+                or any(.steps[]?; .name == \"$COMMIT\" and .status == \"completed\")))] | length") || n=0
+              [ "${n:-0}" -gt 0 ] && break
+            fi
+            sleep "$([ "$SECONDS" -lt 120 ] && echo 0.5 || echo 3.5)"
           done
           wait                                  # follow's last look (a run it started goes on)
           if [ "$SECONDS" -ge 1200 ]; then echo "::warning::$JOB of run $RUN not past $COMMIT in 20 minutes: this build goes on"; fi
-          echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN past $COMMIT (or ended) after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
+          how="past $COMMIT (or ended)"
+          [ -z "$got" ] || how="committed $(git -C carddata rev-parse --short FETCH_HEAD) to data"
+          echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN $how after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
           until [ -s "$bg/data.code" ]; do sleep 0.1; done
           refetch() {   # 3 tries, 10 and 15 s apart (actions/checkout's)
             for try in 1 2 3; do
@@ -384,9 +402,10 @@ jobs:
             return 1
           }
           data=
-          [ "$(cat "$bg/data.code")" != 0 ] || { refetch & data=$!; }
+          [ "$(cat "$bg/data.code")" != 0 ] || [ -n "$got" ] || { refetch & data=$!; }
           was=$(git rev-parse HEAD)
-          if git fetch -q --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
+          if [ -n "$got" ] || git fetch -q --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
+          [ -z "$got" ] || git -C carddata reset -q --hard FETCH_HEAD   # both fetched by the look
           if [ -n "$data" ] && ! { wait "$data" && git -C carddata reset -q --hard FETCH_HEAD; }; then
             echo "::warning::data not fetched again (3 tries): checked out"
             rm -rf carddata
