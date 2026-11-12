@@ -9,7 +9,8 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food") on the
+rulebook panel and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food", a series
+word's start, every name typed with or without its punctuation listed first) on the
 website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or pinned to the commit of the Rulebooks bag's
 PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
@@ -1266,6 +1267,16 @@ def main():
     w.call("finderSearch", red, "status effects")
     statuses, title = sum(c.get("k") in ("Buff", "Debuff") for c in details["cards"].values()), ui.values.get("Red_fc_title")
     check(statuses and title.split()[0] == str(statuses), f"'status effects' finds every buff and debuff ({title!r}, {statuses})")
+    flat = lambda t: "".join(ch for ch in t.lower() if ch.isalnum() or not ch.isascii())    # Global.lua unpunct(t, "")
+    late = []                                           # a name, typed as written or without punctuation: that name first
+    for n in sorted({c["n"] for c in details["cards"].values()}):
+        if any(ch.isupper() and not ch.isascii() for ch in n) or re.search(r"(^|\s)[1-9](★|\s|$)", n):
+            continue                                    # Lua lowers ASCII only; a lone digit is the stars
+        for q in (n.lower(), " ".join(flat(x) for x in n.lower().split())):
+            w.call("finderSearch", red, q)
+            if not ui.on("Red_fc_g1") or flat(ui.text("Red_fc_g1").split("   ")[0].replace("<b></b>", "")) != flat(n):
+                late.append(q)
+    check(not late, f"a name typed in full, punctuation or not, lists that name first ({len(late)}: {late[:5]})")
     grey = w.players["Grey"]
     w.run(w.table_menu["Find a card"], "Grey", w.vec(10, 1, 10), what="Grey: Find a card")
     w.call("finderSearch", grey, card["n"].lower())
@@ -1311,8 +1322,10 @@ def main():
     w4.seat("Red")
     w4.g.onLoad("")
     w4.wait.flush()
+    series = [*details.get("series", []), "Xqj'vkq: Zqf Saga"]
+    odd["se"] = len(series)
     odd_details = {**details, "statuses": {**details["statuses"], **st}, "tags": {**details["tags"], **tags},
-                   "types": {**details["types"], **types}, "cards": {**details["cards"], path: odd}}
+                   "types": {**details["types"], **types}, "cards": {**details["cards"], path: odd}, "series": series}
     w4.respond(json.dumps(odd_details), pages_text)
     w4.run(w4.g.showDetails, "Red", Obj.of(w4, cards[0]), what="Card details: colours")
     title, text = w4.ui.values.get("Red_d1_title") or "", panel_text(w4.ui, "Red_d1")
@@ -1359,6 +1372,12 @@ def main():
     check(w4.ui.text("Red_fc_g1").startswith(plain(odd["n"]) + "   "), f"the finder's row: the name, '<' no tag {w4.ui.text('Red_fc_g1')!r}")
     w4.call("finderSearch", w4.players["Red"], "zqrose")
     check(w4.ui.on("Red_fc_g1") and w4.ui.text("Red_fc_g1").startswith(plain(odd["n"])), f"a card's alias finds it (al) {w4.ui.values.get('Red_fc_title')!r}")
+    got = {}
+    for q in ("vkq", "zqf saga", "xqjvkq", "xqj'vkq:", "jvkq"):
+        w4.call("finderSearch", w4.players["Red"], q)
+        got[q] = w4.ui.on("Red_fc_g1") and w4.ui.text("Red_fc_g1").startswith(plain(odd["n"]))
+    check(got == {"vkq": True, "zqf saga": True, "xqjvkq": True, "xqj'vkq:": True, "jvkq": False},
+          f"a series word's start finds its cards, punctuation or not; mid-word not (se) {got}")
 
     # ---- every card's details at each size ----
     w5 = World(script, save, zones)

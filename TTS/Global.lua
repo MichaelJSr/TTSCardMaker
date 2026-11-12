@@ -443,6 +443,20 @@ local function plain(text)
     return table.concat(out)
 end
 
+-- lowercase text's punctuation (and its spaces, unless spaces) as gap: "mom's" -> "moms" (gap ""), "a/b" -> "a b" (gap " ")
+local function unpunct(text, gap, spaces)
+    local out, from = {}, 1
+    for i = 1, #text do
+        local b = text:byte(i)
+        if b < 128 and not (b >= 97 and b <= 122 or b >= 48 and b <= 57 or spaces and b == 32) then
+            out[#out + 1] = text:sub(from, i - 1) .. gap
+            from = i + 1
+        end
+    end
+    out[#out + 1] = text:sub(from)
+    return table.concat(out)
+end
+
 local HEX = {}
 for i = 1, 16 do HEX[("0123456789abcdef"):sub(i, i)] = true end
 local function hexColour(c)                            -- "#rrggbb", else nil
@@ -1369,20 +1383,29 @@ function rulebookSearch(player, value)
 end
 
 -- the card finder: every word must be in a card's name, kind, types (or their keys: "food"), timing tags or aliases (a plural: or
--- its singular); a digit 1-9 or "5★" (a "star(s)" after it dropped) is the card's stars; names that start with the search come
--- first; a click spawns the card where the table was right-clicked (several: side by side)
+-- its singular; a word without punctuation: or there with punctuation dropped, "moms"), or start a word of its series
+-- ("undertale"); a digit 1-9 or "5★" (a "star(s)" after it dropped) is the card's stars; the typed name itself first
+-- (punctuation aside), then names that start with it, then with its first word; a click spawns the card where the table was
+-- right-clicked (several: side by side)
 local fcOpen, fcFound, searchList = {}, {}, nil
 local function listCards(color, query)
     if not searchList then                             -- each card's words, once, in name order (no sort per keystroke)
         searchList = {}
+        local seen = {}                                -- a series' words, once: " don t starve dont starve don't starve"
         for path, c in pairs(details.cards) do
             local bits = {c.n or "", c.k or "", c.st and (math.floor(c.st) .. "★ " .. math.floor(c.st) .. " star") or ""}
             if c.k == "Buff" or c.k == "Debuff" then table.insert(bits, "status effect") end   -- the website's kind name
             for _, t in ipairs(c.t or {}) do table.insert(bits, ((details.types[t] or {}).n or "") .. " " .. t) end
             for _, g in ipairs(c.g or {}) do table.insert(bits, "(" .. g .. ")") end
             for _, a in ipairs(c.al or {}) do table.insert(bits, a) end      -- the website's aliases ("Sans" for snas.)
-            table.insert(searchList, {path = path, name = (c.n or ""):lower(), all = table.concat(bits, " "):lower(),
-                st = c.st and math.floor(c.st)})
+            local se, all, name = c.se or 0, table.concat(bits, " "):lower(), (c.n or ""):lower()
+            if not seen[se] then
+                local s = ((details.series or {})[se] or ""):lower()
+                local sp, sq = unpunct(s, " ", true), unpunct(s, "", true)
+                seen[se] = " " .. sp .. (sq ~= sp and " " .. sq .. " " .. s or "")
+            end
+            table.insert(searchList, {path = path, name = name, all = all, flat = unpunct(all, "", true), flatName = unpunct(name, ""),
+                series = seen[se], st = c.st and math.floor(c.st)})
         end
         table.sort(searchList, function(a, b) return a.name < b.name end)
     end
@@ -1403,18 +1426,35 @@ local function listCards(color, query)
             table.remove(words, i)
         end
     end
-    local first, rest = {}, {}
+    local tiers, one, bare, lead, leadOne = {{}, {}, {}, {}}, {}, {}, {}, {}
+    for i, word in ipairs(words) do
+        one[i] = #word > 4 and word:sub(-1) == "s" and word:sub(1, -2)    -- "5 stars", "creatures": the singular too
+        local letters = unpunct(word, "")
+        bare[i] = letters == word                              -- "moms": the card's text without punctuation too; "(os)": not
+        lead[i] = letters == "" and word or " " .. unpunct(word, " ")   -- a series word's start (" don t"); "&", "//": as typed
+        leadOne[i] = one[i] and " " .. unpunct(one[i], " ")
+    end
+    local whole = unpunct(table.concat(words), "")
     if #words > 0 or stars then
         for _, w in ipairs(searchList) do
             local ok = not stars or w.st == stars
-            for _, word in ipairs(ok and words or {}) do
-                local hit = w.all:find(word, 1, true) or #word > 4 and word:sub(-1) == "s" and w.all:find(word:sub(1, -2), 1, true)
-                if not hit then ok = false break end                 -- "5 stars", "creatures": the singular too
+            for i, word in ipairs(ok and words or {}) do
+                local hit = w.all:find(word, 1, true) or one[i] and w.all:find(one[i], 1, true)
+                    or bare[i] and w.flat:find(word, 1, true) or w.series:find(lead[i], 1, true)
+                    or leadOne[i] and w.series:find(leadOne[i], 1, true)
+                if not hit then ok = false break end
             end
-            if ok then table.insert(words[1] and w.name:find(words[1], 1, true) == 1 and first or rest, w.path) end
+            if ok then
+                local tier = 4
+                if whole ~= "" and w.flatName == whole then tier = 1
+                elseif whole ~= "" and w.flatName:find(whole, 1, true) == 1 then tier = 2
+                elseif words[1] and w.name:find(words[1], 1, true) == 1 then tier = 3 end
+                table.insert(tiers[tier], w.path)
+            end
         end
     end
-    for _, p in ipairs(rest) do table.insert(first, p) end
+    local first = tiers[1]
+    for t = 2, 4 do for _, p in ipairs(tiers[t]) do table.insert(first, p) end end
     fcFound[color] = first
     for i = 1, RESULTS do
         local path = first[i]
