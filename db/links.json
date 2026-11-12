@@ -12794,7 +12794,7 @@
   ]
  },
  "Creatures/Omori/5 Stars/Omori.psd": {
-  "blob": "bdaa4c3edd7d4b2f5e41e9e00e7959d1671aa725",
+  "blob": "a9e81afc94f577e6619f43fd6a4c02b33faacdae",
   "links": [
    {
     "drawn": null,
@@ -12825,18 +12825,6 @@
     "name": "Omori star.png",
     "path": "Types/Stars/Omori star.png",
     "size": 114793
-   },
-   {
-    "drawn": null,
-    "name": "omori - red_hand.png",
-    "path": "MDW/Linked/omori - red_hand.png",
-    "size": 6677
-   },
-   {
-    "drawn": null,
-    "name": "omori - red_hand.png",
-    "path": "MDW/Linked/omori - red_hand.png",
-    "size": 6677
    }
   ]
  },
