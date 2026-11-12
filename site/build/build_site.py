@@ -168,7 +168,7 @@ CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (globa
 CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
 RATINGS_PATH = "site/Card Ratings.json"         # dated whole-number 1-10 ratings (AutoCroissant tts_ratings; card_edits.CardRatings); data only, the site shows none
 RATING_SCALES = ("favorability", "power")
-RATING_SOURCES = ("TTS session", "website")
+RATING_SOURCES = ("TTS session",)
 BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (the 2026-10-22 migration's)
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
@@ -2110,7 +2110,7 @@ def valid_rating(e):
 
 
 def rating_order(entries):
-    """Oldest first: date, source (TTS sessions first), by, scale (card_edits.CardRatings.order)."""
+    """Oldest first: date, source, by, scale (card_edits.CardRatings.order)."""
     return sorted(entries, key=lambda e: (e["date"], RATING_SOURCES.index(e["source"]), e["by"].lower(), RATING_SCALES.index(e["scale"])))
 
 
@@ -2159,16 +2159,8 @@ def rating_now(entries, scale, skip=None):
     return {"value": rating_number(sum(values) / len(values)), "raters": len(latest), "date": max(e["date"] for e in latest.values())}
 
 
-def rater_shown(e, people, by_login, row_of=None):
-    """A Card Ratings.json entry as cards.json carries it: a login credited by another name keeps it as login. row_of:
-    login_rows()', else credit()."""
-    shown = e["by"] if e["by"] == "group" else (row_of or (lambda k: credit(k, people, by_login)))(e["by"]) or e["by"]
-    return {**e, "by": shown, "login": e["by"]} if shown != e["by"] else {**e}
-
-
-def apply_ratings(cards, ratings, archived, people, by_login, row_of=None):
-    """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source, login?}], oldest first; by stays
-    "group", a login becomes its row (row_of: login_rows(), else credit()), then kept as login. A duplicate's
+def apply_ratings(cards, ratings, archived):
+    """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source}], oldest first. A duplicate's
     go to its original. A name matching an archived row goes to the card it was renamed to (renamedId), else onto the
     row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
     live, by_id = {}, {e["id"]: e for e in cards}
@@ -2185,7 +2177,7 @@ def apply_ratings(cards, ratings, archived, people, by_login, row_of=None):
         if target is None:
             counts["unmatched"].append(name)
             continue
-        target.setdefault("ratings", []).extend(rater_shown(e, people, by_login, row_of) for e in entries)
+        target.setdefault("ratings", []).extend({**e} for e in entries)
         got[id(target)] = target
         counts["entries"] += len(entries)
     for target in got.values():
@@ -3279,7 +3271,6 @@ def redirect_page(target, site_url=""):
 TITLES = (("cards", "Top card maker"), ("edits", "Top editor"), ("commits", "Top committer"))   # top count per column; ties share; same list in profile.js
 OVERALL = "Top contributor"                   # the top total of the three columns; profile.js OVERALL
 RECENT_COMMITS = 10
-MIN_RATERS = 5                                # P7/P8: the fewest cards a correlation is kept for (P5: 3 of their own)
 RECENT_BAL = 5                                # P1: the newest buffs and nerfs kept per person
 PAGE_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$")       # a name that can be a u/<key>/ folder
 
@@ -3466,37 +3457,12 @@ def change_by(at_ts, card, row):
     return got[0][0] if len(got) == 1 else []
 
 
-def pearson(xs, ys):
-    """Their correlation (2 dp), or None under MIN_RATERS pairs or with no spread."""
-    n = len(xs)
-    if n < MIN_RATERS:
-        return None
-    mx, my = sum(xs) / n, sum(ys) / n
-    sx, sy = sum((x - mx) ** 2 for x in xs) ** 0.5, sum((y - my) ** 2 for y in ys) ** 0.5
-    return round(sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / (sx * sy), 2) if sx and sy else None
-
-
-def signed1(v):
-    """rating_number() for a difference: one decimal, either sign."""
-    return -rating_number(-v) if v < 0 else rating_number(v)
-
-
-def latest_of(entries, scale):
-    """{by: value}: each rater's latest entry of scale (oldest first, a later one replaces)."""
-    out = {}
-    for e in entries or ():
-        if e.get("scale") == scale:
-            out[e["by"]] = e["value"]
-    return out
-
-
 def person_extras(rows, cards, commits, people, by_login, balance, revisions, archived, fields_by, row_of):
     """Adds to each contributions row (key K; own cards: credited to K, not duplicates, not hidden) what it has of:
     power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, madeBuff, madeNerf, swing? [id, delta, ts],
     recent [[id, buff|nerf, delta, ts]]}; revisions (P3, P12, P13) {self, others, top, theirs, most?, untouched, oldest?};
-    rework (P11) {n, of, most?}; ratings (P4) {fav?, favN, power?, powerN, best, worst}; selfBias (P5), rater (P7),
-    powerVsStats (P8): per-person ratings only (ratings data: the site shows none since 2026-11-11); editFields (P21) [[field, n]];
-    archived (P17). NOTES.md §8."""
+    rework (P11) {n, of, most?}; ratings (P4) {fav?, favN, power?, powerN, best, worst} (the site shows none since
+    2026-11-11); editFields (P21) [[field, n]]; archived (P17). NOTES.md §8."""
     A = balance.get("cards", {})
     vis = [c for c in cards if c.get("author") and not c.get("dup") and not c.get("hidden")]
     own = defaultdict(list)
@@ -3515,11 +3481,6 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
         for k, n in (revisions or {}).get(c["id"], {}).items():
             if k != c["author"]:
                 theirs[k][c["author"]] += n
-    fav = {c["id"]: latest_of(c.get("ratings"), "favorability") for c in vis}
-    pw = {c["id"]: latest_of(c.get("ratings"), "power") for c in vis}
-    fav_raters = {by for m in fav.values() for by in m if by != "group"}
-    raters = fav_raters | {by for m in pw.values() for by in m if by != "group"}   # either scale: P5, P8
-    web = Counter(e["by"] for c in [*cards, *archived] for e in c.get("ratings") or () if e.get("source") == "website")
     top = lambda counts: [[k, n] for k, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0].lower()))[:3]]
     for r in rows:
         K, mine = r["key"], own.get(r["key"], [])
@@ -3579,36 +3540,7 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
                 rat["best"] = [list(x) for x in order[:k]]
                 rat["worst"] = [list(x) for x in order[k:][::-1][:3] if x[1] < order[k - 1][1]]
             r["ratings"] = rat
-        if K in raters:
-            bias = {}
-            for scale, short, count, latest in (("favorability", "fav", "n", fav), ("power", "power", "powerN", pw)):
-                d = [latest[c["id"]][K] - v["value"] for c in mine if K in latest[c["id"]] for v in [others(c, scale)] if v]
-                if len(d) >= 3:
-                    bias[short], bias[count] = signed1(sum(d) / len(d)), len(d)
-            if bias:
-                r["selfBias"] = bias
-            pairs = [(fav[c["id"]][K], v["value"]) for c in vis if K in fav[c["id"]] for v in [others(c, "favorability")] if v]
-            if len(pairs) >= MIN_RATERS:
-                rater = {"n": len(pairs), "harsh": signed1(sum(a - b for a, b in pairs) / len(pairs))}
-                agree = pearson([a for a, _ in pairs], [b for _, b in pairs])
-                if agree is not None:
-                    rater["agree"] = agree
-                twin = None
-                for other in sorted(fav_raters - {K}, key=str.lower):
-                    shared = [(m[K], m[other]) for m in fav.values() if K in m and other in m]
-                    rr = pearson([a for a, _ in shared], [b for _, b in shared])
-                    if rr is not None and (twin is None or rr > twin[1]):
-                        twin = [other, rr]
-                if twin:
-                    rater["twin"] = twin
-                r["rater"] = rater
-            pz = [(pw[c["id"]][K], A[c["id"]]["z_total"]) for c in vis if K in pw[c["id"]] and "z_total" in A.get(c["id"], {})]
-            rr = pearson([a for a, _ in pz], [b for _, b in pz])
-            if rr is not None:
-                r["powerVsStats"] = {"r": rr, "n": len(pz)}
         fields = Counter(fields_by.get(K, {}))
-        if web[K]:
-            fields["rating"] += web[K]
         if fields:
             r["editFields"] = [[f, n] for f, n in sorted(fields.items(), key=lambda kv: (-kv[1], kv[0]))]
         gone = [{k: a[k] for k in ARCHIVED_PERSON if k in a} for a in archived if a.get("author") == K]
@@ -4935,7 +4867,7 @@ def main():
     by_login = {p["login"].lower(): p for p in profiles}
     name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
     row_of = login_rows(commits, people, by_login)   # a login's row, as contributions keys it
-    rated = apply_ratings(cards, parse_ratings(), archived, people, by_login, row_of)
+    rated = apply_ratings(cards, parse_ratings(), archived)
     line = f"ratings: {rated['entries']} entries on {rated['cards']} cards ({rated['archived']} archived)"
     if rated["unmatched"]:
         warn(f"{line}, {len(rated['unmatched'])} names match no card: {', '.join(rated['unmatched'][:10])}")

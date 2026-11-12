@@ -18,8 +18,8 @@
 #      comes before the conversion, so Card sync's wait does not hold for it. No comment, no Discord.
 # The guards' report (1-3), one per push: the job summary and a comment on the commit. The PNGs and the fixes land
 # right after the check (owner, 2026-11-03; a 30-minute quiet window before): a PNG the author pushed meanwhile withdraws
-# its refusal, a card pushed again is left to that push's run, a write that did not land is told (in report mode, the PNG
-# the bot would make). It never reverts or rejects a push.
+# its refusal, a card pushed again is left to that push's run, a write that did not land is told. It never reverts or
+# rejects a push.
 # ONE Discord post per push to the standards channel (owner 2026-11-11; the tell job, AutoCroissant standards_post.py):
 # the guards' lines and the two checks' notes, "<login> pushed <card>: <notes>. [<sha8>](<commit>)" a line per card,
 # only what the push made new on a card (old notes stay in the comments and job summaries), a note two checks tell
@@ -38,8 +38,8 @@
 # them, so Card sync and the post wait for neither (2026-11-07); a dispatch runs them in `check`. `tell` posts once all
 # three are done; `finish` turns the run red where it should be and tells a broken push.
 #
-# Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = the guards skipped, the two checks still
-# run; report = check, comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry
+# Switches: the repo variable CARD_GUARDS (Settings > Variables; on = check, land, comment and post; unset, off or any
+# other value = the guards skipped, the two checks still run; any letter case). A dispatch defaults to a dry
 # run (job summary and artifacts only); CARD_GUARDS does not bind it, and one that lands refuses while a push run of its
 # commit is still unfinished.
 name: Card guards
@@ -96,7 +96,7 @@ jobs:
     env:
       # the comment's mark that this push's one Discord post went out (a re-run checks it; the tell job sets it)
       TOLD: "<!-- card-guards: told on Discord -->"
-      # off | report | on for a push; dry | on for a dispatch (an `all` dispatch never posts or commits); Start lowercases it
+      # off | on for a push; dry | on for a dispatch (an `all` dispatch never posts or commits); Start lowercases it
       MODE: ${{ github.event_name == 'push' && (vars.CARD_GUARDS || 'off') || ((inputs.dry_run || inputs.all) && 'dry' || 'on') }}
       # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
       # environment), and the packages they install. AutoCroissant tests/test_card_guards.py runs --help on exactly this
@@ -147,12 +147,14 @@ jobs:
       saved: ${{ steps.setup.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
     steps:
       # OUT is set here: a job's env may not read the runner context. MODE lowercased: the job's `if` takes "On", the
-      # shell does not. STARTED: the failure alert tells a cancel by hand from a job's timeout. The post job reads them.
+      # shell does not; a push's MODE other than on becomes off. STARTED: the failure alert tells a cancel by hand from a
+      # job's timeout. The post job reads them.
       - name: Start
         id: start
         shell: bash
         run: |
           mode=$(printf %s "$MODE" | tr '[:upper:]' '[:lower:]')
+          [ "$GITHUB_EVENT_NAME" != push ] || [ "$mode" = on ] || mode=off
           {
             echo "OUT=$RUNNER_TEMP/guards"
             echo "MODE=$mode"
@@ -546,7 +548,7 @@ jobs:
           ALL: ${{ inputs.all }}
         run: |
           n=$(jq '.normalise // 0' "$OUT/summary.json")
-          if [ "$ALL" = true ] || { [ "$MODE" != on ] && [ "$MODE" != dry ]; }; then n=0; fi
+          if [ "$ALL" = true ]; then n=0; fi
           echo "normalise=$n" >> "$GITHUB_OUTPUT"
           jq -e --arg mode "$MODE" --argjson n "$n" '.told + (if $mode == "on" then .writes + $n else 0 end) > 0' \
             "$OUT/summary.json" > /dev/null && echo "land=true" >> "$GITHUB_OUTPUT"
@@ -654,15 +656,14 @@ jobs:
 
       # At once (CARD_GUARDS=on): leave out every write whose blobs moved and commit the rest once (git_commit: the API
       # with GITHUB_TOKEN, retried on a moved head), and settle the guards' lines of the post (landed.json's told; the
-      # tell job's) and the comment's new body (report-landed.md). Report mode: --dry-run (its writes are told as lines,
-      # never made). Exit 1: the commit failed (both files are written first: land never raises). A dispatch with
-      # dry_run off lands the same way (No push run in its window refused it while a push run of its commit was
-      # unfinished). --rerun (a re-run, a dispatch): an earlier run may have landed the writes, so a branch that cannot
-      # be read tells none of them as not made. Only with something to land or tell (Plan's land, report or on), as the
-      # post job.
+      # tell job's) and the comment's new body (report-landed.md). Exit 1: the commit failed (both files are written
+      # first: land never raises). A dispatch with dry_run off lands the same way (No push run in its window refused it
+      # while a push run of its commit was unfinished). --rerun (a re-run, a dispatch): an earlier run may have landed the
+      # writes, so a branch that cannot be read tells none of them as not made. Only with something to land or tell
+      # (Plan's land) and MODE on, as the post job.
       - name: Land
         id: land
-        if: ${{ !cancelled() && steps.plan.outputs.land == 'true' && (env.MODE == 'report' || env.MODE == 'on') }}
+        if: ${{ !cancelled() && steps.plan.outputs.land == 'true' && env.MODE == 'on' }}
         timeout-minutes: 20
         working-directory: bot
         shell: bash
@@ -676,7 +677,6 @@ jobs:
           [ ! -s "$h.pid" ] || while [ ! -e "$h.done" ] && kill -0 "$(cat "$h.pid")" 2> /dev/null; do sleep 0.05; done
           cat "$h.log" 2> /dev/null || true
           args=(--plan "$OUT/plan.json" --repo "$GITHUB_REPOSITORY")
-          [ "$MODE" = report ] && args+=(--dry-run)
           if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] || [ "$EVENT" != push ]; then args+=(--rerun); fi
           status=0
           python -m commands.card_guards land "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
@@ -723,7 +723,7 @@ jobs:
       # job rewrites this comment with what Land settled); a failed call fails the run.
       - name: Comment on the commit
         id: comment
-        if: ${{ !cancelled() && steps.check.outcome == 'success' && (env.MODE == 'report' || env.MODE == 'on') }}
+        if: ${{ !cancelled() && steps.check.outcome == 'success' && env.MODE == 'on' }}
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -779,7 +779,7 @@ jobs:
           if-no-files-found: ignore
           overwrite: true
 
-      # The written files, kept only when they did not reach main (report, dry, Land skipped or failed).
+      # The written files, kept only when they did not reach main (dry, Land skipped or failed).
       - uses: actions/upload-artifact@v7
         if: always() && env.MODE != 'off' && (env.MODE != 'on' || steps.land.outcome != 'success')
         with:
@@ -867,12 +867,12 @@ jobs:
 
   # Right after the check (owner, 2026-11-03: the 30-minute quiet window and its environment card-guards-quiet are gone):
   # Follow up (the comment with what Land settled; Card sync when Start Card sync did not). Only when the check found
-  # something to land or tell (report or on). Land is the check job's; the post is the tell job's.
+  # something to land or tell, with MODE on. Land is the check job's; the post is the tell job's.
   post:
     needs: check
     if: >-
       !cancelled() && needs.check.outputs.checked == 'success' && needs.check.outputs.land == 'true' &&
-      (needs.check.outputs.mode == 'report' || needs.check.outputs.mode == 'on')
+      needs.check.outputs.mode == 'on'
     runs-on: ubuntu-latest
     timeout-minutes: 10     # the comment and a start
     env:
@@ -1001,7 +1001,7 @@ jobs:
 
       # The guards' plan.json, report.md and what Land settled (none with CARD_GUARDS off, or a check that broke first)
       - uses: actions/download-artifact@v8
-        if: needs.check.outputs.mode == 'report' || needs.check.outputs.mode == 'on'
+        if: needs.check.outputs.mode == 'on'
         continue-on-error: true
         with:
           name: card-guards
@@ -1058,7 +1058,7 @@ jobs:
           COMMENT: ${{ needs.check.outputs.comment }}
         run: |
           checks=$RUNNER_TEMP/checks whole=true args=()
-          if [ "$MODE" = report ] || [ "$MODE" = on ]; then
+          if [ "$MODE" = on ]; then
             if [ "$CHECKED" != success ]; then
               whole=""
             elif [ "$LAND" = true ]; then

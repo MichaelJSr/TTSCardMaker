@@ -199,11 +199,10 @@ the same rule (AutoCroissant `CardDates.created`), its first upload being the ea
 same day for the cards first uploaded since 2026-02, so `/query_ability created>=…` and the search agree (770 of 770
 cards on 2026-10-23, also with the 11 newest left out of the file). It is no edit: the Changes page and the edit
 counts never see it. Bad entries are skipped with a warning, never a failed build. `Card Ratings.json` holds each
-card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": a whole number 1-10, "by": "group" | <login>, "source":
-"TTS session" | "website"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m
-commands.tts_ratings`; the website's Rate it wrote "website" entries until 2026-11-11). Only the website build reads it
-(data/editing.json `ratings`, a login shown as its credited name; the site shows none since 2026-11-11); no edit either, and the
-bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": a whole number 1-10, "by": "group", "source":
+"TTS session"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m commands.tts_ratings`).
+Only the website build reads it (data/editing.json `ratings`; the site shows none since 2026-11-11); no edit either,
+and the bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
 the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
 batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;

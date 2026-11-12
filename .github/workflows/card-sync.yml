@@ -636,10 +636,6 @@ jobs:
           main=$(git rev-parse HEAD)
           echo "main=$main" >> "$GITHUB_OUTPUT"
           builder=$(git -C bot rev-parse HEAD)
-          if [ ! -f bot/commands/card_data.py ]; then
-            echo "::error::The builder $BOT_REPO@$BUILDER_REF (${builder:0:8}) has no commands/card_data.py: dispatch with a builder_ref that has it"
-            exit 1
-          fi
           db=carddata/db
           manifest=$db/manifest.json
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' 'MDW/Linked/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
@@ -781,10 +777,6 @@ jobs:
             args+=(--verdicts "$rec/verdicts.json" --events "$rec/events.json")
             merged=true
             if [ "$(jq length "$rec/records.json" 2> /dev/null || echo 0)" -gt 0 ]; then   # db/'s render and spot records
-              if ! grep -q -- '"--records"' commands/card_data.py; then
-                echo "::error::The builder ($BUILDER_REF) predates --records: nothing is merged; dispatch with a newer builder_ref"
-                exit 1
-              fi
               args+=(--records "$rec/records.json")
             fi
           fi
@@ -1250,8 +1242,7 @@ jobs:
               "site/Card Edits.json")
           fi
           edits=$([ "$edits" -gt 0 ] && echo true || echo false)
-          linked=false                          # (h): the Linked due step reads the links
-          if [ "$go" = false ] && [ -f carddata/db/links.json ]; then linked=true; fi
+          linked=$([ "$go" = false ] && echo true || echo false)   # (h): the Linked due step reads the links
           { echo "go=$go"; echo "edits=$edits"; } >> "$GITHUB_OUTPUT"
           { echo "GO=$go"; echo "EDITS=$edits"; echo "LINKED=$linked"; } >> "$GITHUB_ENV"
           {
@@ -1362,7 +1353,6 @@ jobs:
           GIT_NO_LAZY_FETCH: "1"
           MAIN: ${{ steps.gate.outputs.main }}
         run: |
-          [ -f commands/psd_links.py ] || { echo "The builder has no psd_links: nothing to redraw."; exit 0; }
           if ! n=$("$RUNNER_TEMP/venv/bin/python" -m commands.psd_links due --head "$MAIN" \
               --clone "$GITHUB_WORKSPACE" --db "$GITHUB_WORKSPACE/carddata/db"); then
             echo "::warning::the linked pictures due were not read: the next run looks again"
@@ -1575,9 +1565,7 @@ jobs:
           SAVED: ${{ steps.save.outputs.changed }}
           PAGES: ${{ steps.pages.outputs.changed }}
         run: |
-          [ -f commands/psd_links.py ] || { echo "The builder has no psd_links: nothing to redraw."; exit 0; }
           ws=$GITHUB_WORKSPACE
-          [ -f "$ws/carddata/db/links.json" ] || { echo "No db/links.json on data yet: nothing to redraw."; exit 0; }
           left=$((START + 55 * 60 - $(date +%s)))   # killed by minute 55: Commit main still pushes M before minute 60
           [ "$left" -ge 60 ] || { echo "Minute 54 of the lane passed: no redraw this run."; exit 0; }
           head=$(git -C "$ws" rev-parse HEAD)

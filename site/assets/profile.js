@@ -194,7 +194,7 @@ export function contributionsHtml(p, x) {
     titleChips(p.key, x.titles),
     ...(x.people.length > 1 ? ranksOf(p, x.people, wordiness(x.cards)) : []).map(([label, rank, of]) => `<span class="fact" data-tip="${esc(RANK_TIP[label]?.(of) || `Among ${of} people`)}">#${rank} of ${of} by ${label}</span>`),
   ].join("");
-  const fields = (p.editFields || []).filter(([f]) => f !== "rating").slice(0, 6).map(([f, n]) => `${esc(fieldName(f))} ${n}`).join(" · ");   // ratings: off the site (owner 11-11)
+  const fields = (p.editFields || []).slice(0, 6).map(([f, n]) => `${esc(fieldName(f))} ${n}`).join(" · ");
   return `<div class="facts">${facts}</div>${fields ? `<p class="muted p-edited">${noted("Edited", "Fields they edited, once per card per batch")}: ${fields}</p>` : ""}
     ${x.available ? "" : `<p class="muted">Commits aren't in this build; edits are counted from Card Edits.json, which keeps one batch per card.</p>`}
     ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(editorFields(c).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
@@ -276,7 +276,7 @@ export function decksPanelHtml(x) {
 }
 
 // ---- person stats: pure helpers (P6 P10 P14 P15 P16 P18) from the cards in memory; the build's keys (contributions.json
-// people[]: power, bal, revisions, rework, editFields, archived) in panels; ratings, selfBias, rater, powerVsStats unshown. NOTES.md §8.
+// people[]: power, bal, revisions, rework, editFields, archived) in panels; ratings unshown. NOTES.md §8.
 export const STYLE_MIN = 3, STYLE_RATIO = 1.5, STYLE_TOP = 3;
 const memo = new WeakMap();                                                 // per cards array: route() renders twice
 const memoOf = (all, key, make) => { let m = memo.get(all); if (!m) memo.set(all, (m = new Map())); if (!m.has(key)) m.set(key, make()); return m.get(key); };

@@ -122,13 +122,12 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   swing"; `madeBuff`/`madeNerf` = rows on others' cards made by them; present with `power` so the page shows `No buffs
   or nerfs recorded yet.`), `revisions` (P3/P12/P13 from stats' `card_revisions` counts, `{self, others, top, theirs,
   most?, untouched, oldest?}`; absent without history), `rework` (P11: `analytics.reworked` rows), `ratings` (P4:
-  `rating_now(..., skip=K)` per own card, `best` up to half of the rated cards, `worst` the rest rated below them),
-  `selfBias`/`rater`/`powerVsStats` (P5/P7/P8: only for a person with entries of their own on either scale (P7's twins:
-  favorability raters), never "group"; correlations at `MIN_RATERS = 5` cards, P5 at 3), `editFields` (P21:
+  `rating_now(..., skip=K)` per own card, `best` up to half of the rated cards, `worst` the rest rated below them;
+  P5/P7/P8 `selfBias`/`rater`/`powerVsStats`, per-person ratings only, deleted 2026-11-12), `editFields` (P21:
   `edit_batches(..., fields_by=)` counts every changed field of every batch they are credited with, all time, before the
   `BATCH_LINES` cut, a Card Authors.txt line as `author`, not in the commit that created that file, an import of 813
-  credits; plus `rating` = their website ratings), `archived` (P17: `archived_cards` rows with their `author`, slim
-  `ARCHIVED_PERSON` fields, newest first). Top level `site: {z}` = the mean `z_total`. Who made a change row
+  credits; the website ratings' `rating` count deleted 2026-11-12), `archived` (P17: `archived_cards` rows with their
+  `author`, slim `ARCHIVED_PERSON` fields, newest first). Top level `site: {z}` = the mean `z_total`. Who made a change row
   (`change_by`): the commit that added or changed a PSD at its second (`psd_commits_at`, credited by `commit_keys`);
   with two, the one with the card's PSD file name; else nobody. main() calls `edit_batches` once for all time and keeps
   the last `CHANGELOG_DAYS` for edits.json. contributions.json: 9 KB -> 24 KB (rehearsal data). Client (profile.js,
@@ -882,11 +881,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   value's `tierOf` isn't the category the save shows (1148 of 1148 agree). 1148 entries, 399 names (Cho'Gath and Ech:
   archived, kept under their names).
 - Build (`parse_ratings`, `apply_ratings` after `read_profiles`, before `contributions`): cards.json `ratings` on the
-  card whose `key` matches, a login shown as its row's name (`login_rows()`, as contributions keys it; then kept as
-  `login`, `rater_shown`); a duplicate's go to its original (All Purpose Medical Kit2's two TS_Save_3 entries); a name
-  matching an archived row goes to its `renamedId` card, else onto the row (archive.json `archived[].ratings`); others
-  warn "names match no card" (Cho'Gath and Ech until the history backfill tags them archived). `files.ratings`. Python
-  twin of ratings.js: `rating_now(entries, scale, skip)` -> `{value, raters, date}` | None.
+  card whose `key` matches (a login's row name, `login` and `rater_shown`: deleted 2026-11-12); a duplicate's go to its
+  original (All Purpose Medical Kit2's two TS_Save_3 entries); a name matching an archived row goes to its `renamedId`
+  card, else onto the row (archive.json `archived[].ratings`); others warn "names match no card" (Cho'Gath and Ech until
+  the history backfill tags them archived). `files.ratings`. Python twin of ratings.js: `rating_now(entries, scale,
+  skip)` -> `{value, raters, date}` | None.
 - `assets/ratings.js` (pure): `SCALES`, `TIERS` (display labels), `tierOf` (edges 2.5/4.5/6.5/8.5), `latestBy(list,
   scale, {day, skip})`, `current(list, scale, {day, skip})` (mean of each rater's latest; "group" is one rater),
   `ratingDates`, `hasPersonal(cards, scale?)`, `dayLabel`, `chartSvg`, `blockHtml`. The card page's Ratings block
@@ -1615,7 +1614,8 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   `ratingsFile`/`RATINGS_ABOUT`/`stageRating`/`op.rate`, the `rate-*` draft keys, the `.rate-*`/`.ratings`/`.p-picks`
   CSS. Kept as they were: `site/Card Ratings.json`, AutoCroissant `tts_ratings` and `card_edits.CardRatings`, build_site
   `parse_ratings`/`apply_ratings`/`rating_now`, cards.json `ratings`, `files.ratings`, the renames' follower. Shown by
-  nothing now, kept: contributions.json people's `ratings`, `selfBias`, `rater`, `powerVsStats` and editFields' `rating`.
+  nothing now, kept: contributions.json people's `ratings` (`selfBias`, `rater`, `powerVsStats`, editFields' `rating`
+  and the "website" source deleted 2026-11-12).
 - **Balance** (`#card-balance`): after the strips and Decks using this card, just above Recorded changes (`#card-changes`),
   then History and Details; one column the same (DOM order, no CSS order).
 - **Each flag's issue** (Needs handling list only; flags.js `flagIssue`, `flagsHtml`; first "Needs doing by hand" alone,

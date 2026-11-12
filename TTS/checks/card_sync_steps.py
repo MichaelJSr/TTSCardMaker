@@ -1571,7 +1571,7 @@ def lane_cases(flow: dict) -> None:
             st("Plan for the post job", "success"), st("Fixes to land", "success" if fixes else "skipped")]}
         for rid, doc in ((51, [check_job(True), {"name": "post", "status": "waiting"}]),                    # in its window
                          (52, [check_job(True), {"name": "post", "status": "in_progress", "steps": [st("Land", None)]}]),
-                         (53, [check_job(False), {"name": "post", "status": "waiting"}]),                   # report, or no writes
+                         (53, [check_job(False), {"name": "post", "status": "waiting"}]),                   # no writes
                          (54, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "success"), st("Follow up", "success")]}]),
                          (55, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "failure"), st("Follow up", "failure")]}]),
                          (56, [check_job(True), {"name": "post", "status": "completed", "conclusion": "cancelled", "steps": []}]),
@@ -1583,7 +1583,7 @@ def lane_cases(flow: dict) -> None:
         cases = [  # (SHA, guards runs, the run held by, what)
             (sha, [run(51, "in_progress")], "51", "the push's guards waiting to land fixes: skipped"),
             (sha, [run(52, "in_progress")], "52", "the push's guards landing: skipped"),
-            (sha, [run(53, "in_progress")], "", "the push's guards with nothing to land (report mode, no writes): goes"),
+            (sha, [run(53, "in_progress")], "", "the push's guards with nothing to land (no writes): goes"),
             (sha, [run(54, "completed")], "54", "the push's guards done, Follow up started Card sync: skipped"),
             (sha, [run(55, "completed")], "", "the push's guards failed to start Card sync: goes (no bake lost)"),
             (sha, [run(56, "completed")], "", "the push's guards cancelled before Follow up: goes"),
@@ -1650,7 +1650,7 @@ def lane_cases(flow: dict) -> None:
         out_dir = os.path.join(tmp, "guards")
         for event, mode, summ, want, what in (
                 ("push", "on", {"told": 0, "writes": 2}, ("true", "true"), "a push with writes (on): fixes"),
-                ("push", "report", {"told": 1, "writes": 2}, ("true", None), "report mode: told, no fixes"),
+                ("workflow_dispatch", "dry", {"told": 1, "writes": 2}, ("true", None), "a dry dispatch: told, no fixes"),
                 ("push", "on", {"told": 1, "writes": 0}, ("true", None), "told only: no fixes"),
                 ("workflow_dispatch", "on", {"told": 0, "writes": 2}, ("true", None), "a landing dispatch: no fixes (no push run waits)")):
             write(os.path.join(out_dir, "summary.json"), json.dumps({**summ, "card_errors": 0}))
