@@ -1,8 +1,8 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "b8e98435ce6d75f2ee0b687b6544afff80ba06ecc8338db085a4e069f94d61b1",
- "pre": "a20e007a1f299738e568ddb22724b6acc33332ea4143b90bb0085e6af81dfcd8",
+ "key": "f3824f9f88614fc127ea6af57d48e2395f89cb27969086f3e33a13c5dc1cd7ca",
+ "pre": "b20b0cc48dc3b08ae34023fa58c343a5246f69a4a5d26c9f2670bba09ef6ad49",
  "pages": [
   {
    "name": "Cover",
@@ -18,7 +18,7 @@
   {
    "name": "Getting Started",
    "num": "1",
-   "sha": "0849a7bca6108420f96df7b3ab7b296cfa42d712f0957744831852721446a3c4",
+   "sha": "d49a75ca88a9e08463aaa6a12e2081e3567f340afa31e59beb8f8f918e02fcac",
    "t": "GETTING STARTED WELCOME TO IMPOSSIBILITY SIM! Thank you so much for playing! We're very happy to have you with us today. This handy little book will run through the rules to get you started with our little card game. We hope you have fun! TO WIN: Defeat all of your opponent's creatures, while making sure they don't defeat all of yours! Players accomplish this by using their own CREATURES and ITEMS to attack and protect. CREATURES: This game lives and breathes by them. Defeat your opponent's while protecting your own. Above all else, make sure to follow the “Don't be stupid” rule! While reading is helpful, this card game can often seem like it gets complicated, fast. Rather than trying to memorize all of the mechanics and concepts before your first game, it is both encouraged and expected to jump straight into a test match against an experienced player. Make sure to ask questions about mechanics and interactions that are unclear. This game is still in beta and is always being tested, so your feedback is highly appreciated! 1"
   },
   {
