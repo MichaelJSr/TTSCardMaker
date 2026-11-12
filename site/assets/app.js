@@ -1046,7 +1046,7 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
   if (!S.analytics) return part === "balance" ? `<h3>Balance</h3><p class="muted">Loading…</p>` : "";
   const o = balanceOf(c);
   const texts = o.hv && !o.history ? null : (o.history || []).map(v => v.ability).concat(o.ability || "");
-  return (part === "balance" ? St.balance.balanceBlock : St.balance.changesBlock)(c, S.analytics, { byId: S.byId, texts, repo: S.data.repo, pathAt: (ref, ts) => pngAt(o, ref, ts) });
+  return (part === "balance" ? St.balance.balanceBlock : St.balance.changesBlock)(c, S.analytics, { texts, repo: S.data.repo, pathAt: (ref, ts) => pngAt(o, ref, ts) });
 }
 function closeModal() {
   if (modal.hidden) return;
@@ -1633,7 +1633,7 @@ let rbEditP = null;
 function openBookEditor(id, line = null) {
   if (!editing()) { act("edit-hub"); return; }
   withEditor(ed => (rbEditP ||= (early("rulebook-edit.js"), import("./rulebook-edit.js")).catch(e => { rbEditP = null; throw e; })).then(m => m.open({
-    id, line, RB, book: S.book, ctx: bookCtx, editor: ed, repo: S.data.repo, branch: S.data.branch, modal, toast, closeModal,
+    id, line, RB, book: S.book, ctx: bookCtx, editor: ed, branch: S.data.branch, modal, toast, closeModal,
     cards: () => S.all.filter(c => !c.hidden).map(c => c.name),
     published: sent => { localStorage.setItem(RB_SENT, JSON.stringify(sent)); bookChapters(); rerender(); },
   })).catch(e => toast(`Couldn't open the rulebook editor (${e.message})`)));

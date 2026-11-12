@@ -218,7 +218,7 @@ export const slugify = s => String(s || "").toLowerCase().normalize("NFKD").repl
 // ctx: {render(text) -> html (the site's renderer: icons, badges, card names), card(name) -> card or null,
 // cardImg(card) -> url, imgUrl(file) -> url, size(file) -> [w, h] or null, shape(file) -> a transparent picture's outline
 // (polygon points in %, build_site picture_outline) or null, id: the chapter's id (section anchors)}
-const COLOURS = new Set(["red", "green", "blue", "yellow", "orange", "purple", "grey", "white", "hp", "def", "atk", "spd", "u", "big", "small", "caps", "nowrap", "secret"]);
+const COLOURS = new Set(["red", "green", "blue", "yellow", "orange", "purple", "grey", "white", "u", "big", "small", "caps", "nowrap", "secret"]);
 const clsOf = (attrs, keep = null) => (attrs?.cls || []).filter(c => /^[\w-]+$/.test(c) && (!keep || keep.has(c))).map(c => `rb-${c}`).join(" ");
 const safeUrl = u => (/^(https?:|#|mailto:)/i.test(u) ? u : "#");
 
@@ -339,7 +339,7 @@ function fenceHtml(b, ctx) {
     case "panel": return b.arg ? blockHtml({ t: "section", title: b.arg, attrs: b.attrs, children: b.children }, ctx) : `<div class="rb-solo-wrap"><div class="rb-panel rb-solo${holds(b.children, ctx) ? " rb-holds" : ""} ${cls}"${hangOf(b.children) ? ` style="${hangOf(b.children)}"` : ""}>${inner}</div></div>`;
     case "box": return `<div class="rb-box ${cls}">${inner}</div>`;
     case "contents": return `<ol class="rb-contents ${cls}">${(ctx.chapters || []).filter(c => Number(c.num) > 0).map(c => `<li value="${Number(c.num)}"><a href="#/rules/${esc(c.id)}" data-scroll="${esc(c.id)}">${esc(c.title)}</a></li>`).join("")}</ol>${inner}`;
-    case "small": case "center": case "note": return `<div class="rb-${b.kind} ${cls}">${inner}</div>`;
+    case "small": case "center": return `<div class="rb-${b.kind} ${cls}">${inner}</div>`;
     default: return `<div class="rb-${b.kind.replace(/[^\w-]/g, "")} ${cls}">${inner}</div>`;
   }
 }
@@ -479,7 +479,7 @@ function sheetEl(title, num = "") {
   t.innerHTML = `<div class="rb rb-sheet"><div class="rb-page"><header class="rb-head"><h2>${title}</h2></header><div class="rb-body"></div>${num ? `<span class="rb-pnum">${esc(num)}</span>` : ""}</div></div>`;
   return t.content.firstElementChild;
 }
-const kidsOf = b => (b.t === "section" || b.t === "fence" && ["panel", "box", "small", "center", "note"].includes(b.kind) ? b.children : b.t === "list" ? b.items : b.t === "table" ? b.rows : null);
+const kidsOf = b => (b.t === "section" || b.t === "fence" && ["panel", "box", "small", "center"].includes(b.kind) ? b.children : b.t === "list" ? b.items : b.t === "table" ? b.rows : null);
 function withKids(b, kids, cont = false, off = b.off) {   // off: its first child's place in the whole block
   if (b.t === "list") return { ...b, items: kids, cont: cont || b.cont, off };
   if (b.t === "table") return { ...b, rows: kids, cont: cont || b.cont, off };

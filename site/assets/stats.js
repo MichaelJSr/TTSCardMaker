@@ -37,19 +37,19 @@ function roundedTop(x, y, w, h, r = 4) {
 }
 function niceMax(v) { if (v <= 0) return 1; const p = 10 ** Math.floor(Math.log10(v)); return Math.ceil(v / p) * p; }
 
-/** Horizontal bars. rows: [{label, value, html?, card?, href?, sub?, tip?}]; sub: a subseries row under its series (thinner, lighter) */
-function hbar(rows, { labelWidth = 150, unit = "cards", color = "var(--s1)", chars = 24 } = {}) {
+/** Horizontal bars. rows: [{label, value, html?, card?, href?, tip?}] */
+function hbar(rows, { labelWidth = 150, unit = "cards", chars = 24 } = {}) {
   const rowH = 26, W = 560, plotW = W - labelWidth - 48;
   const max = Math.max(1, ...rows.map(r => r.value));
   const H = rows.length * rowH + 4;
   const parts = rows.map((r, i) => {
-    const y = i * rowH, w = (r.value / max) * plotW, bar = r.sub ? 9 : 14;
+    const y = i * rowH, w = (r.value / max) * plotW, bar = 14;
     const label = r.html
       ? `<foreignObject x="0" y="${y}" width="${labelWidth - 8}" height="${rowH}"><div xmlns="http://www.w3.org/1999/xhtml" class="svg-label">${r.html}</div></foreignObject>`
-      : `<text class="lbl${r.sub ? " sub" : ""}" x="${labelWidth - 8}" y="${y + rowH / 2 + 4}" text-anchor="end">${esc(trunc(r.label, chars))}</text>`;
+      : `<text class="lbl" x="${labelWidth - 8}" y="${y + rowH / 2 + 4}" text-anchor="end">${esc(trunc(r.label, chars))}</text>`;
     return go(r.href, r.tip || r.label, `<g class="row" data-v="${esc(fmt(r.value))} ${esc(unit)}" data-l="${esc(r.tip || r.label)}"${r.card && !r.href ? ` data-card="${esc(r.card)}"` : ""}>
       <rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>${label}
-      <path class="mark${r.sub ? " sub" : ""}" d="${roundedRight(labelWidth, y + (rowH - bar) / 2, w, bar)}" fill="${color}"/>
+      <path class="mark" d="${roundedRight(labelWidth, y + (rowH - bar) / 2, w, bar)}" fill="var(--s1)"/>
       <text class="val" x="${labelWidth + w + 6}" y="${y + rowH / 2 + 4}">${esc(fmt(r.value))}</text></g>`);
   });
   return `<svg viewBox="0 0 ${W} ${H}"${svgRole(rows.some(r => r.href))}><line class="axis" x1="${labelWidth}" x2="${labelWidth}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
@@ -80,8 +80,8 @@ function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height 
 
 /** Stacked columns with a 2px surface gap between segments. cats: labels; series: [{key,label,color}]; get(cat,key);
     href(cat, key?): a segment's (key) or a column's cards, or null */
-function stacked(cats, series, get, { height = 230, unit = "cards", width = 1000, every = 1, href = () => null } = {}) {
-  const W = width, padL = 36, padB = 26, plotH = height - padB, gap = 2;
+function stacked(cats, series, get, { unit = "cards", width = 1000, every = 1, href = () => null } = {}) {
+  const height = 230, W = width, padL = 36, padB = 26, plotH = height - padB, gap = 2;
   const totals = cats.map(c => series.reduce((s, sr) => s + get(c, sr.key), 0));
   const max = niceMax(Math.max(1, ...totals));
   const band = (W - padL) / cats.length, bw = Math.min(24, band * 0.6);
@@ -107,18 +107,18 @@ function stacked(cats, series, get, { height = 230, unit = "cards", width = 1000
   return `<svg viewBox="0 0 ${W} ${height}"${svgRole(cats.some(c => href(c) || series.some(sr => href(c, sr.key))))}>${ticks}<line class="axis" x1="${padL}" x2="${W}" y1="${plotH}" y2="${plotH}"/>${parts.join("")}</svg>`;
 }
 
-/** Scatter with emphasis: [{x, jx, y, label, card, hot, v?}] — hot points in the accent, the rest de-emphasised; v: the
-    tip's value (default "<y> total"). Domains and ticks default to the star-level chart's. */
-function scatter(points, { xLabel, yLabel, xTicks, height = 300, xTickLabel = t => `${t}★`, x0, x1, y0 = 0, y1, yTicks }) {
-  const W = 1000, padL = 44, padB = 34, plotH = height - padB;
+/** Scatter with emphasis: [{x, jx, y, label, card, hot}] — hot points in the accent, the rest de-emphasised. Domains and
+    ticks: the star-level chart's. */
+function scatter(points, { xLabel, yLabel, xTicks }) {
+  const W = 1000, height = 300, padL = 44, padB = 34, plotH = height - padB;
   const xs = points.map(p => p.x), ys = points.map(p => p.y);
-  x0 ??= Math.min(...xs) - 0.6; x1 ??= Math.max(...xs) + 0.6; y1 ??= niceMax(Math.max(...ys));
-  yTicks ??= [y0, y1 / 4, y1 / 2, (3 * y1) / 4, y1];
+  const x0 = Math.min(...xs) - 0.6, x1 = Math.max(...xs) + 0.6, y0 = 0, y1 = niceMax(Math.max(...ys));
+  const yTicks = [y0, y1 / 4, y1 / 2, (3 * y1) / 4, y1];
   const X = v => padL + ((v - x0) / (x1 - x0)) * (W - padL - 10), Y = v => plotH - ((v - y0) / (y1 - y0)) * plotH;
   const grid = yTicks.map(t => `<line class="gridline" x1="${padL}" x2="${W}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${padL - 6}" y="${Y(t) + 4}" text-anchor="end">${fmt(t)}</text>`).join("");
-  const xt = xTicks.map(t => `<text x="${X(t)}" y="${height - 14}" text-anchor="middle">${esc(xTickLabel(t))}</text>`).join("");
+  const xt = xTicks.map(t => `<text x="${X(t)}" y="${height - 14}" text-anchor="middle">${esc(`${t}★`)}</text>`).join("");
   const sorted = [...points].sort((a, b) => (a.hot ? 1 : 0) - (b.hot ? 1 : 0));
-  const dots = sorted.map(p => `<g class="dot" data-card="${esc(p.card)}" data-v="${esc(p.v ?? `${p.y} total`)}" data-l="${esc(p.label)}">
+  const dots = sorted.map(p => `<g class="dot" data-card="${esc(p.card)}" data-v="${esc(`${p.y} total`)}" data-l="${esc(p.label)}">
     <circle class="hit" cx="${X(p.jx)}" cy="${Y(p.y)}" r="12"/>
     <circle class="mark" cx="${X(p.jx)}" cy="${Y(p.y)}" r="${p.hot ? 5 : 4}" fill="${p.hot ? "var(--s1)" : "var(--deemph)"}" stroke="var(--surface)" stroke-width="2"/></g>`).join("");
   const placed = [];                          // selective labels: skip any that would collide with one already placed
@@ -134,7 +134,7 @@ function scatter(points, { xLabel, yLabel, xTicks, height = 300, xTickLabel = t 
 
 function table(head, rows, numericFrom = 1) {
   return `<div class="table-wrap"><table class="data"><thead><tr>${head.map((h, i) => `<th class="${i >= numericFrom ? "num" : ""}">${headHtml(h)}</th>`).join("")}</tr></thead>
-    <tbody>${rows.map(r => `<tr${r.sub ? ' class="sub"' : ""}>${r.map((v, i) => `<td class="${i >= numericFrom ? "num" : ""}">${typeof v === "number" ? esc(fmt(v)) : esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    <tbody>${rows.map(r => `<tr>${r.map((v, i) => `<td class="${i >= numericFrom ? "num" : ""}">${typeof v === "number" ? esc(fmt(v)) : esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
 // ---- heat-table colors: the --seq-100 -> --seq-700 ramp mixed in OKLab, with text that always passes WCAG AA ------
@@ -174,28 +174,27 @@ function heatScale() {
 }
 
 /** A heat table: head [text | {html} | {label | html, tip}], rows of cells (a number shaded, null "—", text as is); shade: the columns shaded
-    (default every one from numericFrom), each on its own range, or all on one (all); href(row, col): a cell's cards */
-function heatTable(head, rows, { numericFrom = 1, shade = null, all = false, href = () => null } = {}) {
-  const cols = shade || head.map((_, i) => i).filter(i => i >= numericFrom), heat = heatScale();
+    (default every one but the first), each on its own range, or all on one (all); href(row, col): a cell's cards */
+function heatTable(head, rows, { shade = null, all = false, href = () => null } = {}) {
+  const cols = shade || head.map((_, i) => i).filter(i => i >= 1), heat = heatScale();
   const range = is => { const v = is.flatMap(i => rows.map(r => r[i])).filter(x => typeof x === "number"); return [Math.min(...v), Math.max(...v)]; };
   const ranges = new Map(cols.map(i => [i, all ? null : range([i])])), one = all ? range(cols) : null;
   const cell = (v, i, k) => {
     const rg = typeof v === "number" && ranges.has(i) ? one || ranges.get(i) : null;
     const st = rg ? (({ bg, ink }) => ` style="background:${bg};color:${ink}"`)(heat(rg[1] > rg[0] ? Math.round(((v - rg[0]) / (rg[1] - rg[0])) * 100) : 50)) : "";
     const text = v == null ? "—" : esc(typeof v === "number" ? fmt(v) : v), to = v == null || v === "" ? null : href(k, i);
-    return `<td${i >= numericFrom ? ' class="num"' : ""}${st}>${to ? `<a class="go" href="${esc(to)}" data-tip="Show these cards">${text}</a>` : text}</td>`;
+    return `<td${i >= 1 ? ' class="num"' : ""}${st}>${to ? `<a class="go" href="${esc(to)}" data-tip="Show these cards">${text}</a>` : text}</td>`;
   };
-  return `<div class="table-wrap"><table class="data heat"><thead><tr>${head.map((h, i) => `<th${i >= numericFrom ? ' class="num"' : ""}>${headHtml(h)}</th>`).join("")}</tr></thead>
+  return `<div class="table-wrap"><table class="data heat"><thead><tr>${head.map((h, i) => `<th${i >= 1 ? ' class="num"' : ""}>${headHtml(h)}</th>`).join("")}</tr></thead>
     <tbody>${rows.map((r, k) => `<tr>${r.map((v, i) => cell(v, i, k)).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
-/** A chart card; startTable: open on its table (the Chart button shows the chart); tip: the title's note */
-function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", startTable = false, tip = "" } = {}) {
-  const t = !!(startTable && tableHtml);
+/** A chart card, open on its chart (the Table button shows the table); tip: the title's note */
+function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", tip = "" } = {}) {
   return `<section class="chart${wide ? " wide" : ""}" id="chart-${id}">
-    <header><h3>${noted(title, tip)}</h3>${tableHtml ? `<button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="${t}">${t ? "Chart" : "Table"}</button>` : ""}</header>
+    <header><h3>${noted(title, tip)}</h3>${tableHtml ? `<button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="false">Table</button>` : ""}</header>
     ${sub ? `<p class="sub">${esc(sub)}</p>` : ""}${legend}
-    <div class="view-chart"${t ? " hidden" : ""}>${chartHtml}</div>${tableHtml ? `<div class="view-table"${t ? "" : " hidden"}>${tableHtml}</div>` : ""}</section>`;
+    <div class="view-chart">${chartHtml}</div>${tableHtml ? `<div class="view-table" hidden>${tableHtml}</div>` : ""}</section>`;
 }
 
 // ---- stat distributions: page 0 is 0–10, page k is 10k+1 … 10k+10; one y scale per stat, counts over pages above 0 ---

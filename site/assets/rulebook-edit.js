@@ -177,7 +177,7 @@ function onKey(e) {
 // text stays the one source; the page is patched, not redrawn, so nothing flashes.
 const REORDER_KINDS = ["cards", "say"];                // moved between blocks (HTML5 drag)
 const PICTURE_KINDS = ["img", ...REORDER_KINDS];       // blocks with tools
-const CONTAINERS = ["panel", "box", "stack", "small", "center", "note", "row"];   // fences a picture may be placed in
+const CONTAINERS = ["panel", "box", "stack", "small", "center", "row"];   // fences a picture may be placed in
 const SIDES = ["left", "right", "end", "free"];
 const FLOAT_MAX = 50;                                  // a floated picture's widest (% of its panel): room beside it for text and rows
 // a picture floated left or right kept at most FLOAT_MAX wide (no width: its drawn width, if it would be wider)
@@ -1094,7 +1094,7 @@ const INSERTS = [["section", "Section", "a tabbed panel (## SECTION)"], ["panel"
 // toolbar: what each button puts in (around the selection when it has one)
 const SNIPPET = {
   section: () => "\n## SECTION\n", panel: () => "\n::: panel\n\n:::\n", row: () => "\n::: row\n![](picture.webp)\n\n::: panel\nText beside it.\n:::\n:::\n",
-  ability: () => "\n::: ability\n1. (OYT) Ability text.\n:::\n", card: () => "![[Card name]]", link: () => "[[Card name]]", page: () => "\n=== page ===\n",
+  ability: () => "\n::: ability\n1. (OYT) Ability text.\n:::\n", page: () => "\n=== page ===\n",
 };
 function insert(kind) {
   const ta = textBox(), a = ta.selectionStart, b = ta.selectionEnd, sel = ta.value.slice(a, b);

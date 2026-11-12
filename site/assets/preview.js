@@ -82,11 +82,11 @@ export function newRequest(login, now = Date.now(), rand = Math.random()) {
   return `${who}-${now.toString(36)}-${Math.floor(rand * 36 ** 4).toString(36).padStart(4, "0")}`;
 }
 export const validRequest = r => typeof r === "string" && REQUEST_RE.test(r);
-/** result.json (AutoCroissant card_preview) as {state, transient, reason, notes[], fields{}, changes[], base{}, image,
+/** result.json (AutoCroissant card_preview) as {state, transient, reason, notes[], fields{}, base{}, image,
  *  files{}, run}; anything unreadable is an "error" saying so. Strings stay raw: the HTML escapes them. */
 export function readResult(raw) {
   let r = raw;
-  const bad = reason => ({ state: "error", transient: true, reason, notes: [], fields: {}, changes: [], base: {}, image: null, files: {}, run: "" });
+  const bad = reason => ({ state: "error", transient: true, reason, notes: [], fields: {}, base: {}, image: null, files: {}, run: "" });
   if (typeof raw === "string") { try { r = JSON.parse(raw); } catch { return bad("The preview's result file isn't valid JSON"); } }
   if (!r || typeof r !== "object" || !DONE.includes(r.state)) return bad("The preview's result file has no known state");
   const clip = v => String(v).slice(0, 500), obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
@@ -94,11 +94,8 @@ export function readResult(raw) {
   const base = Object.fromEntries(Object.entries(obj(r.base)).filter(([, v]) => typeof v === "string").map(([k, v]) => [k, v.slice(0, 64)]));
   const files = Object.fromEntries(Object.entries(obj(r.files)).filter(([k, v]) => ["webp", "png", "before"].includes(k) && typeof v === "string" && /^[\w.-]+\.(webp|png|avif)$/i.test(v)));
   const fields = Object.fromEntries(Object.entries(obj(r.fields)).filter(([k, v]) => k in LABEL && typeof v === "string").map(([k, v]) => [k, v.slice(0, 20)]));
-  const changes = (Array.isArray(r.changes) ? r.changes : []).filter(x => x && typeof x === "object" && typeof x.field === "string").slice(0, 12)
-    .map(x => ({ field: x.field, old: x.old, new: x.new }));
   const parts = Object.fromEntries(Object.entries(obj(r.parts)).filter(([k, v]) => /^(\d+|\+ability)$/.test(k) && typeof v === "string").slice(0, 64).map(([k, v]) => [k, v.slice(0, 20)]));   // v2: per layer
-  return { state: r.state, transient: r.transient === true, reason: r.reason ? clip(r.reason) : "", notes, fields, changes, base, parts,
-    variant: Number.isInteger(r.variant) ? r.variant : null,
+  return { state: r.state, transient: r.transient === true, reason: r.reason ? clip(r.reason) : "", notes, fields, base, parts,
     image: r.image === "baked" || r.image === "refused" ? r.image : null, files, run: typeof r.run === "string" && /^https:\/\/github\.com\//.test(r.run) ? r.run : "" };
 }
 /** The store read from localStorage text: only well-formed entries, newest first, KEEP per card. */
@@ -205,9 +202,8 @@ export const badgeTip = state => ({ baked: "Its preview image is ready", redunda
 /** Does the card's tile get the "Preview" badge: its newest preview has a result not seen yet. */
 export const hasNews = (store, id) => { const e = (store[id] || [])[0]; return !!e && DONE.includes(e.state) && !e.seen; };
 /** What to say when the run can't start: the dispatch's status (0: GitHub unreachable), GitHub's message, the token's
- *  classic scopes (null: unknown, a fine-grained token), installed: the workflow file is on the card repo. */
-export function startProblem(status, message = "", { scopes = null, installed = true } = {}) {
-  if (!installed) return `The preview Action isn't set up on the card repo yet (no .github/workflows/${CONTRACT.workflow} on ${CONTRACT.ref}).`;
+ *  classic scopes (null: unknown, a fine-grained token). */
+export function startProblem(status, message = "", { scopes = null } = {}) {
   const scope = "A preview runs an Action, which needs a classic token with the repo scope or a fine-grained one with Actions: Read and write. Make one in GitHub's Settings → Developer settings, then sign in with it.";
   if (status === 401) return "Your sign-in no longer works (the token expired or was deleted): sign in again.";
   if (status === 403 || status === 404) return `${scopes != null && !/(^|[\s,])repo([\s,]|$)/.test(scopes) ? "Your token has only the public_repo scope. " : "Your token can't start Actions. "}${scope}`;
@@ -258,7 +254,7 @@ export function renderedParts(e, v) {
   const r = e.result || {}, stale = DONE.includes(e.state) ? staleWhy(e, v.card, v.hash) : [];
   const staleText = stale.length ? `<p class="pv-stale" role="note">Out of date: ${stale.map(w => (w === "edit" ? "the edit changed since" : "the card changed since")).join(" and ")}. ${button("Preview again", "ghost")}</p>` : "";
   const trash = e.state === "starting" || e.state === "running" ? "" : ` <button type="button" class="ghost icon pv-discard" data-pv="discard" title="Discard this preview" aria-label="Discard this preview">${TRASH}</button>`;
-  const head = `<p class="pv-state" data-state="${esc(e.state)}"><b>${esc(STATE_TEXT[e.state] || e.state)}</b> · ${esc(fieldsLine(e.edit || {}))} · <span class="muted">${esc(ago(v.now - e.at))}</span>${trash}</p>`;
+  const head = `<p class="pv-state"><b>${esc(STATE_TEXT[e.state] || e.state)}</b> · ${esc(fieldsLine(e.edit || {}))} · <span class="muted">${esc(ago(v.now - e.at))}</span>${trash}</p>`;
   const outcomes = (r.fields && Object.keys(r.fields).length ? `<p class="pv-fields">${esc(outcomesLine(r.fields))}</p>` : "")
     + (r.parts && Object.keys(r.parts).length ? `<p class="pv-fields">${esc(partsLine(r.parts))}</p>` : "");
   const notes = r.notes?.length ? `<ul class="pv-notes">${r.notes.map(x => `<li>${esc(plainNote(x))}</li>`).join("")}</ul>` : "";
@@ -292,9 +288,9 @@ export function renderedParts(e, v) {
 }
 /** renderedParts as one piece of markup. */
 export const TABS = [["original", "Original"], ["mockup", "Mock-up"], ["rendered", "Rendered"]];
-/** The viewer's tabs: a tablist, the mode's tab selected (roving tabindex), "New" on Rendered while a result waits unseen. */
-export const tabsHtml = (mode, { news = false } = {}) => `<div class="iv-tabs" role="tablist" aria-label="Card image">${TABS.map(([m, label]) =>
-  `<button type="button" role="tab" data-iv-tab="${m}" aria-selected="${m === mode}" tabindex="${m === mode ? 0 : -1}">${label}${m === "rendered" && news ? ` <span class="pv-badge inline">New</span>` : ""}</button>`).join("")}</div>`;
+/** The viewer's tabs: a tablist, the mode's tab selected (roving tabindex). */
+export const tabsHtml = mode => `<div class="iv-tabs" role="tablist" aria-label="Card image">${TABS.map(([m, label]) =>
+  `<button type="button" role="tab" data-iv-tab="${m}" aria-selected="${m === mode}" tabindex="${m === mode ? 0 : -1}">${label}</button>`).join("")}</div>`;
 /** The tab a viewer opens on: Rendered whenever the card has a preview (owner 2026-11-03), else the Edit dialog's
  *  Mock-up while the form changes the image (n fields), else Original. */
 export const defaultMode = ({ where, n, entry }) => (entry ? "rendered" : where !== "card" && n ? "mockup" : "original");
@@ -415,18 +411,11 @@ export function createPreviews(app) {
     set(remember(store, entry)); notify(c.id);
     try {
       const flow = `/repos/${repo()}/actions/workflows/${CONTRACT.workflow}`;
-      try { await ed.github(`${flow}/dispatches`, { method: "POST", body: { ref: CONTRACT.ref, inputs: CONTRACT.inputs(c, edit, request) } }); }
-      catch (e) {                                     // a 404: is the workflow there at all (the wording only)
-        if (e.status !== 404) throw e;
-        let installed = true;
-        try { await ed.github(flow); } catch (g) { if (g.status === 404) installed = false; else if (!g.status) throw g; }
-        if (!installed) throw Object.assign(new Error(startProblem(404, "", { installed: false })), { shown: true });
-        throw e;
-      }
+      await ed.github(`${flow}/dispatches`, { method: "POST", body: { ref: CONTRACT.ref, inputs: CONTRACT.inputs(c, edit, request) } });
       set(patch(store, request, { state: "running" }));
       app.toast(`Preview started for ${c.name}: it takes a few minutes`);
     } catch (e) {
-      const why = e.shown ? e.message : startProblem(e.status || 0, String(e.message || "").replace(/^GitHub \d+: ?/, ""), { scopes: ed.scopes });
+      const why = startProblem(e.status || 0, String(e.message || "").replace(/^GitHub \d+: ?/, ""), { scopes: ed.scopes });
       set(patch(store, request, { state: "error", error: why, seen: true }));   // said at once: no badge
       app.toast("The preview didn't start");
     }
@@ -629,11 +618,9 @@ export function createPreviews(app) {
   const soon = () => { first = true; if (due(store, Date.now(), true).length) schedule(1000); };
   function init() { set(expire(store)); soon(); }
   return {
-    init, mountTiles, mountCard, mountForm, start, poll: () => poll(),
-    /** a card's values changed (null: any): repaint its open viewers */
-    refresh: id => notify(id),
+    init, mountTiles, mountCard, mountForm, start,
     onAuth() { if (app.editor.me) soon(); },
-    hasNews: id => hasNews(store, id), entries: id => store[id] || [],
+    entries: id => store[id] || [],
     /** how many finished previews Trash all would throw away; trashAll() does it and says how many */
     finished: () => finishedCount(store),
     trashAll() { const n = finishedCount(store); set(trashAll(store)); notify(null); return n; },

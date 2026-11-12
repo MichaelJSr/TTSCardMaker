@@ -60,7 +60,7 @@ export function runs(a, thr) {
  *  px), the heaviest first, for calibrate to pick the one that holds the old text (a blank line between paragraphs, a last
  *  paragraph in another colour, art above or below). Lines are the runs between quiet rows (pitch, size and alignment come
  *  from them). L: luma(), W x H. */
-export function textBlocks(L, W, H, box, { edge = 40, seed = null, most = Infinity, span = 12, strong = span > 1 ? 0.18 : 0.3, join = 4 } = {}) {
+export function textBlocks(L, W, H, box, { edge = 40, seed = null, span = 12, strong = span > 1 ? 0.18 : 0.3, join = 4 } = {}) {
   const [x0, y0, x1, y1] = px(box, W, H), w = x1 - x0, h = y1 - y0;
   if (w < 16 || h < 6) return [];
   const sharp = (o, x) => Math.abs(L[o + x + 1] - L[o + x]) > edge;
@@ -119,7 +119,7 @@ export function textBlocks(L, W, H, box, { edge = 40, seed = null, most = Infini
     const b = block(paras.slice(i, j + 1));
     if (b) out.push(b);
   }
-  return out.sort((a, b) => b.mass - a.mass).slice(0, most);
+  return out.sort((a, b) => b.mass - a.mass);
 }
 /** How well a found block holds the old text (paras: tokenize(old)): measured at the block's size the old text is k times
  *  as wide as the block's lines together, and wrapped at the block's width it makes nPred lines (against the block's).
@@ -193,8 +193,8 @@ export function lineLike(found) {
  *  rows within 1.6 line pitches of it, in its columns, with edges like its lines (at edge 25, dim words too; per em at least 0.3 as
  *  dense: a short header in big letters too), up to 2.4 line heights and 1.8 of its tallest, lined up with it, no wider
  *  than it nor across the card, and not a stat bar; at most four each way. top / bottom: rows not to pass (px). -> [[x0, y0, x1, y1]] */
-export function strayLines(L, W, H, found, { top = 0, bottom = H, bars = [], edge = 25 } = {}) {
-  const hs = found.lines.map(l => l[3] - l[1]), lh = median(hs), pitch = found.pitch || lh * 1.3, out = [];
+export function strayLines(L, W, H, found, { top = 0, bottom = H, bars = [] } = {}) {
+  const edge = 25, hs = found.lines.map(l => l[3] - l[1]), lh = median(hs), pitch = found.pitch || lh * 1.3, out = [];
   const bx0 = clamp(Math.round(found.box[0] - lh), 0, W - 1), bx1 = clamp(Math.round(found.box[2] + lh), 1, W);
   const count = y => { let n = 0; const o = y * W; for (let x = bx0; x < bx1 - 1; x++) if (Math.abs(L[o + x + 1] - L[o + x]) > edge) n++; return n; };
   const per = median(found.lines.map(l => { let t = 0; for (let y = Math.round(l[1]); y < Math.round(l[3]); y++) t += count(y); return t / Math.max(1, l[3] - l[1]); }));
@@ -1135,7 +1135,7 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
  *  again), stale (a newer draw started: drop this one), fills (colourize's)}. Drawn off-screen, then copied. Returns
  *  {drawn: [labels], skipped, boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused:
  *  [[label, why]] (stars, types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without
- *  a font name], shape, plated: [labels drawn on the card's plate], lined: [those on its own lines (geoDraw)]} or null
+ *  a font name]} or null
  *  (the image didn't load, or stale). plate: the card's plates file (card_plates, the plates branch: picture 1's
  *  backdrop under each text layer, its layout) or null. */
 let eraseMemo = null;                                // the last draw's erase pass (draw)
@@ -1154,7 +1154,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
   const nix = paintedOver(rec, edit.colors, typed, edit);   // the bake refuses them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
-  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null, plated: [], lined: [] };
+  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], site: [], starsKept: null };
   for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
     if (barCut(pics, k, psd[k], edit[k])) todo.stats[k] = [psd[k], edit[k]];   // the bake's picture of it
@@ -1219,8 +1219,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const plans = reuse ? eraseMemo.plans : [];
   const cardPx = reuse ? eraseMemo.card : specs.length ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines, a title's splice
   if (reuse) pixels.data.set(eraseMemo.data);
-  for (const [k, { role, text, old, label, own: partBox, added, part, path, id, colors: shared }] of specs.entries()) {
-    if (tints[k]) { out.drawn.push(label); out.lined.push(label); continue; }   // never erased: tinted below
+  for (const [k, { role, text, old, label, own: partBox, added, part, colors: shared }] of specs.entries()) {
+    if (tints[k]) { out.drawn.push(label); continue; }   // never erased: tinted below
     const { fam, layer } = fams[k];
     const set = role === "ability" || role === "name" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems) and letter width (psd_details)
     const measure = (t, z) => {
@@ -1271,7 +1271,6 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     };
     if (!reuse) plans[k] = Object.assign(findAndErase(), plated ? { plated } : {});
     const { found, size: z, colours, deleted, skipped } = plans[k];
-    if (plans[k].plated) out.plated.push(label);
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
     else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: cardPx,
@@ -1322,7 +1321,6 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const imgs = await iconImages(job.text, icons);
     const j = { ...job, fills: job.one ? null : fills };   // under an overlay: painted over, as the bake's
     if (j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) out.over.push(j.label);
-    if (j.lined) out.lined.push(j.label);
     out.drawn.push(job.label);
   }
   return blit();

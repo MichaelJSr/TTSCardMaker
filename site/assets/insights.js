@@ -42,7 +42,7 @@ export function historyHtml({ cards }, params) {
     const href = (y, k) => (k === "" ? null : L({ q: `created==${y}`, author: k }));     // Others: no filter
     charts.push(card("hist-created", "Cards created per year", "By author.", stacked(years, series, get, { width: 560, href }),
       table(["Year", ...series.map(s => s.label), "All"], years.map(y => [y, ...series.map(s => get(y, s.key)), series.reduce((n, s) => n + get(y, s.key), 0)])),
-      { tip: "Cards by the year they were created, as on their card pages; each author a colour of their own", legend: legend(series.map(s => [s.color, s.label, "", s.key ? L({ author: s.key }) : null])) }));
+      { tip: "Cards by the year they were created, as on their card pages; each author a colour of their own", legend: legend(series.map(s => [s.color, s.label, s.key ? L({ author: s.key }) : null])) }));
   }
 
   // S13 text freshness: the year a card's ability last changed (its current text's start), else its creation

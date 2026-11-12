@@ -6,7 +6,7 @@ import { chartCard as card, hbar, table, stacked, fmt, trunc, cardsHref, go, svg
 
 const KINDS = { creature: "creatures", minion: "minions" };
 const ITEM_KIND = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
-  debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", rulebook: "Rulebook page", unknown: "Other" };
+  debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
 const STATS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
 // days and months in one fixed zone, the bot's TIMEZONE (analytics.py ZONE), so every viewer sees the same waves
 const TZ = "America/Los_Angeles";
@@ -22,15 +22,14 @@ const monthsFrom = (first, last) => {
   for (let [y, m] = first.split("-").map(Number); `${y}-${String(m).padStart(2, "0")}` <= last; m === 12 ? (y++, (m = 1)) : m++) out.push(`${y}-${String(m).padStart(2, "0")}`);
   return out;
 };
-const plural = (n, one, many = one + "s") => `${n.toLocaleString()} ${n === 1 ? one : many}`;
 
 /** "3★ creatures", "all minions" for a cohort key */
-export function cohortName(key, cohort) {
+export function cohortName(key) {
   const [kind, stars] = key.split("|");
   return stars === "all" ? `all ${KINDS[kind] || kind}` : `${stars}★ ${KINDS[kind] || kind}`;
 }
 /** the analytics of a card (a duplicate has its original's) */
-export function cardData(A, c, byId) {
+export function cardData(A, c) {
   if (!A || !c) return null;
   return A.cards[c.id] || (c.dup && A.cards[c.dup]) || null;
 }
@@ -69,8 +68,8 @@ const runTags = run => [...run.matchAll(/\(([^()]+)\)/g)].map(m => m[1]);
 const runHtml = run => runTags(run).map(t => tagHtml(t)).join("") || `<span class="muted">none</span>`;
 
 // ---- chart pieces -------------------------------------------------------------------------------------------------
-/** items [color, label, shape?, href?]: an entry with href links to its cards */
-const legend = items => `<div class="legend">${items.map(([color, label, shape, href]) => { const inner = `<i style="background:${color}${shape === "line" ? ";height:3px;vertical-align:3px" : ""}"></i>${esc(label)}`;
+/** items [color, label, href?]: an entry with href links to its cards */
+const legend = items => `<div class="legend">${items.map(([color, label, href]) => { const inner = `<i style="background:${color}"></i>${esc(label)}`;
   return href ? `<a class="go" href="${esc(href)}" data-tip="Show these cards">${inner}</a>` : `<span>${inner}</span>`; }).join("")}</div>`;
 
 /** One row per cohort: the middle 80% as a band, the median as a tick, the lowest to highest as a hairline, and the
@@ -121,8 +120,8 @@ function diverging(rows, { unit = "", labelW = 200 } = {}) {
 
 /** Two bars per row from one centre line: down to the left (--s2), up to the right (--s1): rows [{label, up, down, tip,
     upHref?, downHref?}]; with links each half of the row is one */
-function twoSided(rows, { unit = "points", labelW = 70 } = {}) {
-  const rowH = 26, bar = 14, W = 560, mid = labelW + (W - labelW) / 2, half = (W - labelW) / 2 - 40;
+function twoSided(rows) {
+  const unit = "points", labelW = 70, rowH = 26, bar = 14, W = 560, mid = labelW + (W - labelW) / 2, half = (W - labelW) / 2 - 40;
   const max = Math.max(1, ...rows.flatMap(r => [r.up, r.down]));
   const parts = rows.map((r, i) => {
     const y = i * rowH, by = y + (rowH - bar) / 2, wu = (r.up / max) * half, wd = (r.down / max) * half, ty = y + rowH / 2 + 4;
@@ -225,12 +224,12 @@ export function changeParts(r) {
 
 // ---- the card's Balance block -------------------------------------------------------------------------------------
 /** The Balance line: the card's total among its star level, with the median and the middle 80% */
-export function balanceBlock(c, A, { byId } = {}) {
-  const a = cardData(A, c, byId), cohort = a?.cohort && A.cohorts[a.cohort];
+export function balanceBlock(c, A) {
+  const a = cardData(A, c), cohort = a?.cohort && A.cohorts[a.cohort];
   const out = [];
   if (cohort) {
     const line = a.stats;                                      // as built: the cohort numbers are too
-    const name = cohortName(a.cohort, cohort), total = line.reduce((s, v) => s + (v ?? 0), 0);
+    const name = cohortName(a.cohort), total = line.reduce((s, v) => s + v, 0);
     const all = a.cohort.endsWith("|all"), of = all ? `all ${cohort.n}` : `the ${cohort.n}`;
     const where = a.flags?.includes("top") ? `in the top 10% of ${name}: ${a.below} of ${of} have a lower total`
       : a.flags?.includes("bottom") ? `in the bottom 10% of ${name}: ${a.above} of ${of} have a higher total`
@@ -238,7 +237,7 @@ export function balanceBlock(c, A, { byId } = {}) {
     const folded = all ? (c.type === "creatures" ? " Auxiliary creatures have no star level, so they are compared with all creatures."
       : ` Fewer than ${A.minCohort} ${KINDS[cohort.kind]} have ${c.stars ?? "no"}★, so it is compared with all of them.`) : "";
     const several = c.creatures?.length > 1 ? " (creature 1)" : "";
-    const rows = [["This card" + several, ...line.map(v => (v == null ? "—" : String(v))), String(total)],
+    const rows = [["This card" + several, ...line.map(String), String(total)],
       [noted(`Median of ${name}`, "Each column's own median among these cards (Total: the median total)"), ...["hp", "def", "atk", "spd", "total"].map(k => fmt(cohort[k].p50))],
       [noted("Middle 80%", "Each column's 10th to 90th percentile among these cards"), ...["hp", "def", "atk", "spd", "total"].map(k => `${fmt(cohort[k].p10)}–${fmt(cohort[k].p90)}`)]];
     const ranked = a.flags?.length ? noted(where, "By rank among the cards named, ties counted half; only in groups of 5 or more") : esc(where);
@@ -252,8 +251,8 @@ export function balanceBlock(c, A, { byId } = {}) {
 }
 
 /** The card's recorded changes, newest first: stats (buff, nerf), stars, kind, types, series, timing tags, wording */
-export function changesBlock(c, A, { byId, texts = null, repo = "", pathAt = null } = {}) {
-  const a = cardData(A, c, byId), out = [];
+export function changesBlock(c, A, { texts = null, repo = "", pathAt = null } = {}) {
+  const a = cardData(A, c), out = [];
   if (a?.changes?.length) {
     const items = a.changes.map(r => {
       const parts = changeParts(r);
@@ -280,22 +279,22 @@ export function statsHtml(A, { cards, byId }, params) {
   const keys = Object.keys(A.cohorts).filter(k => { const kd = k.split("|")[0]; return !kind || kind === kd || (kind === "creatures" && kd === "creature"); });
   const members = new Map();
   for (const [id, a] of Object.entries(A.cards)) if (a.cohort && inPool.has(id)) (members.get(a.cohort) || members.set(a.cohort, []).get(a.cohort)).push([id, a]);
-  const totalOf = id => { const l = A.cards[id]?.stats, c = byId.get(id); return l ? l.reduce((s, v) => s + v, 0) : c ? STATS.reduce((s, [k]) => s + (c[k] ?? 0), 0) : 0; };   // as built
+  const totalOf = id => A.cards[id].stats.reduce((s, v) => s + v, 0);   // as built
   const rows = keys.map(k => {
     const co = A.cohorts[k], mine = members.get(k) || [];
     const dots = mine.filter(([, a]) => a.flags?.length).map(([id, a]) => ({ v: totalOf(id), id, name: byId.get(id)?.name || id, hot: a.flags[0] }));
-    return { key: k, label: cohortName(k, co).replace(/^all /, "All "), n: co.n, q: co.total, dots,
+    return { key: k, label: cohortName(k).replace(/^all /, "All "), n: co.n, q: co.total, dots,
       href: cardsHref({ cohort: k }),
-      lo: Math.min(co.total.min ?? co.total.p10, ...dots.map(d => d.v)), hi: Math.max(co.total.max ?? co.total.p90, ...dots.map(d => d.v)) };
-  }).filter(r => r.n);
+      lo: Math.min(co.total.min, ...dots.map(d => d.v)), hi: Math.max(co.total.max, ...dots.map(d => d.v)) };
+  });
   if (rows.length) {
     charts.push(card("bal-cohorts", "Total stats by star level", "Band: middle 80%. Tick: median. Dots: top and bottom 10%.",
       strips(rows), table([{ label: "Star level", tip: "Star levels with under 5 cards have no row of their own, only the All row" },
         { label: "Cards", tip: "Creatures and minions with all four stats in this group, across all series" }, "Lowest",
         { label: "Bottom of the middle 80%", tip: "10th percentile: about 10% of the row's cards have a lower total" }, "Median",
         { label: "Top of the middle 80%", tip: "90th percentile: about 10% of the row's cards have a higher total" }, "Highest", "Average"],
-        rows.map(r => { const t = A.cohorts[r.key].total; return [r.label, r.n, t.min ?? "—", t.p10, t.p50, t.p90, t.max ?? "—", t.mean]; })),
-      { wide: true, tip: "HP + DEF + ATK + SPD of every creature and minion with all four stats; dots: cards in scope", legend: legend([["var(--s1)", "Top 10%", "", L({ bal: "top" })], ["var(--s2)", "Bottom 10%", "", L({ bal: "bottom" })], ["color-mix(in srgb, var(--s1) 28%, transparent)", "Middle 80%"]]) }));
+        rows.map(r => { const t = A.cohorts[r.key].total; return [r.label, r.n, t.min, t.p10, t.p50, t.p90, t.max, t.mean]; })),
+      { wide: true, tip: "HP + DEF + ATK + SPD of every creature and minion with all four stats; dots: cards in scope", legend: legend([["var(--s1)", "Top 10%", L({ bal: "top" })], ["var(--s2)", "Bottom 10%", L({ bal: "bottom" })], ["color-mix(in srgb, var(--s1) 28%, transparent)", "Middle 80%"]]) }));
 
     // 2 outliers: distance from the star level's median
     const flagged = [...members.entries()].flatMap(([k, ms]) => ms.filter(([, a]) => a.flags?.length).map(([id, a]) => {
@@ -304,17 +303,17 @@ export function statsHtml(A, { cards, byId }, params) {
     })).sort((x, y) => y.value - x.value || x.label.localeCompare(y.label));
     if (flagged.length) {
       const ups = flagged.filter(f => f.value > 0).slice(0, 10), downs = flagged.filter(f => f.value < 0).slice(-10);
-      const bars = [...ups, ...downs].map(f => ({ ...f, tip: `${f.label}: total ${f.total}, median of ${cohortName(f.k, f.co)} ${fmt(f.co.total.p50)}` }));
+      const bars = [...ups, ...downs].map(f => ({ ...f, tip: `${f.label}: total ${f.total}, median of ${cohortName(f.k)} ${fmt(f.co.total.p50)}` }));
       charts.push(card("bal-outliers", "Strongest and weakest for their star level", "Total minus its star level's median.",
         diverging(bars, { unit: "vs median" }),
         table(["Card", "Star level", "Total", "Median", { label: "Difference", tip: "Its total minus the median total of its star level" },
-          { label: "Lower totals", tip: "Cards of its star level with a lower total, of all of them" }], flagged.map(f => [f.label, cohortName(f.k, f.co), f.total, f.co.total.p50, f.value, `${f.a.below} of ${f.co.n}`]), 2),
+          { label: "Lower totals", tip: "Cards of its star level with a lower total, of all of them" }], flagged.map(f => [f.label, cohortName(f.k), f.total, f.co.total.p50, f.value, `${f.a.below} of ${f.co.n}`]), 2),
         { tip: "Cards in scope in the top or bottom 10% of their star level; the chart shows 10 each way", legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
     }
 
     // 3 over time: small multiples, one per star level
     const months = A.time?.months || [];
-    const panels = keys.filter(k => !k.endsWith("|all") && A.time?.series?.[k]).map(k => ({ key: k, label: cohortName(k, A.cohorts[k]), points: A.time.series[k] }));
+    const panels = keys.filter(k => !k.endsWith("|all") && A.time?.series?.[k]).map(k => ({ key: k, label: cohortName(k), points: A.time.series[k] }));
     const multi = months.length && panels.length ? multiples(months, panels, A.minCohort) : "";
     charts.push(card("bal-time", "Average total by star level over time", multi ? "Average total per star level, by month." : "",
       multi ? `<div class="multiples">${multi}</div>` : `<p class="muted">Needs a full-history build.</p>`,
@@ -356,7 +355,7 @@ export function statsHtml(A, { cards, byId }, params) {
       updown(cols, { every: Math.ceil(cols.length / 12) }),
       table(["Date", "Card", { label: "Change", tip: "Buff: total rose; Nerf: total fell; Stats moved: same total, stats shifted" },
         { label: "Total", tip: "HP + DEF + ATK + SPD before and after the change" }], [...bal, ...shifts].sort((x, y) => y.r.ts - x.r.ts).map(x => [day(x.r.ts), byId.get(x.id)?.name || x.id, x.r.bal === "buff" ? "Buff" : x.r.bal === "nerf" ? "Nerf" : "Stats moved", sums(x).join(" → ")]), 3),
-      { wide: true, tip: "From recorded versions, by Pacific month; changes with a total over 40 aren't counted", legend: legend([["var(--s1)", "Buffs", "", L({ change: "buff" })], ["var(--s2)", "Nerfs", "", L({ change: "nerf" })]]) }));
+      { wide: true, tip: "From recorded versions, by Pacific month; changes with a total over 40 aren't counted", legend: legend([["var(--s1)", "Buffs", L({ change: "buff" })], ["var(--s2)", "Nerfs", L({ change: "nerf" })]]) }));
   } else charts.push(card("bal-buffs", "Buffs and nerfs", "", `<p class="bal-empty">No buffs or nerfs recorded yet.</p>`, ""));
   if (bal.length || shifts.length) {                  // by stat: the points each stat gained and lost
     const per = STATS.map(([k, label]) => ({ label, up: 0, down: 0, n: 0, upHref: L({ change: `${k}+` }), downHref: L({ change: `${k}-` }) }));
@@ -382,7 +381,7 @@ export function statsHtml(A, { cards, byId }, params) {
       stacked(labels, SERIES, (cat, key) => byLabel.get(cat).v[key], { unit: "changes", every: Math.ceil(labels.length / 12),
         href: (cat, key) => L({ month: byLabel.get(cat).m, change: key }) }),
       table(["Month", ...SERIES.map(s => ({ label: s.label, tip: KIND_TIP[s.key] })), "All"], months.map((m, i) => { const v = counts.get(m); return [labels[i], v.text, v.stats, v.other, v.text + v.stats + v.other]; })),
-      { wide: true, tip: "Each change counted once (stats before wording); timing-tag-only changes left out", legend: legend(SERIES.map(s => [s.color, s.label, "", L({ change: s.key })])) }));
+      { wide: true, tip: "Each change counted once (stats before wording); timing-tag-only changes left out", legend: legend(SERIES.map(s => [s.color, s.label, L({ change: s.key })])) }));
   }
 
   // 6 most reworked
@@ -391,7 +390,6 @@ export function statsHtml(A, { cards, byId }, params) {
     p.n++; if (x.r.words) p.text++; if (x.r.stats || x.r.lines) p.stats++; if (x.r.stars || x.r.kind || x.r.sub) p.stars++; if (x.r.types) p.types++; p.last = Math.max(p.last, x.r.ts); }
   const top = [...per.entries()].sort((x, y) => y[1].n - x[1].n || y[1].last - x[1].last).map(([id, p]) => ({ id, p, name: byId.get(id)?.name || id }));
   if (top.length) {
-    const what = p => [p.text && plural(p.text, "rewording"), p.stats && plural(p.stats, "stat change"), p.stars && plural(p.stars, "star, kind or item type change"), p.types && plural(p.types, "type change")].filter(Boolean).join(", ");
     charts.push(card("bal-reworked", "Most reworked cards", "Wording, stats, stars, kind or types changed.",
       hbar(top.slice(0, 15).map(t => ({ label: t.name, value: t.p.n, card: t.id })), { labelWidth: 190, unit: "changes" }),
       table(["Card", { label: "Changes", tip: "Changes to its wording, stats, stars, kind, item type, types or creatures" }, "Rewordings",

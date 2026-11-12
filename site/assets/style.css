@@ -412,7 +412,6 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-table.rb-grid tbody { border-top: .3em solid #000; border-bottom: .3em solid #000; }
 .rb-red { color: #ae0000; } .rb-green { color: #006b0a; } .rb-blue { color: #1a0fff; } .rb-yellow { color: #a08a00; } .rb-orange { color: #c46a00; }
 .rb-purple { color: #6a1fd0; } .rb-grey { color: #555; } .rb-white { color: #fff; }
-span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { color: #c02020; } span.rb-spd { color: #8a7a00; }
 .rb-u { text-decoration: underline; } .rb-big { font-size: 1.6em; } .rb-caps { text-transform: uppercase; } .rb-nowrap { white-space: nowrap; }
 .rb-secret { color: var(--rb-panel); }
 .rb-stars { color: #e3a21a; letter-spacing: .02em; }
@@ -423,12 +422,7 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rb-break { display: none; }
 .rb mark { background: #ffe066; color: inherit; border-radius: 3px; }
 .rb-hit-none { display: none; }
-/* the Timing tags and Constructed ban list chapters (app.js renderRules): the book's look, drawn from text.js and the ban list file */
-.rb-gloss { display: grid; grid-template-columns: max-content 1fr; gap: .45em 1em; align-items: center; }
-.rb-gloss-tag { text-align: center; min-width: 5.2em; }
-.rb .rb-gloss .badge { font-size: .95em; }
-.rb .badge-legend { font-size: 1em; line-height: 1.9; margin: .4em 0 0; }
-.rb .badge-legend li { color: var(--rb-ink); }
+/* the Constructed ban list chapter (app.js renderRules): the book's look, drawn from the ban list file */
 .rb-bans { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5em, 1fr)); gap: .9em .7em; }
 .rb-ban { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .25em; line-height: 1.25; }
 .rb-ban .rb-card { width: 6.5em; }
@@ -560,7 +554,7 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rb-sheet .rb-body { flex: 1; min-height: 0; overflow: hidden; margin: -.65em -16px 0; padding: .65em 16px 0; }
 .rb-sheet .rb-body > :first-child:not(.rb-left, .rb-right, .rb-say-right) { margin-top: 0; }
 /* the page's last block: its bottom margin falls off the page (as at a break), not a line's room */
-.rb-sheet .rb-body > :last-child:not(.rb-left, .rb-right, .rb-say-right), .rb-sheet .rb-body > :is(.rb-small, .rb-center, .rb-note):last-child > :last-child { margin-bottom: 0; }
+.rb-sheet .rb-body > :last-child:not(.rb-left, .rb-right, .rb-say-right), .rb-sheet .rb-body > :is(.rb-small, .rb-center):last-child > :last-child { margin-bottom: 0; }
 /* a floated picture opening a page or a part carried over: the block beside it without its top margin, so the two sit
    as on the website (where that margin falls above both) */
 .rb-sheet :is(.rb-body, .rb-cont > .rb-panel) > :is(.rb-left, .rb-right, .rb-say-right):first-child + * { margin-top: 0; }
@@ -618,7 +612,6 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 .chart .hit { fill: transparent; } .chart .mark { transition: opacity .1s; }
 .chart a.go, .chart [data-card] { cursor: pointer; }   /* a Stats link to its cards in the grid, a card */
 .chart g.row:hover .mark, .chart g.col:hover .mark, .chart a.go:hover .mark, .chart a.go:focus-visible .mark { opacity: .8; }
-.chart svg text.lbl.sub { fill: var(--muted); font-size: 11px; } .chart path.mark.sub { fill-opacity: .55; }   /* a subseries under its series */
 /* cards by SpongeBob season (stats.js seasonsCard): the picked season, its episodes */
 .chart a.season.on .hit { fill: color-mix(in srgb, var(--ink) 7%, transparent); } .chart a.season.on text { fill: var(--ink); font-weight: 700; }
 .ep-panel h4 { margin: 14px 0 8px; font-size: 14px; } .ep-panel h4 .muted { font-weight: 400; margin-left: 6px; }
@@ -627,7 +620,6 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 .ep-units { display: flex; align-items: center; gap: 2px; } .ep-units i { width: 12px; height: 12px; border-radius: 3px; }
 .ep-units b { margin-left: 6px; font-weight: 600; }
 @media (max-width: 640px) { .ep-rows { grid-template-columns: minmax(0, 1fr) max-content; } .ep-cards { grid-column: 1 / -1; margin: -4px 0 4px; } }
-table.data tr.sub td { color: var(--ink-2); font-size: 12.5px; } table.data tr.sub td:first-child { padding-left: 18px; }
 .chart table.heat a.go { color: inherit; display: block; } .chart table.heat a.go:hover { text-decoration: underline; }
 .legend a.go { color: inherit; } .legend a.go:hover { color: var(--ink); text-decoration: underline; }
 .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--ink-2); margin: 0 0 8px; }
@@ -780,7 +772,7 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
   background: color-mix(in srgb, var(--warn) 16%, var(--surface-2)); font-size: 13px; }
 .needs-link { font-size: 13px; white-space: nowrap; }
 .needs-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.needs-list li { display: flex; gap: 12px; align-items: flex-start; padding: 6px; border-radius: 8px; background: var(--panel); cursor: pointer; }
+.needs-list li { display: flex; gap: 12px; align-items: flex-start; padding: 6px; border-radius: 8px; cursor: pointer; }
 .needs-list .thumb { flex: none; width: 64px; }
 .needs-list li > div { min-width: 0; flex: 1; }
 .needs-list .card-flags { margin: 4px 0 0; }

@@ -23,8 +23,8 @@ async function deriveKey(subtle, password, salt, iterations, uses) {
   return subtle.deriveKey({ name: "PBKDF2", hash: "SHA-256", salt, iterations }, raw, { name: "AES-GCM", length: 256 }, false, uses);
 }
 /** The file object for site/logins/<login>.json (without `at`, which publishing stamps). */
-export async function seal(subtle, password, login, token, { iterations = ITER, random = a => globalThis.crypto.getRandomValues(a) } = {}) {
-  const salt = random(new Uint8Array(LIMITS.salt)), iv = random(new Uint8Array(LIMITS.iv));
+export async function seal(subtle, password, login, token, { iterations = ITER } = {}) {
+  const salt = globalThis.crypto.getRandomValues(new Uint8Array(LIMITS.salt)), iv = globalThis.crypto.getRandomValues(new Uint8Array(LIMITS.iv));
   const key = await deriveKey(subtle, password, salt, iterations, ["encrypt"]);
   const ct = await subtle.encrypt({ name: "AES-GCM", iv, additionalData: utf8(aadOf(login)) }, key, utf8(token));
   return { v: 1, login, kdf: KDF, iterations, salt: b64(salt), iv: b64(iv), ct: b64(new Uint8Array(ct)) };
@@ -44,13 +44,13 @@ export function bytesOf(v, size = null) {
   return size == null || out.length === size ? out : null;
 }
 /** A login file's JSON, checked like build_site.py clean_login: {file, notes} (file null when unusable). stem: the file
- *  name's login; it must equal `login` (case: exactly when exact, else any case). */
-export function checkFile(raw, stem, { exact = true } = {}) {
+ *  name's login; it must equal `login` exactly. */
+export function checkFile(raw, stem) {
   const f = obj(raw);
   if (!f) return { file: null, notes: ["not a JSON object"] };
   if (f.v !== 1) return { file: null, notes: ['"v" must be 1'] };
   if (typeof f.login !== "string" || !LOGIN_RE.test(f.login)) return { file: null, notes: ['"login" must be a GitHub login'] };
-  if (exact ? f.login !== stem : f.login.toLowerCase() !== String(stem).toLowerCase()) return { file: null, notes: [`login ${f.login} doesn't match the file name ${stem}`] };
+  if (f.login !== stem) return { file: null, notes: [`login ${f.login} doesn't match the file name ${stem}`] };
   if (f.kdf !== KDF) return { file: null, notes: [`"kdf" must be ${KDF}`] };
   if (!Number.isInteger(f.iterations) || f.iterations < MIN_ITER || f.iterations > MAX_ITER) return { file: null, notes: [`"iterations" must be ${MIN_ITER} to ${MAX_ITER}`] };
   if (!bytesOf(f.salt, LIMITS.salt)) return { file: null, notes: [`"salt" must be ${LIMITS.salt} bytes in base64`] };

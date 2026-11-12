@@ -74,9 +74,9 @@ export const cardsBy = (author, cards) => cardsOf(author, cards).length;
 /** A card's creation date as epoch seconds (noon UTC of its created day), else its first upload (fs), else 0. */
 export const createdTs = c => (c.created ? Date.parse(`${c.created}T12:00:00Z`) / 1000 : c.fs || 0);
 /** The Cards panel's facts for a person's cards: kinds [[kind, n]] by count (ties in `kinds` order), the three biggest
- *  series [[name, n]], the newest card (by createdTs; null when no card has a date) and the `recent` newest cards
+ *  series [[name, n]], the newest card (by createdTs; null when no card has a date) and the RECENT_CARDS newest cards
  *  (createdTs desc, then first upload, undated last, then name). kindOf(card) groups status effects (app.js kindOf). */
-export function cardFacts(list, { kindOf = c => c.type, kinds = [], recent = RECENT_CARDS } = {}) {
+export function cardFacts(list, { kindOf = c => c.type, kinds = [] } = {}) {
   const count = (f, m = new Map()) => { for (const c of list) { const k = f(c); if (k) m.set(k, (m.get(k) || 0) + 1); } return m; };
   const order = new Map(kinds.map(([k], i) => [k, i]));
   const rank = k => (order.has(k) ? order.get(k) : kinds.length);
@@ -86,7 +86,7 @@ export function cardFacts(list, { kindOf = c => c.type, kinds = [], recent = REC
     kinds: [...count(kindOf)].sort((a, b) => b[1] - a[1] || rank(a[0]) - rank(b[0])),
     series: [...count(c => c.series)].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 3),
     newest: newest[0] && createdTs(newest[0]) ? newest[0] : null,
-    recent: newest.slice(0, recent),
+    recent: newest.slice(0, RECENT_CARDS),
   };
 }
 
@@ -219,7 +219,7 @@ const MONTH = dateFmt({ month: "short", year: "2-digit", timeZone: "UTC" });
 export const ACTIVITY = [["cards", "Cards created", "var(--s1)", "cards"], ["edits", "Edit batches", "var(--s2)", "edits"], ["commits", "Card commits", "var(--s3)", "commits"]];
 /** The person's activity chart: one row of monthly columns per kind they have (each on its own scale, so a big import
  *  month doesn't flatten the rest), on one month axis; Table shows the numbers. "" without months. */
-export function activityHtml(p, x = {}) {
+export function activityHtml(p) {
   const range = monthRange(p.months);
   const kinds = ACTIVITY.map((k, i) => [...k, i + 1]).filter(([, , , , i]) => range.some(([, r]) => r && r[i]));
   if (!kinds.length) return "";
@@ -488,7 +488,7 @@ export function personHtml(x) {
   const own = cardsOf(person.key, x.cards), statusIds = memoOf(x.cards, "status", () => new Set(x.cards.filter(c => c.type === "debuff" || c.type === "buff").map(c => c.id)));
   const kinds = starKinds(own, x.kindOf, x.kinds), kind = kinds.length > 1 && kinds.includes(x.starKind) ? x.starKind : "";   // ?stars=<kind>; else all
   const style = own.length ? stylePanelHtml(styleOf(own, x.cards, { mentions: x.mentions, statusIds }), mixOf(own, x.cards, x.kindOf, kind), x, own.length, { key: person.key, kinds, kind }) : "";
-  const rest = `${x.available ? activityHtml(person, x) : ""}${balancePanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
+  const rest = `${x.available ? activityHtml(person) : ""}${balancePanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
     + `${cardsPanelHtml(person, x)}${archivedPanelHtml(person.archived)}${decksPanelHtml(x)}`;
   if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${rest}`;
   return `<div class="profile"><div class="panel"><h2 class="person-name">${avatarHtml(person.github, 48)}${esc(person.key)}</h2>
