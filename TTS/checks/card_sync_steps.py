@@ -788,7 +788,7 @@ def gate_cases(flow: dict) -> None:
             full.append(code == 0 and git(ws, "rev-parse", "--is-shallow-repository") == "false")
             _bot(ws)
             write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
-                {"card_commit": base, "builder": {"parser_version": 2}, "pending": {"stale": []}}))
+                {"card_commit": base, "builder": {"parser_version": 2, "details_version": 3}, "pending": {"stale": []}}))
             code, text, out = run_step(data, "gate", ws, DATA_GATE, tmp)
             check(code == 0 and out.get("go") == str(want).lower(),
                   f"data gate: {message} -> go={out.get('go')} (want {str(want).lower()})" + ("" if code == 0 else f"\n{text}"))
@@ -808,7 +808,7 @@ def gate_cases(flow: dict) -> None:
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs, "AFTER": "f" * 40, "RECORDS": "true"}, tmp)
                 check(code == 0 and "dispatched with" not in text,
                       "data gate: after the bake on a dispatch -> its inputs left out" + ("" if code == 0 else f"\n{text}"))
-                for built, want in ((3, "false"), (2, "true")):          # the details version (none: an older builder)
+                for built, want in ((3, "false"), (2, "true")):          # the details version
                     write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
                         {"card_commit": git(work, "rev-parse", "HEAD"), "builder": {"parser_version": 2, "details_version": built},
                          "pending": {"stale": []}}))

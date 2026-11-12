@@ -668,7 +668,7 @@ jobs:
             if [ "$parser" != "$built" ]; then why+=("parser version ${built:-none} -> $parser"); fi
             built=$(jq -r '.builder.details_version // ""' "$manifest")
             details=$(sed -n 's/^VERSION *= *\([0-9][0-9]*\).*/\1/p' bot/commands/psd_details.py)
-            if [ -n "$built" ] && [ "$details" != "$built" ]; then why+=("details version $built -> $details"); fi   # none: older builder
+            if [ "$details" != "$built" ]; then why+=("details version ${built:-none} -> $details"); fi
             shopt -s nullglob
             logs=("$db"/changelog/*.jsonl)
             last=0

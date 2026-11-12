@@ -54,7 +54,7 @@ const HANDLING = [["flagged", "All", "Needs handling"], ...CARD_FLAGS.map(([k, l
 const flagName = f => FLAGS.find(x => x[0] === f)?.[1] ?? HANDLING.find(x => x[0] === f)?.[2];
 const others = (ids, c) => { for (const id of ids || []) if (id !== c.id) return true; return false; };   // a card naming itself doesn't count
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
-const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // no creation dates: Name
+const sortOf = p => p.get("sort") || "name";
 
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
 const BUILD = document.querySelector('meta[name="build"]')?.content || "";
@@ -181,7 +181,6 @@ async function init() {
   S.statusFills = Object.fromEntries(Object.entries(S.palette?.statuses || {}).map(([n, c]) => [n.toLowerCase(), c]));   // as the bake prints them (the mock-up's): the chart's, else the swatch
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
-  S.created = S.all.some(c => c.created);                 // creation dates (none: no Created sort)
   for (const c of S.all) S.byId.set(c.id, c);
   S.morgue = S.data.morgue;
   for (const c of S.morgue) S.morgueById.set(c.id, c);
@@ -618,7 +617,7 @@ function renderCards(r) {
     </aside>
     <section>
       ${edits && view_ === "grid" ? tray.html(S.selecting) : ""}
-      ${G.toolbarHtml({ count: list.length, waiting, active: active.length, sort: sortOf(p), dir: p.get("dir"), created: S.created, view: view_, size,
+      ${G.toolbarHtml({ count: list.length, waiting, active: active.length, sort: sortOf(p), dir: p.get("dir"), view: view_, size,
         needs: csv(p, "flags").includes("flagged") ? 0 : S.cards.filter(flagged).length, tail: `${edits && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
           <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
@@ -774,7 +773,7 @@ function adoptFirst(grid, css) {
 }
 function tableHtml(list, p, win) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
-    ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"], ["psd", "PSD"]];
+    ["created", "Created"], ["new", "Updated"], ["psd", "PSD"]];
   const sort = sortOf(p);
   const first = win.all ? list.length : Math.max(TABLE_FIRST, Math.ceil((win.y + 2 * win.h) / 30));    // rows are 30 px or taller: the scroll position stays
   const rest = list.slice(first);
@@ -797,7 +796,7 @@ function sizerRows(rest, rows) {
   const len = v => { const n = String(v ?? "").length; return [n, n]; };
   const cols = c => [[0, 0], text([c.name]), text([`${KIND_LABEL[c.type] || c.type}${c.subtype ? ` · ${cap(c.subtype)}` : ""}`]),
     text([c.series], [c.subseries, 12]), len(c.stars), len(c.hp), len(c.def), len(c.atk), len(c.spd), len(c.hp != null ? total(c) : ""),
-    [(c.types || []).filter(iconFor).length, 0], text([c.author]), ...(S.created ? [text([createdText(c)])] : []), text([date(c.ts)]), text([psdSize(c)])];
+    [(c.types || []).filter(iconFor).length, 0], text([c.author]), text([createdText(c)]), text([date(c.ts)]), text([psdSize(c)])];
   const top = [], pick = new Set();
   rest.forEach((c, i) => {
     if (psdChips(c)) pick.add(i);
@@ -835,7 +834,7 @@ const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
 const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 30)} alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
-      <td>${(c.types || []).map(t => iconImg(t, "tok", 18)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td><td class="num size">${psdSize(c)}</td></tr>`;
+      <td>${(c.types || []).map(t => iconImg(t, "tok", 18)).join("")}</td><td>${esc(c.author || "")}</td><td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td><td>${date(c.ts)}</td><td class="num size">${psdSize(c)}</td></tr>`;
 
 // ---- card detail -----------------------------------------------------------------------------------
 function statBars(c) {

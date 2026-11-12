@@ -47,7 +47,7 @@ export const iconSet = (ic, px) => ` srcset="${esc(ic.file.replace(/\.webp$/, ".
 export const iconImg = (icons, name, cls = "tok", px = 0) => { const ic = icons[norm(name)];
   return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}"${px ? iconSet(ic, px) : ""} alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 
-// [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload), when the build has dates
+// [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload)
 export const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
   ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"], ["psd", "PSD size"]];
 export const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "created", "mentioned", "psd"].includes(sort));
@@ -133,13 +133,13 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
     <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(env.icons, t, "", 16)).join("")}</div></div>${link || href ? "</a>" : "</article>"}`;
 }
 
-/** the grid's toolbar; sort: the shown sort, dir: the dir param, created: the build has creation dates, tail: edit mode's
+/** the grid's toolbar; sort: the shown sort, dir: the dir param, tail: edit mode's
  *  and Compare's controls, needs: the cards needing handling a phone's one tap shows (its Filters are closed) */
-export function toolbarHtml({ count, waiting = false, active = 0, sort, dir = "", created, view, size, tail = "", needs = 0 }) {
+export function toolbarHtml({ count, waiting = false, active = 0, sort, dir = "", view, size, tail = "", needs = 0 }) {
   return `<div class="toolbar">
         <span class="result-count">${waiting ? "…" : `${count.toLocaleString()} card${count === 1 ? "" : "s"}`}</span>${needs ? `<a class="mobile-only needs-link" href="#/cards?flags=flagged">Needs handling (${needs})</a>` : ""}
         <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active ? ` (${active})` : ""}</button>
-        <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.filter(([v]) => v !== "created" || created).map(([v, l, d]) =>
+        <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.map(([v, l, d]) =>
           `<option value="${v}"${d !== undefined ? ` data-dir="${d}"` : ""}${v === sort && (d === undefined || (d === "asc") !== isDesc(sort, dir)) ? " selected" : ""}>${l}</option>`).join("")}</select></label>
         <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>
         <span class="seg">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}">${l}</button>`).join("")}</span>

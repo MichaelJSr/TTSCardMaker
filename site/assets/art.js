@@ -1,10 +1,9 @@
-// Artwork sources (Card Edits.json art: a list, one string in older entries; the retired ability_art goes last): the
-// card page's lines, each http(s) URL in them a link.
+// Artwork sources (Card Edits.json art: a list): the card page's lines, each http(s) URL in them a link.
 import { esc } from "./text.js";
 
 export const ART_MAX = 500;                            // characters a source (build_site ART_MAX, the bot's card_edits.ART_MAX)
 /** A card's (or entry's) artwork sources, in order. */
-export const artList = c => [...(Array.isArray(c?.art) ? c.art : c?.art ? [c.art] : []), ...(c?.ability_art ? [c.ability_art] : [])]
+export const artList = c => (Array.isArray(c?.art) ? c.art : [])
   .map(s => String(s).replace(/\s+/g, " ").trim()).filter(Boolean);
 /** "Artwork source #2" (n of `of`; one alone: "Artwork source"). */
 export const artLabel = (n, of = 2) => (of > 1 ? `Artwork source #${n}` : "Artwork source");

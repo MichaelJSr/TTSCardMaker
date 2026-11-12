@@ -17,6 +17,6 @@ const css = G.TILE_SIZES.m[1];
 console.log(JSON.stringify({
   ids: list.slice(0, n).map(c => c.id),
   tiles: list.slice(0, n).map((c, i) => G.tileHtml(c, { link: true, eager: i < eager, css }, env)),
-  toolbar: G.toolbarHtml({ count: list.length, sort: "name", dir: null, created: cards.some(c => c.created), view: "grid", size: "m", needs: list.filter(flagged).length }),
+  toolbar: G.toolbarHtml({ count: list.length, sort: "name", dir: null, view: "grid", size: "m", needs: list.filter(flagged).length }),
   sizes: G.TILE_SIZES,
 }));

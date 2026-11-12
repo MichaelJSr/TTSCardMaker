@@ -21,18 +21,18 @@ const API = "https://api.github.com";
 const K = { stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
-  atk: "int", spd: "int", ability: "str", parts: "parts", colors: "colors", note: "str", art: "sources", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
+  atk: "int", spd: "int", ability: "str", parts: "parts", colors: "colors", note: "str", art: "sources", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
   creatures: "creatures", flags: "flags", names_ok: "names" };
 const ORDER = Object.keys(FIELDS);
 const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the bot's _by (changes.js BOT)
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
-  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", colors: "Text colours", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases",
+  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", colors: "Text colours", note: "Note", art: "Artwork sources", aliases: "Aliases",
   dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures", flags: "Flags", names_ok: "Names differ on purpose" };
-// art: the artwork sources, a list (art.js; ability_art: the retired second field, read as the last source, never offered)
+// art: the artwork sources, a list (art.js)
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\", \"name\": \"\"}, never baked. names_ok: the website name, printed title and file name as someone marked them differing on purpose, [\"site\", \"printed\", \"File_name\"]; the name flag stays off until one changes. colors: the card image's text colours (baked; never the website's text), [{\"field\": \"ability\", \"phrase\": \"Burning\", \"color\": \"#ff7a1a\"}], on the name or the ability, a phrase as the effect layers' (\"word#n\" the nth; none: the whole field). Read by the website and the card sync.";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art: where the card's artwork comes from, a list of sources (a URL, an artist, a game; at most 500 characters each), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\", \"name\": \"\"}, never baked. names_ok: the website name, printed title and file name as someone marked them differing on purpose, [\"site\", \"printed\", \"File_name\"]; the name flag stays off until one changes. colors: the card image's text colours (baked; never the website's text), [{\"field\": \"ability\", \"phrase\": \"Burning\", \"color\": \"#ff7a1a\"}], on the name or the ability, a phrase as the effect layers' (\"word#n\" the nth; none: the whole field). Read by the website and the card sync.";
 // true beside a name: the bake renames the card's files to it (owner 2026-10-25; build_site.py RENAME_KEY, the bot's card_edits.RENAME)
 export const RENAME_KEY = "_rename", RENAME_LABEL = "Also rename the card's files";
 /** An entry's `_rename` after an op: ticked or unticked (op.rename), and gone without a name or with a website-only one. */
@@ -248,7 +248,6 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json", onCo
     for (const f of op.unset) if (!f.startsWith(P.PART)) delete cur[f];
     Object.assign(cur, set);
     if (cur.flags === null) delete cur.flags;      // cleared before the site rebuilt: no null in the file
-    if ("art" in set || op.unset.includes("art")) delete cur.ability_art;   // the sources hold it now (art.js artList)
     if (parts || unsetParts.length) { const m = P.mergeParts(cur.parts, parts, unsetParts); if (m) cur.parts = m; else delete cur.parts; }   // per layer
     const site = new Set(Array.isArray(cur[SITE]) ? cur[SITE] : []);       // website-only fields: ticked, unticked; one without a value goes
     for (const [f, on] of Object.entries(op.site || {})) if (on) site.add(f); else site.delete(f);

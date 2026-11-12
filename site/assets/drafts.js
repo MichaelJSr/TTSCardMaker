@@ -11,7 +11,7 @@ const STATS = ["hp", "def", "atk", "spd"];
 const CHECKS = new Set(["hidden", "allow_high_stats", "problems_ok"]);
 // the offer's words for the form's keys (edit.js LABEL, plus the ban row's three inputs)
 const NAMES = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP",
-  def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
+  def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", art: "Artwork sources", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", names_ok: "Names differ on purpose", author: "Author", banned: "Ban", "ban-group": "Ban", "ban-reason": "Ban",
   creatures: "Creatures", colors: "Text colours", rename: "Rename files",
   ...Object.fromEntries(CARD_FLAGS.flatMap(([k, l]) => [[`flag-${k}`, l], [`flag:${k}`, l]])) };   // its tick, its reason
@@ -147,7 +147,7 @@ export function fillValues(form, fields, { creatures = null, art = null } = {}) 
     if (f === "types") {
       const box = form.querySelector("#ef-types"); if (box) setToggles(box, Array.isArray(v) ? v : []);
     } else if (f === "creatures") creatures?.(v);
-    else if (f === "art") art?.(Array.isArray(v) ? v : artList({ art: v }));
+    else if (f === "art") art?.(Array.isArray(v) ? v : []);
     else {
       const el = form.querySelector(/^[\w-]+$/.test(f) ? `#ef-${f}` : `[id="ef-${String(f).replace(/["\\]/g, "\\$&")}"]`);     // part:<layer id> has a colon
       if (!el) continue;
