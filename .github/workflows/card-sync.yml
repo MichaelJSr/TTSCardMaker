@@ -54,8 +54,7 @@ on:
       - "TTS/decks.json"
       - "TTS/Impossibility Simulator.json"
       - "site/rulebook/**"   # the rulebook's chapters: db/rulebook.json, and the TTS pages once the website shows them
-      - "TTS/Global.lua"     # the save's global script and UI (tts_save writes them into the save)
-      - "TTS/Global.xml"
+      - "TTS/Global.lua"     # the save's global script (tts_save writes it into the save)
   schedule:
     - cron: "17 * * * *"     # the hourly safety net (owner, 2026-10-25; GitHub starts it every 4-10 h): off the top of the hour, GitHub's busiest
   workflow_dispatch:
@@ -1205,7 +1204,7 @@ jobs:
           { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
-                  'TTS/Impossibility Simulator.json' 'site/rulebook/' 'TTS/Global.lua' 'TTS/Global.xml'
+                  'TTS/Impossibility Simulator.json' 'site/rulebook/' 'TTS/Global.lua'
                   'site/assets/' 'site/build/' 'MDW/Linked/')    # the site code and the rulebook's pictures draw its PDF
           why=()
           event=$GITHUB_EVENT_NAME

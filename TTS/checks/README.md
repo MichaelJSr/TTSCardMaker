@@ -17,12 +17,12 @@ python3 -m venv ~/.venvs/tts-checks                             # once
 Each check takes the save as its first argument (default: the repo's save) and exits 1 on a failure. `run_all.py`
 runs them 4 at a time, the slow ones first, prints one line per check (in its list's order) plus the end of a failing
 check's output, and keeps every output in `/tmp/tts-checks/out/`. It runs `card_sync_steps.py` as 3 parts of its
-groups (`GROUPS`: two listed in `run_all.py`, then the rest), about 15 s each, so 17 lines.
+groups (`GROUPS`: two listed in `run_all.py`, then the rest), about 15 s each, so 13 lines.
 
 Interpreter: any Python 3 with `requests` and `Pillow`. The Lua checks also need `lupa`. A
 check that needs lupa and runs without it starts again under `$LUA_PYTHON` or `~/.venvs/tts-checks/bin/python`.
 The updater checks run a copy of the bot's code (`global_config.py` and every `commands/*.py`) on copies of the
-updater's inputs (decks.json, Card Edits.json, Global.lua, Global.xml, pages.json); it needs `requests` and `Pillow`.
+updater's inputs (decks.json, Card Edits.json, Global.lua, pages.json); it needs `requests` and `Pillow`.
 
 | Variable | Default | What |
 |---|---|---|
@@ -43,16 +43,12 @@ Network: the website's `cards.json` (names) and `tts.json` (`lua_mock.py`), GitH
 | Check | What it checks |
 |---|---|
 | `structure.py` | Save shape: keys, cards (CardID, own CustomDeck, 1x1), decks (DeckIDs = cards, CustomDeck = used keys), no CustomDeck key naming two images, GUIDs, transforms, bags, snap points, hand zones (FogColor a seat colour) |
-| `drift.py` | Against the last hand edit (`befdf769`, 11-06: the Specific Item Decks bag removed; or a ref or file as 2nd argument): only the updater's own kinds of edit (link refs, links to a moved file, Nicknames, keys, deck cards, the Rulebooks bag's contents, resizeTargets rows; the global script and UI must equal `TTS/Global.lua` and `TTS/Global.xml`); an existing card's Description, GMNotes, Memo, Tags or scripts, or the global Lua outside resizeTargets, changed fails. Re-baseline `BASELINE` after a deliberate hand edit of the save |
+| `drift.py` | Against the last hand edit (`befdf769`, 11-06: the Specific Item Decks bag removed; or a ref or file as 2nd argument): only the updater's own kinds of edit (link refs, links to a moved file, Nicknames, keys, deck cards, the Rulebooks bag's contents, resizeTargets rows; the global script must equal `TTS/Global.lua`, the UI the baseline's); an existing card's Description, GMNotes, Memo, Tags or scripts, or the global Lua outside resizeTargets, changed fails. Re-baseline `BASELINE` after a deliberate hand edit of the save |
 | `contents_decks.py` | Complete decks hold exactly their rule's PNGs at the rule's counts (an empty one fails); hand-picked decks stay inside their rule, and with `add_new_since` hold every rule card the save at that commit lacked |
-| `contents_names.py` | Card Nicknames = the website's names (Card Edits.json first); Descriptions are not judged (the team's) |
 | `contents_backs.py` | Each deck has its rule's back; backs by card type |
 | `contents_coverage.py` | Every website card is in the save and in a complete rule; the Rulebooks bag holds the rulebook's PDF (`TTS/Rulebook/Rulebook.pdf`) as one Custom_PDF object |
 | `verify_rules_snapshot.py` | `decks.json` agrees with the save: `card_list` of hand-picked decks (an `add_new_since` deck may hold more: a note), and no rule matching a PNG that is not a card (no PSD, not on the website, like a back) |
-| `scripts_global_refs.py` | GUIDs and object types in the scripts are real; `TEAMS` (seat = team) and `SIDE_ORDER` (the seats a side's free hand zones go to) agree; hand zones belong to seats on a team |
-| `scripts_state_xml.py` | LuaScriptState is JSON; XmlUI is well-formed (the global UI may be only a comment: its panels are built at run time) |
 | `lua_mock.py` | The global script (`TTS/Global.lua`) under a mock TTS API (lupa) on the save's own objects and hand zones: no Lua patterns (caught as they run; MoonSharp's "pattern too complex"); handlers are TTS events, none per frame; loading does nothing and builds no UI; Red/Orange/Green -> Hearts, Blue/Purple/Pink -> Clubs, other seats None, Grey/Black untouched; a side's free hand zones go to its first seated player and come back (kept through a save and load); large cards to 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the rulebook panel and the card finder (aliases, plurals, "status effects") on the website's `tts.json` and the repo's `pages.json` (built on a player's first use, the save's UI kept, every id set exists, every onClick a function, spawns into the hand face down (at the pointer on a seat without one, once the card has gone), the PDF turned to the right page, hidden cards stay hidden (face down, or in any of another player's hand zones), the name plain and the ability in the website's palette (`ac`) with a card's own "<" never a tag; every card's details at each size: the text only the kind line, the stats and the ability (no rule sections), each chapter a whole Rules button, rows fit, each "+ name" spawns its card, the ability laid out line by line as one text would draw it with each status word, timing tag and creature or minion type word's rule on hover (wrapped to the text's width), a type word in its type's colour (`ic`), a button's tooltip only on a name cut short: its whole name, above every row of buttons; every tooltip in the opaque style `TIP`); each deck button a copy of the full deck, every card at its count in the save's piles (2★ Items: Metronome 5, Bomb 3). A second argument tests a `.lua` file instead (the way to try a Global.lua change before it reaches the save) |
-| `lua_resize_roundtrip.py` | The updater's table edit leaves the rest of the script byte-identical and still loads in Lua 5.2 |
 | `links_pins.py` | Every repo link is pinned to a full sha on main, the last commit that changed the file, with canonical %-encoding (git log's view noted for failed pins only); the global script's links are live data on main, not pinned |
 | `links_http.py` | Every URL in the save loads; repo files match their blobs (fetched uncompressed: `.obj` models come gzipped) and images decode; the global script's links load (a `.json` one parses); links in Descriptions, notes and XmlUI only load. Pinned blobs a blobless checkout lacks are fetched first, in a few batches; blobs are read by one `git cat-file --batch` per repo; a blob that decoded once is not decoded again (`decoded-blobs.txt` beside the history clone) |
 | `updater_idempotent.py` | The updater run as the Action runs it reports no changes and leaves the bytes alone; unpinned links and a dropped Lua row converge back; an offline website changes nothing; a card taken out of a complete deck comes back once |
@@ -60,17 +56,19 @@ Network: the website's `cards.json` (names) and `tts.json` (`lua_mock.py`), GitH
 
 `contents_lib.py` and `checks_env.py` are shared helpers. `links_pins.py` and `updater_idempotent.py` judge the save
 at the checkout's commit (a work branch: its merge-base with `TTS_REF`) when it is that commit's save, else at main:
-a later save update on GitHub does not fail an older checkout. The names checks (`contents_names.py`,
-`updater_idempotent.py`) follow the live website, like the updater. When the website's names change (a Card sync data
-commit), they fail until the next Card sync run has updated the save (15 of 17 pass meanwhile).
+a later save update on GitHub does not fail an older checkout. `updater_idempotent.py` follows the live website's
+names, like the updater. When the website's names change (a Card sync data commit), it fails until the next Card sync
+run has updated the save (12 of 13 pass meanwhile).
 
 Not kept from the audit: the zone-claiming runtime checks (`scripts_global_runtime.py`, `verify_scripts_f1_reload.py`,
 retired with the old respawn claiming in `c9873ddf`; the hand zones shared on a side since 10-30 are `lua_mock.py`'s),
 the one-off checks of that fix against the old save (`final_bytes.py`, `final_diff.py`, `fixer_changes.py`),
 `contents_cooldown_pins.py` and `pins_current.py` (covered by `links_pins.py`), `dump_roundtrip.py` and `serializer.py`
 (covered by `updater_idempotent.py` and AutoCroissant's `test_serializer_round_trip_real_save`), `final_spot.py` (30
-random cards end to end: all cards are in `links_http.py`, `links_pins.py`, `contents_names.py`, `structure.py` and
-`contents_decks.py`), `customdeck_collisions.py` (covered by `structure.py`), `verify_scripts_static.py` (covered by
-`drift.py`), `scripts_lua_syntax.py` (covered by `lua_mock.py`, `lua_resize_roundtrip.py` and `drift.py`),
-`lua_table.py` and `contents_resize.py` (covered by `structure.py`, `updater_idempotent.py` and
-`lua_resize_roundtrip.py`) and `updater_report_decks.py` (covered by AutoCroissant's `test_tts_save.py`).
+random cards end to end: all cards are in `links_http.py`, `links_pins.py`, `structure.py` and `contents_decks.py`),
+`customdeck_collisions.py` (covered by `structure.py`), `verify_scripts_static.py` (covered by `drift.py`),
+`scripts_lua_syntax.py` (covered by `lua_mock.py` and `drift.py`), `lua_table.py`, `contents_resize.py` and (2026-11-12)
+`lua_resize_roundtrip.py` (covered by `structure.py`, `updater_idempotent.py` and `lua_mock.py`),
+`updater_report_decks.py` (covered by AutoCroissant's `test_tts_save.py`), and since 2026-11-12 `contents_names.py`
+(covered by `updater_idempotent.py`), `scripts_global_refs.py` and `scripts_state_xml.py` (covered by `drift.py` and
+`lua_mock.py`).

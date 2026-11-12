@@ -18,8 +18,8 @@ BOT = os.path.expanduser(os.environ.get("AUTOCROISSANT", "~/Desktop/AutoCroissan
 LUA_PYTHONS = (os.environ.get("LUA_PYTHON", ""), "~/.venvs/tts-checks/bin/python")
 CARD_REPO_URL = "https://github.com/MichaelJSr/TTSCardMaker.git"
 SITE_URL = "https://michaeljsr.github.io/TTSCardMaker"
-# the card repo files the updater reads (a missing Global.lua, Global.xml or pages.json leaves that part of the save alone)
-UPDATER_INPUTS = ("TTS/decks.json", "site/Card Edits.json", "TTS/Global.lua", "TTS/Global.xml", "TTS/Rulebook/pages.json")
+# the card repo files the updater reads (a missing Global.lua or pages.json leaves that part of the save alone)
+UPDATER_INPUTS = ("TTS/decks.json", "site/Card Edits.json", "TTS/Global.lua", "TTS/Rulebook/pages.json")
 
 
 def save_arg(i: int = 1) -> str:
@@ -113,13 +113,6 @@ def site_cards() -> list:
             return json.load(f)["cards"]
     with urlopen(f"{SITE_URL}/data/cards.json", timeout=60) as r:
         return json.load(r)["cards"]
-
-
-def use_bot() -> None:
-    """The updater importable (commands.tts_save needs only requests)."""
-    if not os.path.exists(os.path.join(BOT, "commands", "tts_save.py")):
-        sys.exit(f"no updater at {BOT} (set AUTOCROISSANT)")
-    sys.path.insert(0, BOT)
 
 
 def copy_bot(dest: str) -> None:

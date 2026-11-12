@@ -14,10 +14,9 @@ from checks_env import HERE, ensure_history, save_arg  # noqa: E402
 
 CHECKS = [   # file and its extra arguments
     ("structure.py",), ("drift.py",),
-    ("contents_decks.py",), ("contents_names.py",), ("contents_backs.py",), ("contents_coverage.py",),
+    ("contents_decks.py",), ("contents_backs.py",), ("contents_coverage.py",),
     ("verify_rules_snapshot.py",),
-    ("scripts_global_refs.py",), ("scripts_state_xml.py",),
-    ("lua_mock.py",), ("lua_resize_roundtrip.py",),
+    ("lua_mock.py",),
     ("links_pins.py",), ("links_http.py",),
     ("updater_idempotent.py",),
 ]

@@ -4,9 +4,9 @@
 python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref befdf769, the last hand edit of the save)
 Allowed: repo link refs, links to a moved file (the old path gone from main, the new one on it), card Nicknames, card
 CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
-removed from decks, the Rulebooks bag's contents, the resizeTargets rows, and the global script and UI as TTS/Global.lua
-and TTS/Global.xml hold them (since 2026-10-30 the updater writes them; a mismatch fails). Everything else is listed and
-fails: a card's Description, GMNotes, Memo, Tags and scripts are the team's (2026-10-22).
+removed from decks, the Rulebooks bag's contents, the resizeTargets rows, and the global script as TTS/Global.lua holds
+it (since 2026-10-30 the updater writes it; a mismatch fails). Everything else is listed and fails: a card's
+Description, GMNotes, Memo, Tags and scripts are the team's (2026-10-22).
 """
 import json
 import os
@@ -154,15 +154,11 @@ def from_file(name):
 def main(path, base_arg):
     cur = json.load(open(path, encoding="utf-8"))
     base = load_base(base_arg)
-    lua, xml = from_file("Global.lua"), from_file("Global.xml")
+    lua = from_file("Global.lua")
     # the updater writes the script: the file is the baseline
     if norm(lua_rest(lua)) != norm(lua_rest(cur.get("LuaScript"))):
         fails.append("LuaScript differs from TTS/Global.lua outside resizeTargets (the next save update writes it)")
     base["LuaScript"] = cur.get("LuaScript")
-    if xml is not None:
-        if xml != (cur.get("XmlUI") or ""):
-            fails.append("XmlUI differs from TTS/Global.xml (the next save update writes it)")
-        base["XmlUI"] = cur.get("XmlUI")
     for k in (set(base) | set(cur)) - {"ObjectStates", "LuaScript"}:
         if norm(base.get(k)) != norm(cur.get(k)):
             fails.append(f"top-level {k}: {str(base.get(k))[:100]} -> {str(cur.get(k))[:100]}")

@@ -7,12 +7,11 @@ import sys
 from urllib.parse import unquote
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, REPO as TC, file_at, save_arg, site_cards  # noqa: E402
+from checks_env import REF, REPO as TC, file_at, save_arg, site_cards  # noqa: E402,F401 (site_cards re-exported)
 
 RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 LINK = re.compile(re.escape(RAW) + r"(refs/heads/main|main|[0-9a-f]{7,40})/([^\s\"\\<>]+)")
 CARD_NAMES = ("Card", "CardCustom")
-HAND_NAMED = ("MDW/Assets/Markers/",)
 
 
 def git(*args) -> bytes:
@@ -81,14 +80,6 @@ def back(card):
     return lk[1] if lk else None
 
 
-def stem(path):
-    return os.path.splitext(os.path.basename(path))[0].replace("_", " ")
-
-
-def edit_key(name):
-    return re.sub(r"\s+", " ", name.replace("_", " ")).strip().lower()
-
-
 def glob(pattern):
     out = ""
     for tok in re.split(r"(\*\*|\*|\?)", pattern):
@@ -100,33 +91,6 @@ def rule_cards(rule, pngs):
     globs = [glob(g) for g in rule.get("folders", [])]
     inc, exc = set(rule.get("include", [])), set(rule.get("exclude", []))
     return [p for p in pngs if p in inc or (p not in exc and any(g.match(p) for g in globs))]
-
-
-class Names:
-    """Card Edits.json name > cards.json name > PSD stem > PNG stem (as _Names)."""
-
-    def __init__(self, files, save_path):
-        cards = site_cards()
-        self.site = {c["png"]: c["name"] for c in cards if c.get("png") and c.get("name")}
-        self.cards = cards
-        side = os.path.join(os.path.dirname(os.path.abspath(save_path)), "..", "site", "Card Edits.json")
-        text = open(side, encoding="utf-8").read() if os.path.exists(side) else show("site/Card Edits.json")
-        self.edits = {edit_key(k): v for k, v in (json.loads(text or "{}").get("cards") or {}).items()
-                      if isinstance(v, dict)}
-        self.lower = {p.lower(): p for p in files}
-
-    def _stem(self, path):
-        psd = self.lower.get(os.path.splitext(path)[0].lower() + ".psd")
-        return stem(psd or path)
-
-    def known(self, path):
-        e = self.edits.get(edit_key(self._stem(path)))
-        if e and isinstance(e.get("name"), str) and e["name"].strip():
-            return e["name"]
-        return self.site.get(path)
-
-    def of(self, path):
-        return self.known(path) or self._stem(path)
 
 
 class Result:
