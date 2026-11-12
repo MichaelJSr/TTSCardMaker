@@ -896,47 +896,87 @@ jobs:
           fi
           gh workflow run card-checks.yml --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB"
 
-      # A failed live job (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of its lane
-      # (data: Card data and after the bake; main: Bake and save): the streak is the lane's outcome in the
-      # newest other live run where it ended (finished or not), so runs that skipped the lane (or held it: its Gate
-      # skipped) neither end nor count. A
-      # lane tells once a run (after follows data, so it sees data's failure); the two lanes may each tell. The URL is
-      # never printed; a failed call only warns. Dry runs neither alert nor count (their run names say so).
+      # A failed live job tells the standards channel once per broken push (owner, 2026-11-11), Card guards' alert
+      # included: before posting it looks for the marker line in the commit comments of the push's head commit (this
+      # push's, or the push a guards follow-up runs for); after posting it comments it there. A run without a push (the
+      # schedule, the chain, a retry, a hand dispatch) also stays quiet when its lane failed in the newest other live run
+      # where it ended (runs that skipped or held the lane, and dry runs, pass over), so a lasting failure tells once.
+      # It names the failed steps (this job's in the run's job list, else the outcomes below), plain, no preview card,
+      # no ping. Unread comments: it posts anyway. The URL is never printed; a failed call only warns.
       - name: Tell Discord
         if: failure() && env.DRY_RUN != 'true'
-        timeout-minutes: 2
+        timeout-minutes: 3
         env:
           GH_TOKEN: ${{ github.token }}
-          WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
-          OUTCOMES: "gate=${{ steps.gate.outcome }} build=${{ steps.build.outcome }} data=${{ steps.data-commit.outcome }}"
+          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
+          GUARDS_RUN: ${{ inputs.guards }}
+          OUTCOMES: |
+            Bot and data=${{ steps.clones.outcome }}
+            Python environment=${{ steps.venv.outcome }}
+            Gate=${{ steps.gate.outcome }}
+            Fonts tree=${{ steps.fonts.outcome }}
+            Build=${{ steps.build.outcome }}
+            Posts=${{ steps.posts.outcome }}
+            Commit data=${{ steps.data-commit.outcome }}
         run: &tell |
-          if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; no Discord message"; exit 0; fi
-          if [ "$GITHUB_JOB" = main ]; then lane='.name == "Bake and save"'; what="Bake and save"; keep="website edits wait for the next bake"
-          else lane='(.name | startswith("Card data"))'; what="Card data"; keep="the website and the bot keep the last good data"; fi
-          bad='(.conclusion == "failure" or .conclusion == "timed_out")'
-          held='(.conclusion == "success" and any(.steps[]?; .name == "Gate" and .conclusion == "skipped"))'
-          told=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs" \
-            --jq "[.jobs[] | select(($lane) and $bad)] | length") || told=0
-          if [ "${told:-0}" -gt 0 ]; then echo "$what failed earlier in this run: Discord was told then."; exit 0; fi
-          ids=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json databaseId,displayTitle \
-            --jq ".[] | select(.databaseId != $GITHUB_RUN_ID and .displayTitle != \"Card sync (dry run)\") | .databaseId") \
-            || ids=""
-          last=""
-          for id in $(head -10 <<< "$ids"); do        # the newest live run where the lane ended (a push run's data ends long before it)
-            last=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
-              --jq "[.jobs[] | select(($lane) and .conclusion != null and .conclusion != \"skipped\" and .conclusion != \"cancelled\" and ($held | not))]
-                | if length == 0 then \"\" elif any(.[]; $bad) then \"failure\" else \"success\" end") || last=""
-            if [ -n "$last" ]; then break; fi
-          done
-          if [ "$last" = failure ]; then
-            echo "$what failed in the last live run where it ran too: Discord was told then."
-            exit 0
+          if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"; exit 0; fi
+          mark='<!-- discord-failure-told -->'
+          if [ "$GITHUB_JOB" = main ]; then lane='.name == "Bake and save"'; job="Bake and save"; keep="Website edits wait for the next bake."
+          else lane='(.name | startswith("Card data"))'; job="Card data"; keep="The website and the bot keep the last good data."; fi
+          sha=${GITHUB_SHA:-} login=""
+          if [ "${GITHUB_EVENT_NAME:-}" = push ]; then login=$GITHUB_ACTOR
+          elif [ -n "${GUARDS_RUN:-}" ]; then          # a guards follow-up: that guards run's push
+            read -r psha by <<< "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GUARDS_RUN" \
+              --jq 'select(.event == "push") | "\(.head_sha) \(.actor.login)"' 2> /dev/null)" || true
+            if [ -n "${by:-}" ]; then sha=$psha login=$by; fi
           fi
-          stages=$(tr ' ' '\n' <<< "$OUTCOMES" | sed -n 's/=failure$//p' | paste -sd, - | sed 's/,/, /g')
-          jq -n --arg run "$RUN_URL" --arg what "$what" --arg stages "${stages:-a step}" --arg keep "$keep" \
-            '{content: ("Card sync failed (" + $what + ": " + $stages + "): " + $run + "; " + $keep + "."), allowed_mentions: {parse: []}}' \
+          if [ -z "$login" ]; then
+            bad='(.conclusion == "failure" or .conclusion == "timed_out")'
+            held='(.conclusion == "success" and any(.steps[]?; .name == "Gate" and .conclusion == "skipped"))'
+            told=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs" \
+              --jq "[.jobs[] | select(($lane) and $bad)] | length") || told=0
+            if [ "${told:-0}" -gt 0 ]; then echo "$job failed earlier in this run: Discord was told then."; exit 0; fi
+            ids=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json databaseId,displayTitle \
+              --jq ".[] | select(.databaseId != $GITHUB_RUN_ID and .displayTitle != \"Card sync (dry run)\") | .databaseId") \
+              || ids=""
+            last=""
+            for id in $(head -10 <<< "$ids"); do        # the newest live run where the lane ended (a push run's data ends long before it)
+              last=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
+                --jq "[.jobs[] | select(($lane) and .conclusion != null and .conclusion != \"skipped\" and .conclusion != \"cancelled\" and ($held | not))]
+                  | if length == 0 then \"\" elif any(.[]; $bad) then \"failure\" else \"success\" end") || last=""
+              if [ -n "$last" ]; then break; fi
+            done
+            if [ "$last" = failure ]; then
+              echo "$job failed in the last live run where it ran too: Discord was told then."
+              exit 0
+            fi
+          fi
+          if [ -n "$sha" ]; then
+            told="" read=""
+            for wait in 0 10 30; do
+              sleep "$wait"
+              if told=$(gh api "repos/$GITHUB_REPOSITORY/commits/$sha/comments" --paginate \
+                  --jq ".[] | select(.body | contains(\"$mark\")) | .id"); then read=true; break; fi
+            done
+            if [ -n "$told" ]; then echo "This push's failure was told in Discord already."; exit 0; fi
+            if [ -z "$read" ]; then echo "::warning::the commit's comments were not read: posting anyway"; fi
+          fi
+          steps=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/${GITHUB_RUN_ATTEMPT:-1}/jobs" --paginate \
+            --jq ".jobs[] | select(.status == \"in_progress\" and .runner_name == \"${RUNNER_NAME:-}\") | .steps[]
+              | select(.conclusion == \"failure\" or .conclusion == \"timed_out\") | .name" 2> /dev/null) || steps=""
+          if [ -z "$steps" ]; then steps=$(sed -n 's/=failure$//p' <<< "$OUTCOMES"); fi
+          steps=$(paste -sd, - <<< "${steps:-$job}" | sed 's/,/, /g')
+          if [ -n "$login" ]; then where="$login's push ${sha:0:8}"; else where="main ${sha:0:8}"; fi
+          jq -n --arg content "Card sync failed on $where: $steps $RUN_URL"$'\n'"$keep" \
+            '{content: $content, flags: 4, allowed_mentions: {parse: []}}' \
             | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK" \
-            || echo "::warning::the Discord webhook call failed"
+            || { echo "::warning::the Discord webhook call failed"; exit 0; }
+          echo "Told Discord: Card sync failed on $where: $steps."
+          if [ -n "$sha" ]; then
+            jq -n --arg body "Failure told in Discord: $RUN_URL"$'\n'"$mark" '{body: $body}' \
+              | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$sha/comments" --input - > /dev/null \
+              || echo "::warning::the told mark was not commented on ${sha:0:8}"
+          fi
 
   # The main lane goes at once (owner, 2026-11-03: the 30-minute window of 2026-10-24 is gone). A push's run, the
   # schedule's and a chained one first look for a push run whose Bake and save is queued or still in its Guards' fixes
@@ -1679,11 +1719,25 @@ jobs:
 
       - name: Tell Discord
         if: failure() && env.DRY_RUN != 'true'
-        timeout-minutes: 2
+        timeout-minutes: 3
         env:
           GH_TOKEN: ${{ github.token }}
-          WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
-          OUTCOMES: "gate=${{ steps.gate.outcome }} bake=${{ steps.bake.outcome }} save=${{ steps.save.outcome }} redraw=${{ steps.redraw.outcome }} main=${{ steps.main.outcome }} repin=${{ steps.repin.outcome }}"
+          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
+          GUARDS_RUN: ${{ inputs.guards }}
+          OUTCOMES: |
+            Bot and data=${{ steps.clones.outcome }}
+            Python environment=${{ steps.venv.outcome }}
+            Fonts first=${{ steps.fonts-first.outcome }}
+            Gate=${{ steps.gate.outcome }}
+            Pending edits=${{ steps.edits.outcome }}
+            Fonts tree=${{ steps.fonts.outcome }}
+            Bake=${{ steps.bake.outcome }}
+            TTS save start=${{ steps.save-start.outcome }}
+            TTS save=${{ steps.save.outcome }}
+            Linked redraw=${{ steps.redraw.outcome }}
+            Commit main=${{ steps.main.outcome }}
+            Bake records=${{ steps.records.outcome }}
+            Re-pin=${{ steps.repin.outcome }}
         run: *tell
 
   # After M (it brought the bake's card files), R (the redrawn cards) or a bake that only recorded verdicts: the data lane

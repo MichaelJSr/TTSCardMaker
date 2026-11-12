@@ -405,4 +405,4 @@ export function statsHtml(A, { cards, byId }, params) {
     <div class="charts">${charts.join("")}</div>`;
 }
 
-export { diverging, legend };   // insights.js
+export { legend };   // insights.js

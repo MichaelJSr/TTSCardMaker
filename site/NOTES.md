@@ -860,7 +860,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   scroll-padding: focus inside the sticky tray would scroll the page to the top); past nine boxes a "Skip to cards" button (shown on
   focus) jumps past their Tab stops.
 
-## 25. Ratings (2026-10-24)
+## 25. Ratings (2026-10-24; off the website since 2026-11-11, §54: the data parts below stand, the display and Rate it parts are history)
 - File `site/Card Ratings.json` (AutoCroissant `card_edits.CardRatings`, `dump_ratings`): `{about, cards: {"Card Name": [{date
   "YYYY-MM-DD", scale "favorability" | "power", value a whole number 1-10 (owner, 2026-10-26: the 830 one-decimal values
   were rounded half up that day, 5.5 -> 6; averages keep one decimal), by "group" | <login>, source
@@ -898,7 +898,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `ratingsFile(text, ops, <Pacific day>, login)`: your entry of that day and scale replaced, others kept; `editsFile`
   skips a rating-only op, so Card Edits.json is untouched. `RATINGS_ABOUT` = `CardRatings.ABOUT`.
 
-## 26. Stats round 3: distributions, Ratings and History, the Archive (2026-10-24)
+## 26. Stats round 3: distributions, Ratings and History, the Archive (2026-10-24; Ratings gone 2026-11-11, §54)
 - Removed: Balance's "The cooldown update" (`bal-cooldown`, `WAVE`, `groupOf`) and analytics.py's `old` row flag
   (`OLD_RE`, `NEW_RE`; the log line keeps `timing tags n`). Chart texts are one short line (70 characters at most) or
   none; the Balance intro is one sentence.
@@ -1544,7 +1544,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 - **Palette**, defined once: build_site `STAT_COLORS` (HP #2fbf3a, DEF #3d63ff, ATK #ff3b3b, SPD #ffd21f, owner 11-11), `COUNTER_COLORS` (points #00ffae, BRICKS #a0522d, SP #ffff00: the TTS table's counters, text.js `COSTS`' swatches), and each status card's name in its chart colour (Card sync's `db/status_colors.json`, else its swatch): `text_palette` into cards.json `palette` ({stats, counters, statuses}) and tts.json (`ac`, statuses' `c`).
 - **Words** (textcolor.js `wordColors`, build_site `word_colors`: the same rule, AutoCroissant `tests/test_text_colors.py` holds them together): status words as `statusSpans` finds them (capitalised); stat words with their numbers as one unit ("+2 ATK", "3 HP", "-1 SPD", "0.5 ATK", "50% SPD", "x2 ATK", "X HP"; HP, DEF, ATK, SPD alone too; Health, Defense, Speed only after a number and Attack only after a signed one ("+2 Attack"): alone they are verbs and mechanics, "Attack items", "defense mode", and "Negate 1 attack" counts attacks (11-11: of the 756 real texts the only long form after a number); a lone lowercase "x" is a times sign, never part of the unit ("(2 x DEF + 4)": DEF alone; "X" is the variable, a number)); counter words (points, BRICKS, SP, star points; "point" and "brick" only after a number: "at any point"), any case; none over an icon, a badge (the site draws a cost as its badge) or another word, nor inside another card's name (text.js `render`, build_site `unlinked` over `name_links`' spans: "Deploy a Poison Circle" keeps the link's plain look; a status word linking its own status card keeps its colour).
 - **Website**: card text (the card page's ability and note, Compare, the Edit dialog's live preview and "On the site": app.js `cardText`, live.js) through text.js `render(text, {colors})`: `.tc` spans; names plain. A palette colour under 3:1 against its box in a theme gets the thin outline there (text.js `lowOn`: `.tc.lo-l`, `.tc.lo-d`; light: HP, SPD, points, SP; dark: BRICKS), never another colour. Linked status words keep their hover preview (tip.js: thumbnail and name).
-- **TTS** (Global.lua Card details): build_site `tts_words` maps the ability's words through `game_words` into tts.json `ac` ([text, colour, nth find after the last piece], found by text: MoonSharp's strings aren't bytes); a cost's words take their counter's colour there (TTS draws no badge); Global.lua `painted` draws them, every "<" made harmless (`plain`); a colour under 3:1 against the panel takes the least lighter shade of its hue that reaches 3:1 (owner 11-11: `tts_seen`, HLS lightness up in 1% steps, saturation kept, so black is a grey; 18 of the 64 chart colours today, at 3.01-3.13:1; the website keeps the chart's). No outline: TTS's rich text has no outline tag and an element's `outline` draws every letter of that text. The name is plain. STATUS EFFECTS: each status its own text under the details (`STATUS_ROWS` 6, the last takes any more), its name in its colour (statuses' `c`), its rule's words in theirs (statuses' `xc`, `tts_words`), its rule as the line's hover tooltip (statuses' `x`; its "+ name" spawn button's too, above it, under the whole name when shortened), the heading atop the first line's text; the text above measured narrower so a line more never overlaps them (the slack falls above the heading, 11-11: it sat 1-5 blank lines over its first entry at 208 of 612 card sizes). `TTS/checks/lua_mock.py` checks both on every card.
+- **TTS** (Global.lua Card details): build_site `tts_words` maps the ability's words through `game_words` into tts.json `ac` ([text, colour, nth find after the last piece], found by text: MoonSharp's strings aren't bytes); a cost's words take their counter's colour there (TTS draws no badge); Global.lua `painted` draws them, every "<" made harmless (`plain`); a colour under 3:1 against the panel takes the least lighter shade of its hue that reaches 3:1 (owner 11-11: `tts_seen`, HLS lightness up in 1% steps, saturation kept, so black is a grey; 18 of the 64 chart colours today, at 3.01-3.13:1; the website keeps the chart's). No outline: TTS's rich text has no outline tag and an element's `outline` draws every letter of that text. The name is plain. STATUS EFFECTS: the details text's last section, each status a line, its name in its colour (statuses' `c`), its rule's words in theirs (statuses' `xc`, `tts_words`). No rule tooltips (owner 11-11 ~19:40: they repeated the printed rules; the hover areas were uneven): a tooltip only on a button whose name is cut short ("..."), its whole name, styled as the panel (`TIP`: TTS's own is see-through) and above every row of buttons (`tooltipOffset` per row). `TTS/checks/lua_mock.py` checks both on every card.
 
 ## 50. Stat caps on a card's own display (2026-11-08, owner: "reject stat changes above 10" on custom bars; past a display's room: "refuse at edit time")
 - AutoCroissant psd_details VERSION 4: `stat_caps` ({stat: [per creature]}, psd_edit `stat_caps`) on a card whose stats are not on the template's layer-comp bars (separate icons, pictures, own shapes, digit rows): 10, less where a counted row (Computer Virus's squares) has room for fewer, 20 on Top and Bottom rows. Its cards.json `statCaps`. The template's bars have none: 0-20 (raid 0-40) and website only past them, as before.
@@ -1598,5 +1598,23 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   on purpose", shown for a card the flag names or one marked; a stale mark stays unless ticked again.
 - **No notes** (§46-47 superseded there): a card's page shows no flag line, note or reason, and edit mode has no
   in-place flags (`+ needs doing by hand`, `flag:<key>`, ✕ gone); `flagsHtml` is the labels alone (Needs handling; the
-  Edit dialog's preview shows none, as the page). People's flags are set in All fields.
+  Edit dialog's preview shows none, as the page). People's flags are set in All fields. The hand flag's issue: §54.
+
+## 54. Ratings off the site, Balance lower, the hand flag's issue (2026-11-11, owner: "remove the favorability and power ratings from the card browser website, but keep the data", "move balance to near the bottom, above recorded changes", "for the cards that need doing by hand, include some non intrusive way to see what the issue is")
+- **Ratings**: no display anywhere: the card page's Ratings block and Rate it, All fields' Ratings fieldset, the Stats
+  page's Ratings section and jump link, the person page's Ratings panel and the "rating" count in Edited, Missing's No
+  ratings. Gone: assets/ratings.js, insights.js `ratingsHtml` (and `dotRows`), balance.js's `diverging` export, edit.js
+  `ratingsFile`/`RATINGS_ABOUT`/`stageRating`/`op.rate`, the `rate-*` draft keys, the `.rate-*`/`.ratings`/`.p-picks`
+  CSS. Kept as they were: `site/Card Ratings.json`, AutoCroissant `tts_ratings` and `card_edits.CardRatings`, build_site
+  `parse_ratings`/`apply_ratings`/`rating_now`, cards.json `ratings`, `files.ratings`, the renames' follower. Shown by
+  nothing now, kept: contributions.json people's `ratings`, `selfBias`, `rater`, `powerVsStats` and editFields' `rating`.
+- **Balance** (`#card-balance`): after the strips and Decks using this card, just above Recorded changes (`#card-changes`),
+  then History and Details; one column the same (DOM order, no CSS order).
+- **Hand flag's issue** (Needs handling list only; flags.js `handIssue`, `flagsHtml`): the label "Needs doing by hand"
+  gets a 15 px ⓘ button (`.flag-i`, a 33 px hit area by `::before`) when the checks note it (`checks.hand`: "Automatic
+  check: …") or a person gave a reason (`flags.hand`: "Reason given: …"), both in that order. Hover: the site tooltip
+  (`data-tip`, the two joined by " · "); a click, tap or Enter (app.js action `flag-issue`, data-action wins over the
+  row's data-open) toggles `.flag-issue` under the labels (`aria-expanded`, `aria-controls`; `aria-describedby` reads it
+  on focus). Rows keep their height closed (checked against the 11-11 build: 44 rows, none moved). No mark on a card's
+  page or preview, as before. AutoCroissant `tests/test_site_flags.py`.
 

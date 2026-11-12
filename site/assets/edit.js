@@ -7,7 +7,6 @@ import * as decks from "./decks.js";
 import * as auth from "./login.js";
 import * as live from "./live.js";
 import * as draft from "./drafts.js";
-import { current as ratingNow } from "./ratings.js";
 import { soon } from "./fresh.js";
 import * as P from "./parts.js";
 import { date, dayOf, pictureNumber } from "./history.js";
@@ -28,8 +27,7 @@ const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", colors: "Text colours", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases",
-  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures", flags: "Flags", names_ok: "Names differ on purpose",
-  "rate-favorability": "Favorability", "rate-power": "Power" };
+  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures", flags: "Flags", names_ok: "Names differ on purpose" };
 // art: the artwork sources, a list (art.js; ability_art: the retired second field, read as the last source, never offered)
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
@@ -58,13 +56,6 @@ export function siteAfter(op, b = {}) {
   for (const f of op?.unset || []) s.delete(f);
   return SITE_FIELDS.filter(f => s.has(f));
 }
-// site/Card Ratings.json (AutoCroissant card_edits.CardRatings.ABOUT, for a new file)
-export const RATINGS_ABOUT = "Card ratings, whole numbers 1 to 10. favorability: how much players like the card; power: 1 weak, 10 too strong; the middle (5.5) is balanced. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.";
-const RATE = ["favorability", "power"], RATE_SOURCES = ["TTS session", "website"], RATE_RANGE = "Whole numbers 1 to 10";
-/** A typed rating: a whole number 1-10, null when empty, else NaN (owner 2026-10-26: no decimals). */
-const rateValue = t => { t = String(t ?? "").trim(); if (t === "") return null; const v = Number(t); return Number.isInteger(v) && v >= 1 && v <= 10 ? v : NaN; };
-let pacific = null;                                // one formatter: the Pacific day of a rating
-const pacificDay = d => (pacific ||= new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit" })).format(d);
 
 const cardKey = s => (s || "").replace(/_/g, " ").toLowerCase().split(/\s+/).filter(Boolean).join(" ");
 const alnum = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -79,7 +70,7 @@ const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", a
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
   : typeof v === "boolean" ? (v ? "yes" : "no") : typeof v === "object" ? flagsText(v) : String(v));
 const clip = s => (s.length > 48 ? `${s.slice(0, 45).trimEnd()}…` : s);
-/** A duplicate whose author and ratings are its original's; a variant picture keeps its own. */
+/** A duplicate whose author is its original's; a variant picture keeps its own. */
 const follows = c => !!c.dup && !c.variantOf;
 const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : FIELDS[f] === "flags" ? cleanFlags(v) : FIELDS[f] === "colors" ? TC.tidyColors(v) : FIELDS[f] === "sources" ? (artList({ art: v }).length ? artList({ art: v }) : null) : f === "dup_of" ? v || ""
   : f === "creatures" ? (v?.length > 1 ? v.map(x => Object.fromEntries(STATS.map(k => [k, x[k] ?? null]))) : null) : v ?? null);
@@ -108,7 +99,7 @@ export function capError(c, k, v, n = 0) {
 export const capsError = (c, b, f, x) => (f === "creatures" ? (Array.isArray(x) ? x : []).flatMap((one, n) =>
   STATS.map(k => (one?.[k] != null && one[k] !== b.creatures?.[n]?.[k] ? capError(c, k, one[k], n) : "")))
   : STATS.includes(f) && x !== b[f] ? [capError(c, f, x)] : []).find(Boolean) || "";
-export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && !Object.keys(op.site || {}).length && op.author === undefined && !op.ban && !op.rate && op.rename === undefined;
+export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && !Object.keys(op.site || {}).length && op.author === undefined && !op.ban && op.rename === undefined;
 
 // ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
 /** An inline input's text as field f's value: trimmed, "" -> null (the name falls back to `name`), ints >= 0. */
@@ -182,7 +173,7 @@ export function mergeAuthor(op, v, published) {
   if (v === (published || "")) delete o.author; else o.author = v || null;
   return o;
 }
-/** op without one item: a field, "author", "ban" or a rating ("rate-power"; a reverted name goes back to the published one).
+/** op without one item: a field, "author" or "ban" (a reverted name goes back to the published one).
  *  "parts": the boxes, and the name/ability derived from them (fields: theirs, else the staged boxes' own). */
 export function withoutItem(op, item, name, fields = null) {
   const o = { ...op, set: { ...op.set }, unset: (op.unset || []).filter(k => k !== item) };
@@ -192,7 +183,6 @@ export function withoutItem(op, item, name, fields = null) {
   if (item.startsWith("site-")) { unsite(item.slice(5)); return o; }
   unsite(item);
   if (item === "author") delete o.author; else if (item === "ban") delete o.ban;
-  else if (item.startsWith("rate-")) { const r = { ...o.rate }; delete r[item.slice(5)]; if (Object.keys(r).length) o.rate = r; else delete o.rate; }
   else if (item === "parts") {
     const derived = fields || [...new Set(Object.values(o.set.parts || {}).map(p => p.field))];
     delete o.set.parts; delete o.partsBase; o.unset = o.unset.filter(k => !k.startsWith(P.PART) && !derived.includes(k));
@@ -220,7 +210,6 @@ export function describeItems(op, b = {}, { byId } = {}) {
   for (const k of (op.unset || []).filter(k => !k.startsWith(P.PART))) { const p = show(psdValue(b, k, byId)); items.push(k === "flags" ? flagged(flagsChange(value(b, k), null)) : k === "colors" ? coloured(value(b, k), null) : { item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
   if (op.author !== undefined) { const t = `Author → ${op.author || "(from git)"}`; items.push({ item: "author", text: t, short: t }); }
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
-  for (const k of RATE) if (op.rate?.[k] != null) { const l = LABEL[`rate-${k}`]; items.push({ item: `rate-${k}`, text: `${l}: rated ${op.rate[k]}`, short: `${l} ${op.rate[k]}` }); }
   for (const [k, on] of Object.entries(op.site || {})) { const t = `${LABEL[k]}: ${on ? "website only (the card image keeps its text)" : "on the card image too"}`; items.push({ item: `site-${k}`, text: t, short: t }); }
   if (op.rename !== undefined) { const t = op.rename ? "Files: renamed to the name" : "Files: keep their name"; items.push({ item: "rename", text: t, short: t }); }
   const site = siteAfter(op, b);
@@ -282,36 +271,6 @@ function cardsText(data) {
   const body = keys.map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(data.cards[k])}`).join(",\n");
   return `{\n${rest.join("\n")}${rest.length ? "\n" : ""}  "cards": {${keys.length ? `\n${body}\n  ` : ""}}\n}\n`;
 }
-const rank = (list, v) => (list.includes(v) ? list.indexOf(v) : list.length);
-const lower = s => String(s ?? "").toLowerCase();
-/** Card Ratings.json with the ops' ratings added: one entry per scale, dated day, by the login; your entry of that day
- *  is replaced. Lists oldest first (date, source, by, scale: card_edits.CardRatings.order). */
-export function ratingsFile(text, ops, day, by, path = "site/Card Ratings.json") {
-  let data;
-  try { data = text ? JSON.parse(text) : { about: RATINGS_ABOUT, cards: {} }; }
-  catch (e) { throw new Error(`${path} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
-  data.cards ||= {};
-  for (const op of ops) {
-    if (!op.rate) continue;
-    const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
-    let list = Array.isArray(data.cards[k]) ? data.cards[k] : [];
-    for (const scale of RATE) {
-      const v = op.rate[scale];
-      if (v == null) continue;
-      if (!Number.isInteger(v) || !(v >= 1 && v <= 10)) throw new Error(RATE_RANGE);
-      list = list.filter(e => !(e?.date === day && e.scale === scale && e.source === "website" && lower(e.by) === lower(by)));
-      list.push({ date: day, scale, value: v, by, source: "website" });
-    }
-    data.cards[k] = list.map((e, i) => [e, i]).sort(([a, i], [b, j]) => {
-      const x = [String(a?.date ?? ""), rank(RATE_SOURCES, a?.source), lower(a?.by), rank(RATE, a?.scale)];
-      const y = [String(b?.date ?? ""), rank(RATE_SOURCES, b?.source), lower(b?.by), rank(RATE, b?.scale)];
-      for (let n = 0; n < 4; n++) if (x[n] !== y[n]) return x[n] < y[n] ? -1 : 1;
-      return i - j;
-    }).map(([e]) => e);
-  }
-  return cardsText(data);
-}
-
 /** The profile page's form state (what its inputs hold) for a profile; validateProfile({login, ...state}) gives the profile back. */
 export const profileState = p => ({ author: p.author || "", motto: p.motto || "", series: p.series || "", subseries: p.subseries || "", ...Object.fromEntries(PICKS.map(([k]) => [k, p[k] || ""])),
   deck: p.deck || "", facts: (p.facts || []).map(f => ({ label: f.label, value: f.value })) });
@@ -582,12 +541,6 @@ export function createEditor(app) {
         if (!g) S.data.banlist.groups.push(g = { title: op.ban.group, entries: [] });
         g.entries.push({ name: c.name, reason: op.ban.reason, id: c.id });
       }
-    }
-    if (op.rate) {                                 // dashed dots until the rebuild; _rate: the form's start values (drafts.js rawOf)
-      const day = pacificDay(new Date(op._sent ? sentRecord()?.at || Date.now() : Date.now())), login = me?.login.toLowerCase();
-      const own = login && (c.ratings || []).find(e => !e._staged && !e._sent && e.by !== "group" && (e.login || e.by).toLowerCase() === login);   // rated before: one rater
-      c.ratings = [...(c.ratings || []), ...RATE.filter(k => op.rate[k] != null).map(k => ({ date: day, scale: k, value: op.rate[k], by: "you", ...(own ? { rater: own.by } : {}), source: "website", [op._sent ? "_sent" : "_staged"]: true }))];
-      if (!op._sent) c._rate = Object.fromEntries(Object.entries(op.rate).map(([k, v]) => [k, String(v)]));
     }
     c[op._sent ? "_sent" : "_staged"] = true;
   }
@@ -896,11 +849,6 @@ export function createEditor(app) {
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="${c.variantOf ? esc(S.byId.get(c.variantOf)?.key || "") : "not a duplicate"}"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
-        ${isDup ? "" : `<fieldset><legend>Ratings</legend>
-          ${RATE.map(k => { const now = ratingNow((b.ratings || []).filter(e => !e._staged), k), v = stage.cards[c.id]?.rate?.[k];
-            return `<div class="erow" data-row="rate-${k}"><label for="ef-rate-${k}">${LABEL[`rate-${k}`]}</label><div class="ein"><input id="ef-rate-${k}" type="number" min="1" max="10" step="1" placeholder="1–10" value="${v ?? ""}"><span class="muted">${now ? `${now.value} now` : "not rated"}</span></div></div>`; }).join("")}
-          <p class="muted">Adds your dated rating; empty adds none.</p>
-        </fieldset>`}
         <fieldset id="ef-flags"><legend>Flags</legend>
           ${CARD_FLAGS.map(([k, l]) => `<div class="erow" data-row="flag-${k}"><label for="ef-flag-${k}">${esc(l)}</label><div class="ein"><input id="ef-flag-${k}" type="checkbox"${ownFlag(c, k) ? " checked" : ""}>
             <input id="ef-flag:${k}" data-flag-why="${k}" value="${esc(c.flags?.[k] ?? "")}" placeholder="what is the issue?" aria-label="${esc(l)}: what is the issue?"></div></div>`).join("")}
@@ -1005,11 +953,6 @@ export function createEditor(app) {
       const was = banOf(c.id, pristineBan || S.data.banlist);
       if (ban.banned !== was.banned || (ban.banned && (ban.group !== was.group || ban.reason !== was.reason))) op.ban = ban;
     }
-    if (f("rate-favorability")) {
-      const rate = {};
-      for (const k of RATE) { const v = rateValue(f(`rate-${k}`).value); if (Number.isNaN(v)) error = RATE_RANGE; else if (v != null) rate[k] = v; }
-      if (Object.keys(rate).length) op.rate = rate;
-    }
     for (const k of SITE_FIELDS) {                  // ticked or unticked: for a field with a value once published
       const has = k in op.set ? op.set[k] != null : !op.unset.includes(k) && !!b.edited?.includes(k) && b[k] != null;
       if (f(`site-${k}`) && has && siteOn(k) !== (b.siteOnly || []).includes(k)) op.site = { ...op.site, [k]: siteOn(k) };
@@ -1083,17 +1026,6 @@ export function createEditor(app) {
     const a = defer ? String(v ?? "").trim() : spell("author", String(v ?? "").trim(), c.id); if (a === undefined) return null;
     const op = mergeAuthor(opFor(c), a, b.author);
     put(c.id, op); if (!defer) save();
-    return op;
-  }
-  // the card page's Rate it: {favorability, power} as typed ("" = none) -> the op, or null (refused: a toast says why)
-  function stageRating(id, values) {
-    const c = find(id); if (!c) return null;
-    const op = opFor(c), rate = {};
-    for (const k of RATE) { const v = rateValue(values[k]); if (Number.isNaN(v)) { app.toast(RATE_RANGE); return null; } if (v != null) rate[k] = v; }
-    if (!Object.keys(rate).length && !op.rate) { app.toast("Type a rating, 1 to 10"); return null; }
-    if (Object.keys(rate).length) op.rate = rate; else delete op.rate;
-    put(c.id, op); save();
-    app.toast(op.rate ? `Added to the batch: ${count()} unpublished` : "Rating removed from the batch");
     return op;
   }
   // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone),
@@ -1702,7 +1634,7 @@ export function createEditor(app) {
   }
   // the drafted fields an op covers: other fields' drafts (a card a rename reached) stay
   const opFields = op => [...Object.keys(op.set || {}), ...Object.keys(op.set?.parts || {}).map(k => P.PART + k), ...(op.unset || []), ...(op.author !== undefined ? ["author"] : []),
-    ...(op.ban ? ["banned", "ban-group", "ban-reason"] : []), ...(op.rate ? RATE.map(k => `rate-${k}`) : []), ...(op.rename !== undefined ? ["rename"] : [])];
+    ...(op.ban ? ["banned", "ban-group", "ban-reason"] : []), ...(op.rename !== undefined ? ["rename"] : [])];
   const dropDrafts = ops => { for (const op of ops) cardDrafts.drop(op.id, opFields(op)); };
   async function publish(message) {
     const ops = Object.values(stage.cards), people = stage.people, F = files();
@@ -1713,7 +1645,6 @@ export function createEditor(app) {
     if (ops.some(o => Object.keys(o.set).length || o.unset.length || o.rename !== undefined)) edits[F.edits] = t => editsFile(t, ops, at, me.login, F.edits, clash);
     if (ops.some(o => o.author !== undefined) || Object.keys(people).length) edits[F.authors] = t => authorsFile(t, ops, people);
     if (ops.some(o => o.ban)) edits[F.banlist] = t => banFile(t, ops);
-    if (ops.some(o => o.rate)) edits[F.ratings] = t => ratingsFile(t, ops, pacificDay(new Date(at)), me.login, F.ratings);
     if (stage.admins) edits[F.admins] = t => [...(t ?? "").split("\n").filter(l => l.trim().startsWith("#")), ...stage.admins].join("\n") + "\n";
     const foreign = Object.keys(stage.profiles).filter(l => !mine(l));
     if (foreign.length && !me.admin) throw new Error(`Only admins can publish someone else's profile (${foreign.join(", ")}): discard it from the batch.`);
@@ -1999,9 +1930,6 @@ export function createEditor(app) {
     "pw-remove": el => removePassword(el.dataset.login || me?.login || ""),
     "pw-later": () => later(),
     "pw-list": () => listPasswords(),
-    "rate-add": el => { const id = el.dataset.id, v = k => document.getElementById(`rate-${k}`)?.value ?? "";   // a duplicate's page: its original's id
-      if (!stageRating(id, { favorability: v("favorability"), power: v("power") })) return;
-      const top = app.modal.scrollTop; app.goCard(app.currentCard() || id); app.modal.scrollTop = top; },
     "rename-value": el => openRename(el.dataset.renameK, el.dataset.renameV),
     "rename-cancel": () => { const id = app.currentCard(); if (id) app.goCard(id); else app.closeModal(); },
     "edit-show-hidden": el => { S.showHidden = el.checked; localStorage.setItem(K.hidden, el.checked ? "1" : ""); app.derive(); app.rerender(); },
@@ -2042,7 +1970,6 @@ export function createEditor(app) {
       const c = find(id), off = c ? siteAfter(op, baseOf(c)) : [];     // website only: never baked
       return [...f].filter(k => !off.includes(k)); },
     siteFields: (id, op = stage.cards[id]) => { const c = find(id); return c ? siteAfter(op, baseOf(c)) : []; },
-    stageRating,
     // the parts editor: a card's boxes per field once its record is loaded ({title, ability, rule} or null: no parts), and
     // the parts its Card Edits.json entry (its PSD's: variant 1's) would hold once published, for the previews
     partsFor: c => new Promise(ok => withRecs(c, () => { const v = partsView(c); ok(v && { title: v.list.filter(x => x.kind === "title").length, ability: v.list.filter(x => x.kind === "ability").length }); })),
@@ -2056,7 +1983,6 @@ export function createEditor(app) {
       if (mine) parts = P.mergeParts(parts, mine.set?.parts, (mine.unset || []).filter(k => k.startsWith(P.PART)).map(k => k.slice(P.PART.length)));
       return parts;
     },
-    myRating: id => stage.cards[id]?.rate || null,
     names: nameEntries,
     canonical: (kind, v) => canonical(kind, v),
     renamePlan, renameAll,
