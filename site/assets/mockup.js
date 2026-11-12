@@ -1167,14 +1167,17 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   // changed only those (typing) starts from the last one's pixels
   const fxWords = sheet ? plate.crops.flatMap(c => c.fx || []) : [];   // the plate picked follows these (plateCuts)
   const idsOf = (s, k) => { const ids = s.part ? [s.id] : printed(obj(rec?.parts) || {}, s.role).map(p => p?.id); return ids.length ? ids : [fams[k].layer?.id]; };
-  const wiping = sheet ? specs.flatMap((s, k) => (s.added ? [] : idsOf(s, k))) : [];   // the layers this draw wipes
-  const sig = JSON.stringify([src, W, H, card?.id, bfam, barsBottom, rows.map(r => r.k), seen.length, fams.map(f => f.fam),
+  const tints = specs.map((s, k) => (sheet && !s.added && s.text != null && txt(s.text) === txt(s.old) && !(Array.isArray(psd.colors) && psd.colors.some(o => o.field === s.role))
+    ? tintPlan(pixels.data, W, plate, idsOf(s, k), kc, s.old, fams[k].layer, s.part ? s.colors : todo.colors, s.role, statuses) : null));   // a colour alone: recoloured in place
+  const wiping = sheet ? specs.flatMap((s, k) => (s.added || tints[k] ? [] : idsOf(s, k))) : [];   // the layers this draw wipes
+  const sig = JSON.stringify([src, W, H, card?.id, bfam, barsBottom, rows.map(r => r.k), seen.length, fams.map(f => f.fam), tints.map(Boolean),
     specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id, fxWords.map(w => count(text, w))])]);
   const reuse = eraseMemo?.sig === sig && eraseMemo.rec === rec && eraseMemo.icons === icons && eraseMemo.sheet === sheet;
   const plans = reuse ? eraseMemo.plans : [];
   const cardPx = reuse ? eraseMemo.card : specs.length ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines, a title's splice
   if (reuse) pixels.data.set(eraseMemo.data);
   for (const [k, { role, text, old, label, own: partBox, added, part, path, id, colors: shared }] of specs.entries()) {
+    if (tints[k]) { out.drawn.push(label); out.lined.push(label); continue; }   // never erased: tinted below
     const { fam, layer } = fams[k];
     const set = role === "ability" || role === "name" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems) and letter width (psd_details)
     const measure = (t, z) => {
@@ -1233,6 +1236,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
   if (!reuse) eraseMemo = { sig, rec, icons, sheet, plans, data: pixels.data.slice(), card: cardPx };
+  for (const t of tints) if (t) tintInPlace(pixels.data, W, H, kc, t, readPlate);   // after the memo: it never holds tinted pixels
   const shown = { ...psd };                            // the values the rows show as they are redrawn
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
@@ -1831,6 +1835,98 @@ export function paintLit(data, W, H, row, lit, to) {
     for (let y = T.y0 + 1; y < T.y1 - 1; y++) for (let x = a + 1; x < b - 1; x++) {
       const i = (y * W + x) * 4, j = ((y + dy) * W + sa + (k || !c ? x - a : Math.max(x - a, (b - a) >> 1))) * 4;
       data[i] = data[j]; data[i + 1] = data[j + 1]; data[i + 2] = data[j + 2];
+    }
+  }
+}
+
+// ---- a colour alone: the card's own letters recoloured in place (its plate's layout)
+/** {R, c, want, own} for tintInPlace when the plate (one layer, ids) has the layer's layout for old, colors newly paint
+ *  some of its letters (colorRanges) and the layer's old fill shows in at least 4 in 5 of those (else an effect paints
+ *  them otherwise); null: redrawn. layer: the details record's text layer (its colours over its text: runs). */
+export function tintPlan(data, W, plate, ids, k, old, layer, colors, role, statuses = null) {
+  const geo = geoOf(plate, ids, k), R = geo && recordLayout(geo.c, old, k), want = R && colorRanges(R.was, colors, role, statuses);
+  const own = want?.length ? tintOld(layer, R) : null;
+  return own && tintFits(data, W, R, want, own) ? { R, c: geo.c, want, own } : null;
+}
+/** Old fill colour per index of R.was from the record's layer (runs over its text), or null when its text isn't R's. */
+function tintOld(lay, R) {
+  if (!R || !lay) return null;
+  const T = String(lay.text ?? "").replace(/[\r\u0003]/g, "\n"), core = R.was.trim();
+  if (!core || T.trim() !== core) return null;
+  const shift = R.was.indexOf(core) - T.indexOf(core), cols = Array.isArray(lay.colors) ? lay.colors : [lay.color];
+  const runs = Array.isArray(lay.runs) && lay.runs.length ? lay.runs : [[0, T.length, 0]];
+  return i => { const j = i - shift, r = runs.find(([a, b]) => j >= a && j < b); return hexRgb(r ? cols[r[2]] : lay.color); };
+}
+/** The letters want paints: [{f (old fill), nw (new colour), ink, line}]; never a space, icon or badge (drawnSpans). */
+function tintLetters(R, want, own) {
+  const icon = new Set(drawnSpans(R.was).flatMap(([a, b]) => Array.from({ length: b - a }, (_, j) => a + j))), out = [];
+  for (const { start, end, color } of want) for (let i = start; i < end; i++) {
+    const f = own(i), nw = hexRgb(color), ink = R.ink.get(i), line = R.lines.find(l => l.para >= 0 && i >= l.s && i < l.e);
+    if (f && nw && ink && line && !icon.has(i) && !/\s/.test(R.was[i] || " ")) out.push({ f, nw, ink, line });
+  }
+  return out;
+}
+/** Whether the old fill shows in at least 4 in 5 of the letters to recolour. */
+function tintFits(data, W, R, want, own) {
+  const all = tintLetters(R, want, own);
+  const seen = all.filter(({ f, ink, line }) => {
+    for (let y = Math.max(0, Math.floor(line.top)); y < Math.ceil(line.bottom); y++) for (let x = Math.max(0, Math.floor(ink[0])); x < Math.min(W, Math.ceil(ink[1])); x++) {
+      const p = (y * W + x) * 4;
+      if ((data[p] - f[0]) ** 2 + (data[p + 1] - f[1]) ** 2 + (data[p + 2] - f[2]) ** 2 < 1600) return true;
+    }
+    return false;
+  });
+  return all.length > 0 && seen.length >= 0.8 * all.length;
+}
+const OFF_PLATE = 3600, SAME_FILL = 900, DOWNHILL = 24;   // squared RGB distances; levels
+/** tintPlan's letters, each pixel of its ink box (+2 px) moved from the old fill toward the new colour by its share of
+ *  the fill: fitted against the plate's backdrop pixel or the letter's stroke (its off-backdrop ink farthest from the
+ *  fill), the better fit. What the box's edge reaches from the backdrop going only away from the fill (the backdrop, a
+ *  stroke's outside) stays; each pixel tinted once. read(c, w, h): the plate crop's pixels at w x h. */
+export function tintInPlace(data, W, H, k, { R, c, want, own }, read) {
+  const [cx0, cy0, cx1, cy1] = px(c.box.map(v => v * k), W, H), cw = cx1 - cx0, ch = cy1 - cy0;
+  if (cw < 1 || ch < 1) return;
+  const bg = read(c, cw, ch), done = new Uint8Array(cw * ch), d2 = (a, b) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2;
+  for (const { f, nw, ink, line } of tintLetters(R, want, own)) {
+    const x0 = clamp(Math.floor(ink[0]) - 2, cx0, cx1), x1 = clamp(Math.ceil(ink[1]) + 2, cx0, cx1), y0 = clamp(Math.floor(line.top) - 2, cy0, cy1), y1 = clamp(Math.ceil(line.bottom) + 2, cy0, cy1);
+    const bw = x1 - x0, bh = y1 - y0;
+    if (bw < 1 || bh < 1) continue;
+    const P = [], B = [];
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+      const p = (y * W + x) * 4, q = ((y - cy0) * cw + (x - cx0)) * 4;
+      P.push([data[p], data[p + 1], data[p + 2]]); B.push([bg[q], bg[q + 1], bg[q + 2]]);
+    }
+    let s = null, far = 0;                             // a stroke: the ink off the backdrop farthest from the fill
+    for (let j = 0; j < P.length; j++) { if (d2(P[j], B[j]) < OFF_PLATE) continue; const e = d2(P[j], f); if (e > far) { far = e; s = P[j]; } }
+    const fd = P.map(q => Math.sqrt(d2(q, f))), on = P.map((q, j) => d2(q, B[j]) < OFF_PLATE), stay = new Uint8Array(P.length), stack = [];
+    for (let j = 0; j < P.length; j++) {               // the backdrop from the box's edge (1), then only away from the fill (2)
+      const x = j % bw, y = (j / bw) | 0;
+      if ((!x || !y || x === bw - 1 || y === bh - 1) && on[j]) { stay[j] = 1; stack.push(j); }
+    }
+    while (stack.length) {
+      const j = stack.pop(), x = j % bw, y = (j / bw) | 0;
+      for (const n of [x > 0 && j - 1, x < bw - 1 && j + 1, y > 0 && j - bw, y < bh - 1 && j + bw]) {
+        if (n === false || stay[n]) continue;
+        const v = stay[j] === 1 && on[n] ? 1 : fd[n] >= fd[j] - DOWNHILL && fd[n] >= 40 ? 2 : 0;
+        if (v) { stay[n] = v; stack.push(n); }
+      }
+    }
+    for (let j = 0; j < P.length; j++) {
+      const x = x0 + (j % bw), y = y0 + ((j / bw) | 0), m = (y - cy0) * cw + (x - cx0);
+      if (stay[j] || done[m]) continue;
+      let t = 0, best = Infinity;
+      for (const o of [B[j], s]) {
+        if (!o) continue;
+        const dd = d2(f, o); if (dd < SAME_FILL) continue;
+        const a = clamp(((P[j][0] - o[0]) * (f[0] - o[0]) + (P[j][1] - o[1]) * (f[1] - o[1]) + (P[j][2] - o[2]) * (f[2] - o[2])) / dd, 0, 1);
+        const r = d2(P[j], [o[0] + a * (f[0] - o[0]), o[1] + a * (f[1] - o[1]), o[2] + a * (f[2] - o[2])]);
+        if (r < best) { best = r; t = a; }
+      }
+      if (best === Infinity) t = clamp(1 - fd[j] / 60, 0, 1);
+      if (!t) continue;
+      const p = (y * W + x) * 4;
+      for (let e = 0; e < 3; e++) data[p + e] = clamp(Math.round(data[p + e] + t * (nw[e] - f[e])), 0, 255);
+      done[m] = 1;
     }
   }
 }
