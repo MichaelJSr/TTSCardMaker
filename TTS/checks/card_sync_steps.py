@@ -381,8 +381,9 @@ def plans(flow: dict) -> None:
     fast = {**go, "venv-key": {"key": "k"}, "cards": {"ok": "true"}}
     p, q = plan(flow, "data", inputs=follow, outputs=fast), plan(flow, "main", inputs=follow, outputs=go)
     r = plan(flow, "after", inputs=follow, outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
-    check(order("data", p)[:15] == ["Site build start", "Clones start", "Cards start", "History start", "venv-key", "venv-cache", "cards",
-                                    "History join", "clones", "venv", "guards", "History wait", "Newest", "records-in", "gate"] and "build" in runs(p)
+    check(order("data", p)[:16] == ["Site build start", "Clones start", "Cards start", "History start", "venv-key", "venv-cache", "cards",
+                                    "History join", "clones", "venv", "guards", "History wait", "Newest", "Guard events start", "records-in",
+                                    "gate"] and "build" in runs(p)
           and [k for k in order("main", q) if k in ("venv", "guards", "Newest", "gate")][:4] == ["venv", "guards", "Newest", "gate"] and "bake" in runs(q)
           and not {"guards", "Newest"} & runs(r),
           "a follow-up (guards): the site build and clones first; both lanes set up, wait for the guards' Land, the data's history, take main's head, then gate; after waits for nothing")
@@ -912,7 +913,8 @@ def history_cases(flow: dict) -> None:
         ok = "checked out instead" in text and not os.path.exists(os.path.join(tmp, "ws-gone", ".git"))
         check(ok, "Cards start's fetch failed: not ok, warned, its .git removed for the checkout" + ("" if ok else f"\n{text}"))
     names = [s.get("id") or s.get("name") or s.get("uses") for s in site["steps"]]
-    check(names.index("History start") == 1 and names.index("History wait") < names.index("Data wait") < names.index("build"),
+    check(names[names.index("History start") - 1].startswith("actions/checkout")
+          and names.index("History wait") < names.index("Data wait") < names.index("build"),
           "site.yml: History start after its checkout, History wait before Data wait's fetch and the build")
 
 
