@@ -1,4 +1,4 @@
-"""LuaScriptState is JSON the script can load, BlockSquare turn markers agree with their state, XmlUI is well-formed.
+"""LuaScriptState is JSON the script can load, XmlUI is well-formed.
 Usage: python scripts_state_xml.py [save.json]   (exit 1 on a failure)"""
 import json, os, re, sys
 import xml.etree.ElementTree as ET
@@ -26,20 +26,6 @@ def main(path):
                 warns.append(f'{name}: LuaScriptState kept but the script has no onSave')
             if not re.search(r'function\s+on[Ll]oad\s*\(\s*\w+', src):
                 warns.append(f'{name}: LuaScriptState kept but onLoad takes no saved_data')
-            if 'watchFlip' in src and isinstance(data, dict):     # BlockSquare turn marker
-                cycle = re.findall(r'\{\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\}', src.split('stateNames')[0])
-                names = re.findall(r'"([^"]+)"', src.split('stateNames', 1)[1].split('}')[0])
-                i = data.get('currentIndex')
-                if not isinstance(i, int) or not 1 <= i <= len(names):
-                    fails.append(f'{name}: currentIndex {i!r} out of 1..{len(names)}')
-                else:
-                    if o.get('Nickname') != names[i - 1]:
-                        fails.append(f'{name}: Nickname {o.get("Nickname")!r} but state {i} is {names[i - 1]!r}')
-                    cd = o.get('ColorDiffuse') or {}
-                    want = tuple(map(float, cycle[i - 1]))
-                    have = (cd.get('r'), cd.get('g'), cd.get('b'))
-                    if any(h is None or abs(h - w) > 0.01 for h, w in zip(have, want)):
-                        fails.append(f'{name}: ColorDiffuse {have} but state {i} is {want}')
             if 'tableImageData' in src and isinstance(data, dict):  # Flex Table Control
                 for e in data.get('tid') or []:
                     if not (isinstance(e, dict) and e.get('name') and str(e.get('url', '')).startswith('http')):

@@ -269,7 +269,7 @@ def main(path):
     for k, v in sorted(clash.items(), key=lambda kv: int(kv[0])):
         faces = sorted({f.rsplit("/", 1)[-1] for f, *_ in v})
         backs = sorted({b.rsplit("/", 1)[-1] for _, b, *_ in v})
-        warn(f"CustomDeck key {k}: {len(v)} different images: faces {faces} backs {backs}")
+        fail(f"CustomDeck key {k}: {len(v)} different images: faces {faces} backs {backs}")
     flag = {k: v for k, v in images.items() if len(v) > 1 and k not in clash}
     for k, v in flag.items():
         warn(f"CustomDeck key {k}: same images, flags differ {sorted(map(str, v))}")

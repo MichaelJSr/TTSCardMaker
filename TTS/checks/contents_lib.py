@@ -13,7 +13,6 @@ RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 LINK = re.compile(re.escape(RAW) + r"(refs/heads/main|main|[0-9a-f]{7,40})/([^\s\"\\<>]+)")
 CARD_NAMES = ("Card", "CardCustom")
 HAND_NAMED = ("MDW/Assets/Markers/",)
-LARGE = "Auxiliary/Creatures/"
 
 
 def git(*args) -> bytes:

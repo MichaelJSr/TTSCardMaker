@@ -2018,14 +2018,7 @@
       "rule": {
         "kind": "rulebook",
         "pdf": "TTS/Rulebook/Rulebook.pdf"
-      },
-      "back": "own face",
-      "texture": "MDW/Assets/Book_Cover.png"
+      }
     }
-  },
-  "large_cards": {
-    "source": "Auxiliary/Creatures",
-    "lua_table": "resizeTargets",
-    "key": "Nickname"
   }
 }

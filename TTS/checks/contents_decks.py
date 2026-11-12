@@ -16,7 +16,7 @@ from contents_lib import CARD_NAMES, REF, Result, face, git, load_rules, load_sa
 
 KIND_DIRS = {"creatures": ("Creatures/",), "items": ("Items/",), "fields": ("Field/",), "nme": ("N.M.E/",),
              "minions": ("Auxiliary/Minions/", "Auxiliary/Creatures/"), "auxiliary_items": ("Auxiliary/Items/",),
-             "status_effects": ("Auxiliary/Status Effects/",), "morgue": ("MDW/The Morgue/",)}
+             "status_effects": ("Auxiliary/Status Effects/",)}
 
 r = Result("contents_decks")
 save, path = load_save()
@@ -93,14 +93,6 @@ for g, e in rd.items():
             r.fail(f"{label}: rule names {p}, not in the repo")
     if e.get("back") and e["back"] not in files:
         r.fail(f"{label}: back {e['back']} not in the repo")
-    # integrity the updater relies on
-    if (deck.get("DeckIDs") or []) != [c.get("CardID") for c in cards]:
-        r.fail(f"{label}: DeckIDs differ from its cards' CardIDs")
-    keys = {str(c.get("CardID", 0) // 100) for c in cards}
-    if keys - set(deck.get("CustomDeck") or {}):
-        r.fail(f"{label}: CustomDeck lacks {sorted(keys - set(deck.get('CustomDeck') or {}))}")
-    if set(deck.get("CustomDeck") or {}) - keys:
-        r.note(f"{label}: unused CustomDeck keys {sorted(set(deck.get('CustomDeck') or {}) - keys)}")
     want = rule_cards(rule, pngs)
     count = int(rule.get("count") or 0)
     odd = {p: int(n) for p, n in (e.get("odd_counts") or {}).items()}

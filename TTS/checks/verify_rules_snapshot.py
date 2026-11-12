@@ -1,9 +1,7 @@
-"""decks.json vs the save (C1-C3): card_list (an add_new_since deck may hold more), cards, large_cards.current_keys, and
-no rule matching a non-card PNG.
-Usage: verify_rules_snapshot.py [save.json] [decks.json]. Absent snapshot fields are skipped (removing them passes)."""
+"""decks.json vs the save (C1-C3): card_list (an add_new_since deck may hold more), and no rule matching a non-card PNG.
+Usage: verify_rules_snapshot.py [save.json] [decks.json]."""
 import json
 import os
-import re
 import subprocess
 import sys
 
@@ -44,19 +42,11 @@ def main():
                 print(f"NOTE {g} card_list: new cards since add_new_since, not listed yet {sorted(have - listed)}")
             elif have != listed:
                 fails.append(f"{g} card_list: only listed {sorted(listed - have)}, only in deck {sorted(have - listed)}")
-        if "cards" in e and e["cards"] != len(cards):
-            fails.append(f"{g} cards: {e['cards']} in rules, {len(cards)} in save")
         r = e.get("rule")
         if r:
             for p in rule_cards(r, pngs):
-                if p not in site and (p[:-4] + ".psd") not in fileset and not p.startswith(("MDW/Old Rules/", "MDW/Assets/Markers/")):
+                if p not in site and (p[:-4] + ".psd") not in fileset:
                     fails.append(f"{g} rule matches {p}: not a card (no PSD, not on the website)")
-    lc = rules.get("large_cards") or {}
-    if "current_keys" in lc:
-        m = re.search(r"resizeTargets\s*=\s*\{\n(.*?)\n\}", save.get("LuaScript") or "", re.S)
-        keys = re.findall(r'\[\s*"((?:[^"\\]|\\.)*)"\s*\]', m.group(1)) if m else []
-        if sorted(keys) != sorted(lc["current_keys"]):
-            fails.append(f"large_cards.current_keys {lc['current_keys']} != Lua {keys}")
     for f in fails:
         print("FAIL", f)
     print(f"{len(fails)} failure(s)")

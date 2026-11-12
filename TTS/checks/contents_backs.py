@@ -36,7 +36,7 @@ for o, parents in walk(save.get("ObjectStates")):
     elif p and p.startswith("MDW/Assets/Markers/"):
         exp = os.path.dirname(p) + "/minus_" + os.path.basename(p)
     else:
-        exp = "MDW/Assets/cardback.png" if p and p.startswith("MDW/The Morgue/") else None
+        exp = None
     if exp is None:
         r.note(f"{p}: no expected back (type {kind.get(p)}), has {b}")
     elif b != exp:

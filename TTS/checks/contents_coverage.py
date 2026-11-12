@@ -2,8 +2,7 @@
 
     python contents_coverage.py [save.json]
 Fails: a website card missing from the save or from every complete rule; a complete-rule card not on the website;
-the Rulebooks bag not exactly its rule's pages (one each, back = own face) or, with rule.pdf, not one PDF object linking
-it; its rule's old pages, kept, in the bag rule.old names inside it. Notes: repo PNGs nowhere in the save
+the Rulebooks bag not one Custom_PDF object linking its rule.pdf (in the repo). Notes: repo PNGs nowhere in the save
 (by folder), links to files gone from the repo (D5: report only).
 """
 import os
@@ -11,7 +10,7 @@ import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from contents_lib import (CARD_NAMES, LINK, Result, back, face, load_rules, load_save, rule_cards,  # noqa: E402
+from contents_lib import (CARD_NAMES, LINK, Result, face, load_rules, load_save, rule_cards,  # noqa: E402
                           site_cards, tree, walk)
 from urllib.parse import unquote  # noqa: E402
 
@@ -68,15 +67,6 @@ for guid, bag in (rules.get("bags") or {}).items():
     if not rule or rule.get("kind") != "rulebook":
         continue
     inside = objs[0].get("ContainedObjects") or []
-    old = rule.get("old") or {}
-    if old:                                             # the Photoshop pages, kept in a bag of their own inside it
-        nested = [o for o in inside if o.get("Nickname") == old.get("bag")]
-        if len(nested) != 1:
-            r.fail(f"bag {bag.get('name')!r}: {len(nested)} bags named {old.get('bag')!r} inside")
-        else:
-            kept = Counter(face(c) for c in nested[0].get("ContainedObjects") or [])
-            for p in sorted(set(rule_cards(old, pngs)) - set(kept)):
-                r.fail(f"bag {old.get('bag')!r}: page missing {p}")
     if rule.get("pdf"):                                 # the rulebook as one Custom_PDF object (AutoCroissant tts_save._rulebook)
         found = [o for o in inside if o.get("Name") == "Custom_PDF"
                  and (m := LINK.fullmatch((o.get("CustomPDF") or {}).get("PDFUrl") or "")) and unquote(m.group(2)) == rule["pdf"]]
@@ -84,25 +74,4 @@ for guid, bag in (rules.get("bags") or {}).items():
             r.fail(f"bag {bag.get('name')!r}: {len(found)} PDF objects linking {rule['pdf']}")
         if rule["pdf"] not in files:
             r.fail(f"bag {bag.get('name')!r}: {rule['pdf']} not in the repo")
-        continue
-    held = Counter(face(c) for c in inside if c.get("Name") in CARD_NAMES)
-    want = set(rule_cards(rule, pngs))
-    for p in sorted(want - set(held)):
-        r.fail(f"bag {bag.get('name')!r}: page missing {p}")
-    for p, n in held.items():
-        if p not in want:
-            r.fail(f"bag {bag.get('name')!r}: not its rule's {p}")
-        elif n != 1:
-            r.fail(f"bag {bag.get('name')!r}: {p} x{n}")
-    for c in objs[0].get("ContainedObjects") or []:
-        if bag.get("back") == "own face" and back(c) != face(c):
-            r.fail(f"bag {bag.get('name')!r}: {face(c)} back {back(c)}")
-    elsewhere = [p for o, par in walk(save.get("ObjectStates")) if o.get("Name") in CARD_NAMES
-                 and (p := face(o)) in want and objs[0] not in par]
-    if elsewhere:
-        r.note(f"bag {bag.get('name')!r} pages also outside it: {elsewhere}")
-    tex = bag.get("texture")
-    if tex and tex not in {unquote(m.group(2)) for s in strings({k: v for k, v in objs[0].items()
-                                                                  if k != "ContainedObjects"}) for m in LINK.finditer(s)}:
-        r.fail(f"bag {bag.get('name')!r}: texture {tex} not linked")
 r.done()

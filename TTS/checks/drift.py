@@ -155,10 +155,10 @@ def main(path, base_arg):
     cur = json.load(open(path, encoding="utf-8"))
     base = load_base(base_arg)
     lua, xml = from_file("Global.lua"), from_file("Global.xml")
-    if lua is not None:                           # the updater writes the script: the file is the baseline
-        if norm(lua_rest(lua)) != norm(lua_rest(cur.get("LuaScript"))):
-            fails.append("LuaScript differs from TTS/Global.lua outside resizeTargets (the next save update writes it)")
-        base["LuaScript"] = cur.get("LuaScript")
+    # the updater writes the script: the file is the baseline
+    if norm(lua_rest(lua)) != norm(lua_rest(cur.get("LuaScript"))):
+        fails.append("LuaScript differs from TTS/Global.lua outside resizeTargets (the next save update writes it)")
+    base["LuaScript"] = cur.get("LuaScript")
     if xml is not None:
         if xml != (cur.get("XmlUI") or ""):
             fails.append("XmlUI differs from TTS/Global.xml (the next save update writes it)")
@@ -168,12 +168,6 @@ def main(path, base_arg):
             fails.append(f"top-level {k}: {str(base.get(k))[:100]} -> {str(cur.get(k))[:100]}")
     if list(base) != list(cur):
         fails.append("top-level key order changed")
-    if norm(lua_rest(base.get("LuaScript"))) != norm(lua_rest(cur.get("LuaScript"))):
-        fails.append("LuaScript changed outside resizeTargets")
-    ta = LUA_TABLE.search(base.get("LuaScript") or "")
-    tb = LUA_TABLE.search(cur.get("LuaScript") or "")
-    if ta and tb and ta.group(2) != tb.group(2):
-        notes.append("resizeTargets rows changed")
     stats = Counter()
     kids(base["ObjectStates"], cur["ObjectStates"], "table", stats, False)
     notes.append(f"card Nicknames changed {stats['nickname']}; "

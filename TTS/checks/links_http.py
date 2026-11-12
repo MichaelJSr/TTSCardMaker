@@ -3,8 +3,9 @@
     python links_http.py [save.json] [checkout] [history clone]     (defaults: this repo, $TTS_HISTORY)
 Repo links: ranged GET of the first 64 KB, uncompressed, compared with the blob at the pin (size from Content-Range or
 Content-Length); the blob itself is decoded with PIL, and a blob that decoded once is not decoded again
-(decoded-blobs.txt beside the history clone). Other hosts: full GET, decoded or magic-checked. The global script's
-links are live data (TTS/Global.lua): each loads, a .json one parses; a bare prefix is skipped. 8 requests at a time.
+(decoded-blobs.txt beside the history clone). Other hosts: full GET, status only; one in a field TTS loads fails
+(assets are in MDW/Assets since 2026-10-30). The global script's links are live data (TTS/Global.lua): each loads, a
+.json one parses; a bare prefix is skipped. 8 requests at a time.
 Pinned blobs the checkout lacks are fetched first, in a few batches: a blobless repo would fetch each one on the spot,
 one fetch and one pack per blob. Blobs are read by one `git cat-file --batch` per repo. Exit 1 on a defect.
 """
@@ -31,10 +32,8 @@ RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 LINK = re.compile(re.escape(RAW) + r"([0-9a-f]{40})/([^\s\"\\<>]+)")
 ANY_URL = re.compile(r"https?://[^\s\"\\<>]+")
 PREFIX = 65536
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
 FORMATS = {".png": "PNG", ".jpg": "JPEG", ".jpeg": "JPEG"}
 REQUIRED = ("FaceURL", "BackURL", "ImageURL", "MeshURL", "DiffuseURL", "AssetbundleURL", "PDFUrl")
-DOC_ONLY = ("https://api.tabletopsimulator.com/",)      # links in comments: status only
 TEXT_FIELDS = ("/Description", "/GMNotes", "/Memo", "/XmlUI")   # links for people to open: status only
 
 
@@ -230,25 +229,13 @@ def check_live(url, session):
 
 def check_other(url, session, status_only=False):
     out = {"url": url, "fail": [], "note": []}
-    if url.startswith("http://"):
-        out["note"].append("plain http")
     r = session.get(url, timeout=60)
     out["status"], out["type"], out["size"] = r.status_code, r.headers.get("Content-Type", ""), len(r.content)
     if r.status_code != 200:
         out["fail"].append(f"HTTP {r.status_code}")
         return out
-    if status_only or url.startswith(DOC_ONLY):
-        return out
-    data = r.content
-    if data[:7] == b"UnityFS":
-        out["image"] = ("assetbundle", *[x.decode(errors="replace") for x in data[12:60].split(b"\0")[:2]])
-    elif re.search(rb"^\s*v\s+-?[\d.]", data[:4096], re.M) and re.search(rb"^\s*f\s+\d", data, re.M):
-        out["image"] = ("obj mesh", data.count(b"\nv "), data.count(b"\nf "))
-    else:
-        try:
-            out["image"] = decode(data)
-        except Exception as e:
-            out["fail"].append(f"neither image, assetbundle nor OBJ ({out['type']}): {e}")
+    if not status_only:
+        out["fail"].append("outside link in a field TTS loads (assets are in MDW/Assets since 2026-10-30)")
     return out
 
 
@@ -279,7 +266,6 @@ def main():
                 blanks(x, f"{where}[{i}]")
     blanks(data)
     session = requests.Session()
-    session.headers["User-Agent"] = UA                  # imgur answers 429 to python-requests
     session.mount("https://", requests.adapters.HTTPAdapter(pool_maxsize=8, max_retries=2))
 
     def one(url):
@@ -332,7 +318,7 @@ def main():
     print(f"{len(urls)} URLs; status/type: {types}")
     for r in results:
         if not r["url"].startswith(RAW):
-            print("other:", r["url"], r.get("status"), r.get("type"), r.get("size"), r.get("image"), r["note"],
+            print("other:", r["url"], r.get("status"), r.get("type"), r.get("size"), r["note"],
                   sorted(urls[r["url"]])[:2])
     for r in results:
         for n in r["note"]:

@@ -148,7 +148,7 @@ def lua_python() -> str:
         py = os.path.expanduser(py)
         if py and os.path.exists(py):
             return py
-    sys.exit("needs lupa: pip install lupa luaparser (README.md), or set LUA_PYTHON")
+    sys.exit("needs lupa: pip install lupa (README.md), or set LUA_PYTHON")
 
 
 def need_lupa() -> None:

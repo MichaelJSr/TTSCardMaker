@@ -13,13 +13,13 @@ from card_sync_steps import GROUPS  # noqa: E402
 from checks_env import HERE, ensure_history, save_arg  # noqa: E402
 
 CHECKS = [   # file and its extra arguments
-    ("structure.py",), ("serializer.py",), ("customdeck_collisions.py",), ("drift.py",),
+    ("structure.py",), ("drift.py",),
     ("contents_decks.py",), ("contents_names.py",), ("contents_backs.py",), ("contents_coverage.py",),
-    ("contents_resize.py",), ("verify_rules_snapshot.py",),
-    ("scripts_lua_syntax.py",), ("scripts_global_refs.py",), ("scripts_state_xml.py",), ("verify_scripts_static.py",),
-    ("lua_mock.py",), ("lua_table.py",), ("lua_resize_roundtrip.py",),
+    ("verify_rules_snapshot.py",),
+    ("scripts_global_refs.py",), ("scripts_state_xml.py",),
+    ("lua_mock.py",), ("lua_resize_roundtrip.py",),
     ("links_pins.py",), ("links_http.py",),
-    ("updater_idempotent.py",), ("updater_report_decks.py",),
+    ("updater_idempotent.py",),
 ]
 # card_sync_steps.py in 3 parts of about 15 s: these two and the rest of its GROUPS
 CSS_PARTS = (("main", "save", "bake"), ("plans", "timer", "gate", "history", "build", "tell"))

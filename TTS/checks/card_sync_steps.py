@@ -29,7 +29,7 @@
 6. The timer: a push's and the schedule's run look for a push run about to bake (Another timer: one with its Bake and
    save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as none) and skip
    their main lane when there is one (no cancel: the data lane ran); else a push's main lane sets up and
-   waits in itself for its guards (no Quiet window job, no environment, no sleep) and the schedule's goes; a dispatch's
+   waits in itself for its guards (no sleep) and the schedule's goes; a dispatch's
    at once; a follow-up's (input guards) two lanes set up, then wait for that guards run's Land, then take main's head. The data lane runs at once on every event but a retry. A chained run looks like the schedule; its main Gate is
    the schedule's.
 7. Tell Discord on faked runs and commit comments: once per broken push, by the marker comment on its head commit (a
@@ -355,7 +355,6 @@ def plan(flow: dict, job: str, event: str = "workflow_dispatch", inputs: dict = 
 def plans(flow: dict) -> None:
     runs = lambda p: {k for k, v in p.items() if v not in ("skipped",) and k != "env"}    # noqa: E731
     go = {"gate": {"go": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "true"}}}
-    check(not {"MAIN_COMMIT", "POSTS"} & set(flow["env"]), "no rollback switches (MAIN_COMMIT, POSTS)")
     data, main, after = (flow["jobs"][j] for j in ("data", "main", "after"))
     rec, bot = "${{ github.workspace }}/carddata/db", data["env"].get("BOT_FILES")
     check(after["steps"] is data["steps"] and data["env"] == {"AFTER": "", "RECORDS": "", "CARD_RECORDS_DIR": rec, "BOT_FILES": bot}
@@ -681,10 +680,10 @@ def timer_cases(flow: dict) -> None:
           f"timer: a person's or the bot's push and the schedule look for a running window; dispatches never ({got})")
     t = lambda result, other="": {"result": result, "outputs": {"other": other} if result != "skipped" else {}}  # noqa: E731
     other = step(timer, "other")
-    check("quiet" not in jobs and "environment" not in main and "concurrency" not in timer
+    check("concurrency" not in timer
           and other["env"]["LANE"] == main["name"] == step(main, "gate")["env"]["LANE"] == LANE
           and other["env"]["WAIT"] == step(main, "guards")["name"],
-          "no Quiet window job, no environment; Another timer looks for main's lane in its guards' wait, the main Gate for main's name")
+          "Another timer looks for main's lane in its guards' wait, the main Gate for main's name")
     want = [(("push", t("success")), True), (("push", t("failure")), True),
             (("push", t("success", "41")), False),
             (("schedule", t("success")), True), (("schedule", t("success", "41")), False),
