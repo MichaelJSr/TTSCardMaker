@@ -223,10 +223,11 @@ when a card's or rulebook page's Details dropdown is first opened; `editing.json
 (`TTS/Global.lua`) fetches it for the Card details, Find a card and Rules buttons (`build_site.py` `tts_details`). Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The Action ships the scripts as
 one minified bundle, `assets/app.js`, with its source map `assets/app.js.map` (the modules' own text: browser devtools
-show and debug them); the editor, the Stats page (and the cards' Balance blocks) and the People pages are chunks of their
-own (`assets/editing-*.js`, `charts-*.js`, `profile-*.js`, each with its map), fetched the first time one is opened
-("Loading…"), or at once for a browser that keeps a sign-in or a staged edit. A local build without esbuild ships the
-modules one by one, those three loaded the same way. `index.html` carries the cards grid's first
+show and debug them); the editor, the Stats page (and the cards' Balance blocks), the People pages, the Changes tabs, the
+published decks and the deck builder's picker are chunks of their own (`assets/editing-*.js`, `charts-*.js`, `profile-*.js`,
+`changelog-*.js`, `decks-*.js`, `pick-*.js`, each with its map), fetched the first time one is opened ("Loading…"), or at
+once for a browser that keeps a sign-in or a staged edit. A local build without esbuild ships the modules one by one,
+those loaded the same way. `index.html` carries the cards grid's first
 eight tiles (plain links to the cards' pages), so a phone shows cards before the script arrives; a visitor with another
 saved view gets it once the script runs. The build checks those tiles against the site's own code in node and stops on
 any difference (`site/NOTES.md` §31). The build stops (and nothing is deployed) if the bot's data can't be
@@ -473,6 +474,6 @@ with esbuild: `app.js` routes and views, `grid.js` the cards grid's tiles and to
 editor's and the Stats page's modules (loaded on first use),
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, `tokens.js` the
 icon and timing-tag picker in card text, drag-to-assign and
-the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `login.js` the password sign-in and this browser's sealed token, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
+the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `signin.js` the password sign-in, `login.js` this browser's sealed token and deck passphrases, `changelog.js` the Changes tabs, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
 published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

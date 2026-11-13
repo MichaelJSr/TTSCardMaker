@@ -5,7 +5,8 @@ import { decode as decodeDeck, encode as encodeDeck } from "./deck.js";
 import { validateProfile, profileFile, sameProfile, deckCode, profileHtml, LIMITS, PICKS, ITEM_KINDS, LOGIN_RE } from "./profile.js";
 import * as pick from "./pick.js";
 import * as decks from "./decks.js";
-import * as auth from "./login.js";
+import * as auth from "./signin.js";
+import { vault } from "./login.js";
 import * as live from "./live.js";
 import * as draft from "./drafts.js";
 import { soon } from "./fresh.js";
@@ -280,7 +281,7 @@ export const savedHands = decks => decks.map(d => ({ id: d.id, name: d.name, n: 
 export function createEditor(app) {
   const { S } = app;
   // the token: in memory; kept sealed under this browser's device key (login.js vault), never in plain text
-  const device = auth.vault();
+  const device = vault();
   let token = "";
   let me = null;                                   // { login, admin }
   let scopes = null;                               // the token's classic scopes (x-oauth-scopes); null: unknown (fine-grained)

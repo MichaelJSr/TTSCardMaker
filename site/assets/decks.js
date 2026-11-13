@@ -4,6 +4,7 @@
 // app.js renders the HTML below and wires it. Every string is user-written and goes through esc.
 import { esc, LOGIN_RE, noted } from "./text.js";
 import { HAND, CHECK_TIP } from "./deck.js";
+import { b64, unb64, utf8 } from "./login.js";
 
 export const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,59}$/;
 export const LIMITS = { name: 80, description: 500, cards: 40, slug: 60, passphrase: 8, file: 16 * 1024 };
@@ -70,10 +71,7 @@ export const usesCard = (d, id) => { d = obj(d); return !!id && !d.private && ((
 /** A decrypted payload (or any object) as the page expects it. */
 export const payloadOf = o => { o = obj(o); return { name: line(o.name) || "Hand", description: str(o.description), cards: Array.isArray(o.cards) ? o.cards.map(String) : [], field: o.field ? String(o.field) : null }; };
 
-// ---- base64 and the cipher -------------------------------------------------------------------------
-export const b64 = bytes => { let s = ""; for (const b of bytes) s += String.fromCharCode(b); return btoa(s); };
-export const unb64 = text => Uint8Array.from(atob(String(text ?? "")), ch => ch.charCodeAt(0));
-const utf8 = s => new TextEncoder().encode(s);
+// ---- the cipher -------------------------------------------------------------------------------------
 async function deriveKey(subtle, passphrase, salt, iter, uses) {
   const raw = await subtle.importKey("raw", utf8(String(passphrase)), "PBKDF2", false, ["deriveKey"]);
   return subtle.deriveKey({ name: "PBKDF2", hash: KDF.hash, salt, iterations: iter }, raw, { name: "AES-GCM", length: 256 }, false, uses);

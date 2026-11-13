@@ -3,8 +3,6 @@ import { esc, norm, dateFmt, makeRenderer, diffWords, legendHtml, hasBadges, has
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
-import * as decks from "./decks.js";
-import * as pick from "./pick.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml, stampOf, pictureNumber } from "./history.js";
 import { deckPasses, SEALED } from "./login.js";
@@ -141,17 +139,27 @@ const loadProfile = () => (profileP ||= (early("profile.js"), import("./profile.
 // balance analytics (data/analytics.json, with charts.js): the Stats page's Balance section and the cards' Balance blocks
 let analyticsP = null;
 const loadAnalytics = () => (analyticsP ||= Promise.all([getJson("analytics.json"), loadCharts()]).then(([d]) => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
-// the Changes page's Changelog, Archive and Database edits tabs, each its own file (NEEDS; build_site changelog_files, changes.js)
+// the Changes page's Changelog, Archive and Database edits tabs, each its own file (NEEDS; build_site changelog_files), with
+// their renderers (changelog.js, loaded on first use beside the file): S.changelog[file] set means CL is in
 const changelogP = {};
-const loadChangelog = file => (changelogP[file] ||= getJson(file).then(d => { S.changelog[file] = d; }).catch(e => { delete changelogP[file]; throw e; }));
+let CL = null;
+const loadChangelog = file => (changelogP[file] ||= Promise.all([getJson(file), (early("changelog.js"), import("./changelog.js"))])
+  .then(([d, m]) => { CL = m; S.changelog[file] = d; }).catch(e => { delete changelogP[file]; throw e; }));
 let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
 const loadContrib = () => (contribP ||= Promise.all([getJson("contributions.json"), loadProfile()]).then(([d]) => { S.contrib = d; S.titles = Pf.titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
-// published decks (data/decks.json): the deck browser, deck pages and the person pages' Decks panel. A failed load leaves an
-// empty set with the reason (the browser says so; person pages just show no decks) instead of breaking the page.
-let decksP = null;
-const loadDecks = () => (decksP ||= getJson("decks.json").then(d => { S.decksData = decks.normalizeData(d, S.byId); })
-  .catch(e => { decksP = null; S.decksData = { generated: "", decks: [], private: [], error: failText("the published decks", e) }; }));
+// published decks (data/decks.json, with decks.js: loaded on first use): the deck browser, deck pages and the person pages'
+// Decks panel. A failed decks.json leaves an empty set with the reason (the browser says so; person pages just show no
+// decks) instead of breaking the page; a failed decks.js rejects (S.decksData set means decks.js is in).
+let decksP = null, decks = null;
+const loadDecks = () => (decksP ||= Promise.all([getJson("decks.json").catch(e => ({ failed: e })), (early("decks.js"), import("./decks.js"))]).then(([d, m]) => {
+  decks = m;
+  if (d.failed) throw d.failed;
+  S.decksData = decks.normalizeData(d, S.byId);
+}).catch(e => { decksP = null; if (!decks) throw e; S.decksData = { generated: "", decks: [], private: [], error: failText("the published decks", e) }; }));
+// the deck builder's card picker (pick.js): asked for when the deck builder draws
+let pickP = null, Pick = null;
+const loadPick = () => (pickP ||= (early("pick.js"), import("./pick.js")).then(m => { Pick = m; }).catch(e => { pickP = null; throw e; }));
 // the Details dropdown on a card page: data/details/<id>.json, fetched on first open and kept for the session
 const detailsP = new Map();
 const loadDetails = c => detailsP.get(c.id) || detailsP.set(c.id, getJson(`details/${encodeURIComponent(c.id)}.json`).catch(e => { detailsP.delete(c.id); throw e; })).get(c.id);
@@ -1250,6 +1258,7 @@ function renderDeck(r) {
   else if (S.shared) D.canon(S.shared, S.byId);
   const d = S.shared || deck();
   const readOnly = !!S.shared;
+  if (!readOnly) loadPick().catch(() => {});             // the picker, before a "+" asks for it
   const v = D.validate(d, S.byId, S.banned);
   const slot = (c, label, tier) => c
     ? `<div class="slot filled${v.badCards.has(c.id) ? " bad" : ""}" data-open="${c.id}" title="${esc(c.name)}">${c.img ? `<img loading="lazy" decoding="async" ${imgAttrs(c, 130)} alt="${esc(c.name)}">` : ""}<a class="slot-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${readOnly ? "" : `<button type="button" class="x" data-action="deck-remove" data-id="${c.id}" aria-label="Remove ${esc(c.name)}">✕</button>`}</div>`
@@ -1308,9 +1317,13 @@ function openPicker(tier) {                              // the shared picker (p
     <h3>${kind === "field" ? `Pick a field card (≤${D.FIELD_MAX_STARS}★)` : `Pick a ${st}★ ${kind}`}</h3>
     <p class="muted">Banned cards are marked: they make the hand illegal.</p><div id="picker-body"></div></div>`;
   modal.hidden = false; document.body.style.overflow = "hidden";
-  pick.mount($("#picker-body"), { cards: () => S.cards, filter: c => fits(c) && c.parsed && !deckHas(c.id), kinds: KINDS, kindOf,
+  const body = $("#picker-body");
+  const mount = () => Pick.mount(body, { cards: () => S.cards, filter: c => fits(c) && c.parsed && !deckHas(c.id), kinds: KINDS, kindOf,
     tile: (c, o) => tileHtml(c, { small: true, constructed: true, ...o }),
     onChoose: id => { const err = D.addCard(deck(), S.byId.get(id), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } } });
+  if (Pick) { mount(); return; }
+  body.innerHTML = `<div class="loading">Loading…</div>`;
+  loadPick().then(() => { if (body.isConnected) mount(); }, e => { if (body.isConnected) body.innerHTML = failBox("the card picker", e); });
 }
 
 // ---- stats / changes / compare -------------------------------------------------------------------
@@ -1358,9 +1371,9 @@ function distPage(panel, step) {          // a stat distribution's pager: the ne
 const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"],
   ["parser", "Parser notes"]];
 const NEEDS = { "": "history", changelog: "changelog.json", archive: "archive.json", edits: "edits.json" };   // the data a tab loads first
-// a minor fold's lines, drawn on its first open (changes.js foldHtml; capture: toggle doesn't bubble)
+// a minor fold's lines, drawn on its first open (changelog.js foldHtml; capture: toggle doesn't bubble)
 document.addEventListener("toggle", e => { const ul = e.target.open && e.target.matches?.(".cl-minor") && $("ul[data-fold]", e.target);
-  if (ul && !ul.childElementCount) ul.innerHTML = changes.foldHtml(+ul.dataset.fold); }, true);
+  if (ul && !ul.childElementCount && CL) ul.innerHTML = CL.foldHtml(+ul.dataset.fold); }, true);
 function renderChanges(r = parseHash(), held = null) {   // held: the tab a loading page focused, for the loaded redraw
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
@@ -1385,9 +1398,9 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
     return;
   }
   const updated = `<p class="muted">Site updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific), the last build that changed it, from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
-  if (tab === "changelog") { page(changes.changelogHtml(C, r.params)); return; }
-  if (tab === "archive") { page(changes.archiveHtml(C.archived, C.repo, r.params)); return; }
-  if (tab === "edits") { page(changes.editsHtml(C, r.params)); return; }
+  if (tab === "changelog") { page(CL.changelogHtml(C, r.params)); return; }
+  if (tab === "archive") { page(CL.archiveHtml(C.archived, C.repo, r.params)); return; }
+  if (tab === "edits") { page(CL.editsHtml(C, r.params)); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
   const item = (c, diff = true) => {          // diff: the text change since the last earlier text
     const last = diff && c.history && c.history.length ? c.history[c.history.length - 1] : null;
@@ -1449,14 +1462,14 @@ const publicDecks = () => deckList().filter(d => !d.private);
 function deckHits(q) {
   if (!q.trim() || !hasDecks()) return "";
   if (S.decksData) return decks.searchHitsHtml(publicDecks(), q, deckCtx());
-  loadDecks().then(() => { const el = $("#deck-hits"), h = parseHash(S.renderedHash || ""); if (el && h.name === "cards" && (h.params.get("q") || "") === q) el.innerHTML = deckHits(q); });
+  loadDecks().then(() => { const el = $("#deck-hits"), h = parseHash(S.renderedHash || ""); if (el && h.name === "cards" && (h.params.get("q") || "") === q) el.innerHTML = deckHits(q); }, () => {});
   return "";
 }
 /** Card page: the public decks holding the card. */
 function usingDecks(c) {
   if (!hasDecks()) return "";
   if (S.decksData) return decks.usingHtml(publicDecks(), c.id, deckCtx());
-  loadDecks().then(() => { const slot = $("#decks-slot"); if (slot && !modal.hidden && parseHash().arg === c.id) slot.innerHTML = usingDecks(c); });
+  loadDecks().then(() => { const slot = $("#decks-slot"); if (slot && !modal.hidden && parseHash().arg === c.id) slot.innerHTML = usingDecks(c); }, () => {});
   return "";
 }
 function decksReady() {
