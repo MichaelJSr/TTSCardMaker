@@ -854,20 +854,23 @@ export function statSite(rec, k, to) {
 }
 const HAND_STATS = /\b(Stat|(?:HP|DEF|ATK|SPD)(?: and (?:HP|DEF|ATK|SPD))*) (?:edits need Photoshop|(?:edits|raises) bake but change nothing|bars are on each other's rows)|brighten the cells/g;
 /** The stats whose edits Card checks' real bakes refuse, leave as they are or put on the wrong bar (cards.json
- *  checks.hand: AutoCroissant card_checks _note("stats"), NO_CHANGE_NOTE, SWAP_NOTE, BRIGHT_NOTE; keep in step). */
-export const handStats = card => [...new Set([...String(card?.checks?.hand || "").matchAll(HAND_STATS)]
+ *  checks.hand: AutoCroissant card_checks _note("stats"), NO_CHANGE_NOTE, SWAP_NOTE, BRIGHT_NOTE; checks.bars:
+ *  printed_bars, Baba's refused for good; keep in step). */
+export const handStats = card => [...new Set([...`${card?.checks?.hand || ""} ${card?.checks?.bars || ""}`.matchAll(HAND_STATS)]
   .flatMap(m => (!m[1] || m[1] === "Stat" ? STATS : m[1].toLowerCase().split(" and "))))];
 
 /** The boxes to redraw from per-layer edits (PARTS_EDITOR.md §5; parts: Card Edits.json's, by layer id): [{id, role (name |
  *  ability), old, text (null: the layer is deleted), box (canvas px), added, colors}] for the record's parts whose edit
  *  differs from the layer's text, or whose letters `colors` paints otherwise than `was` (the image's); an added ability
- *  goes in the template's Ability box. colors: each part's share of the field's (textcolor.js layerColors over the
- *  field's layers as the bake leaves them, picture 1's, in reading order). */
+ *  goes where the bake puts it (the details' addRoom, card_checks' room), else in the template's Ability box, and
+ *  nowhere on a card with no room for one (addRoom false: the bake refuses it). colors: each part's share of the
+ *  field's (textcolor.js layerColors over the field's layers as the bake leaves them, picture 1's, in reading order). */
 export function partJobs(rec, parts, { colors = null, was = null, statuses = null } = {}) {
   const p = obj(rec?.parts);
   if (!p || !obj(parts)) return [];
   const list = [...(p.title || []).map(x => ["name", x]), ...(p.ability || []).map(x => ["ability", x])];
-  const add = obj(parts["+ability"]), tb = rec?.partsTemplate?.ability?.box, plus = add?.text && !(p.ability || []).length ? { id: "+ability" } : null;
+  const room = rec?.addRoom, tb = Array.isArray(room) ? room : rec?.partsTemplate?.ability?.box;
+  const add = obj(parts["+ability"]), plus = add?.text && !(p.ability || []).length && room !== false ? { id: "+ability" } : null;
   const textOf = part => { const e = obj(parts[String(part?.id)]); return e ? (e.delete ? null : String(e.text ?? "")) : part?.text; };
   const layers = { name: [], ability: plus ? [plus] : [] };
   for (const [role, part] of list) if (textOf(part) != null && !(Array.isArray(part?.variants) && !part.variants.includes(1))) layers[role].push(part);

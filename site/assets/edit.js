@@ -695,13 +695,17 @@ export function createEditor(app) {
     const list = view.list.filter(b => b.kind === kind), many = list.length > 1;
     return list.map(b => boxHtml(b, view, many)).join("");
   }
-  function addHtml(view) {                         // + Add an ability: a card with no Ability layer
+  const NO_ROOM = "There's no room for an ability on this card.";   // the details' addRoom false (card_checks' room)
+  /** + Add an ability: a card with no Ability layer; none where the bake finds no room (owner 2026-11-13), the reason
+   *  instead (an ability published before: its box, to remove). */
+  function addHtml(view) {
     if (view.list.some(b => b.kind === "ability")) return "";
-    const t = view.rec.partsTemplate, was = view.added, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
+    const t = view.rec.partsTemplate, was = view.added, full = view.rec.addRoom === false, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
+    if (full && !was) return `<p class="muted part-note" data-part-full>${NO_ROOM}</p>`;
     return `<div class="part-box part-add" data-part-box="${P.ADD}"${was ? "" : " hidden"}><div class="part-head"><label for="ef-part:${P.ADD}">New ability</label><button type="button" class="ghost" data-part-add-remove>Remove</button></div>
       <textarea id="ef-part:${P.ADD}" class="part-text" rows="3" spellcheck="true" data-tokens data-part="${P.ADD}">${esc(was?.text || "")}</textarea>
-      <p class="muted part-note">New layer ‘Ability’ from ${esc(file)} (box, font, size); the bake flags it for a look.${was?.state === "stale" ? " ⚠ The card has an Ability layer now (added in Photoshop): this one will be skipped." : ""}</p></div>
-      <button type="button" class="ghost" data-part-add${was ? " hidden" : ""}>+ Add an ability</button>`;
+      <p class="muted part-note">${full ? `⚠ ${NO_ROOM} The bake refuses this one: remove it.` : `New layer ‘Ability’ from ${esc(file)} (box, font, size); the bake flags it for a look.`}${was?.state === "stale" ? " ⚠ The card has an Ability layer now (added in Photoshop): this one will be skipped." : ""}</p></div>
+      ${full ? `<p class="muted part-note" data-part-full>${NO_ROOM}</p>` : `<button type="button" class="ghost" data-part-add${was ? " hidden" : ""}>+ Add an ability</button>`}`;
   }
   function partsTop(view, c) {                     // above the boxes: the data's age, the variant pictures, edits for gone layers
     const pic = view.picture, first = (c.dup && S.byId.get(c.dup)) || pic?.cards?.[0], gone = P.goneEdits(view.rec);
@@ -1174,7 +1178,9 @@ export function createEditor(app) {
     const paintBoxes = () => {                     // the deleted boxes, the added one
       if (!partForm) return;
       for (const el of form.querySelectorAll(".part-box[data-part-box]")) el.classList.toggle("deleted", partForm.deleted.has(el.dataset.partBox));
-      const add = form.querySelector(".part-add"); if (add) { add.hidden = !partForm.added; form.querySelector("[data-part-add]").hidden = partForm.added; }
+      const add = form.querySelector(".part-add"), btn = form.querySelector("[data-part-add]");
+      if (add) add.hidden = !partForm.added;
+      if (btn) btn.hidden = partForm.added;        // none on a card with no room
       for (const el of form.querySelectorAll("[data-part-gone]")) el.classList.toggle("dropped", partForm.drops.has(el.dataset.partGone));
     };
     const update = () => {

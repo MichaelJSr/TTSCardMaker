@@ -564,11 +564,16 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   bars `isBar` may miss (2026-11-11): the plate's `bars` (AutoCroissant `card_plates.with_bars`: the bake's own picture
   of every value it takes, at the site's view, `vw` px wide, only the pixels it moves) are pasted (`barCut`, `putBar`)
   instead of the cells, on every card shape; a value with none (the bake refuses it) draws nothing. With no plate
-  bars, the stats a Card checks note names (`handStats`: card_checks' stat notes in `checks.hand`) aren't drawn
-  either. Stars (2026-11-12): the plate's `icons` (`card_plates.with_stars`: the bake's stars at every count 1-7, a
+  bars, the stats a Card checks note names (`handStats`: card_checks' stat notes in `checks.hand`, and printed bars'
+  in `checks.bars`: Baba's, refused for good, an info flag since 2026-11-13) aren't drawn either. Stars (2026-11-12): the plate's `icons` (`card_plates.with_stars`: the bake's stars at every count 1-7, a
   folder card's in its "N Stars" folder) are pasted the same way, no erase and no `starPlan`; a count with none
   takes section 23's way.
   A title in the picture (parts.js `titleInPicture`, the dialog's note) isn't drawn either. Stars and types: section 23.
+  An added ability ("+ Add an ability", 2026-11-13): the details' `addRoom` (build_site from AutoCroissant card_checks'
+  `room`, ability_place's room rule on a card with no ability) is the box the bake puts it in (`partJobs` draws it
+  there, not the template's Ability box over the bars), or false: no room (Whelp, Tentacle, Silithid, Paint Warrior,
+  Electro Probe, Galacta Warrior), where edit.js shows "There's no room for an ability on this card." instead of the
+  button and the mock-up draws none; no record yet: the template's box, as before.
   - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
     is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`
     1200x2400 creatures and minions, whose stat bars sit at (0.3, 0.5, 0.978, 0.535) + 0.0525 a row on 311 of the 390
