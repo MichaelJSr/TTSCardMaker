@@ -1169,14 +1169,14 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
  *  [[label, why]] (stars, types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without
  *  a font name], added: an added ability's box from "room" (the bake's, addRoom) or "template", else null} or null
  *  (the image didn't load, or stale). plate: the card's plates file (card_plates, the plates branch: picture 1's
- *  backdrop under each text layer, its layout) or null. */
+ *  backdrop under each text layer, its layout; another picture's own titles' too) or null. */
 let eraseMemo = null;                                // the last draw's erase pass (draw)
 export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, fills = null, stale = () => false, plate = null }) {
   const seq = (canvas._seq = (canvas._seq || 0) + 1);   // the newest draw on a canvas wins (one with the plate may end first)
   const img = await loadImage(src);
   if (!img || stale()) return null;
-  const ours = plate?.v === 1 && plate.w === rec?.canvas?.w && (card?.variant || 1) === 1;   // picture 1's plate
-  const sheet = ours && Array.isArray(plate.crops) && plate.crops.length ? await loadImage(plate.img) : null;
+  const mine = plate?.v === 1 && plate.w === rec?.canvas?.w, ours = mine && (card?.variant || 1) === 1;   // ours: picture 1's
+  const sheet = mine && Array.isArray(plate.crops) && plate.crops.length ? await loadImage(plate.img) : null;   // any picture: plateCuts checks each crop
   const pics = ours && plate.bars?.vw > 0 && Array.isArray(plate.bars.cuts) ? plate.bars : null;   // the bake's stat pictures
   const spics = ours && plate.icons?.vw > 0 && Array.isArray(plate.icons.cuts) ? plate.icons : null;   // its stars pictures
   const readPlate = (c, w, h) => { const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
