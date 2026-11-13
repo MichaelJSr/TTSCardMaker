@@ -80,7 +80,6 @@ const userUrl = login => `${ROOT}u/${encodeURIComponent(login)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
 const iconImg = (name, cls = "tok", px = 0) => G.iconImg(S.icons, name, cls, px);
-const iconLow = name => { const lo = S.icons[norm(name)]?.lo; return /^[dl]{1,2}$/.test(lo || "") ? [...lo].map(k => `lo-${k}`).join(" ") : ""; };   // too close to the box (style.css)
 const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
@@ -624,7 +623,7 @@ function renderCards(r) {
       <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts, xs("stars"), removes)}
       ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts, xs("sub"), removes)}` : ""}
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t), x = xs("types").includes(t), on = !x && csv(p, "types").includes(t), name = t.replace(/_/g, " ");
-        return `<button type="button" class="icon-toggle${on ? " on" : ""}${x ? " x" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(x ? `not ${name} (removes ${removes("types", t)})` : `${name} (${typeCounts.get(t)})`)}" aria-pressed="${on}"${x ? ` aria-label="${esc(name)}: excluded"` : ""}>${ic ? `<img loading="lazy" src="${esc(ic.file)}"${G.iconSet(ic, 26)} alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
+        return `<button type="button" class="icon-toggle${on ? " on" : ""}${x ? " x" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(x ? `not ${name} (removes ${removes("types", t)})` : `${name} (${typeCounts.get(t)})`)}" aria-pressed="${on}"${x ? ` aria-label="${esc(name)}: excluded"` : ""}>${ic ? `<img${G.loCls(ic) ? ` class="${G.loCls(ic)}"` : ""} loading="lazy" src="${esc(ic.file)}"${G.iconSet(ic, 26)} alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
       <h3>Series</h3>${notSel("series", `<select data-action="select-param" data-key="series" aria-label="Series"><option value="">All series</option>${series.map(s => `<option${s === pickOf("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}
       ${subseries.length || pickOf("subseries") ? `<h3>Subseries</h3>${notSel("subseries", `<select data-action="select-param" data-key="subseries" aria-label="Subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(pickOf("subseries"))}</option>` : ""}${subseries.map(s => `<option${s === pickOf("subseries") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
@@ -949,7 +948,7 @@ function openCard(id, showDetails = false) {
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
-        ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, iconLow(t), 34)}</a>`).join("")}</div>` : ""}
+        ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "", 34)}</a>`).join("")}</div>` : ""}
         ${statBars(c)}
         ${c.ability ? `<div class="ability">${cardText(c.ability)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
         ${c.note ? `<div class="note"><b>Note</b> ${cardText(c.note)}</div>` : ""}

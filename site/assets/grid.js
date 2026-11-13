@@ -44,8 +44,10 @@ export function hangVars(c, tall = 0, radius = 12) {
 export const hangs = c => !!(c.hang && c.tw && c.th);
 /** srcset of an icon drawn at px (≤34) CSS px: its 68 px copy (build_site ICON_SMALL) up to 2x, else the 96 px file */
 export const iconSet = (ic, px) => ` srcset="${esc(ic.file.replace(/\.webp$/, ".68.webp"))} 68w, ${esc(ic.file)} 96w" sizes="${px}px"`;
-export const iconImg = (icons, name, cls = "tok", px = 0) => { const ic = icons[norm(name)];
-  return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}"${px ? iconSet(ic, px) : ""} alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
+/** "lo-d", "lo-l": the themes whose boxes an icon nearly vanishes on (build_site icon_low), outlined there (style.css) */
+export const loCls = ic => (/^[dl]{1,2}$/.test(ic?.lo || "") ? [...ic.lo].map(k => `lo-${k}`).join(" ") : "");
+export const iconImg = (icons, name, cls = "tok", px = 0) => { const ic = icons[norm(name)], lo = loCls(ic);
+  return ic ? `<img class="${cls && lo ? `${cls} ${lo}` : cls || lo}" loading="lazy" src="${esc(ic.file)}"${px ? iconSet(ic, px) : ""} alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 
 // [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload)
 export const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],

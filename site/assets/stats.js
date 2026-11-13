@@ -5,6 +5,7 @@ import { total } from "./search.js";
 import { HAND } from "./deck.js";
 import { date } from "./history.js";
 import { artList } from "./art.js";
+import { loCls } from "./grid.js";
 
 // the game's names (rulebook "04 Table")
 const KIND_LABEL = { creature: "Creatures", item: "Items", field: "Field cards", minion: "Minions", nme: "N.M.E. items", "aux item": "Auxiliary items",
@@ -510,7 +511,7 @@ export function renderStats(root, ctx, params) {
   for (const c of pool) for (const t of new Set(c.types || [])) types.set(t, (types.get(t) || 0) + 1);
   const typeRows = desc(types).map(([t, v]) => {
     const ic = icons[t.toLowerCase().replace(/[\s_\-.'’]+/g, "")];
-    return { label: t.replace(/_/g, " "), value: v, href: L({ types: t }), html: `${ic ? `<img src="${esc(ic.file)}" alt="">` : ""}<span>${esc(t.replace(/_/g, " "))}</span>` };
+    return { label: t.replace(/_/g, " "), value: v, href: L({ types: t }), html: `${ic ? `<img${loCls(ic) ? ` class="${loCls(ic)}"` : ""} src="${esc(ic.file)}" alt="">` : ""}<span>${esc(t.replace(/_/g, " "))}</span>` };
   });
   if (typeRows.length) charts.push(card("types", "Types on cards", "Cards with each type.", hbar(typeRows), table(["Type", "Cards"], typeRows.map(r => [r.label, r.value]))));
 
