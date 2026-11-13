@@ -4333,7 +4333,8 @@ def main():
     seen_pngs, bot_dups = set(), []
     for name, c in sorted(stats.items(), key=lambda kv: kv[0].lower()):
         path = getattr(c, "path", "") or ""
-        if getattr(c, "duplicate_of", None) and not getattr(c, "variant_of", None):     # the bot's duplicate: made below
+        own = os.path.splitext(os.path.basename(path))[0].replace("_", " ") == name   # a marked PSD (card_models.picture_only)
+        if getattr(c, "duplicate_of", None) and not getattr(c, "variant_of", None) and not own:   # the bot's: made below
             bot_dups.append((name, c))
             continue
         variant = getattr(c, "variant", None)
