@@ -241,7 +241,8 @@ jobs:
             echo "$code" > "$RUNNER_TEMP/cards.code" ) < /dev/null > "$RUNNER_TEMP/cards.log" 2>&1 &
 
       # Main's history (every commit and tree) fetched beside the card repo's into history.git with carddata's header, 60 s
-      # at most; History join adds it to the checkout. Exit code in history-fetch.code.
+      # at most; History join adds it to the checkout, the save and Re-pin use it as their history clone. Exit code in
+      # history-fetch.code.
       - &history-start
         name: History start
         run: |
@@ -1285,7 +1286,7 @@ jobs:
         working-directory: bot
         env:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
-          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/history.git   # History start's: refresh tops up main
         run: &save-sh |
           save="TTS/Impossibility Simulator.json" bg=$RUNNER_TEMP/save ws=$GITHUB_WORKSPACE
           head=$(git -C "$ws" rev-parse HEAD)
@@ -1456,7 +1457,7 @@ jobs:
         working-directory: bot
         env:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
-          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/history.git
         run: *save-sh
 
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
@@ -1833,7 +1834,7 @@ jobs:
         working-directory: bot
         env:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
-          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/history.git
           GIT_NO_LAZY_FETCH: "1"
           M: ${{ steps.main.outputs.top }}
         run: |
