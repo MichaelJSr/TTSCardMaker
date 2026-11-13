@@ -576,6 +576,12 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   button and the mock-up draws none; no record yet: the template's box, as before. Card checks' Commit step counts
   `room` in `shown()`: a room-only change rebuilds the site. The caption says which box (preview.js `mockNote`, draw()'s
   `added`): "where the bake puts it" or "where the template puts it".
+  With the details' `addLook` (card_checks' `look`: ability_place's plan font, px and leading for two lines, the template
+  Ability's colour, Stroke and `just`; `shown()` counts it too) there is no box: `drawAdded` sets the text as the bake
+  does, from the room's top (its first ink row), centred or left set, shrunk by 0.94 only while it runs past the room
+  (the bake also raises a long text first: not modelled). Its font is in data/fonts.json (`record_fonts`). Measured
+  2026-11-13 on the 15 cards that fit, one- and three-line texts: wrong px against the bake -88% (746k -> 88k), never
+  worse than drawing nothing (the box was on 27 of 30). No caption then (`added` null).
   - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
     is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`
     1200x2400 creatures and minions, whose stat bars sit at (0.3, 0.5, 0.978, 0.535) + 0.0525 a row on 311 of the 390

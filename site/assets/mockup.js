@@ -1167,7 +1167,8 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
  *  again), stale (a newer draw started: drop this one), fills (colourize's)}. Drawn off-screen, then copied. Returns
  *  {drawn: [labels], skipped, boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused:
  *  [[label, why]] (stars, types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without
- *  a font name], added: an added ability's box from "room" (the bake's, addRoom) or "template", else null} or null
+ *  a font name], added: an added ability's box from "room" (the bake's, addRoom) or "template", else null (none, or
+ *  drawn as the bake sets it: addLook)} or null
  *  (the image didn't load, or stale). plate: the card's plates file (card_plates, the plates branch: picture 1's
  *  backdrop under each text layer, its layout; another picture's own titles' too) or null. */
 let eraseMemo = null;                                // the last draw's erase pass (draw)
@@ -1220,10 +1221,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     return blit();
   }
   const pixels = ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
-  const family = async (role, label, path = "", id = "") => {   // path, id: a part's own layer (a split title's share a path)
+  const family = async (role, label, path = "", id = "", look = null) => {   // path, id: a part's own layer (a split title's share a path); look: an added ability's
     const mine = t => t && (id && t.id != null ? String(t.id) === id : t.layer === path) && (t.lf || !ICON_FONT.test(String(t.font || "")));
     const own = path && Array.isArray(rec?.text) ? rec.text.find(mine) : null;
-    const layer = own || layerOf(rec, role), name = layer?.lf || layer?.font || "";   // lf: the font most of its letters use
+    const layer = look || own || layerOf(rec, role), name = layer?.lf || layer?.font || "";   // lf: the font most of its letters use
     const pending = name ? loadFont(name, { getFonts, raw }) : Promise.resolve("");
     let fam = "";
     const ready = await Promise.race([pending, new Promise(r => setTimeout(() => r(null), 60))]);   // a loaded font draws at once
@@ -1247,7 +1248,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   else specs.splice(0, specs.length, ...specs.filter(s => !tinted.includes(s.role)));   // each of its layers recoloured in its own box
   for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer, id: j.added ? "" : j.id, colors: j.colors });
   const fams = [];
-  for (const { role, label, path, id } of specs) fams.push(await family(role, label, path, id));
+  const look = Array.isArray(rec?.addRoom) && obj(rec?.addLook) && rec.addLook.px > 0 ? { ...rec.addLook, added: true } : null;   // how the bake sets an added ability
+  for (const { role, label, path, id, added } of specs) fams.push(await family(role, label, path, id, added ? look : null));
   // the erase pass (where each old text is, erased) depends on none of the new text, colours or statuses: a redraw that
   // changed only those (typing) starts from the last one's pixels
   const fxWords = sheet ? plate.crops.flatMap(c => c.fx || []) : [];   // the plate picked follows these (plateCuts)
@@ -1277,6 +1279,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
     const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null);    // the card's own colours on what is unchanged
+    if (added && layer?.added && own) { jobs.push({ role, text, label, area: { box: own, seed: null }, fam, layer, measure, icons, colors, statuses, kc, look: true }); continue; }   // as the bake sets it
     if (added) {                                      // top: at the top of the bake's area, as tall as its lines
       jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true, top: !!own });
       if (own) out.added = Array.isArray(rec?.addRoom) ? "room" : "template"; else out.boxed.push(label);   // mockNote says where
@@ -1369,7 +1372,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   for (const job of jobs) {
     const imgs = await iconImages(job.text, icons);
     const j = { ...job, fills: job.one ? null : fills };   // under an overlay: painted over, as the bake's
-    if (j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) out.over.push(j.label);
+    if (j.look ? drawAdded(ctx, j, imgs) : j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) out.over.push(j.label);
     out.drawn.push(job.label);
   }
   return blit();
@@ -1949,6 +1952,21 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
   }
   paintLines(ctx, drawn.lines, { ...look, at: drawn.at, base: drawn.base, pitch: step, z: drawn.z, hx: drawn.hx });
   return fit ? "splice" : "lines";
+}
+/** An added ability as the bake sets it (the details' addLook: card_checks' plan font, px and leading, the template
+ *  Ability's colour, Stroke and just): from the room's top (its first ink row), centred or left set, smaller by 0.94
+ *  down to 40% (ability_place FIT_MIN) only while its lines run past the room. True: still past it. */
+function drawAdded(ctx, { text, area, fam, layer: look, measure, icons, colors, statuses, fills, kc }, imgs) {
+  const b = area.box, z0 = look.px * kc, lead = look.lead > 0 ? look.lead / look.px : LINE, room = b[3] - b[1];
+  const paras = colourize(tokenize(text, icons), text, colors, "ability", statuses, null, null, fills);
+  const tall = (lines, z) => (lines.length - 1) * z * lead + z;
+  let z = z0, lines = layout(paras, b[2] - b[0], z, measure);
+  while (tall(lines, z) > room + 0.5 && z > z0 * 0.4) { z *= 0.94; lines = layout(paras, b[2] - b[0], z, measure); }
+  const stroke = Array.isArray(look.stroke) && look.stroke.length === 4 ? look.stroke : null;
+  paintLines(ctx, lines, { at: l => (look.just === 0 ? b[0] : (b[0] + b[2] - l.w) / 2), base: b[1] + measure.cap(z)[0], pitch: z * lead, z, fam,
+    label: measure.label, track: measure.track, hx: measure.hx, fill: hexRgb(look.color) || [255, 255, 255], stroke: stroke?.slice(0, 3),
+    strokeW: stroke ? 2 * stroke[3] * kc : 0, imgs });
+  return tall(lines, z) > room + 0.5;
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the

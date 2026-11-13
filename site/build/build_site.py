@@ -114,7 +114,7 @@ SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 RAW = f"https://raw.githubusercontent.com/{CARD_REPO}/main/"
 CARD_BACKS = ("MDW/Assets/cardback.png", "MDW/Assets/cardback_item.png")    # deck.js ttsSave's backs
 DETAILS_JSON = "psd_details.json"            # the PSD structure records {version, cards: {blob sha: record}} (AutoCroissant card_db.DETAILS_JSON)
-CHECKS_JSON = "card_checks.json"             # the automatic flags {cards: {blob sha: {hand, bars, name, room}}, cleared: {PSD path: flags' psd}} (AutoCroissant card_checks)
+CHECKS_JSON = "card_checks.json"             # the automatic flags {cards: {blob sha: {hand, bars, name, room, look}}, cleared: {PSD path: flags' psd}} (AutoCroissant card_checks)
 PSD_TREE = os.environ.get("PSD_TREE", "")     # the trees API's reply at the build's commit (site.yml): the PSDs' sizes
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
@@ -820,7 +820,7 @@ def join_details(cards, records, tree, edits=None):
     Flags the card (details: true in cards.json) and returns {card id: record + id and name} for data/details/<id>.json.
     A duplicate (same PSD) gets its original's record. A VERSION 2 record's parts come as details_parts() gives them; the
     part edits live in the PSD's entry (variant 1's). `addRoom`: card_checks' room on a card with no ability (the box a
-    "+ability" goes in, or false: no room, the editor offers none).
+    "+ability" goes in, or false: no room, the editor offers none); `addLook`: its look (how the bake sets it).
     """
     by_path, blob_of = {}, {id(rec): sha for sha, rec in records.items()}
     for rec in records.values():
@@ -833,7 +833,7 @@ def join_details(cards, records, tree, edits=None):
         path = e.get("psd")
         rec = (records.get(tree.get(path, "")) or records.get(e.get("_blob") or "") or by_path.get(path)) if path else None
         plain = e.pop("_plain", None)             # apply_edits' pending without the part edits' fields
-        room = e.pop("_room", None)
+        room, look = e.pop("_room", None), e.pop("_look", None)
         if rec:
             e["details"] = True
             try:
@@ -858,6 +858,8 @@ def join_details(cards, records, tree, edits=None):
                 out[e["id"]].update(parts)
                 if room is not None:
                     out[e["id"]]["addRoom"] = room    # a "+ability"'s box, or false: no room (edit.js, mockup.js)
+                if room and look:
+                    out[e["id"]]["addLook"] = look    # its font, px, leading, colour, stroke, just (mockup.js drawAdded)
                 shown = {str(p.get("id")) for k in ("title", "ability") for p in parts["parts"][k]}
                 here = {p["field"] for k, p in parts["partEdits"].items() if "field" in p and (k == "+ability" or k in shown
                         or (parts["partState"].get(k) == "gone" and first is e))} - set(e.get("siteOnly") or [])
@@ -1066,9 +1068,9 @@ def web_woff2(fonts, tree):
 
 
 def record_fonts(records):
-    """The font names the text layers of the details records ask for."""
+    """The font names the text layers of the details records ask for, an added ability's (addLook) too."""
     return {t.get("font") for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
-            if isinstance(t, dict) and isinstance(t.get("font"), str)}
+            + [rec.get("addLook")] if isinstance(t, dict) and isinstance(t.get("font"), str)}
 
 
 CARD_FONTS = "cardfonts.json"                # data/: the grid's Font filter, loaded on its first use
@@ -4409,6 +4411,7 @@ def main():
         merge_flags(entry, checked, cleared, bool(getattr(c, "variant_of", None)))
         if (checked or {}).get("room") is not None:
             entry["_room"] = checked["room"]      # card_checks' room: join_details, dropped below
+            entry["_look"] = checked.get("look")
         date_text(entry, c, history_of(name))     # a renamed card's history goes on (its old names' versions)
         if isinstance(variant, int) and not isinstance(variant, bool) and variant >= 1:
             entry["variant"] = variant            # one picture of a PSD with several (" #N" layers); variantOf/variants below
@@ -4664,6 +4667,7 @@ def main():
     for e in cards:
         e.pop("_blob", None)
         e.pop("_room", None)
+        e.pop("_look", None)
     if records:
         log(f"PSD details: {len(detail_files)} cards have a record ({len(records)} in {DETAILS_JSON})")
     font_use = card_fonts(cards, detail_files)    # the Font filter (data/cardfonts.json)
