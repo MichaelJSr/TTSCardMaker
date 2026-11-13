@@ -1319,8 +1319,8 @@ esac
 
 
 def save_cases(flow: dict) -> None:
-    """TTS save start: the save in the background (a fake one taking 1 s), started before the rulebook PDF; TTS save
-    waits for it: its report, changed, its exit code."""
+    """TTS save start: the save in the background (a fake one that ends once TTS save waits), started before the
+    rulebook PDF; TTS save waits for it: its report, changed, its exit code."""
     job = flow["jobs"]["main"]
     ids = [s.get("id") for s in job["steps"]]
     at, between = ids.index("pages"), [s.get("name") for s in job["steps"][ids.index("pages") + 1:ids.index("save")]]
@@ -1333,14 +1333,16 @@ def save_cases(flow: dict) -> None:
             _, bare = origin(tmp)
             ws = checkout(tmp, bare)
             os.makedirs(os.path.join(ws, "bot"))
-            python = os.path.join(tmp, "runner", "venv", "bin", "python")
-            write(python, f'#!/bin/bash\nsleep 1\necho "report $*"\necho "a warning" >&2\n{body}\n')
+            python, gate = os.path.join(tmp, "runner", "venv", "bin", "python"), os.path.join(tmp, "go")
+            # the fake save ends once TTS save's wait first sleeps (10 s at most), not on a clock
+            write(python, f'#!/bin/bash\nuntil [ -e "{gate}" ] || [ "$SECONDS" -ge 10 ]; do sleep 0.01; done\n'
+                          f'echo "report $*"\necho "a warning" >&2\n{body}\n')
             os.chmod(python, 0o755)
             env = {"AUTOCROISSANT_LOCAL_DIR": ws, "AUTOCROISSANT_HISTORY_CLONE": tmp}
-            t = time.monotonic()
             code, text, _ = run_step(job, "save-start", os.path.join(ws, "bot"), {**env, "GITHUB_WORKSPACE": ws}, tmp)
-            quick = time.monotonic() - t < 0.8
-            code2, text2, out = run_step(job, "save", ws, {"STARTED": "success"}, tmp)
+            quick = not os.path.exists(os.path.join(tmp, "runner", "save", "code"))     # returned with the save still running
+            code2, text2, out = run_step(job, "save", ws, {"STARTED": "success",
+                                                           "BASH_FUNC_sleep%%": f'() {{ : > "{gate}"; command sleep 0.02; }}'}, tmp)
             ok = (code == 0 and quick and code2 == want and out.get("changed") == changed and "a warning" in text2
                   and "report -m commands.tts_save" in text2 and "report" in open(os.path.join(tmp, "runner", "save.md")).read())
             check(ok, f"save, {name}: the start step returns at once, TTS save waits (exit {code2}, changed={out.get('changed')})"
