@@ -179,10 +179,13 @@ function sourceHtml(C) {
 }
 
 // ---- the tabs ---------------------------------------------------------------------------------------------------
+/** A file renamed in its own folder, the card's name kept (cardfix2's underscores, 11-13): file housekeeping, not a card
+    change, so off the Changes page ("moved to 1 Stars from 1 Stars"). */
+export const fileRename = e => e.kind === "moved" && !!e.from_path && folder(e.from_path) === folder(e.path);
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=) */
 export function changelogHtml(C, params) {
   folds = [];
-  const events = C.events, kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
+  const events = C.events.filter(e => !fileRename(e)), kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
   const counts = new Map();
   for (const e of events) counts.set(e.kind, (counts.get(e.kind) || 0) + 1);
   const present = KINDS.filter(([k]) => counts.get(k));
