@@ -1615,6 +1615,22 @@ function drawText(ctx, job, imgs, W) {
   const own = Array.isArray(layer?.stroke) && layer.stroke.length === 4 ? layer.stroke : null;   // psd_details: the layer's or its group's Stroke
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = own ? own.slice(0, 3) : colours?.stroke, strokeW = own ? 2 * own[3] * (kc || W / 1200) : 0;
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
+  if (role === "name" && geo && kc && plain(text) === plain(old) && sameWords(geo.c.text, old)) {   // a colour alone on a title (its fill hidden: tintPlan's none): each of its own lines redrawn where it stands
+    const Rl = recordLayout(geo.c, lineBreaks(geo.c.text), kc), rows = (Rl ? Rl.lines.filter(l => l.para >= 0 && Rl.was.slice(l.s, l.e).trim()) : []).map(l => {
+      const t = Rl.was.slice(l.s, l.e).replace(/\s+$/, ""), body = t.trimStart();
+      return { l, body, a: Rl.ink.get(l.s + t.length - body.length), b: Rl.ink.get(l.s + t.length - 1) };
+    });
+    if (rows.length && rows.every(r => r.a && r.b && !drawnSpans(r.body).length)) {   // letters only, each line's ink ends known
+      for (const { l, body, a, b } of rows) {
+        ctx.font = `${size}px ${fam}`; ctx.letterSpacing = measure.track ? `${measure.track * size}px` : "0px";
+        const m = ctx.measureText(body), inkW = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) * measure.hx; ctx.letterSpacing = "0px";
+        const zl = inkW > 0 && b[1] > a[0] ? size * (b[1] - a[0]) / inkW : size;   // its own ink width
+        const line = fit(colourize(tokenize(body, icons), body, colors, role, statuses, null, null, fills), Infinity, Infinity, zl, measure).lines.slice(0, 1);
+        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one });
+      }
+      job.lined = "own"; return false;
+    }
+  }
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid
   job.lined = plan && !shrunk ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name", icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades }, pitch: pitch0, W }) : "";
@@ -1941,11 +1957,15 @@ export function paintLit(data, W, H, row, lit, to) {
 }
 
 // ---- a colour alone: the card's own letters recoloured in place (its plate's layout)
+const lineBreaks = t => String(t ?? "").replace(/[\r\u0003]/g, "\n");   // Photoshop's paragraph and line breaks
+const plain = t => String(t ?? "").replace(/\r/g, "").trim();   // text the same: a moved break is an edit
+const sameWords = (a, b) => typeof a === "string" && lineBreaks(a).replace(/\s+/g, " ").trim() === lineBreaks(b).replace(/\s+/g, " ").trim();
 /** {R, c, want, own} for tintInPlace when the plate (one layer, ids) has the layer's layout for old, colors newly paint
  *  some of its letters (colorRanges) and the layer's old fill shows in at least 4 in 5 of those (else an effect paints
  *  them otherwise); null: redrawn. layer: the details record's text layer (its colours over its text: runs). */
 export function tintPlan(data, W, plate, ids, k, old, layer, colors, role, statuses = null) {
-  const geo = geoOf(plate, ids, k), R = geo && recordLayout(geo.c, old, k), want = R && colorRanges(R.was, colors, role, statuses);
+  const geo = geoOf(plate, ids, k), R = geo && (recordLayout(geo.c, old, k) || (role === "name" && sameWords(geo.c.text, old) ? recordLayout(geo.c, lineBreaks(geo.c.text), k) : null));   // a title on several lines: the website's name joins them with spaces
+  const want = R && colorRanges(R.was, colors, role, statuses);
   const own = want?.length ? tintOld(layer, R) : null;
   return own && tintFits(data, W, R, want, own) ? { R, c: geo.c, want, own } : null;
 }
