@@ -1168,7 +1168,7 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
  *  again), stale (a newer draw started: drop this one), fills (colourize's)}. Drawn off-screen, then copied. Returns
  *  {drawn: [labels], skipped, boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused:
  *  [[label, why]] (stars, types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without
- *  a font name]} or null
+ *  a font name], added: an added ability's box from "room" (the bake's, addRoom) or "template", else null} or null
  *  (the image didn't load, or stale). plate: the card's plates file (card_plates, the plates branch: picture 1's
  *  backdrop under each text layer, its layout) or null. */
 let eraseMemo = null;                                // the last draw's erase pass (draw)
@@ -1189,7 +1189,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
   const nix = paintedOver(rec, edit.colors, typed, edit);   // the bake refuses them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
-  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], site: [], starsKept: null };
+  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], site: [], starsKept: null, added: null };
   const hand = pics ? [] : handStats(card);           // the bake won't draw them: not drawn, nothing said (owner 11-11); a plate's bars tell value by value
   for (const k of Object.keys(todo.stats)) if (hand.includes(k.split("@")[0])) delete todo.stats[k];
   todo.skipped = todo.skipped.filter(label => !hand.includes(label.toLowerCase()));
@@ -1278,7 +1278,11 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
     const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null);    // the card's own colours on what is unchanged
-    if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true, top: !!own }); out.boxed.push(label); continue; }   // top: at the top of the bake's area, as tall as its lines
+    if (added) {                                      // top: at the top of the bake's area, as tall as its lines
+      jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true, top: !!own });
+      if (own) out.added = Array.isArray(rec?.addRoom) ? "room" : "template"; else out.boxed.push(label);   // mockNote says where
+      continue;
+    }
     let plated = false;
     const wipe = (box, opts) => {                     // erase's colours; with the card's plate, its pixels in place of erase's
       const cuts = sheet && plateCuts(pixels.data, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, text, wiping);
