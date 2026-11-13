@@ -46,7 +46,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - details/<id>.json (2026-10-21; 0.9-16.7 KB each, median 3.7 KB, one per card or rulebook page with `details: true`; lazy: the card or rulebook page's Details dropdown, `loadDetails` memoised per card id in app.js): the bot's psd_details.json record `{id, name, path, at, parser, canvas{w,h,mode,depth,icc}, fonts{font:{layers[], supplied}}, text[{layer,text,font,size,color,visible}], effects{layer:[names]}, smart_objects[], icons, stats{hp,def,atk,spd}, fx[], overlays[], template{name_layer, ability_layers, deviations}, tree[[name, kind, visible, children?]]}`; a section the bot couldn't read is a short string. Section 11.
   - decks.json (2026-10-21; lazy: `#/decks`, a deck page, a person's Decks panel): `{generated, decks: [{owner, slug, name, description, cards[visible ids], dropped, field|null, updated, n}], private: [{owner, slug, kdf{name,hash,iter,salt}, iv, data, updated}]}`, both newest first. cards.json carries the counts as `decks: {public, private}` and `files.decks = "site/decks"`. Section 12.
   - analytics.json (2026-10-22; 105 KB, 13 KB gzipped; lazy: the Stats page's Balance section, a card with `balance: true`): section 14.
-- Card record (cards.json, empty fields dropped; 773 cards; types: creature 298, item 189, minion 91, debuff 52, field 50, aux item 48, nme 26, buff 12, creatures 7). Fields: `id` (slug, e.g. "a-snack"), `name`, `type` (kind), `subtype` (item type e.g. heal), `series`, `stars` (int), `types[]` (icon names), `hp def atk spd`, `ability` (text with `[type]` tokens and \n), `author`, `ts` ("updated", Recently updated: its last real change, epoch s; since 2026-11-09 stats, stars, types, name or ability beyond formatting, or a picture change that shows by no pass, bake or guards commit: build_site `set_updated`), `psd`, `png` (repo path of full PNG), `key` (card file key used in Card Edits.json/Authors), `dups[]` (ids that are copies of this card; on the copy: `dup` = original id; since 2026-10-25 a variant picture 2+ is also `dup` of picture 1, `variantOf` / `variants` naming the PSD's pictures), `art` (artwork sources, 2026-10-25), `aliases[]`, `authorListed`, `img` (hash for thumbs), `tw`,`th` (360-wide thumb dims), `color` (accent hex), `hv` (history count), `iv` (image versions, only over 1), `ivm` (the minor ones), `fs` (first upload of the image, epoch s, from the git history, every card with a history row), `created` (the creation date "YYYY-MM-DD": the earlier of `site/Card Creation Dates.json`'s first Discord post and `fs`, a hand-set date winning; `createdFrom` "discord" | "git" | "hand"; build_site `apply_created`, 2026-10-23), `problems[]`, `creatures[]` (list of per-creature stat objects when a card has several), `ratings[]` (dated 1-10 ratings, oldest first: section 25), `parsed:false` (only when not parsed), plus editor-only fields at runtime: `edited`, `orig`, `editAt`, `webAliases`, `hidden`, `note`, `problems_ok`, `allow_high_stats`, `_staged`, `_sent`, `_banned`, `_unused`. Cards have NO sha/GUID or TTS ids (`details: true`, 2026-10-21, only says `data/details/<id>.json` exists; the record is joined by blob sha at build time). Note `c.type` of a field card = "field", status effects "debuff"/"buff". Since 2026-11-12 `blob`, `webAliases`, `statCaps`, `creatureBars`, `ink` and `ratings` (build_site EDITOR_FIELDS) are in data/editing.json `{id: fields}`, not cards.json: app.js loads it with the editor and `addEditFields` puts them on the cards (then `anchorInks`) before any edit applies.
+- Card record (cards.json, empty fields dropped; 773 cards; types: creature 298, item 189, minion 91, debuff 52, field 50, aux item 48, nme 26, buff 12, creatures 7). Fields: `id` (slug, e.g. "a-snack"), `name`, `type` (kind), `subtype` (item type e.g. heal), `series`, `stars` (int), `types[]` (icon names), `hp def atk spd`, `ability` (text with `[type]` tokens and \n), `author`, `ts` ("updated", Recently updated: its last real change, epoch s; since 2026-11-09 stats, stars, types, name or ability beyond formatting, or a picture change that shows by no pass, bake or guards commit: build_site `set_updated`), `psd`, `png` (repo path of full PNG), `key` (card file key used in Card Edits.json/Authors), `dups[]` (ids that are copies of this card; on the copy: `dup` = original id; since 2026-10-25 a variant picture 2+ is also `dup` of picture 1, `variantOf` / `variants` naming the PSD's pictures), `art` (artwork sources, 2026-10-25), `aliases[]`, `authorListed`, `img` (hash for thumbs), `tw`,`th` (360-wide thumb dims), `color` (accent hex), `hv` (history count), `iv` (image versions, only over 1), `ivm` (the minor ones), `fs` (first upload of the image, epoch s, from the git history, every card with a history row), `created` (the creation date "YYYY-MM-DD": the earlier of `site/Card Creation Dates.json`'s first Discord post and `fs`, a hand-set date winning; `createdFrom` "discord" | "git" | "hand"; build_site `apply_created`, 2026-10-23), `problems[]`, `creatures[]` (list of per-creature stat objects when a card has several), `parsed:false` (only when not parsed), plus editor-only fields at runtime: `edited`, `orig`, `editAt`, `webAliases`, `hidden`, `note`, `problems_ok`, `allow_high_stats`, `_staged`, `_sent`, `_banned`, `_unused`. Cards have NO sha/GUID or TTS ids (`details: true`, 2026-10-21, only says `data/details/<id>.json` exists; the record is joined by blob sha at build time). Note `c.type` of a field card = "field", status effects "debuff"/"buff". Since 2026-11-12 `blob`, `webAliases`, `statCaps`, `creatureBars` and `ink` (build_site EDITOR_FIELDS) are in data/editing.json `{id: fields}`, not cards.json: app.js loads it with the editor and `addEditFields` puts them on the cards (then `anchorInks`) before any edit applies.
 - Images: thumbnails `thumbs/<img>-{96|240|360|720}-<tag>.avif` (AVIF since 2026-10-24, §28; the tags in cards.json `thumbs`) (app.js:~44 `img(c,w)`, `imgAttrs(c, cssPx)` gives src+srcset+width/height); full-size PNG = `S.data.raw + urlPath(c.png)` (raw.githubusercontent.com, `fullUrl(c)` app.js:~49; this is what TTS FaceURL uses in deck.js:156); card back images `raw + "MDW/cardback.png"` and `MDW/cardback_item.png` (deck.js:181-183). Icons `icons/<name>.<stamp>.webp` (§28). Name lookup helpers: `S.byId`, `norm(name)` (text.js:4: lowercase, strips spaces/_-.'), search `compile(query)` (search.js:35) returns predicate; matches names + aliases; `suggest(q, cards)`.
 - Load errors (2026-11-04): app.js `failText` / `failBox` (`.load-error`, the Reload link kept). Offline
   (`navigator.onLine === false`): "Couldn't load the Stats page: no connection. It will try again when you're back
@@ -121,7 +121,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   own cards' analytics rows with `bal`, delta = new total - old; `swing` [id, delta, ts] the largest, shown as "Biggest
   swing"; `madeBuff`/`madeNerf` = rows on others' cards made by them; present with `power` so the page shows `No buffs
   or nerfs recorded yet.`), `revisions` (P3/P12/P13 from stats' `card_revisions` counts, `{self, others, top, theirs,
-  most?, untouched, oldest?}`; absent without history), `rework` (P11: `analytics.reworked` rows), the ratings (P4/P5/P7/P8 `ratings`/`selfBias`/`rater`/`powerVsStats`,
+  most?, untouched, oldest?}`), `rework` (P11: `analytics.reworked` rows), the ratings (P4/P5/P7/P8 `ratings`/`selfBias`/`rater`/`powerVsStats`,
   deleted 2026-11-12), `editFields` (P21:
   `edit_batches(..., fields_by=)` counts every changed field of every batch they are credited with, all time, before the
   `BATCH_LINES` cut, a Card Authors.txt line as `author`, not in the commit that created that file, an import of 813
@@ -342,9 +342,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   so another card, a reload or a crash returns to it; drop an entry when a newer preview of the card replaces it, or on
   a 404 more than a day after `at`. A preview stays at least 6 days unless 150 newer ones came after it: the branch is
   rewritten as one fresh commit when it holds more than 200 previews or one older than 7 days. `index.json` on the
-  branch (`.../contents/index.json?ref=previews`) lists every preview
-  `{request: {at, card, path, state, psd_blob, png_blob}}`: another device's preview of a card is the newest row with
-  its `path` and current blobs (its result.json has the edit).
+  branch (`.../contents/index.json?ref=previews`) lists every preview's date, `{request: {at}}` (the rewrite's ages).
 - **Latency.** About 1-2 minutes for a stat edit and 1.5-3 for an ability or name, from the dispatch to result.json
   (queue, checkouts and the 27 s pip install measured on card-edits.yml's runs; the bake 14 s for a stat and 26 s for an
   ability on the dev Mac under load; the publish job's start, about 10-20 s, estimated), more when Actions queues.
@@ -684,8 +682,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     press does the same (the contract's rule). A card whose only previews are expired and that has no PSD change gets
     no viewer.
   - Result: `readResult` keeps state, transient, reason, notes (20, 500 characters), fields, base, image,
-    files (`webp`, `png`, `before`: `.webp` / `.png` names only) and the run (a github.com link only); anything else is a transient
-    error. Baked: the preview (preview.webp, 720 px) in the image's place, a link to full size (preview.png when `files` lists one: since work/card-preview a1274af7 it never does, so the WebP), Diff
+    files (`webp`, `before`: `.webp` / `.avif` names only) and the run (a github.com link only); anything else is a transient
+    error. Baked: the preview (preview.webp, 720 px) in the image's place, the image a link to itself (no full-size PNG: `files.png` went 2026-11-12), Diff
     swapping in the red differences (`diffPixels` against the result's `before.webp`, hidden: changed pixels red over the
     dimmed card, with the share in the caption; a result without one, from before it was published, diffs against the
     720 px AVIF thumb); `renderedParts(e, v)` -> `{stage, caption, dim}`, `renderedHtml` =
@@ -703,8 +701,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     hex digits; before a result, the card's `ts` and `img` at the dispatch): "Out of date: the edit changed since" with
     Preview again. Kept, not dropped: the last three stay listed under "Earlier:".
   - The server contract's suggestions not followed: the request id above instead of `crypto.randomUUID()` (both fit);
-    `card-previews` with three per card instead of `edit-previews` with one; index.json (another device's previews) not
-    read yet. (Polling follows the contract since the 2026-10-23 review: until then every 15 s up to 20 minutes.)
+    `card-previews` with three per card instead of `edit-previews` with one. (Polling follows the contract since the 2026-10-23 review: until then every 15 s up to 20 minutes.)
   - Between Publish and the site's rebuild the PSD values come from the built card (edit.js `psdVal` reads `pristine`),
     so a newly published PSD field still counts as one the image doesn't show yet: the mock-up and Preview image stay
     (they read the published-not-built card as printed before). Open viewers are forgotten as soon as they leave the
@@ -863,14 +860,14 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   focus) jumps past their Tab stops.
 
 ## 25. Ratings (2026-10-24; off the website since 2026-11-11, §54: the data parts below stand, the display and Rate it parts are history)
-- File `site/Card Ratings.json` (AutoCroissant `card_edits.CardRatings`, `dump_ratings`): `{about, cards: {"Card Name": [{date
-  "YYYY-MM-DD", scale "favorability" | "power", value a whole number 1-10 (owner, 2026-10-26: the 830 one-decimal values
-  were rounded half up that day, 5.5 -> 6; averages keep one decimal), by "group" | <login>, source
-  "TTS session" | "website"}]}}`, keyed like Card Edits.json (`card_key`), one line per card, lists ordered by date,
-  source (TTS first), by (lower case), scale. Not a card file: no Action, card sync, check or bot reads it (AutoCroissant
+- File `site/Card Ratings.json` (AutoCroissant `card_edits.CardRatings.order`; `dump_ratings` deleted 2026-11-12, a card
+  rename writes the file in `dump_edits`' layout): `{about, cards: {"Card Name": [{date "YYYY-MM-DD", scale
+  "favorability" | "power", value a whole number 1-10 (owner, 2026-10-26: the 830 one-decimal values were rounded half
+  up that day, 5.5 -> 6; averages keep one decimal), by "group", source "TTS session"}]}}`, keyed like Card Edits.json
+  (`card_key`), one line per card, lists ordered by date, source, by (lower case), scale. Not a card file: no Action, card sync, check or bot reads it (AutoCroissant
   `test_bot_ignores_ratings`); not in EDIT_PATHS, so no edit batch.
-- The import (AutoCroissant `python -m commands.tts_ratings`, by hand; re-runs replace the sessions' group entries and keep
-  the rest): TS_Save_3 2023-04-28, TS_Save_8 2025-03-02, TS_Save_10 2025-04-28 (the session evenings). Each board's five
+- The import (AutoCroissant `python -m commands.tts_ratings`, by hand; deleted 2026-11-12 (owner), git history keeps it;
+  re-runs replaced the sessions' group entries and kept the rest): TS_Save_3 2023-04-28, TS_Save_8 2025-03-02, TS_Save_10 2025-04-28 (the session evenings). Each board's five
   3DText labels (power: Plz buff :(, Below Average, Balens, Above Average, Too Stronk; favorability: Pain, Dislike,
   Bogstandard, Like, Nut on you) at x positions: the value is piecewise linear in a card's x between the label midpoints
   (midpoint i/i+1 -> 2i+2.5; label i about 2i+1.5, exactly when centred; past the end labels the same half-band), clamped
@@ -894,7 +891,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   by `withoutItem`). `applyOp` adds preview entries (by "you", `_staged`/`_sent`; `rater` = your published entries'
   `by`, matched on `login || by`, so `latestBy` counts you once) and `c._rate` (drafts.js `rawOf`). `publish` writes
   `ratingsFile(text, ops, <Pacific day>, login)`: your entry of that day and scale replaced, others kept; `editsFile`
-  skips a rating-only op, so Card Edits.json is untouched. `RATINGS_ABOUT` = `CardRatings.ABOUT`.
+  skips a rating-only op, so Card Edits.json is untouched. `RATINGS_ABOUT` = `CardRatings.ABOUT` (both deleted; `CardRatings.ABOUT` 2026-11-12).
 
 ## 26. Stats round 3: distributions, Ratings and History, the Archive (2026-10-24; Ratings gone 2026-11-11, §54)
 - Removed: Balance's "The cooldown update" (`bal-cooldown`, `WAVE`, `groupOf`) and analytics.py's `old` row flag
@@ -1220,7 +1217,7 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   makes it (cards not hidden, Name order: mirrors `listOf` with no parameters; change both together) through grid.js's
   `tileHtml` and `toolbarHtml`; build_site writes that markup as it is (its Python copy `tile_html`/`toolbar_html` and
   the parity check deleted 2026-11-12, owner). Counts are written en-US; a browser redraws them in its own. No node: no
-  first screen (logged), the rest as before. AutoCroissant `tests/test_site_build.py` (the first screen).
+  first screen (logged), the rest as before. (AutoCroissant's first-screen test deleted 2026-11-12, lean tests.)
 - Measured 10-25 (scratch opt/site-phone `firstload.mjs` over `serve.mjs`, Pages-like HTTP/2 and gzip; emulated
   mid-range phone, 4x CPU, cold cache; both sites built locally from the same data; 5 interleaved runs, median (range)):
   slow 4G LCP 3.43 (3.42-3.44) -> 2.05 s (2.01-2.05), fast 4G 0.91 (0.90-0.93) -> 0.50 s (0.46-0.51); FCP unchanged
@@ -1251,8 +1248,8 @@ the cards use.
   copies; from raw it loaded 127 (Academy Engraved LET, EarthboundZero: a bad table directory; Apple Kid: the cmap), so
   those cards' previews now draw in their fonts. The Edit dialog's mock-up of Enraged (Calibri), Monkey D Goofy (EB
   Garamond), Sword (PopJoyStd-B) and Po (an Ability set in stoogedings) draws the same pixels from WOFF2 as from raw;
-  Joel Miller (Apple Kid, EarthboundZero) draws in its fonts, where raw gave stand-ins. AutoCroissant
-  `tests/test_site_previews.py::test_woff2_copies`.
+  Joel Miller (Apple Kid, EarthboundZero) draws in its fonts, where raw gave stand-ins. (AutoCroissant's
+  `tests/test_site_previews.py::test_woff2_copies` deleted 2026-11-12, lean tests.)
 
 ## 33. Loaded on first use: the editor, Stats, People (2026-10-25, owner's decision)
 
@@ -1316,8 +1313,8 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
   the old names' versions (`renamed_into`), and `c/<old slug>/` redirects to the new page (`redirects`, `redirect_page`). The old id also
   follows in profile picks and published hands (`read_profiles`, `read_decks`) and in the app (cards.json `moved`:
   `#/card/<old id>`, share codes, saved hands).
-- AutoCroissant `tests/test_card_bake.py::test_a_rename_bake_moves_the_files_and_everything_keyed_by_them`,
-  `tests/test_site_build.py::test_a_renamed_card_goes_on_and_its_old_page_redirects`.
+- AutoCroissant `tests/test_card_bake.py::test_a_rename_bake_moves_the_files_and_everything_keyed_by_them`
+  (`tests/test_site_build.py::test_a_renamed_card_goes_on_and_its_old_page_redirects` deleted 2026-11-12, lean tests).
 
 ## 35. A subseries across series (2026-10-25, owner: "if i click just a subseries i should see all cards under that subseries regardless of series, but i can filter by series if i want")
 - A subseries is one name across series (the same name under Kirby and Mario is one subseries), and a card may have one
@@ -1333,8 +1330,8 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
   with a subseries but no series go under "No series", last (shown only then; it links to `missing=series`). The
   Subseries tile counts names.
 - AutoCroissant: the changelog and the history count the same subseries in another series (or without one) as a series
-  change (`card_history.same_series`; the 2026-10-20 split still is none). Test:
-  `tests/test_site_stats.py::test_a_subseries_is_one_name_across_series`.
+  change (`card_history.same_series`; the 2026-10-20 split still is none). (Its test
+  `tests/test_site_stats.py::test_a_subseries_is_one_name_across_series` deleted 2026-11-12, lean tests.)
 
 ## 36. The grid stays in the page: Safari's flash (2026-10-25 night)
 
@@ -1454,8 +1451,8 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   (`add_dup`): the original's data, author, PSD, history and fonts; its own name (aliases, else its file name), picture,
   artwork sources and Card Edits entry; counted once. Before, they were image only under "Not parsed yet". The bake never
   redraws their picture, so they never show the original's bake state (PSD pending, refused, baked); Re-parse pending
-  they do. AutoCroissant
-  `tests/test_site_build.py::test_a_picture_only_duplicate_is_its_originals_card`.
+  they do. (AutoCroissant
+  `tests/test_site_build.py::test_a_picture_only_duplicate_is_its_originals_card` deleted 2026-11-12, lean tests.)
 - **Missing: No ratings** reads the ratings a card's page shows (grid.js `ratedBy`, app.js `ratedOf`): a duplicate's
   are its original's, a variant picture's its own.
 - **Font chips**: a click on a picked font turns it off and keeps it listed (like Kind); a click turns it on again; its ✕
@@ -1477,7 +1474,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   hangs out over the gap, the next tile or the dialog's edge; a clip-path rounds the card's own corners like every
   tile's. Tiles stay cut off below, as every tile is. The card page's Mock-up and Rendered layers take the same box.
   Plain picture elsewhere (table, deck slots, Compare, versions, the editor's preview pane). Phones cut the overhang at the
-  screen's edge. Test: `tests/test_site_build.py::test_overhang_card_body`.
+  screen's edge. (Test `tests/test_site_build.py::test_overhang_card_body` deleted 2026-11-12, lean tests.)
 
 ## 43. Cards by SpongeBob season (2026-10-31, owner: "status effects per spongebob season, and then if you click on a specific season then it will show you the status effects breakdown per episode"; then "generalize it so any card can go on the chart")
 

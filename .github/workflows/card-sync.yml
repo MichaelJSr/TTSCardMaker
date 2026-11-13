@@ -1187,7 +1187,7 @@ jobs:
       # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished (the
       # newest passed over when its rulebook PDF was not drawn, UNDRAWN, but not the one before it: a lag that lasts costs
       # one extra lane), or none of the last 30 runs did; else (g) a website edit the bake put off (capped, main moved):
-      # the Pending edits step; else (h) linked pictures not redrawn yet: the Linked due step. GO, EDITS and LINKED in the
+      # the Pending edits step; else (h) linked pictures not redrawn yet: the Linked due step. GO and EDITS in the
       # env. Skipped when the guards hold a push's lane (the schedule and the failure streak pass over such a lane).
       - name: Gate
         id: gate
@@ -1241,9 +1241,8 @@ jobs:
               "site/Card Edits.json")
           fi
           edits=$([ "$edits" -gt 0 ] && echo true || echo false)
-          linked=$([ "$go" = false ] && echo true || echo false)   # (h): the Linked due step reads the links
           { echo "go=$go"; echo "edits=$edits"; } >> "$GITHUB_OUTPUT"
-          { echo "GO=$go"; echo "EDITS=$edits"; echo "LINKED=$linked"; } >> "$GITHUB_ENV"
+          { echo "GO=$go"; echo "EDITS=$edits"; } >> "$GITHUB_ENV"
           {
             echo "## Bake and save$([ "$DRY_RUN" = true ] && echo " (dry run)")"
             echo
@@ -1275,12 +1274,7 @@ jobs:
             rm -rf "$bg" "$ws/${save%.json}.report.md" "$ws/${save%.json}.message.txt" "$ws/$save.tmp"
             echo "The Bake committed ${head:0:8}: the save and the count made again on it."
           fi
-          names=()
-          if [ -f "$ws/carddata/db/stats.json" ]; then
-            names=(--names "$ws/carddata/db/stats.json")
-          else
-            echo "No card data: names from the website's cards.json."
-          fi
+          names=(--names "$ws/carddata/db/stats.json")
           mkdir -p "$bg"
           ( code=0
             timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$ws/$save" "${names[@]}" \
@@ -1344,7 +1338,7 @@ jobs:
       # (h): linked pictures and icon glyphs the redraw has not done yet (a capped run, a chain that stopped) start the
       # lane. `due` prints how many cards: the data's links.json and psd_details.json, the icon font's blobs.
       - name: Linked due
-        if: env.LINKED == 'true' && env.GO != 'true' && steps.venv.outcome == 'success'
+        if: env.GO == 'false' && steps.venv.outcome == 'success'
         timeout-minutes: 5
         working-directory: bot
         env:
@@ -1427,7 +1421,7 @@ jobs:
           exit "$code"
 
       # The save on the checkout (B's Card Edits.json and decks), names from the data branch's head (Card Edits.json's
-      # first); with no data, the website's cards.json. In the background while the rulebook PDF prints (the save pins
+      # first). In the background while the rulebook PDF prints (the save pins
       # main before M and reads only pages.json's PDF name): TTS save waits for it (20 minutes at most). Early save's
       # kept while HEAD is still main's head; else (B) stopped and made again here, the count too; started here in a lane
       # Pending edits or Linked due let go.
@@ -1773,10 +1767,10 @@ jobs:
 
       # The website edits left for the chain: card_bake.pending at this run's end (B, or main's head) with this run's
       # verdicts on the data's (over the cap, main moved under a card). Not after a rejected M: its retry or another run
-      # does them; nor in a held lane (the guards' run does) or one with nothing to do.
+      # does them; nor in a held lane (the guards' run does).
       - name: Leftover edits
         id: left
-        if: env.DRY_RUN != 'true' && steps.gate.outcome == 'success' && steps.venv.outcome == 'success' && steps.main.outputs.rejected != 'true' && (env.GO == 'true' || env.EDITS == 'true' || env.LINKED == 'true')
+        if: env.DRY_RUN != 'true' && steps.gate.outcome == 'success' && steps.venv.outcome == 'success' && steps.main.outputs.rejected != 'true'
         continue-on-error: true   # uncounted: the safety schedule looks again
         timeout-minutes: 1        # Commit main's reserve covers it
         working-directory: bot
@@ -1820,8 +1814,7 @@ jobs:
           M: ${{ steps.main.outputs.top }}
         run: |
           save="TTS/Impossibility Simulator.json"
-          names=()
-          if [ -f "$GITHUB_WORKSPACE/carddata/db/stats.json" ]; then names=(--names "$GITHUB_WORKSPACE/carddata/db/stats.json"); fi
+          names=(--names "$GITHUB_WORKSPACE/carddata/db/stats.json")
           "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$GITHUB_WORKSPACE/$save" "${names[@]}" | tee "$RUNNER_TEMP/repin.md"
           cd "$GITHUB_WORKSPACE"
           export GIT_INDEX_FILE=$RUNNER_TEMP/repin.index

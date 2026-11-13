@@ -42,7 +42,7 @@ jobs:
     env:
       BOT_REPO: bobberlington/AutoCroissant
       # The preview and its import closure (no config.py; never psd_analyzer), and the packages it installs. AutoCroissant
-      # tests/test_card_preview.py runs --help on exactly this list (card_preview.SPARSE_FILES).
+      # tests/test_card_preview.py checks this list is card_preview.SPARSE_FILES and runs the jobs' steps from exactly it.
       BOT_FILES: |
         /commands/card_preview.py
         /commands/card_preview_branch.py

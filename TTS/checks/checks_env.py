@@ -106,7 +106,7 @@ def file_at(ref: str, path: str):
 
 
 def site_cards() -> list:
-    """The card browser's cards: $TTS_CARDS (a cards.json file), else the live website (as the updater)."""
+    """The card browser's cards: $TTS_CARDS (a cards.json file), else the live website."""
     path = os.environ.get("TTS_CARDS")
     if path:
         with open(path, encoding="utf-8") as f:

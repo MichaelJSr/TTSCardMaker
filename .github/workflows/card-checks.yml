@@ -1,5 +1,5 @@
 # Card checks (AutoCroissant commands/card_checks.py, owner 2026-11-07): the automatic card flags, off Card sync's path.
-# hand: the picture says other than the data, old-style bars, a website edit that cannot bake. bars: special bars. name:
+# hand: the picture says other than the data, old-style bars, a stat edit that cannot bake. bars: special bars. name:
 # the website's name, the printed title and the file name disagree (worded at each save). The results stay on the data
 # branch by PSD blob (db/card_checks.json); the website shows them. No Discord, no commit
 # comment, no block. Card sync starts it at a data job's start (inputs after, job): it sets up, then waits for that job's
@@ -198,14 +198,13 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: *card-files
 
-      # blobs_of's shared files (the status chart, template_for's templates) the clone lacks, one a fetch, 4 at a time, in
+      # blobs_of's shared file (the status chart) the clone lacks, one a fetch, 4 at a time, in
       # the background while the job sets up and waits (its exit code in shared.txt.done); Fetch them leaves them out
       - name: Shared blobs
         continue-on-error: true
         run: |
           list=$RUNNER_TEMP/shared.txt
-          git ls-tree --object-only HEAD -- "MDW/Croissant's Special Folder/Satus Effect Colors.psd" \
-            MDW/Templates/{Creature,Item,ActiveItem,Status_Effect}_Template.psd | git cat-file --batch-check \
+          git ls-tree --object-only HEAD -- "MDW/Croissant's Special Folder/Satus Effect Colors.psd" | git cat-file --batch-check \
             | awk '$2 == "missing" {print $1}' > "$list"
           nohup bash -c 'timeout -k 10 600 xargs -r -P 4 -n 1 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags \
             --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1" & echo $! > "$1.pid"

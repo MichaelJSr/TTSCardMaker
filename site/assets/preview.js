@@ -92,7 +92,7 @@ export function readResult(raw) {
   const clip = v => String(v).slice(0, 500), obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
   const notes = (Array.isArray(r.notes) ? r.notes : r.notes ? [r.notes] : []).filter(n => n != null && n !== "").slice(0, 20).map(n => clip(typeof n === "string" ? n : JSON.stringify(n)));
   const base = Object.fromEntries(Object.entries(obj(r.base)).filter(([, v]) => typeof v === "string").map(([k, v]) => [k, v.slice(0, 64)]));
-  const files = Object.fromEntries(Object.entries(obj(r.files)).filter(([k, v]) => ["webp", "png", "before"].includes(k) && typeof v === "string" && /^[\w.-]+\.(webp|png|avif)$/i.test(v)));
+  const files = Object.fromEntries(Object.entries(obj(r.files)).filter(([k, v]) => ["webp", "before"].includes(k) && typeof v === "string" && /^[\w.-]+\.(webp|avif)$/i.test(v)));
   const fields = Object.fromEntries(Object.entries(obj(r.fields)).filter(([k, v]) => k in LABEL && typeof v === "string").map(([k, v]) => [k, v.slice(0, 20)]));
   const parts = Object.fromEntries(Object.entries(obj(r.parts)).filter(([k, v]) => /^(\d+|\+ability)$/.test(k) && typeof v === "string").slice(0, 64).map(([k, v]) => [k, v.slice(0, 20)]));   // v2: per layer
   return { state: r.state, transient: r.transient === true, reason: r.reason ? clip(r.reason) : "", notes, fields, base, parts,
@@ -241,7 +241,7 @@ const STATE_TEXT = {
 /** The rendered preview of entry e (or none) for the image viewer: {stage, caption, dim}. stage: the preview image over the
  *  card's image (a hidden current image and the diff canvas with it), or the state's words over the dimmed original (dim);
  *  caption: the status lines, outcomes, notes and buttons. v: {card, n (fields the image would change by), hash, now,
- *  scopes, images (preview URLs: the 720 px WebP, the full PNG), current (what Diff compares with: the result's before.webp,
+ *  scopes, images (preview URLs: the 720 px image), current (what Diff compares with: the result's before.webp,
  *  else the site's image), diff}. */
 export function renderedParts(e, v) {
   const button = (label, cls = "") => `<button type="button" class="${cls}" data-pv="start"${v.n ? "" : " disabled"}>${label}</button>`;
@@ -266,11 +266,11 @@ export function renderedParts(e, v) {
   }
   if (e.state === "expired") return { ...state, caption: `${head}<p>Its image is gone: previews are kept about a week.</p>${outcomes}<div class="actions">${button("Preview again", "ghost")}</div>` };
   const shot = alt => {                               // the preview in the stage; Diff swaps in the red differences
-    const [src, full] = v.images, diff = v.diff && !!v.current;
+    const [src] = v.images, diff = v.diff && !!v.current;
     return {
-      stage: `<a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview"></a>
+      stage: `<a href="${esc(src)}" target="_blank" rel="noopener"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview"></a>
         ${v.current ? `<img src="${esc(v.current)}" alt="" crossorigin="anonymous" data-pv-img="current" hidden><canvas data-pv-diff role="img" aria-label="Differences between the current image and the preview, in red"${diff ? "" : " hidden"}></canvas>` : ""}`,
-      tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span></p>` : ""}` };
+      tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span></p>` : ""}` };
   };
   if (e.state === "baked" && v.images.length) { const s = shot("rendered preview"); return { stage: s.stage, dim: false, caption: `${head}${staleText}${s.tools}${outcomes}${notes}` }; }
   if (e.state === "baked") return { ...words("No image"), caption: `${head}${staleText}<p>The bake drew it, but no image came with the result.${runLink}</p>${outcomes}${notes}${again ? `<div class="actions">${again}</div>` : ""}` };
@@ -376,7 +376,7 @@ export function createPreviews(app) {
   window.addEventListener("pagehide", () => { if (lockMine()) localStorage.removeItem(LOCK_KEY); });   // the next tab takes over at once
   const repo = () => S.data.repo;
   const rawUrl = (ref, path) => `https://raw.githubusercontent.com/${repo()}/${ref}/${path.split("/").map(encodeURIComponent).join("/")}`;
-  const imagesOf = e => [e.result?.files?.webp, e.result?.files?.png].filter(Boolean).map(f => rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px WebP, the full PNG
+  const imagesOf = e => [e.result?.files?.webp].filter(Boolean).map(f => rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px image
   const current = c => app.img(c, 720);
   // the Diff's other side: the result's before.webp (the card's PNG made as preview.webp, so unchanged pixels match)
   const beforeOf = e => (e?.result?.files?.before ? rawUrl(CONTRACT.branch, CONTRACT.file(e.request, e.result.files.before)) : "");

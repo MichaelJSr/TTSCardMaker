@@ -837,11 +837,11 @@ export const compBar = (rec, k) => Array.isArray(rec?.smart_objects) && rec.smar
   const path = String(p).split("/"), own = path.pop().trim();
   return STAT_NAME[k].test(own) && path.some(g => /dark|bars/i.test(g)); });
 /** Why a stat at `to` stays on the website (psd_edit.classify's site reasons; old bars), or null: it bakes, or the record
- *  can't tell (several rows: Top and Bottom rows bake to 20, several creatures' rows don't). */
+ *  can't tell (several creatures' digit rows). */
 export function statSite(rec, k, to) {
   const kind = rec?.stats?.[k];
   if (!(to > 10) || typeof kind !== "string" || !Array.isArray(rec.smart_objects) || compBar(rec, k)) return null;
-  if (kind === "two-row") return to > 20 ? "the card's bars print up to 20" : null;
+  if (kind === "two-row") return null;                 // several creatures' rows: their stat caps refuse past 10
   return `the card's ${kind === "template" ? "old-style " : ""}bars print up to 10`;
 }
 

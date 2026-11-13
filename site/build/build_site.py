@@ -68,7 +68,7 @@ data/editing.json (the card fields only edit mode reads, EDITOR_FIELDS: loaded w
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
 assets (with esbuild: one bundle, assets/app.js, and its source map; else the modules one by one) and one share page per card, per person and per public deck (its preview image a montage of its cards).
-index.html carries the plain grid's first tiles (first_screen, checked against grid.js in node). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
+index.html carries the plain grid's first tiles (first_screen, drawn by grid.js in node). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
 content and its imports' (the bundle's from its code and map), the data's from its content without the build time; build.txt digests the whole site (which build is live),
 then the page's stamp (<meta name="page">), which open pages poll for (fresh.js).
 game.txt: every visible card and rulebook chapter and the ban list as plain text (game_text), linked from the Rulebook.
@@ -215,7 +215,7 @@ DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp",
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
 FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT FOUND",), "spd": ("SPD NOT FOUND",),
-            "stars": ("NO STARS FOUND",), "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",),
+            "stars": ("NO STARS FOUND",), "type": ("UNKNOWN TYPE",),
             "allow_high_stats": ("STATS TOO HIGH",), "creatures": ("NO STATS FOUND",)}
 FIXED_BY_ALL = {("hp", "def", "atk", "spd"): ("NO STATS FOUND",)}    # answered once every one has a value
 SKIP_PARTS = ("MDW", "Markers")

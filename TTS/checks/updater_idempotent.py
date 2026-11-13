@@ -1,5 +1,5 @@
-"""Runs the bot's TTS save updater on a copy of the save as Card sync's TTS save step does; it must report no changes
-and leave the bytes identical. Also: perturbed copies must converge back, and an offline website must change nothing.
+"""Runs the bot's TTS save updater on a copy of the save as Card sync's TTS save step does (--names: $TTS_DATA_REF's
+db/stats.json); it must report no changes and leave the bytes identical. Also: perturbed copies must converge back.
 Usage: updater_idempotent.py [save.json]
 Rules: decks.json beside the save, else TTSCardMaker origin/main. Card Edits: ../site/Card Edits.json, else origin/main.
 Code: $AUTOCROISSANT's updater modules (copied; its repo_history.json is never touched), run by this Python."""
@@ -17,6 +17,7 @@ from checks_env import REF, UPDATER_INPUTS, copy_bot, file_at, history_at, judge
 
 PY = sys.executable
 OK_SECTIONS = ("Nicknames kept (not on the website)", "Decks left alone")   # informational, no change
+DATA_REF = os.environ.get("TTS_DATA_REF", "origin/data")                    # Card sync's names: its db/stats.json
 
 save = save_arg()
 work = tempfile.mkdtemp(prefix="ttsupd_")
@@ -37,18 +38,22 @@ def setup():
         open(os.path.join(local, path), "wb").write(data)
     bot = os.path.join(work, "bot")
     copy_bot(bot)
-    return local, bot
+    stats, data = os.path.join(work, "stats.json"), file_at(DATA_REF, "db/stats.json")
+    if data is None:
+        sys.exit(f"no db/stats.json at {DATA_REF} (git fetch origin +data:refs/remotes/origin/data)")
+    open(stats, "wb").write(data)
+    return local, bot, stats
 
 
-LOCAL, BOT = setup()
+LOCAL, BOT, STATS = setup()
 ENV = {**runner_env(), "AUTOCROISSANT_LOCAL_DIR": LOCAL, "AUTOCROISSANT_HISTORY_CLONE": CLONE}
 
 
-def run(path, offline=False):
-    """The updater's report text for path (offline: the website unreachable)."""
-    code = ("import global_config; global_config.SITE_URL = 'http://127.0.0.1:9'\n" if offline else "") + \
-        "import sys, runpy; sys.argv = ['tts_save', sys.argv[1]]; runpy.run_module('commands.tts_save', run_name='__main__')"
-    r = subprocess.run([PY, "-c", code, path], cwd=BOT, env=ENV, capture_output=True, text=True, timeout=600)
+def run(path):
+    """The updater's report text for path, the names from STATS (Card sync's --names)."""
+    code = "import sys, runpy; sys.argv = ['tts_save', sys.argv[1], '--names', sys.argv[2]]; " \
+        "runpy.run_module('commands.tts_save', run_name='__main__')"
+    r = subprocess.run([PY, "-c", code, path, STATS], cwd=BOT, env=ENV, capture_output=True, text=True, timeout=600)
     if r.returncode:
         failures.append(f"updater exited {r.returncode}: {r.stderr[-2000:]}")
     return r.stdout
@@ -78,15 +83,7 @@ for title, _ in sections(rep):
     if title not in OK_SECTIONS:
         failures.append(f"report section: {title}")
 
-# 2. Offline website: names left alone, nothing else changes
-p = copy("offline.json", orig)
-rep2 = run(p, offline=True)
-if open(p, "rb").read() != orig or "**No changes.**" not in rep2:
-    failures.append("offline run changed the save")
-if "Card browser data not fetched" not in rep2:
-    failures.append("offline run did not notice the website was unreachable")
-
-# 3. Perturbed: unpinned links, a wrong Nickname, a missing resizeTargets row must all come back exactly
+# 2. Perturbed: unpinned links, a wrong Nickname, a missing resizeTargets row must all come back exactly
 s = json.loads(orig.decode("utf-8"))
 text = orig.decode("utf-8")
 raw = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
@@ -107,7 +104,7 @@ if open(p, "rb").read() != orig:
     print(rep3)
 print("perturbed run:", [t for t in sections(rep3) if t[0] not in OK_SECTIONS])
 
-# 4. One card taken out of a complete deck: re-added once, then a second run reports no changes
+# 3. One card taken out of a complete deck: re-added once, then a second run reports no changes
 rules = json.load(open(os.path.join(LOCAL, "TTS", "decks.json")))["decks"]
 
 

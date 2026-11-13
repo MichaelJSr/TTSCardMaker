@@ -160,10 +160,8 @@ export function titleInPicture(rec) {
 /** "Also printed by Text/Name copy (they follow)." and "The watermark images/Name follows the title." for a box's part. */
 export function followHtml(part) {
   const f = arr(part.follow), copies = f.filter(x => x.how === "copy").map(x => x.layer), marks = f.filter(x => x.how === "watermark").map(x => x.layer);
-  const relaid = f.filter(x => x.how === "relaid").map(x => x.layer);
   return [copies.length ? `Also printed by ${esc(copies.join(", "))} (${copies.length > 1 ? "they follow" : "it follows"}).` : "",
-    marks.length ? `The watermark ${esc(marks.join(", "))} follows the title.` : "",
-    relaid.length ? `The hidden ${esc(relaid.join(", "))} follows.` : ""].filter(Boolean).join(" ");
+    marks.length ? `The watermark ${esc(marks.join(", "))} follows the title.` : ""].filter(Boolean).join(" ");
 }
 /** A box's variant line: "only in this picture" or "⚠ shared: changes every variant (A snack, Breakfast, Supper)". */
 export function sharedHtml(part, picture) {

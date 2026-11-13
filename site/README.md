@@ -199,7 +199,7 @@ same day for the cards first uploaded since 2026-02, so `/query_ability created>
 cards on 2026-10-23, also with the 11 newest left out of the file). It is no edit: the Changes page and the edit
 counts never see it. Bad entries are skipped with a warning, never a failed build. `Card Ratings.json` holds each
 card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": a whole number 1-10, "by": "group", "source":
-"TTS session"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m commands.tts_ratings`).
+"TTS session"}]`, oldest first: the TTS sessions' boards (imported once by AutoCroissant's `tts_ratings`, deleted 2026-11-12).
 Neither the site (none shown since 2026-11-11; its build stopped copying it on 2026-11-12) nor the bot reads it; a card
 rename renames its entries; no edit either. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
@@ -236,7 +236,7 @@ downloaded or looks truncated, or if many images fail.
 
 A card can carry three flags: **Needs doing by hand**, **Special stat bars** and **Names differ**. They replace the problem
 cards CSV, and they are automatic: the bot's checks (AutoCroissant `commands/card_checks.py`, the Card checks workflow) set
-and clear them. `hand`: the picture says other than the data, old-style bars, a website edit that cannot bake. `bars`:
+and clear them. `hand`: the picture says other than the data, old-style bars, a stat edit that cannot bake. `bars`:
 bars that do not read like the template. `name`: the website's name differs from the printed title (exact), or the
 printed title's file form from the file name (the file-name convention, owner 2026-11-11: the title with `. : [ ] ? * "
 < > | / \` left out, spaces as underscores, small words such as of, the, to lowercase but the first and the last; their
@@ -443,7 +443,7 @@ Both run in `.github/workflows/card-guards.yml`'s check job (their own workflows
   card without adding the ... font to MDW/Fonts, bite this user."). The fix is to add the font file to the top level of
   `MDW/Fonts/`.
 - The card check (AutoCroissant `commands/card_check.py`) reports the notes `/update_stats` would print for each pushed
-  PSD (NO STARS FOUND, MISSPELT TYPE, NO STATS FOUND, HP/DEF/ATK/SPD NOT FOUND, STATS TOO HIGH, UNKNOWN TYPE),
+  PSD (NO STARS FOUND, NO STATS FOUND, HP/DEF/ATK/SPD NOT FOUND, STATS TOO HIGH, UNKNOWN TYPE),
   after the card's `site/Card Edits.json` entry (`problems_ok`, `allow_high_stats`, `creatures`)
   and the bot's exclusions: the job summary, a comment on the commit and one Discord line per card in the standards
   channel, no ping ("... has pushed ... with: ..."). An unreadable PSD is one error line.

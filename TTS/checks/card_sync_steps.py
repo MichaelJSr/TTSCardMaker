@@ -449,7 +449,8 @@ def plans(flow: dict) -> None:
     check({"venv", "edits"} <= runs(p) and not {"bake", "save", "main"} & runs(p),
           "main, no website edit pending: the Python environment and Pending edits only")
     p = plan(flow, "main", event="schedule", outputs={"gate": {"go": "false", "edits": "false", "GITHUB_ENV": {"GO": "false", "EDITS": "false"}}})
-    check("venv" in runs(p) and not {"edits", "bake", "save", "left"} & runs(p), "main, nothing to do: its setup, then the job ends at the gate")
+    check({"venv", "Linked due", "left"} <= runs(p) and not {"edits", "bake", "save"} & runs(p),
+          "main, nothing to do: its setup, Linked due (none due) and Leftover edits")
     p = plan(flow, "main", event="push", outputs={**baked, "guards": {"run": "51"}})
     check({"venv", "guards"} <= runs(p) and not {"Newest", "gate", "bake", "save", "main", "left", "Tell Discord"} & runs(p),
           "main, a push whose guards land fixes: the setup and the wait, then nothing (their Follow up's run bakes)")
@@ -752,8 +753,7 @@ def timer_cases(flow: dict) -> None:
 
 
 def _bot(ws: str) -> None:
-    """The builder checkout a gate reads: card_data.py, PARSER_VERSION 2, psd_details VERSION 3, one commit."""
-    write(os.path.join(ws, "bot/commands/card_data.py"), "")
+    """The builder checkout a gate reads: PARSER_VERSION 2, psd_details VERSION 3, one commit."""
     write(os.path.join(ws, "bot/commands/psd_parser.py"), "PARSER_VERSION = 2\n")
     write(os.path.join(ws, "bot/commands/psd_details.py"), "VERSION = 3\n")
     subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)

@@ -4,8 +4,9 @@
 #      (Photoshop's composite) is never written, only a cross-check that can refuse. A PSD with no stored image (saved
 #      without Maximize Compatibility) gets the PNG under the bake's own gates alone, told "no stored image to cross-check".
 #      When a gate refuses, no PNG and a report instead ("PNG not made: ...; export it in Photoshop");
-#   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md); only the owner's easy
-#      fix (Txt2 stories kept in sync, 0 pixels) is made, the rest is reported. Missing fonts are the font check's alone;
+#   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md); every issue is
+#      reported (the Txt2 story fix, R9, deleted 2026-11-12); the silent fixes land unsaid. Missing fonts are the
+#      font check's alone;
 #   3. every card PNG the push brought is recompressed losslessly (oxipng: the same pixels and chunks) when that saves
 #      more than 10%, and so is every PNG the bot writes (owner, 2026-10-23: Photoshop's exports are 3-4x bigger);
 #   4. the card check and the font check (card-check.yml and font-check.yml until 2026-10-25), on every push whatever
@@ -121,7 +122,6 @@ jobs:
         /commands/git_commit.py
         /commands/repo_history.py
         /global_config.py
-        /commands/psd_remote.py
         /requirements-cards.txt
         /commands/ability_place.py
         /commands/ability_index.json
@@ -877,7 +877,6 @@ jobs:
     timeout-minutes: 10     # the comment and a start
     env:
       TOLD: "<!-- card-guards: told on Discord -->"
-      MODE: ${{ needs.check.outputs.mode }}
       GH_REPO: ${{ github.repository }}     # gh workflow run with no checkout
     steps:
       - name: Work dir
@@ -940,7 +939,7 @@ jobs:
           refresh=ok start=""
           [ -n "$SHA" ] && start=true
           [ "$FIXES" = true ] && start=true
-          if [ "$MODE" = on ] && [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
+          if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
           if [ "$EARLY" = true ]; then
             lost=1
             [ -z "$EARLY_RUN" ] || lost=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$EARLY_RUN/jobs" \
