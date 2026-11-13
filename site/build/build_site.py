@@ -266,6 +266,7 @@ PAPER_DAY = "Before 2020"                     # a paper card's Created (owner Q6
 HISTORY_DAY = "2019-01-01"                    # before every dated card: the team's Discord began in 2019-02
 HISTORY_IMAGE = re.compile(r"[\w.-]+\.webp\Z")
 HISTORY_STATS = ("hp", "def", "atk", "spd")
+HISTORY_REMOVE = ("remove", "drop")           # a type fact's ops taking the type away (AC discord_facts writes remove)
 
 
 def log(*args):
@@ -1531,7 +1532,7 @@ def history_fact(change):
         return {"words": True}
     field = change.get("field")
     if field == "type" and isinstance(change.get("to"), str):
-        return {"types": {"add": [change["to"]], "drop": []} if change.get("op") != "drop" else {"add": [], "drop": [change["to"]]}}
+        return {"types": {"add": [], "drop": [change["to"]]} if change.get("op") in HISTORY_REMOVE else {"add": [change["to"]], "drop": []}}
     if field == "name" and isinstance(change.get("to"), str):
         return {"name": [change.get("from"), change["to"]]}
     if field in HISTORY_STATS + ("stars",):
@@ -1549,7 +1550,7 @@ def history_shown(change, parts):
         i = HISTORY_STATS.index(field)
         return bool(parts.get("stats") and parts["stats"][0][i] != parts["stats"][1][i]) or any(m[0] == field for m in parts.get("moves") or ())
     if field == "type":
-        return change.get("to") in ((parts.get("types") or {}).get("drop" if change.get("op") == "drop" else "add") or ())
+        return change.get("to") in ((parts.get("types") or {}).get("drop" if change.get("op") in HISTORY_REMOVE else "add") or ())
     return field in ("stars", "name") and field in parts
 
 
