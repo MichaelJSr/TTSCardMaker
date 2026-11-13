@@ -1016,6 +1016,10 @@ relies on:
   time and facts (`steady`: `VOLATILE`, `generated`, `source`). A build that changed nothing keeps every URL.
 - Deploys: site.yml runs on pushes that touch what the build reads (`paths`). `build.txt` digests the whole site
   without the build time (`dist_digest`); a run whose build equals the live one (its build.txt) doesn't deploy (§28).
+- Data stamps (11-12): each data file but cards.json has its own (`<meta name="data">`, `data_stamps`, app.js `dataUrl`;
+  details/: one for all), so a deploy keeps the unchanged ones cached (a Card checks deploy: a card page reloads
+  290 -> 166 KB, Changelog 413 -> 168). cards.json keeps the build's: its `source` tells edit.js a publish is live, and a
+  profile or deck publish leaves cards.json unchanged.
 - Second pass (2026-10-31, scratch perf2: trace.mjs, interact.mjs, firstload.mjs, lh-ab.sh). No sibling combinator before
   a descendant one in a rule that reaches tiles or rows: `.tray ~ * *` walked every earlier tile or row for each element
   (Table on a 4x phone: style 195 -> 60 ms; a sort 270-390 -> 160-180 ms). The tray's scroll margin is the inherited

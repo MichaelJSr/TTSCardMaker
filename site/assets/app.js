@@ -58,7 +58,10 @@ const sortOf = p => p.get("sort") || "name";
 
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
 const BUILD = document.querySelector('meta[name="build"]')?.content || "";
-const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // same URLs as the preload hints in index.html
+const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // cards.json's (index.html preloads it), else a file without its own
+// the other data files' own stamps (build_site data_stamps): a deploy keeps the unchanged ones cached
+const DATA_V = (() => { try { return JSON.parse(document.querySelector('meta[name="data"]')?.content || "{}"); } catch { return {}; } })();
+const dataUrl = name => { const v = DATA_V[name.startsWith("details/") ? "details/" : name]; return `data/${name}${/^[0-9a-f]+$/.test(v || "") ? `?v=${v}` : V}`; };
 const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 96 / 240 / 360 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 px by screen density, 96 too at 64 px or less */
@@ -96,7 +99,7 @@ const psdChips = c => { const b = psdBadges(c); return b && b + detailsLink(c); 
 
 // ---- boot ------------------------------------------------------------------------------------------
 async function getJson(name) {
-  const r = await fetch(`data/${name}${V}`);
+  const r = await fetch(dataUrl(name));
   if (!r.ok) throw Object.assign(new Error(`${name}: HTTP ${r.status}`), { http: r.status });
   return r.json();
 }

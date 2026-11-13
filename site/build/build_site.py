@@ -69,7 +69,7 @@ data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
 assets (with esbuild: one bundle, assets/app.js, and its source map; else the modules one by one) and one share page per card, per person and per public deck (its preview image a montage of its cards).
 index.html carries the plain grid's first tiles (first_screen, drawn by grid.js in node). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
-content and its imports' (the bundle's from its code and map), the data's from its content without the build time; build.txt digests the whole site (which build is live),
+content and its imports' (the bundle's from its code and map), each data file's from its content without the build time (cards.json: all the data's); build.txt digests the whole site (which build is live),
 then the page's stamp (<meta name="page">), which open pages poll for (fresh.js).
 game.txt: every visible card and rulebook chapter and the ban list as plain text (game_text), linked from the Rulebook.
 
@@ -1454,7 +1454,7 @@ def grid_preload(cards, ids=None, version="", lazy=None):
     """index.html's preload hints for the grid's first pictures (grid.js tileHtml: srcset 240w/360w, sizes = the tile size),
     added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size.
     ids: the grid's first cards in order (first_screen), else Name order. A link to the Rulebook starts app.js loadBook's
-    files instead: rules.json at getJson's URL (version: the data's stamp) and the rulebook's chunks (lazy: bundle()'s)."""
+    files instead: rules.json at getJson's URL (version: its stamp) and the rulebook's chunks (lazy: bundle()'s)."""
     by_id = {c["id"]: c for c in cards}
     order = [by_id[i] for i in ids] if ids else sorted((c for c in cards if not c.get("hidden")), key=lambda c: c["name"].lower())
     first = [c["img"] for c in order if c.get("img")][:GRID_PRELOADS]
@@ -4217,6 +4217,16 @@ def data_stamp(data, details):
     return digest.hexdigest()[:10]
 
 
+def data_stamps(data, details):
+    """index.html's meta data, app.js getJson's ?v=: {file: its own stamp} (data: steady()'s), so a deploy keeps unchanged
+    files cached; "details/": one over the details files. Not cards.json: on the build's stamp, its build facts stay fresh
+    (edit.js: a publish is live)."""
+    out = {name: stamp_of(blob) for name, blob in sorted(data.items()) if name != "cards.json"}
+    if details:
+        out["details/"] = data_stamp({}, details)
+    return out
+
+
 BUILD_TXT = "build.txt"                       # in DIST: dist_digest() (which build is live), then the page stamp
 
 
@@ -4747,7 +4757,7 @@ def main():
             texts[name] = fh.read()
     assets = asset_stamps(texts)
     data = steady(files, blobs)
-    version = data_stamp(data, details)
+    version, own = data_stamp(data, details), data_stamps(data, details)
     os.makedirs(os.path.join(DIST, "assets"))
     packed = bundle({name: text for name, text in texts.items() if name.endswith(".js")})   # with esbuild: one script and its chunks
     if packed:
@@ -4769,6 +4779,7 @@ def main():
     if packed:                                # the bundle holds every module: no hints for them
         template = re.sub(r'<link rel="modulepreload" href="assets/(?!' + re.escape(BUNDLE) + r'")[\w-]+\.js">\n', "", template)
     template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, template).replace("<!--BUILD-->", version)
+    template = template.replace("<!--DATA-->", html.escape(json.dumps(own, separators=(",", ":"))))
     if packed:                                # the lazy chunks' list, after the bundle's hint
         tag = f'<link rel="modulepreload" href="assets/{BUNDLE}?v={stamps[BUNDLE]}">'
         if tag in template:
@@ -4800,7 +4811,7 @@ def main():
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", og_url, (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
         first = first_screen(cards, icons)
-        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1], version, lazy))
+        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1], own.get("rules.json", version), lazy))
         fh.write(index.replace("</main>\n", f"</main>\n{first[0]}\n", 1) if first else index)
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
