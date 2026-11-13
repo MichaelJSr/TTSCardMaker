@@ -1579,7 +1579,7 @@ def history_morgue(hist, slug):
         e = {"id": slug(str(t.get("card") or t["name"])), "name": t["name"], "key": t["name"], "type": "unknown",
              "psd": None, "png": None, "morgue": True, "lost": t.get("kind_of") if t.get("kind_of") in ("joke", "played") else "joke",
              "pic": pics[0]["img"], "tw": pics[0].get("w"), "th": pics[0].get("h"), "ive": len(mine)}
-        if isinstance(first.get("day"), str):
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(first.get("day"))):    # a paper card's "Before 2020": no day
             e["first"] = first["day"]
         if isinstance(first.get("channel"), str):
             e["firstCh"] = first["channel"]
@@ -2493,8 +2493,9 @@ def apply_created(cards, created, proposed=None):
         log(f"created: {moved} cards dated earlier by the card timelines ({len(proposed)} proposed)")
     dated = [e for e in cards if e.get("created")]
     by = Counter(e["createdFrom"] for e in dated)
+    more = "".join(f", {by[k]} {k}" for k in ("old repo", "paper") if by[k])     # the card timelines' (proposed)
     log(f"created: {len(dated)} of {len(cards)} cards dated ({by['discord']} first Discord post, {by['git']} first upload, "
-        f"{by['hand']} by hand)")
+        f"{by['hand']} by hand{more})")
     if later:
         log(f"created: {later} dates in {CREATED_PATH} are after the card's first upload; the upload's used")
     missing = sorted(e["key"] for e in dated if card_key(e["key"]) not in created)
