@@ -65,6 +65,10 @@ button:disabled { opacity: .45; cursor: default; }
 }
 @media (min-width: 981px) { .search { min-width: 0; } }   /* one-row bar: shrink, don't widen the page */
 @media (min-width: 981px) and (max-width: 1200px) { .brand span { display: none; } }
+/* focus and jumps land below the pinned bar (--top-h: its height, app.js); not the page's scroll-padding: focus in the
+   bar (its search box) would scroll the page */
+:root { --bar: calc(var(--top-h, 57px) + 8px); }
+main * { scroll-margin-top: var(--bar); }
 
 main { padding: 16px; outline: none; }
 .loading, .empty { padding: 60px; text-align: center; color: var(--muted); }
@@ -276,9 +280,6 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
   border-radius: 10px; padding: 8px 14px; font-size: 14px; box-shadow: var(--shadow); }
 
 /* ---- rulebook (rulebook.js): the book's look, light pages in either theme; the TTS sheets (.rb-sheet) the same at 1080x1920 ---- */
-.rb-chapter, .rb-extra, #stats-balance, #stats-history, .rb-sec { scroll-margin-top: 70px; }   /* jumped to: below the bar */
-@media (max-width: 980px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-history { scroll-margin-top: 117px; } }   /* two-row bar */
-@media (max-width: 640px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-history { scroll-margin-top: 184px; } }   /* three-row bar */
 /* @sheet rulebook: to its end mark, assets/rulebook.css, in before the rulebook draws (app.js loadBook; build_site split_css) */
 @font-face { font-family: "Inconsolata"; src: url("../rulebook/fonts/inconsolata-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Inconsolata"; src: url("../rulebook/fonts/inconsolata-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
@@ -287,6 +288,7 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 @media (max-width: 860px) { .rules { grid-template-columns: 1fr; } .toc { position: static !important; max-height: none !important; } }
 .toc { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow: auto; font-size: 14px; }
 @media (min-width: 861px) and (max-width: 980px) { .toc { top: 112px; max-height: calc(100vh - 128px); } }   /* under the two-row bar */
+@media (max-height: 450px) { .toc { top: 8px; } }   /* the bar scrolls away (style.css end) */
 .toc a { display: block; padding: 3px 8px; border-radius: 6px; color: var(--ink-2); } .toc a:hover { background: var(--surface-2); text-decoration: none; }
 .toc a.sub { padding-left: 22px; font-size: 13px; color: var(--muted); }
 .toc a.on { background: var(--surface-2); color: var(--ink); font-weight: 600; }
@@ -1091,9 +1093,9 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
   .tray .bucket.add { align-items: center; justify-content: center; }
   .tray .pin-form { min-height: 48px; }
 }
-/* tray.js padTop: focus scrolls clear of the sticky tray (--tray-pad on the section while it's there, the tray itself 0);
-   not ".tray ~ * *", whose matching walked every earlier tile or row for each element */
-.browse > section * { scroll-margin-top: var(--tray-pad, 0px); } .browse > section > .tray { --tray-pad: 0px; }
+/* tray.js padTop: focus scrolls clear of the sticky tray (--tray-pad on the section while it pins, the tray itself 0; else
+   the bar's); not ".tray ~ * *", whose matching walked every earlier tile or row for each element */
+.browse > section * { scroll-margin-top: var(--tray-pad, var(--bar)); } .browse > section > .tray { --tray-pad: 0px; }
 .tray-skip { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* past nine boxes: shown on focus */
 .tray-skip:focus { position: static; grid-column: 1 / -1; justify-self: start; width: auto; height: auto; overflow: visible; clip-path: none; }
 .bucket-wrap { position: relative; display: flex; min-width: 0; }
@@ -1191,3 +1193,9 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 :root:not([data-theme="light"]) .tc.lo-d { -webkit-text-stroke: 2px rgb(255 255 255 / .6); paint-order: stroke fill; }
 :root[data-theme="light"] img.tok.lo-l { filter: drop-shadow(0 0 .6px rgb(0 0 0 / .8)) drop-shadow(0 0 .4px rgb(0 0 0 / .5)); }
 :root:not([data-theme="light"]) img.tok.lo-d, :root:not([data-theme="light"]) .ctypes img.lo-d { filter: drop-shadow(0 0 .6px rgb(255 255 255 / .8)) drop-shadow(0 0 .4px rgb(255 255 255 / .5)); }
+/* short windows (landscape phones, 400% zoom): the bar scrolls away, and what pinned under it pins to the top */
+@media (max-height: 450px) {
+  .top { position: static; } :root { --bar: 0px; }
+  .filters, .edit-preview { top: 8px; } .tray { top: 0; }
+}
+@media (max-height: 450px) and (min-width: 981px) { table.data th { top: 0; } }

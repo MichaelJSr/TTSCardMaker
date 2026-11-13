@@ -84,7 +84,8 @@ let sized = null;                                  // a ResizeObserver, made on 
 function padTop() {
   const t = trayEl(), cs = t && getComputedStyle(t);
   if (!t) { A.view.querySelector(".browse > section")?.style.removeProperty("--tray-pad"); return; }   // unpinned in place: none
-  t.parentElement.style.setProperty("--tray-pad", cs.position === "sticky" ? `${Math.ceil(parseFloat(cs.top) + t.offsetHeight) + 8}px` : "0px");
+  const st = t.parentElement.style;
+  if (cs.position === "sticky") st.setProperty("--tray-pad", `${Math.ceil(parseFloat(cs.top) + t.offsetHeight) + 8}px`); else st.removeProperty("--tray-pad");   // in place: the bar's
 }
 const restore = () => {
   const t = trayEl(); if (t && t.scrollTop !== trayTop) t.scrollTop = trayTop;

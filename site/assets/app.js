@@ -21,6 +21,7 @@ const ROOT = new URL("./", document.baseURI).href;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q"), pageH1 = $("#page-h1"), srStatus = $("#sr-status");
+{ const bar = $("header.top"); new ResizeObserver(() => document.documentElement.style.setProperty("--top-h", `${bar.offsetHeight}px`)).observe(bar); }   // style.css --bar
 const store = (() => { try { return sessionStorage; } catch { return null; } })();   // storage blocked: the Details dropdown just forgets its state
 
 const S = {
@@ -453,7 +454,7 @@ function setParams(updates) {
 // another list (search, filters, sort) drawn while scrolled into the old one: its top under the bar (the scroll had clamped)
 function toResults(was) {
   if (!was || (was.length === S.list.length && was.every((c, i) => c === S.list[i]))) return;
-  const top = $(".browse > section", view)?.getBoundingClientRect().top, bar = $("header.top")?.getBoundingClientRect().bottom || 0;
+  const top = $(".browse > section", view)?.getBoundingClientRect().top, bar = Math.max(0, $("header.top")?.getBoundingClientRect().bottom || 0);   // unpinned (short windows): 0
   if (top < bar) scrollBy(0, top - bar);
 }
 
