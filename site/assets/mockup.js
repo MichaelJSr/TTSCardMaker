@@ -1687,19 +1687,39 @@ const LETTERS_ONLY = /[()[\]{}\u0001\u0002]/;          // a badge, icon or cost:
 /** A plate crop's layout (card_plates.layout) for old, the website's text of its layer (\r dropped), in image px (k per
  *  canvas px): {was, lines: [{s, e, base, left, right, top, bottom, just, para}], x: Map(char index -> pen x of the
  *  letter it starts), ink: Map(char index -> [left, right] of its ink), frame: [left, right] | null}, indexes into was
- *  (para -1: a blank line the website trims); null when it has none or its text is not old's. */
+ *  (para -1: a blank line the website trims); null when it has none or its text (icon variants aside) is not old's. */
 export function recordLayout(c, old, k) {
   if (!c || typeof c.text !== "string" || !Array.isArray(c.lines) || !c.lines.length || !Array.isArray(c.glyphs) || !(k > 0)) return null;
-  const T = c.text.replace(/[\r\u0003]/g, "\n").replace(/\t/g, " "), was = String(old ?? "").replace(/\r/g, ""), core = was.trim();
-  if (!core || T.trim() !== core) return null;
+  let T = c.text.replace(/[\r\u0003]/g, "\n").replace(/\t/g, " "), at = i => i;
+  const was = String(old ?? "").replace(/\r/g, ""), core = was.trim();
+  if (!core) return null;
+  if (T.trim() !== core) { const v = noVariants(T); if (!v || v.T.trim() !== core) return null; ({ T, at } = v); }   // the record has [dark], the plate [dark:sticker]
   const shift = was.indexOf(core) - T.indexOf(core), paraAt = [];   // T index + shift: was's
   for (let i = 0, p = 0; i <= was.length; i++) { paraAt.push(p); if (was[i] === "\n") p++; }
   const lines = c.lines.map(([s, e, base, left, right, top, bottom, just]) => {
-    const a = s + shift, z = e + shift, inside = a === z ? a >= 0 && a <= was.length : z > 0 && a < was.length, s0 = clamp(a, 0, was.length);   // a leading space trimmed: from 0
+    const a = at(s) + shift, z = at(e) + shift, inside = a === z ? a >= 0 && a <= was.length : z > 0 && a < was.length, s0 = clamp(a, 0, was.length);   // a leading space trimmed: from 0
     return { s: inside ? s0 : a, e: inside ? clamp(z, 0, was.length) : z, base: base * k, left: left * k, right: right * k, top: top * k, bottom: bottom * k, just: just | 0, para: inside ? paraAt[s0] : -1 };
   });
-  return { was, lines, x: new Map(c.glyphs.map(([i, x]) => [i + shift, x * k])), ink: new Map(c.glyphs.filter(g => g.length >= 4).map(([i, , a, b]) => [i + shift, [a * k, b * k]])),
-    frame: Array.isArray(c.frame) ? c.frame.map(v => v * k) : null };
+  const x = new Map(), ink = new Map();               // a cluster's first glyph (a sticker draws 3)
+  for (const g of c.glyphs) {
+    const j = at(g[0]) + shift;
+    if (!x.has(j)) x.set(j, g[1] * k);
+    if (g.length >= 4 && !ink.has(j)) ink.set(j, [g[2] * k, g[3] * k]);
+  }
+  return { was, lines, x, ink, frame: Array.isArray(c.frame) ? c.frame.map(v => v * k) : null };
+}
+/** t without its icon variants ([dark:sticker] -> [dark]) and at(i): t's index i there; null when it has none. */
+function noVariants(t) {
+  const cut = [];
+  for (const m of t.matchAll(/\[([^[\]]{1,70})\]/g)) { const v = splitToken(m[1]); if (v?.v) cut.push([m.index + 1 + v.base.length, m.index + m[0].length - 1]); }
+  if (!cut.length) return null;
+  const to = []; let T = "";
+  for (let i = 0, j = 0; i <= t.length; i++) {
+    while (j < cut.length && i >= cut[j][1]) j++;
+    to.push(T.length);
+    if (i < t.length && !(j < cut.length && i >= cut[j][0])) T += t[i];
+  }
+  return { T, at: i => (i < 0 ? i : i < to.length ? to[i] : i - t.length + T.length) };
 }
 /** An Ability edit (R's was -> text) against the card's own lines (recordLayout R): {splice, keep, gone, after, from,
  *  paras} or null (no change but trailing spaces). splice: {i, a, b, at, run} when one paragraph changes inside one
