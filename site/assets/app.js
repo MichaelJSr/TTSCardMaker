@@ -111,7 +111,7 @@ const failBox = (what, e) => `<div class="empty load-error">${esc(failText(what,
 // loaded on demand: the rulebook (data/rules.json: its chapters' text and its pictures' sizes; rulebook.js draws them), and
 // older versions of card text
 let historyP = null, versionsP = null, RB = null, bookP = null;
-const loadBook = () => (bookP ||= Promise.all([getJson("rules.json"), (early("rulebook.js"), import("./rulebook.js"))]).then(([d, m]) => {
+const loadBook = () => (bookP ||= Promise.all([getJson("rules.json"), (early("rulebook.js"), import("./rulebook.js")), sheet("rulebook")]).then(([d, m]) => {
   RB = m; S.book = { images: d.images, built: d.chapters, cover: d.cover || [] };
   bookChapters();
 }).catch(e => { bookP = null; throw e; }));
@@ -125,6 +125,16 @@ const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S
 // early(): a module's chunks all at once (index.html's meta chunks, build_site.py bundle), so the first open is one round trip
 const CHUNKS = (() => { try { return JSON.parse(document.querySelector('meta[name="chunks"]')?.content || "{}"); } catch { return {}; } })();
 const early = name => { for (const href of CHUNKS[name] || []) if (!document.querySelector(`link[href="${href}"]`)) document.head.append(Object.assign(document.createElement("link"), { rel: "modulepreload", href })); };
+// the rulebook's and the editor's styles: sheets of their own (build_site split_css), each in before what draws with it
+// (loadBook, loadEditor); none listed (an unsplit build): style.css holds them
+const SHEETS = (() => { try { return JSON.parse(document.querySelector('meta[name="sheets"]')?.content || "{}"); } catch { return {}; } })();
+const sheetP = {};
+const sheet = name => (sheetP[name] ||= !SHEETS[name] ? Promise.resolve() : new Promise((ok, fail) => {
+  const l = Object.assign(document.createElement("link"), { rel: "stylesheet", href: SHEETS[name] });
+  l.onload = ok;
+  l.onerror = () => { l.remove(); delete sheetP[name]; fail(new Error(`${name}.css`)); };   // a later load tries again
+  document.head.append(l);
+}));
 let St = null, chartsP = null, Pf = null, profileP = null;
 const loadCharts = () => (chartsP ||= (early("charts.js"), import("./charts.js")).then(m => { St = m; }).catch(e => { chartsP = null; throw e; }));
 const loadProfile = () => (profileP ||= (early("profile.js"), import("./profile.js")).then(m => { Pf = m; }).catch(e => { profileP = null; throw e; }));
@@ -261,7 +271,7 @@ const wantsEditor = () => !!(kept(SEALED) || kept("edit-sent") || kept("edit-sho
 function loadEditor(say = false) {                       // say: "Loading…" while it comes (a click)
   const note = "Loading the editor…";
   if (!editorP && say) toast(note);
-  return (editorP ||= Promise.all([(early("editing.js"), import("./editing.js")), getJson("editing.json")]).then(([M, f]) => {
+  return (editorP ||= Promise.all([(early("editing.js"), import("./editing.js")), getJson("editing.json"), sheet("editing")]).then(([M, f]) => {
     editFields = { cards: f, on: null };
     if (S.ready) addEditFields();
     const ed = startEditor(M);

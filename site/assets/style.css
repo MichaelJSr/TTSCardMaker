@@ -74,6 +74,7 @@ main { padding: 16px; outline: none; }
 @media (max-width: 860px) { .browse { grid-template-columns: 1fr; } .filters { position: static !important; max-height: none !important; display: none; } .filters.open { display: block; } }
 .mobile-only { display: none; } @media (max-width: 860px) { .mobile-only { display: inline-block; } }
 .filters { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow: auto; padding: 4px 6px 16px 0; }
+@media (min-width: 861px) and (max-width: 980px) { .filters { top: 112px; max-height: calc(100vh - 128px); } }   /* under the two-row bar */
 .filters h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 16px 0 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 5px; }
 .chip { border: 1px solid var(--border-strong); background: transparent; border-radius: 999px; padding: 3px 10px; font-size: 13px; color: var(--ink-2); }
@@ -275,20 +276,21 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
   border-radius: 10px; padding: 8px 14px; font-size: 14px; box-shadow: var(--shadow); }
 
 /* ---- rulebook (rulebook.js): the book's look, light pages in either theme; the TTS sheets (.rb-sheet) the same at 1080x1920 ---- */
+.rb-chapter, .rb-extra, #stats-balance, #stats-history, .rb-sec { scroll-margin-top: 70px; }   /* jumped to: below the bar */
+@media (max-width: 980px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-history { scroll-margin-top: 117px; } }   /* two-row bar */
+@media (max-width: 640px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-history { scroll-margin-top: 184px; } }   /* three-row bar */
+/* @sheet rulebook: to its end mark, assets/rulebook.css, in before the rulebook draws (app.js loadBook; build_site split_css) */
 @font-face { font-family: "Inconsolata"; src: url("../rulebook/fonts/inconsolata-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Inconsolata"; src: url("../rulebook/fonts/inconsolata-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "EB Garamond"; src: url("../rulebook/fonts/eb-garamond-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 .rules { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 20px; align-items: start; }
 @media (max-width: 860px) { .rules { grid-template-columns: 1fr; } .toc { position: static !important; max-height: none !important; } }
 .toc { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow: auto; font-size: 14px; }
-@media (min-width: 861px) and (max-width: 980px) { .filters, .toc { top: 112px; max-height: calc(100vh - 128px); } }   /* under the two-row bar */
+@media (min-width: 861px) and (max-width: 980px) { .toc { top: 112px; max-height: calc(100vh - 128px); } }   /* under the two-row bar */
 .toc a { display: block; padding: 3px 8px; border-radius: 6px; color: var(--ink-2); } .toc a:hover { background: var(--surface-2); text-decoration: none; }
 .toc a.sub { padding-left: 22px; font-size: 13px; color: var(--muted); }
 .toc a.on { background: var(--surface-2); color: var(--ink); font-weight: 600; }
 .toc .toc-tools { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
-.rb-chapter, .rb-extra, #stats-balance, #stats-history, .rb-sec { scroll-margin-top: 70px; }   /* jumped to: below the bar */
-@media (max-width: 980px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-history { scroll-margin-top: 117px; } }   /* two-row bar */
-@media (max-width: 640px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-history { scroll-margin-top: 184px; } }   /* three-row bar */
 .rb { --rb-ink: #102175; --rb-panel: #cfcfff; --rb-tab: #e4e4ff; --rb-pnum: #adadf8; --rb-paper: #fff;
   font-family: Consolas, Inconsolata, ui-monospace, Menlo, monospace; font-size: 17px; line-height: 1.45; color: var(--rb-ink); }
 /* a chapter is a page drawn to scale, as a PDF's: its text 17px on a 1108px page (a 1400px window; 1300px at most), all
@@ -562,6 +564,7 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-sheet .rb-card img { box-shadow: none; }
 .rb-sheet a { color: inherit; text-decoration: none; }
 .rb-sheet.rb-cover-sheet > .rb-page { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body { margin: 0; padding: 0; } .rb-sheet.rb-cover-sheet .rb-body img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* @sheet end */
 .badge-legend { list-style: none; margin: 8px 0; padding: 0; font-size: 14px; line-height: 1.9; }
 .badge-legend .nw { white-space: nowrap; }   /* "(" and "," stay with their badge */
 .badge-legend .swatch { width: .8em; min-width: 0; height: .8em; padding: 0; margin: 0 6px 0 0; vertical-align: -.05em; cursor: default; }
@@ -696,29 +699,9 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .ver-text { margin-top: 10px; font-size: 14px; background: var(--surface-2); border-radius: 10px; padding: 8px 10px; }
 
 /* ---- editing ---- */
-.dialog.edit-dialog { width: min(880px, 100%); }
-.edit-form fieldset { border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; margin: 0 0 12px; }
-.edit-form fieldset:disabled { opacity: .55; }
-.edit-form legend { font-weight: 700; padding: 0 6px; }
-/* on the card image / database only */
-.edit-form .egroup { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 2px; }
-.edit-form .egroup:first-child { margin-top: 4px; }
-.edit-form .egroup-note { margin: 0 0 10px; font-size: 13px; }
-.erow { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; align-items: start; margin: 8px 0; }
-.erow > label, .erow > span { padding-top: 6px; font-size: 13px; color: var(--ink-2); }
-.ein { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-width: 0; }
+/* outside edit mode too (in the page): the Font box's token picker, fresh.js's new-deploy bar, card states and flags */
 .ein > input:not([type=checkbox]), .ein > select, .ein > textarea, .wide, .people input { flex: 1 1 220px; min-width: 0;
   padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); }
-.ein > textarea { width: 100%; resize: vertical; line-height: 1.45; }
-.ein > input[type=number] { flex: 0 0 90px; }
-.ein .icon-toggles { flex: 1 1 100%; }
-.estats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); column-gap: 14px; }
-.estats[hidden] { display: none; }
-.estats .erow { grid-template-columns: 44px 1fr; }
-.token-bar { display: flex; flex-wrap: wrap; gap: 2px; width: 100%; }
-.token-bar button { padding: 2px; width: 28px; height: 28px; }
-.token-bar img { width: 22px; height: 22px; object-fit: contain; }
-.ability.preview { width: 100%; min-height: 2.5em; margin: 0; }
 /* the token picker (tokens.js): "[" or "(" in card text */
 .tok-picker { position: fixed; z-index: 70; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-content: start;
   width: min(400px, calc(100vw - 16px)); max-height: 330px; margin: 0; padding: 4px; list-style: none; overflow-y: auto;
@@ -737,12 +720,7 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .tp-kind { color: var(--muted); font-size: 12px; white-space: nowrap; }
 @media (pointer: coarse) { .tok-picker li { min-height: 46px; } }
 .tok-status, .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
-.edit-summary { min-height: 1.4em; margin: 4px 0 8px; overflow-wrap: anywhere; }
 .wide { width: 100%; display: block; margin: 4px 0 8px; }
-.people .erow { grid-template-columns: 160px 1fr; }
-.review-item { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
-.review-item ul { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 14px; }
 /* the batch bar: one line (the sentences ellipsised) or, open, a list with a revert per line */
 .edit-bar { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; flex-direction: column; gap: 2px;
   max-width: min(880px, calc(100% - 32px)); background: var(--surface); border: 1px solid var(--border-strong); border-radius: 999px; padding: 6px 8px 6px 16px; box-shadow: var(--shadow); }
@@ -750,17 +728,10 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .fresh-bar { bottom: auto; top: 12px; z-index: 95; }   /* fresh.js: a new deploy */
 .edit-bar .bar-line { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .edit-bar.open { border-radius: 14px; width: min(760px, calc(100% - 32px)); max-height: 40vh; overflow: auto; }
-.bar-list { margin: 2px 0 0; padding: 0; list-style: none; font-size: 14px; }
-.bar-list li { display: flex; gap: 6px; align-items: center; padding: 1px 0; min-width: 0; }
-.bar-list .txt { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bar-list button { padding: 1px 8px; font-size: 12px; } .bar-list button.icon { width: 26px; height: 26px; font-size: 14px; }
+@media (max-width: 640px) { .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; max-width: none; } .edit-bar .bar-head { flex-wrap: wrap; } }
 .tile .flag.staged, .fact.staged { background: var(--accent); color: var(--accent-ink); }
 /* edit pipeline: a PSD edit waiting to be baked into the card image, or refused */
 .tile .flag.pending, .fact.pending { background: #1d4f7c; color: #d6ebff; }
-.site-box { flex: 1 1 100%; font-size: 12px; margin: 0; }
-.site-on .site-boxes { opacity: .45; pointer-events: none; } .site-on .site-boxes .part-join { display: none; }
-.site-plain { flex: 1 1 100%; display: flex; flex-direction: column; gap: 4px; } .site-plain[hidden] { display: none; }
-.site-plain input, .site-plain textarea { width: 100%; }
 .tile .flag.refused, .fact.refused { background: #7c1d1d; color: #ffd6d6; }
 .data td .fact, .panel li .fact, .erow label .fact { margin-left: 6px; font-size: 11px; }
 .note { background: var(--surface-2); border-left: 3px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
@@ -784,7 +755,43 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .flag-issue[hidden] { display: none; }
 .flag-issue p { margin: 0; }
 .art-src { margin: 4px 0; font-size: .92em; overflow-wrap: anywhere; }
-@media (max-width: 640px) { .erow { grid-template-columns: 1fr; } .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; max-width: none; } .edit-bar .bar-head { flex-wrap: wrap; } }
+:root[data-theme="light"] .ctypes img, :root[data-theme="light"] .pal-type img { filter: drop-shadow(0 0 1px rgba(0,0,0,.7)); }   /* white icons (light, lightshadow) on a light page */
+/* @sheet editing: to its end mark (inline editing too), assets/editing.css, in before the editor draws (app.js loadEditor) */
+.dialog.edit-dialog { width: min(880px, 100%); }
+.edit-form fieldset { border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; margin: 0 0 12px; }
+.edit-form fieldset:disabled { opacity: .55; }
+.edit-form legend { font-weight: 700; padding: 0 6px; }
+/* on the card image / database only */
+.edit-form .egroup { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 2px; }
+.edit-form .egroup:first-child { margin-top: 4px; }
+.edit-form .egroup-note { margin: 0 0 10px; font-size: 13px; }
+.erow { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; align-items: start; margin: 8px 0; }
+.erow > label, .erow > span { padding-top: 6px; font-size: 13px; color: var(--ink-2); }
+.ein { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-width: 0; }
+.ein > textarea { width: 100%; resize: vertical; line-height: 1.45; }
+.ein > input[type=number] { flex: 0 0 90px; }
+.ein .icon-toggles { flex: 1 1 100%; }
+.estats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); column-gap: 14px; }
+.estats[hidden] { display: none; }
+.estats .erow { grid-template-columns: 44px 1fr; }
+.token-bar { display: flex; flex-wrap: wrap; gap: 2px; width: 100%; }
+.token-bar button { padding: 2px; width: 28px; height: 28px; }
+.token-bar img { width: 22px; height: 22px; object-fit: contain; }
+.ability.preview { width: 100%; min-height: 2.5em; margin: 0; }
+button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
+.edit-summary { min-height: 1.4em; margin: 4px 0 8px; overflow-wrap: anywhere; }
+.people .erow { grid-template-columns: 160px 1fr; }
+.review-item { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+.review-item ul { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 14px; }
+.bar-list { margin: 2px 0 0; padding: 0; list-style: none; font-size: 14px; }
+.bar-list li { display: flex; gap: 6px; align-items: center; padding: 1px 0; min-width: 0; }
+.bar-list .txt { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-list button { padding: 1px 8px; font-size: 12px; } .bar-list button.icon { width: 26px; height: 26px; font-size: 14px; }
+.site-box { flex: 1 1 100%; font-size: 12px; margin: 0; }
+.site-on .site-boxes { opacity: .45; pointer-events: none; } .site-on .site-boxes .part-join { display: none; }
+.site-plain { flex: 1 1 100%; display: flex; flex-direction: column; gap: 4px; } .site-plain[hidden] { display: none; }
+.site-plain input, .site-plain textarea { width: 100%; }
+@media (max-width: 640px) { .erow { grid-template-columns: 1fr; } }
 .review-item .actions { align-self: flex-start; flex-wrap: nowrap; margin: 0; }
 /* sign in: Password | Token, and the password dialog (login.js) */
 .signin-modes { margin: 4px 0 10px; }
@@ -842,7 +849,6 @@ body.dragging-cards .drop-list { display: flex; }
     background: color-mix(in srgb, var(--warn) 18%, var(--surface)); }
   .detail:has(.draft-offer) { padding-bottom: 96px; }
 }
-:root[data-theme="light"] .ctypes img, :root[data-theme="light"] .pal-type img { filter: drop-shadow(0 0 1px rgba(0,0,0,.7)); }   /* white icons (light, lightshadow) on a light page
 /* the Edit dialog's live preview (live.js): beside the form; on narrow screens a bar at the top that opens it */
 .dialog.edit-dialog.has-preview { width: min(1260px, 100%); }
 .edit-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); gap: 22px; align-items: start; }
@@ -869,6 +875,7 @@ body.dragging-cards .drop-list { display: flex; }
   .modal:has(.lp-pane.open) { scroll-padding-top: calc(36vh + 24px); }   /* a field scrolled into view stays below the open preview */
   .modal:has(.lp-pane:not(.open)) { scroll-padding-top: 48px; }
 }
+/* @sheet end */
 
 /* ---- profiles ---- */
 #account { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }

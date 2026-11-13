@@ -1450,7 +1450,7 @@ def share_text(c):
 GRID_PRELOADS = 4                            # the cards grid's first pictures that index.html preloads
 
 
-def grid_preload(cards, ids=None, version="", lazy=None):
+def grid_preload(cards, ids=None, version="", lazy=None, sheets=None):
     """index.html's preload hints for the grid's first pictures (grid.js tileHtml: srcset 240w/360w, sizes = the tile size),
     added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size.
     ids: the grid's first cards in order (first_screen), else Name order. A link to the Rulebook starts app.js loadBook's
@@ -1458,11 +1458,12 @@ def grid_preload(cards, ids=None, version="", lazy=None):
     by_id = {c["id"]: c for c in cards}
     order = [by_id[i] for i in ids] if ids else sorted((c for c in cards if not c.get("hidden")), key=lambda c: c["name"].lower())
     first = [c["img"] for c in order if c.get("img")][:GRID_PRELOADS]
-    book = [["preload", f"data/rules.json{f'?v={version}' if re.fullmatch(r'[0-9a-f]+', version or '') else ''}"]]   # app.js V
+    book = [["preload", f"data/rules.json{f'?v={version}' if re.fullmatch(r'[0-9a-f]+', version or '') else ''}", "fetch"]]   # app.js V
+    book += [["preload", sheets["rulebook"], "style"]] if (sheets or {}).get("rulebook") else []   # its sheet (sheet_tags')
     book += [["modulepreload", f"assets/{n}"] for n in (lazy or {}).get("rulebook.js", [])]    # the meta chunks' names, no ?v=
     return ("<script>(() => { try { if (/^#\\/?rules(\\/|\\?|$)/.test(location.hash)) {\n"
-            f"    for (const [r, h] of {json.dumps(book)}) {{ const l = document.createElement(\"link\"); l.rel = r; l.href = h;\n"
-            "      if (r === \"preload\") { l.as = \"fetch\"; l.crossOrigin = \"\"; } document.head.append(l); }\n"
+            f"    for (const [r, h, as] of {json.dumps(book)}) {{ const l = document.createElement(\"link\"); l.rel = r; l.href = h;\n"
+            "      if (as) { l.as = as; if (as === \"fetch\") l.crossOrigin = \"\"; } document.head.append(l); }\n"
             "    return; }\n"
             + ("  if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
                "  const w = { s: 160, l: 270 }[localStorage.getItem(\"size\")] || 200;\n"
@@ -4118,6 +4119,38 @@ def chunk_tags(lazy):
     return f'\n<meta name="chunks" content="{html.escape(json.dumps({k: [f"assets/{n}" for n in v] for k, v in sorted(lazy.items())}, separators=(",", ":")))}">'
 
 
+SHEET_MARK = re.compile(r"/\*\s*@sheet\s+([\w-]+)\b.*\*/", re.S)   # style.css: "/* @sheet <name>: ... */" to "/* @sheet end */"
+CSS_TOKEN = re.compile(r"""/\*.*?\*/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[{}]""", re.S)   # comments, strings, braces
+
+
+def split_css(css):
+    """style.css as (the page's part, {name: part}): each stretch from "/* @sheet <name> */" to "/* @sheet end */" goes to
+    assets/<name>.css, which app.js sheet() loads before what draws with it, out of the CSS every page inlines. A mark
+    inside a rule or unpaired: not split (a warning)."""
+    page, parts, name, at, depth = [], {}, None, 0, 0
+    for t in CSS_TOKEN.finditer(css):
+        if t[0] in ("{", "}"):
+            depth += 1 if t[0] == "{" else -1
+            continue
+        m = SHEET_MARK.fullmatch(t[0])
+        if not m:
+            continue
+        if depth or (m[1] == "end") == (name is None):
+            warn(f"style.css not split: {m[0][:30]}… {'inside a rule' if depth else 'unpaired'}")
+            return css, {}
+        (page if name is None else parts.setdefault(name, [])).append(css[at:t.start()])
+        name, at = None if m[1] == "end" else m[1], t.end()
+    if name is not None:
+        warn(f"style.css not split: {name}'s sheet has no end")
+        return css, {}
+    return "".join(page) + css[at:], {n: "".join(p) for n, p in parts.items()}
+
+
+def sheet_tags(urls):
+    """Every page's map of split_css's sheets to their stamped URLs (app.js sheet())."""
+    return f'\n<meta name="sheets" content="{html.escape(json.dumps(urls, separators=(",", ":")))}">' if urls else ""
+
+
 def inline_css(page, css, what="index.html"):
     """page with its style.css link swapped for the stylesheet itself (index.html and card pages: one round trip less on first paint)."""
     link = re.search(r'<link rel="stylesheet" href="assets/style\.css\?v=\w+">', page)
@@ -4755,6 +4788,8 @@ def main():
     for name in os.listdir(assets_src):
         with open(os.path.join(assets_src, name), encoding="utf-8") as fh:
             texts[name] = fh.read()
+    texts["style.css"], sheets = split_css(texts["style.css"])   # the rulebook's and the editor's styles: sheets of their own
+    texts.update({f"{n}.css": t for n, t in sheets.items()})
     assets = asset_stamps(texts)
     data = steady(files, blobs)
     version, own = data_stamp(data, details), data_stamps(data, details)
@@ -4786,6 +4821,8 @@ def main():
             template = template.replace(tag, tag + chunk_tags(lazy), 1)
         else:
             warn("index.html: no modulepreload for the bundle, so no chunks list: a first open loads chunk after chunk")
+    sheet_urls = {n: f"assets/{n}.css?v={stamps[f'{n}.css']}" for n in sheets}
+    template = re.sub(r'<link rel="stylesheet" href="assets/style\.css\?v=\w+">', lambda m: m[0] + sheet_tags(sheet_urls), template, count=1)
     page = stamp_of(template.encode("utf-8"))  # the page's stamp: build.txt's 2nd line (fresh.js)
     template = template.replace("<!--PAGE-->", page)
     share = template                          # share pages and d/: with the chunks app.js imports (not index.html: §33)
@@ -4811,7 +4848,7 @@ def main():
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", og_url, (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
         first = first_screen(cards, icons)
-        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1], own.get("rules.json", version), lazy))
+        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1], own.get("rules.json", version), lazy, sheet_urls))
         fh.write(index.replace("</main>\n", f"</main>\n{first[0]}\n", 1) if first else index)
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
