@@ -1050,14 +1050,6 @@ export function barCut(bars, k, from, to) {
   const cut = bars.cuts[s.to?.[String(to)]];
   return Array.isArray(cut) && cut.length === 6 ? cut : null;
 }
-/** The places in cuts (barCut's, in paste order) whose picture clashes with an earlier pasted one (card_plates._clashes:
- *  together either shows the other stat's old bar, Ze'mer's flowers): not drawn. */
-export function clashing(bars, cuts) {
-  const pairs = new Set((Array.isArray(bars?.clash) ? bars.clash : []).map(([i, j]) => `${Math.min(i, j)},${Math.max(i, j)}`));
-  const at = cuts.map(c => (c ? bars.cuts.indexOf(c) : -1)), out = new Set();
-  at.forEach((i, n) => { if (i >= 0 && at.some((j, m) => m < n && j >= 0 && !out.has(m) && pairs.has(`${Math.min(i, j)},${Math.max(i, j)}`))) out.add(n); });
-  return out;
-}
 /** A bar cut's pixels from its sheet at k image px per view px: [x, y, w, h, rgba] (image px). */
 function barPixels(img, [x, y, w, h, sx, sy], k) {
   const X = Math.round(x * k), Y = Math.round(y * k), w2 = Math.max(1, Math.round((x + w) * k) - X), h2 = Math.max(1, Math.round((y + h) * k) - Y);
@@ -1213,9 +1205,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (kept) { if (moved) out.starsKept = { why: kept, to: moved.to }; else out.refused.push(["stars", kept]); todo.stars = null; }   // the picture's stay
   const blit = () => { if (stale() || canvas._seq !== seq) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
   if (!tpl) {                                         // no template: the bake's stat pictures alone
-    const all = Object.entries(todo.stats).map(([k, [from, to]]) => [k, barCut(pics, k, from, to)]), apart = clashing(pics, all.map(([, c]) => c));
-    out.skipped.push(...all.filter((_, n) => apart.has(n)).map(([k]) => statLabel(k)));
-    const got = all.filter(([, c], n) => c && !apart.has(n));
+    const got = Object.entries(todo.stats).map(([k, [from, to]]) => [k, barCut(pics, k, from, to)]).filter(([, c]) => c);
     const sheetImg = got.length ? await loadImage(pics.img) : null;
     if (stale()) return null;
     if (sheetImg || starImg) {
@@ -1331,13 +1321,12 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (!reuse) eraseMemo = { sig, rec, icons, sheet, plans, data: pixels.data.slice(), card: cardPx };
   for (const t of tints) if (t) tintInPlace(pixels.data, W, H, kc, t, readPlate);   // after the memo: it never holds tinted pixels
   const shown = { ...psd };                            // the values the rows show as they are redrawn
-  const cuts = Object.entries(todo.stats).map(([k, [from, to]]) => barCut(pics, k, from, to)), apart = clashing(pics, cuts);
+  const cuts = Object.entries(todo.stats).map(([k, [from, to]]) => barCut(pics, k, from, to));
   const picsImg = cuts.some(Boolean) ? await loadImage(pics.img) : null;
   if (stale()) return null;
   for (const [n, [k, [from, to]]] of Object.entries(todo.stats).entries()) {
     if (cuts[n] !== undefined) {                      // the card's pictured bars: the bake's picture, or none (it refuses the value)
-      if (apart.has(n)) out.skipped.push(statLabel(k));   // its picture clashes with one drawn: not drawn, said
-      else if (cuts[n] && picsImg) { putBar(pixels.data, W, H, barPixels(picsImg, cuts[n], W / pics.vw)); shown[k] = to; out.drawn.push(statLabel(k)); }
+      if (cuts[n] && picsImg) { putBar(pixels.data, W, H, barPixels(picsImg, cuts[n], W / pics.vw)); shown[k] = to; out.drawn.push(statLabel(k)); }
       continue;
     }
     const row = bars.find(r => r.k === k);
