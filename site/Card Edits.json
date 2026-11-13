@@ -644,7 +644,7 @@
     "Tainted Isaac": {"series":"The Binding of Isaac","art":["https://saindoo.artstation.com/projects/nY3dQ6","https://x.com/MitBoy_/status/1696224972920803622","https://x.com/simgart/status/1424130356735787014"],"_bot":["series"],"_by":"Zomoroko","_at":"2026-11-06T07:46:50Z"},
     "Tainted Jacob": {"series":"The Binding of Isaac","art":["https://saindoo.artstation.com/projects/nY3dQ6","https://x.com/MitBoy_/status/1696224972920803622"],"_bot":["series"],"_by":"Zomoroko","_at":"2026-11-07T02:28:38Z"},
     "Tainted Keeper": {"series":"The Binding of Isaac","art":["https://saindoo.artstation.com/projects/nY3dQ6"],"_bot":["series"],"_by":"Zomoroko","_at":"2026-11-06T07:46:50Z"},
-    "Tainted Lazarus": {"series":"The Binding of Isaac","_bot":["series"],"_by":"MichaelJSr","_at":"2026-10-22T04:37:15Z"},
+    "Tainted Lazarus": {"series":"The Binding of Isaac","flags":{"hand":"To be split into two creatures: the dead form's Undead type and ability are not in the data yet.","psd":"dd4ed80c"},"_bot":["series"],"_by":"MichaelJSr","_at":"2026-11-13T11:15:41Z"},
     "Tainted Lilith": {"series":"The Binding of Isaac","art":["https://saindoo.artstation.com/projects/nY3dQ6","https://x.com/MitBoy_/status/1696224972920803622"],"_by":"Zomoroko","_at":"2026-11-06T07:46:50Z"},
     "Tainted Lost": {"series":"The Binding of Isaac","art":["https://saindoo.artstation.com/projects/nY3dQ6","https://x.com/MitBoy_/status/1695096541894082569"],"_bot":["series"],"_by":"Zomoroko","_at":"2026-11-06T07:46:50Z"},
     "Tainted Magdalene": {"series":"The Binding of Isaac","art":["https://saindoo.artstation.com/projects/nY3dQ6","https://x.com/MitBoy_/status/1696224972920803622"],"_bot":["series"],"_by":"Zomoroko","_at":"2026-11-06T07:46:50Z"},
