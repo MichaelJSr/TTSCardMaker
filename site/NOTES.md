@@ -652,8 +652,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     sets them" for "the '5 Stars' folder sets them (moving the card is ledger S9)"), else the text without its field,
     boxes and ledger codes; a reworded refusal in psd_edit needs its pattern here too. Rendered says them the same way
     (`plainReason`, `plainNote`): a refused reason's "unsupported-card: stars: <why>" parts read "The bake would refuse
-    the stars: <why>.", a "stars not baked: <code>: <why>" note "The stars weren't baked: <why>."; other reasons and
-    notes lose ledger codes only.
+    the stars: <why>." (an ability's the same, 2026-11-13: "...: no room for an ability on this card."), a "stars not
+    baked: <code>: <why>" note "The stars weren't baked: <why>."; other reasons and notes lose ledger codes only.
 - **Rendered** (`createPreviews`): the Action's side is one adapter, `CONTRACT` (workflow, ref, branch, inputs, paths).
   - Start: `POST .../actions/workflows/card-preview.yml/dispatches` at once with `{ref: "main", inputs: {card: c.key, edit: JSON.stringify(edit), request}}`. `edit` =
     `entryEdit(editor.entryFields(id, op), get)`: every PSD-kind field of the card's Card Edits.json entry as Publish

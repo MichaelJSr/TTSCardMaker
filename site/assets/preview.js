@@ -333,10 +333,11 @@ export function plainWhy(why) {
     ?? (s.replace(LEDGER, "").replace(/^(?:stars|types): /, "").replace(/ at \(\d+(?:, \d+)*\)/g, "").trim() || "no reason given");
 }
 const REFUSALS = [[/^[a-z-]+: (stars|types): (.*)$/s, ([, f, why]) => `The bake would refuse the ${f}: ${plainWhy(why)}.`],
+  [/^[a-z-]+: ability: (.*)$/s, ([, why]) => `The bake would refuse the ability: ${why.replace(LEDGER, "")}.`],   // "no room for an ability on this card"
   [/^[a-z>\d-]+: (?:creatures: )?(hp|def|atk|spd) (\d+): (.*)$/s, ([, f, v, why]) => `The bake would refuse ${f.toUpperCase()} ${v}: ${why.replace(LEDGER, "")}.`]];
 /** A refused result's reason: "unsupported-card: stars: <why>" (parts joined by "; ") -> "The bake would refuse the
- *  stars: <plainWhy>."; "...: spd 6: <why>" -> "The bake would refuse SPD 6: <why>."; any other reason without its
- *  ledger codes. */
+ *  stars: <plainWhy>."; "...: ability: <why>" -> "The bake would refuse the ability: <why>."; "...: spd 6: <why>" ->
+ *  "The bake would refuse SPD 6: <why>."; any other reason without its ledger codes. */
 export function plainReason(reason) {
   const s = String(reason ?? ""), parts = s.split("; ").map(x => REFUSALS.map(([re, say]) => { const m = re.exec(x); return m && say(m); }).find(Boolean));
   return s && parts.every(Boolean) ? parts.join(" ") : s.replace(LEDGER, "");
