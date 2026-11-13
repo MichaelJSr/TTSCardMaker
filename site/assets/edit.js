@@ -1673,9 +1673,10 @@ export function createEditor(app) {
 
   // ---- revert (app.js "card-revert": a History or Image versions "Revert to this version"): a card's files as they were
   // at a version's commit, at today's paths, as one commit of tree entries pointed at the old blobs (nothing uploaded).
-  // Its PSD and the PNGs printed from it (its own, its variants', its numbered duplicates'), or a picture-only duplicate's
-  // PNG. then: its PNG's path at that commit (Image versions follow renames); the PSD then is beside it, under its name
-  // then. A file that version lacks stays, and so does Card Edits.json (its edits still show over the files).
+  // Its PSD and the PNGs printed from it (its own, its variants' and numbered duplicates', a drawn duplicate's: the data's
+  // pictures, a '<name> #N' tag before a title), or a picture-only duplicate's PNG. then: its PNG's path at that commit
+  // (Image versions follow renames); the PSD then is beside it, under its name then. A file that version lacks stays, and
+  // so does Card Edits.json (its edits still show over the files).
   async function revertCard(c, { ref, ts, then = c.png }) {
     const repo = S.data.repo, branch = S.data.branch, lists = new Map();
     const dirOf = p => p.slice(0, Math.max(0, p.lastIndexOf("/")));
@@ -1691,14 +1692,17 @@ export function createEditor(app) {
       return new Map([...files.keys()].map(p => [pictureNumber(psd, p), p]).filter(([n, p]) => n !== null && !(n && low.has(p.toLowerCase().replace(/\.png$/, ".psd")))));
     };
     const now = c.psd ? await listing(dirOf(c.psd), branch) : new Map();
-    const pngs = now.has(c.psd) ? pngsOf(c.psd, now) : new Map(), n = [...pngs.keys()].find(k => pngs.get(k) === c.png);
+    const pngs = now.has(c.psd) ? pngsOf(c.psd, now) : new Map();
+    const drawn = new Map(groupOf(c).filter(x => x.variant > 1 && x.png && x.psd === c.psd && pictureNumber(c.psd, x.png) === null && now.has(x.png)).map(x => [String(x.variant), x.png]));
+    for (const [k, p] of drawn) if (now.has(c.psd)) pngs.set(k, p);           // a drawn duplicate's own PNG: picture N
+    const n = [...pngs.keys()].find(k => pngs.get(k) === c.png);
     let files;                                         // [today's path, its path then]
     if (n === undefined) files = c.png ? [[c.png, (await blob(then, ref)) ? then : c.png]] : [];
     else {
       const cut = then.lastIndexOf("/") + 1, name = then.slice(cut).replace(/\.[^.]*$/, ""), ext = c.psd.slice(c.psd.lastIndexOf("."));
       const guess = `${then.slice(0, cut)}${n && name.endsWith(n) ? name.slice(0, -n.length) : name}${ext}`, psd = (await blob(guess, ref)) ? guess : c.psd;
       const was = pngsOf(psd, await listing(dirOf(psd), ref));
-      files = [[c.psd, psd], ...[...pngs].map(([k, p]) => [p, was.get(k) || null])];
+      files = [[c.psd, psd], ...[...pngs].map(([k, p]) => [p, was.get(k) || (drawn.get(k) === p ? p : null)])];
     }
     const plan = [], newer = [];
     for (const [path, old] of files) {
