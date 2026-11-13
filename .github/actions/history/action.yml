@@ -1,0 +1,45 @@
+# History wait: main's history joined to the depth-1 checkout (History join's join.sh, in the background) before any git
+# that reads it. History start's fetch not in yet (0.4-33 s on the runner, GitHub's side): the newest cached copy
+# (main-history-<date>, Card data's, ~2.6 MB) is restored and fetches only the commits since it (~1 s), and join.sh
+# joins whichever comes first. Fast runs restore nothing. Still shallow after: once more, else it fails (never a
+# shallow build).
+name: History wait
+description: Main's history joined, a late fetch raced by the cached copy
+
+runs:
+  using: composite
+  steps:
+    - id: late
+      shell: bash
+      run: |
+        [ -s "$RUNNER_TEMP/history.code" ] || [ -s "$RUNNER_TEMP/history-fetch.code" ] || echo "late=true" >> "$GITHUB_OUTPUT"
+
+    - id: copy
+      if: steps.late.outputs.late == 'true'
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ runner.temp }}/history-copy.git
+        key: main-history-newest
+        restore-keys: main-history-
+
+    - shell: bash
+      env:
+        COPY: ${{ steps.copy.outputs.cache-matched-key }}
+      run: |
+        t=$RUNNER_TEMP
+        if [ -n "$COPY" ] && [ ! -s "$t/history.code" ] && [ ! -s "$t/history-fetch.code" ]; then
+          echo "History start's fetch is late: the cached copy $COPY fetches the commits since it"
+          touch "$t/history-copy.started"
+          ( code=0 s=$(date +%s.%N)
+            timeout 30 git --git-dir="$t/history-copy.git" -c protocol.version=2 fetch -q --no-tags --filter=blob:none origin \
+              +refs/heads/main:refs/heads/main || code=$?
+            echo "History copy: exit $code in $(awk -v a="$s" -v b="$(date +%s.%N)" 'BEGIN { printf "%.2f", b - a }') s"
+            echo "$code" > "$t/history-copy.code" ) > "$t/history-copy.log" 2>&1 < /dev/null &
+        fi
+        until [ -s "$t/history.code" ]; do sleep 0.05; done
+        cat "$t/history.log"
+        if [ "$(git rev-parse --is-shallow-repository)" != false ]; then
+          echo "::warning::main's history not fetched in the background (exit $(cat "$t/history.code")): once more"
+          git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
+          [ "$(git rev-parse --is-shallow-repository)" = false ] || { echo "::error::main's history is still shallow"; exit 1; }
+        fi

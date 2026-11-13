@@ -130,7 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.guards && 155 || 90 }}   # a follow-up's: 65 more for its setup and the guards' wait (as main's)
     outputs:
-      saved: ${{ steps.venv.outputs.wheels == 'built' }}
+      saved: ${{ steps.venv.outputs.wheels == 'built' || steps.history-save.outcome == 'success' }}
       committed: ${{ steps.data-commit.outputs.committed }}
     defaults:
       run:
@@ -251,9 +251,12 @@ jobs:
 
       # Main's history (every commit and tree) fetched beside the card repo's into history.git with carddata's header, 60 s
       # at most; History join adds it to the checkout, the save and Re-pin use it as their history clone. Exit code in
-      # history-fetch.code.
+      # history-fetch.code. Then, in the data job, today's cached copy looked up for History keep (history-day: its key
+      # and the entries found).
       - &history-start
         name: History start
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           h=$RUNNER_TEMP/history.git
           ( code=0 t=$(date +%s.%N)
@@ -262,7 +265,12 @@ jobs:
                 && git -C "$h" remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
                 && timeout 60 git -C "$h" -c protocol.version=2 fetch -q --no-tags --filter=blob:none origin +refs/heads/main:refs/heads/main; } || code=$?
             echo "History start: exit $code in $(awk -v a="$t" -v b="$(date +%s.%N)" 'BEGIN { printf "%.2f", b - a }') s"
-            echo "$code" > "$RUNNER_TEMP/history-fetch.code" ) > "$RUNNER_TEMP/history-fetch.log" 2>&1 < /dev/null &
+            echo "$code" > "$RUNNER_TEMP/history-fetch.code"
+            if [ "$GITHUB_JOB" = data ] && [ "$code" = 0 ]; then
+              key=main-history-$(date -u +%F)
+              n=$(timeout 20 gh api "repos/$GITHUB_REPOSITORY/actions/caches?ref=$GITHUB_REF&key=$key" --jq .total_count 2> /dev/null) \
+                && echo "$key $n" > "$RUNNER_TEMP/history-day"
+            fi ) > "$RUNNER_TEMP/history-fetch.log" 2>&1 < /dev/null &
 
       # The venv's entry restored here, beside Cards start's fetch: cards-venv's key (the image's newest 3.14.x, the oxipng
       # tag) from bot.reqs, else the bot clone's file (15 s at most); cards-venv checks it (its input restored).
@@ -322,25 +330,12 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: *card-files
 
-      # In the background once History start's fetch is done: its history joins the checkout (no config or ref written);
-      # it failed, or still shallow (main moved between the two): from GitHub. Exit code in history.code; no git runs in
-      # the workspace before History wait but Bake and save's Fonts first (the head's tree; blob fetches never deepen).
+      # In the background: History start's history (or History wait's cached copy, if in first) joins the checkout
+      # (.github/actions/history/join.sh; exit code in history.code). No git runs in the workspace before History wait
+      # but Bake and save's Fonts first (the head's tree; blob fetches never deepen).
       - &history-join
         name: History join
-        run: |
-          ( until [ -s "$RUNNER_TEMP/history-fetch.code" ]; do sleep 0.05; done
-            cat "$RUNNER_TEMP/history-fetch.log"
-            code=0
-            if [ "$(cat "$RUNNER_TEMP/history-fetch.code")" = 0 ] \
-                && git -c remote.history.url="file://$RUNNER_TEMP/history.git" -c remote.history.promisor=true -c remote.history.partialclonefilter=blob:none \
-                  fetch -q --unshallow --no-tags --no-write-fetch-head history main \
-                && [ "$(git rev-parse --is-shallow-repository)" = false ]; then
-              echo "History join: joined"
-            else
-              echo "History join: from GitHub"
-              git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main || code=$?
-            fi
-            echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
+        run: bash .github/actions/history/join.sh > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
 
       # The clones in bot/ and carddata/ once done (15 s at most); one failed or late: checked out below as ever
       - &clones
@@ -567,19 +562,12 @@ jobs:
           done <<< "$runs"
           echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # History join done (before any git here: Newest, the Gate, the build's dates); failed or still shallow: once more,
-      # else the job fails (never a shallow build)
+      # History join done (before any git here: Newest, the Gate, the build's dates); History start's fetch late: raced
+      # by the cached copy; still shallow: once more, else the job fails (.github/actions/history)
       - &history-wait
         name: History wait
         timeout-minutes: 5
-        run: |
-          until [ -s "$RUNNER_TEMP/history.code" ]; do sleep 0.1; done
-          cat "$RUNNER_TEMP/history.log"
-          if [ "$(git rev-parse --is-shallow-repository)" != false ]; then
-            echo "::warning::main's history not fetched in the background (exit $(cat "$RUNNER_TEMP/history.code")): once more"
-            git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
-            [ "$(git rev-parse --is-shallow-repository)" = false ] || { echo "::error::main's history is still shallow"; exit 1; }
-          fi
+        uses: ./.github/actions/history
 
       # After a wait that held nothing (a push's main lane, a follow-up's two): main's head and the data's as they are
       # now (one not fetched stays as checked out)
@@ -1000,6 +988,26 @@ jobs:
             fi
           fi
           gh workflow run card-checks.yml --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB"
+
+      # Once a UTC day (History start found no main-history-<date> entry): its fetch saved as the copy History wait races
+      # a late fetch with (.github/actions/history; the caches job keeps 2). After the data's commit; no API call here.
+      - name: History keep
+        id: history-keep
+        if: github.job == 'data'
+        run: |
+          t=$RUNNER_TEMP
+          read -r key n < "$t/history-day" 2> /dev/null || exit 0
+          [ "$n" = 0 ] && [ "$(cat "$t/history-fetch.code")" = 0 ] || exit 0
+          [ ! -e "$t/history-copy.started" ] || [ -s "$t/history-copy.code" ] || exit 0      # the copy's fetch still on
+          rm -rf "$t/history-copy.git" && cp -R "$t/history.git" "$t/history-copy.git" && echo "key=$key" >> "$GITHUB_OUTPUT"
+
+      - name: History save
+        id: history-save
+        if: steps.history-keep.outputs.key != ''
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ runner.temp }}/history-copy.git
+          key: ${{ steps.history-keep.outputs.key }}
 
       # A failed live job tells the standards channel once per broken push (owner, 2026-11-11), Card guards' alert
       # included: before posting it looks for the marker line in the commit comments of the push's head commit (this
@@ -2161,7 +2169,8 @@ jobs:
     steps:
       - *chain
 
-  # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
+  # A new wheel, font or history cache (its key changes with requirements-cards.txt, Python, MDW/Fonts, the day): the
+  # older ones go (caches.yml)
   caches:
     needs: [data, main]
     if: ${{ !cancelled() && (needs.data.outputs.saved == 'true' || needs.main.outputs.saved == 'true') }}
@@ -2169,4 +2178,4 @@ jobs:
       actions: write
     uses: ./.github/workflows/caches.yml
     with:
-      prefixes: card-wheels- card-venv- card-fonts-
+      prefixes: card-wheels- card-venv- card-fonts- main-history-

@@ -148,6 +148,24 @@ jobs:
           echo "after=$sync" >> "$GITHUB_OUTPUT"
           echo "This run is Card sync's early build ($why): it waits for $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$sync's data commit." | tee -a "$GITHUB_STEP_SUMMARY"
 
+      # Main's every commit and tree (no file contents, for the image-version history) fetched beside the checkout into
+      # history.git (the token in a header), 60 s at most; History join adds it to the checkout. Exit code in
+      # history-fetch.code.
+      - name: History start
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$auth"
+          h=$RUNNER_TEMP/history.git
+          ( export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+            code=0 t=$(date +%s.%N)
+            { git init -q --bare "$h" && git -C "$h" config uploadpack.allowFilter true \
+                && timeout 60 git -C "$h" -c protocol.version=2 fetch -q --no-tags --filter=blob:none "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+                  +refs/heads/main:refs/heads/main; } || code=$?
+            echo "History start: exit $code in $(awk -v a="$t" -v b="$(date +%s.%N)" 'BEGIN { printf "%.2f", b - a }') s"
+            echo "$code" > "$RUNNER_TEMP/history-fetch.code" ) > "$RUNNER_TEMP/history-fetch.log" 2>&1 < /dev/null &
+
       # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
       # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs and uncached
       # icons (Types/) are downloaded on demand and their resized images cached between runs. Depth 1, blob:none; main's every
@@ -158,17 +176,17 @@ jobs:
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
+            /.github/actions/history/
             /.mailmap
             /site/
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /MDW/Fonts/stoogedings-src/build_stoogedings.py
             /MDW/Fonts/stoogedings-src/requirements.txt
 
-      # Exit code in history.code; no git fetch here before History wait
-      - name: History start
-        run: |
-          ( code=0; git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main \
-            || code=$?; echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
+      # History start's history (or History wait's cached copy, if in first) joins the checkout in the background
+      # (.github/actions/history/join.sh; exit code in history.code); no git fetch here before History wait
+      - name: History join
+        run: bash .github/actions/history/join.sh > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
 
       # build_stoogedings.py and its packages (site/build/requirements.txt includes them) draw the token variants' pictures.
       # Python: the image's newest 3.14.x (setup-python's pick from the tool cache, as card-preview's venv); setup-python
@@ -326,18 +344,11 @@ jobs:
           key: card-versions-${{ github.run_id }}
           restore-keys: card-versions-
 
-      # History start's fetch done (before Data wait's fetch and the build's history); failed or still shallow: once more,
-      # else the job fails (never a shallow build)
+      # History join done (before Data wait's fetch and the build's history); History start's fetch late: raced by the
+      # cached copy; still shallow: once more, else the job fails (.github/actions/history)
       - name: History wait
         timeout-minutes: 5
-        run: |
-          until [ -s "$RUNNER_TEMP/history.code" ]; do sleep 0.1; done
-          if [ "$(git rev-parse --is-shallow-repository)" != false ]; then
-            echo "::group::History start (exit $(cat "$RUNNER_TEMP/history.code"))"; cat "$RUNNER_TEMP/history.log"; echo "::endgroup::"
-            echo "::warning::main's history not fetched in the background: once more"
-            git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
-            [ "$(git rev-parse --is-shallow-repository)" = false ] || { echo "::error::main's history is still shallow"; exit 1; }
-          fi
+        uses: ./.github/actions/history
 
       - id: og-before
         run: echo "names=$(ls site/.og-cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
