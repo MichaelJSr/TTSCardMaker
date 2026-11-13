@@ -947,10 +947,10 @@ export function starPlan(stars, from, to) {
   return { erase: left.map(({ u }) => u.box), draw, refused: why, boxed: false };
 }
 /** Type icons for `now` on the record's header.types, as psd_edit.plan_types does it: kept icons stay in their
- *  slot, removed ones are erased, a kept icon past the new count moves to the first free slot, new ones take the next free
- *  slots (spots[count] past the row). -> {erase: [box], draw: [{name, core}], refused, boxed}. A token row, no icon to line
- *  up with or no spots for the count: boxed. first: the template's spot (canvas px) when the card has no type icon; one
- *  new icon goes there. */
+ *  slot, removed ones are erased, a kept icon past the new count moves to the first free slot (centre on centre, its own
+ *  size), new ones take the next free slots (spots[count] past the row). -> {erase: [box], draw: [{name, core}], refused,
+ *  boxed}. A token row, no icon to line up with or no spots for the count: boxed. first: the template's spot (canvas px)
+ *  when the card has no type icon; one new icon goes there. */
 export function typePlan(types, now, first = null) {
   const ty = obj(types), row = Array.isArray(ty?.row) ? ty.row : [];
   if (!ty && first && now.length === 1) return { erase: [], draw: [{ name: now[0], core: first }], refused: null, boxed: false };
@@ -970,7 +970,10 @@ export function typePlan(types, now, first = null) {
   const free = spots.map((_, i) => i).filter(i => !(i < row.length && kept[i]));
   row.forEach((u, i) => {
     if (!kept[i]) erase.push(u.box);
-    else if (i >= count) { const j = free.shift(); erase.push(u.box); draw.push({ name: u.name, core: spots[j] }); }
+    else if (i >= count) {
+      const to = centreOf(spots[free.shift()]), c = centreOf(u.core), dx = Math.round(to[0] - c[0]), dy = Math.round(to[1] - c[1]);
+      erase.push(u.box); draw.push({ name: u.name, core: [u.core[0] + dx, u.core[1] + dy, u.core[2] + dx, u.core[3] + dy] });
+    }
   });
   for (const name of added) draw.push({ name, core: spots[free.shift()] });
   return { erase, draw, refused, boxed: false };

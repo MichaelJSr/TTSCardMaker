@@ -770,8 +770,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   take off (a frame, a group). Site: `changes()` returns `stars` `[from, to]` and `types` `[old, new]`; `starPlan` keeps
   a shown star when one of the count's centres is within a quarter of a star of it, erases the others (their box, glow
   included) and draws a star at every centre none covers (none: all erased); `typePlan` mirrors plan_types (kept icons
-  stay in their slot, removed ones are erased, a kept icon past the new count moves to the first free slot, new ones
-  take the next free slots); `fillBox` fills an erased box from the ring of pixels around it (the left-right and
+  stay in their slot, removed ones are erased, a kept icon past the new count moves to the first free slot, centre on
+  centre at its own size, new ones take the next free slots); `fillBox` fills an erased box from the ring of pixels around it (the left-right and
   top-bottom blends, weighted by nearness, so a gradient goes on through); stars are drawn with the record's star icon
   (`S.icons`, else the last star's own pixels), types with their icons, with a soft shadow for the PSD's drop shadow and
   glow. No header, no layout for the count, a token row, or units unlike the stars (The Lich King: 4 units for 5 stars):
