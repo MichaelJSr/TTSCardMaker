@@ -1278,7 +1278,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
     const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null);    // the card's own colours on what is unchanged
-    if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); continue; }
+    if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true, top: !!own }); out.boxed.push(label); continue; }   // top: at the top of the bake's area, as tall as its lines
     let plated = false;
     const wipe = (box, opts) => {                     // erase's colours; with the card's plate, its pixels in place of erase's
       const cuts = sheet && plateCuts(pixels.data, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, text, wiping);
@@ -1897,13 +1897,15 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
- *  old text is covered, never half there. */
-function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, statuses, ink, fills }, imgs, W, H, shape) {
+ *  old text is covered, never half there. top: the box only as tall as the lines, at the area's top (an added ability in
+ *  the bake's area, card_checks' room). */
+function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, statuses, ink, fills, top }, imgs, W, H, shape) {
   const r = area.seed ? [0, area.seed[0], W, H] : area.box;     // the text area to the card's edges (the old text may touch them)
   const b = area.seed ? r : [r[0] - W * 0.01, r[1] - H * 0.004, r[2] + W * 0.01, r[3] + H * 0.004], pad = W * 0.03;
   const start = role === "name" ? (b[3] - b[1]) * 0.5 : W * (shape === "square" ? 0.06 : shape === "item" ? 0.05 : 0.045);
   const { size: z, lines } = fit(colourize(tokenize(text, icons), text, colors, role, statuses, ink, BOX_FILL, fills), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
   const over = lines.length * z * LINE > b[3] - b[1] - pad + 0.5;
+  if (top) b[3] = Math.min(b[3], b[1] + lines.length * z * LINE + pad);
   const rad = Math.min(W * 0.03, (b[3] - b[1]) / 2);
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();
   ctx.fillStyle = rgb(BOX_FILL); ctx.fill(); ctx.lineWidth = Math.max(1.5, W * 0.003); ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.setLineDash([W * 0.012, W * 0.008]); ctx.stroke(); ctx.restore();

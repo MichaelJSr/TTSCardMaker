@@ -571,7 +571,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   A title in the picture (parts.js `titleInPicture`, the dialog's note) isn't drawn either. Stars and types: section 23.
   An added ability ("+ Add an ability", 2026-11-13): the details' `addRoom` (build_site from AutoCroissant card_checks'
   `room`, ability_place's room rule on a card with no ability) is the box the bake puts it in (`partJobs` draws it
-  there, not the template's Ability box over the bars), or false: no room (Whelp, Tentacle, Silithid, Paint Warrior,
+  there, not the template's Ability box over the bars; `drawBox`'s `top`: the dark box at its top, as tall as the lines), or false: no room (Whelp, Tentacle, Silithid, Paint Warrior,
   Electro Probe, Galacta Warrior), where edit.js shows "There's no room for an ability on this card." instead of the
   button and the mock-up draws none; no record yet: the template's box, as before.
   - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
