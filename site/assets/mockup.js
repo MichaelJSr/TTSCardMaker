@@ -854,9 +854,8 @@ export function statSite(rec, k, to) {
 }
 const HAND_STATS = /\b(Stat|(?:HP|DEF|ATK|SPD)(?: and (?:HP|DEF|ATK|SPD))*) (?:edits need Photoshop|(?:edits|raises) bake but change nothing|bars are on each other's rows)|brighten the cells/g;
 /** The stats whose edits Card checks' real bakes refuse, leave as they are or put on the wrong bar (cards.json
- *  checks.hand: AutoCroissant card_checks _note("stats"), NO_CHANGE_NOTE, SWAP_NOTE, BRIGHT_NOTE; checks.bars:
- *  printed_bars, Baba's refused for good; keep in step). */
-export const handStats = card => [...new Set([...`${card?.checks?.hand || ""} ${card?.checks?.bars || ""}`.matchAll(HAND_STATS)]
+ *  checks.hand: AutoCroissant card_checks _note("stats"), NO_CHANGE_NOTE, SWAP_NOTE, BRIGHT_NOTE; keep in step). */
+export const handStats = card => [...new Set([...String(card?.checks?.hand || "").matchAll(HAND_STATS)]
   .flatMap(m => (!m[1] || m[1] === "Stat" ? STATS : m[1].toLowerCase().split(" and "))))];
 
 /** The boxes to redraw from per-layer edits (PARTS_EDITOR.md §5; parts: Card Edits.json's, by layer id): [{id, role (name |
