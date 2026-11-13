@@ -1127,7 +1127,7 @@
 ]
 }
 },
-"Auxiliary/Minions/Bulborb Larva.psd": {
+"Auxiliary/Minions/Bulborb_Larva.psd": {
 "icc": [
 0.0,
 356674
@@ -3875,7 +3875,7 @@
 ]
 }
 },
-"Auxiliary/Status Effects/Buffs/Marked For Life.psd": {
+"Auxiliary/Status Effects/Buffs/Marked_For_Life.psd": {
 "icc": [
 0.0002,
 308060
@@ -4755,7 +4755,7 @@
 ]
 }
 },
-"Auxiliary/Status Effects/Debuffs/4 Stars/Marked For Death.psd": {
+"Auxiliary/Status Effects/Debuffs/4 Stars/Marked_For_Death.psd": {
 "icc": [
 0.0,
 189349
@@ -6779,7 +6779,7 @@
 ]
 }
 },
-"Creatures/Hollow Knight/4 Stars/White Defender.psd": {
+"Creatures/Hollow Knight/4 Stars/White_Defender.psd": {
 "icc": [
 0.0,
 28253
@@ -11735,7 +11735,7 @@
 ]
 }
 },
-"Creatures/Other/3 Stars/Empress Bulblax.psd": {
+"Creatures/Other/3 Stars/Empress_Bulblax.psd": {
 "icc": [
 0.0029,
 1286437
@@ -14653,7 +14653,7 @@
 ]
 }
 },
-"Field/1 Stars/Keelhaul Key.psd": {
+"Field/1 Stars/Keelhaul_Key.psd": {
 "text": {
 "320": [
 "b436c47b24f1",
@@ -14973,7 +14973,7 @@
 ]
 }
 },
-"Field/3 Stars/Excess Express.psd": {
+"Field/3 Stars/Excess_Express.psd": {
 "text": {
 "320": [
 "ee46f08a867d",
@@ -15325,7 +15325,7 @@
 ]
 }
 },
-"Items/Active/3 Stars/The Orb of Confusion.psd": {
+"Items/Active/3 Stars/The_Orb_of_Confusion.psd": {
 "text": {
 "320": [
 "272bb0562647",
@@ -15725,7 +15725,7 @@
 ]
 }
 },
-"Items/Deploy/2 Stars/Pananda Peel.psd": {
+"Items/Deploy/2 Stars/Pananda_Peel.psd": {
 "text": {
 "320": [
 "bafa4bb87d0f",
@@ -15749,7 +15749,7 @@
 ]
 }
 },
-"Items/Equip/1 Stars/Bone's Loans.psd": {
+"Items/Equip/1 Stars/Bone's_Loans.psd": {
 "text": {
 "320": [
 "759e10eed82b",
@@ -16329,7 +16329,7 @@
 ]
 }
 },
-"Items/Equip/4 Stars/Blasphemous Blade.psd": {
+"Items/Equip/4 Stars/Blasphemous_Blade.psd": {
 "text": {
 "320": [
 "c1321ea76dc4",
@@ -17125,7 +17125,7 @@
 ]
 }
 },
-"Items/Support/1 Stars/Back In Time Juice.psd": {
+"Items/Support/1 Stars/Back_In_Time_Juice.psd": {
 "text": {
 "320": [
 "d85f9fbf798e",
@@ -18213,7 +18213,7 @@
 ]
 }
 },
-"N.M.E/Black Hole.psd": {
+"N.M.E/Black_Hole.psd": {
 "text": {
 "320": [
 "85d757c8f890",
