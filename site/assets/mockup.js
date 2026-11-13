@@ -852,6 +852,11 @@ export function statSite(rec, k, to) {
   if (kind === "two-row") return null;                 // several creatures' rows: their stat caps refuse past 10
   return `the card's ${kind === "template" ? "old-style " : ""}bars print up to 10`;
 }
+const HAND_STATS = /\b(Stat|(?:HP|DEF|ATK|SPD)(?: and (?:HP|DEF|ATK|SPD))*) (?:edits need Photoshop|(?:edits|raises) bake but change nothing|bars are on each other's rows)|brighten the cells/g;
+/** The stats whose edits Card checks' real bakes refuse, leave as they are or put on the wrong bar (cards.json
+ *  checks.hand: AutoCroissant card_checks _note("stats"), NO_CHANGE_NOTE, SWAP_NOTE, BRIGHT_NOTE; keep in step). */
+export const handStats = card => [...new Set([...String(card?.checks?.hand || "").matchAll(HAND_STATS)]
+  .flatMap(m => (!m[1] || m[1] === "Stat" ? STATS : m[1].toLowerCase().split(" and "))))];
 
 /** The boxes to redraw from per-layer edits (PARTS_EDITOR.md §5; parts: Card Edits.json's, by layer id): [{id, role (name |
  *  ability), old, text (null: the layer is deleted), box (canvas px), added, colors}] for the record's parts whose edit
@@ -1179,6 +1184,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const nix = paintedOver(rec, edit.colors, typed, edit);   // the bake refuses them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
   const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], site: [], starsKept: null };
+  const hand = pics ? [] : handStats(card);           // the bake won't draw them: not drawn, nothing said (owner 11-11); a plate's bars tell value by value
+  for (const k of Object.keys(todo.stats)) if (hand.includes(k.split("@")[0])) delete todo.stats[k];
+  todo.skipped = todo.skipped.filter(label => !hand.includes(label.toLowerCase()));
   for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
     if (barCut(pics, k, psd[k], edit[k])) todo.stats[k] = [psd[k], edit[k]];   // the bake's picture of it
