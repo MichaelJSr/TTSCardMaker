@@ -4313,7 +4313,17 @@ def main():
 
     cards, used_slugs = [], set()
     into = renamed_into(old_stats, stats)
-    history_of = lambda name: [v for n in into.get(name, ()) for v in old_stats.get(n) or []] + list(old_stats.get(name) or [])
+    own_history = lambda name: [v for n in into.get(name, ()) for v in old_stats.get(n) or []] + list(old_stats.get(name) or [])
+    dated_at = lambda v: analytics.when(v) if isinstance(analytics.when(v), (int, float)) else None
+
+    def history_of(name):
+        """name's versions; a variant picture's go back through its picture 1's from before its own (the same card then,
+        owner 10-25), as the bot's /query as_of."""
+        mine, first = own_history(name), getattr(stats.get(name), "variant_of", None)
+        starts = [t for t in map(dated_at, mine + [stats[name]]) if t is not None] if first else []
+        if not starts:
+            return mine
+        return [v for v in own_history(first) if dated_at(v) is not None and dated_at(v) < min(starts)] + mine
 
     def unique_slug(name):
         base = slugify(name)
