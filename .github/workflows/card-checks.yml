@@ -4,7 +4,7 @@
 # branch by PSD blob (db/card_checks.json); the website shows them. No Discord, no commit
 # comment, no block. Card sync starts it at a data job's start (inputs after, job): it sets up, then waits for that job's
 # Commit data. Only PSDs (or PNGs) without a result are read, so a fixed card clears on its next push. A dispatch with
-# `all` reads the whole tree in six shards, each its share of the blobs.
+# `all` reads the whole tree in eight shards, each its share of the blobs.
 # One writer beside Card sync's data lane: its commits touch db/card_checks.json alone, gate G6 lets them by, and each lane
 # goes on top of the other when a push is rejected (card-sync.yml's Commit data).
 name: Card checks
@@ -80,7 +80,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: ${{ fromJSON(inputs.all && '[0,1,2,3,4,5]' || '[0]') }}
+        shard: ${{ fromJSON(inputs.all && '[0,1,2,3,4,5,6,7]' || '[0]') }}
     permissions:
       contents: write   # one shard saves here
       actions: write
@@ -90,7 +90,7 @@ jobs:
       run:
         shell: bash
     env:
-      SHARD: ${{ matrix.shard }}/${{ inputs.all && '6' || '1' }}
+      SHARD: ${{ matrix.shard }}/${{ inputs.all && '8' || '1' }}
       GIT_NO_LAZY_FETCH: "1"
       CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the bakes' renders: the data's records
     steps:
@@ -400,7 +400,7 @@ jobs:
           git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       # Each shard reads each blob as it lands (CARD_BLOBS_PENDING: card_bake waits for a listed one, 300 s at most from
-      # the list's write; an `all` shard lists ~250); only lists over 1000 blobs (~7 a second: their fetch can pass the
+      # the list's write; an `all` shard lists ~195); only lists over 1000 blobs (~7 a second: their fetch can pass the
       # cap) wait for it all
       - name: Check
         if: steps.list.outputs.n != '0'
@@ -518,7 +518,7 @@ jobs:
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_plates publish --git "$GITHUB_WORKSPACE" --head "${HEAD_SHA:-HEAD}" \
             "${results[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
-  # `all`: the six shards' results saved together
+  # `all`: the eight shards' results saved together
   save:
     needs: check
     if: ${{ !cancelled() && inputs.all }}
