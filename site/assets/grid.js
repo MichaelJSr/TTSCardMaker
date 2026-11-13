@@ -19,11 +19,11 @@ export const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 // tile size: [--tile, the picture's css px (sizes)]; m: two columns on 320-381 px phones too (build_site's first screen reads these)
 export const TILE_SIZES = { s: ["130px", 160], m: ["min(168px, calc(50% - 7px))", 200], l: ["230px", 270] };
 
-/** a card picture's URL, 96 / 240 / 360 / 720 px wide (thumbs: cards.json's tags of their settings) */
+/** a card picture's URL, 96 / 192 / 240 / 360 / 720 px wide (thumbs: cards.json's tags of their settings) */
 export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w]}.avif` : "");
-/** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 px by screen density, 96 too at 64 px or less */
+/** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 96 too at 64 px or less */
 export const imgAttrs = (thumbs, c, css) => { const u = w => thumb(thumbs, c, w);
-  return `src="${u(360)}" srcset="${css <= 64 ? `${u(96)} 96w, ` : ""}${u(240)} 240w, ${u(360)} 360w" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
+  return `src="${u(360)}" srcset="${css <= 64 ? `${u(96)} 96w, ` : ""}${u(192)} 192w, ${u(240)} 240w, ${u(360)} 360w" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
 const TILE_ART = 8 / 5;                      // a tile's picture box, height / width (style.css .tile .art); its corners 11 px round (.tile's 12 less its border)
 /** A card whose art hangs out of its see-through edge (cards.json hang: the card's own box in the picture, [left, top,
  *  right, bottom] in fractions; build_site OVERHANG): style.css's --hw, --hm, --ha, --hc, the picture's width, margins,

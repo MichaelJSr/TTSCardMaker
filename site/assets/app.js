@@ -60,9 +60,9 @@ const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // cards.js
 // the other data files' own stamps (build_site data_stamps): a deploy keeps the unchanged ones cached
 const DATA_V = (() => { try { return JSON.parse(document.querySelector('meta[name="data"]')?.content || "{}"); } catch { return {}; } })();
 const dataUrl = name => { const v = DATA_V[name.startsWith("details/") ? "details/" : name]; return `data/${name}${/^[0-9a-f]+$/.test(v || "") ? `?v=${v}` : V}`; };
-const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 96 / 240 / 360 / 720 px wide (tag: their settings)
+const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 96 / 192 / 240 / 360 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
-/** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 px by screen density, 96 too at 64 px or less */
+/** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 96 too at 64 px or less */
 const imgAttrs = (c, css) => G.imgAttrs(S.data.thumbs, c, css);
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });

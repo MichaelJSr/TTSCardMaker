@@ -12,8 +12,8 @@ Where the data comes from:
     data/details/<id>.json for its Details dropdown, and its name's and ability's colours on the card (card_inks:
     cards.json `ink`). Aliases come from site/Card Edits.json.
   * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
-    for the card view; AVIF only, no WebP copies), plus 96 px made from the 720 one (SMALL_SIZES: table rows and
-    64 px lists at 1x). They are cached by git blob hash and encode settings (thumb_tag, in
+    for the card view; AVIF only, no WebP copies), plus 96 and 192 px made from the 720 one (SMALL_SIZES: table rows,
+    64 px lists, strips and deck slots). They are cached by git blob hash and encode settings (thumb_tag, in
     the file names) in site/.cache/img, so after the first run only new or changed cards (or a width whose settings
     changed) are downloaded and encoded (an early build makes them during its Data wait: early_images, site.yml
     Images start); images no card uses any more are pruned. With
@@ -119,7 +119,7 @@ PSD_TREE = os.environ.get("PSD_TREE", "")     # the trees API's reply at the bui
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
 THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
-SMALL_SIZES = {96: (720, 60)}                # width -> (made from that cached width, quality): table rows and 64 px lists at 1x
+SMALL_SIZES = {96: (720, 60), 192: (720, 60)}   # width -> (made from that cached width, quality): table rows, lists, strips
 
 
 def thumb_tag(w):
@@ -1455,7 +1455,7 @@ GRID_PRELOADS = 4                            # the cards grid's first pictures t
 
 
 def grid_preload(cards, ids=None, version="", lazy=None, sheets=None):
-    """index.html's preload hints for the grid's first pictures (grid.js tileHtml: srcset 240w/360w, sizes = the tile size),
+    """index.html's preload hints for the grid's first pictures (grid.js tileHtml: srcset 192w/240w/360w, sizes = the tile size),
     added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size.
     ids: the grid's first cards in order (first_screen), else Name order. A link to the Rulebook starts app.js loadBook's
     files instead: rules.json at getJson's URL (version: its stamp) and the rulebook's chunks (lazy: bundle()'s)."""
@@ -1472,7 +1472,7 @@ def grid_preload(cards, ids=None, version="", lazy=None, sheets=None):
             + ("  if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
                "  const w = { s: 160, l: 270 }[localStorage.getItem(\"size\")] || 200;\n"
                f"  for (const id of {json.dumps(first)}) {{ const l = document.createElement(\"link\"); l.rel = \"preload\"; l.as = \"image\"; l.href = `thumbs/${{id}}-360-{thumb_tag(360)}.avif`;\n"
-               f"    l.imageSrcset = `thumbs/${{id}}-240-{thumb_tag(240)}.avif 240w, thumbs/${{id}}-360-{thumb_tag(360)}.avif 360w`; l.imageSizes = `${{w}}px`; l.fetchPriority = \"high\"; document.head.append(l); }}\n"
+               f"    l.imageSrcset = `thumbs/${{id}}-192-{thumb_tag(192)}.avif 192w, thumbs/${{id}}-240-{thumb_tag(240)}.avif 240w, thumbs/${{id}}-360-{thumb_tag(360)}.avif 360w`; l.imageSizes = `${{w}}px`; l.fetchPriority = \"high\"; document.head.append(l); }}\n"
                if first else "")
             + "} catch { /* storage blocked: no hints */ } })();</script>")
 
