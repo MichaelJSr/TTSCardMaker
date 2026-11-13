@@ -573,7 +573,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `room`, ability_place's room rule on a card with no ability) is the box the bake puts it in (`partJobs` draws it
   there, not the template's Ability box over the bars; `drawBox`'s `top`: the dark box at its top, as tall as the lines), or false: no room (Whelp, Tentacle, Silithid, Paint Warrior,
   Electro Probe, Galacta Warrior), where edit.js shows "There's no room for an ability on this card." instead of the
-  button and the mock-up draws none; no record yet: the template's box, as before.
+  button and the mock-up draws none; no record yet: the template's box, as before. Card checks' Commit step counts
+  `room` in `shown()`: a room-only change rebuilds the site.
   - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
     is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`
     1200x2400 creatures and minions, whose stat bars sit at (0.3, 0.5, 0.978, 0.535) + 0.0525 a row on 311 of the 390
