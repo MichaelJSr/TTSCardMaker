@@ -416,7 +416,7 @@ jobs:
           if [ "$N" -gt 1000 ]; then until [ -s "$list.done" ]; do sleep 0.2; done
           else export CARD_BLOBS_PENDING=$list; fi
           mapfile -d '' args < "$RUNNER_TEMP/args"
-          "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks run "${args[@]}" --workers 3 --minutes 70 \
+          "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks run "${args[@]}" --workers 4 --minutes 70 \
             --out "$RUNNER_TEMP/checks.json"
 
       # What the fetches brought (a blob they never brought went by REST); one still going is stopped: Check is done
