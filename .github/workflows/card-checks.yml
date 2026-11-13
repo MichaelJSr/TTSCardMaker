@@ -399,8 +399,9 @@ jobs:
           git ls-files -v -z -- ':(glob)MDW/Fonts/*' | while IFS= read -r -d '' f; do [ "${f:0:2}" != "S " ] || rm -f -- "${f:2}"; done
           git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
-      # One shard reads each blob as it lands (CARD_BLOBS_PENDING: card_bake waits for a listed one, 300 s at most from
-      # the list's write); `all` and lists over 1000 blobs (~7 a second: their fetch can pass the cap) wait for it all
+      # Each shard reads each blob as it lands (CARD_BLOBS_PENDING: card_bake waits for a listed one, 300 s at most from
+      # the list's write; an `all` shard lists ~250); only lists over 1000 blobs (~7 a second: their fetch can pass the
+      # cap) wait for it all
       - name: Check
         if: steps.list.outputs.n != '0'
         timeout-minutes: 75
@@ -409,11 +410,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
           OMP_NUM_THREADS: "1"
-          ALL: ${{ inputs.all }}
           N: ${{ steps.list.outputs.n }}
         run: |
           list=$RUNNER_TEMP/blobs.txt
-          if [ "$ALL" = true ] || [ "$N" -gt 1000 ]; then until [ -s "$list.done" ]; do sleep 0.2; done
+          if [ "$N" -gt 1000 ]; then until [ -s "$list.done" ]; do sleep 0.2; done
           else export CARD_BLOBS_PENDING=$list; fi
           mapfile -d '' args < "$RUNNER_TEMP/args"
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks run "${args[@]}" --workers 3 --minutes 70 \
