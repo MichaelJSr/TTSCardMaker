@@ -9368,40 +9368,40 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Retro_Kirby.psd": {
-  "blob": "c8a907ed946a848cb4830d93f222aba94fff77ed",
+  "blob": "904f5d701f79da2addf6031c4ca20d0ddd05659b",
   "links": [
    {
-    "drawn": "ed17c5f29d3a79b937a0ad2a005d7a0f2369577f",
+    "drawn": null,
     "name": "Retro_Kirby - fvrwayrnysj11.png",
     "path": "MDW/Linked/Retro_Kirby - fvrwayrnysj11.png",
     "size": 4186
    },
    {
-    "drawn": "e2933940925e3a8fa4255cf2cfb62eefd280fb81",
+    "drawn": null,
     "name": "Retro_Kirby - 94078cce6f96ef5c2f1a6804d5be7b70072624cf_hq.gif",
     "path": "MDW/Linked/Retro_Kirby - 94078cce6f96ef5c2f1a6804d5be7b70072624cf_hq.gif",
     "size": 449122
    },
    {
-    "drawn": "f1ea34301705e7bebfe92218d2ab576e1d8d895a",
+    "drawn": null,
     "name": "Computer_Virus - pixel-star.png",
     "path": "MDW/Linked/Computer_Virus - pixel-star.png",
     "size": 2225
    },
    {
-    "drawn": "f1ea34301705e7bebfe92218d2ab576e1d8d895a",
+    "drawn": null,
     "name": "Computer_Virus - pixel-star.png",
     "path": "MDW/Linked/Computer_Virus - pixel-star.png",
     "size": 2225
    },
    {
-    "drawn": "f1ea34301705e7bebfe92218d2ab576e1d8d895a",
+    "drawn": null,
     "name": "Computer_Virus - pixel-star.png",
     "path": "MDW/Linked/Computer_Virus - pixel-star.png",
     "size": 2225
    },
    {
-    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+    "drawn": null,
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
@@ -12973,22 +12973,22 @@
   "links": []
  },
  "Creatures/Other/2 Stars/Little_Guy.psd": {
-  "blob": "b3dd6509f8d354c7445d5fb006e457ef1209ffde",
+  "blob": "21484fc8d1ebb47370f1b04a1bc2246c5772287c",
   "links": [
    {
-    "drawn": "0277065426b0dcc35ba87f9c5cbb21285c7f252e",
+    "drawn": null,
     "name": "Little_Guy - Template Kertas Aesthetic copy.jpg",
     "path": "MDW/Linked/Little_Guy - Template Kertas Aesthetic copy.jpg",
     "size": 91804
    },
    {
-    "drawn": "151a2147c186b8c72e914fb1d0dbd501d76ec1df",
+    "drawn": null,
     "name": "Little_Guy - lil guy2.png",
     "path": "MDW/Linked/Little_Guy - lil guy2.png",
     "size": 21718
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
@@ -13404,7 +13404,7 @@
   ]
  },
  "Creatures/Other/3 Stars/Puzzled_Cat.psd": {
-  "blob": "d757b22902e6e7b5dadf9867fb77be384d381246",
+  "blob": "9abc1e3feb268520525ee595b6af555e3ab74c63",
   "links": []
  },
  "Creatures/Other/3 Stars/Stay.psd": {
@@ -14885,10 +14885,10 @@
   ]
  },
  "Creatures/Pandas/2 Stars/Pandanoko.psd": {
-  "blob": "eb27c2fe06eb9d66d3e45ec21090647da2fd774f",
+  "blob": "29076dfc6462fc2e88203db5dfb5c538dead6c0f",
   "links": [
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
