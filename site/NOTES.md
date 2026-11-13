@@ -621,7 +621,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     its line count and stays within the room about its centre. Stats: `barRows` (template rows, only for stats the
     details call "template") checked with `isBar` (ten cells with sharp borders, else "Not drawn: HP"), then
     `cellPlan`: a cell lights as the last lit one (the rounded first cell: its colour) and darkens as the first dark one
-    (none or the rounded last: a shade).
+    (none or the rounded last: a shade). From 0 (no lit cell on the row) the cells come from the nearest row lit there
+    (`paintLit`); a layer-comp bar's 11-20 is its comps' two half rows (`paintComp`), from 0 too (2026-11-13: lit from
+    the other rows, the dark cells as they were; no lit row anywhere: not drawn).
   - Measured (scratch bench, ~/Documents/Tools/wt/scratch/site2r3/bench-run.mjs: " Burns [fire]." added to the
     ability, current image left, mock-up right): the review's 16 cards plus alex-yiik, crock-pot, fragile-strength,
     flameblade and the cursed idol: 21 placed, 1 boxed (tainted-lazarus, upside down), none with both versions of a

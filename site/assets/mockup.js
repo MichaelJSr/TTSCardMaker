@@ -1175,7 +1175,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
     if (barCut(pics, k, psd[k], edit[k])) todo.stats[k] = [psd[k], edit[k]];   // the bake's picture of it
     else if (why) out.site.push([`${label} ${edit[k]}`, why]);
-    else if (compBar(rec, k) && psd[k] >= 1 && psd[k] <= 10 && edit[k] > 10 && edit[k] <= 20) todo.stats[k] = [psd[k], edit[k]];   // its comps' two half rows; from 0: no lit cell to copy
+    else if (compBar(rec, k) && psd[k] >= 0 && psd[k] <= 10 && edit[k] > 10 && edit[k] <= 20) todo.stats[k] = [psd[k], edit[k]];   // its comps' two half rows
   }                                                   // else not drawn, nothing said (owner 11-11)
   if (todo.name != null && titleInPicture(rec)) { out.site.push(["name", "title"]); todo.name = null; }   // the dialog's note
   const starCut = todo.stars && barCut(spics, "stars", ...todo.stars), starImg = starCut ? await loadImage(spics.img) : null;
@@ -1311,8 +1311,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     }
     const row = bars.find(r => r.k === k);
     if (!row) continue;                               // no row found (a creature's past 1: never cells): not drawn, nothing said (owner 11-11)
-    const lit = from === 0 && to <= row.cells ? bars.filter(r => r !== row && shown[r.k] >= 1 && shown[r.k] <= r.cells).sort((a, b) => Math.abs(a.box[1] - row.box[1]) - Math.abs(b.box[1] - row.box[1])).map(r => ({ row: r, v: shown[r.k] })) : [];
-    if (lit.length) paintLit(pixels.data, W, H, row, lit, to);   // no lit cell on the row: another row's
+    const lit = from === 0 ? bars.filter(r => r !== row && shown[r.k] >= 1 && shown[r.k] <= r.cells).sort((a, b) => Math.abs(a.box[1] - row.box[1]) - Math.abs(b.box[1] - row.box[1])).map(r => ({ row: r, v: shown[r.k] })) : [];
+    if (lit.length) to > row.cells ? paintComp(pixels.data, W, H, row, from, to, lit) : paintLit(pixels.data, W, H, row, lit, to);   // no lit cell on the row: another row's
+    else if (from === 0 && to > row.cells) continue;  // none anywhere: not drawn
     else (to > row.cells ? paintComp : paintCells)(pixels.data, W, H, row, from, to);
     shown[k] = to; out.drawn.push(k.toUpperCase());
   }
@@ -1879,20 +1880,20 @@ function paintCells(data, W, H, row, from, to) {
     }
   }
 }
-/** A layer-comp bar from `from` (1-10) to `to` (11-20) as its comps draw it: the top half row all lit, the bottom half lit
+/** A layer-comp bar from `from` (0-10) to `to` (11-20) as its comps draw it: the top half row all lit, the bottom half lit
  *  to to - 10 and dark after (the first dark cell's, a shade when none or the rounded end), a soft border-coloured line
- *  between the halves of the cells lit in both. */
-export function paintComp(data, W, H, row, from, to) {
+ *  between the halves of the cells lit in both. lit (paintLit's, from 0): cells lit from other rows, dark as they were. */
+export function paintComp(data, W, H, row, from, to, lit = null) {
   const [x0, y0, x1, y1] = px(row.box, W, H), cw = (x1 - x0) / row.cells, mid = Math.round((y0 + y1) / 2);
   const cellBox = c => [Math.round(x0 + c * cw), Math.round(x0 + (c + 1) * cw)];
   const src = new Uint8ClampedArray(data), d = from < row.cells - 1 ? cellBox(from)[0] : null;
   const e = (mid * W + cellBox(1)[0]) * 4, line = [src[e], src[e + 1], src[e + 2]];   // a cell border
-  paintCells(data, W, H, row, from, row.cells);
+  if (lit) paintLit(data, W, H, row, lit, row.cells); else paintCells(data, W, H, row, from, row.cells);
   for (let c = to - row.cells; c < row.cells; c++) {
     const [a, b] = cellBox(c);
     for (let y = mid; y < y1 - 1; y++) for (let x = a + 1; x < b - 1; x++) {
       const i = (y * W + x) * 4;
-      for (let ch = 0; ch < 3; ch++) data[i + ch] = d == null ? data[i + ch] * 0.38 : src[(y * W + d + x - a) * 4 + ch];
+      for (let ch = 0; ch < 3; ch++) data[i + ch] = lit ? src[i + ch] : d == null ? data[i + ch] * 0.38 : src[(y * W + d + x - a) * 4 + ch];
     }
   }
   const t = Math.max(1, Math.round((y1 - y0) * 0.04)), top = mid - Math.floor(t / 2), inset = Math.round(cw * 0.3), end = Math.min(x1 - inset, cellBox(to - row.cells)[0]);
