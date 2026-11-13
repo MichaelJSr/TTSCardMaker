@@ -89,15 +89,18 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url || steps.retry.outputs.page_url || steps.pages.outputs.page_url }}
     runs-on: ubuntu-latest
     # the first run downloads every card PNG (~1.6 GB); three stuck deploys add ~19 min; an early build's Data wait 25
-    timeout-minutes: ${{ inputs.after && 92 || 67 }}
+    # (a push's: Early build)
+    timeout-minutes: ${{ (inputs.after || github.event_name == 'push') && 92 || 67 }}
     outputs:
       saved: ${{ steps.og-save.outcome == 'success' || steps.cache-save.outcome == 'success' }}
     steps:
       # A push that also changed Card sync's data inputs (card-sync.yml's push paths but TTS/Global.lua, Global.xml and the
-      # save: no data commit): Card sync's early build (dispatched at its data job's start; Data wait reads main's head)
-      # builds this push's site code with the new data. Found in 30 s: this run stops (every later step skipped) and
-      # leaves pages-build to it; else it builds as today. The push's files: the payload's lists, else the compare API;
-      # neither (a big push: 422) counts as a data change while Card sync has a run for it (both start with the push).
+      # save: no data commit) is Card sync's early build itself (after: that push run) once its data job has started (it
+      # holds card-data, so the next "Card data" commit is its own): Images start and Data wait run, and this push's site
+      # code goes live with the new data. No such job in 30 s: it builds as today. The push's files: the payload's lists,
+      # else the compare API; neither (a big push: 422) counts as a data change while Card sync has a run for it. The
+      # data job's own early build waits behind this run in pages-build (Card sync's Site build sends none), then builds
+      # the same site and deploys nothing (build.txt), unless main moved on.
       - name: Early build
         id: early
         if: github.event_name == 'push' && github.run_attempt == '1'    # a re-run builds
@@ -122,31 +125,30 @@ jobs:
           done <<< "$files"
           [ -z "$data" ] || why="$data changed"
           [ -n "$why" ] || exit 0
-          runs=repos/$GITHUB_REPOSITORY/actions/workflows
-          sync='' early=''
+          api=repos/$GITHUB_REPOSITORY/actions
+          sync='' st=''
           while :; do
-            [ -n "$sync" ] || sync=$(timeout 10 gh api "$runs/card-sync.yml/runs?event=push&head_sha=$GITHUB_SHA" --jq '.workflow_runs[0].id // empty') || sync=
+            [ -n "$sync" ] || sync=$(timeout 10 gh api "$api/workflows/card-sync.yml/runs?event=push&head_sha=$GITHUB_SHA" --jq '.workflow_runs[0].id // empty') || sync=
             [ -n "$sync$data" ] || break    # files unknown, no Card sync run
             if [ -n "$sync" ]; then
-              early=$(timeout 10 gh api "$runs/site.yml/runs?event=workflow_dispatch&per_page=30" --jq "[.workflow_runs[] |
-                select(.display_title == \"Card browser (after $sync data)\" and .status != \"completed\")][0].id // empty") || early=
+              st=$(timeout 10 gh api "$api/runs/$sync/jobs" --jq '[.jobs[] | select(.name == "Card data") | .status][0] // empty') || st=
             fi
-            [ -z "$early" ] && [ "$SECONDS" -lt 28 ] || break
+            case $st in in_progress|completed) break ;; esac
+            [ "$SECONDS" -lt 28 ] || break
             sleep 2
           done
-          if [ -z "$early" ]; then
-            echo "No early build of Card sync's run ${sync:-(none)} in 30 s: this run builds ($why)"
-            exit 0
-          fi
-          echo "run=$early" >> "$GITHUB_OUTPUT"
-          echo "Card sync's early build $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$early builds this push with its site code ($why); this run stops." | tee -a "$GITHUB_STEP_SUMMARY"
+          case $st in
+            in_progress|completed) ;;
+            *) echo "No data job of Card sync's run ${sync:-(none)} in 30 s: this run builds ($why)"; exit 0 ;;
+          esac
+          echo "after=$sync" >> "$GITHUB_OUTPUT"
+          echo "This run is Card sync's early build ($why): it waits for $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$sync's data commit." | tee -a "$GITHUB_STEP_SUMMARY"
 
       # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
       # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs and uncached
       # icons (Types/) are downloaded on demand and their resized images cached between runs. Depth 1, blob:none; main's every
       # commit and tree (no file contents) for the image-version history come in the background (History start).
       - uses: actions/checkout@v7
-        if: steps.early.outputs.run == ''
         with:
           fetch-depth: 1
           filter: blob:none
@@ -160,7 +162,6 @@ jobs:
 
       # Exit code in history.code; no git fetch here before History wait
       - name: History start
-        if: steps.early.outputs.run == ''
         run: |
           ( code=0; git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main \
             || code=$?; echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
@@ -169,7 +170,6 @@ jobs:
       # Python: the image's newest 3.14.x (setup-python's pick from the tool cache, as card-preview's venv); setup-python
       # only when the cache has none.
       - id: py
-        if: steps.early.outputs.run == ''
         run: |
           py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
           if [ -n "$py" ] && [ -x "$py/bin/python" ]; then
@@ -178,7 +178,7 @@ jobs:
             echo "python=$py/bin/python" >> "$GITHUB_OUTPUT"
           fi
 
-      - if: steps.early.outputs.run == '' && steps.py.outputs.python == ''
+      - if: steps.py.outputs.python == ''
         uses: actions/setup-python@v7
         id: python
         with:
@@ -197,7 +197,6 @@ jobs:
       # The data branch (Card sync's, db/) in carddata, after the checkout above (it empties the workspace): the token in a
       # header, and in carddata's config as actions/checkout keeps it (Data wait fetches there), as Card sync's clone.
       - name: Setup start
-        if: steps.early.outputs.run == ''
         env:
           UV_PYTHON: ${{ steps.py.outputs.python || steps.python.outputs.python-path }}
           UV_COMPILE_BYTECODE: "1"
@@ -269,12 +268,10 @@ jobs:
       # thumbs' names carry their settings (build_site.py thumb_tag), so a restored cache made with other settings re-encodes
       # those widths.
       - id: images
-        if: steps.early.outputs.run == ''
         run: echo "key=$(git ls-tree -r HEAD | grep -iE '\.png$|[[:space:]]MDW/Fonts/[^/]+\.(ttf|otf)$' | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # Keep `path` exactly site/.cache: actions/cache only restores (restore-keys too) caches saved with the same path list.
       - id: cache
-        if: steps.early.outputs.run == ''
         uses: actions/cache/restore@v6
         with:
           path: site/.cache
@@ -284,14 +281,13 @@ jobs:
       # The restored cache's file names and JSON indexes (image sizes, font faces), for the save at the end: a build that
       # changed neither saves nothing.
       - id: cache-before
-        if: steps.early.outputs.run == ''
         run: echo "names=$({ find site/.cache 2>/dev/null | LC_ALL=C sort; cat site/.cache/*.json 2>/dev/null; } | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # An early build's images: the card PNGs the restored cache lacks (the push's pictures), made in the background once
       # Setup start's packages are in, while Data wait runs (build_site.py early_images; Data wait runs it again at a newer
       # main, as the guards' PNGs). Setup wait stops it (none started after) and prints its log; the build makes the rest.
       - name: Images start
-        if: inputs.after
+        if: inputs.after || steps.early.outputs.after
         run: |
           bg=$RUNNER_TEMP/setup
           at=$(git rev-parse HEAD)
@@ -312,7 +308,6 @@ jobs:
       # once, not redrawn each run. The run id in the key makes each save the newest entry, even when the set of montages
       # returns to one saved before (an existing key can't be saved over, and restore would keep taking a newer, wrong one).
       - id: og-restore
-        if: steps.early.outputs.run == ''
         uses: actions/cache/restore@v6
         with:
           path: site/.og-cache
@@ -322,7 +317,6 @@ jobs:
       # History start's fetch done (before Data wait's fetch and the build's history); failed or still shallow: once more,
       # else the job fails (never a shallow build)
       - name: History wait
-        if: steps.early.outputs.run == ''
         timeout-minutes: 5
         run: |
           until [ -s "$RUNNER_TEMP/history.code" ]; do sleep 0.1; done
@@ -334,7 +328,6 @@ jobs:
           fi
 
       - id: og-before
-        if: steps.early.outputs.run == ''
         run: echo "names=$(ls site/.og-cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # A Card sync data job's early build (dispatched at its start): set up above while that job builds, it waits here
@@ -346,13 +339,13 @@ jobs:
       # the early images' commit, with those done, it fetches it and starts them again at it (same log and code). Then
       # main's head again, as Card sync's Newest; when that moved a PSD, the PSD sizes again (Setup wait waits for them).
       # The data's head beside main's (Card checks' lines; 3 tries, ~3.5 min at most: 25 minutes for the step; the clone
-      # or those failed: checked out after Setup wait).
+      # or those failed: checked out after Setup wait). A push's run that is one (Early build) waits here too.
       - name: Data wait
-        if: inputs.after
+        if: inputs.after || steps.early.outputs.after
         timeout-minutes: 25
         env:
           GH_TOKEN: ${{ github.token }}
-          RUN: ${{ inputs.after }}
+          RUN: ${{ inputs.after || steps.early.outputs.after }}
           JOB: ${{ inputs.job == 'after' && 'Card data after the bake' || 'Card data' }}   # card-sync.yml's job names
           COMMIT: Commit data                                                               # and its step
         run: |
@@ -435,7 +428,6 @@ jobs:
       # sizes failing only leaves them out (a warning); the data clone failing: checked out below. Images start's: stopped
       # first, a failure only warns.
       - name: Setup wait
-        if: steps.early.outputs.run == ''
         id: setup
         timeout-minutes: 10
         run: |
@@ -459,7 +451,7 @@ jobs:
           [ -z "$failed" ] || { echo "::error::failed:$failed"; exit 1; }
 
       # The card data (Card sync's branch data, db/) when Setup start's clone failed
-      - if: steps.early.outputs.run == '' && steps.setup.outputs.data != 'true'
+      - if: steps.setup.outputs.data != 'true'
         uses: actions/checkout@v7
         with:
           ref: data
@@ -470,7 +462,6 @@ jobs:
       # on the runner) are left for the next run; the build then fails (nothing deployed) and the job's last step keeps what
       # it made. The step's timeout leaves that save time to run before the job's.
       - id: build
-        if: steps.early.outputs.run == ''
         timeout-minutes: 38
         run: python site/build/build_site.py
         env:
@@ -480,7 +471,6 @@ jobs:
           ESBUILD: ${{ runner.temp }}/esbuild/node_modules/.bin/esbuild
 
       - id: og
-        if: steps.early.outputs.run == ''
         run: |
           if [ -n "$(ls -A site/.og-cache 2>/dev/null)" ]; then
             echo "names=$(ls site/.og-cache | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
@@ -498,7 +488,6 @@ jobs:
       # site again: deploy only a site that differs from the live one. build.txt is a digest of the whole site without the
       # build's clock; a schedule tick or a dispatch that rebuilt the same site stops here. No live digest: deploy.
       - id: changed
-        if: steps.early.outputs.run == ''
         run: |
           live=$(curl -fsSL --max-time 30 "$SITE_URL/build.txt?run=$GITHUB_RUN_ID" || true)
           if [ -n "$live" ] && [ "$live" = "$(cat site/dist/build.txt)" ]; then
