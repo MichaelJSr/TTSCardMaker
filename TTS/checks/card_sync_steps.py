@@ -47,8 +47,9 @@
    reads it (queued, waiting), after CHAIN_IDLE runs without progress or CHAIN_MAX runs (said in the summary), or on a
    dry run; a fork's run's bake records are passed over; the dispatch is tried 3 times. A push's run also looks after its data lane (Chain after the data, the same step), so a re-parse goes on at
    once.
-10. One main lane per guarded push (P-2; faked gh): Guards' fixes (in the push's Bake and save, after its setup) waits
-   for the push's own guards' check job, then skips the rest of the push's main lane (its Gate on) when that guards run has
+10. One main lane per guarded push (P-2; faked gh and curl): Guards' fixes (in the push's Bake and save, after its setup)
+   waits for the push's own guards' check job (conditional reads 1 s apart, 3 s after 2 minutes or 15 changed in a row),
+   then skips the rest of the push's main lane (its Gate on) when that guards run has
    fixes to land (card-guards.yml's "Fixes to land"; unfinished, or done with Follow up started), the schedule's and a
    chain's while any guards run with fixes is unfinished; it goes when the guards have nothing to land, failed to start
    Card sync, were cancelled, are absent or unreadable. A follow-up's wait ends at its guards run's Landed or the check
@@ -1567,9 +1568,20 @@ def lane_cases(flow: dict) -> None:
               '  */jobs) [[ $path =~ /runs/([0-9]+)/jobs ]]; jq -r "$q" "$FAKE_JOBS/${BASH_REMATCH[1]}.json" ;;\n'
               '  */dispatches) printf %s "$FAKE_DISPATCH" ;;\n'
               'esac\n')
-        write(os.path.join(fake, "sleep"), "#!/bin/bash\n")
-        for name in ("gh", "sleep"):
+        write(os.path.join(fake, "curl"), r'''#!/bin/bash
+o=""; prev=""; for a in "$@"; do [ "$prev" = -o ] && o=$a; prev=$a; done
+n=$(grep -c "^curl" "CALLS" || true) f="$FAKE_JOBS/job-${a##*/}.json" hit=""
+[ "$n" -lt "${FAKE_LOOKS:-1000}" ] || f=$f.later
+tag="\"${FAKE_CHURN:+$n}${f##*.}\""
+while IFS= read -r h; do [ "$h" != "If-None-Match: $tag" ] || hit=1; done
+if [ -n "$hit" ]; then code=304; else code=200; cp "$f" "$o"; fi
+echo "curl $code ${a##*/}" >> "CALLS"
+printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
+'''.replace("CALLS", calls))      # GET actions/jobs/<id>: job-<id>.json (.later from look FAKE_LOOKS on); its ETag: a 304
+        write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" >> "{calls}.naps"; SECONDS=$((SECONDS + $1))\n')  # a function: the clock moves
+        for name in ("gh", "curl", "sleep"):
             os.chmod(os.path.join(fake, name), 0o755)
+        os.makedirs(os.path.join(tmp, "runner"), exist_ok=True)
         jobs_dir = os.path.join(tmp, "jobs")
         st = lambda name, conclusion: {"name": name, "status": "completed" if conclusion else "in_progress", "conclusion": conclusion}  # noqa: E731
         check_job = lambda fixes: {"name": "check", "status": "completed", "steps": [  # noqa: E731
@@ -1580,8 +1592,9 @@ def lane_cases(flow: dict) -> None:
                          (54, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "success"), st("Follow up", "success")]}]),
                          (55, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "failure"), st("Follow up", "failure")]}]),
                          (56, [check_job(True), {"name": "post", "status": "completed", "conclusion": "cancelled", "steps": []}]),
-                         (57, [{"name": "check", "status": "in_progress", "steps": [st("Plan for the post job", None)]}])):  # still checking
+                         (57, [{"id": 570, "name": "check", "status": "in_progress", "steps": [st("Plan for the post job", None)]}])):  # still checking
             write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": doc}))
+        write(os.path.join(jobs_dir, "job-570.json"), json.dumps(json.load(open(os.path.join(jobs_dir, "57.json")))["jobs"][0]))
         stamp = lambda minutes: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() - minutes * 60))  # noqa: E731
         run = lambda rid, status, minutes=31: {"id": rid, "status": status, "created_at": stamp(minutes)}  # noqa: E731
         sha = "c" * 40
@@ -1599,17 +1612,36 @@ def lane_cases(flow: dict) -> None:
             ("", [run(51, "in_progress", 150)], "", "the schedule: a guards run over two hours old is passed over: goes"),
         ]
         env = {}
+
+        def lane(runs, sha_=sha, **extra) -> tuple:
+            for f in (calls, calls + ".naps"):
+                os.remove(f) if os.path.exists(f) else None
+            env_ = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": sha_, "FAKE_JOBS": jobs_dir,
+                    "FAKE_GUARDS": json.dumps({"workflow_runs": runs}), "GITHUB_SERVER_URL": "https://github.com",
+                    "GITHUB_API_URL": "https://api.github.com", **{k: mark["env"][k] for k in ("FIXES", "DECIDED", "FOLLOW")}, **extra}
+            code_, text_, out_ = run_step(timer, "guards", tmp, {**env_, **as_functions(fake, "sleep", "curl")}, tmp)
+            naps_ = open(calls + ".naps").read().split() if os.path.exists(calls + ".naps") else []
+            return env_, code_, text_, out_, open(calls).read() if os.path.exists(calls) else "", naps_
+
         for want_sha, runs, want, what in cases:
-            if os.path.exists(calls):
-                os.remove(calls)
-            env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": want_sha, "FAKE_JOBS": jobs_dir,
-                   "FAKE_GUARDS": json.dumps({"workflow_runs": runs}), "GITHUB_SERVER_URL": "https://github.com",
-                   "FIXES": mark["env"]["FIXES"], "FOLLOW": mark["env"]["FOLLOW"]}
-            code, text, out = run_step(timer, "guards", tmp, {**env, **as_functions(fake, "sleep")}, tmp)
-            asked = open(calls).read() if os.path.exists(calls) else ""
+            env, code, text, out, asked, naps = lane(runs, want_sha)
             ok = code == 0 and out.get("run", "") == want and ((f"head_sha={want_sha}" in asked) == bool(want_sha))
-            ok = ok and (asked.count("/runs/57/jobs") > 50) == any(r["id"] == 57 for r in runs)     # the wait asked its check job again and again
+            waits = any(r["id"] == 57 for r in runs)
+            ok = ok and (asked.count("curl 304 570") > 50 and naps[:1] == ["1"] and naps[-1:] == ["3"]) == waits   # 1 s looks, 3 s after 2 minutes
+            ok = ok and (asked.count("/jobs") == 1 or waits or not want_sha or not runs)      # one jobs read: past Decided, the hold from it
             check(ok, f"Guards' fixes: {what} -> {out.get('run') or 'none'}" + ("" if ok else f"\n{text}\n{asked}"))
+        check_ = {"id": 580, "name": "check", "status": "in_progress", "steps": [st("Fixes to land", "success"), st("Decided", None)]}
+        write(os.path.join(jobs_dir, "58.json"), json.dumps({"jobs": [check_, {"name": "checks", "status": "in_progress", "steps": [st("Decided", "success")]}]}))
+        write(os.path.join(jobs_dir, "job-580.json"), json.dumps(check_))
+        write(os.path.join(jobs_dir, "job-580.json.later"), json.dumps({**check_, "steps": [st("Fixes to land", "success"), st("Decided", "success")]}))
+        for extra, naps_want, n304, what in (({"FAKE_LOOKS": "3"}, ["1"] * 4, 2, "Decided at the 4th look, 304s before it"),
+                                             ({"FAKE_LOOKS": "17", "FAKE_CHURN": "1"}, ["1"] * 15 + ["3"] * 3, 0, "15 changed reads in a row: 3 s looks")):
+            _, code, text, out, asked, naps = lane([run(58, "in_progress")], FAKE_USED="7", **extra)
+            ok = code == 0 and out.get("run") == "58" and naps == naps_want and asked.count("curl 304") == n304 and asked.count("/jobs") == 1
+            ok = ok and f"Check job: {len(naps)} looks, {len(naps) - n304} changed; rate limit used 7 -> 7" in text
+            check(ok, f"Guards' fixes: the check job alone by conditional reads, 1 s apart (another job's Decided is not it): {what}"
+                  + ("" if ok else f"\n{text}\n{asked}\n{naps}"))
+        os.remove(calls + ".naps")
         code, text, out = run_step(timer, "guards", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Guards' fixes: runs not read -> none (the main lane goes on)")
 

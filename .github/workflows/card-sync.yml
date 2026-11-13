@@ -507,24 +507,48 @@ jobs:
             echo "::warning::the guards' runs were not read: the main lane goes on"
             runs=""
           fi
+          decided="(.status == \"completed\" or any(.steps[]?; .name == \"$DECIDED\" and .status == \"completed\"))"
+          fixes="any(.name == \"$FIXES\" and .conclusion == \"success\")"
+          check_job() {    # the run's: "<check job id, 0 if none> <it is past Decided: 1|0> <hold>"
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "([.jobs[] | select(.name == \"check\")][0]) as \$c
+              | [.jobs[].steps // [] | .[]] as \$s | \"\(\$c.id // 0) \(if \$c != null and (\$c | $decided) then 1 else 0 end) \((\$s | $fixes)
+                and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\"))))\"" || echo "0 0 false"
+          }
+          body=$RUNNER_TEMP/guards-check.json
           while read -r id status; do
             [ -n "$id" ] || continue
             if [ -z "$SHA" ] && [ "$status" = completed ]; then continue; fi     # another push's: unfinished only
-            if [ -n "$SHA" ]; then      # this push's: its check job's Decided step (or its end) settles Fixes to land; 12 min at most
-              for k in $(seq 200); do
-                [ "$status" = completed ] && break
-                done_=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[] | select(.name == \"check\" and (.status == \"completed\"
-                  or any(.steps[]?; .name == \"$DECIDED\" and .status == \"completed\")))] | length") || done_=0
-                [ "${done_:-0}" -gt 0 ] && break
-                sleep 3
-                if [ $((k % 5)) = 0 ]; then       # the run, every 15 s: ended with no check job?
+            read -r cid dec hold <<< "$(check_job)"
+            if [ -n "$SHA" ] && [ "$dec" != 1 ] && [ "$status" != completed ]; then
+              # this push's: its check job's Decided (or its end) settles Fixes to land; 12 min at most. That job alone by
+              # conditional reads (a 304 is free, the body kept) every 1 s for 2 minutes or until 15 counted reads in a row,
+              # then 3 s; the run every 15 s: ended with no check job?
+              tag='' n=0 ran=$SECONDS k=0 c=0 u0=''
+              while [ "$SECONDS" -lt 720 ]; do
+                sleep "$([ "$SECONDS" -lt 120 ] && [ "$n" -lt 15 ] && echo 1 || echo 3)"
+                if [ $((SECONDS - ran)) -ge 15 ]; then
+                  ran=$SECONDS
                   status=$(gh api "$q" --jq ".workflow_runs[] | select(.id == $id) | .status") || status=""
+                  [ "$status" != completed ] || break
                 fi
+                if [ "$cid" = 0 ]; then n=$((n + 1)); read -r cid dec hold <<< "$(check_job)"
+                else
+                  IFS=, read -r code used new <<< "$({ echo "Authorization: Bearer $GH_TOKEN"; [ -z "$tag" ] || echo "If-None-Match: $tag"; } \
+                    | curl -sS --max-time 5 -H @- -H "Accept: application/vnd.github+json" -o "$body.new" \
+                      -w '%{http_code},%header{x-ratelimit-used},%header{etag}' "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/jobs/$cid" || true)"
+                  k=$((k + 1)) u0=${u0:-$used}
+                  if [ "$code" = 304 ]; then n=0
+                  elif [ "$code" = 200 ]; then      # anything else: a failed look
+                    n=$((n + 1)) c=$((c + 1)) tag=$new
+                    mv "$body.new" "$body"
+                    read -r dec hold <<< "$(jq -r "\"\(if $decided then 1 else 0 end) \([.steps[]?] | $fixes)\"" "$body" || echo "0 false")"
+                  fi
+                fi
+                [ "$dec" != 1 ] || break
               done
+              [ "$dec" = 1 ] || read -r cid dec hold <<< "$(check_job)"      # ended or cut: the run's jobs once more
+              [ -z "$u0" ] || echo "Check job: $k looks, $c changed; rate limit used $u0 -> $used (a 304 is free when it moved less than the looks)"
             fi
-            hold=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[].steps // [] | .[]] as \$s
-              | (\$s | any(.name == \"$FIXES\" and .conclusion == \"success\"))
-                and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\")))") || hold=false
             if [ "$hold" = true ]; then
               echo "run=$id" >> "$GITHUB_OUTPUT"
               echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id lands fixes: the Card sync run it starts bakes and saves (this run's main lane is skipped)." \
