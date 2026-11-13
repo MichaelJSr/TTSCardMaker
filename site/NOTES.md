@@ -690,7 +690,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     error. Baked: the preview (preview.webp, 720 px) in the image's place, the image a link to itself (no full-size PNG: `files.png` went 2026-11-12), Diff
     swapping in the red differences (`diffPixels` against the result's `before.webp`, hidden: changed pixels red over the
     dimmed card, with the share in the caption; a result without one, from before it was published, diffs against the
-    720 px AVIF thumb); `renderedParts(e, v)` -> `{stage, caption, dim}`, `renderedHtml` =
+    720 px AVIF thumb). readResult keeps the bake's `region` and the PNG's `size` (finite numbers only): red only inside
+    the region plus 4 px (`diffBox`; the share counts those only), since merge_png writes nothing outside it (red there
+    was AVIF noise: 4.5% of the red on 233 real edits, 0.4% after); none (older results, a move alone): the whole card.
+    `renderedParts(e, v)` -> `{stage, caption, dim}`, `renderedHtml` =
     stage + caption; each field's outcome ("HP baked · Stars
     refused") and the notes. Redundant: "Already on the card". Refused: the reason, with the bake's render when
     `image` is "refused". Baked without an image file: "The bake drew it, but no image came with the result." with the

@@ -83,7 +83,7 @@ export function newRequest(login, now = Date.now(), rand = Math.random()) {
 }
 export const validRequest = r => typeof r === "string" && REQUEST_RE.test(r);
 /** result.json (AutoCroissant card_preview) as {state, transient, reason, notes[], fields{}, base{}, image,
- *  files{}, run}; anything unreadable is an "error" saying so. Strings stay raw: the HTML escapes them. */
+ *  files{}, run, region, size}; anything unreadable is an "error" saying so. Strings stay raw: the HTML escapes them. */
 export function readResult(raw) {
   let r = raw;
   const bad = reason => ({ state: "error", transient: true, reason, notes: [], fields: {}, base: {}, image: null, files: {}, run: "" });
@@ -95,8 +95,11 @@ export function readResult(raw) {
   const files = Object.fromEntries(Object.entries(obj(r.files)).filter(([k, v]) => ["webp", "before"].includes(k) && typeof v === "string" && /^[\w.-]+\.(webp|avif)$/i.test(v)));
   const fields = Object.fromEntries(Object.entries(obj(r.fields)).filter(([k, v]) => k in LABEL && typeof v === "string").map(([k, v]) => [k, v.slice(0, 20)]));
   const parts = Object.fromEntries(Object.entries(obj(r.parts)).filter(([k, v]) => /^(\d+|\+ability)$/.test(k) && typeof v === "string").slice(0, 64).map(([k, v]) => [k, v.slice(0, 20)]));   // v2: per layer
+  const nums = (v, n) => Array.isArray(v) && v.length === n && v.every(Number.isFinite);
+  const size = nums(r.size, 2) && r.size[0] > 0 && r.size[1] > 0 ? r.size : null;   // the PNG's [w, h]
+  const region = size && nums(r.region, 4) && r.region[2] > r.region[0] && r.region[3] > r.region[1] ? r.region : null;   // the bake's [x0, y0, x1, y1]
   return { state: r.state, transient: r.transient === true, reason: r.reason ? clip(r.reason) : "", notes, fields, base, parts,
-    image: r.image === "baked" || r.image === "refused" ? r.image : null, files, run: typeof r.run === "string" && /^https:\/\/github\.com\//.test(r.run) ? r.run : "" };
+    image: r.image === "baked" || r.image === "refused" ? r.image : null, files, run: typeof r.run === "string" && /^https:\/\/github\.com\//.test(r.run) ? r.run : "", region, size };
 }
 /** The store read from localStorage text: only well-formed entries, newest first, KEEP per card. */
 export function readStore(textValue) {
@@ -218,13 +221,23 @@ export function ago(ms) {
   const m = Math.round(ms / 60000);
   return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 48 * 60 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`;
 }
-/** The diff of two same-sized RGBA images: changed pixels red over a dimmed a. {data, changed (0-1)}. */
-export function diffPixels(a, b, threshold = 48) {
+/** The Diff's box on a w x h image: result r's region scaled from its size, margin px around it, as {w, x0, y0, x1, y1};
+ *  null (the whole card) without one. The bake's merge_png writes nothing outside it: red there is codec noise. */
+export function diffBox(r, w, h, margin = 4) {
+  if (!r?.region || !r.size) return null;
+  const [x0, y0, x1, y1] = r.region, [cw, ch] = r.size;
+  return { w, x0: Math.max(0, Math.floor((x0 * w) / cw) - margin), y0: Math.max(0, Math.floor((y0 * h) / ch) - margin),
+    x1: Math.min(w, Math.ceil((x1 * w) / cw) + margin), y1: Math.min(h, Math.ceil((y1 * h) / ch) + margin) };
+}
+/** The diff of two same-sized RGBA images: changed pixels red over a dimmed a, only inside box (diffBox) when given.
+ *  {data, changed (0-1 of all pixels)}. */
+export function diffPixels(a, b, threshold = 48, box = null) {
   const out = new Uint8ClampedArray(a.length);
   let n = 0;
   for (let i = 0; i < a.length; i += 4) {
     const d = Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]);
-    if (d > threshold) { out[i] = 255; out[i + 1] = 40; out[i + 2] = 40; n++; }
+    const x = box && (i >> 2) % box.w, y = box && ((i >> 2) - x) / box.w;
+    if (d > threshold && (!box || (x >= box.x0 && x < box.x1 && y >= box.y0 && y < box.y1))) { out[i] = 255; out[i + 1] = 40; out[i + 2] = 40; n++; }
     else { out[i] = a[i] * 0.3; out[i + 1] = a[i + 1] * 0.3; out[i + 2] = a[i + 2] * 0.3; }
     out[i + 3] = 255;
   }
@@ -606,7 +619,7 @@ export function createPreviews(app) {
     Promise.all([ready(cur), ready(prev)]).then(() => {
       const w = cur.naturalWidth, h = Math.round((cur.naturalWidth * prev.naturalHeight) / prev.naturalWidth) || cur.naturalHeight;
       const grab = img => { const k = document.createElement("canvas"); k.width = w; k.height = h; const x = k.getContext("2d"); x.drawImage(img, 0, 0, w, h); return x.getImageData(0, 0, w, h).data; };
-      const { data, changed } = diffPixels(grab(cur), grab(prev));
+      const { data, changed } = diffPixels(grab(cur), grab(prev), 48, diffBox(e?.result, w, h));
       canvas.width = w; canvas.height = h; canvas.getContext("2d").putImageData(new ImageData(data, w, h), 0, 0);
       const el = cap.querySelector("[data-pv-changed]"); if (el) el.textContent = `(${(changed * 100).toFixed(1)}% of the pixels)`;
     }, () => { const el = cap.querySelector("[data-pv-changed]"); if (el) el.textContent = "(couldn't load both images)"; });
