@@ -20,9 +20,10 @@ export const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 export const TILE_SIZES = { s: ["130px", 160], m: ["min(168px, calc(50% - 7px))", 200], l: ["230px", 270] };
 
 /** a card picture's URL, 96 / 192 / 240 / 360 / 480 / 720 px wide (thumbs: cards.json's tags of their settings) */
-export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w]}.avif` : "");
+export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w]}.avif` : c.pic || "");   // pic: a Morgue entry from Discord's webp
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 96 too at 64 px or less */
 export const imgAttrs = (thumbs, c, css) => { const u = w => thumb(thumbs, c, w);
+  if (!c.img && c.pic) return `src="${esc(c.pic)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
   return `src="${u(360)}" srcset="${css <= 64 ? `${u(96)} 96w, ` : ""}${u(192)} 192w, ${u(240)} 240w, ${u(360)} 360w" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
 const TILE_ART = 8 / 5;                      // a tile's picture box, height / width (style.css .tile .art); its corners 11 px round (.tile's 12 less its border)
 /** A card whose art hangs out of its see-through edge (cards.json hang: the card's own box in the picture, [left, top,
@@ -122,7 +123,7 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
   const inDeck = !link && env.inDeck(c.id), url = `c/${encodeURIComponent(c.id)}/`, label = `aria-label="${esc(c.name)}"`;
   const hang = c.img && hangs(c), cls = `tile${hang ? " hang" : ""}`;
   return `${link ? `<a class="${cls}" href="${url}" ${label}>` : href ? `<a class="${cls}" href="${url}" data-open="${c.id}" ${label}>` : `<article class="${cls}" data-open="${c.id}" tabindex="0" ${label}>`}
-    ${c.img ? `<img class="art${c.tw && c.tw === c.th ? " sq" : ""}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(env.thumbs, c, small ? 120 : css)}${hang ? ` style="${hangVars(c, TILE_ART, 11)}"` : ""} alt="">` : `<div class="art"></div>`}
+    ${c.img || c.pic ? `<img class="art${c.tw && c.tw === c.th ? " sq" : ""}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(env.thumbs, c, small ? 120 : css)}${hang ? ` style="${hangVars(c, TILE_ART, 11)}"` : ""} alt="">` : `<div class="art"></div>`}
     ${link || c.morgue ? "" : constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
       : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
       : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`

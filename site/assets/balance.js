@@ -38,7 +38,7 @@ const KIND_TIP = { text: "Wording changes with no stat change", stats: "Changes 
   other: "Everything else: stars, kind, item type, types, series, ability spacing" };
 /** a change row's kind for the monthly chart: each counted once; null: timing tags only (not counted) */
 export function changeKind(r) {
-  if (r.stats || r.lines) return "stats";
+  if (r.stats || r.lines || r.moves || (r.fact && r.fact.field !== "stars")) return "stats";
   if (r.words) return "text";
   if (r.tags && !(r.stars || r.kind || r.sub || r.types || r.series)) return null;
   return "other";
@@ -202,6 +202,17 @@ function sparkline(points) {
 
 // ---- describing a change ------------------------------------------------------------------------------------------
 const statsLine = l => STATS.map(([, lab], i) => `${lab} ${l[i]}`).join(" · ");
+const STAT_LABEL = Object.fromEntries(STATS);
+/** a changelog fact (the card timelines, owner Q4: data, never the line's text): "ATK 5 → 4", "SPD +1", "Stars → 3★" */
+function factHtml(f) {
+  const what = f.field === "stars" ? "Stars" : STAT_LABEL[f.field] || f.field, star = f.field === "stars" ? "★" : "";
+  const how = f.from != null && f.to != null ? `${f.from}${star} → ${f.to}${star}` : f.by != null ? `${f.by > 0 ? "+" : ""}${f.by}` : `→ ${f.to}${star}`;
+  return `<b>${esc(what)}:</b> ${esc(how)}`;
+}
+/** where a change from before this repo comes from (analytics.py early) */
+const EARLY_SRC = { discord: ["Discord", "Read off its pictures posted on Discord"], "old repo": ["old repo", "Read off the old card repo's versions"],
+  paper: ["paper card", "Read off a photo of the paper card"], text: ["changelog", "A change an update's changelog states (its text is not shown)"],
+  git: ["first record", "Its first version in this repo against its last one before it"] };
 /** plain parts of a change row (HTML), the ability diff aside */
 export function changeParts(r) {
   const parts = [];
@@ -214,6 +225,9 @@ export function changeParts(r) {
       parts.push(`<b>${what}:</b> ${esc(moved)}${r.bal ? ` <span class="muted">(total ${ta} → ${tb})</span>` : ` <span class="muted">(total ${ta} → ${tb}: off the scale, not a buff or nerf)</span>`}`);
     } else parts.push(a ? `<b>Stats lost</b> <span class="muted">(were ${esc(statsLine(a))})</span>` : `<b>Stats read:</b> ${esc(statsLine(b))}`);
   }
+  if (r.moves) parts.push(`<b>Stats:</b> ${esc(r.moves.map(([k, a, b]) => `${STAT_LABEL[k] || k} ${a} → ${b}`).join(", "))}`);
+  if (r.fact) parts.push(factHtml(r.fact));
+  if (r.name) parts.push(`<b>Name:</b> ${esc(r.name[0] ?? "?")} → ${esc(r.name[1] ?? "?")}`);
   if (r.lines) parts.push(`<b>Creatures on the card:</b> ${r.lines[0]} → ${r.lines[1]}`);
   if (r.stars) parts.push(`<b>Stars:</b> ${esc(r.stars[0] ?? "none")}${r.stars[0] != null ? "★" : ""} → ${esc(r.stars[1] ?? "none")}${r.stars[1] != null ? "★" : ""}`);
   if (r.kind) parts.push(`<b>Kind:</b> ${esc(ITEM_KIND[r.kind[0]] || r.kind[0] || "none")} → ${esc(ITEM_KIND[r.kind[1]] || r.kind[1] || "none")}`);
@@ -261,7 +275,9 @@ export function changesBlock(c, A, { texts = null, repo = "", pathAt } = {}) {
       const [i, j] = r.text || [];
       const diff = r.words && texts && texts[i] != null && texts[j] != null ? `<details class="bal-diff"><summary>Show the change</summary><div>${diffWords(texts[i], texts[j])}</div></details>` : "";
       const sha = A.commits[r.c], link = commitLink(repo, sha, `Commit for the ${day(r.ts)} change`, sha && pathAt(sha, r.ts));   // r.c: index in commits
-      const when = (r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts))) + (link && `<br>${link}`);
+      const src = r.early && EARLY_SRC[r.early];
+      const when = (r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts))) + (link && `<br>${link}`)
+        + (src ? `<br><span class="fact ver-src" data-tip="${esc(src[1])}">${esc(src[0])}</span>` : "");
       return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");
     out.push(`<h3>${noted("Recorded changes", "Changes between its recorded versions; buff: total stats up, nerf: down")}</h3><ol class="bal-changes">${items}</ol>`);

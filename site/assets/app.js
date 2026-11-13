@@ -73,10 +73,12 @@ const imgAttrs = (c, css) => G.imgAttrs(S.data.thumbs, c, css);
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
-const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
-const createdText = c => day(c.created);
-const createdTip = c => CREATED_TIP[c.createdFrom] || "Created";
+const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand",
+  "old repo": "Its first version in the old card repo, before this one", paper: "A paper card, made before 2020 (its photo was posted later)" };
+const createdText = c => (c.createdBefore ? `before ${c.createdBefore}` : day(c.created));
+const createdTip = c => (CREATED_TIP[c.createdFrom] || "Created") + (c.createdWas ? ` (the card timelines moved it from ${day(c.createdWas)})` : "");
 const isStatus = c => c.type === "debuff" || c.type === "buff";
+const LOST_TIP = { joke: "A joke card", played: "Played, then lost before the card repo" };     // cards.json morgue lost (build_site history_morgue)
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
 const cardOf = id => S.byId.get(id) || S.morgueById.get(id);              // a Morgue card opens too, never in a live list
@@ -901,7 +903,7 @@ function fitTable(t) {
 const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="">` : ""}
   <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
-const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 30)} alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
+const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img || c.pic ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 30)} alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
       <td>${(c.types || []).map(t => iconImg(t, "tok", 18)).join("")}</td><td>${esc(c.author || "")}</td><td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td><td>${date(c.ts)}</td><td class="num size">${psdSize(c)}</td></tr>`;
@@ -957,7 +959,7 @@ function openCard(id, showDetails = false) {
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
-      <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img"${first === null ? "" : ` src="${first || esc(fullUrl(c))}"`} alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
+      <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img"${first === null ? "" : ` src="${first || esc(fullUrl(c))}"`} alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : c.pic ? `<img id="detail-img" src="${esc(c.pic)}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}">` : `<div class="empty">No image</div>`}</div></div></div>
         ${c.morgue ? "" : `<div class="actions card-actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
@@ -970,7 +972,8 @@ function openCard(id, showDetails = false) {
       <div>
         <h2>${esc(c.name)}</h2>
         <div class="facts">
-          ${c.morgue ? `<a class="fact" href="#/cards?morgue=1" data-tip="${esc(`Retired: in MDW/The Morgue${c.retired ? ` since ${date(c.retired)}` : ""}, out of play`)}">The Morgue</a>` : ""}
+          ${c.morgue ? `<a class="fact" href="#/cards?morgue=1" data-tip="${esc(c.lost ? `${LOST_TIP[c.lost] || LOST_TIP.joke}: from Discord, never in the card repo` : `Retired: in MDW/The Morgue${c.retired ? ` since ${date(c.retired)}` : ""}, out of play`)}">The Morgue</a>` : ""}
+          ${c.lost ? `<span class="fact" data-tip="Its first post on Discord">${c.lost === "played" ? "Played, lost before git" : "Joke card"}${c.first ? ` · first posted ${day(c.first)}` : ""}${c.firstCh ? ` in #${esc(c.firstCh)}` : ""}</span>` : ""}
           ${c.morgue && c.type === "unknown" ? "" : `<a class="fact" href="#/cards?${scope}kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>`}
           ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
           ${c.stars ? `<a class="fact" href="#/cards?${scope}stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
@@ -1028,7 +1031,7 @@ function openCard(id, showDetails = false) {
   else if (c.history || balanceOf(c).history) nearby.on(["#card-changes", "#history-slot"], heavyPaths);   // its texts in already
   else if (hasBalance(c)) nearby.on(["#card-changes"], heavyPaths);                                      // stats changes only
   if (hasBalance(c) && !S.analytics) nearby.on(["#card-balance", "#card-changes"], () => loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; }));
-  if (c.iv && !S.versions) { const box = $(".ver-box", modal);   // versions.json once the box is open (closed on a phone)
+  if ((c.iv || c.ive) && !S.versions) { const box = $(".ver-box", modal);   // versions.json once the box is open (closed on a phone)
     if (!box || box.open) fillVersions(); else box.addEventListener("toggle", fillVersions, { once: true }); }
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
@@ -1054,7 +1057,7 @@ const nearby = (() => {
  *  page shows (build_site card_frame: 480 or 720 px, as its srcset picked) or preloads (720 px), any other loaded one
  *  of 192 px or more (a strip's, a Changes row's: sized by URL), else null (openCard picks one once laid out) */
 function placeholderOf(c) {
-  if (!c.img) return "";
+  if (!c.img) return c.pic || "";
   const t = view.querySelector(`.grid .tile[data-open="${CSS.escape(c.id)}"] img.art`);
   if (t?.complete && t.naturalWidth && t.currentSrc) return local(t.currentSrc);
   const shown = $("#detail-img")?.currentSrc;
@@ -1064,13 +1067,20 @@ function placeholderOf(c) {
   for (const i of document.images) if (i.complete && i.naturalWidth && mine.has(local(i.currentSrc))) return local(i.currentSrc);
   return null;
 }
-// ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card
+// ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card; then
+// its versions before this repo (versions.json early, build_site history_rows: the old repo, Discord, a paper card, the
+// first repo's push notices as text only), never with a link or Revert
+const EARLY_BADGE = { discord: "Discord", "old repo": "old repo", paper: "paper card", "first repo": "first repo" };
 const versionList = c => {
-  const rows = S.versions && S.versions.cards[c.id];
-  if (!rows) return [];
+  if (!S.versions) return [];
+  const rows = S.versions.cards[c.id] || [];
   const minor = new Set(S.versions.minor[c.id] || []);        // build_site: a picture change under the share that shows, no data change
-  return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; });
+  return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; })
+    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, ts: r.ts, label: r.label, channel: r.ch, author: r.a, subject: r.s, as: r.as,
+      img: r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor })));
 };
+const versionWhen = v => (v.ts ? date(v.ts) : esc(v.label || "Undated"));
+const versionMsg = v => [v.subject, v.as && `as ${v.as}`].filter(Boolean).join(" · ");
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
 // an older version's 360 px copy on the plates branch (build_site version_images, not in the site); one not made yet: its PNG
 const versionCopy = (c, v) => `${COPIES}/${S.versions.repo}/plates/v/${c.id}/${v.sha.slice(0, 10)}-${S.data.thumbs.v}.avif`;
@@ -1082,13 +1092,13 @@ function versionsOpen(id) {
   return !modal.hidden && was?.dataset.id === id ? was.open : !matchMedia("(max-width: 820px)").matches;
 }
 function versionsHtml(c, open) {
-  if (!c.iv) return "";
+  if (!c.iv && !c.ive) return "";
   const box = (n, body) => `<details class="ver-box" data-id="${esc(c.id)}"${open ? " open" : ""}><summary>Image versions <span class="muted">${n}</span></summary>${body}</details>`;
-  if (!S.versions) return box(c.iv - (c.ivm || 0), `<p class="muted">Loading…</p>`);
+  if (!S.versions) return box((c.iv || 0) - (c.ivm || 0) + (c.ive || 0) - (c.ivme || 0), `<p class="muted">Loading…</p>`);
   const vs = versionList(c);
   if (vs.length < 2) return "";
-  const item = (v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
-        <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`;
+  const item = (v, i) => `<button type="button" class="ver-item${v.early ? " ver-early" : ""}" data-action="version-pick" data-i="${i}" aria-pressed="false">
+        <span class="when">${versionWhen(v)}${i === 0 ? ` <span class="fact">current</span>` : ""}${v.early ? ` <span class="fact ver-src">${EARLY_BADGE[v.early] || ""}</span>` : ""}</span><span class="who">${esc(v.author || (v.channel ? `#${v.channel}` : ""))}</span><span class="msg">${esc(versionMsg(v))}</span></button>`;
   const rows = vs.map((v, i) => [v, i]), major = rows.filter(([v]) => !v.minor), minor = rows.filter(([v]) => v.minor);
   const share = Math.round(S.versions.visible * 100);
   // minor changes (owner 11-09): folded, never dropped (versions.json visible: AutoCroissant png_changes.VISIBLE)
@@ -1105,6 +1115,7 @@ function showVersion(c, i) {
   const vs = versionList(c), v = vs[i], box = $("#ver-compare");
   if (!v || !box) return;
   $$(".ver-item", modal).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+  if (v.early || vs[0].early) { box.innerHTML = earlyVersion(c, vs, i); return; }
   // text at that time, when the bot's text history lines up with the commit (the latest text at or before it; the
   // current one from when it started, not from the last PSD commit)
   const then = textAt(c, v.ts);
@@ -1116,11 +1127,27 @@ function showVersion(c, i) {
       <figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }
+/** A version from before this repo (or a Morgue entry's): its picture (none: a first-repo push notice) beside the current
+ *  one, with its date (a paper card: "Before 2020"), source, author and commit subject (old repo, first repo) or channel
+ *  (Discord), never a link or Revert; "Text then": the ability read off it when that read is sure */
+function earlyVersion(c, vs, i) {
+  const v = vs[i], cur = vs[0];
+  const caption = w => `${versionWhen(w)}${w.early ? ` · ${EARLY_BADGE[w.early] || ""}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}`
+    + (w.sha ? commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path) : "") + (versionMsg(w) ? `<br><span class="muted">${esc(versionMsg(w))}</span>` : "");
+  const src = w => (w.early ? w.img : img(c, 720));
+  const pic = (w, alt) => (src(w) ? `<img src="${esc(src(w))}" alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
+    : `<div class="empty">${w.early === "first repo" ? "No picture: a push notice of the first repo, whose files are gone" : "No picture"}</div>`);
+  if (i === 0) return `<figure>${pic(v, `${c.name}, current version`)}<figcaption>${caption(v)}<br>Current version</figcaption></figure>`;
+  const then = v.fields?.ability;
+  return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : v.label || ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}</figcaption></figure>
+      <figure>${pic(cur, `${c.name}, current version`)}<figcaption>Current<br><span class="muted">${cur.early ? caption(cur) : `${date(cur.ts)}${commitAfter(S.versions.repo, cur.sha, `Commit for the ${date(cur.ts)} image version`, cur.path)}`}</span></figcaption></figure></div>
+      ${then && c.ability && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
+}
 // ---- revert (editors): a History or Image versions "Revert to this version", the card's files as they were at that
 // version's commit (edit.js revertCard). A picture-only duplicate's texts are its original's PSD's: no Revert there
 const canRevert = c => editing() && (!c.dup || !!c.variantOf || pictureNumber(c.psd, c.png) !== null);
 /** c's PNG path at commit ref (time ts): its image version there or the newest before it (renames followed), else today's */
-const pngAt = (c, ref, ts) => { const vs = versionList(c); return (vs.find(v => v.sha.startsWith(ref)) || vs.find(v => v.ts <= ts) || vs[vs.length - 1])?.path || c.png; };
+const pngAt = (c, ref, ts) => { const vs = versionList(c).filter(v => v.sha); return (vs.find(v => v.sha.startsWith(ref)) || vs.find(v => v.ts <= ts) || vs[vs.length - 1])?.path || c.png; };
 const historyOf = c => historyHtml(c, S.data.repo, S.history?._shas, canRevert(c), (ref, ts) => pngAt(c, ref, ts));
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
@@ -1907,7 +1934,7 @@ const actions = {
       .catch(e => toast(`Couldn't revert (${e.message})`)).finally(() => { el.disabled = false; }); },
   "flag-issue": el => { const box = document.getElementById(el.getAttribute("aria-controls") || ""); if (!box) return;   // Needs handling: a flag's issue (flags.js)
     box.hidden = !box.hidden; el.setAttribute("aria-expanded", String(!box.hidden)); hideTip(); },
-  "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
+  "version-pick": el => { const id = parseHash().arg, c = cardOf(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "to-cards": () => { const sec = $(".browse > section", view), to = sec && $(".grid > .tile, .row-name, .empty a", sec);   // past the filters: the first card
     if (to) to.focus(); else if (sec) { sec.tabIndex = -1; sec.focus(); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
@@ -2050,7 +2077,7 @@ function fillTip(t) {
     const c = S.byId.get(t.dataset.card);
     if (!c) return false;
     tip.replaceChildren();
-    if (c.img) { const im = document.createElement("img"); im.style.aspectRatio = `auto ${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}`; im.src = thumbUrl(c); im.alt = ""; tip.append(im); }   // sized before it loads: place() flips it right
+    if (c.img || c.pic) { const im = document.createElement("img"); im.style.aspectRatio = `auto ${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}`; im.src = thumbUrl(c); im.alt = ""; tip.append(im); }   // sized before it loads: place() flips it right
     const n = document.createElement("div"); n.className = "v"; n.textContent = c.name; tip.append(n);
   } else tip.textContent = t.dataset.tip;
 }

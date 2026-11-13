@@ -13,7 +13,9 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   search box), each one a checkbox in the sidebar (`cf=` keeps, `xcf=` drops; a link carries them). A new search, filter
   or sort shows its results from the top; the same cards drawn another way (grid or table, tile size) keep the place.
   **The Morgue** (under Retired; `morgue=1`): the retired cards in `MDW/The Morgue` (a PSD with its PNG), picture and
-  name only, never in the default list, decks, the TTS save, Stats or counts of live cards.
+  name only, never in the default list, decks, the TTS save, Stats or counts of live cards; with the card timelines
+  (below), also the joke cards and the cards played but lost before git, from Discord (picture, first post's day and
+  channel).
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
   column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
@@ -40,7 +42,13 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   same series, text history with changes highlighted, and an image version viewer under the card's picture (closed on a
   phone): every commit that changed the
   card's image, compared side by side with the current one, with the text of that time when it differs (each version,
-text or image, links its commit when it is known), and the artwork sources when set. The current
+text or image, links its commit when it is known), and the artwork sources when set. With the card timelines
+(`HISTORY_DIR`: the `history` branch, AutoCroissant `commands/discord_preview.py`), the versions from before this repo
+follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"), Discord's (date and channel,
+never a poster or message), a paper card's ("Before 2020") and the first repo's push notices (text only, "first
+repo"); each compares with the current card like the others (its own sure ability as "Text then"), with no link and no
+Revert, and their changes (and the update changelogs' facts, as data only) join Recorded changes and the balance
+charts. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
   that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
   variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own. Signed in, each earlier text with a

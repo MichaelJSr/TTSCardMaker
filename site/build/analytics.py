@@ -18,6 +18,10 @@ months are Pacific time (ZONE).
     newer reading replaces it. A field a version changed and the next one put back within a day (UNDONE) is no change.
   * Over time (a card's start is its first upload): each month, the total stats of each star cohort's cards as they
     were then.
+  * The card timelines before the repo (build_site history_stats, when the build has them): their versions' sure stats
+    and stars start the card's chain for its trend and the over-time series (its start moves back to them), and their
+    changes (a version's against the one before, a changelog fact, the first recorded version's against the last one
+    before it) go under its recorded changes, each with "early": where it comes from (discord, old repo, paper, text, git).
 
 PSDs are never read here; everything comes from the bot's data.
 """
@@ -450,15 +454,28 @@ def point(v):
     return when(v), getattr(v, "card_type", None), getattr(v, "stars", None), line_of(getattr(v, "stats", None))
 
 
-def over_time(cards, stats, old_stats, sizes, now):
+def early_chain(points):
+    """The card timelines' versions (build_site history_stats points) as chain versions: a stat line or stars it isn't
+    sure of is None (line_of: no line)."""
+    out = []
+    for p in sorted(points or (), key=lambda p: p["ts"]):
+        line = p.get("line") or [None] * 4
+        out.append(SimpleNamespace(timestamp=p["ts"], stars=p.get("stars"), card_type=p.get("kind"),
+                                   stats=SimpleNamespace(**{attr: x for (_, attr), x in zip(STATS, line)})))
+    return out
+
+
+def over_time(cards, stats, old_stats, sizes, now, early=None):
     """{months: [...], series: {star cohort key: [[n, mean, p10, p90] or None per month]}}: at each month's end, the
     creatures and minions there were then with the stars and stats they had then. A card's start is its image's first
-    upload (fs) or its oldest version, whichever is earlier; an archived card ends at its tag."""
+    upload (fs) or its oldest version, whichever is earlier; an archived card ends at its tag. early: the card
+    timelines' points by card id (their versions come first)."""
     lives = []
     for e in cards:
         if e.get("dup") or e.get("hidden") or e.get("parsed") is False or e.get("key") not in stats:
             continue
-        points = [point(v) for v in page_chain(e, stats, old_stats)]                     # the current card as shown
+        before = early_chain(((early or {}).get(e["id"]) or {}).get("points"))
+        points = [point(v) for v in before + page_chain(e, stats, old_stats)]             # the current card as shown
         if not points:
             continue
         start = min([p[0] for p in points] + ([e["fs"]] if e.get("fs") else []))
@@ -491,15 +508,19 @@ def over_time(cards, stats, old_stats, sizes, now):
         for key, totals in groups.items():
             ordered = sorted(totals)
             series[key][i] = [len(ordered), round(sum(ordered) / len(ordered), 2), quantile(ordered, .1), quantile(ordered, .9)]
+    if early:                                     # timelines start cards before their stats are known: from the first month with a total
+        skip = min((next((i for i, x in enumerate(s) if x), len(months)) for s in series.values()), default=0)
+        months, series = months[skip:], {k: s[skip:] for k, s in series.items()}
     return {"months": months, "series": dict(series)}
 
 
 # ---- the file ----------------------------------------------------------------------------------------------------
-def build(cards, stats, old_stats, now=None, psd_commits=None, lineage=None, into=None):
+def build(cards, stats, old_stats, now=None, psd_commits=None, lineage=None, into=None, early=None):
     """data/analytics.json for the site's card entries (before their history is moved to history.json).
     psd_commits = {(commit time, PSD file name in lower case)} from the git history: an older record dated by one is exact.
     lineage = psd_lineage of it: each change row's "c", an index into "commits" (version_commit). into: renamed cards'
-    old names (renames_followed)."""
+    old names (renames_followed). early: the card timelines before the repo by card id ({points, rows}: build_site
+    history_stats)."""
     now = now or datetime.now(timezone.utc).timestamp()
     old_stats, stats = renames_followed(old_stats, stats, into)
     members = cohort_members(cards)
@@ -514,8 +535,9 @@ def build(cards, stats, old_stats, now=None, psd_commits=None, lineage=None, int
             continue
         versions += max(0, len(chain_of(e["key"], stats, old_stats)) - 1)
         chain = page_chain(e, stats, old_stats)
-        rows = card_changes(e, chain, psd_commits, lineage)
-        trend = trend_of(chain) if e["id"] in out_cards else []
+        before = (early or {}).get(e["id"]) or {}
+        rows = sorted(card_changes(e, chain, psd_commits, lineage) + list(before.get("rows") or ()), key=lambda r: -r["ts"])
+        trend = trend_of(early_chain(before.get("points")) + chain) if e["id"] in out_cards else []
         if rows or trend:
             entry = out_cards.setdefault(e["id"], {})
             if rows:
@@ -529,7 +551,7 @@ def build(cards, stats, old_stats, now=None, psd_commits=None, lineage=None, int
             r["c"] = table.setdefault(sha, len(table))
     counts = Counter(e.get("type") for e, _, _ in members)
     return {"cohorts": cohorts, "cards": out_cards, "counts": dict(counts), "versions": versions,
-            "time": over_time(cards, stats, old_stats, sizes, now),
+            "time": over_time(cards, stats, old_stats, sizes, now, early),
             "minCohort": MIN_COHORT, "commits": list(table)}
 
 

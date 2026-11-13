@@ -54,6 +54,12 @@ Where the data comes from:
   * Creation dates: site/Card Creation Dates.json, each card's first Discord post; a card's created is the earlier of that
     and fs (a hand-set date wins): the Cards tab's created sort, the card page's "created" fact, the person pages' newest
     cards and activity chart. Bad entries skipped.
+  * Card timelines before this repo (HISTORY_DIR: the history branch's history/ folder, or the local preview's; unset: the
+    site goes without them, as before): each card's versions from the old pre-wipe repo, Discord, paper cards and the
+    first repo's push notices after its own in Image versions (versions.json early; webps copied to dist/history/),
+    their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
+    Morgue's entries from Discord (cards.json morgue, lost: joke or played) and the Created dates they move earlier
+    (never later, never over a hand entry). load_history; bad files are skipped, never a failed build.
   * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
     (one more `git log` over Card Edits.json and Card Authors.txt, their versions read in one batch) and the archived
     cards (old_stats tags).
@@ -248,6 +254,16 @@ FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT
 FIXED_BY_ALL = {("hp", "def", "atk", "spd"): ("NO STATS FOUND",)}    # answered once every one has a value
 SKIP_PARTS = ("MDW", "Markers")
 MORGUE = "MDW/The Morgue/"                    # retired cards (owner 11-08): cards.json morgue, picture only, never a live card
+# the card timelines before this repo (AutoCroissant discord_preview; docs/Future/CARD_TIMELINE.md): the history branch's
+# history/ folder, or the local preview's; unset or missing: the site goes without them
+HISTORY_DIR = os.environ.get("HISTORY_DIR", "")
+HISTORY_ROWS = ("discord", "old repo", "paper", "first repo")   # Image versions' rows (changelog facts: Recorded changes only)
+HISTORY_KINDS = HISTORY_ROWS + ("text",)
+HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "git": "git", "paper card": "paper"}   # a proposed Created's source
+PAPER_DAY = "Before 2020"                     # a paper card's Created (owner Q6): HISTORY_DAY, createdBefore 2020
+HISTORY_DAY = "2019-01-01"                    # before every dated card: the team's Discord began in 2019-02
+HISTORY_IMAGE = re.compile(r"[\w.-]+\.webp\Z")
+HISTORY_STATS = ("hp", "def", "atk", "spd")
 
 
 def log(*args):
@@ -1377,6 +1393,218 @@ def morgue_cards(tree, slug):
     return out
 
 
+def load_history(folder):
+    """The card timelines before this repo (HISTORY_DIR: index.json, <card id>/timeline.json, its webps, _morgue/): {"dir",
+    "cards": {card key: (folder, timeline)}, "morgue": [(folder, timeline)] (the Morgue's entries from Discord),
+    "mdw": {card key: (folder, timeline)} (MDW Morgue cards' Discord pictures), "created": {card key: {date, source}}}; None
+    without them. A bad file is skipped with a warning: never a failed build."""
+    if not folder:
+        return None
+    try:
+        with open(os.path.join(folder, "index.json"), encoding="utf-8") as fh:
+            index = json.load(fh)
+    except (OSError, ValueError) as e:
+        warn(f"HISTORY_DIR {folder}: no index.json ({type(e).__name__}); the site goes without the card timelines")
+        return None
+    if not isinstance(index, dict) or index.get("version") != 1:
+        warn(f"HISTORY_DIR {folder}: index.json isn't version 1; the site goes without the card timelines")
+        return None
+    out, bad = {"dir": folder, "cards": {}, "morgue": [], "mdw": {}, "created": {}}, []
+
+    def read(sub):
+        if not isinstance(sub, str) or ".." in sub.split("/") or sub.startswith("/"):
+            return None
+        try:
+            with open(os.path.join(folder, sub, "timeline.json"), encoding="utf-8") as fh:
+                t = json.load(fh)
+        except (OSError, ValueError):
+            return None
+        if not isinstance(t, dict) or not isinstance(t.get("name"), str) or not isinstance(t.get("entries"), list):
+            return None
+        t["entries"] = [e for e in t["entries"] if isinstance(e, dict) and e.get("kind") in HISTORY_KINDS]
+        return t
+    for sub, row in (index.get("cards") or {}).items():
+        t = read((row or {}).get("dir") or sub)
+        if t and isinstance(t.get("key"), str):
+            out["cards"][card_key(t["key"])] = ((row or {}).get("dir") or sub, t)
+        else:
+            bad.append(sub)
+    for row in index.get("morgue") or ():
+        t = read((row or {}).get("dir"))
+        if t:
+            out["morgue"].append((row["dir"], t))
+        else:
+            bad.append(str((row or {}).get("dir")))
+    for row in index.get("mdw") or ():
+        t = read((row or {}).get("dir"))
+        if t and isinstance(row.get("card"), str):
+            out["mdw"][card_key(row["card"])] = (row["dir"], t)
+        else:
+            bad.append(str((row or {}).get("dir")))
+    for key, c in (index.get("created") or {}).items():
+        day = (c or {}).get("date")
+        try:
+            ok = day == PAPER_DAY or isinstance(day, str) and date.fromisoformat(day).isoformat() == day
+        except ValueError:
+            ok = False
+        if ok and c.get("source") in HISTORY_FROM:
+            out["created"][card_key(key)] = {"date": day, "source": c["source"]}
+        else:
+            bad.append(f"created {key}")
+    if bad:
+        warn(f"HISTORY_DIR: {len(bad)} entries skipped: {', '.join(bad[:10])}")
+    log(f"card timelines ({folder}): {len(out['cards'])} cards, {len(out['morgue'])} Morgue entries from Discord, "
+        f"{len(out['mdw'])} Morgue cards' pictures, {len(out['created'])} Created dates")
+    return out
+
+
+def history_ts(e):
+    """A timeline entry's date as epoch seconds; None when undated (a paper card)."""
+    try:
+        return int(datetime.fromisoformat(e["date"]).timestamp()) if isinstance(e.get("date"), str) else None
+    except ValueError:
+        return None
+
+
+def history_rows(folder, t):
+    """A timeline's Image versions rows, newest first (undated ones last): versions.json early (app.js versionList).
+    k: kind; ts or label ("Before 2020"); ch: Discord channel; a, s: author and commit subject (old repo, first repo); as:
+    the old card it was (a split, owner Q3); img (history/<folder>/<webp>), w, h; f: its sure fields' values; minor."""
+    rows = []
+    for e in t["entries"]:
+        if e["kind"] not in HISTORY_ROWS:
+            continue
+        row = {"k": e["kind"], "ts": history_ts(e)}
+        if row["ts"] is None and isinstance(e.get("label"), str):
+            row["label"] = e["label"]
+        for src, key in (("channel", "ch"), ("author", "a"), ("subject", "s"), ("as", "as")):
+            if isinstance(e.get(src), str) and e[src]:
+                row[key] = e[src]
+        if isinstance(e.get("image"), str) and HISTORY_IMAGE.match(e["image"]):
+            row["img"] = f"history/{folder}/{e['image']}"
+            if isinstance(e.get("w"), int) and isinstance(e.get("h"), int):
+                row["w"], row["h"] = e["w"], e["h"]
+        fields = {k: f["value"] for k, f in (e.get("fields") or {}).items()
+                  if isinstance(f, dict) and f.get("confidence") == "sure" and "value" in f}
+        if fields:
+            row["f"] = fields
+        if e.get("minor"):
+            row["minor"] = 1
+        rows.append(row)
+    return sorted(rows[::-1], key=lambda r: r["ts"] if r["ts"] is not None else float("-inf"), reverse=True)
+
+
+def history_change(ch):
+    """A timeline version's change from the one before (fields sure on both sides) as a Recorded changes row's parts
+    (analytics.change's keys; moves: [stat, from, to] when a side lacks one of the four, as an item's bars)."""
+    row = {}
+    st = ch.get("stats")
+    a, b = st if isinstance(st, list) and len(st) == 2 else (None, None)
+    if isinstance(a, dict) and isinstance(b, dict):
+        if all(isinstance(a.get(k), int) and isinstance(b.get(k), int) for k in HISTORY_STATS):
+            row["stats"] = [[a[k] for k in HISTORY_STATS], [b[k] for k in HISTORY_STATS]]
+            if ch.get("bal") in ("buff", "nerf", "shift"):
+                row["bal"] = ch["bal"]
+        else:
+            moves = [[k, a[k], b[k]] for k in HISTORY_STATS if isinstance(a.get(k), int) and isinstance(b.get(k), int) and a[k] != b[k]]
+            if moves:
+                row["moves"] = moves
+    if isinstance(ch.get("stars"), list) and len(ch["stars"]) == 2:
+        row["stars"] = ch["stars"]
+    if isinstance(ch.get("types"), dict):
+        row["types"] = {"add": list(ch["types"].get("add") or []), "drop": list(ch["types"].get("drop") or [])}
+    if isinstance(ch.get("name"), list) and len(ch["name"]) == 2:
+        row["name"] = ch["name"]
+    if ch.get("ability_change") == "changed":
+        row["words"] = True
+    return row
+
+
+def history_fact(change):
+    """A changelog fact (owner Q4: data, never its text) as a Recorded changes row's parts."""
+    if change.get("ability") == "changed":
+        return {"words": True}
+    field = change.get("field")
+    if field == "type" and isinstance(change.get("to"), str):
+        return {"types": {"add": [change["to"]], "drop": []} if change.get("op") != "drop" else {"add": [], "drop": [change["to"]]}}
+    if field == "name" and isinstance(change.get("to"), str):
+        return {"name": [change.get("from"), change["to"]]}
+    if field in HISTORY_STATS + ("stars",):
+        fact = {k: change[k] for k in ("from", "to", "by") if isinstance(change.get(k), int)}
+        return {"fact": {"field": field, **fact}} if fact else {}
+    return {}
+
+
+def history_stats(t, kind):
+    """A timeline's part in the balance analytics (analytics.build early): points [{ts, line, stars, kind}] for each dated
+    version (its sure stats and stars, else None) and rows: each version's and changelog fact's change, "early" saying
+    where it comes from, and its first recorded version's change from the last one before (git_first)."""
+    points, rows = [], []
+    for e in t["entries"]:
+        ts = history_ts(e)
+        if ts is None:
+            continue
+        if e["kind"] == "text":
+            row = history_fact(e.get("change") or {})
+        elif e["kind"] in HISTORY_ROWS and e["kind"] != "first repo":
+            fields = {k: f.get("value") for k, f in (e.get("fields") or {}).items() if isinstance(f, dict) and f.get("confidence") == "sure"}
+            st = fields.get("stats") if isinstance(fields.get("stats"), dict) else {}
+            line = [st.get(k) for k in HISTORY_STATS]
+            points.append({"ts": ts, "line": line if all(isinstance(x, int) for x in line) else None,
+                           "stars": fields.get("stars") if isinstance(fields.get("stars"), int) else None, "kind": kind})
+            row = history_change(e.get("changes") or {})
+        else:
+            continue
+        if row:
+            rows.append({"ts": ts, **row, "early": e["kind"]})
+    first = t.get("git_first") or {}
+    if isinstance(first.get("changes"), dict) and history_ts(first) is not None:
+        row = history_change(first["changes"])
+        if row:
+            rows.append({"ts": history_ts(first), **row, "early": "git"})
+    return {"points": points, "rows": rows}
+
+
+def history_morgue(hist, slug):
+    """The Morgue's entries from Discord (owner Q1, Q2: joke cards and cards played but lost before git): name and
+    pictures only, never a live card (cards.json morgue). Each: lost (joke | played), pic (its newest picture), first
+    (day) and firstCh; their rows: {id: history_rows}."""
+    out, rows = [], {}
+    for folder, t in hist["morgue"]:
+        mine = history_rows(folder, t)
+        pics = [r for r in mine if r.get("img")]
+        if not pics:
+            continue
+        first = t.get("first") if isinstance(t.get("first"), dict) else {}
+        e = {"id": slug(str(t.get("card") or t["name"])), "name": t["name"], "key": t["name"], "type": "unknown",
+             "psd": None, "png": None, "morgue": True, "lost": t.get("kind_of") if t.get("kind_of") in ("joke", "played") else "joke",
+             "pic": pics[0]["img"], "tw": pics[0].get("w"), "th": pics[0].get("h"), "ive": len(mine)}
+        if isinstance(first.get("day"), str):
+            e["first"] = first["day"]
+        if isinstance(first.get("channel"), str):
+            e["firstCh"] = first["channel"]
+        out.append(e)
+        rows[e["id"]] = mine
+    return out, rows
+
+
+def copy_history(hist, rows):
+    """Each row's webp into dist/history/ (hardlinks); rows whose file is missing lose their img."""
+    n = 0
+    for row in rows:
+        if not row.get("img"):
+            continue
+        src = os.path.join(hist["dir"], row["img"][len("history/"):])
+        if not os.path.isfile(src):
+            row.pop("img")
+            continue
+        dst = os.path.join(DIST, row["img"])
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        link_or_copy(src, dst)
+        n += 1
+    return n
+
+
 def retired_into(morgue, archived):
     """A Morgue card's kind, stars and author from the archive row whose PSD moved to it (archived_cards)."""
     rows = {r.get("moved_to"): r for r in archived if r.get("moved_to")}
@@ -1575,7 +1803,7 @@ def clip(text, limit=300):
 def share_text(c):
     """Kind line, stats line, ability: the card's link-preview description."""
     kind = "" if c.get("morgue") and c["type"] == "unknown" else KIND_LABEL.get(c["type"], c["type"].title())
-    head = " · ".join(filter(None, ["Retired (The Morgue)" if c.get("morgue") else None,
+    head = " · ".join(filter(None, [("The Morgue, from Discord" if c.get("lost") else "Retired (The Morgue)") if c.get("morgue") else None,
                                     f"{c['stars']}★ {kind}" if c.get("stars") else kind, c.get("series"), c.get("subseries"),
                                     f"by {c['author']}" if c.get("author") else None]))
     stats = " · ".join(f"{label} {c[k]}" for k, label in (("hp", "HP"), ("def", "DEF"), ("atk", "ATK"), ("spd", "SPD")) if c.get(k) is not None)
@@ -2234,11 +2462,14 @@ def created_ts(e):
     return e.get("fs")
 
 
-def apply_created(cards, created):
+def apply_created(cards, created, proposed=None):
     """created (UTC day) per card: the earliest evidence, its first Discord post (the file) or its first upload (fs); a hand
     entry wins. createdFrom says which. Logs, never fails. The bot keeps the same rule (AutoCroissant
-    card_edits.CardDates.created) with its own first upload: the earliest version its database holds."""
-    used, later, today = set(), 0, datetime.now(timezone.utc).date().isoformat()
+    card_edits.CardDates.created) with its own first upload: the earliest version its database holds.
+    proposed: the card timelines' dates (load_history created): one earlier than both wins, never over a hand entry
+    (createdFrom discord, old repo, git or paper; createdWas: the date it replaced); "Before 2020" (a paper card) is
+    HISTORY_DAY with createdBefore 2020."""
+    used, later, today, moved = set(), 0, datetime.now(timezone.utc).date().isoformat(), 0
     for e in cards:
         found = created.get(card_key(e["key"]))
         upload = datetime.fromtimestamp(e["fs"], timezone.utc).date().isoformat() if e.get("fs") else None
@@ -2249,8 +2480,19 @@ def apply_created(cards, created):
         elif upload:
             e["created"], e["createdFrom"] = upload, "git"
             later += bool(found)
+        p = (proposed or {}).get(card_key(e["key"]))
+        day = (HISTORY_DAY if p["date"] == PAPER_DAY else p["date"]) if p else None
+        if day and not (found and found["from"] == "hand") and (not e.get("created") or day < e["created"]):
+            if e.get("created"):
+                e["createdWas"] = e["created"]
+            e["created"], e["createdFrom"] = day, HISTORY_FROM[p["source"]]
+            if p["date"] == PAPER_DAY:
+                e["createdBefore"] = 2020
+            moved += 1
+    if proposed:
+        log(f"created: {moved} cards dated earlier by the card timelines ({len(proposed)} proposed)")
     dated = [e for e in cards if e.get("created")]
-    by = {f: sum(1 for e in dated if e["createdFrom"] == f) for f in CREATED_FROM}
+    by = Counter(e["createdFrom"] for e in dated)
     log(f"created: {len(dated)} of {len(cards)} cards dated ({by['discord']} first Discord post, {by['git']} first upload, "
         f"{by['hand']} by hand)")
     if later:
@@ -4768,6 +5010,15 @@ def main():
         cards.append(entry)
     # cards.json leaves "parsed" out when true
     morgue = morgue_cards(tree, unique_slug)
+    hist, early = load_history(HISTORY_DIR), {}   # the card timelines before this repo; early: their Image versions rows
+    if hist:
+        lost, early = history_morgue(hist, unique_slug)
+        for e in morgue:                          # MDW Morgue cards: their Discord pictures
+            tl = hist["mdw"].get(card_key(e["key"])) or hist["mdw"].get(card_key(e["name"]))
+            if tl and history_rows(*tl):
+                early[e["id"]] = history_rows(*tl)
+                e["ive"] = len(early[e["id"]])
+        morgue += lost
 
     # dup_of ("" = not a duplicate)
     by_id = {e["id"]: e for e in cards}
@@ -4944,7 +5195,8 @@ def main():
             for e in by_png[png]:                 # fs: first upload (the oldest row): created's fallback (apply_created)
                 if rows:
                     e["fs"] = min(ts for (_, ts, _, _), _ in vs)
-            if len(rows) > 1:                     # one version = nothing to compare
+            timeline = hist and any(card_key(e["key"]) in hist["cards"] for e in by_png[png])
+            if len(rows) > 1 or timeline:         # one version = nothing to compare (unless versions before this repo)
                 for e in by_png[png]:
                     versions["cards"][e["id"]] = rows
                     e["iv"] = len(rows)
@@ -4957,10 +5209,23 @@ def main():
             f"({sum(len(m) for m in versions['minor'].values())} minor) from {len(versions['commits'])} commits, since "
             f"{datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}; {len(changes)} picture changes measured")
         version_images(olds)
+    for e in cards if hist else ():               # the card timelines' rows, after this repo's (newest first)
+        tl = hist["cards"].get(card_key(e["key"]))
+        rows = history_rows(*tl) if tl and e["id"] in versions["cards"] else []
+        if rows:
+            early[e["id"]] = rows
+            e["ive"] = len(rows)
+            if sum(1 for r in rows if r.get("minor")):
+                e["ivme"] = sum(1 for r in rows if r.get("minor"))
+    if early:
+        versions["early"] = early
+        log(f"card timelines: {sum(len(r) for r in early.values())} versions before this repo on {len(early)} cards "
+            f"({sum(1 for c in morgue if c.get('lost'))} Morgue entries from Discord), "
+            f"{copy_history(hist, [r for rows in early.values() for r in rows])} pictures")
     moved = set_updated(cards, real, data_key, shown_at)
     log(f"updated: {moved} of {sum(1 for e in cards if e.get('ts'))} cards dated by their last real change")
 
-    apply_created(cards, parse_created())         # after fs: a card's first upload can be the earlier evidence
+    apply_created(cards, parse_created(), hist and hist["created"])   # after fs: a card's first upload can be the earlier evidence
     detail_files = join_details(cards, records, tree, edits)
     sizes = psd_sizes(PSD_TREE)
     for e in cards:                               # a duplicate or variant: its PSD's
@@ -4989,7 +5254,9 @@ def main():
     psd_commits = {(ts, os.path.basename(path).lower()) for _, ts, _, _, _, entries, _ in commits
                    for status, _, _, path in entries if status != "D" and path.lower().endswith(".psd")}
     try:                                          # balance analytics: never a failed build
-        balance = analytics.build(cards, stats, old_stats, psd_commits=psd_commits, lineage=lineage, into=into)
+        before = {e["id"]: history_stats(hist["cards"][card_key(e["key"])][1], e.get("type")) for e in cards
+                  if hist and not e.get("dup") and card_key(e["key"]) in hist["cards"]}
+        balance = analytics.build(cards, stats, old_stats, psd_commits=psd_commits, lineage=lineage, into=into, early=before)
         for message in analytics.summary(balance):
             log(message)
     except Exception as e:
