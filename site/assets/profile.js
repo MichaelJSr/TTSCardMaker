@@ -252,7 +252,7 @@ export function cardsPanelHtml(p, x) {
     <div class="facts">
       ${f.series.length ? `<span class="fact">Mostly ${f.series.map(([s, n]) => `<a href="#/cards?${by}&series=${encodeURIComponent(s)}">${esc(s)}</a> <span class="muted">${n}</span>`).join(", ")}</span>` : ""}
       ${f.newest ? `<span class="fact" data-tip="By creation date: its first Discord post or first upload, unless set by hand">Newest card: <a href="#/card/${f.newest.id}">${esc(f.newest.name)}</a> · ${esc(x.month(createdTs(f.newest)))}</span>` : ""}
-      ${career ? `<span class="fact" data-tip="Years of their first and newest cards, by creation date; best year: the most cards created">${yearOf(career.first)}${yearOf(career.last) !== yearOf(career.first) ? `–${yearOf(career.last)}` : ""}${career.years.length > 1 ? ` · best year ${career.best[0]} (${career.best[1]})` : ""}</span>` : ""}
+      ${career ? `<span class="fact" data-tip="Years of their first and newest cards, by creation date; best year: the most cards created">${yearText(career.first)}${yearText(career.last) !== yearText(career.first) ? `–${yearText(career.last)}` : ""}${career.years.length > 1 ? ` · best year ${career.best[0]} (${career.best[1]})` : ""}</span>` : ""}
       ${series.n ? `<span class="fact"${series.leads.length ? ` data-tip="${esc(`Series where nobody has more cards than them (ties count): ${series.leads.slice(0, 3).join(", ")}${series.leads.length > 3 ? ", …" : ""}`)}"` : ""}>${series.n} series${series.leads.length ? ` · top author in ${series.leads.length}` : ""}</span>` : ""}
       ${banned ? `<a class="fact banned" href="#/cards?${by}&flags=banned" data-tip="In the constructed ban list">${banned} banned</a>` : ""}
       ${ref ? `<span class="fact" data-tip="Their card whose name appears in the most other cards' ability text">Most referenced: <a href="#/card/${ref[0].id}">${esc(ref[0].name)}</a> · named by ${ref[1]} cards</span>` : ""}
@@ -328,14 +328,16 @@ export function starKinds(own, kindOf = c => c.type, kinds = []) {
   return [...new Set(own.filter(c => c.stars != null).map(kindOf).filter(Boolean))].sort((a, b) => rank(a) - rank(b) || String(a).localeCompare(String(b)));
 }
 const yearOf = c => (c.created ? +c.created.slice(0, 4) : c.fs ? new Date(c.fs * 1000).getUTCFullYear() : 0);
-/** P14: {first, last (cards), years: [[year, n]], best: [year, n]} by createdTs (undated cards left out); null without dates. */
+const yearText = c => (c.createdBefore ? `before ${c.createdBefore}` : String(yearOf(c)));   // a paper card's: no day
+/** P14: {first, last (cards), years: [[year, n]], best: [year, n]} by createdTs (undated cards left out; a paper card's
+ *  "before 2020" in no year); null without dates. */
 export function careerOf(own) {
   const dated = own.filter(c => createdTs(c)).sort((a, b) => createdTs(a) - createdTs(b) || byName(a, b));
   if (!dated.length) return null;
   const years = new Map();
-  for (const c of dated) years.set(yearOf(c), (years.get(yearOf(c)) || 0) + 1);
+  for (const c of dated) if (!c.createdBefore) years.set(yearOf(c), (years.get(yearOf(c)) || 0) + 1);
   const list = [...years].sort((a, b) => a[0] - b[0]);
-  return { first: dated[0], last: dated[dated.length - 1], years: list, best: list.reduce((b, r) => (r[1] > b[1] ? r : b)) };
+  return { first: dated[0], last: dated[dated.length - 1], years: list, best: list.reduce((b, r) => (r[1] > b[1] ? r : b), [0, 0]) };
 }
 /** P15: {n, leads: [series]}: the series they have cards in, and those where nobody has more of its cards (ties share).
  *  all: every person's cards (cardsOf's rule). */

@@ -259,6 +259,7 @@ MORGUE = "MDW/The Morgue/"                    # retired cards (owner 11-08): car
 HISTORY_DIR = os.environ.get("HISTORY_DIR", "")
 HISTORY_ROWS = ("discord", "old repo", "paper", "first repo")   # Image versions' rows (changelog facts: Recorded changes only)
 HISTORY_KINDS = HISTORY_ROWS + ("text",)
+HISTORY_BEFORE = ("discord", "text", "first repo")              # before the card's first git record (stop at git; the old repo overlaps it)
 HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "git": "git", "paper card": "paper"}   # a proposed Created's source
 PAPER_DAY = "Before 2020"                     # a paper card's Created (owner Q6): HISTORY_DAY, createdBefore 2020
 HISTORY_DAY = "2019-01-01"                    # before every dated card: the team's Discord began in 2019-02
@@ -1469,12 +1470,15 @@ def history_ts(e):
 def history_rows(folder, t):
     """A timeline's Image versions rows, newest first (undated ones last): versions.json early (app.js versionList).
     k: kind; ts or label ("Before 2020"); ch: Discord channel; a, s: author and commit subject (old repo, first repo); as:
-    the old card it was (a split, owner Q3); img (history/<folder>/<webp>), w, h; f: its sure fields' values; minor."""
+    the old card it was (a split, owner Q3); img (history/<folder>/<webp>), w, h; f: its sure fields' values; minor; cov:
+    its photo shows the card under another one."""
     rows = []
     for e in t["entries"]:
         if e["kind"] not in HISTORY_ROWS:
             continue
         row = {"k": e["kind"], "ts": history_ts(e)}
+        if e.get("covered"):
+            row["cov"] = 1                        # its photo shows the card under another one
         if row["ts"] is None and isinstance(e.get("label"), str):
             row["label"] = e["label"]
         for src, key in (("channel", "ch"), ("author", "a"), ("subject", "s"), ("as", "as")):
@@ -1535,16 +1539,34 @@ def history_fact(change):
     return {}
 
 
+def history_shown(change, parts):
+    """Whether a version's change (parts: history_change's) records a changelog fact's change too."""
+    if change.get("ability") == "changed":
+        return bool(parts.get("words"))
+    field = change.get("field")
+    if field in HISTORY_STATS:
+        i = HISTORY_STATS.index(field)
+        return bool(parts.get("stats") and parts["stats"][0][i] != parts["stats"][1][i]) or any(m[0] == field for m in parts.get("moves") or ())
+    if field == "type":
+        return change.get("to") in ((parts.get("types") or {}).get("drop" if change.get("op") == "drop" else "add") or ())
+    return field in ("stars", "name") and field in parts
+
+
 def history_stats(t, kind):
     """A timeline's part in the balance analytics (analytics.build early): points [{ts, line, stars, kind}] for each dated
     version (its sure stats and stars, else None) and rows: each version's and changelog fact's change, "early" saying
-    where it comes from, and its first recorded version's change from the last one before (git_first)."""
+    where it comes from, and its first recorded version's change from the last one before (git_first; approx: the card
+    had versions before that one). A confirmed fact whose confirming version records the same change is that version's
+    row (counted once)."""
     points, rows = [], []
+    shown = {e.get("id"): history_change(e.get("changes") or {}) for e in t["entries"] if e["kind"] in HISTORY_ROWS}
     for e in t["entries"]:
         ts = history_ts(e)
         if ts is None:
             continue
         if e["kind"] == "text":
+            if history_shown(e.get("change") or {}, shown.get(e.get("confirmed_by")) or {}):
+                continue
             row = history_fact(e.get("change") or {})
         elif e["kind"] in HISTORY_ROWS and e["kind"] != "first repo":
             fields = {k: f.get("value") for k, f in (e.get("fields") or {}).items() if isinstance(f, dict) and f.get("confidence") == "sure"}
@@ -1561,14 +1583,35 @@ def history_stats(t, kind):
     if isinstance(first.get("changes"), dict) and history_ts(first) is not None:
         row = history_change(first["changes"])
         if row:
-            rows.append({"ts": history_ts(first), **row, "early": "git"})
+            rows.append({"ts": history_ts(first), **row, "early": "git", **({"approx": True} if first.get("approx") else {})})
     return {"points": points, "rows": rows}
 
 
-def history_morgue(hist, slug):
+def history_cut(t, fs):
+    """Leaves out a timeline's Discord, changelog and first-repo entries at or after the card's first version here (fs, its
+    first upload): what came before this repo comes before its first version. Returns how many."""
+    keep = [e for e in t["entries"] if e["kind"] not in HISTORY_BEFORE or (history_ts(e) or 0) < fs]
+    gone, t["entries"] = len(t["entries"]) - len(keep), keep
+    return gone
+
+
+def history_day(first):
+    """A Morgue entry's first post as a Pacific day (its rows' dates are Pacific), else its stored day; None for a paper
+    card's "Before 2020"."""
+    try:
+        when = datetime.fromisoformat(first["date"])
+        if when.tzinfo:
+            return when.astimezone(analytics.ZONE).date().isoformat()
+    except (KeyError, TypeError, ValueError):
+        pass
+    return first.get("day") if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(first.get("day"))) else None
+
+
+def history_morgue(hist, slug, old_slugs=()):
     """The Morgue's entries from Discord (owner Q1, Q2: joke cards and cards played but lost before git): name and
     pictures only, never a live card (cards.json morgue). Each: lost (joke | played), pic (its newest picture), first
-    (day) and firstCh; their rows: {id: history_rows}."""
+    (its Pacific day) and firstCh; their rows: {id: history_rows}. An entry named as a renamed card once was (old_slugs:
+    its old page redirects to it) is "<slug>-morgue", as one named as a card of today is."""
     out, rows = [], {}
     for folder, t in hist["morgue"]:
         mine = history_rows(folder, t)
@@ -1576,11 +1619,12 @@ def history_morgue(hist, slug):
         if not pics:
             continue
         first = t.get("first") if isinstance(t.get("first"), dict) else {}
-        e = {"id": slug(str(t.get("card") or t["name"])), "name": t["name"], "key": t["name"], "type": "unknown",
+        base = slugify(str(t.get("card") or t["name"]))
+        e = {"id": slug(f"{base}-morgue" if base in old_slugs else base), "name": t["name"], "key": t["name"], "type": "unknown",
              "psd": None, "png": None, "morgue": True, "lost": t.get("kind_of") if t.get("kind_of") in ("joke", "played") else "joke",
              "pic": pics[0]["img"], "tw": pics[0].get("w"), "th": pics[0].get("h"), "ive": len(mine)}
-        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(first.get("day"))):    # a paper card's "Before 2020": no day
-            e["first"] = first["day"]
+        if history_day(first):                    # a paper card's "Before 2020": no day
+            e["first"] = history_day(first)
         if isinstance(first.get("channel"), str):
             e["firstCh"] = first["channel"]
         out.append(e)
@@ -5013,7 +5057,7 @@ def main():
     morgue = morgue_cards(tree, unique_slug)
     hist, early = load_history(HISTORY_DIR), {}   # the card timelines before this repo; early: their Image versions rows
     if hist:
-        lost, early = history_morgue(hist, unique_slug)
+        lost, early = history_morgue(hist, unique_slug, {slugify(n) for names in into.values() for n in names})
         for e in morgue:                          # MDW Morgue cards: their Discord pictures
             tl = hist["mdw"].get(card_key(e["key"])) or hist["mdw"].get(card_key(e["name"]))
             if tl and history_rows(*tl):
@@ -5210,14 +5254,19 @@ def main():
             f"({sum(len(m) for m in versions['minor'].values())} minor) from {len(versions['commits'])} commits, since "
             f"{datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}; {len(changes)} picture changes measured")
         version_images(olds)
+    cut = 0
     for e in cards if hist else ():               # the card timelines' rows, after this repo's (newest first)
         tl = hist["cards"].get(card_key(e["key"]))
+        if tl and e.get("fs"):
+            cut += history_cut(tl[1], e["fs"])
         rows = history_rows(*tl) if tl and e["id"] in versions["cards"] else []
         if rows:
             early[e["id"]] = rows
             e["ive"] = len(rows)
             if sum(1 for r in rows if r.get("minor")):
                 e["ivme"] = sum(1 for r in rows if r.get("minor"))
+    if cut:
+        warn(f"card timelines: {cut} Discord, changelog or first-repo entries at or after their card's first version here left out")
     if early:
         versions["early"] = early
         log(f"card timelines: {sum(len(r) for r in early.values())} versions before this repo on {len(early)} cards "

@@ -1,7 +1,7 @@
 // The Stats page's History section (app.js renderStatsView, after Balance), from cards.json (created, since). Charts
 // follow stats.js (dataviz method); DOM-free like balance.js. NOTES.md §26, §30.
 import { chartCard as card, table, stacked, columns, cardsHref } from "./chartkit.js";
-import { legend } from "./balance.js";
+import { legend, createdYear, createdQuery } from "./balance.js";
 import { yearOf } from "./history.js";
 
 const poolOf = (cards, params) => {
@@ -15,7 +15,7 @@ const add = (m, k, n = 1) => m.set(k, (m.get(k) || 0) + n);
 // from those four and the pink, in both themes)
 const AUTHOR_COLOUR = { Zomoroko: "#ffa9e2" }, AUTHOR_EXTRA = ["#9c27b0", "#aed581", "#a52a2a"];
 /** S13: when a card's ability last changed (its current text's start), else its creation; null without an ability */
-const freshTs = c => (!c.ability ? null : (c.hv ? c.since ?? c.ts : c.created ? Date.parse(`${c.created}T12:00:00Z`) / 1000 : c.fs ?? c.ts) || null);
+const freshTs = c => (!c.ability ? null : (c.hv ? c.since ?? c.ts : c.created && !c.createdBefore ? Date.parse(`${c.created}T12:00:00Z`) / 1000 : c.fs ?? c.ts) || null);
 /** its year (app.js fresh=) */
 export const freshYear = c => { const ts = freshTs(c); return ts ? yearOf(ts) : null; };
 
@@ -33,13 +33,14 @@ export function historyHtml({ cards, narrow = false }, params) {
     const ranked = topKeys(all, 8), here = new Set(made.map(c => c.author)), top = ranked.filter(a => here.has(a));
     const free = [...[1, 2, 3, 4].map(i => `var(--s${i})`), ...AUTHOR_EXTRA], colour = new Map();
     for (const a of ranked) colour.set(a, AUTHOR_COLOUR[a] || free.shift());
-    for (const c of made) add(counts, `${c.created.slice(0, 4)}\u0001${top.includes(c.author) ? c.author : ""}`);
-    const ys = made.map(c => +c.created.slice(0, 4)), years = [];
+    for (const c of made) add(counts, `${createdYear(c)}\u0001${top.includes(c.author) ? c.author : ""}`);
+    const ys = made.filter(c => !c.createdBefore).map(c => +c.created.slice(0, 4)), years = [];
+    years.push(...[...new Set(made.filter(c => c.createdBefore).map(createdYear))].sort());     // "Before 2020" first
     for (let y = Math.min(...ys); y <= Math.max(...ys); y++) years.push(String(y));
     const series = [...top.map(a => ({ key: a, label: a, color: colour.get(a) })),
       ...(made.some(c => !top.includes(c.author)) ? [{ key: "", label: "Others", color: "var(--deemph)" }] : [])];
     const get = (y, k) => counts.get(`${y}\u0001${k}`) || 0;
-    const href = (y, k) => (k === "" ? null : L({ q: `created==${y}`, author: k }));     // Others: no filter
+    const href = (y, k) => (k === "" ? null : L({ q: createdQuery(y), author: k }));     // Others: no filter
     charts.push(card("hist-created", "Cards created per year", "By author.", stacked(years, series, get, { width: 560, href, narrow }),
       table(["Year", ...series.map(s => s.label), "All"], years.map(y => [y, ...series.map(s => get(y, s.key)), series.reduce((n, s) => n + get(y, s.key), 0)])),
       { tip: "Cards by the year they were created, as on their card pages; each author a colour of their own", legend: legend(series.map(s => [s.color, s.label, s.key ? L({ author: s.key }) : null])) }));

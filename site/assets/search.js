@@ -26,7 +26,7 @@ const OPS = { "<": (a, b) => a < b, "<=": (a, b) => a <= b, "==": (a, b) => a ==
 const STR = {
   type: c => c.type, subtype: c => c.subtype, series: c => c.series, subseries: c => c.subseries, author: c => c.author,
   path: c => c.psd || c.png, ability: c => c.ability, types: c => (c.types || []).join(" "),
-  name: c => c.name, alias: c => c.aliases || [], aliases: c => c.aliases || [], created: c => c.created,   // aliases: each its own
+  name: c => c.name, alias: c => c.aliases || [], aliases: c => c.aliases || [], created: c => (c.createdBefore ? `before ${c.createdBefore}` : c.created),   // aliases: each its own
 };
 export const FLAGS = {
   "has:alias": c => !!(c.aliases && c.aliases.length),
@@ -113,7 +113,10 @@ export function compile(query) {
   let m = lower.match(/^(\w+)\s*(<=|>=|==?|<|>)\s*(\d{4}(?:-\d{2}){0,2})$/);   // a lone = reads as ==
   if (m && DATE[m[1]]) {                                  // created>2023: after 2023; created==2023-10: in October 2023
     const get = DATE[m[1]], v = m[3], op = OPS[m[2]] || OPS["=="];
-    return c => { const x = get(c); return x != null && op(x.slice(0, v.length), v); };
+    return c => {                                         // "before 2020" (a paper card, no day): only a < or <= it surely meets
+      if (c.createdBefore && m[1] === "created") return (m[2] === "<" || m[2] === "<=") && op(`${c.createdBefore - 1}-12-31`.slice(0, v.length), v);
+      const x = get(c); return x != null && op(x.slice(0, v.length), v);
+    };
   }
   m = lower.match(/^(\w+)\s*(<=|>=|==?|<|>)\s*(-?\d+)$/);
   if (m && NUM[m[1]]) {

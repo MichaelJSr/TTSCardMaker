@@ -1077,7 +1077,7 @@ const versionList = c => {
   const minor = new Set(S.versions.minor[c.id] || []);        // build_site: a picture change under the share that shows, no data change
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; })
     .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, ts: r.ts, label: r.label, channel: r.ch, author: r.a, subject: r.s, as: r.as,
-      img: r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor })));
+      img: r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor, covered: !!r.cov })));
 };
 const versionWhen = v => (v.ts ? date(v.ts) : esc(v.label || "Undated"));
 const versionMsg = v => [v.subject, v.as && `as ${v.as}`].filter(Boolean).join(" · ");
@@ -1138,8 +1138,8 @@ function earlyVersion(c, vs, i) {
   const pic = (w, alt) => (src(w) ? `<img src="${esc(src(w))}" alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
     : `<div class="empty">${w.early === "first repo" ? "No picture: a push notice of the first repo, whose files are gone" : "No picture"}</div>`);
   if (i === 0) return `<figure>${pic(v, `${c.name}, current version`)}<figcaption>${caption(v)}<br>Current version</figcaption></figure>`;
-  const then = v.fields?.ability;
-  return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : v.label || ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}</figcaption></figure>
+  const then = v.fields?.ability, under = v.covered ? `<br><span class="muted">In this photo it lies under another card: mostly hidden</span>` : "";
+  return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : v.label || ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}${under}</figcaption></figure>
       <figure>${pic(cur, `${c.name}, current version`)}<figcaption>Current<br><span class="muted">${cur.early ? caption(cur) : `${date(cur.ts)}${commitAfter(S.versions.repo, cur.sha, `Commit for the ${date(cur.ts)} image version`, cur.path)}`}</span></figcaption></figure></div>
       ${then && c.ability && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }

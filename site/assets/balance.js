@@ -200,6 +200,10 @@ function sparkline(points) {
   return `<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(`Total stats over time: ${totals.join(", ")}`)}"><path class="line" d="${d}"/>${dots}<text class="val" x="${X(last.ts) + 8}" y="${Y(last.total) + 4}">${last.total}</text></svg>`;
 }
 
+/** a card's year created, "Before 2020" for a paper card's (cards.json createdBefore: no day), and its search */
+export const createdYear = c => (c.createdBefore ? `Before ${c.createdBefore}` : c.created.slice(0, 4));
+export const createdQuery = y => (y.startsWith("Before ") ? `created<${y.slice(7)}` : `created==${y}`);
+
 // ---- describing a change ------------------------------------------------------------------------------------------
 const statsLine = l => STATS.map(([, lab], i) => `${lab} ${l[i]}`).join(" · ");
 const STAT_LABEL = Object.fromEntries(STATS);
@@ -344,14 +348,15 @@ export function statsHtml(A, { cards, byId, narrow = false }, params) {
   for (const c of pool) { const a = A.cards[c.id], co = a?.cohort && A.cohorts[a.cohort]; if (co) strength.set(c.id, totalOf(c.id) - co.total.p50); }
   const years = new Map();
   for (const c of pool) if (strength.has(c.id) && c.created) {
-    const y = c.created.slice(0, 4), g = years.get(y) || years.set(y, { n: 0, s: 0, t: 0 }).get(y);
+    const y = createdYear(c), g = years.get(y) || years.set(y, { n: 0, s: 0, t: 0 }).get(y);
     g.n++; g.s += strength.get(c.id); g.t += totalOf(c.id);
   }
-  const yearRows = [...years].sort((a, b) => a[0].localeCompare(b[0])).map(([y, g]) => ({ y, n: g.n, s: g.s / g.n, t: g.t / g.n }));
+  const yearSort = y => (y.startsWith("Before ") ? "0" : "1") + y;                                 // "Before 2020" first
+  const yearRows = [...years].sort((a, b) => yearSort(a[0]).localeCompare(yearSort(b[0]))).map(([y, g]) => ({ y, n: g.n, s: g.s / g.n, t: g.t / g.n }));
   if (yearRows.some(r => r.n >= 3))
     charts.push(card("bal-creep", "Power creep", "Average total vs its star level's median, by year created.",
       diverging(yearRows.filter(r => r.n >= 3).map(r => ({ label: `${r.y} (${r.n})`, value: Math.round(r.s * 10) / 10, tip: `${r.y}: ${r.n} creatures and minions, average total ${fmt(r.t)}`,
-        href: L({ cohort: "any", q: `created==${r.y}` }) })), { unit: "vs median", labelW: 110, narrow }),
+        href: L({ cohort: "any", q: createdQuery(r.y) }) })), { unit: "vs median", labelW: 110, narrow }),
       table(["Year", "Cards", { label: "Average vs median", tip: "Mean of each card's total minus its star level's median (all of its kind if few)" }, "Average total"], yearRows.map(r => [r.y, r.n, Math.round(r.s * 10) / 10, Math.round(r.t * 10) / 10])),
       { tip: "Creatures and minions by year created; the chart leaves out years with under 3 cards", legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
 

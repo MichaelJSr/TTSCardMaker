@@ -47,8 +47,9 @@ text or image, links its commit when it is known), and the artwork sources when 
 follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"), Discord's (date and channel,
 never a poster or message), a paper card's ("Before 2020") and the first repo's push notices (text only, "first
 repo"); each compares with the current card like the others (its own sure ability as "Text then"), with no link and no
-Revert, and their changes (and the update changelogs' facts, as data only) join Recorded changes and the balance
-charts. The current
+Revert, and their changes (and the update changelogs' facts, as data only, each once: a fact its version also shows is
+that version's change) join Recorded changes and the balance charts; a Discord or changelog row is always before the
+card's first version here. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
   that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
   variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own. Signed in, each earlier text with a
