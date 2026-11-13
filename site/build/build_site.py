@@ -61,7 +61,7 @@ cards.json morgue, picture only, never a live card (morgue_cards).
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json, data/changelog.json, data/archive.json and data/edits.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's Details dropdown),
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/changelog-minor.json (a Changelog push's minor changes, when their fold opens), data/details/<id>.json (a card's Details dropdown),
 data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/editing.json (the card fields only edit mode reads, EDITOR_FIELDS: loaded with the editor),
@@ -2861,13 +2861,38 @@ AUTHOR_PATHS = {AUTHORS_PATH, "MDW/Card Authors.txt"}   # before the 2026-10-20 
 WEBSITE_SUBJECT = "Website edit"              # edit.js publish(): "Website edit: …" / "Website edits: n changes"
 BATCH_LINES = 60                              # lines kept per edit batch (Card Authors.txt's first commit credited 813 cards); the rest is `more`
 EDIT_EVENTS = ("edited", "authors")           # the Database edits tab's events (changes.js EDIT_KINDS)
+STUB_KEYS = ("seq", "at", "build", "push")    # a push's minor events in changelog.json: one stub with these, in the first's place
+
+
+def minor_split(events):
+    """events (seq order) -> (each push's minor ones as one stub where the first was: STUB_KEYS and `minors`, the counts by
+    kind; {stub seq: those events without STUB_KEYS}). A push is changelog.js pushGroups' group: consecutive events with one
+    build, push and re-read flag."""
+    out, minor, last, stub = [], {}, None, None
+    for e in events:
+        key = (e.get("build"), (e.get("push") or {}).get("after"), e.get("kind") == "reparse")
+        if key != last:
+            last, stub = key, None
+        if not e.get("minor"):
+            out.append(e)
+            continue
+        if stub is None:
+            stub = {**{k: e[k] for k in STUB_KEYS if k in e}, "minors": {}}
+            out.append(stub)
+            minor[stub["seq"]] = []
+        stub["minors"][e["kind"]] = stub["minors"].get(e["kind"], 0) + 1
+        minor[stub["seq"]].append({k: v for k, v in e.items() if k not in STUB_KEYS})
+    return out, minor
 
 
 def changelog_files(changelog):
-    """One file per Changes tab: changelog.json (every event), archive.json (the archived cards), edits.json (the edit
-    events and batches); the new two carry no build facts (VOLATILE)"""
+    """One file per Changes tab: changelog.json (every event, a push's minor ones as a stub: minor_split),
+    changelog-minor.json (those, loaded when a fold opens), archive.json (the archived cards), edits.json (the edit
+    events and batches); only changelog.json carries build facts (VOLATILE)"""
     head = {k: changelog[k] for k in ("days", "repo")}
-    return {"changelog.json": {k: v for k, v in changelog.items() if k not in ("archived", "edits")},
+    events, minor = minor_split(changelog["events"])
+    return {"changelog.json": {**{k: v for k, v in changelog.items() if k not in ("archived", "edits")}, "events": events},
+            "changelog-minor.json": minor,
             "archive.json": {"repo": changelog["repo"], "archived": changelog["archived"]},
             "edits.json": {**head, "events": [e for e in changelog["events"] if e.get("kind") in EDIT_EVENTS], "edits": changelog["edits"]}}
 

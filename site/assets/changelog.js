@@ -1,6 +1,7 @@
 // The Changes page's Changelog, Archive and Database edits tabs (app.js renderChanges has the tab row and the other tabs), from
 // data/changelog.json, archive.json and edits.json (build_site.py changelog_files: the card sync's events, the archived cards,
-// the edit events and the edit batches from git history); loaded on first use, with a tab's data (app.js loadChangelog).
+// the edit events and the edit batches from git history); loaded on first use, with a tab's data (app.js loadChangelog);
+// changelog.json's minor events in changelog-minor.json, loaded when a fold first opens.
 // Events are grouped by push as the Discord posts are
 // (AutoCroissant commands/changelog.py: messages(), title_of(), link_of(), SECTIONS). DOM-free: every function returns
 // HTML, every string goes through esc.
@@ -40,6 +41,14 @@ const dateLabel = ts => (ts ? DATE(new Date(ts * 1000)) : "");
 const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
 const short = sha => esc(String(sha || "").slice(0, 8));
 
+/** changelog.json's events, each push's stub of minor events (build_site minor_split) as one stand-in per event (`stub`,
+    the stub's seq): pushGroups, the counts and the kind filter see every event; foldHtml draws the real ones */
+const expanded = new WeakMap();
+function eventsOf(C) {
+  if (!expanded.has(C)) expanded.set(C, C.events.flatMap(({ minors, ...e }) => (minors
+    ? Object.entries(minors).flatMap(([kind, n]) => Array.from({ length: n }, () => ({ ...e, kind, minor: true, stub: e.seq }))) : [e])));
+  return expanded.get(C);
+}
 /** The posts' groups: events in seq order, consecutive ones with one build, push and re-read flag together (messages()). */
 export function pushGroups(events) {
   const out = [];
@@ -133,8 +142,12 @@ export function eventHtml(e) {
 
 // ---- one push ---------------------------------------------------------------------------------------------------
 let folds = [];                                           // the minor folds' events of the last tab drawn: foldHtml draws one when it opens
-/** A minor fold's lines (app.js, on its first open) */
-export const foldHtml = n => (folds[n] || []).map(eventHtml).join("");
+/** A minor fold's lines (app.js, on its first open); M: changelog-minor.json, for its stand-ins (foldNeeds) */
+export const foldNeeds = n => (folds[n] || []).some(e => e.stub);
+export function foldHtml(n, M) {
+  const fold = folds[n] || [], kinds = new Set(fold.map(e => e.kind)), stubs = new Set(fold.map(e => e.stub).filter(s => s != null));
+  return [...fold.filter(e => e.stub == null), ...[...stubs].flatMap(s => (M?.[s] || []).filter(e => kinds.has(e.kind)))].map(eventHtml).join("");
+}
 /** A push's block: the post's title linked to the push, its sections, then the re-reads and the minor changes (folded,
     their lines drawn on open: foldHtml). kinds: only those (a filter) */
 export function groupHtml(group, repo, kinds = null) {
@@ -185,7 +198,7 @@ export const fileRename = e => e.kind === "moved" && !!e.from_path && folder(e.f
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=) */
 export function changelogHtml(C, params) {
   folds = [];
-  const events = C.events.filter(e => !fileRename(e)), kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
+  const events = eventsOf(C).filter(e => !fileRename(e)), kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
   const counts = new Map();
   for (const e of events) counts.set(e.kind, (counts.get(e.kind) || 0) + 1);
   const present = KINDS.filter(([k]) => counts.get(k));

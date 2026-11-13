@@ -1371,9 +1371,16 @@ function distPage(panel, step) {          // a stat distribution's pager: the ne
 const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"],
   ["parser", "Parser notes"]];
 const NEEDS = { "": "history", changelog: "changelog.json", archive: "archive.json", edits: "edits.json" };   // the data a tab loads first
-// a minor fold's lines, drawn on its first open (changelog.js foldHtml; capture: toggle doesn't bubble)
+// a minor fold's lines, drawn on its first open (changelog.js foldHtml; capture: toggle doesn't bubble); the Changelog's
+// come from changelog-minor.json, loaded then (a failed load: the next open tries again)
+const MINOR = "changelog-minor.json";
 document.addEventListener("toggle", e => { const ul = e.target.open && e.target.matches?.(".cl-minor") && $("ul[data-fold]", e.target);
-  if (ul && !ul.childElementCount && CL) ul.innerHTML = CL.foldHtml(+ul.dataset.fold); }, true);
+  if (!ul || !CL || (ul.childElementCount && !$(".load-error", ul))) return;
+  const n = +ul.dataset.fold, draw = () => { if (ul.isConnected) ul.innerHTML = CL.foldHtml(n, S.changelog[MINOR]); };
+  if (S.changelog[MINOR] || !CL.foldNeeds(n)) return draw();
+  ul.innerHTML = `<li class="muted">Loading…</li>`;
+  loadChangelog(MINOR).then(draw, err => { if (ul.isConnected) ul.innerHTML = `<li class="load-error">${esc(failText("the minor changes", err, ""))} <a href="javascript:location.reload()">Reload</a></li>`; });
+}, true);
 function renderChanges(r = parseHash(), held = null) {   // held: the tab a loading page focused, for the loaded redraw
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
