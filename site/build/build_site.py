@@ -58,7 +58,8 @@ Where the data comes from:
     site goes without them, as before): each card's versions from the old pre-wipe repo, Discord, paper cards and the
     first repo's push notices after its own in Image versions (versions.json early; webps copied to dist/history/),
     their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
-    Morgue's entries from Discord (cards.json morgue, lost: joke or played) and the Created dates they move earlier
+    Morgue's entries from Discord (cards.json morgue, lost: joke or played), the MDW Morgue cards' Discord pictures
+    (after their PNG's newest version here, the current one: history_mdw) and the Created dates they move earlier
     (never later, never over a hand entry). load_history; bad files are skipped, never a failed build.
   * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
     (one more `git log` over Card Edits.json and Card Authors.txt, their versions read in one batch) and the archived
@@ -1630,6 +1631,35 @@ def history_morgue(hist, slug, old_slugs=()):
         out.append(e)
         rows[e["id"]] = mine
     return out, rows
+
+
+def history_mdw(hist, morgue, early, versions, commits, renamed, people):
+    """The MDW Morgue cards' Discord pictures as Image versions (early), cut at their PNG's first record here (history_cut),
+    after one row of this repo: their PNG's newest version, the current one Compare puts them beside (no Revert: the
+    Morgue's cards can't be edited). Returns how many entries the cut left out."""
+    tls = {e["id"]: tl for e in morgue if not e.get("lost") and e.get("png")
+           for tl in [hist["mdw"].get(card_key(e["key"])) or hist["mdw"].get(card_key(e["name"]))] if tl}
+    found = image_versions(sorted({e["png"] for e in morgue if e["id"] in tls}), commits, renamed)
+    at, cut = {c[0]: i for i, c in enumerate(versions["commits"])}, 0
+    for e in morgue:
+        vs = found.get(e.get("png")) if e["id"] in tls else None
+        if not vs:
+            continue
+        cut += history_cut(tls[e["id"]][1], min(ts for (_, ts, _, _), _ in vs))      # its first upload here
+        rows = history_rows(*tls[e["id"]])
+        if not rows:
+            continue
+        (sha, ts, author, subject), path = vs[0]
+        if sha not in at:
+            at[sha] = len(versions["commits"])
+            versions["commits"].append([sha, ts, person(people, author), subject])
+        versions["cards"][e["id"]] = [[at[sha]] + ([path] if path != e["png"] else [])]
+        e["iv"] = 1
+        early[e["id"]] = rows
+        e["ive"] = len(rows)
+        if sum(1 for r in rows if r.get("minor")):
+            e["ivme"] = sum(1 for r in rows if r.get("minor"))
+    return cut
 
 
 def copy_history(hist, rows):
@@ -5058,11 +5088,6 @@ def main():
     hist, early = load_history(HISTORY_DIR), {}   # the card timelines before this repo; early: their Image versions rows
     if hist:
         lost, early = history_morgue(hist, unique_slug, {slugify(n) for names in into.values() for n in names})
-        for e in morgue:                          # MDW Morgue cards: their Discord pictures
-            tl = hist["mdw"].get(card_key(e["key"])) or hist["mdw"].get(card_key(e["name"]))
-            if tl and history_rows(*tl):
-                early[e["id"]] = history_rows(*tl)
-                e["ive"] = len(early[e["id"]])
         morgue += lost
 
     # dup_of ("" = not a duplicate)
@@ -5265,6 +5290,7 @@ def main():
             e["ive"] = len(rows)
             if sum(1 for r in rows if r.get("minor")):
                 e["ivme"] = sum(1 for r in rows if r.get("minor"))
+    cut += history_mdw(hist, morgue, early, versions, commits, renamed, people) if hist else 0
     if cut:
         warn(f"card timelines: {cut} Discord, changelog or first-repo entries at or after their card's first version here left out")
     if early:
