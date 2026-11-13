@@ -62,6 +62,8 @@ jobs:
         /requirements-cards.txt
         /commands/psd_links.py
         /commands/card_preview_reads.py
+        /commands/ability_place.py
+        /commands/ability_index.json
     steps:
       # In the background: BOT_FILES at the bot's main (cloned in RUNNER_TEMP, moved into bot/ once in, then compiled by
       # the image's Python 3.14, setup-python's: Start imports them compiled), its requirements-cards.txt once through the
