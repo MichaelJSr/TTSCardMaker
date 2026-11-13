@@ -96,7 +96,8 @@ jobs:
       # A push that also changed Card sync's data inputs (card-sync.yml's push paths but TTS/Global.lua, Global.xml and the
       # save: no data commit): Card sync's early build (dispatched at its data job's start; Data wait reads main's head)
       # builds this push's site code with the new data. Found in 30 s: this run stops (every later step skipped) and
-      # leaves pages-build to it; else it builds as today. The push's files: the payload's lists, else the compare API.
+      # leaves pages-build to it; else it builds as today. The push's files: the payload's lists, else the compare API;
+      # neither (a big push: 422) counts as a data change while Card sync has a run for it (both start with the push).
       - name: Early build
         id: early
         if: github.event_name == 'push' && github.run_attempt == '1'    # a re-run builds
@@ -107,8 +108,9 @@ jobs:
         run: |
           files=$(jq -r '[.commits[] | .added, .modified, .removed] | if length > 0 and all(type == "array") then flatten[] else empty end' \
             "$GITHUB_EVENT_PATH") || files=
+          why=
           [ -n "$files" ] || files=$(timeout 20 gh api "repos/$GITHUB_REPOSITORY/compare/$(jq -r .before "$GITHUB_EVENT_PATH")...$GITHUB_SHA" \
-            --jq '.files[] | .filename, .previous_filename // empty') || files=
+            --jq '.files[] | .filename, .previous_filename // empty') || why="GitHub listed no files"
           data=
           while IFS= read -r f; do
             case $f in   # card-sync.yml's push paths but the three
@@ -118,11 +120,13 @@ jobs:
               MDW/Fonts/*) data=$f; break ;;
             esac
           done <<< "$files"
-          [ -n "$data" ] || exit 0
+          [ -z "$data" ] || why="$data changed"
+          [ -n "$why" ] || exit 0
           runs=repos/$GITHUB_REPOSITORY/actions/workflows
           sync='' early=''
           while :; do
             [ -n "$sync" ] || sync=$(timeout 10 gh api "$runs/card-sync.yml/runs?event=push&head_sha=$GITHUB_SHA" --jq '.workflow_runs[0].id // empty') || sync=
+            [ -n "$sync$data" ] || break    # files unknown, no Card sync run
             if [ -n "$sync" ]; then
               early=$(timeout 10 gh api "$runs/site.yml/runs?event=workflow_dispatch&per_page=30" --jq "[.workflow_runs[] |
                 select(.display_title == \"Card browser (after $sync data)\" and .status != \"completed\")][0].id // empty") || early=
@@ -131,11 +135,11 @@ jobs:
             sleep 2
           done
           if [ -z "$early" ]; then
-            echo "No early build of Card sync's run ${sync:-(none)} in 30 s: this run builds ($data changed)"
+            echo "No early build of Card sync's run ${sync:-(none)} in 30 s: this run builds ($why)"
             exit 0
           fi
           echo "run=$early" >> "$GITHUB_OUTPUT"
-          echo "This push changed card data ($data): Card sync's early build $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$early builds it with this site code; this run stops." | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "Card sync's early build $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$early builds this push with its site code ($why); this run stops." | tee -a "$GITHUB_STEP_SUMMARY"
 
       # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
       # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs and uncached
