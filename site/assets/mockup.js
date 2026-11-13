@@ -832,10 +832,18 @@ export function changes(edit, psd) {
 }
 
 const STAT_NAME = { hp: /^(hp|health)$/i, def: /^(def|defen[cs]e|defemse)$/i, atk: /^(atk|attack)$/i, spd: /^(spd|speed)$/i };   // psd_regions.STATS
+const isComp = (p, k) => { const path = String(p).split("/"), own = path.pop().trim(); return STAT_NAME[k].test(own) && path.some(g => /dark|bars/i.test(g)); };
 /** Whether the record's stat bar is a layer-comp smart object (the Alt template's Stats Bars/Darks/Health): it bakes to 20. */
-export const compBar = (rec, k) => Array.isArray(rec?.smart_objects) && rec.smart_objects.some(p => {
-  const path = String(p).split("/"), own = path.pop().trim();
-  return STAT_NAME[k].test(own) && path.some(g => /dark|bars/i.test(g)); });
+export const compBar = (rec, k) => Array.isArray(rec?.smart_objects) && rec.smart_objects.some(p => isComp(p, k));
+/** Whether a comp bar's group shows a layer in its Bars group (the lit look its comps uncover); none (Bulborb Larva: its
+ *  comps draw their own look, up to 10): nothing to light from 0. */
+const compLit = (rec, k) => rec.smart_objects.some(p => {
+  if (!isComp(p, k)) return false;
+  let kids = Array.isArray(rec.tree) ? rec.tree : [];
+  for (const g of String(p).split("/").slice(0, -2)) kids = kids.find(n => n?.[0] === g && n[1] === "group")?.[3] || [];
+  const shown = list => Array.isArray(list) && list.some(n => n?.[2] && (n[1] !== "group" || shown(n[3])));
+  return kids.some(n => n?.[1] === "group" && /^\s*bars\s*$/i.test(n[0]) && shown(n[3]));
+});
 /** Why a stat at `to` stays on the website (psd_edit.classify's site reasons; old bars), or null: it bakes, or the record
  *  can't tell (several creatures' digit rows). */
 export function statSite(rec, k, to) {
@@ -1175,7 +1183,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
     if (barCut(pics, k, psd[k], edit[k])) todo.stats[k] = [psd[k], edit[k]];   // the bake's picture of it
     else if (why) out.site.push([`${label} ${edit[k]}`, why]);
-    else if (compBar(rec, k) && psd[k] >= 0 && psd[k] <= 10 && edit[k] > 10 && edit[k] <= 20) todo.stats[k] = [psd[k], edit[k]];   // its comps' two half rows
+    else if (compBar(rec, k) && Number.isInteger(psd[k]) && psd[k] >= 0 && psd[k] <= 10 && edit[k] > 10 && edit[k] <= 20
+      && (psd[k] > 0 || compLit(rec, k))) todo.stats[k] = [psd[k], edit[k]];   // its comps' two half rows
   }                                                   // else not drawn, nothing said (owner 11-11)
   if (todo.name != null && titleInPicture(rec)) { out.site.push(["name", "title"]); todo.name = null; }   // the dialog's note
   const starCut = todo.stars && barCut(spics, "stars", ...todo.stars), starImg = starCut ? await loadImage(spics.img) : null;
