@@ -842,6 +842,7 @@ function sizerRows(rest, rows) {
 const TABLE_FIRST = 100, TABLE_CHUNK = 150;
 let tableRest = [], tableJob = 0;
 function fillTable(tbody) {
+  fitTable(tbody.parentElement);
   const rest = tableRest, job = ++tableJob; tableRest = [];
   let k = 0;
   const step = () => {
@@ -850,6 +851,13 @@ function fillTable(tbody) {
     if (k < rest.length) setTimeout(step); else tbody.parentElement.querySelector("tbody.sizer")?.remove();
   };
   if (rest.length) setTimeout(step);
+}
+// a table wider than its column (long names, fonts) scrolls in its box, its header row unpinned (.outgrown). The column's
+// width from the toolbar (.outgrown moves the box's height: an observer loop); a function of its own keeps no rows' markup
+function fitTable(t) {
+  const sx = t.parentElement, fit = new ResizeObserver(() => t.isConnected
+    ? sx.classList.toggle("outgrown", t.getBoundingClientRect().width - sx.getBoundingClientRect().width > 0.5) : fit.disconnect());
+  fit.observe(t); fit.observe($(".toolbar", sx.parentElement));
 }
 // the Needs handling view: a list to scan, each card's flags beside it (labels; each flag's issue behind a mark, owner 11-11)
 const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="">` : ""}
