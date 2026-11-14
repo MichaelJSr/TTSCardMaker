@@ -355,6 +355,9 @@ jobs:
         with:
           python-version: "3.14"
 
+      # The wait and the take-over (card_preview_branch --take): one connection to the API, the run's artifacts listed
+      # every 0.25 s with If-None-Match (a 304 isn't counted), the preview job every 15 s; once the hand-over is listed,
+      # its zip on that connection, the blob store's URL without the token, HANDED's names alone into preview/.
       - name: Wait for the preview
         id: wait
         working-directory: bot
@@ -362,29 +365,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          runs="repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           # Publish's reads, done now (none: Publish fetches as ever)
           timeout 10 python -S -m commands.card_preview_branch --warm --git "$GITHUB_WORKSPACE" || true
           if [ $SECONDS -lt 5 ]; then sleep $((5 - SECONDS)); fi    # a hand-over takes 7 s or more
-          job_at=15
-          while [ $SECONDS -lt 720 ]; do            # 12 minutes at most; about 9 API calls a preview (the token's 1000/h)
-            if gh api "$runs/artifacts" --jq '.artifacts[].name' 2> /dev/null | grep -qx card-preview; then
-              echo "go=true" >> "$GITHUB_OUTPUT"; exit 0
-            fi
-            if [ $SECONDS -ge $job_at ]; then       # the job, every 15 s: ended without a hand-over?
-              job_at=$((SECONDS + 15))
-              job=$(gh api "$runs/jobs" --jq '.jobs[] | select(.name == "preview") | "\(.status) \([.steps[] | select(.name == "Validate") | .conclusion][0])"' 2> /dev/null) || job=""
-              case $job in
-                "completed success") echo "go=true" >> "$GITHUB_OUTPUT"; exit 0 ;;   # validated: published as try again
-                completed*) echo "The request never validated: nothing to publish."; exit 0 ;;
-              esac
-            fi
-            if [ $SECONDS -lt 60 ]; then sleep 1; else sleep 3; fi
-          done
-          echo "::warning::the preview did not end in 12 minutes: nothing published"
+          python -S -m commands.card_preview_branch --take "$RUNNER_TEMP/preview" >> "$GITHUB_OUTPUT"
 
-      - name: Take over
-        if: steps.wait.outputs.go == 'true'
+      - name: Take over                         # the direct take-over failed: as ever
+        if: steps.wait.outputs.go == 'true' && steps.wait.outputs.took != 'true'
         continue-on-error: true
         uses: actions/download-artifact@v8
         with:

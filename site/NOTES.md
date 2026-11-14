@@ -311,7 +311,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   poll raw.githubusercontent.com for it: raw caches 5 minutes (`max-age=300`), a 404 too.
   - Sooner (2026-11-13): the preview job's hand-over, the artifact `card-preview` (result.json, preview.avif,
     before.avif), is listed on the run as soon as it is finalized, about 1.9-2.9 s before the publish job has it on the
-    branch. A client may read it itself: `GET .../actions/runs/<id>/artifacts?name=card-preview` (Actions: Read; a
+    branch (about 0.6 s less since 2026-11-14: the publish job takes the hand-over itself, AutoCroissant `--take`). A client may read it itself: `GET .../actions/runs/<id>/artifacts?name=card-preview` (Actions: Read; a
     classic token's repo scope), then its `archive_download_url` with the Authorization header alone (no
     X-GitHub-Api-Version: the 302 goes to GitHub's blob store, `Access-Control-Allow-Origin: *`; the browser drops
     Authorization on that cross-origin redirect, so the token reaches api.github.com only). The zip's result.json is
