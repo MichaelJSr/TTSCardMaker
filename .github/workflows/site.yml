@@ -281,7 +281,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           bg=$RUNNER_TEMP/setup
-          ( code=0; python site/build/psd_sizes.py "$(git rev-parse HEAD)" "$RUNNER_TEMP/tree.json" || code=$?
+          ( code=0; python -S site/build/psd_sizes.py "$(git rev-parse HEAD)" "$RUNNER_TEMP/tree.json" || code=$?
             echo "$code" > "$bg/sizes.code" ) > "$bg/sizes.log" 2>&1 < /dev/null &
 
       # An early build's images: the card PNGs the restored cache lacks (the push's pictures), made in the background once
@@ -415,7 +415,7 @@ jobs:
             old=$(cat "$bg/sizes.code")
             rm "$bg/sizes.code"
             (                                   # Sizes start's: no tree at head, the older sizes stay
-              code=0; python site/build/psd_sizes.py "$head" "$RUNNER_TEMP/tree.json" || code=$?
+              code=0; python -S site/build/psd_sizes.py "$head" "$RUNNER_TEMP/tree.json" || code=$?
               [ "$code" != 2 ] || { code=$old; echo "::warning::PSD sizes at ${head:0:8} not read: those at ${was:0:8}"; }
               echo "$code" > "$bg/sizes.code"
             ) >> "$bg/sizes.log" 2>&1 < /dev/null &
