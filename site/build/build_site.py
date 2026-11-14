@@ -2223,6 +2223,9 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
             entry["partFlags"] = flags
     if current and isinstance(verdict.get("moved"), str):
         entry["moved"] = verdict["moved"]         # a stars edit moved the card into its N Stars folder
+    fit = verdict.get("ability_fit")
+    if current and isinstance(fit, (int, float)) and 0.4 <= fit < 1:
+        entry["abilityFit"] = fit                 # the bake set the Ability smaller (AutoCroissant card_bake.FIT): the mock-up grows it back
     if meta.get(RENAME_KEY) and "name" in fields:
         entry["renameFiles"] = True               # the bake renames its files to the name (the bot's CardEdits.renames)
     site = meta.get(SITE_KEY) or []

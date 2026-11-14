@@ -1331,7 +1331,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const { found, size: z, colours, deleted, skipped } = plans[k];
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
-    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1,
+    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : 0,
       geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null,
       bare: plans[k].plated && fxIn(plate, idsOf(specs[k], k), old) ? () => plateCuts(cardPx, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, "", wiping) : null });   // the crop without its FX layers
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
@@ -1617,9 +1617,10 @@ export function steadyPitch(lines) {
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
  *  record's frame and px (box text) wraps at the frame at its set size, as the bake; with px and no frame (point
- *  text) each paragraph is one line (pointLayout), re-laid at a size it shrank to past the old text's (fit_below). */
+ *  text) each paragraph is one line (pointLayout), re-laid at a size it shrank to past the old text's (fit_below). An
+ *  Ability a bake set smaller (the card's abilityFit) starts from the card maker's size, as the next bake. */
 function drawText(ctx, job, imgs, W) {
-  let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split } = job;
+  let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was } = job;
   const looked = (ps, s) => {                         // kept badges at their own size and tracking, typed ones tracked as the card's
     if (role === "ability" && Array.isArray(layer?.badges)) {
       const looks = badgeLooks(s, old, layer.badges); let i = 0;
@@ -1634,13 +1635,15 @@ function drawText(ctx, job, imgs, W) {
   if (frame && layer.px > 0) size = layer.px * kc;    // at its set size
   const point = role === "ability" && !!kc && !frame && layer?.px > 0;   // point text: its paragraphs never wrap
   if (point) size = layer.px * kc;
+  const grow = was > 0 && was < 1 ? 1 / was : 1;     // a bake set it smaller (its verdict's ability_fit): from the card maker's size, as the next bake
+  size *= grow;
   const maxW = point ? Infinity : frame ? (left ? frame[2] - found.box[0] : frame[2] - frame[0]) : left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
-  const pitch0 = steadyPitch(found.lines) || size * LINE, top = found.lines[0][1];
+  const pitch0 = steadyPitch(found.lines) * grow || size * LINE, top = found.lines[0][1];
   // Room for an Ability at its size, as the bake leaves it (psd_edit fit_below, ink_beyond): its new ink ends no lower
   // than the old text's, or lower but on the card and off the design below (the backdrop under the old text, BEYOND)
   function roomBelow() {
     const H = ctx.canvas.height, k = kc || W / 1200, pad = 6 * k;
-    const h1 = Math.max(size * 0.5, found.box[3] - top - (found.lines.length - 1) * pitch0), floor = found.box[3] + pad;
+    const h1 = Math.max(size * 0.5, (found.box[3] - top) * grow - (found.lines.length - 1) * pitch0), floor = found.box[3] + pad;
     const end = top + ((lines.length - 1) * pitch0 + h1) * (z / size);
     if (end <= floor) return true;
     if (end > H) return false;
@@ -1699,10 +1702,10 @@ function drawText(ctx, job, imgs, W) {
   }
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid
-  job.lined = plan && !shrunk ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects }, pitch: pitch0, W }) : "";
+  job.lined = plan && !shrunk && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
-  const kept = card && role === "ability" && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
+  const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
   paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects });
   return over;
