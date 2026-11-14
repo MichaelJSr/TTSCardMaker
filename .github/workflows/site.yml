@@ -619,6 +619,7 @@ jobs:
       - id: copies
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         uses: actions/upload-artifact@v7
+        continue-on-error: true    # a failed upload never fails a deployed build (no versions job)
         with:
           name: version-copies
           path: ${{ runner.temp }}/version-copies.txt

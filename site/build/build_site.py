@@ -2851,6 +2851,9 @@ def version_copies(blobs, budget):
         for i in range(0, len(todo), VERSION_BATCH):
             if time.time() - started >= budget:
                 break
+            if shutil.disk_usage(REPO).free < 3 << 30:   # fetched packs stay (gc.auto 0): the runner's disk never fills
+                log("version copies: under 3 GB free; the rest wait for the next run")
+                break
             listed = "".join(b + "\n" for b in todo[i:i + VERSION_BATCH])
             try:
                 fetched += fetch_blobs(listed, timeout=120)
