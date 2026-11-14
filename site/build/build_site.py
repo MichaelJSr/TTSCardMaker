@@ -3995,20 +3995,21 @@ def name_links(cards, icons, tag_table):
 
 
 RULE_WORDS = (("damage-types", r"piercing|true (?:damage|dmg)|life ?steal|shockwave|overkill|counter (?:damage|dmg)|cdmg"),   # a card's text -> a chapter
-              ("negation", r"negat(?:e|es|ed|ing|ions?)"), ("reactions", r"react(?:s|ions?|ive|ively)?"))
+              ("negation", r"negat(?:e|es|ed|ing|ions?)"), ("reactions", r"react(?:s|ions?|ive|ively)?"), ("shops", r"shops?"))
+KIND_RULES = (("field", "field-cards"), ("nme", "shops"))   # types the rulebook gives no meaning -> their chapter
 
 
 def tts_details(cards, chapters, icons, tag_table, palette=None, banlist=None):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
     stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
-    it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions;
-    a [field] card's Field Cards first), its aliases not part of its name (al: Find a card's words), its series (se: its
-    1-based place in series, each the series then its subseries where that differs: Find a card's words too)
-    and its ability's word colours (ac: tts_words, palette: text_palette's, the site's); with the types', tags' and
-    statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows, its words' colours too
-    (xc), and on hover: x), a type's own colour (ic: its icon's in dist, icon_ink, or TYPE_INK's, in tts_seen's shade)
-    and the chapters (their numbers find the PDF's pages); a card banned in constructed its reason (b; a duplicate picture:
-    its card's, as app.js derive). Hidden cards left out."""
+    it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions,
+    shops; a [field] card's Field Cards, an [nme] card's Shops first), its aliases not part of its name (al: Find a
+    card's words), its series (se: its 1-based place in series, each the series then its subseries where that differs:
+    Find a card's words too) and its ability's word colours (ac: tts_words, palette: text_palette's, the site's); with
+    the types', tags' and statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows,
+    its words' colours too (xc), and on hover: x), a type's own colour (ic: its icon's in dist, icon_ink, or TYPE_INK's,
+    in tts_seen's shade) and the chapters (their numbers find the PDF's pages); a card banned in constructed its reason
+    (b; a duplicate picture: its card's, as app.js derive). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
     palette = palette or text_palette(cards)
     marks = status_patterns(palette["statuses"])
@@ -4030,7 +4031,7 @@ def tts_details(cards, chapters, icons, tag_table, palette=None, banlist=None):
     out_cards, used_tags = {}, {}
     ids = {c["id"] for c in chapters}
     rule_words = [(cid, re.compile(rf"\b(?:{words})\b", re.I)) for cid, words in RULE_WORDS if cid in ids]
-    field = ["field-cards"] if "field-cards" in ids else []   # the rulebook gives [field] no meaning
+    kinds = {t: cid for t, cid in KIND_RULES if cid in ids}
     series_of = lambda c: " ".join(dict.fromkeys(filter(None, (c.get("series"), c.get("subseries")))))
     count = Counter(s for c in shown if c.get("png") and (s := series_of(c)))
     series = sorted(count, key=lambda s: (-count[s], s))   # most cards first: short numbers
@@ -4064,7 +4065,8 @@ def tts_details(cards, chapters, icons, tag_table, palette=None, banlist=None):
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
-            "r": (field if "field" in map(norm, c.get("types") or []) else []) + [cid for cid, words in rule_words if words.search(text)] or None,
+            "r": list(dict.fromkeys([kinds[t] for t in map(norm, c.get("types") or []) if t in kinds] +
+                                    [cid for cid, words in rule_words if words.search(text)])) or None,
             "al": list(aliases.values()), "se": place.get(series_of(c)), "by": c.get("author"), "ac": colours,
             "b": bans.get(c.get("id")) or bans.get(c.get("dup"))}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
