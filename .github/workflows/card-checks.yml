@@ -344,7 +344,9 @@ jobs:
           [ -z "$data" ] || wait "$data" || { echo "::error::data not fetched again (3 tries)"; exit 1; }
           git -C carddata reset -q --hard FETCH_HEAD
 
-      # The blobs of the PSDs to check and their PNGs, fetched per shard (the guards' way): none, and the job is done
+      # The blobs of the PSDs to check, their PNGs and published plates (the plates branch's tree first, at card_plates'
+      # LOCAL_REF: a stat sheet whose pixels are the same is kept, not encoded again), fetched per shard (the guards'
+      # way): none, and the job is done
       - name: To check
         id: list
         working-directory: bot
@@ -357,6 +359,8 @@ jobs:
           if [ "$ALL" = true ]; then args+=(--all); fi
           if [ -n "$CARDS" ]; then args+=(--cards "$CARDS"); fi
           printf '%s\0' "${args[@]}" > "$RUNNER_TEMP/args"
+          timeout 30 git -C "$GITHUB_WORKSPACE" fetch -q --depth 1 --filter=blob:none --no-tags --no-write-fetch-head origin \
+            +refs/heads/plates:refs/card-plates/head || echo "::warning::the plates branch not fetched: every stat sheet is encoded again"
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks list "${args[@]}" > "$RUNNER_TEMP/blobs.txt"
           n=$(grep -c . "$RUNNER_TEMP/blobs.txt" || true)
           echo "n=$n" >> "$GITHUB_OUTPUT"
