@@ -1201,3 +1201,12 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
   .filters, .edit-preview { top: 8px; } .tray { top: 0; }
 }
 @media (max-height: 450px) and (min-width: 981px) { table.data th { top: 0; } }
+/* contrast themes (forced colors): picked toggles in the system's selection colours; adjust none: no backplate hiding the text */
+@media (forced-colors: active) {
+  :is(.chip.on, .seg button.on, .tabs a.active, .icon-toggle.on, .sel-row .not[aria-pressed="true"], .ver-item[aria-pressed="true"],
+    .segs i.on, .deck-list button.on, .pv-older .chip[aria-pressed="true"], .tok-picker li.on, .part-variant button.on) {
+    forced-color-adjust: none; background: Highlight; color: HighlightText; border-color: Highlight; outline-color: Highlight;
+  }
+  :is(.chip.on, .seg button.on, .tabs a.active, .icon-toggle.on, .sel-row .not[aria-pressed="true"], .ver-item[aria-pressed="true"],
+    .deck-list button.on, .pv-older .chip[aria-pressed="true"], .tok-picker li.on, .part-variant button.on) * { color: inherit; background-color: transparent; }
+}
