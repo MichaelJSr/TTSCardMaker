@@ -261,7 +261,8 @@ HISTORY_DIR = os.environ.get("HISTORY_DIR", "")
 HISTORY_ROWS = ("discord", "old repo", "paper", "first repo")   # Image versions' rows (changelog facts: Recorded changes only)
 HISTORY_KINDS = HISTORY_ROWS + ("text",)
 HISTORY_BEFORE = ("discord", "text", "first repo")              # before the card's first git record (stop at git; the old repo overlaps it)
-HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "git": "git", "paper card": "paper"}   # a proposed Created's source
+HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "first repo": "first repo", "git": "git", "paper card": "paper",
+                "changelog": "changelog"}   # a proposed Created's source
 PAPER_DAY = "Before 2020"                     # a paper card's Created (owner Q6): HISTORY_DAY, createdBefore 2020
 HISTORY_DAY = "2019-01-01"                    # before every dated card: the team's Discord began in 2019-02
 HISTORY_IMAGE = re.compile(r"[\w.-]+\.webp\Z")
@@ -1471,7 +1472,8 @@ def history_ts(e):
 
 def history_rows(folder, t):
     """A timeline's Image versions rows, newest first (undated ones last): versions.json early (app.js versionList).
-    k: kind; ts or label ("Before 2020"); ch: Discord channel; a, s: author and commit subject (old repo, first repo); as:
+    k: kind; r: "first" for the first repo's versions (kind old repo); ts or label ("Before 2020"); ch: Discord channel; a,
+    s: author and commit subject (old repo, first repo); as:
     the old card it was (a split, owner Q3); img (history/<folder>/<webp>), w, h; f: its sure fields' values; minor; cov:
     its photo shows the card under another one."""
     rows = []
@@ -1479,6 +1481,8 @@ def history_rows(folder, t):
         if e["kind"] not in HISTORY_ROWS:
             continue
         row = {"k": e["kind"], "ts": history_ts(e)}
+        if e["kind"] == "old repo" and e.get("repo") == "first":
+            row["r"] = "first"                    # the first repo's file (2022-08..2023-04)
         if e.get("covered"):
             row["cov"] = 1                        # its photo shows the card under another one
         if row["ts"] is None and isinstance(e.get("label"), str):
@@ -1580,7 +1584,7 @@ def history_stats(t, kind):
         else:
             continue
         if row:
-            rows.append({"ts": ts, **row, "early": e["kind"]})
+            rows.append({"ts": ts, **row, "early": "first repo" if e.get("repo") == "first" else e["kind"]})
     first = t.get("git_first") or {}
     if isinstance(first.get("changes"), dict) and history_ts(first) is not None:
         row = history_change(first["changes"])
@@ -2568,7 +2572,7 @@ def apply_created(cards, created, proposed=None):
         log(f"created: {moved} cards dated earlier by the card timelines ({len(proposed)} proposed)")
     dated = [e for e in cards if e.get("created")]
     by = Counter(e["createdFrom"] for e in dated)
-    more = "".join(f", {by[k]} {k}" for k in ("old repo", "paper") if by[k])     # the card timelines' (proposed)
+    more = "".join(f", {by[k]} {k}" for k in ("old repo", "first repo", "changelog", "paper") if by[k])   # the timelines' (proposed)
     log(f"created: {len(dated)} of {len(cards)} cards dated ({by['discord']} first Discord post, {by['git']} first upload, "
         f"{by['hand']} by hand{more})")
     if later:

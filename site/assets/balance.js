@@ -215,6 +215,7 @@ function factHtml(f) {
 }
 /** where a change from before this repo comes from (analytics.py early) */
 const EARLY_SRC = { discord: ["Discord", "Read off its pictures posted on Discord"], "old repo": ["old repo", "Read off the old card repo's versions"],
+  "first repo": ["first repo", "Read off the first card repo's versions (2022-23)"],
   paper: ["paper card", "Read off a photo of the paper card"], text: ["changelog", "A change an update's changelog states (its text is not shown)"],
   git: ["first record", "Its first version in this repo against its last one before it"] };
 /** plain parts of a change row (HTML), the ability diff aside */

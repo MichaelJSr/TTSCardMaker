@@ -74,7 +74,9 @@ const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand",
-  "old repo": "Its first version in the old card repo, before this one", paper: "A paper card, made before 2020 (its photo was posted later)" };
+  "old repo": "Its first version in the old card repo, before this one", paper: "A paper card, made before 2020 (its photo was posted later)",
+  "first repo": "Its first version in the first card repo (2022-23), before the old one",
+  changelog: "Named in a 2019 balance-change list on Discord, before its first picture" };
 const createdText = c => (c.createdBefore ? `before ${c.createdBefore}` : day(c.created));
 const createdTip = c => (CREATED_TIP[c.createdFrom] || "Created") + (c.createdWas ? ` (the card timelines moved it from ${day(c.createdWas)})` : "");
 const isStatus = c => c.type === "debuff" || c.type === "buff";
@@ -1071,12 +1073,13 @@ function placeholderOf(c) {
 // its versions before this repo (versions.json early, build_site history_rows: the old repo, Discord, a paper card, the
 // first repo's push notices as text only), never with a link or Revert
 const EARLY_BADGE = { discord: "Discord", "old repo": "old repo", paper: "paper card", "first repo": "first repo" };
+const earlyBadge = v => (v.repo === "first" ? "first repo" : EARLY_BADGE[v.early] || "");    // versions.json early r: the first repo's files
 const versionList = c => {
   if (!S.versions) return [];
   const rows = S.versions.cards[c.id] || [];
   const minor = new Set(S.versions.minor[c.id] || []);        // build_site: a picture change under the share that shows, no data change
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; })
-    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, ts: r.ts, label: r.label, channel: r.ch, author: r.a, subject: r.s, as: r.as,
+    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, repo: r.r, ts: r.ts, label: r.label, channel: r.ch, author: r.a, subject: r.s, as: r.as,
       img: r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor, covered: !!r.cov })));
 };
 const versionWhen = v => (v.ts ? date(v.ts) : esc(v.label || "Undated"));
@@ -1098,7 +1101,7 @@ function versionsHtml(c, open) {
   const vs = versionList(c);
   if (vs.length < 2) return "";
   const item = (v, i) => `<button type="button" class="ver-item${v.early ? " ver-early" : ""}" data-action="version-pick" data-i="${i}" aria-pressed="false">
-        <span class="when">${versionWhen(v)}${i === 0 ? ` <span class="fact">current</span>` : ""}${v.early ? ` <span class="fact ver-src">${EARLY_BADGE[v.early] || ""}</span>` : ""}</span><span class="who">${esc(v.author || (v.channel ? `#${v.channel}` : ""))}</span><span class="msg">${esc(versionMsg(v))}</span></button>`;
+        <span class="when">${versionWhen(v)}${i === 0 ? ` <span class="fact">current</span>` : ""}${v.early ? ` <span class="fact ver-src">${earlyBadge(v)}</span>` : ""}</span><span class="who">${esc(v.author || (v.channel ? `#${v.channel}` : ""))}</span><span class="msg">${esc(versionMsg(v))}</span></button>`;
   const rows = vs.map((v, i) => [v, i]), major = rows.filter(([v]) => !v.minor), minor = rows.filter(([v]) => v.minor);
   const share = Math.round(S.versions.visible * 100);
   // minor changes (owner 11-09): folded, never dropped (versions.json visible: AutoCroissant png_changes.VISIBLE)
@@ -1132,11 +1135,11 @@ function showVersion(c, i) {
  *  (Discord), never a link or Revert; "Text then": the ability read off it when that read is sure */
 function earlyVersion(c, vs, i) {
   const v = vs[i], cur = vs[0];
-  const caption = w => `${versionWhen(w)}${w.early ? ` · ${EARLY_BADGE[w.early] || ""}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}`
+  const caption = w => `${versionWhen(w)}${w.early ? ` · ${earlyBadge(w)}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}`
     + (w.sha ? commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path) : "") + (versionMsg(w) ? `<br><span class="muted">${esc(versionMsg(w))}</span>` : "");
   const src = w => (w.early ? w.img : img(c, 720));
   const pic = (w, alt) => (src(w) ? `<img src="${esc(src(w))}" alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
-    : `<div class="empty">${w.early === "first repo" ? "No picture: a push notice of the first repo, whose files are gone" : "No picture"}</div>`);
+    : `<div class="empty">${w.early === "first repo" ? "No picture: a push notice of the first repo, with no card picture of its own" : "No picture"}</div>`);
   if (i === 0) return `<figure>${pic(v, `${c.name}, current version`)}<figcaption>${caption(v)}<br>Current version</figcaption></figure>`;
   const then = v.fields?.ability, under = v.covered ? `<br><span class="muted">In this photo it lies under another card: mostly hidden</span>` : "";
   return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : v.label || ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}${under}</figcaption></figure>
