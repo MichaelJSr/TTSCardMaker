@@ -229,7 +229,7 @@ async function init() {
 // everything computed from the cards; re-run after an edit
 function derive() {
   S.rev++;
-  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; delete c._unusedBy; delete c._hay; }   // _hay: search.js haystack, made again from edited text
+  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; delete c._unusedBy; delete c._hay; delete c._sq; }   // _hay, _sq: search.js haystack, made again from edited text
   S.cards = S.all.filter(c => !c.hidden || S.showHidden);
   // stats can pass 10 (Sonic's speed is 20)
   S.statMax = Object.fromEntries(["hp", "def", "atk", "spd"].map(k => [k, Math.max(10, ...S.cards.map(c => c[k] ?? 0))]));

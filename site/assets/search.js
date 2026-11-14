@@ -1,5 +1,5 @@
 // Query language: the same syntax as AutoCroissant's /query_ability, plus names/aliases and a few extras.
-//   fire              text in the ability, name or aliases (any case)
+//   fire              text in the ability, name or aliases (any case); also a name without its punctuation or a series
 //   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
 //                     counter damage CDMG; and back), as the bot
 //   "draw 2"          whole-word match
@@ -34,6 +34,19 @@ export const FLAGS = {
 export function haystack(c) {
   if (c._hay === undefined) c._hay = [c.name, ...(c.aliases || []), ...(c.was || []), (c.ability || "").replace(/\s+/g, " ")].join("\n").toLowerCase();
   return c._hay;
+}
+
+const squash = s => String(s || "").normalize("NFD").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");   // letters and digits: "Mom's Knife" momsknife
+/** Names, aliases and old names squashed, one per line, and the names a typed series may be: whole, without a leading
+ *  The or a closing number, or a part split at : or / ("Dark Souls III": dark souls; "Undertale/Deltarune") */
+function squashed(c) {
+  if (c._sq === undefined) {
+    const ser = new Set(), s = c.series || "";
+    for (const part of [s, ...s.split(/[:/]+/)])
+      for (const v of [part, part.replace(/^\s*the\s+/i, "").replace(/\s+(?:[ivx]+|\d+)$/i, "")]) if (squash(v)) ser.add(squash(v));
+    c._sq = { names: `\n${[c.name, ...(c.aliases || []), ...(c.was || [])].map(squash).join("\n")}\n`, ser };
+  }
+  return c._sq;
 }
 
 const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -92,9 +105,10 @@ export function compile(query) {
     const re = new RegExp(`${edge(t[0])}${escapeRe(t)}${edge(t.slice(-1))}`);
     return c => re.test(haystack(c));
   }
-  const re = synonymRe(lower);
-  if (re) return c => re.test(haystack(c));
-  return c => haystack(c).includes(lower);
+  const re = synonymRe(lower), sq = squash(lower), probe = sq.length > 3 ? sq : `\n${sq}\n`;   // 3 letters or fewer: a whole name
+  const more = c => !!sq && (squashed(c).names.includes(probe) || squashed(c).ser.has(sq));   // a name without its punctuation, a series
+  if (re) return c => re.test(haystack(c)) || more(c);
+  return c => haystack(c).includes(lower) || more(c);
 }
 
 /** The cards whose name, an alias or an old name is the query (text.js norm: case, spaces and dots aside; quotes allowed). */
@@ -121,6 +135,7 @@ export function suggest(query, cards) {
 
 export const SEARCH_HELP = [
   ["fire", "In the ability, name or aliases"],
+  ["hollow knight · moms knife", "A series' cards; names without punctuation"],
   ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
   ['"draw 2"', "Whole words only"],
   ["!die", "Exclude (any term)"],
