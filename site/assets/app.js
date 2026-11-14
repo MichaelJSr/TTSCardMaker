@@ -1041,7 +1041,7 @@ const versionList = c => {
 };
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
 // an older version's 360 px copy (build_site version_images); one not built yet: its PNG
-const versionCopy = (c, v) => `thumbs/v/${c.id}-${v.sha.slice(0, 10)}-${S.data.thumbs[360]}.avif`;
+const versionCopy = (c, v) => `thumbs/v/${c.id}-${v.sha.slice(0, 10)}-${S.data.thumbs.v}.avif`;
 modal.addEventListener("error", e => { const t = e.target; if (t.dataset?.png) { t.src = t.dataset.png; delete t.dataset.png; } }, true);
 /** Under the card's picture: open beside the text, closed in one column (style.css .detail), where the card's text comes
  *  after it; a redraw of the same card keeps it as it was. */

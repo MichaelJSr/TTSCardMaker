@@ -117,21 +117,36 @@ CARD_BACKS = ("MDW/Assets/cardback.png", "MDW/Assets/cardback_item.png")    # de
 DETAILS_JSON = "psd_details.json"            # the PSD structure records {version, cards: {blob sha: record}} (AutoCroissant card_db.DETAILS_JSON)
 CHECKS_JSON = "card_checks.json"             # the automatic flags {cards: {blob sha: {hand, bars, name, room, look}}, cleared: {PSD path: flags' psd}} (AutoCroissant card_checks)
 PSD_TREE = os.environ.get("PSD_TREE", "")     # the trees API's reply at the build's commit (site.yml): the PSDs' sizes
-IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
+IMAGE_SIZES = {240: 58, 360: 52, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
-THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
+AVIF_SPEED = {240: 4, 360: 4}                # the grid's sizes: slower, fewer bytes for the same quality
+THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality, AVIF and AVIF_SPEED rename by themselves
 SMALL_SIZES = {96: (720, 60), 192: (720, 60), 480: (720, 50)}   # width -> (made from that cached width, quality): table rows, lists, strips; card view at 1x
 CARD_VIEW_SIZES = "(max-width: 820px) calc(100vw - 78px), 430px"   # the card view's picture (style.css .detail, .modal, .dialog)
-VERSION_WIDTH = 360                          # older image versions' copies (app.js showVersion): the grid's 360 settings
+VERSION_WIDTH, VERSION_QUALITY = 360, 55    # older image versions' copies (app.js versionCopy, cards.json thumbs.v): the grid's old 360 settings
 VERSION_BUDGET = float(os.environ.get("VERSION_BUDGET", "40"))   # s a build spends making them, newest first; the rest: later builds
 VERSION_BATCH = 50                            # PNG blobs a git fetch
 
 
+def avif(w):
+    """A width's AVIF save options."""
+    return {**AVIF, "speed": AVIF_SPEED.get(w, AVIF["speed"])}
+
+
+def settings_tag(w, q, opts):
+    opts = {k: v for k, v in opts.items() if k != "max_threads"}
+    return hashlib.sha256(f"{THUMB_VERSION}:{w}:{q}:{json.dumps(opts, sort_keys=True)}".encode()).hexdigest()[:6]
+
+
 def thumb_tag(w):
     """6 hex digits of a width's encode settings, in its file names: new settings, new files (and URLs)."""
-    avif = {k: v for k, v in AVIF.items() if k != "max_threads"}
     q = IMAGE_SIZES[w] if w in IMAGE_SIZES else (SMALL_SIZES[w], thumb_tag(SMALL_SIZES[w][0]))   # a small one: its source's too
-    return hashlib.sha256(f"{THUMB_VERSION}:{w}:{q}:{json.dumps(avif, sort_keys=True)}".encode()).hexdigest()[:6]
+    return settings_tag(w, q, avif(w))
+
+
+def version_tag():
+    """The older versions' copies' tag (cards.json thumbs.v)."""
+    return settings_tag(VERSION_WIDTH, VERSION_QUALITY, AVIF)
 
 
 def thumb_tags():
@@ -1335,7 +1350,7 @@ def make_images(path, sha, known=None):
                 with Image.open(cached[frm]) as im:
                     im = im.convert("RGBA")
                     im.thumbnail((w, w * 3), Image.LANCZOS)
-                    im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **AVIF)
+                    im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **avif(w))
                 os.replace(cached[w] + ".tmp", cached[w])
     small()
     if known and all(os.path.exists(f) for f in cached.values()):
@@ -1349,7 +1364,7 @@ def make_images(path, sha, known=None):
         sized[w] = im = src.copy()
         im.thumbnail((w, w * 3), Image.LANCZOS)
         if not os.path.exists(cached[w]):
-            im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **AVIF)   # no profile: WebP never had one
+            im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **avif(w))   # no profile: WebP never had one
             os.replace(cached[w] + ".tmp", cached[w])
     small()
     if known:
@@ -2810,7 +2825,7 @@ def version_images(olds):
     sha[:10], app.js versionCopy): (PNG blob, commit time)}), cached by blob in site/.cache/ver. The uncached ones, newest
     first, are made from their blobs, fetched VERSION_BATCH a call (none one by one: a blob still missing waits), batches
     starting until VERSION_BUDGET s have passed; the page shows the rest's PNGs."""
-    tag, cache, out = thumb_tag(VERSION_WIDTH), os.path.join(CACHE, "ver"), os.path.join(DIST, "thumbs", "v")
+    tag, cache, out = version_tag(), os.path.join(CACHE, "ver"), os.path.join(DIST, "thumbs", "v")
     os.makedirs(cache, exist_ok=True)
     os.makedirs(out, exist_ok=True)
     name = lambda blob: f"{blob[:16]}-{VERSION_WIDTH}-{tag}.avif"
@@ -2826,7 +2841,7 @@ def version_images(olds):
                 im = im.convert("RGBA" if im.mode in ("RGBA", "LA", "P") else "RGB")
                 im.thumbnail((VERSION_WIDTH, VERSION_WIDTH * 3), Image.LANCZOS)
                 path = os.path.join(cache, name(sha))
-                im.save(path + ".tmp", "AVIF", quality=IMAGE_SIZES[VERSION_WIDTH], icc_profile=None, **AVIF)
+                im.save(path + ".tmp", "AVIF", quality=VERSION_QUALITY, icc_profile=None, **AVIF)
             os.replace(path + ".tmp", path)
             made.append(sha)
         except Exception as err:
@@ -4826,7 +4841,7 @@ def main():
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist, "tagMeanings": tag_meanings(rulebook_chapters()[0]),
         "swatches": swatch_list,              # the editor's colour palette (textcolor.js): the status and attribute colours
         "palette": palette,                   # the site's word colours (textcolor.js wordColors; the mock-up's status words)
-        "thumbs": thumb_tags(),               # app.js img(): thumbs/<img>-<w>-<tag>.avif
+        "thumbs": {**thumb_tags(), "v": version_tag()},   # app.js img(): thumbs/<img>-<w>-<tag>.avif; versionCopy: v
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
                                             "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR},
