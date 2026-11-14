@@ -3998,7 +3998,7 @@ RULE_WORDS = (("damage-types", r"piercing|true (?:damage|dmg)|life ?steal|shockw
               ("negation", r"negat(?:e|es|ed|ing|ions?)"), ("reactions", r"react(?:s|ions?|ive|ively)?"))
 
 
-def tts_details(cards, chapters, icons, tag_table, palette=None):
+def tts_details(cards, chapters, icons, tag_table, palette=None, banlist=None):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
     stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
     it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions;
@@ -4007,7 +4007,8 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
     and its ability's word colours (ac: tts_words, palette: text_palette's, the site's); with the types', tags' and
     statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows, its words' colours too
     (xc), and on hover: x), a type's own colour (ic: its icon's in dist, icon_ink, or TYPE_INK's, in tts_seen's shade)
-    and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
+    and the chapters (their numbers find the PDF's pages); a card banned in constructed its reason (b; a duplicate picture:
+    its card's, as app.js derive). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
     palette = palette or text_palette(cards)
     marks = status_patterns(palette["statuses"])
@@ -4025,6 +4026,7 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
         if statuses else None
     lower = {n.lower(): n for n in statuses}
     originals = {c["id"]: c for c in shown if c.get("id")}   # a duplicate -> its original
+    bans = {e["id"]: e["reason"] or True for g in (banlist or {}).get("groups", []) for e in g["entries"] if e.get("id")}
     out_cards, used_tags = {}, {}
     ids = {c["id"] for c in chapters}
     rule_words = [(cid, re.compile(rf"\b(?:{words})\b", re.I)) for cid, words in RULE_WORDS if cid in ids]
@@ -4063,7 +4065,8 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
             "r": (field if "field" in map(norm, c.get("types") or []) else []) + [cid for cid, words in rule_words if words.search(text)] or None,
-            "al": list(aliases.values()), "se": place.get(series_of(c)), "by": c.get("author"), "ac": colours}.items() if v}
+            "al": list(aliases.values()), "se": place.get(series_of(c)), "by": c.get("author"), "ac": colours,
+            "b": bans.get(c.get("id")) or bans.get(c.get("dup"))}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
             "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards, "series": series}
 
@@ -4920,7 +4923,7 @@ def main():
     with open(os.path.join(DIST, GAME_TXT), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(game)
     log(f"{GAME_TXT}: {len(game.encode())} bytes, about {round(len(game.split()) * 1.3)} tokens")
-    tts = json.dumps(tts_details(cards, printed_chapters(chapters), icons, tag_meanings(chapters), palette), ensure_ascii=False, separators=(",", ":"))
+    tts = json.dumps(tts_details(cards, printed_chapters(chapters), icons, tag_meanings(chapters), palette, banlist), ensure_ascii=False, separators=(",", ":"))
     with open(os.path.join(DIST, "data", TTS_JSON), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(tts)
     log(f"{TTS_JSON}: {len(tts.encode())} bytes")

@@ -840,14 +840,20 @@ local function deckPaths(deck)
     return out
 end
 
--- the text before the ability (kind, stars, author; the stats), and its lines as runs (abilityLines)
+-- the text before the ability (kind, stars, author; a constructed ban, dim too; the stats), and its lines as runs (abilityLines)
 local function detailsText(card)
     local bits = {card.k}
     if card.st then table.insert(bits, math.floor(card.st) .. "★") end
     if card.by then table.insert(bits, "by " .. card.by) end
-    local head = {"<color=" .. DIM .. ">" .. plain(table.concat(bits, " · ")) .. "</color>"}
-    if card.s then table.insert(head, "<b>" .. plain(card.s) .. "</b>") end
-    return table.concat(head, "\n"), {{table.concat(bits, " · ")}, card.s and {card.s, nil, true}}
+    local runs = {{table.concat(bits, " · ")}}
+    if card.b then table.insert(runs, {"Banned in constructed" .. (type(card.b) == "string" and " (" .. card.b .. ")" or "")}) end
+    local head = {}
+    for _, r in ipairs(runs) do table.insert(head, "<color=" .. DIM .. ">" .. plain(r[1]) .. "</color>") end
+    if card.s then
+        table.insert(head, "<b>" .. plain(card.s) .. "</b>")
+        table.insert(runs, {card.s, nil, true})
+    end
+    return table.concat(head, "\n"), runs
 end
 
 -- a button's width for its text at font size f (a little more than the text: never cut off)
@@ -1382,7 +1388,7 @@ function rulebookSearch(player, value)
     listPages(player.color, value)
 end
 
--- the card finder: every word must be in a card's name, kind, types (or their keys: "food"), timing tags or aliases (a plural: or
+-- the card finder: every word must be in a card's name, kind, types (or their keys: "food"), timing tags, aliases or "banned" (a plural: or
 -- its singular; a word without punctuation: or there with punctuation dropped, "moms"), or start a word of its series
 -- ("undertale"); a digit 1-9 or "5★" (a "star(s)" after it dropped) is the card's stars; the typed name itself first
 -- (punctuation aside), then names that start with it, then with its first word; a click spawns the card where the table was
@@ -1395,6 +1401,7 @@ local function listCards(color, query)
         for path, c in pairs(details.cards) do
             local bits = {c.n or "", c.k or "", c.st and (math.floor(c.st) .. "★ " .. math.floor(c.st) .. " star") or ""}
             if c.k == "Buff" or c.k == "Debuff" then table.insert(bits, "status effect") end   -- the website's kind name
+            if c.b then table.insert(bits, "banned") end   -- as the website's has:banned
             for _, t in ipairs(c.t or {}) do table.insert(bits, ((details.types[t] or {}).n or "") .. " " .. t) end
             for _, g in ipairs(c.g or {}) do table.insert(bits, "(" .. g .. ")") end
             for _, a in ipairs(c.al or {}) do table.insert(bits, a) end      -- the website's aliases ("Sans" for snas.)
@@ -1459,8 +1466,8 @@ local function listCards(color, query)
     for i = 1, RESULTS do
         local path = first[i]
         local c = path and details.cards[path]
-        set(id .. "_g" .. i, c and {active = "true", text = plain(c.n) .. "   " .. (c.k or "") .. (c.st and (" " .. math.floor(c.st) .. "★") or "")}
-            or {active = "false"})
+        set(id .. "_g" .. i, c and {active = "true", text = plain(c.n) .. "   " .. (c.k or "") .. (c.st and (" " .. math.floor(c.st) .. "★") or "")
+            .. (c.b and " · Banned" or "")} or {active = "false"})
     end
     set(id .. "_list", {height = math.max(40, math.min(#first, RESULTS) * 33 + 10)})
     setValue(id .. "_title", #words == 0 and not stars and "Find a card" or (#first == 0 and "No card found"

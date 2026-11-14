@@ -9,14 +9,14 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food", a series
+rulebook panel and the card finder (aliases, plurals, "status effects", "banned", "1 star" the 1★ cards only, "food", a series
 word's start, every name typed with or without its punctuation listed first) on the
 website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or pinned to the commit of the Rulebooks bag's
 PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name plain,
 the ability in the website's palette (tts.json ac), every "<" of a text kept from starting a tag; every card's details at each
-size: the text only the kind line, the stats and the ability (no rule sections), each chapter a whole Rules button, rows
+size: the text only the kind line, a ban, the stats and the ability (no rule sections), each chapter a whole Rules button, rows
 fit, each "+ name" spawns its card; the ability laid out line by line as one text would draw it, each status word, timing
 tag and creature or minion type word with its rule on hover (wrapped to the text's width), a type word in its type's
 colour (tts.json types ic); a button's tooltip only on a name cut short (its whole name), above every row of buttons;
@@ -719,9 +719,14 @@ def ability_wrong(ui, panel, card, d, wide, f=None, width=None):   # an ability 
     return wrong
 
 
-def text_wrong(ui, panel, card, d):                         # the text: the kind line, the stats, the ability; no sections
+def ban_of(card):                                           # a ban's dim line: tts.json b, a reason or true
+    b = card.get("b")
+    return [] if not b else ["Banned in constructed" + (f" ({b})" if isinstance(b, str) else "")]
+
+
+def text_wrong(ui, panel, card, d):                         # the text: the kind line, a ban, the stats, the ability; no sections
     bits = " · ".join([card.get("k") or ""] + ([f"{int(card['st'])}★"] if card.get("st") else []) + ([f"by {card['by']}"] if card.get("by") else []))
-    head = f"<color=#94a3b8>{plain(bits)}</color>" + (f"\n<b>{plain(card['s'])}</b>" if card.get("s") else "")
+    head = "\n".join(f"<color=#94a3b8>{plain(x)}</color>" for x in [bits] + ban_of(card)) + (f"\n<b>{plain(card['s'])}</b>" if card.get("s") else "")
     text, wrong = ui.values.get(f"{panel}_text") or "", []
     if ability_lines(ui, panel):
         if text != head:
@@ -1254,12 +1259,12 @@ def main():
     ones = [c for c in details["cards"].values() if c.get("st") is not None and int(c["st"]) == 1]
     w.call("finderSearch", red, "1 star")
     title, rows = finder_rows()
-    check(rows and all(r.endswith(" 1★") for r in rows) and title.split()[0] == str(len(ones)),
+    check(rows and all(r.removesuffix(" · Banned").endswith(" 1★") for r in rows) and title.split()[0] == str(len(ones)),
           f"'1 star' lists the 1★ cards only, not every '1' ((1CD)): {title!r}, {len(ones)}")
     words = lambda c: " ".join([c.get("n", ""), c.get("k", "")] + [(details["types"].get(t) or {}).get("n", "") for t in c.get("t") or []] + list(c.get("al") or [])).lower()
     w.call("finderSearch", red, "1 star creature")
     title, rows = finder_rows()
-    check(all(r.endswith(" 1★") for r in rows) and (title == "No card found") == (not any("creature" in words(c) for c in ones)),
+    check(all(r.removesuffix(" · Banned").endswith(" 1★") for r in rows) and (title == "No card found") == (not any("creature" in words(c) for c in ones)),
           f"'1 star creature': 1★ creatures only ({title!r})")
     foods = sum("food" in (c.get("t") or []) for c in details["cards"].values())
     w.call("finderSearch", red, "food")
@@ -1317,7 +1322,7 @@ def main():
     odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"]], "al": ["Zqrose"],
            "a": "<i>Burn</i> a Burn, then Burn<3\nBurn\n(1cd) offensive minion: fire, darkmatter; (OS)/(BOGT) not Fire, firework or attack",
            "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]],
-           "x": ["Burn", "Gone", *list(st)[1:]]}
+           "x": ["Burn", "Gone", *list(st)[1:]], "b": "too <b>strong</b>"}
     w4 = World(script, save, zones)
     w4.seat("Red")
     w4.g.onLoad("")
@@ -1332,8 +1337,11 @@ def main():
     check(title == "Rose <<b></b>b>Thorn<<b></b>/b> <<b></b>color=#ff0000>x" and title == plain(odd["n"]),
           f"the name plain (no nc), the card's own '<' no tag {title!r}")
     check(not text_wrong(w4.ui, "Red_d1", odd, odd_details) and not w4.ui.attrs["Red_d1_text"].get("tooltip"),
-          f"the text: the kind line, the stats, the ability; no TIMING TAGS, TYPES or STATUS EFFECTS; no tooltip on it "
+          f"the text: the kind line, its ban, the stats, the ability; no TIMING TAGS, TYPES or STATUS EFFECTS; no tooltip on it "
           f"{text_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
+    kind = (w4.ui.values.get("Red_d1_text") or "").split("\n")[:2]
+    check(kind[1:] == ["<color=#94a3b8>Banned in constructed (too <<b></b>b>strong<<b></b>/b>)</color>"] and "anned" not in kind[0],
+          f"a banned card: its ban and reason a dim line under the kind line, '<' no tag {kind!r}")
     check("<<b></b>i>Burn<<b></b>/i> a <color=#ff0000>Burn</color>, then <color=#00ff00>Burn<<b></b>3</color>\n<color=#0000ff>Burn</color>" in text,
           "the ability in its colours: the nth find, a piece not found skipped, '<' no tag")
     laid = ability_lines(w4.ui, "Red_d1")
@@ -1372,6 +1380,14 @@ def main():
     check(w4.ui.text("Red_fc_g1").startswith(plain(odd["n"]) + "   "), f"the finder's row: the name, '<' no tag {w4.ui.text('Red_fc_g1')!r}")
     w4.call("finderSearch", w4.players["Red"], "zqrose")
     check(w4.ui.on("Red_fc_g1") and w4.ui.text("Red_fc_g1").startswith(plain(odd["n"])), f"a card's alias finds it (al) {w4.ui.values.get('Red_fc_title')!r}")
+    check(w4.ui.text("Red_fc_g1").endswith(" · Banned"), f"a banned card's finder row ends '· Banned' {w4.ui.text('Red_fc_g1')!r}")
+    got = {}
+    for q in ("banned", "banned 4 star"):
+        w4.call("finderSearch", w4.players["Red"], q)
+        rows = [w4.ui.text(i) for i in sorted(w4.ui.ids) if i.startswith("Red_fc_g") and w4.ui.on(i)]
+        want = [c for c in odd_details["cards"].values() if c.get("b") and (q == "banned" or c.get("st") == 4)]
+        got[q] = (w4.ui.values.get("Red_fc_title").replace("No card found", "0").split()[0], str(len(want)), all(r.endswith(" · Banned") for r in rows))
+    check(all(n == m and ends for n, m, ends in got.values()), f"'banned' lists exactly the banned cards (b), with stars too {got}")
     got = {}
     for q in ("vkq", "zqf saga", "xqjvkq", "xqj'vkq:", "jvkq"):
         w4.call("finderSearch", w4.players["Red"], q)
