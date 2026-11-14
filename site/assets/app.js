@@ -61,7 +61,7 @@ const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // cards.js
 // the other data files' own stamps (build_site data_stamps): a deploy keeps the unchanged ones cached
 const DATA_V = (() => { try { return JSON.parse(document.querySelector('meta[name="data"]')?.content || "{}"); } catch { return {}; } })();
 const dataUrl = name => { const v = DATA_V[name.startsWith("details/") ? "details/" : name]; return `data/${name}${/^[0-9a-f]+$/.test(v || "") ? `?v=${v}` : V}`; };
-const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 96 / 192 / 240 / 360 / 720 px wide (tag: their settings)
+const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 96 / 192 / 240 / 360 / 480 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 96 too at 64 px or less */
 const imgAttrs = (c, css) => G.imgAttrs(S.data.thumbs, c, css);
@@ -970,8 +970,10 @@ function openCard(id, showDetails = false) {
   document.body.style.overflow = "hidden";
   modal.scrollTop = 0;
   document.title = `${c.name} · Impossibility Simulator`;
-  if (c.img && $("#detail-img")?.getAttribute("src") !== img(c, 720)) {        // sharper 720 px image once it's loaded
-    const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
+  const shown = $("#detail-img"), from = shown?.getAttribute("src"), drawn = shown?.getBoundingClientRect().width * devicePixelRatio;
+  const big = c.img && img(c, drawn > 0 && drawn <= 480 ? 480 : 720);   // sharper image once loaded: 480 px if drawn at most 480 device px (1x desktops)
+  if (big && from !== big && from !== img(c, 720)) {
+    const im = new Image(); im.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big; }; im.src = big;
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
   const fillHistory = () => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyOf(c); };
@@ -1006,12 +1008,15 @@ const nearby = (() => {
     },
   };
 })();
-/** The card dialog's first picture: the grid tile's when it has loaded (240 or 360 px, no new download), the 720 px one a
- *  share page preloads, else the 360 px one */
+/** The card dialog's first picture: the grid tile's when it has loaded (240 or 360 px, no new download), the one a card
+ *  page shows (build_site card_frame: 480 or 720 px, as its srcset picked) or preloads (720 px), else the 360 px one */
 function placeholderOf(c) {
   if (!c.img) return "";
+  const local = u => (u.startsWith(ROOT) ? u.slice(ROOT.length) : u);
   const t = view.querySelector(`.grid .tile[data-open="${CSS.escape(c.id)}"] img.art`);
-  if (t?.complete && t.naturalWidth && t.currentSrc) return t.currentSrc.startsWith(ROOT) ? t.currentSrc.slice(ROOT.length) : t.currentSrc;
+  if (t?.complete && t.naturalWidth && t.currentSrc) return local(t.currentSrc);
+  const shown = $("#detail-img")?.currentSrc;
+  if (shown && local(shown).startsWith(`thumbs/${c.img}-`)) return local(shown);
   if (document.querySelector(`link[rel="preload"][as="image"][href="${img(c, 720)}"]`)) return img(c, 720);
   return thumbUrl(c);
 }

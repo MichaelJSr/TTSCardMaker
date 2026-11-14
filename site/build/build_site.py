@@ -12,11 +12,11 @@ Where the data comes from:
     data/details/<id>.json for its Details dropdown, and its name's and ability's colours on the card (card_inks:
     cards.json `ink`). Aliases come from site/Card Edits.json.
   * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
-    for the card view; AVIF only, no WebP copies), plus 96 and 192 px made from the 720 one (SMALL_SIZES: table rows,
-    64 px lists, strips and deck slots). They are cached by git blob hash and encode settings (thumb_tag, in
-    the file names) in site/.cache/img, so after the first run only new or changed cards (or a width whose settings
-    changed) are downloaded and encoded (an early build makes them during its Data wait: early_images, site.yml
-    Images start); images no card uses any more are pruned. With
+    for the card view; AVIF only, no WebP copies), plus 96, 192 and 480 px made from the 720 one (SMALL_SIZES: table
+    rows, 64 px lists, strips and deck slots; the card view at 1x). They are cached by git blob hash and encode
+    settings (thumb_tag, in the file names) in site/.cache/img, so after the first run only new or changed cards (or
+    a width whose settings changed) are downloaded and encoded (an early build makes them during its Data wait:
+    early_images, site.yml Images start); images no card uses any more are pruned. With
     IMAGE_BUDGET (seconds; site.yml sets it), images not made by then are left for the next run: the build fails
     (nothing deployed) and site.yml saves the cache (it does after any failed build), so a full re-encode spans runs.
     Each image's size and accent color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck
@@ -120,7 +120,8 @@ PSD_TREE = os.environ.get("PSD_TREE", "")     # the trees API's reply at the bui
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
 THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
-SMALL_SIZES = {96: (720, 60), 192: (720, 60)}   # width -> (made from that cached width, quality): table rows, lists, strips
+SMALL_SIZES = {96: (720, 60), 192: (720, 60), 480: (720, 50)}   # width -> (made from that cached width, quality): table rows, lists, strips; card view at 1x
+CARD_VIEW_SIZES = "(max-width: 820px) calc(100vw - 78px), 430px"   # the card view's picture (style.css .detail, .modal, .dialog)
 VERSION_WIDTH = 360                          # older image versions' copies (app.js showVersion): the grid's 360 settings
 VERSION_BUDGET = float(os.environ.get("VERSION_BUDGET", "40"))   # s a build spends making them, newest first; the rest: later builds
 VERSION_BATCH = 50                            # PNG blobs a git fetch
@@ -4332,10 +4333,15 @@ def first_screen(cards, icons):
 EMPTY_MODAL = '<div id="modal" class="modal" hidden></div>'   # index.html's
 
 
+def card_view_srcset(c):
+    """The card view's 480 and 720 px pictures: a c/<id>/ page's picture and preload pick one as app.js openCard does."""
+    return ", ".join(f'thumbs/{c["img"]}-{w}-{thumb_tag(w)}.avif {w}w' for w in (480, 720))
+
+
 def card_frame(c):
-    """A c/<id>/ page's #modal: app.js openCard's dialog with only its picture (the 720 px one the page preloads, as
-    placeholderOf picks it) and name, so the card shows before the scripts; openCard's markup, so nothing moves when
-    it draws the dialog over it. "" without a picture, or when the art hangs out (grid.js hangs)."""
+    """A c/<id>/ page's #modal: app.js openCard's dialog with only its picture (480 or 720 px by CARD_VIEW_SIZES, the
+    one the page preloads; placeholderOf keeps it) and name, so the card shows before the scripts; openCard's markup,
+    so nothing moves when it draws the dialog over it. "" without a picture, or when the art hangs out (grid.js hangs)."""
     if not (c.get("img") and c.get("png")) or (c.get("hang") and c.get("tw") and c.get("th")):
         return ""
     name = js_esc(c["name"])
@@ -4346,7 +4352,8 @@ def card_frame(c):
             '<button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button><div class="detail">'
             '<div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">'
             f'<a href="{full}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" '
-            f'src="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" alt="{name}"{dims} style="aspect-ratio:{ratio}"></a>'
+            f'src="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" srcset="{card_view_srcset(c)}" sizes="{CARD_VIEW_SIZES}" '
+            f'alt="{name}"{dims} style="aspect-ratio:{ratio}"></a>'
             f'</div></div></div></div><div><h2>{name}</h2></div></div></div></div>')
 
 
@@ -5018,15 +5025,16 @@ def main():
     for c in cards + morgue:
         if c.get("hidden"):
             continue
-        desc, (image, size) = share_text(c), og_image(c)
+        desc, (image, size), frame = share_text(c), og_image(c), card_frame(c)
         share_page(("c", c["id"]), [
-            *([f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
+            *([f'<link rel="preload" as="image" imagesrcset="{card_view_srcset(c)}" imagesizes="{CARD_VIEW_SIZES}" fetchpriority="high">'] if frame   # card_frame's picture; no href: no wrong guess without imagesrcset
+              else [f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
             *([f'<link rel="preload" as="font" type="font/woff2" href="{BADGE_FONT}" crossorigin>'] if has_badges(c.get("ability") or "") else []),   # its badges' labels
             og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
             f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(c["name"])} · {SITE_NAME}</title>',
-        ], card_frame(c))
+        ], frame)
     for slug, target in moved.items():
         os.makedirs(os.path.join(DIST, "c", slug), exist_ok=True)
         with open(os.path.join(DIST, "c", slug, "index.html"), "w", encoding="utf-8") as fh:
