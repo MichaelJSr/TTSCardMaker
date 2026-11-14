@@ -421,8 +421,20 @@ function renderView(r, hash) {
   setTitle(r); tint();
   S.viewSig = viewSig();
 }
-// the section's tab: marked, and aria-current on it alone
-const markTab = tab => $$(".tabs a").forEach(a => { const on = a.dataset.tab === tab; a.classList.toggle("active", on); if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+// the section's tab: marked, and aria-current on it alone; a new one out of the phone's scrolled strip: centred in it
+// (scrollLeft: the page never moves)
+let markedTab = "";
+const markTab = tab => {
+  $$(".tabs a").forEach(a => { const on = a.dataset.tab === tab; a.classList.toggle("active", on); if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  if (tab === markedTab) return;
+  markedTab = tab;
+  requestAnimationFrame(() => {                          // after the view draws: one layout
+    const a = $(".tabs a.active"), nav = a?.parentElement;
+    if (!a || nav.scrollWidth <= nav.clientWidth) return;
+    const n = nav.getBoundingClientRect(), r = a.getBoundingClientRect();
+    if (r.left < n.left || r.right > n.right) nav.scrollLeft += r.left - n.left - (n.width - r.width) / 2;
+  });
+};
 function pageName(r) {
   const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People",
     decks: r.arg ? S.deckTitle || "Deck" : "Published decks" };
