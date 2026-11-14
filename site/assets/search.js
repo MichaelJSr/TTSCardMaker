@@ -1,6 +1,7 @@
 // Query language: the same syntax as AutoCroissant's /query_ability, plus names/aliases and a few extras.
 //   fire              text in the ability, name or aliases (any case)
-//   damage            also finds DMG (defense DEF, speed SPD, health HP; and back), as the bot
+//   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
+//                     counter damage CDMG; and back), as the bot
 //   "draw 2"          whole-word match
 //   !die              exclude (works on any term here, e.g. !type==creature)
 //   a & b   a | b     both / either  (| binds looser than &, as in the bot)
@@ -36,8 +37,9 @@ export function haystack(c) {
 }
 
 const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const SYNONYMS = { damage: "dmg", dmg: "damage", defense: "def", def: "defense", speed: "spd", spd: "speed", health: "hp", hp: "health" };
-const SYNONYM_WORDS = new RegExp(`\\b(${Object.keys(SYNONYMS).join("|")})\\b`);
+const SYNONYMS = { damage: "dmg", dmg: "damage", defense: "def", def: "defense", speed: "spd", spd: "speed", health: "hp", hp: "health",
+  "star points": "sp", sp: "star points", "primary field": "pf", pf: "primary field", "counter damage": "cdmg", cdmg: "counter damage" };
+const SYNONYM_WORDS = new RegExp(`\\b(${Object.keys(SYNONYMS).sort((a, b) => b.length - a.length).join("|")})\\b`);   // longest key first
 
 /** A text term's regex as the bot's _text_pattern (query_card.py), each synonym also finding the other; null without one. */
 function synonymRe(t) {
@@ -119,7 +121,7 @@ export function suggest(query, cards) {
 
 export const SEARCH_HELP = [
   ["fire", "In the ability, name or aliases"],
-  ["damage · hp", "Damage/DMG, defense/DEF, speed/SPD, health/HP find each other"],
+  ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
   ['"draw 2"', "Whole words only"],
   ["!die", "Exclude (any term)"],
   ["fire & type==creature", "Both must match"],
