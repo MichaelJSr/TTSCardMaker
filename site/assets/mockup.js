@@ -266,9 +266,9 @@ export function alignOf(spans, x0, x1) {
  *  take the colour of the background around them (the unmasked pixels' mean per cell, cells without any filled from
  *  their neighbours, blended across cells). lines ([[x0, y0, x1, y1]] px): only edges in them (grown by `reach`) count,
  *  and gaps up to `close` px between edges on a row are filled too (a badge's pill, the inside of thick letters).
- *  Returns the colours read on the way: {fill, stroke | null} as [r, g, b]. fill: the record's (textColours' known).
+ *  Returns the colours read on the way: {fill, stroke | null} as [r, g, b]. fill, stroke: the record's (textColours').
  *  profile (a Gradient Overlay): shades too, the old letters' colours top to bottom (shadesOf), else null. */
-export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines = null, close = 0, fill = null, profile = false } = {}) {
+export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines = null, close = 0, fill = null, profile = false, stroke = null } = {}) {
   const [x0, y0, x1, y1] = px(box, W, H), w = x1 - x0, h = y1 - y0;
   if (w < 2 || h < 2) return null;
   const L = luma(data), mask = new Uint8Array(w * h);
@@ -314,7 +314,7 @@ export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines 
     have.set(next);
   }
   const at = (cx, cy, k) => grid[(clamp(cy, 0, gy - 1) * gx + clamp(cx, 0, gx - 1)) * 3 + k];
-  const tc = textColours(masked, bg, fill), shades = profile ? shadesOf(masked, lines, y0, cw, at, tc.stroke) : null;
+  const tc = textColours(masked, bg, fill, stroke), shades = profile ? shadesOf(masked, lines, y0, cw, at, tc.stroke) : null;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     if (!mask[y * w + x]) continue;
     const fx = (x + 0.5) / cw - 0.5, fy = (y + 0.5) / cw - 0.5, cx = Math.floor(fx), cy = Math.floor(fy), tx = fx - cx, ty = fy - cy;
@@ -351,8 +351,9 @@ function dilate(mask, w, h, r) {                     // square dilation, separab
 }
 /** The text's fill and outline from its pixels [lum, r, g, b]: on a dark background the brightest ones fill and the
  *  darkest outline (when darker than the background), on a light one the other way round. known (the record's fill)
- *  fills instead when 4% of the pixels are near it. */
-export function textColours(masked, bg, known = null) {
+ *  fills instead when 4% of the pixels are near it. stroke (the record's): a guessed fill that is it gives way to the
+ *  ink off it and off the background. */
+export function textColours(masked, bg, known = null, stroke = null) {
   if (masked.length < 8) return { fill: known, stroke: null };
   const bgL = (bg[0] * 77 + bg[1] * 150 + bg[2] * 29) >> 8, s = [...masked].sort((a, b) => a[0] - b[0]), n = Math.max(1, Math.round(s.length * 0.12));
   const avg = part => [1, 2, 3].map(k => Math.round(part.reduce((t, p) => t + p[k], 0) / part.length));
@@ -364,8 +365,14 @@ export function textColours(masked, bg, known = null) {
     if (kL >= bgL) return { fill: known, stroke: lum(dark) < bgL - 25 ? avg(dark) : kL - bgL < 40 && lum(light) > kL + 50 ? avg(light) : null };
     return { fill: known, stroke: lum(dark) < kL - 50 ? avg(dark) : lum(light) > bgL + 25 ? avg(light) : null };   // black past it: its outline
   }
-  return bgL < 140 ? { fill: avg(light), stroke: lum(dark) < bgL - 25 ? avg(dark) : null }
+  const guess = bgL < 140 ? { fill: avg(light), stroke: lum(dark) < bgL - 25 ? avg(dark) : null }
     : { fill: avg(dark), stroke: lum(light) > bgL + 25 ? avg(light) : null };
+  const far = (p, c, d) => Math.max(Math.abs(p[1] - c[0]), Math.abs(p[2] - c[1]), Math.abs(p[3] - c[2])) > d;
+  if (stroke && !far([0, ...guess.fill], stroke, 60)) {   // the darkest ink was the Stroke
+    const rest = masked.filter(p => far(p, stroke, 60) && far(p, bg, 48));
+    if (rest.length >= 8) return { fill: [1, 2, 3].map(k => median(rest.map(p => p[k]))), stroke };
+  }
+  return guess;
 }
 
 /** Ability text as paragraphs of chunks (no break inside a chunk), each piece {text}, {icon, no, sticker} (an icon token
@@ -1105,6 +1112,8 @@ export function oneColour(rec, path, kind = OVERLAY) {
 }
 /** The same for an enabled Gradient Overlay: the letters are drawn in the old ones' shades (erase's profile). */
 export const gradientOn = (rec, path) => oneColour(rec, path, /^GradientOverlay$/);
+/** The record's Stroke [r, g, b] (psd_details: the layer's or its group's), or null. */
+const strokeOf = t => (Array.isArray(t?.stroke) && t.stroke.length === 4 && t.stroke[3] > 0 ? t.stroke.slice(0, 3) : null);
 const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 const hexRgb = h => (/^#[0-9a-f]{6}$/i.test(h || "") ? [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)) : null);
 /** A record text layer's main fill [r, g, b]: the colour most of its letters are in (build_site layer_inks' main ink,
@@ -1307,13 +1316,13 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
         const { found, strays } = part && own && role === "ability" ? layerBlock(L, W, H, b, own, z, rows) : { found: b, strays: [] };   // one layer: its lines in its own box
         const gone = role === "name" ? hit.b.lines : part ? [...eraseLines(b), ...strays] : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
         const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
-        const colours = wipe(all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });   // in the lines only: dim words too
+        const colours = wipe(all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer), stroke: strokeOf(layer) });   // in the lines only: dim words too
         return text == null ? { deleted: true } : { found, size: z, colours };
       }
       if (text == null) return { skipped: true };
       if (own && kc && layer?.px > 0 && (part || printed(obj(rec.parts) || {}, role).some(p => p?.layer === layer.layer))) {   // not found: at the record's box, size and frame (a whole field's: its printed layer)
         const z = layer.px * kc, found = recordBlock(own, paras, measure, z, wrap, wrap ? layer.frame.map(v => v * kc) : null);
-        const colours = wipe([own[0] - z, own[1] - z * 0.5, own[2] + z, own[3] + z * 0.5], { lines: found.lines, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });
+        const colours = wipe([own[0] - z, own[1] - z * 0.5, own[2] + z, own[3] + z * 0.5], { lines: found.lines, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer), stroke: strokeOf(layer) });
         return { found, size: z, colours };
       }
       return {};
