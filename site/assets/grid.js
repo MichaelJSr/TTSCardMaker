@@ -120,7 +120,7 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
   const inDeck = !link && env.inDeck(c.id), url = `c/${encodeURIComponent(c.id)}/`, label = `aria-label="${esc(c.name)}"`;
   const hang = c.img && hangs(c), cls = `tile${hang ? " hang" : ""}`;
   return `${link ? `<a class="${cls}" href="${url}" ${label}>` : href ? `<a class="${cls}" href="${url}" data-open="${c.id}" ${label}>` : `<article class="${cls}" data-open="${c.id}" tabindex="0" ${label}>`}
-    ${c.img ? `<img class="art" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(env.thumbs, c, small ? 120 : css)}${hang ? ` style="${hangVars(c, TILE_ART, 11)}"` : ""} alt="">` : `<div class="art"></div>`}
+    ${c.img ? `<img class="art${c.tw && c.tw === c.th ? " sq" : ""}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(env.thumbs, c, small ? 120 : css)}${hang ? ` style="${hangVars(c, TILE_ART, 11)}"` : ""} alt="">` : `<div class="art"></div>`}
     ${link || c.morgue ? "" : constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
       : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
       : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`
