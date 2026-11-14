@@ -1735,12 +1735,13 @@ function noVariants(t) {
   }
   return { T, at: i => (i < 0 ? i : i < to.length ? to[i] : i - t.length + T.length) };
 }
-/** An Ability edit (R's was -> text) against the card's own lines (recordLayout R): {splice, keep, gone, after, from,
- *  paras} or null (no change but trailing spaces). splice: {i, a, b, at, run} when one paragraph changes inside one
- *  line (was[a, b) -> run, text index at; at letters' starts). keep: the lines that stand (the paragraphs before the
- *  change, and the first changed one's lines a greedy wrap ends before it: the word that broke them unchanged); gone:
- *  the changed paragraphs' other lines; after: the paragraphs' after it (moved when the line count changes); the new
- *  text to wrap: its paragraphs paras [first, past the last], the first from text index from. */
+/** An Ability edit (R's was -> text) against the card's own lines (recordLayout R): {splice, splices, keep, gone, after,
+ *  from, paras} or null (no change but trailing spaces). splice: {i, a, b, at, run} when one paragraph changes inside one
+ *  line (was[a, b) -> run, text index at; at letters' starts); else splices: one such per changed line (lineSplices) or
+ *  null. keep: the lines that stand (the paragraphs before the change, and the first changed one's lines a greedy wrap
+ *  ends before it: the word that broke them unchanged); gone: the changed paragraphs' other lines; after: the
+ *  paragraphs' after it (moved when the line count changes); the new text to wrap: its paragraphs paras [first, past
+ *  the last], the first from text index from. */
 export function geoPlan(R, text) {
   const was = R.was, now = String(text ?? "").replace(/\r/g, ""), L = R.lines;
   if (now === was) return null;
@@ -1764,6 +1765,7 @@ export function geoPlan(R, text) {
       splice = { i, a: x0, b: x1, at, run: now.slice(at, S1[a] + n.length - s + (x1 - B)) };
     }
   }
+  const splices = splice ? null : lineSplices(R, now);
   const lastOld = P0.length - b, lastNew = P1.length - b;
   const reach = j => { const k = L[j + 1], sp = was.indexOf(" ", k.s); return sp >= 0 && sp < k.e ? sp : k.e; };   // the next line's first word's end
   const keep = [], gone = [], after = [];
@@ -1775,7 +1777,42 @@ export function geoPlan(R, text) {
     else gone.push(j);
   });
   const first = L[gone[0]], from = first && first.para === a ? S1[a] + first.s - S0[a] : S1[Math.min(a, P1.length)];
-  return { splice, keep, gone, after, from, paras: [a, lastNew] };
+  return { splice, splices, keep, gone, after, from, paras: [a, lastNew] };
+}
+/** An edit's word changes (was -> now) each inside one of R's lines: per line, its changed run as geoPlan's splice
+ *  ({i, a, b, at, run}, at letters' starts), lines in order; null when a change holds a line break or crosses a line. */
+function lineSplices(R, now) {
+  const was = R.was, L = R.lines, tok = t => t.match(/\n|[^\S\n]+|\S+/g) || [], A = tok(was), B = tok(now);
+  if (A.length * B.length > 250000) return null;
+  const n = A.length, m = B.length, D = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));   // LCS of the tokens
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) D[i][j] = A[i] === B[j] ? D[i + 1][j + 1] + 1 : Math.max(D[i + 1][j], D[i][j + 1]);
+  const hunks = []; let i = 0, j = 0, pa = 0, pb = 0, h = null;
+  while (i < n || j < m) {
+    if (i < n && j < m && A[i] === B[j]) { if (h) hunks.push(h); h = null; pa += A[i++].length; pb += B[j++].length; }
+    else { h ||= [pa, pa, pb, pb];
+      if (j < m && (i >= n || D[i][j + 1] >= D[i + 1][j])) h[3] = pb += B[j++].length; else h[1] = pa += A[i++].length; }
+  }
+  if (h) hunks.push(h);
+  const by = new Map(), ends = (t, e) => e >= t.length || t[e] === "\n";
+  for (const [oa, ob, na, nb] of hunks) {
+    const o = was.slice(oa, ob), w = now.slice(na, nb);
+    if (/\n/.test(o + w)) return null;
+    if (!/\S/.test(o + w) && ends(was, ob) && ends(now, nb)) continue;   // a paragraph's trailing spaces: never drawn
+    const k = L.findIndex(l => l.para >= 0 && l.s <= oa && ob <= l.e);
+    if (k < 0) return null;
+    const g = by.get(k); by.set(k, g ? [g[0], ob, g[2], nb] : [oa, ob, na, nb]);
+  }
+  if (!by.size) return null;
+  return [...by].sort((x, y) => x[0] - y[0]).map(([k, [oa, ob, na, nb]]) => {   // as geoPlan's splice
+    const o = was.slice(oa, ob), w = now.slice(na, nb), l = L[k];
+    let p = 0; while (p < o.length && p < w.length && o[p] === w[p]) p++;
+    let q = 0; while (q < o.length - p && q < w.length - p && o[o.length - 1 - q] === w[w.length - 1 - q]) q++;
+    const a0 = oa + p, b0 = ob - q;
+    let x0 = a0; while (x0 > l.s && !R.x.has(x0)) x0--;
+    let x1 = b0; while (x1 < l.e && !R.x.has(x1)) x1++;
+    const at = na + p - (a0 - x0);
+    return { i: k, a: x0, b: x1, at, run: now.slice(at, nb - q + (x1 - b0)) };
+  });
 }
 /** The plate crop with the card's layout of the one layer ids names: {c, box (image px, k per canvas px), fx: its FX
  *  layers' words}, or null. */
@@ -1799,10 +1836,11 @@ function tagSwap(R, sp, now, icons) {
 }
 /** A splice (geoPlan's) set as the bake would: the run's width from the line's own letters (their pen steps), else this
  *  font's scaled to the card's line; a timing tag for another (tagSwap) the old pill's width times the new one's over
- *  it in this font; the line moved as its alignment moves it. {xa, cutA, cutB, dp, ds, hx, z, tag: {at, w} | null}
- *  (image px: the old run's pen start and the cuts between its letters' ink and its neighbours', prefix and suffix
- *  shifts, its letters' width scale, their size) or null when it would wrap
- *  otherwise (past the frame, a word pulled up), is not letters only, moves an FX layer's word, or the font is far off. */
+ *  it in this font; the line moved as its alignment moves it. {xa, cutA, cutB, dp, ds, hx, z, tag: {at, w} | null,
+ *  width, k, space} (image px: the old run's pen start and the cuts between its letters' ink and its neighbours', prefix
+ *  and suffix shifts, its letters' width scale, their size; the line's new width, card over this font, a space) or null
+ *  when it would wrap otherwise (past the frame, a word pulled up), is not letters only, moves an FX layer's word, or the
+ *  font is far off. */
 export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity }) {
   const { was, lines: L, x: X } = R, l = L[sp.i], { run } = sp, now = was.slice(0, sp.a) + run + was.slice(sp.b);
   const word = (t, i, j) => { while (i > 0 && !/\s/.test(t[i - 1])) i--; while (j < t.length && !/\s/.test(t[j])) j++; return t.slice(i, j); };
@@ -1847,7 +1885,20 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
   const before = inked.filter(j => j < a).pop(), first = inked.find(j => j >= a && j < b), last = inked.filter(j => j >= a && j < b).pop(), next = inked.find(j => j >= b);
   const cut = (p, q, x) => (p != null && q != null ? (edge(p, 1) + edge(q, 0)) / 2 : x);
   const cutA = first != null ? cut(before, first, xa) : cut(before, next, xa), cutB = last != null ? cut(last, next, xb) : cutA;
-  return { xa, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, hx, z: zl, tag: tag && { at: tag.at, w } };
+  return { xa, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, hx, z: zl, tag: tag && { at: tag.at, w }, width, k, space };
+}
+/** lineSplices' sps (now: the edited text) with their spliceFits fits, framed text: no line spliced right after the
+ *  line before (one paragraph) has a new first word that fits up there at that line's new width. */
+function staysDown(R, sps, fits, now, measure, z) {
+  const L = R.lines, room = R.frame[1] - R.frame[0];
+  let d = 0;                                          // was -> now index shift so far
+  return sps.every((sp, n) => {
+    const l = L[sp.i], s = l.s + d, prev = sps[n - 1], f = fits[n - 1];
+    d += sp.run.length - (sp.b - sp.a);
+    if (!prev || prev.i !== sp.i - 1 || L[prev.i].para !== l.para) return true;
+    const e = l.e + d, sp2 = now.indexOf(" ", s), word = now.slice(s, sp2 >= 0 && sp2 < e ? sp2 : e);
+    return f.width + f.space + measure(word, z) * fits[n].k > room + FIT_PAD;
+  });
 }
 /** Rows of R's lines (image px [top, bottom)): half-way to the neighbours' ink, the first and last to box's edges. */
 function bands(L, box) {
@@ -1912,13 +1963,14 @@ function pillAt(paras, text, at, w) {
   }
   return [];
 }
-/** An Ability on the card's own lines (recordLayout R, geoPlan's plan): spliced (spliceFit), else its unchanged
- *  paragraphs' lines kept and the rest wrapped at the frame from where the change starts (wrapped lines that read as
- *  the card's first or last ones there kept too); kept lines are the card's pixels (moveInk, onto the plate's wiped
- *  ones: moved as the bake moves them). "splice" | "lines", or "" when neither holds (drawText's way then). box: the
- *  layer's plate crop (image px); z: its set size; grow: room for more lines at it (drawText's roomBelow); only: a splice
- *  or "" (a title); look: paintLines' options. bare: () => the crop's cuts without its FX layers, pasted when an FX
- *  layer's word moves or is redrawn (the bake moves the layer with it). */
+/** An Ability on the card's own lines (recordLayout R, geoPlan's plan): spliced (spliceFit: its one changed line, or
+ *  each of several when all fit and staysDown), else its unchanged paragraphs' lines kept and the rest wrapped at the
+ *  frame from where the change starts (wrapped lines that read as the card's first or last ones there kept too); kept
+ *  lines are the card's pixels (moveInk, onto the plate's wiped ones: moved as the bake moves them). "splice" |
+ *  "splices" | "lines", or "" when none holds (drawText's way then). box: the layer's plate crop (image px); z: its set
+ *  size; grow: room for more lines at it (drawText's roomBelow); only: spliced or "" (a title); look: paintLines'
+ *  options. bare: () => the crop's cuts without its FX layers, pasted when an FX layer's word moves or is redrawn (the
+ *  bake moves the layer with it). */
 export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, grow, only = false, icons, paras, text, look, pitch, W }) {
   const H = ctx.canvas.height, L = R.lines, now = String(text ?? "").replace(/\r/g, ""), B = bands(L, box);
   const gaps = L.slice(1).map((l, j) => l.base - L[j].base).filter(g => g > 0), step = gaps.length ? median(gaps) : pitch;
@@ -1927,13 +1979,20 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
     fit = spliceFit(R, plan.splice, { measure, z, icons, fx: [], W }); useBare = !!fit; }
   const pill = fit?.tag && pillAt(paras, now, fit.tag.at, fit.tag.w);   // a timing tag's new pill alone
   if (pill && !pill.length) fit = null;
+  let sps = fit ? [plan.splice] : null, fits = [fit], pills = [pill];
+  if (!fit && plan.splices) {                         // several lines changed: each spliced on its own when all fit
+    const fs = plan.splices.map(sp => spliceFit(R, sp, { measure, z, icons, fx, W })), ps = fs.map(f => f?.tag && pillAt(paras, now, f.tag.at, f.tag.w));
+    if (fs.every((f, n) => f && !(ps[n] && !ps[n].length)) && (!R.frame || staysDown(R, plan.splices, fs, now, measure, z))) [sps, fits, pills] = [plan.splices, fs, ps];
+  }
+  if (!sps && only) return "";
   let drawn = null, x0 = box[0], x1 = box[2];
-  if (!fit && only) return "";
-  if (fit) {
-    const { i, at, run } = plan.splice, l = L[i];
-    x0 -= Math.abs(fit.dp) + Math.abs(fit.ds); x1 += Math.abs(fit.dp) + Math.abs(fit.ds);
-    drawn = { lines: pill ? [{ pieces: pill }] : run ? [{ pieces: runPieces(paras, now, at, at + run.length, measure, fit.z, fit.hx) }] : [], at: () => fit.xa + fit.dp, base: l.base, hx: look.hx * fit.hx, z: fit.z,
-      moves: [...L.flatMap((_, j) => (j === i ? [] : [[[x0, B[j][0], x1, B[j][1]], 0, 0]])), [[x0, B[i][0], fit.cutA, B[i][1]], fit.dp, 0], [[fit.cutB, B[i][0], x1, B[i][1]], fit.ds, 0]] };
+  if (sps) {
+    const pad = Math.max(...fits.map(f => Math.abs(f.dp) + Math.abs(f.ds))), own = new Set(sps.map(sp => sp.i));
+    x0 -= pad; x1 += pad;
+    drawn = { paints: sps.map(({ i, at, run }, n) => { const f = fits[n];
+        return [pills[n] ? [{ pieces: pills[n] }] : run ? [{ pieces: runPieces(paras, now, at, at + run.length, measure, f.z, f.hx) }] : [], { at: () => f.xa + f.dp, base: L[i].base, hx: look.hx * f.hx, z: f.z }]; }),
+      moves: [...L.flatMap((_, j) => (own.has(j) ? [] : [[[x0, B[j][0], x1, B[j][1]], 0, 0]])),
+        ...sps.flatMap(({ i }, n) => [[[x0, B[i][0], fits[n].cutA, B[i][1]], fits[n].dp, 0], [[fits[n].cutB, B[i][0], x1, B[i][1]], fits[n].ds, 0]])] };
   } else {
     const [qa, qb] = plan.paras, spans = chunkSpans(paras, now), sel = [];
     for (let q = qa; q < qb; q++) sel.push((paras[q] || []).filter((_, c) => { const s = spans.find(([p, k]) => p === q && k === c); return s && (q > qa || s[2] >= plan.from); }));
@@ -1949,7 +2008,7 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
     let k = 0; while (k < G.length - h && k < lines.length - h && was[G.length - 1 - k] && got[lines.length - 1 - k] === was[G.length - 1 - k] && !(dy && !bare && moving(G[G.length - 1 - k]))) k++;
     const from = h ? L[G[h - 1]].base + step : base, tail = G.slice(G.length - k).map((j, n) => [j, from + (lines.length - h - k + n) * step - L[j].base]);
     useBare = !!bare && [...tail.filter(([, d]) => d).map(([j]) => j), ...(dy ? plan.after : []), ...G.slice(h, G.length - k)].some(moving);   // moved or redrawn
-    drawn = { lines: lines.slice(h, lines.length - k), at, base: from, hx: look.hx, z,
+    drawn = { paints: [[lines.slice(h, lines.length - k), { at, base: from, hx: look.hx, z }]],
       moves: [...[...plan.keep, ...G.slice(0, h)].map(j => [[x0, B[j][0], x1, B[j][1]], 0, 0]), ...tail.map(([j, d]) => [[x0, B[j][0], x1, B[j][1]], 0, d]), ...plan.after.map(j => [[x0, B[j][0], x1, B[j][1]], 0, dy])] };
   }
   if (useBare && !pasteCuts(ctx, W, bare())) return "";   // FX layers off: moveInk moves their ink as letters
@@ -1959,8 +2018,8 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
     for (const [rect, dx, dy] of drawn.moves) moveInk(img.data, wiped, card, W, [ya, yb], rect, dx, dy);
     ctx.putImageData(img, 0, ya);
   }
-  paintLines(ctx, drawn.lines, { ...look, at: drawn.at, base: drawn.base, pitch: step, z: drawn.z, hx: drawn.hx });
-  return fit ? "splice" : "lines";
+  for (const [lines, o] of drawn.paints) paintLines(ctx, lines, { ...look, ...o, pitch: step });
+  return sps ? (sps.length > 1 ? "splices" : "splice") : "lines";
 }
 /** An added ability as the bake sets it (the details' addLook: card_checks' plan font, px and leading, the template
  *  Ability's colour, Stroke and just): from the room's top (its first ink row), centred or left set, smaller by 0.94
