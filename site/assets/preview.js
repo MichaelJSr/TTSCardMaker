@@ -22,10 +22,11 @@ export const CONTRACT = {
 export const KEY = "card-previews";                   // localStorage: {card id: [entry, newest first]}
 export const LOCK_KEY = "card-previews-poll";         // localStorage: {tab, until}: the tab that checks for all of them
 export const KEEP = 3, MAX_EDIT = 16384;              // MAX_EDIT: card_preview's, UTF-8 bytes of the edit's JSON
-// the contract's checks: none in the first 17 s (results land 20-28 s after the press), every second until 1 minute
-// while at most 3 wait (else every 3 s), every 3 s until 2 minutes, every 10 s until 3, then every 30 s, giving up at
-// 16 (the publish job's timeout is 14); "Check again" waits 10 more
-export const FIRST_MS = 17000, POLL_BRISK = 1000, BRISK_FOR = 60000, BRISK_MAX = 3, POLL_FAST = 3000, FAST_FOR = 2 * 60000, POLL_MID = 10000, MID_FOR = 3 * 60000, POLL_SLOW = 30000;
+// the contract's checks: none in the first 12 s (the run's hand-over from then, the branch from 17: results land 20-28 s
+// after the press), every second until 1 minute while at most 3 wait (else every 3 s), every 3 s until 2 minutes, every
+// 10 s until 3, then every 30 s, giving up at 16 (the publish job's timeout is 14); "Check again" waits 10 more
+export const EARLY_MS = 12000, FIRST_MS = 17000, POLL_BRISK = 1000, BRISK_FOR = 60000, BRISK_MAX = 3, POLL_FAST = 3000, FAST_FOR = 2 * 60000, POLL_MID = 10000, MID_FOR = 3 * 60000, POLL_SLOW = 30000;
+export const HANDOVER = "card-preview";               // the preview job's artifact (card-preview.yml "Hand over")
 export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
 // more than a day after the press means it never comes; entries go after 30 days
@@ -101,6 +102,24 @@ export function readResult(raw) {
   return { state: r.state, transient: r.transient === true, reason: r.reason ? clip(r.reason) : "", notes, fields, base, parts,
     image: r.image === "baked" || r.image === "refused" ? r.image : null, files, run: typeof r.run === "string" && /^https:\/\/github\.com\//.test(r.run) ? r.run : "", region, size };
 }
+/** A zip's files, {name: Uint8Array}: stored or deflated entries, sizes from the central directory (upload-artifact's
+ *  data descriptors don't matter). Throws on anything else. */
+export async function unzip(buf) {
+  const v = new DataView(buf), u8 = new Uint8Array(buf), td = new TextDecoder(), out = {};
+  let end = buf.byteLength - 22;
+  while (end >= 0 && v.getUint32(end, true) !== 0x06054b50) end--;
+  if (end < 0) throw new Error("not a zip");
+  for (let i = 0, n = v.getUint16(end + 10, true), p = v.getUint32(end + 16, true); i < n; i++) {
+    const how = v.getUint16(p + 10, true), size = v.getUint32(p + 20, true), nl = v.getUint16(p + 28, true), at = v.getUint32(p + 42, true);
+    if (v.getUint32(p, true) !== 0x02014b50 || (how !== 0 && how !== 8)) throw new Error("unreadable zip entry");
+    const name = td.decode(u8.subarray(p + 46, p + 46 + nl)), start = at + 30 + v.getUint16(at + 26, true) + v.getUint16(at + 28, true);
+    p += 46 + nl + v.getUint16(p + 30, true) + v.getUint16(p + 32, true);
+    if (start + size > end) throw new Error("unreadable zip entry");
+    const data = u8.slice(start, start + size);
+    out[name] = how ? new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer()) : data;
+  }
+  return out;
+}
 /** The store read from localStorage text: only well-formed entries, newest first, KEEP per card. */
 export function readStore(textValue) {
   let s; try { s = JSON.parse(textValue); } catch { s = null; }
@@ -159,12 +178,12 @@ export function missed(e, now = Date.now()) {
   if (e.state === "running" && now - e.at > (e.wait || MAX_WAIT_MS)) return { state: "timeout" };
   return null;
 }
-/** ms to the next check (null: nothing running): when the oldest reaches FIRST_MS, then POLL_BRISK while one started
+/** ms to the next check (null: nothing running): when the oldest reaches EARLY_MS, then POLL_BRISK while one started
  *  under BRISK_FOR ago and at most BRISK_MAX wait, POLL_FAST under FAST_FOR, POLL_MID under MID_FOR, else POLL_SLOW. */
 export const pollDelay = (store, now = Date.now()) => {
   const ages = waiting(store).map(e => now - e.at);
   if (!ages.length) return null;
-  if (ages.every(a => a < FIRST_MS)) return FIRST_MS - Math.max(...ages);
+  if (ages.every(a => a < EARLY_MS)) return EARLY_MS - Math.max(...ages);
   if (ages.length <= BRISK_MAX && ages.some(a => a < BRISK_FOR)) return POLL_BRISK;
   return ages.some(a => a < FAST_FOR) ? POLL_FAST : ages.some(a => a < MID_FOR) ? POLL_MID : POLL_SLOW;
 };
@@ -383,7 +402,7 @@ export function createPreviews(app) {
     heardT = setTimeout(() => { const m = finishedToast(heard); heard = []; if (m && visible()) app.toast(m); }, 400); };
   window.addEventListener("storage", e => {         // another tab: its starts, and the results the checking tab found
     if (e.key !== KEY) return;
-    const before = store; store = readStore(e.newValue);
+    const before = store; store = readStore(e.newValue); sweep();
     announce(finished(before, store)); notify(null); schedule();
   });
   const TAB = Math.random().toString(36).slice(2);     // this tab, for the check's lock
@@ -391,10 +410,23 @@ export function createPreviews(app) {
   window.addEventListener("pagehide", () => { if (lockMine()) localStorage.removeItem(LOCK_KEY); });   // the next tab takes over at once
   const repo = () => S.data.repo;
   const rawUrl = (ref, path) => `https://raw.githubusercontent.com/${repo()}/${ref}/${path.split("/").map(encodeURIComponent).join("/")}`;
-  const imagesOf = e => [e.result?.files?.webp].filter(Boolean).map(f => rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px image
+  // the run's hand-over, read by the checking tab before the publish job puts it on the branch (NOTES §22): early =
+  // request -> its result, shown in this tab only (the store says "running" until the branch has it, so other tabs and
+  // later loads use the branch); local = its images as object URLs, kept while the page lives (no reload when the
+  // branch's copy lands); direct = request -> {run, tries}, or false once done or failed (the branch as ever)
+  const early = new Map(), local = new Map(), direct = new Map(), told = new Set();
+  // the token goes to api.github.com only: the archive's 302 to GitHub's blob store relies on the browser dropping
+  // Authorization on a cross-origin redirect (Chrome 119, Firefox 111, Safari 16.1); Set's union (Chrome 122, Firefox
+  // 127, Safari 17) vouches for it
+  let directOk = (() => { try { return typeof Set.prototype.union === "function" && !!new DecompressionStream("deflate-raw"); } catch { return false; } })();
+  const withEarly = e => (e.state === "running" && early.has(e.request) ? { ...e, state: early.get(e.request).state, result: early.get(e.request) } : e);
+  const listOf = id => (store[id] || []).map(withEarly);
+  const sweep = () => { const kept = new Set(Object.values(store).flat().map(e => e.request));   // object URLs of entries gone
+    for (const [r, urls] of local) if (!kept.has(r)) { Object.values(urls).forEach(URL.revokeObjectURL); local.delete(r); early.delete(r); } };
+  const imagesOf = e => [e.result?.files?.webp].filter(Boolean).map(f => local.get(e.request)?.webp || rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px image
   const current = c => app.img(c, 720);
   // the Diff's other side: the result's before.webp (the card's PNG made as preview.webp, so unchanged pixels match)
-  const beforeOf = e => (e?.result?.files?.before ? rawUrl(CONTRACT.branch, CONTRACT.file(e.request, e.result.files.before)) : "");
+  const beforeOf = e => (e?.result?.files?.before ? local.get(e.request)?.before || rawUrl(CONTRACT.branch, CONTRACT.file(e.request, e.result.files.before)) : "");
 
   // ---- the values: the card's (published + staged) or the open form's, against the PSD's
   const psdOf = c => app.editor.psdOf(c.id) || {};
@@ -452,6 +484,37 @@ export function createPreviews(app) {
     const run = (r.workflow_runs || []).find(x => String(x.display_title || x.name || "").includes(e.request));
     return run ? { id: run.id, url: run.html_url, status: run.status, conclusion: run.conclusion } : null;
   }
+  async function handOver(e) {                        // the run's hand-over once it's listed: true when early has its result
+    let d = direct.get(e.request), step = "run";
+    if (!directOk || d === false || early.has(e.request) || Date.now() - e.at > MID_FOR) return false;   // later: 1-2 s matter no more
+    if (!d) direct.set(e.request, (d = { run: e.run?.id || null, tries: 0 }));
+    try {
+      if (!d.run) {
+        if (++d.tries > 3) throw new Error("no run");
+        const run = await findRun(e);
+        if (!run) return false;
+        d.run = run.id; set(patch(store, e.request, { run }));
+      }
+      step = "list";
+      const a = (await app.editor.github(`/repos/${repo()}/actions/runs/${d.run}/artifacts?name=${HANDOVER}`)).artifacts?.find(x => x.name === HANDOVER && !x.expired);
+      if (!a) return false;
+      step = "zip";
+      const url = new URL(a.archive_download_url);
+      if (url.origin !== "https://api.github.com") throw new Error("not GitHub's API");
+      const files = await unzip(await app.editor.github(url.pathname + url.search, { zip: true }));
+      const r = JSON.parse(new TextDecoder().decode(files["result.json"]));
+      if (r?.request !== e.request || !DONE.includes(r.state)) throw new Error("not this request's result");   // the publisher's stand-in then
+      const result = readResult(r), urls = {};
+      for (const [k, f] of Object.entries(result.files)) if (files[f]) urls[k] = URL.createObjectURL(new Blob([files[f]], { type: /\.webp$/i.test(f) ? "image/webp" : "image/avif" }));
+      result.files = Object.fromEntries(Object.keys(urls).map(k => [k, result.files[k]]));   // what the publisher keeps
+      local.set(e.request, urls); early.set(e.request, result); direct.set(e.request, false);
+      return true;
+    } catch (err) {
+      if (step !== "zip" && [401, 403, 404].includes(err.status)) directOk = false;   // a token without Actions read
+      direct.set(e.request, false);
+      return false;
+    }
+  }
   async function poll(only = null) {
     if (busy || !app.editor.me) return;
     if (!only) {                                      // one tab checks for all
@@ -464,13 +527,15 @@ export function createPreviews(app) {
     try {
       set(expire(store));
       for (const e of only ? [only] : due(store, Date.now(), look)) {
-        if (!only && e.state === "running" && Date.now() - e.at < FIRST_MS) continue;   // too soon to be done
-        let raw = null;
-        try { raw = await fetchResult(e); } catch { continue; }                 // GitHub unreachable: next time
+        const age = Date.now() - e.at, running = !only && e.state === "running";
+        if (running && age < EARLY_MS) continue;                             // too soon to be done
+        const [raw, got] = await Promise.all([running && age < FIRST_MS ? undefined : fetchResult(e).catch(() => undefined), running && handOver(e)]);
+        if (got && raw == null) { notify(e.card); told.add(e.request); announce([withEarly(e)]); continue; }   // the branch: next rounds
+        if (raw === undefined) continue;                                     // too soon for the branch, or GitHub unreachable
         if (raw != null) {
           const result = readResult(raw);
           set(patch(store, e.request, { state: result.state, result }));
-          notify(e.card);
+          if (!early.delete(e.request) || got) notify(e.card);              // shown early: the same result, nothing to repaint
           continue;
         }
         const gone = missed(e);                                              // not there: timed out, or never coming
@@ -487,15 +552,15 @@ export function createPreviews(app) {
         }
       }
       if (!only) first = false;
-    } finally { busy = false; announce(finished(before, store)); }
+    } finally { busy = false; announce(finished(before, store).filter(e => !told.has(e.request))); }
   }
 
   // ---- marks: the grid's badges, the image viewer on the card page and in the Edit dialog's Preview pane
   function mountTiles(root) {
     for (const t of root.querySelectorAll(".tile[data-open]")) {
-      const id = t.dataset.open, on = hasNews(store, id), b = t.querySelector(".pv-badge");
-      if (on && !b) t.insertAdjacentHTML("beforeend", `<span class="pv-badge" data-tip="${esc(badgeTip(store[id][0].state))}">Preview</span>`);
-      else if (on) b.dataset.tip = badgeTip(store[id][0].state);   // a reused tile: its tip as of now
+      const id = t.dataset.open, list = listOf(id), on = hasNews({ [id]: list }, id), b = t.querySelector(".pv-badge");
+      if (on && !b) t.insertAdjacentHTML("beforeend", `<span class="pv-badge" data-tip="${esc(badgeTip(list[0].state))}">Preview</span>`);
+      else if (on) b.dataset.tip = badgeTip(list[0].state);   // a reused tile: its tip as of now
       else if (b) b.remove();
     }
   }
@@ -510,11 +575,11 @@ export function createPreviews(app) {
     const tabs = iv.querySelector(".iv-tabs"), alt = stage.querySelector(".iv-alt"), cap = iv.querySelector(".iv-caption");
     const pick = mode => views.set(c.id, { ...views.get(c.id), mode });
     const paint = () => {
-      const v = getV(), list = store[c.id] || [], st = views.get(c.id) || {};
+      const v = getV(), list = listOf(c.id), st = views.get(c.id) || {};
       const shown = Math.min(st.shown || 0, Math.max(0, list.length - 1)), e = list[shown];
       const mode = st.mode || defaultMode({ where, n: v.n, entry: list[0] });
       for (const b of tabs.children) { const on = b.dataset.ivTab === mode; b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; }
-      const pill = tabs.querySelector(".pv-badge"), news = hasNews(store, c.id);
+      const pill = tabs.querySelector(".pv-badge"), news = hasNews({ [c.id]: list }, c.id);
       if (news && !pill) tabs.lastElementChild.insertAdjacentHTML("beforeend", ` <span class="pv-badge inline">New</span>`); else if (!news && pill) pill.remove();
       let show = "orig";
       if (mode === "mockup" && v.n && c.img) {
@@ -544,7 +609,7 @@ export function createPreviews(app) {
       else if (act === "diff") { const st = views.get(c.id) || {}; views.set(c.id, { ...st, diff: !st.diff }); paint(); }
       else if (act === "discard") {                   // the preview shown, thrown away here; the next one (or none) shows
         const st = views.get(c.id) || {}, list = store[c.id] || [], e = list[Math.min(st.shown || 0, Math.max(0, list.length - 1))];
-        if (e) { set(discard(store, e.request)); views.set(c.id, { ...st, shown: 0, diff: false }); notify(c.id); }
+        if (e) { set(discard(store, e.request)); sweep(); views.set(c.id, { ...st, shown: 0, diff: false }); notify(c.id); }
       }
       else if (act === "recheck") { const e = (store[c.id] || [])[0]; if (e) { set(patch(store, e.request, { state: "running", wait: Date.now() - e.at + MORE_WAIT_MS })); notify(c.id); poll(store[c.id][0]).then(() => notify(c.id)); schedule(); } }
     };
@@ -633,9 +698,9 @@ export function createPreviews(app) {
   return {
     init, mountTiles, mountCard, mountForm, start,
     onAuth() { if (app.editor.me) soon(); },
-    entries: id => store[id] || [],
+    entries: listOf,
     /** how many finished previews Trash all would throw away; trashAll() does it and says how many */
     finished: () => finishedCount(store),
-    trashAll() { const n = finishedCount(store); set(trashAll(store)); notify(null); return n; },
+    trashAll() { const n = finishedCount(store); set(trashAll(store)); sweep(); notify(null); return n; },
   };
 }

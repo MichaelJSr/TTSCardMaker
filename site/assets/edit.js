@@ -306,17 +306,18 @@ export function createEditor(app) {
   const find = id => S.byId.get(id);
 
   // ---- GitHub API
-  async function gh(path, { method = "GET", body, raw = false, full = false, anon = false } = {}) {     // anon: no token (signed out)
+  // anon: no token (signed out); zip: an archive's bytes, the token its one header (its 302's host gets none: preview.js)
+  async function gh(path, { method = "GET", body, raw = false, full = false, anon = false, zip = false } = {}) {
     const r = await fetch(API + path, {
       method, cache: "no-store", body: body && JSON.stringify(body),
-      headers: { ...(anon ? {} : { Authorization: `Bearer ${token}` }), Accept: raw ? "application/vnd.github.raw+json" : "application/vnd.github+json",
+      headers: zip ? { Authorization: `Bearer ${token}` } : { ...(anon ? {} : { Authorization: `Bearer ${token}` }), Accept: raw ? "application/vnd.github.raw+json" : "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28", ...(body ? { "Content-Type": "application/json" } : {}) },
     });
     if (!r.ok) {
       let msg = ""; try { msg = (await r.json()).message || ""; } catch { /* no body */ }
       const e = new Error(`GitHub ${r.status}${msg ? `: ${msg}` : ""}`); e.status = r.status; throw e;
     }
-    const data = raw ? await r.text() : r.status === 204 ? null : await r.json();
+    const data = zip ? await r.arrayBuffer() : raw ? await r.text() : r.status === 204 ? null : await r.json();
     return full ? { data, headers: r.headers } : data;
   }
   const repoPath = p => p.split("/").map(encodeURIComponent).join("/");
