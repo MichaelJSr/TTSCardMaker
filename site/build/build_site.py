@@ -12,8 +12,8 @@ Where the data comes from:
     data/details/<id>.json for its Details dropdown, and its name's and ability's colours on the card (card_inks:
     cards.json `ink`). Aliases come from site/Card Edits.json.
   * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
-    for the card view; AVIF only, no WebP copies), plus 96, 192 and 480 px made from the 720 one (SMALL_SIZES: table
-    rows, 64 px lists, strips and deck slots; the card view at 1x). They are cached by git blob hash and encode
+    for the card view; AVIF only, no WebP copies), plus 48, 64, 96, 192 and 480 px made from the 720 one (SMALL_SIZES:
+    table rows, 64 px lists, strips and deck slots; the card view at 1x). They are cached by git blob hash and encode
     settings (thumb_tag, in the file names) in site/.cache/img, so after the first run only new or changed cards (or
     a width whose settings changed) are downloaded and encoded (an early build makes them during its Data wait:
     early_images, site.yml Images start); images no card uses any more are pruned. With
@@ -132,7 +132,7 @@ IMAGE_SIZES = {240: 58, 360: 52, 720: 50}    # width -> AVIF quality. 240/360: g
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
 AVIF_SPEED = {240: 4, 360: 4}                # the grid's sizes: slower, fewer bytes for the same quality
 THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality, AVIF and AVIF_SPEED rename by themselves
-SMALL_SIZES = {96: (720, 60), 192: (720, 60), 480: (720, 50)}   # width -> (made from that cached width, quality): table rows, lists, strips; card view at 1x
+SMALL_SIZES = {48: (720, 60), 64: (720, 60), 96: (720, 60), 192: (720, 60), 480: (720, 50)}   # width -> (made from that cached width, quality): table rows, lists, strips; card view at 1x
 CARD_VIEW_SIZES = "(max-width: 820px) calc(100vw - 78px), 430px"   # the card view's picture (style.css .detail, .modal, .dialog)
 VERSION_WIDTH, VERSION_QUALITY = 360, 55    # older image versions' copies (app.js versionCopy, cards.json thumbs.v): the grid's old 360 settings
 VERSION_BUDGET = float(os.environ.get("VERSION_BUDGET", "900"))  # s the versions job spends making them, newest first; the rest: later runs

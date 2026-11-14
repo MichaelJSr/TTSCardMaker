@@ -19,12 +19,12 @@ export const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 // tile size: [--tile, the picture's css px (sizes)]; m: two columns on 320-381 px phones too (build_site's first screen reads these)
 export const TILE_SIZES = { s: ["130px", 160], m: ["min(168px, calc(50% - 7px))", 200], l: ["230px", 270] };
 
-/** a card picture's URL, 96 / 192 / 240 / 360 / 480 / 720 px wide (thumbs: cards.json's tags of their settings) */
+/** a card picture's URL, 48 / 64 / 96 / 192 / 240 / 360 / 480 / 720 px wide (thumbs: cards.json's tags of their settings) */
 export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w]}.avif` : (w <= 360 && c.lpic) || c.pic || "");   // pic: a Morgue entry from Discord's webp, lpic its 360 px copy
-/** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 96 too at 64 px or less */
+/** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 64 and 96 too at 64 px or less, 48 at 32 */
 export const imgAttrs = (thumbs, c, css) => { const u = w => thumb(thumbs, c, w);
   if (!c.img && c.pic) return `src="${esc(c.lpic || c.pic)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;   // tiles and rows: 360 px, as the grid's
-  return `src="${u(360)}" srcset="${css <= 64 ? `${u(96)} 96w, ` : ""}${u(192)} 192w, ${u(240)} 240w, ${u(360)} 360w" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
+  return `src="${u(360)}" srcset="${css <= 32 ? `${u(48)} 48w, ` : ""}${css <= 64 ? `${u(64)} 64w, ${u(96)} 96w, ` : ""}${u(192)} 192w, ${u(240)} 240w, ${u(360)} 360w" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
 /** A card picture in Compare's n columns (app.js renderCompare): 360 px up to the card view's 720, sizes = its column
  *  (style.css .compare: main's 16 px padding, 14 px gaps, the panel's 15 px a side; columns min(220px, half) at least) */
 export const compareAttrs = (thumbs, c, n) => { const u = w => thumb(thumbs, c, w), fr = `calc((100vw - ${18 + 14 * n}px) / ${n} - 30px)`;

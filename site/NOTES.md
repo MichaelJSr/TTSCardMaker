@@ -1241,7 +1241,7 @@ relies on:
   screen at 0.68 s.
 - `diffWords` keeps its HTML (2026-11-04: a Map by before + "\0" + after, the oldest dropped past 2000; ~1,000 pairs
   exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
-- Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first
+- Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, 64 px since 2026-11-13, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first
   screen loads ~26 of the 60 (was all), CLS 0.15 -> 0.
 - The Morgue list's small copies (2026-11-19, owner: "make small copies", the full picture still opens on tap): each
   Morgue entry from Discord has a 360 px AVIF copy of its shown picture on the history branch (AutoCroissant
@@ -1302,6 +1302,12 @@ relies on:
   -3.9% (median -3.6%); 1.1x the same; 1.25x, 2x, phones and 1x windows under 820 px unchanged (720). Looks the same
   by eye at 1x (8 cards with small text). Image versions' current picture (app.js `curImg`, both figures) is the
   dialog's 480 when it shows it, else the 720: 1x first picks on 20 cards 1,430 -> 321 KB (no 720 download).
+- 48 and 64 px (2026-11-13): `SMALL_SIZES` 48 and 64: (720, 60), made like the 96 px one (1,576 files, ~50 CPU-s once
+  on the Mac). `imgAttrs` adds `48w` at css <= 32 (table rows) and `64w` at css <= 64 (rows, Needs handling, Recently
+  updated), ahead of 96w: rows take 48 at 1-1.25x, 64 at 2x, 96 at 3x; the 64 px lists 64 at 1x, 96 at 1.25x, 192 at
+  2-3x. Tiles, strips, deck slots, compare and the card view keep theirs. 1.4 / 1.9 KB a card (96: 3.8), +2.7 MB to the
+  artifact and the image cache. Local A/B, first screen: table 1x 570 -> 426 KB, 1.25x 579 -> 430, 2x 575 -> 460, phone
+  unchanged; Recently updated 1x 406 -> 351, Needs handling 1x 446 -> 388. Looks the same by eye.
 - Quality (ssimulacra2 against a LANCZOS reference on the dark background, all 817 images; scratch site-img-adv2
   score_all.py, q240.jsonl, q360.jsonl): q50 everywhere (the first pick, from a 60-card sample without rulebook pages)
   scored below WebP q80 at 240 px on 483 images (by more than 5 on 259; rulebook pages 76.3 -> 70.7, small text visibly
