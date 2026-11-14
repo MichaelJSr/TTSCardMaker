@@ -1,5 +1,5 @@
 // Query language: the same syntax as AutoCroissant's /query_ability, plus names/aliases and a few extras.
-//   fire              text in the ability, name or aliases (any case); also a name without its punctuation or a series
+//   fire              text in the ability, name or aliases (any case); also a name without its punctuation or a (sub)series
 //   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
 //                     counter damage CDMG; and back), as the bot
 //   "draw 2"          whole-word match
@@ -7,6 +7,7 @@
 //   a & b   a | b     both / either  (| binds looser than &, as in the bot)
 //   hp>5  def<=3  atk==2  spd>=7  stars<4  total>=24        numbers
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
+//                   (series== and series~ match a subseries too; a known field's lone = reads as ==)
 //   created>=2025  created==2023-10  created<2021-06-01                   dates at the precision given (as the bot)
 //   has:alias  flag:hand  flag:bars  flag:name  flag:any
 import { flagged, hasFlag } from "./flags.js";
@@ -37,12 +38,12 @@ export function haystack(c) {
 }
 
 const squash = s => String(s || "").normalize("NFD").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");   // letters and digits: "Mom's Knife" momsknife
-/** Names, aliases and old names squashed, one per line, and the names a typed series may be: whole, without a leading
- *  The or a closing number, or a part split at : or / ("Dark Souls III": dark souls; "Undertale/Deltarune") */
+/** Names, aliases and old names squashed, one per line, and the names a typed series or subseries may be: whole, without
+ *  a leading The or a closing number, or a part split at : or / ("Dark Souls III": dark souls; "Undertale/Deltarune") */
 function squashed(c) {
   if (c._sq === undefined) {
-    const ser = new Set(), s = c.series || "";
-    for (const part of [s, ...s.split(/[:/]+/)])
+    const ser = new Set();
+    for (const s of [c.series || "", c.subseries || ""]) for (const part of [s, ...s.split(/[:/]+/)])
       for (const v of [part, part.replace(/^\s*the\s+/i, "").replace(/\s+(?:[ivx]+|\d+)$/i, "")]) if (squash(v)) ser.add(squash(v));
     c._sq = { names: `\n${[c.name, ...(c.aliases || []), ...(c.was || [])].map(squash).join("\n")}\n`, ser };
   }
@@ -84,21 +85,22 @@ export function compile(query) {
   const lower = q.toLowerCase();
   if (FLAGS[lower]) return FLAGS[lower];
 
-  let m = lower.match(/^(\w+)\s*(<=|>=|==|<|>)\s*(\d{4}(?:-\d{2}){0,2})$/);
+  let m = lower.match(/^(\w+)\s*(<=|>=|==?|<|>)\s*(\d{4}(?:-\d{2}){0,2})$/);   // a lone = reads as ==
   if (m && DATE[m[1]]) {                                  // created>2023: after 2023; created==2023-10: in October 2023
-    const get = DATE[m[1]], v = m[3], op = OPS[m[2]];
+    const get = DATE[m[1]], v = m[3], op = OPS[m[2]] || OPS["=="];
     return c => { const x = get(c); return x != null && op(x.slice(0, v.length), v); };
   }
-  m = lower.match(/^(\w+)\s*(<=|>=|==|<|>)\s*(-?\d+)$/);
+  m = lower.match(/^(\w+)\s*(<=|>=|==?|<|>)\s*(-?\d+)$/);
   if (m && NUM[m[1]]) {
-    const get = NUM[m[1]], v = Number(m[3]), op = OPS[m[2]];
+    const get = NUM[m[1]], v = Number(m[3]), op = OPS[m[2]] || OPS["=="];
     return c => { const x = get(c); return x != null && op(x, v); };
   }
-  m = q.match(/^(\w+)\s*(==|~)\s*(.+)$/);
+  m = q.match(/^(\w+)\s*(==?|~)\s*(.+)$/);
   if (m && STR[m[1].toLowerCase()]) {
-    const get = STR[m[1].toLowerCase()], v = m[3].trim().toLowerCase().replace(/^"(.*)"$/, "$1");
-    if (m[2] === "==") return c => (get(c) || "").toString().toLowerCase() === v;
-    return c => (get(c) || "").toString().toLowerCase().includes(v);
+    const k = m[1].toLowerCase(), v = m[3].trim().toLowerCase().replace(/^"(.*)"$/, "$1");
+    const gets = k === "series" ? [STR.series, STR.subseries] : [STR[k]];   // a subseries counts as a series
+    const ok = m[2] === "~" ? x => x.includes(v) : x => x === v;
+    return c => gets.some(get => ok((get(c) || "").toString().toLowerCase()));
   }
   if (q.length > 1 && q.startsWith('"') && q.endsWith('"')) {
     const t = lower.slice(1, -1), edge = ch => (ch && /\w/.test(ch) ? "\\b" : "");   // a word's edge; a tag's ( and ) are their own
@@ -135,7 +137,7 @@ export function suggest(query, cards) {
 
 export const SEARCH_HELP = [
   ["fire", "In the ability, name or aliases"],
-  ["hollow knight · moms knife", "A series' cards; names without punctuation"],
+  ["hollow knight · moms knife", "A series' or subseries' cards; names without punctuation"],
   ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
   ['"draw 2"', "Whole words only"],
   ["!die", "Exclude (any term)"],
