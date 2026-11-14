@@ -329,9 +329,10 @@ class UI:
         self.calls += 1
 
     def setAttributes(self, id, data):
-        for key, value in self._w.from_lua(data).items():
+        data = self._w.from_lua(data)
+        for key, value in data.items():
             self.setAttribute(id, key, value)
-        self.calls += 1 - len(self._w.from_lua(data))
+        self.calls += 1 - len(data)
 
     def setValue(self, id, value):
         if id not in self.ids:
@@ -562,6 +563,14 @@ def pool(ui, panel):                                        # the ability's plai
 
 
 def ability_lines(ui, panel):                               # the ability's laid-out lines, top down:
+    memo = getattr(ui, "_lines", None)                      # the same until the UI next changes
+    if memo and memo[0] is ui.ids and memo[1:3] == (ui.calls, panel):
+        return memo[3]
+    ui._lines = (ui.ids, ui.calls, panel, _ability_lines(ui, panel))
+    return ui._lines[3]
+
+
+def _ability_lines(ui, panel):
     out, (al, rows) = [], pool(ui, panel)                   # [(y, [(text, tooltip)], row id or None)]
     for i in al:
         if ui.on(i):
@@ -743,16 +752,27 @@ TIP = {"tooltipPosition": "Above", "tooltipBackgroundColor": "#1b2740", "tooltip
        "tooltipTextColor": "#ffffff", "tooltipFadeTime": "0"}
 
 
+def panel_ids(ui, panel):                                   # the panel's ids, found once per build: [(id, tippable, ability text)]
+    got = getattr(ui, "_panel_ids", None)
+    if not got or got[0] is not ui.ids:
+        got = ui._panel_ids = (ui.ids, {})
+    if panel not in got[1]:
+        some, text = re.compile(rf"{re.escape(panel)}_(as\d+_\d+|[rck]\d_\d)"), re.compile(rf"{re.escape(panel)}_as\d+_\d+")
+        got[1][panel] = [(i, bool(some.fullmatch(i)), bool(text.fullmatch(i))) for i in ui.ids if i.startswith(panel + "_")]
+    return got[1][panel]
+
+
 def style_wrong(ui, panel):                                 # every element that can show a tooltip: TIP, its size's font
     wrong = []
-    for i, a in ui.attrs.items():
-        if not i.startswith(panel + "_") or not ("tooltip" in a or re.fullmatch(rf"{panel}_(as\d+_\d+|[rck]\d_\d)", i)):
+    for i, tippable, text in panel_ids(ui, panel):
+        a = ui.attrs.get(i, {})
+        if not ("tooltip" in a or tippable):
             continue
         if any(a.get(k) != v for k, v in TIP.items()):
             wrong.append((i, "style"))
         if a.get("tooltip") and not a.get("tooltipFontSize"):
             wrong.append((i, "no font size"))
-        if re.fullmatch(rf"{panel}_as\d+_\d+", i) and a.get("tooltipOffset") != "6":
+        if text and a.get("tooltipOffset") != "6":
             wrong.append((i, "offset", a.get("tooltipOffset")))
     return wrong
 
@@ -1414,7 +1434,7 @@ def main():
             bad.append((c["n"], "no panel"))
             continue
         for size in (1, 2, 3):
-            for b in ["smaller"] * 3 + ["bigger"] * (size - 1):
+            for b in ["smaller"] * 3 if size == 1 else ["bigger"]:
                 w5.call("detailsSize", red5, None, f"Red_d1_{b}")
             shown = [ui5.text(b) for b in (at("r", i, 3) for i in range(1, 6)) if b]
             if shown != [f"Rules: {details['chapters'][r]['title']}" for r in rules]:
@@ -1425,7 +1445,7 @@ def main():
                     if ws and sum(ws) + 6 * (len(ws) - 1) > int(ui5.attrs[f"Red_d1_{kind}{r}"]["width"]):
                         bad.append((c["n"], size, f"{kind}{r}", ws))
             bad += [(c["n"], size, x) for x in text_wrong(ui5, "Red_d1", c, details) + tip_wrong(ui5, "Red_d1") + style_wrong(ui5, "Red_d1")]
-            cut += sum(1 for b in ui5.attrs if re.fullmatch(r"Red_d1_[rck]\d_\d", b) and ui5.on(b) and ui5.attrs[b].get("tooltip"))
+            cut += sum(1 for b, button, text in panel_ids(ui5, "Red_d1") if button and not text and ui5.on(b) and ui5.attrs[b].get("tooltip"))
             bad += [(c["n"], size, x) for x in ability_wrong(ui5, "Red_d1", c, details, (440, 540, 660)[size - 1] - 44, (14, 16, 18)[size - 1], width)]
             laid_n += bool(ability_lines(ui5, "Red_d1"))
             for ch in (drawn(t) for _, els, _ in ability_lines(ui5, "Red_d1") for t, _ in els):
