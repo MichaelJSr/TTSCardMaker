@@ -6,8 +6,9 @@
 # - data (Card data): at once on every run but a retry: re-reads main's head, one commit on `data`, the posts, the site.
 # - main (Bake and save): the bake and the save as one commit M on main (fast-forward only), then the baked PNGs' save
 #   links re-pinned (a second commit). A card push's goes at once (owner, 2026-11-03: no 30-minute window any more): it
-#   syncs main's head, one lane at a time (card-main; a newer pending one replaces an older one), and a push made while
-#   another push's lane is starting rides along. After M the after job re-reads the baked cards into `data` (no wait).
+#   syncs main's head, one lane at a time (card-main; a newer pending one replaces an older one), starting with its data
+#   job (no timer job); a push made while another lane holds card-main queues behind it. After M the after job re-reads
+#   the baked cards into `data` (no wait).
 #   A linked file (Types/, MDW/Linked/) changed since its users' pictures were drawn: the Linked redraw redraws those
 #   layers and their PNGs as commit R on M, in M's push (silent; capped, Leftover work chains the rest). So do icon
 #   glyphs a stoogedings font commit changed, in the text layers that show them (the same R, one rewrite a card).
@@ -1037,15 +1038,15 @@ jobs:
               || echo "::warning::the told mark was not commented on ${sha:0:8}"
           fi
 
-  # The main lane goes at once (owner, 2026-11-03: the 30-minute window of 2026-10-24 is gone). A push's run, the
-  # schedule's and a chained one first look for a push run whose Bake and save is queued or still in its Guards' fixes
-  # (one pushed over 40 minutes ago is stuck and holds nothing). One there syncs main's head after that wait, this
-  # push's included, so this run's main lane rides along (skipped; its data lane ran at once). Else the main lane goes.
-  # Runs that cannot be read count as none (this run goes on); two near-simultaneous pushes may both wait: the second
-  # main lane finds nothing to commit. Other dispatches and retries skip both jobs. A push's lane holds card-main while
-  # it waits for its guards: another lane queues behind it.
+  # The main lane goes at once (owner, 2026-11-03: the 30-minute window of 2026-10-24 is gone). The schedule's run and
+  # a chained one first look for a push run whose Bake and save is queued or still in its Guards' fixes (one pushed
+  # over 40 minutes ago is stuck and holds nothing). One there syncs main's head after that wait, so this run's main
+  # lane rides along (skipped; its data lane ran at once). Else the main lane goes. Runs that cannot be read count as
+  # none (this run goes on). A push's run, other dispatches and retries skip it: a push's lane starts with its data job
+  # (2026-11-14: about 5 s sooner than after this job). A push's lane holds card-main while it waits for its guards:
+  # another lane queues behind it (one whose push that lane synced finds nothing to commit).
   timer:
-    if: github.event_name == 'schedule' || inputs.chain || github.event_name == 'push'
+    if: github.event_name == 'schedule' || inputs.chain
     runs-on: ubuntu-latest
     timeout-minutes: 5
     defaults:
@@ -1958,8 +1959,8 @@ jobs:
   # looks once its data lane is done, for the data's leftovers, so a re-parse goes on at once.
   chain-data:
     name: Chain after the data
-    needs: [data, timer]
-    if: ${{ !cancelled() && !inputs.dry_run && needs.timer.result == 'success' && !needs.timer.outputs.other && !needs.timer.outputs.guards && github.event_name == 'push' }}
+    needs: data
+    if: ${{ !cancelled() && !inputs.dry_run && github.event_name == 'push' }}
     concurrency:
       group: card-chain
       cancel-in-progress: false

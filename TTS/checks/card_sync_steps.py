@@ -26,10 +26,10 @@
    inputs), none from a retry or while another run is unfinished; past minute 60 nothing is pushed. Re-pin: the save
    run again on M, a change is a second commit on M; none when the links were current or main moved. The save starts
    in the background before the rulebook PDF; TTS save waits for it (its report, changed, its exit code).
-6. The timer: a push's and the schedule's run look for a push run about to bake (Another timer: one with its Bake and
-   save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as none) and skip
-   their main lane when there is one (no cancel: the data lane ran); else a push's main lane sets up and
-   waits in itself for its guards (no sleep) and the schedule's goes; a dispatch's
+6. The timer: the schedule's run looks for a push run about to bake (Another timer: one with its Bake and
+   save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as none) and skips
+   its main lane when there is one (no cancel: the data lane ran); else it goes. A push's run has no timer: its main
+   lane sets up at once and waits in itself for its guards (no sleep); a dispatch's
    at once; a follow-up's (input guards) two lanes set up, then wait for that guards run's Land, then take main's head. The data lane runs at once on every event but a retry. A chained run looks like the schedule; its main Gate is
    the schedule's.
 7. Tell Discord on faked runs and commit comments: once per broken push, by the marker comment on its head commit (a
@@ -469,13 +469,11 @@ def plans(flow: dict) -> None:
           and chain["concurrency"] == {"group": "card-chain", "cancel-in-progress": "false"},
           f"chain: at the end of every live run (a retry's too), never a dry run's; one at a time ({got})")
     early = flow["jobs"]["chain-data"]
-    t = lambda result, other="": {"result": result, "outputs": {"other": other}}  # noqa: E731
-    ctx = lambda e, i, n: {"github": {"event_name": e}, "inputs": i, "needs": {"timer": n},  # noqa: E731
-                           "functions": {"cancelled": lambda: False}}
-    got = [bool(evaluate(early["if"], ctx(e, i, n))) for e, i, n in (
-        ("push", {}, t("success")), ("push", {}, t("success", "41")), ("schedule", {}, t("success")),
-        ("workflow_dispatch", {"chain": "now 1 0"}, t("success")), ("workflow_dispatch", {"dry_run": True}, t("skipped")))]
-    check(got == [True, False, False, False, False] and early["needs"] == "[data, timer]"
+    ctx = lambda e, i: {"github": {"event_name": e}, "inputs": i, "functions": {"cancelled": lambda: False}}  # noqa: E731
+    got = [bool(evaluate(early["if"], ctx(e, i))) for e, i in (
+        ("push", {}), ("push", {"dry_run": True}), ("schedule", {}), ("workflow_dispatch", {"chain": "now 1 0"}),
+        ("workflow_dispatch", {"dry_run": True}))]
+    check(got == [True, False, False, False, False] and early["needs"] == "data"
           and early["steps"][0] is chain["steps"][0] and early["env"]["DUE"] == "" and "HELD" not in early["env"]
           and early["concurrency"] == chain["concurrency"],
           f"chain after the data: only in a push's run (its main lane waits for its guards), the same step, "
@@ -679,16 +677,15 @@ def timer_cases(flow: dict) -> None:
           f"data: at once on a push, the schedule and a dispatch, never a retry; one group with after, a dry run's its own ({got}, {locks})")
     got = [bool(evaluate(timer["if"], ctx(e, a))) for e, a in (("push", "MichaelJSr"), ("push", "AutoCroissant"),
                                                               ("schedule", "x"), ("workflow_dispatch", "x"))]
-    check(got == [True, True, True, False],
-          f"timer: a person's or the bot's push and the schedule look for a running window; dispatches never ({got})")
+    check(got == [False, False, True, False],
+          f"timer: the schedule looks for a push lane about to bake; a push and a dispatch never (their lanes go at once) ({got})")
     t = lambda result, other="": {"result": result, "outputs": {"other": other} if result != "skipped" else {}}  # noqa: E731
     other = step(timer, "other")
     check("concurrency" not in timer
           and other["env"]["LANE"] == main["name"] == step(main, "gate")["env"]["LANE"] == LANE
           and other["env"]["WAIT"] == step(main, "guards")["name"],
           "Another timer looks for main's lane in its guards' wait, the main Gate for main's name")
-    want = [(("push", t("success")), True), (("push", t("failure")), True),
-            (("push", t("success", "41")), False),
+    want = [(("push", t("skipped")), True),
             (("schedule", t("success")), True), (("schedule", t("success", "41")), False),
             (("schedule", t("failure")), True), (("workflow_dispatch", t("skipped")), True)]
     got = [bool(evaluate(main["if"], ctx(e, timer=n))) for (e, n), _ in want]
@@ -702,7 +699,7 @@ def timer_cases(flow: dict) -> None:
     locks = [lock("main", i) for i in ({}, {"dry_run": False}, {"dry_run": True})]
     check(got == [w for _, w in want] and main["needs"] == "timer" and main["concurrency"]["cancel-in-progress"] == "false"
           and locks == ["card-main", "card-main", "card-main-dry-77"],
-          f"main: a push's unless another push's lane is about to bake, the schedule's too, a dispatch's at once; one group, a dry run's its own ({got}, {locks})")
+          f"main: a push's and a dispatch's at once, the schedule's unless a push's lane is about to bake; one group, a dry run's its own ({got}, {locks})")
     a = lambda result, baked="", records="": {"result": result, "outputs": {"baked": baked, "records": records}}  # noqa: E731
     got = [bool(evaluate(jobs["after"]["if"], ctx("push", main=n))) for n in (a("success", "true"), a("success", "false"),
                                                                               a("success"), a("skipped"), a("failure", "true"),
@@ -743,7 +740,7 @@ def timer_cases(flow: dict) -> None:
         env = {}
         for runs, want, what in cases:
             env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_RUNS": json.dumps(runs), "FAKE_JOBS": jobs_dir, "GITHUB_RUN_ID": "99",
-                   "GITHUB_EVENT_NAME": "push", "GITHUB_SERVER_URL": "https://github.com", "GH_TOKEN": "x",
+                   "GITHUB_EVENT_NAME": "schedule", "GITHUB_SERVER_URL": "https://github.com", "GH_TOKEN": "x",
                    "LANE": LANE, "WAIT": wait}
             code, text, out = run_step(timer, "other", tmp, env, tmp)
             check(code == 0 and out.get("run", "") == want and not os.path.exists(cancelled),
@@ -1533,7 +1530,8 @@ def lane_cases(flow: dict) -> None:
     ctx = lambda e, inputs=None, job="", **needs: {  # noqa: E731
         "github": {"event_name": e, "job": job, "run_attempt": "1"}, "inputs": inputs or {}, "needs": needs, "steps": {},
         "functions": {"cancelled": lambda: False}}
-    want = [(("push", None, t()), True), (("schedule", None, t(guards="51")), False), (("schedule", None, t()), True),
+    want = [(("push", None, {"result": "skipped", "outputs": {}}), True), (("schedule", None, t(guards="51")), False),
+            (("schedule", None, t()), True),
             (("workflow_dispatch", {"chain": "now 1 0"}, t(guards="51")), False),
             (("workflow_dispatch", {"bake": "pending"}, {"result": "skipped", "outputs": {}}), True)]
     got = [bool(evaluate(main["if"], ctx(e, i, timer=n))) for (e, i, n), _ in want]
