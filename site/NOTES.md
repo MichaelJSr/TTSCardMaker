@@ -990,8 +990,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - Build: `archived_cards(old_stats, id_of, stats, people, credited)` adds `author` (a renamed card's: Card Authors.txt by the live card it
   became > by the archived name, or by its title when no live card has that title: 'Pizza (item)' is not the live
   Pizza's > the live card's author (`author_of`) > the tag's `author` (backfill) > the last version's, through
-  `person`), `created` (the last version's `created.date`, else the Pacific day of its oldest
-  version). analytics.json gains `archived` (`ARCHIVED_SLIM`: card, title, tag, card_type, stars, series, at,
+  `person`), `created` (a renamed card's: the card it became's, `created_of` with the renamed_to chain followed by
+  `renamed_end` (11-14); else the last version's `created.date`, else the Pacific day of its oldest version); a renamed
+  row has no `title`, so the Archive tab and person pages show its old name (`card`), as Discord's "renamed from" (and
+  changelog.js `eventHtml`'s renamed line). analytics.json gains `archived` (`ARCHIVED_SLIM`: card, title, tag, card_type, stars, series, at,
   created, author; no ratings, commit or path) and `revisions` = `{available, mass: MASS_PASS, cards: {id: {name: n}}}`
   from `card_revisions(found, by_png, commits, people, by_login, skip=rule_ids)`: each image version after a PNG's first
   upload, mass passes (`mass_passes`: commits in more than `MASS_PASS` = 20 cards' versions, rulebook pages not counted)

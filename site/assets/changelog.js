@@ -124,7 +124,7 @@ export function eventHtml(e) {
   switch (e.kind) {
     case "restore": return `<li>Card data restored from ${short(e.restored_from || "?")}</li>`;
     case "new": return `<li>${title} <span class="muted">(${esc(kindWord(e.card_type))}${e.stars ? `, ${e.stars}★` : ""})</span>${e.by ? ` by ${esc(e.by)}` : ""}</li>`;
-    case "renamed": return `<li>${esc(e.title || e.card)} renamed to ${cardLink(e.renamedId, e.renamed_to || "?")}</li>`;
+    case "renamed": return `<li>${esc(e.card || e.title)} renamed to ${cardLink(e.renamedId, e.renamed_to || "?")}</li>`;   // the old name, as Discord's "renamed from"
     case "moved": return `<li>${title} moved to ${esc(folder(e.path) || "?")}${e.from_path ? ` <span class="muted">from ${esc(folder(e.from_path))}</span>` : ""}</li>`;
     case "archived": return `<li>${esc(e.title || e.card)} ${archiveTagHtml(e)}</li>`;
     case "restored": return `<li>${title} <span class="muted">(PSD back)</span></li>`;

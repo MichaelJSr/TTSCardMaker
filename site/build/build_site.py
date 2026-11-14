@@ -3216,13 +3216,14 @@ def edit_batches(commits, people, by_login, id_of, name_of, since, row_of, field
 ARCHIVED_PERSON = ("card", "title", "renamed_to", "renamedId", "moved_to", "at", "created")       # contributions.json people[].archived
 
 
-def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, author_of=None):
+def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, author_of=None, created_of=None):
     """The cards whose PSD left the card repo: old_stats names whose last version carries the bot's `archived` tag
     {at, path, blob, commit, renamed_to?, moved_to?, author?, backfill?} (moved_to: the PSD moved into MDW, retired; changes.js archiveTag tells the tag from these), newest first. A name in stats is back, whatever its tag says (the
     bot clears it on its next save: card_models.stale_archives). author: a renamed card's Card Authors.txt
     line > the old name's (credited, by name, or by title when no live card has it) > the renamed card's (author_of: a card name ->
-    its author) > the tag's > the last version's, through person(); created: the last version's created date, else the
-    Pacific day of its oldest version."""
+    its author) > the tag's > the last version's, through person(); created: a renamed card's is the card it became's
+    (created_of: a card name -> its created; the renamed_to chain followed), else the last version's created date, else the
+    Pacific day of its oldest version. A renamed row has no title: its old name (card) shows, as Discord's "renamed from"."""
     out = []
     for name, versions in old_stats.items():
         if name in stats:
@@ -3241,7 +3242,7 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, autho
         if not made:
             dated = [analytics.when(v) for v in versions if isinstance(getattr(v, "timestamp", None), (int, float))]
             made = datetime.fromtimestamp(min(dated), analytics.ZONE).strftime("%Y-%m-%d") if dated else None
-        row = {"card": name, "title": title, "card_type": getattr(last, "card_type", None),
+        row = {"card": name, "title": None if tag.get("renamed_to") else title, "card_type": getattr(last, "card_type", None),
                "stars": getattr(last, "stars", None), "at": tag.get("at"),
                "created": made, "author": person(people or {}, listed or tag.get("author") or getattr(last, "author", None)),
                "path": tag.get("path") or getattr(last, "path", None),
@@ -3249,7 +3250,21 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, autho
         if renamed:
             row["renamedId"] = renamed
         out.append({k: v for k, v in row.items() if v not in (None, "")})
+    to = {r["card"]: r["renamed_to"] for r in out if r.get("renamed_to")}
+    for r in out:
+        made = r["card"] in to and created_of and created_of(renamed_end(to, r["card"], id_of))
+        if made:
+            r["created"] = made                   # as the card's page says
     return sorted(out, key=lambda r: (-(r.get("at") or 0), r["card"].lower()))
+
+
+def renamed_end(to, name, id_of):
+    """name's renamed_to chain (to: {old name: new name}) followed to a card of today, else to its last name."""
+    seen, end = {name}, to[name]
+    while id_of(end) is None and end in to and end not in seen:
+        seen.add(end)
+        end = to[end]
+    return end
 
 
 def redirects(archived, used, id_of):
@@ -3258,11 +3273,7 @@ def redirects(archived, used, id_of):
     to = {r["card"]: r["renamed_to"] for r in archived if r.get("renamed_to")}
     out = {}
     for name in sorted(to):
-        seen, end = {name}, to[name]
-        while id_of(end) is None and end in to and end not in seen:
-            seen.add(end)
-            end = to[end]
-        slug, target = slugify(name), id_of(end)
+        slug, target = slugify(name), id_of(renamed_end(to, name, id_of))
         if target and slug not in used and slug != target:
             out.setdefault(slug, target)
     return out
@@ -4846,7 +4857,8 @@ def main():
     history["_shas"] = list(shas)             # card ids never start with _
     id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
     archived = archived_cards(old_stats, id_of, stats, people=people, credited=credited,
-                             author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"))
+                             author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"),
+                             created_of=lambda name: (by_key.get(card_key(name)) or {}).get("created"))
     moved = redirects(archived, used_slugs, id_of)   # renamed cards: their old ids (pages, picks, hands) go on to the new one
     retired_into(morgue, archived)
     public_decks, private_decks = read_decks(cards, moved)
