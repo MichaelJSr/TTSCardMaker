@@ -873,10 +873,10 @@ def join_details(cards, records, tree, edits=None):
 
 FONTS_DIR = "MDW/Fonts"                       # the PSDs' fonts, top level only (AutoCroissant font_check.FONTS_DIR)
 FONT_EXTENSIONS = (".ttf", ".otf", ".ttc", ".otc")
-WEB_FONTS = (".ttf", ".otf")                  # what the mock-up loads in the browser (a collection holds several faces)
+WEB_FONTS = (".ttf", ".otf")                  # what the mock-up loads from raw (a collection's face: only its WOFF2 copy)
 FONT_NAMES = "fonts.json"                     # in CACHE: each font file's face names and size, by blob sha
 FONT_NAMES_VERSION = 2                        # bump when font_faces changes (2: PostScript names only, as font_check since 2026-10-23)
-FONT_WEB_MAX = 8 * 1024 * 1024                # a bigger file isn't offered to the browser: the mock-up draws a stand-in
+FONT_WEB_MAX = 8 * 1024 * 1024                # a bigger font (its WOFF2 copy, else the file) isn't offered: the mock-up draws a stand-in
 
 
 def ps_name(name):
@@ -947,9 +947,9 @@ def font_bytes(path):
 
 def web_fonts(tree, names):
     """
-    {font name: {"file": MDW/Fonts path}} for the PSD fonts in names a top-level MDW/Fonts file supplies, as
-    font_check decides it (a face with exactly that PostScript name; the first file by path wins), for the mock-up to
-    load as a web font: .ttf / .otf up to FONT_WEB_MAX only. Face names are cached by blob sha
+    {font name: {"file": MDW/Fonts path, "_bytes": its size, "_face": its index in a .ttc / .otc}} for the PSD fonts in
+    names a top-level MDW/Fonts file supplies, as font_check decides it (a face with exactly that PostScript name; the
+    first file by path wins), for the mock-up to load as a web font (web_woff2 keeps those it can). Face names are cached by blob sha
     in CACHE/fonts.json (a file is read, from the checkout or downloaded, only when its blob is new); never fails.
     """
     path = os.path.join(CACHE, FONT_NAMES)
@@ -979,9 +979,9 @@ def web_fonts(tree, names):
         if not row:
             continue
         used[sha] = row
-        for ps in row["faces"]:
+        for i, ps in enumerate(row["faces"]):
             if isinstance(ps, str) and ps:
-                exact.setdefault(ps, p)
+                exact.setdefault(ps, (p, i))
     try:
         os.makedirs(CACHE, exist_ok=True)
         with open(path + ".tmp", "w", encoding="utf-8") as fh:
@@ -992,9 +992,9 @@ def web_fonts(tree, names):
     size = {p: used[tree[p]]["bytes"] for p in files if tree[p] in used}
     out = {}
     for name in sorted(n for n in names if isinstance(n, str) and n):
-        p = exact.get(name)
-        if p and p.lower().endswith(WEB_FONTS) and size.get(p, FONT_WEB_MAX + 1) <= FONT_WEB_MAX:
-            out[name] = {"file": p}
+        if name in exact:
+            p, i = exact[name]
+            out[name] = {"file": p, "_bytes": size[p], **({} if p.lower().endswith(WEB_FONTS) else {"_face": i})}
     return out
 
 
@@ -1012,11 +1012,11 @@ def woff2_tag():
     return hashlib.sha1(f"woff2 {WOFF2_VERSION} {version} {brotli.__version__}".encode()).hexdigest()[:6]
 
 
-def woff2_bytes(data):
-    """The font as WOFF2, every glyph kept (fontTools' woff2.compress), its cmap written anew by fontTools: Chrome refuses
-    Apple Kid's own (a format 4 range past the last glyph)."""
+def woff2_bytes(data, face=None):
+    """The font (a collection's face: its index) as WOFF2, every glyph kept (fontTools' woff2.compress), its cmap written
+    anew by fontTools: Chrome refuses Apple Kid's own (a format 4 range past the last glyph)."""
     from fontTools.ttLib import TTFont
-    font = TTFont(io.BytesIO(data), recalcBBoxes=False, recalcTimestamp=False)
+    font = TTFont(io.BytesIO(data), recalcBBoxes=False, recalcTimestamp=False, fontNumber=-1 if face is None else face)
     if "cmap" in font:
         font["cmap"]                              # decompiled, so compiled again on save
     font.flavor = "woff2"
@@ -1027,9 +1027,10 @@ def woff2_bytes(data):
 
 def web_woff2(fonts, tree):
     """
-    WOFF2 copies of the web fonts (full glyph sets) in DIST/fonts, cached in CACHE/woff2 by blob and woff2_tag; adds
-    "woff2" (its path in the site) to each entry of fonts. A file that fails, or no fontTools / brotli,
-    leaves its entry without one: the mock-up loads the TTF/OTF from raw. Unused copies pruned; never fails.
+    WOFF2 copies of the web fonts (full glyph sets; a collection's one face) in DIST/fonts, cached in CACHE/woff2 by
+    blob, face and woff2_tag; adds "woff2" (its path in the site) to each entry of fonts. A file that fails, a copy over
+    FONT_WEB_MAX, or no fontTools / brotli, leaves its entry without one (web_loadable then decides). Unused copies
+    pruned; never fails.
     """
     try:
         tag = woff2_tag()
@@ -1039,27 +1040,29 @@ def web_woff2(fonts, tree):
     cache_dir = os.path.join(CACHE, WOFF2)
     os.makedirs(cache_dir, exist_ok=True)
     os.makedirs(os.path.join(DIST, "fonts"), exist_ok=True)
-    want = {f["file"]: f"{tree[f['file']][:16]}-{tag}.woff2" for n, f in fonts.items() if not ICON_FONT.match(n) and f["file"] in tree}
+    key = lambda f: (f["file"], f.get("_face"))
+    want = {key(f): f"{tree[f['file']][:16]}{'' if f.get('_face') is None else '-' + str(f['_face'])}-{tag}.woff2"
+            for n, f in fonts.items() if not ICON_FONT.match(n) and f["file"] in tree}
 
-    def make(p):
-        dst = os.path.join(cache_dir, want[p])
+    def make(k):
+        dst = os.path.join(cache_dir, want[k])
         if os.path.exists(dst):
             return False
         try:
-            data = woff2_bytes(image_bytes(p, tree[p]))
+            data = woff2_bytes(image_bytes(k[0], tree[k[0]]), k[1])
             with open(dst + ".tmp", "wb") as fh:
-                fh.write(data)
+                fh.write(data if len(data) <= FONT_WEB_MAX else b"")     # too big: an empty file, so never made again
             os.replace(dst + ".tmp", dst)
             return True
         except Exception as e:
-            log(f"woff2 {p}: {type(e).__name__}: {e}")
+            log(f"woff2 {k[0]}: {type(e).__name__}: {e}")
             return False
     with ThreadPoolExecutor(max_workers=4) as pool:
-        made = sum(pool.map(make, sorted(want)))
+        made = sum(pool.map(make, sorted(want, key=want.get)))
     for n, f in fonts.items():
-        name = want.get(f["file"]) if not ICON_FONT.match(n) else None
+        name = want.get(key(f)) if not ICON_FONT.match(n) else None
         src = os.path.join(cache_dir, name) if name else None
-        if src and os.path.exists(src):
+        if src and os.path.exists(src) and os.path.getsize(src):
             link_or_copy(src, os.path.join(DIST, "fonts", name))
             f["woff2"] = f"fonts/{name}"
     for n in set(os.listdir(cache_dir)) - set(want.values()):
@@ -1067,10 +1070,21 @@ def web_woff2(fonts, tree):
     return made
 
 
+def web_loadable(fonts):
+    """Keeps the web_fonts entries the browser can load: with a WOFF2 copy, else a .ttf / .otf up to FONT_WEB_MAX (from
+    raw; a collection's face has no such fallback). Drops the build's own keys."""
+    for n, f in list(fonts.items()):
+        face, size = f.pop("_face", None), f.pop("_bytes", None)
+        if "woff2" not in f and (face is not None or not f["file"].lower().endswith(WEB_FONTS) or not size or size > FONT_WEB_MAX):
+            del fonts[n]
+    return fonts
+
+
 def record_fonts(records):
-    """The font names the text layers of the details records ask for, an added ability's (addLook) too."""
-    return {t.get("font") for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
-            + [rec.get("addLook")] if isinstance(t, dict) and isinstance(t.get("font"), str)}
+    """The font names the text layers of the details records ask for (font, and lf: mockup.js draws a layer in it), an
+    added ability's (addLook) too."""
+    return {t[k] for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
+            + [rec.get("addLook")] if isinstance(t, dict) for k in ("font", "lf") if isinstance(t.get(k), str)}
 
 
 CARD_FONTS = "cardfonts.json"                # data/: the grid's Font filter, loaded on its first use
@@ -4675,6 +4689,7 @@ def main():
     fonts = web_fonts(tree, record_fonts(detail_files.values())) if detail_files else {}     # the mock-up's web fonts (data/fonts.json)
     if fonts:
         made = web_woff2(fonts, tree)
+        web_loadable(fonts)
         log(f"web fonts: {len(fonts)} of the {len(record_fonts(detail_files.values()))} PSD fonts from {FONTS_DIR}, "
             f"{sum('woff2' in f for f in fonts.values())} as WOFF2 ({made} new)")
 
