@@ -1126,7 +1126,8 @@ relies on:
   KB a card vs 50.7 (0.57x; +23.4 MB to the artifact and the image cache; the first build made 788 in ~250 CPU-s).
   Local A/B, desktop 1x: dialog opens from the grid 123 -> 100 KB each (1280x720 110 -> 86), 41 cold card pages
   -3.9% (median -3.6%); 1.1x the same; 1.25x, 2x, phones and 1x windows under 820 px unchanged (720). Looks the same
-  by eye at 1x (8 cards with small text).
+  by eye at 1x (8 cards with small text). Image versions' current picture (app.js `curImg`, both figures) is the
+  dialog's 480 when it shows it, else the 720: 1x first picks on 20 cards 1,430 -> 321 KB (no 720 download).
 - Quality (ssimulacra2 against a LANCZOS reference on the dark background, all 817 images; scratch site-img-adv2
   score_all.py, q240.jsonl, q360.jsonl): q50 everywhere (the first pick, from a 60-card sample without rulebook pages)
   scored below WebP q80 at 240 px on 483 images (by more than 5 on 259; rulebook pages 76.3 -> 70.7, small text visibly

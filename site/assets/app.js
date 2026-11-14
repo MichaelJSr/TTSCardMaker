@@ -18,6 +18,7 @@ import { statusNames, anchorInks, wordColors } from "./textcolor.js";
 const baseEl = document.querySelector("base");
 if (baseEl) baseEl.setAttribute("href", new URL(baseEl.getAttribute("href"), location.href).href);
 const ROOT = new URL("./", document.baseURI).href;
+const local = u => (u.startsWith(ROOT) ? u.slice(ROOT.length) : u);   // a URL under the site root: relative
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q"), pageH1 = $("#page-h1"), srStatus = $("#sr-status");
@@ -1012,7 +1013,6 @@ const nearby = (() => {
  *  page shows (build_site card_frame: 480 or 720 px, as its srcset picked) or preloads (720 px), else the 360 px one */
 function placeholderOf(c) {
   if (!c.img) return "";
-  const local = u => (u.startsWith(ROOT) ? u.slice(ROOT.length) : u);
   const t = view.querySelector(`.grid .tile[data-open="${CSS.escape(c.id)}"] img.art`);
   if (t?.complete && t.naturalWidth && t.currentSrc) return local(t.currentSrc);
   const shown = $("#detail-img")?.currentSrc;
@@ -1055,6 +1055,8 @@ function versionsHtml(c, open) {
       <div class="ver-compare" id="ver-compare" aria-live="polite"><p class="muted">Pick a version to compare (↑ ↓).</p></div>
     </div>`);
 }
+// the current picture beside a version: the dialog's own 480 px one (1x screens) when it shows it, else 720 px
+const curImg = c => (local($("#detail-img")?.currentSrc || "") === img(c, 480) ? img(c, 480) : img(c, 720));
 function showVersion(c, i) {
   const vs = versionList(c), v = vs[i], box = $("#ver-compare");
   if (!v || !box) return;
@@ -1065,9 +1067,9 @@ function showVersion(c, i) {
   const link = w => commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path);
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
-    ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
+    ? `<figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
     : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, v))}" data-png="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
-      <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
+      <figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }
 // ---- revert (editors): a History or Image versions "Revert to this version", the card's files as they were at that
