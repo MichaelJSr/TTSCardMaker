@@ -1023,6 +1023,9 @@ const versionList = c => {
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; });
 };
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
+// an older version's 360 px copy (build_site version_images); one not built yet: its PNG
+const versionCopy = (c, v) => `thumbs/v/${c.id}-${v.sha.slice(0, 10)}-${S.data.thumbs[360]}.avif`;
+modal.addEventListener("error", e => { const t = e.target; if (t.dataset?.png) { t.src = t.dataset.png; delete t.dataset.png; } }, true);
 /** Under the card's picture: open beside the text, closed in one column (style.css .detail), where the card's text comes
  *  after it; a redraw of the same card keeps it as it was. */
 function versionsOpen(id) {
@@ -1058,7 +1061,7 @@ function showVersion(c, i) {
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
     ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
-    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
+    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, v))}" data-png="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
       <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }

@@ -48,7 +48,8 @@ Where the data comes from:
     when one PNG of that file name was deleted; not the bot's lossless recompressions, named in its Recompressed
     trailers), gives each card its first upload (fs: created's fallback), and counts
     per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
-    Edits.json). Needs full history: a shallow clone stops the build.
+    Edits.json). Needs full history: a shallow clone stops the build. Each older version gets a 360 px copy
+    (version_images: thumbs/v/, cached by blob in site/.cache/ver; their PNG blobs fetched in batches, VERSION_BUDGET a build).
   * Creation dates: site/Card Creation Dates.json, each card's first Discord post; a card's created is the earlier of that
     and fs (a hand-set date wins): the Cards tab's created sort, the card page's "created" fact, the person pages' newest
     cards and activity chart. Bad entries skipped.
@@ -120,6 +121,9 @@ IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: g
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
 THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
 SMALL_SIZES = {96: (720, 60), 192: (720, 60)}   # width -> (made from that cached width, quality): table rows, lists, strips
+VERSION_WIDTH = 360                          # older image versions' copies (app.js showVersion): the grid's 360 settings
+VERSION_BUDGET = float(os.environ.get("VERSION_BUDGET", "40"))   # s a build spends making them, newest first; the rest: later builds
+VERSION_BATCH = 50                            # PNG blobs a git fetch
 
 
 def thumb_tag(w):
@@ -2800,6 +2804,59 @@ def image_versions(paths, commits, renamed=None, pairs=None):
     return versions
 
 
+def version_images(olds):
+    """Older image versions' VERSION_WIDTH px copies in dist thumbs/v/<stem>-<tag>.avif (olds: {stem (card id-commit
+    sha[:10], app.js versionCopy): (PNG blob, commit time)}), cached by blob in site/.cache/ver. The uncached ones, newest
+    first, are made from their blobs, fetched VERSION_BATCH a call (none one by one: a blob still missing waits), batches
+    starting until VERSION_BUDGET s have passed; the page shows the rest's PNGs."""
+    tag, cache, out = thumb_tag(VERSION_WIDTH), os.path.join(CACHE, "ver"), os.path.join(DIST, "thumbs", "v")
+    os.makedirs(cache, exist_ok=True)
+    os.makedirs(out, exist_ok=True)
+    name = lambda blob: f"{blob[:16]}-{VERSION_WIDTH}-{tag}.avif"
+    newest = {}
+    for blob, ts in sorted(olds.values(), key=lambda o: -o[1]):
+        newest.setdefault(blob, ts)
+    todo = [b for b in newest if not os.path.exists(os.path.join(cache, name(b)))]
+    made, failed, fetched, started = [], [], 0, time.time()
+
+    def one(sha, data):
+        try:
+            with Image.open(io.BytesIO(data)) as im:
+                im = im.convert("RGBA" if im.mode in ("RGBA", "LA", "P") else "RGB")
+                im.thumbnail((VERSION_WIDTH, VERSION_WIDTH * 3), Image.LANCZOS)
+                path = os.path.join(cache, name(sha))
+                im.save(path + ".tmp", "AVIF", quality=IMAGE_SIZES[VERSION_WIDTH], icc_profile=None, **AVIF)
+            os.replace(path + ".tmp", path)
+            made.append(sha)
+        except Exception as err:
+            failed.append(sha)
+            log("version image failed:", sha[:12], err)
+
+    with ThreadPoolExecutor(min(16, (os.cpu_count() or 4) * 2)) as pool:
+        for i in range(0, len(todo), VERSION_BATCH):
+            if time.time() - started >= VERSION_BUDGET:
+                break
+            listed = "".join(b + "\n" for b in todo[i:i + VERSION_BATCH])
+            try:
+                fetched += fetch_blobs(listed, timeout=120)
+            except subprocess.TimeoutExpired:
+                log("version images: a blob fetch timed out; the rest wait for the next build")
+                break
+            list(pool.map(lambda b: one(*b), cat_blobs(listed, lazy=False).items()))
+    kept = {name(b) for b in newest}
+    if kept:
+        for n in os.listdir(cache):
+            if n not in kept:
+                os.remove(os.path.join(cache, n))
+    linked = 0
+    for stem, (blob, _) in olds.items():
+        if os.path.exists(os.path.join(cache, name(blob))):
+            link_or_copy(os.path.join(cache, name(blob)), os.path.join(out, f"{stem}-{tag}.avif"))
+            linked += 1
+    log(f"version images: {linked} of {len(olds)} older versions have a copy ({len(newest)} blobs); {len(made)} made "
+        f"({fetched} fetched), {len(failed)} failed, {len(todo) - len(made) - len(failed)} left ({time.time() - started:.1f}s)")
+
+
 HEAVY_PSDS = 45                               # card PSDs in a commit from which GitHub's commit page fails (503 after ~10 s)
 
 
@@ -2976,20 +3033,24 @@ def edit_history():
     return parse_history(out)
 
 
-def read_blobs(shas):
-    """{blob sha: text} from the history repo. In a blobless clone the missing ones come in one fetch, not one each."""
-    shas = sorted({s for s in shas if s and s.strip("0")})
-    if not shas:
-        return {}
-    git, listed = ["git", "-C", REPO], "".join(s + "\n" for s in shas)
+def fetch_blobs(listed, timeout=None):
+    """Fetches the blobs (listed: their shas, one a line) a blobless clone lacks, in one call: git's own lazy fetch is
+    one each. Returns how many were missing."""
+    git = ["git", "-C", REPO]
     check = subprocess.run(git + ["cat-file", "--batch-check"], input=listed, capture_output=True, text=True,
                            env={**os.environ, "GIT_NO_LAZY_FETCH": "1"})
     missing = [line.split()[0] for line in check.stdout.splitlines() if line.endswith(" missing")]
-    if missing:                                   # git's own lazy fetch, batched; on failure cat-file fetches what is left
+    if missing:
         subprocess.run(git + ["-c", "fetch.negotiationAlgorithm=noop", "fetch", "-q", "--no-tags", "--no-write-fetch-head",
                               "--recurse-submodules=no", "--filter=blob:none", "--stdin", "origin"],
-                       input="".join(s + "\n" for s in missing), capture_output=True, text=True)
-    out = subprocess.run(git + ["cat-file", "--batch"], input=listed.encode(), capture_output=True).stdout
+                       input="".join(s + "\n" for s in missing), capture_output=True, text=True, timeout=timeout)
+    return len(missing)
+
+
+def cat_blobs(listed, lazy=True):
+    """{blob sha: bytes} of the listed blobs (shas, one a line) the history repo has; lazy=False: none fetched one by one."""
+    out = subprocess.run(["git", "-C", REPO, "cat-file", "--batch"], input=listed.encode(), capture_output=True,
+                         env=None if lazy else {**os.environ, "GIT_NO_LAZY_FETCH": "1"}).stdout
     blobs, i = {}, 0
     while i < len(out):
         end = out.index(b"\n", i)
@@ -2998,9 +3059,19 @@ def read_blobs(shas):
             i = end + 1
             continue
         size = int(head[2])
-        blobs[head[0]] = out[end + 1:end + 1 + size].decode("utf-8", "replace")
+        blobs[head[0]] = out[end + 1:end + 1 + size]
         i = end + 2 + size
     return blobs
+
+
+def read_blobs(shas):
+    """{blob sha: text} from the history repo. In a blobless clone the missing ones come in one fetch, not one each."""
+    shas = sorted({s for s in shas if s and s.strip("0")})
+    if not shas:
+        return {}
+    listed = "".join(s + "\n" for s in shas)
+    fetch_blobs(listed)                           # on failure cat-file fetches what is left
+    return {sha: data.decode("utf-8", "replace") for sha, data in cat_blobs(listed).items()}
 
 
 def edits_entries(text):
@@ -4636,6 +4707,7 @@ def main():
     dated = lambda name: sorted((v for v in history_of(name) if isinstance(getattr(v, "timestamp", None), (int, float))), key=analytics.when)
     real = {k: real_starts(dated(k) + [stats[k]]) for k in {data_key(e) for e in cards} if k in stats}
     shown_at = {}                                 # PNG -> its newest change that counts for "updated"
+    olds = {}                                     # version_images: older versions' copies
     if found:
         index, mass = {}, pass_commits(commits, found)
         for png, vs in found.items():
@@ -4660,6 +4732,7 @@ def main():
                 for e in by_png[png]:
                     versions["cards"][e["id"]] = rows
                     e["iv"] = len(rows)
+                    olds.update({f"{e['id']}-{sha[:10]}": (pairs[png, sha][1], ts) for (sha, ts, _, _), _ in vs[1:] if (png, sha) in pairs})
                     if minor:
                         versions["minor"][e["id"]] = minor
                         e["ivm"] = len(minor)
@@ -4667,6 +4740,7 @@ def main():
         log(f"image versions: {sum(len(r) for r in versions['cards'].values())} versions of {len(versions['cards'])} cards "
             f"({sum(len(m) for m in versions['minor'].values())} minor) from {len(versions['commits'])} commits, since "
             f"{datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}; {len(changes)} picture changes measured")
+        version_images(olds)
     moved = set_updated(cards, real, data_key, shown_at)
     log(f"updated: {moved} of {sum(1 for e in cards if e.get('ts'))} cards dated by their last real change")
 
