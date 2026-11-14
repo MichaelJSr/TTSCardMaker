@@ -184,14 +184,13 @@ jobs:
         with:
           python-version: "3.14"
 
-      # The packages (uv), esbuild, the PSD sizes and the data branch, in the background while the steps up to Setup wait
+      # The packages (uv), esbuild and the data branch, in the background while the steps up to Setup wait
       # run (each one's output and exit code in $RUNNER_TEMP/setup).
       # uv, no cache: ~2 s from PyPI where pip took 5-7 s after a 155 MB pip cache restore. uv itself: setup-uv's download,
       # its sha256 pinned, else the GitHub release; neither: pip.
       # esbuild bundles the JS (app.js and the chunks loaded on first use) with source maps and minifies the CSS
       # (build_site.py bundle, minify); node draws index.html's first screen with grid.js (first_screen). Exact
       # version: same source, same bytes.
-      # The PSDs' sizes (the PSD size sort): one trees API call, since the blobless clone has no blob sizes.
       # The deploy's versions: the version job's hand-over, 3 minutes at most (the deploy waits for it, Setup wait not);
       # none when that job did not run in this attempt.
       # The data branch (Card sync's, db/) in carddata, after the checkout above (it empties the workspace): the token in a
@@ -222,13 +221,6 @@ jobs:
             echo "::warning::uv not fetched: pip installs the packages"
             "$UV_PYTHON" -m pip install -q -r site/build/requirements.txt
           }
-          sizes() {
-            for _ in 1 2 3; do
-              gh api "repos/$GITHUB_REPOSITORY/git/trees/$1?recursive=1" > "$RUNNER_TEMP/tree.json" && return 0
-              sleep 10
-            done
-            return 1
-          }
           auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')
           echo "::add-mask::$auth"
           creds=$RUNNER_TEMP/carddata-credentials.config
@@ -258,7 +250,6 @@ jobs:
           }
           start uv packages
           start npm npm install --prefix "$RUNNER_TEMP/esbuild" --no-save --no-audit --no-fund esbuild@0.28.2
-          start sizes sizes "$(git rev-parse HEAD)"
           start data data
           start versions versions
 
@@ -282,6 +273,16 @@ jobs:
       # changed neither saves nothing.
       - id: cache-before
         run: echo "names=$({ find site/.cache 2>/dev/null | LC_ALL=C sort; cat site/.cache/*.json 2>/dev/null; } | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      # The PSDs' sizes (the PSD size sort; the blobless clone has none) in the background, for Setup wait: kept by blob in
+      # the cache (site/.cache/psd, saved with the images), only new PSDs' folders read (psd_sizes.py)
+      - name: Sizes start
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          bg=$RUNNER_TEMP/setup
+          ( code=0; python site/build/psd_sizes.py "$(git rev-parse HEAD)" "$RUNNER_TEMP/tree.json" || code=$?
+            echo "$code" > "$bg/sizes.code" ) > "$bg/sizes.log" 2>&1 < /dev/null &
 
       # An early build's images: the card PNGs the restored cache lacks (the push's pictures), made in the background once
       # Setup start's packages are in, while Data wait runs (build_site.py early_images; Data wait runs it again at a newer
@@ -413,20 +414,16 @@ jobs:
             until [ -s "$bg/sizes.code" ]; do sleep 0.1; done
             old=$(cat "$bg/sizes.code")
             rm "$bg/sizes.code"
-            (                                   # Setup start's: on failure, the older sizes and code stay
-              code=$old
-              if gh api "repos/$GITHUB_REPOSITORY/git/trees/$head?recursive=1" > "$RUNNER_TEMP/tree.new"; then
-                mv "$RUNNER_TEMP/tree.new" "$RUNNER_TEMP/tree.json" && code=0
-              else
-                echo "::warning::PSD sizes at ${head:0:8} not read: those at ${was:0:8}"
-              fi
+            (                                   # Sizes start's: no tree at head, the older sizes stay
+              code=0; python site/build/psd_sizes.py "$head" "$RUNNER_TEMP/tree.json" || code=$?
+              [ "$code" != 2 ] || { code=$old; echo "::warning::PSD sizes at ${head:0:8} not read: those at ${was:0:8}"; }
               echo "$code" > "$bg/sizes.code"
             ) >> "$bg/sizes.log" 2>&1 < /dev/null &
           fi
 
-      # Setup start's uv, npm, sizes and data (versions: the deploy waits for it): uv or npm failing fails the job; the PSD
-      # sizes failing only leaves them out (a warning); the data clone failing: checked out below. Images start's: stopped
-      # first, a failure only warns.
+      # Setup start's uv, npm and data, and Sizes start's (versions: the deploy waits for it): uv or npm failing fails the
+      # job; the PSD sizes failing only leaves them out (a warning); the data clone failing: checked out below. Images
+      # start's: stopped first, a failure only warns.
       - name: Setup wait
         id: setup
         timeout-minutes: 10
@@ -440,7 +437,7 @@ jobs:
             echo "::group::$n (exit $code)"; cat "$bg/$n.log"; echo "::endgroup::"
             [ "$code" = 0 ] || [ "$n" = sizes ] || [ "$n" = data ] || failed="$failed $n"
           done
-          [ "$(cat "$bg/sizes.code")" = 0 ] || echo "::warning::PSD sizes failed: the site leaves them out"
+          [ "$(cat "$bg/sizes.code")" = 0 ] || echo "::warning::PSD sizes not all read: the site leaves those out"
           if [ "$(cat "$bg/data.code")" = 0 ]; then echo "data=true" >> "$GITHUB_OUTPUT"; else echo "::warning::the data clone failed: checked out"; fi
           if [ -e "$bg/images.log" ]; then
             until [ -s "$bg/images.code" ]; do sleep 0.1; done
