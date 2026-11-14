@@ -1114,6 +1114,7 @@ jobs:
       records: ${{ steps.records.outputs.records }}
       due: ${{ steps.left.outputs.due }}
       redraw_due: ${{ steps.redraw.outputs.due }}
+      lag: ${{ steps.undrawn.outputs.chain }}   # the rulebook PDF waited for the website in vain: Chain starts a run
     defaults:
       run:
         shell: bash
@@ -1534,11 +1535,18 @@ jobs:
 
       # The PDF not drawn: the website lagged past its wait (a deploy late or failed, a font's older CDN copy) or the step
       # failed or ran out of time. The Gate of the schedule's next run (and a chained one's) passes over this lane, so its
-      # main lane goes and draws the PDF again (once: a lane marked too is not passed over)
+      # main lane goes and draws the PDF again (once: a lane marked too is not passed over). A lag in any lane but the
+      # schedule's or a chained run's has Chain start the chained one at once (the deploy is most likely minutes away)
       - name: Rulebook PDF not drawn
+        id: undrawn
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.pages.outputs.lag == 'true' || steps.pages.outcome == 'failure') }}
+        env:
+          NEXT: ${{ steps.pages.outputs.lag == 'true' && github.event_name != 'schedule' && !inputs.chain }}
         run: |
-          echo "Rulebook PDF not drawn (the website lagged main's rulebook past the wait, or the step failed): the schedule's next run draws it again." | tee -a "$GITHUB_STEP_SUMMARY"
+          next="the schedule's next run draws it again"
+          if [ "$NEXT" = true ]; then next="the next run (chained at once) draws it"; fi
+          echo "chain=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "Rulebook PDF not drawn (the website lagged main's rulebook past the wait, or the step failed): $next." | tee -a "$GITHUB_STEP_SUMMARY"
 
       # TTS save start's save: its report and exit code
       - name: TTS save
@@ -1952,7 +1960,8 @@ jobs:
   # Leftover work (owner, 2026-10-25: the chain and a safety schedule): a live run's last job dispatches the next run when
   # work is left, at once (chain=now): cards still to re-parse (manifest pending.stale), bake records no data commit
   # merged, website edits not baked (chain=wait, for edits held by a recent push, went on 2026-11-04), linked pictures
-  # and icon glyphs the redraw's caps left (its Linked due step starts the next lane). None when nothing
+  # and icon glyphs the redraw's caps left (its Linked due step starts the next lane), a rulebook PDF the website lagged
+  # (Rulebook PDF not drawn: not after the schedule's lane or a chained one's). None when nothing
   # is left, a lane failed (Discord was told), another live run's lane will read it (unfinished: its own chain looks
   # again), after CHAIN_IDLE runs in a row without a data or main commit or CHAIN_MAX runs (the safety schedule picks it
   # up); never from a dry run. The chain input carries the count. A push's run (its main lane waits for its guards) also
@@ -1978,6 +1987,7 @@ jobs:
       PROGRESS: ${{ needs.data.outputs.committed == 'true' && 'true' || 'false' }}
       DUE: ""
       REDRAW: ""
+      LAG: ""
     steps:
       - &chain
         name: Leftover work
@@ -2021,6 +2031,7 @@ jobs:
           if [ "${DUE:-0}" -gt 0 ]; then now+=("$DUE website edits to bake"); fi
           if [ "${REDRAW:-0}" -gt 0 ]; then now+=("$REDRAW cards to redraw (linked pictures, icon glyphs)"); fi
           main=$(( ${DUE:-0} + ${REDRAW:-0} ))  # the main lane's work
+          if [ "$LAG" = true ]; then now+=("the rulebook PDF the website lagged"); main=$((main + 1)); fi
           if [ ${#now[@]} -eq 0 ]; then say "Nothing left: no chain."; exit 0; fi
           printf -- '- %s\n' "${now[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
           # Another live run that will read it: queued, or its lane not finished (its own chain looks again at its end)
@@ -2082,6 +2093,7 @@ jobs:
       PROGRESS: ${{ (needs.data.outputs.committed == 'true' || needs.after.outputs.committed == 'true' || needs.main.outputs.top) && 'true' || 'false' }}
       DUE: ${{ needs.main.outputs.due }}
       REDRAW: ${{ needs.main.outputs.redraw_due }}
+      LAG: ${{ needs.main.outputs.lag }}
     steps:
       - *chain
 

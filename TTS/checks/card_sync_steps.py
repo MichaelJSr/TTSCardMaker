@@ -43,10 +43,11 @@
    events finds a guards commit's guard-events.json through its Guarded-push run (faked gh), skips one naming another
    commit, and warns for one not found.
 9. The chain (faked gh): Leftover edits counts the pending website edits; Chain dispatches at once for cards still to
-   re-parse, unmerged bake records or pending edits; none when nothing is left, a lane failed, another live run's lane
-   reads it (queued, waiting), after CHAIN_IDLE runs without progress or CHAIN_MAX runs (said in the summary), or on a
-   dry run; a fork's run's bake records are passed over; the dispatch is tried 3 times. A push's run also looks after its data lane (Chain after the data, the same step), so a re-parse goes on at
-   once.
+   re-parse, unmerged bake records, pending edits or a rulebook PDF the website lagged (not after the schedule's lane or
+   a chained one); none when nothing is left, a lane failed, another live run's lane reads it (queued, waiting), after
+   CHAIN_IDLE runs without progress or CHAIN_MAX runs (said in the summary), or on a dry run; a fork's run's bake
+   records are passed over; the dispatch is tried 3 times. A push's run also looks after its data lane (Chain after the
+   data, the same step), so a re-parse goes on at once.
 10. One main lane per guarded push (P-2; faked gh and curl): Guards' fixes (in the push's Bake and save, after its setup)
    waits for the push's own guards' check job (conditional reads 1 s apart, 3 s after 2 minutes or 15 changed in a row),
    then skips the rest of the push's main lane (its Gate on) when that guards run has
@@ -468,13 +469,22 @@ def plans(flow: dict) -> None:
     check(got == [True, True, True, False, True] and chain["needs"] == "[data, main, after]"
           and chain["concurrency"] == {"group": "card-chain", "cancel-in-progress": "false"},
           f"chain: at the end of every live run (a retry's too), never a dry run's; one at a time ({got})")
+    undrawn = step(main, "undrawn")
+    when = lambda e, i, lag: {"github": {"event_name": e}, "inputs": i, "steps": {"pages": {"outputs": {"lag": lag}}}}  # noqa: E731
+    got = [evaluate(undrawn["env"]["NEXT"], when(e, i, lag)) for e, i, lag in (
+        ("push", {}, "true"), ("workflow_dispatch", {"retry": "push"}, "true"), ("schedule", {}, "true"),
+        ("workflow_dispatch", {"chain": "now 1 0"}, "true"), ("push", {}, None))]
+    check(got == [True, True, False, False, False] and "steps.undrawn.outputs.chain" in main["outputs"]["lag"]
+          and "needs.main.outputs.lag" in chain["env"]["LAG"],
+          f"main, a rulebook PDF the website lagged: Chain starts a run, not after the schedule's lane or a chained one ({got})")
     early = flow["jobs"]["chain-data"]
     ctx = lambda e, i: {"github": {"event_name": e}, "inputs": i, "functions": {"cancelled": lambda: False}}  # noqa: E731
     got = [bool(evaluate(early["if"], ctx(e, i))) for e, i in (
         ("push", {}), ("push", {"dry_run": True}), ("schedule", {}), ("workflow_dispatch", {"chain": "now 1 0"}),
         ("workflow_dispatch", {"dry_run": True}))]
     check(got == [True, False, False, False, False] and early["needs"] == "data"
-          and early["steps"][0] is chain["steps"][0] and early["env"]["DUE"] == "" and "HELD" not in early["env"]
+          and early["steps"][0] is chain["steps"][0] and early["env"]["DUE"] == early["env"]["LAG"] == ""
+          and "HELD" not in early["env"]
           and early["concurrency"] == chain["concurrency"],
           f"chain after the data: only in a push's run (its main lane waits for its guards), the same step, "
           f"data leftovers only ({got})")
@@ -1415,7 +1425,7 @@ def chain_cases(flow: dict) -> None:
         other = lambda rid, status="in_progress", title="Card sync": json.dumps(  # noqa: E731
             [{"databaseId": rid, "status": status, "displayTitle": title}])
         base = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "GITHUB_RUN_ID": "99", "FAKE_JOBS": jobs, "CHAIN": "",
-                "BUILDER": "", "LANES": "data=success main=success after=skipped", "PROGRESS": "true", "DUE": "",
+                "BUILDER": "", "LANES": "data=success main=success after=skipped", "PROGRESS": "true", "DUE": "", "LAG": "",
                 "CHAIN_IDLE": chain["steps"][0]["env"]["CHAIN_IDLE"], "CHAIN_MAX": chain["steps"][0]["env"]["CHAIN_MAX"],
                 "DATA_LANE": "Card data", "MAIN_LANE": LANE, "FAKE_MANIFEST": stale(0), "FAKE_MERGED": '{"merged": {"7": 3}}',
                 "FAKE_ARTIFACTS": art(7), "FAKE_RUNS": "[]"}
@@ -1432,6 +1442,7 @@ def chain_cases(flow: dict) -> None:
             ({"DUE": "2", "FAKE_RUNS": other(40, "waiting", "Card sync (dry run)")}, "now 1 0", "Next run dispatched",
              "edits, only a dry run waiting: dispatched"),
             ({}, None, "Nothing left: no chain.", "nothing left: none"),
+            ({"LAG": "true"}, "now 1 0", "the rulebook PDF the website lagged", "a rulebook PDF the website lagged: at once"),
             ({"FAKE_ARTIFACTS": art(7, fork=(8,))}, None, "Nothing left: no chain.", "a fork's run's bake records: passed over"),
             ({"FAKE_MANIFEST": stale(5), "LANES": "data=failure main=success after=skipped"}, None, "data failed",
              "a lane failed: none"),
