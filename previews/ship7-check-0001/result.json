@@ -1,0 +1,61 @@
+{
+ "v": 2,
+ "request": "ship7-check-0001",
+ "card": "Chomp",
+ "path": "Auxiliary/Minions/Chomp.psd",
+ "png": "Auxiliary/Minions/Chomp.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "59cd225c5f59db9e140a732764ae354890cce36c",
+  "psd_blob": "55e7dd9eb6c25950906fecf49c0e089593831682",
+  "png_blob": "b61038adc4c067e4cfd400d2526a6be27af7aa2e"
+ },
+ "edit": {
+  "spd": 6
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "spd": "baked"
+ },
+ "reason": "spd 5 -> 6",
+ "changes": [
+  {
+   "field": "spd",
+   "old": 5,
+   "new": 6
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "spd": {
+   "bad_pct": 0.0,
+   "mean": 0.625,
+   "max": 3.0
+  }
+ },
+ "region": [
+  359,
+  1577,
+  1174,
+  1663
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.avif",
+  "before": "before.avif"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43566922190",
+ "took_s": 2.1,
+ "at": "2026-11-14T06:33:43Z",
+ "variant": null,
+ "parts": {},
+ "size": [
+  1200,
+  2400
+ ]
+}
