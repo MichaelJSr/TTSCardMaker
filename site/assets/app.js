@@ -979,6 +979,7 @@ function openCard(id, showDetails = false) {
         </div>
       </div>
     </div></div>`;
+  for (const b of $$(".detail > div > .ability :is(.badge, .ring)[data-tip]", modal)) b.tabIndex = 0;   // Tab shows their meanings (tip.js)
   modal.hidden = false;
   document.body.style.overflow = "hidden";
   modal.scrollTop = 0;
@@ -1967,7 +1968,7 @@ function fillTip(t) {
     const n = document.createElement("div"); n.className = "v"; n.textContent = c.name; tip.append(n);
   } else tip.textContent = t.dataset.tip;
 }
-const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
+const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; }, id: tip.id });
 function hideTip() { tips.hide(); }
 // the Font box: its data and list load on first focus (then the list opens as if typed); a pick or Enter (the best
 // suggestion when no row is chosen) adds the font, the box empties and keeps the focus
@@ -1986,11 +1987,12 @@ document.addEventListener("keydown", e => { const el = e.target; if (e.key !== "
 let touchAt = -1e9;
 document.addEventListener("pointerdown", e => { if (e.pointerType === "touch") touchAt = performance.now(); }, true);
 document.addEventListener("contextmenu", e => { const el = xTarget(e.target); if (!el) return; e.preventDefault(); if (performance.now() - touchAt > 1500) actions["toggle-param"](el, true); });
-wireTips(document, tips, (cx, cy) => {
+wireTips(document, tips, (cx, cy, box) => {             // box: a focused element's, the tooltip under it (else over it)
   const r = tip.getBoundingClientRect();
   let x = cx + 14, y = cy + 16;
-  if (x + r.width > innerWidth - 8) x = Math.max(8, cx - r.width - 14);
-  if (y + r.height > innerHeight - 8) y = cy - r.height - 14;
+  if (box) { x = Math.max(8, Math.min(box.left, innerWidth - 8 - r.width)); y = box.bottom + 6; if (y + r.height > innerHeight - 8) y = Math.max(8, box.top - r.height - 6); }
+  else if (x + r.width > innerWidth - 8) x = Math.max(8, cx - r.width - 14);
+  if (!box && y + r.height > innerHeight - 8) y = cy - r.height - 14;
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 }, { match: xTarget, run: el => actions["toggle-param"](el, true) });
 

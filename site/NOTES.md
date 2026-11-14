@@ -462,6 +462,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   removes or changes `data-tip` is inline.js (`open` deletes it, `cancel` puts it back, `mountCard`, the palette);
   app.js's `fillTip` is the old pointerover body, unchanged in what it shows. app.js hands inline.js `hideTip` and the icons
   through `inline.extend` (kept off the lines the picker and previews branches change, so their merges stay clean).
+- **Keyboard** (2026-11-14, WCAG 1.4.13): a `:focus-visible` focus not right after a press shows the element's tooltip
+  (`focusSource`: its own, else on a link, button, summary or tile the one inside it; a tile only its flag) under its box
+  (above when no room), with `aria-describedby="tooltip"` on it while up; focus leaving hides it. The first Esc hides it
+  (a capturing keydown, so the dialog stays), the next closes the dialog; Esc also hides a pointer's tooltip and goes on.
+  The card dialog's ability badges and rings with a meaning get `tabindex=0` (openCard), so Tab reaches them.
 - **Live preview** (`assets/live.js`) in the Edit dialog (All fields): the card as it will look once the batch is published,
   redrawn on every input from `readForm`'s op over the published card (`baseOf`: unset fields as their PSD values,
   `previewCard`), nothing staged. Shown: name, kind, item type, stars, series, subseries,
