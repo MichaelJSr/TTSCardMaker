@@ -93,6 +93,7 @@ jobs:
     timeout-minutes: ${{ (inputs.after || github.event_name == 'push') && 92 || 67 }}
     outputs:
       saved: ${{ steps.og-save.outcome == 'success' || steps.cache-save.outcome == 'success' }}
+      copies: ${{ steps.copies.outputs.artifact-id }}
     steps:
       # A push that also changed Card sync's data inputs (card-sync.yml's push paths but TTS/Global.lua, Global.xml and the
       # save: no data commit) is Card sync's early build itself (after: that push run) once its data job has started (it
@@ -315,6 +316,13 @@ jobs:
           key: deck-previews-v2-${{ github.sha }}
           restore-keys: deck-previews-v2-
 
+      # Older image versions' copies: the versions job's cache (below), only read here
+      - uses: actions/cache/restore@v6
+        with:
+          path: site/.vcache
+          key: card-versions-${{ github.run_id }}
+          restore-keys: card-versions-
+
       # History start's fetch done (before Data wait's fetch and the build's history); failed or still shallow: once more,
       # else the job fails (never a shallow build)
       - name: History wait
@@ -457,7 +465,8 @@ jobs:
 
       # IMAGE_BUDGET: images not made in 30 minutes (a full AVIF re-encode is ~11 CPU-minutes on a Mac, an estimated 20-25
       # on the runner) are left for the next run; the build then fails (nothing deployed) and the job's last step keeps what
-      # it made. The step's timeout leaves that save time to run before the job's.
+      # it made. The step's timeout leaves that save time to run before the job's. Older versions' copies: only those the
+      # versions cache has (some missing: their list, for the versions job).
       - id: build
         timeout-minutes: 38
         run: python site/build/build_site.py
@@ -465,6 +474,8 @@ jobs:
           CARD_DATA_DIR: carddata/db
           PSD_TREE: ${{ runner.temp }}/tree.json
           IMAGE_BUDGET: "1800"
+          VERSION_BUDGET: "0"
+          VERSION_LIST: ${{ runner.temp }}/version-copies.txt
           ESBUILD: ${{ runner.temp }}/esbuild/node_modules/.bin/esbuild
 
       - id: og
@@ -604,6 +615,17 @@ jobs:
           reporting_interval: 1000    # ms between status checks (5000)
           error_count: 15             # HTTP errors before it gives up (10)
 
+      # The versions job's list (none: nothing to make)
+      - id: copies
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: version-copies
+          path: ${{ runner.temp }}/version-copies.txt
+          retention-days: 1
+          if-no-files-found: ignore
+          overwrite: true     # a re-run replaces attempt 1's
+
       # The card images are saved here whenever the build changed them (names or JSON indexes differ from the restored ones):
       # images made after Data wait moved HEAD onto newer PNGs too, and those of a job that failed or was cancelled once the
       # build ran (out of image time, failed downloads, an error, the step's timeout, a cancel by hand, or a step after it),
@@ -621,12 +643,75 @@ jobs:
           path: site/.cache
           key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'site/build/requirements.txt', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}-${{ github.run_id }}-${{ github.run_attempt }}
 
-  # Each save above is a new entry (card images ~150 MB): the older ones go. After the deploy.
-  caches:
+  # Older image versions' 360 px copies (build_site version_copies), off the build's path and outside pages-build: the
+  # build links those cached and, some missing, lists every older version's PNG blob, newest first; this job makes ~15
+  # minutes of the missing ones (3-4 a second, the blobs fetched by id) into the cache the next build restores. A version
+  # without one shows its PNG. One at a time (a newer waiting run replaces one), so no two save over each other. Never
+  # fails the run (the site is out).
+  versions:
     needs: build
-    if: ${{ !cancelled() && needs.build.outputs.saved == 'true' }}
+    if: ${{ !cancelled() && needs.build.outputs.copies != '' }}
+    concurrency:
+      group: site-versions
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    permissions:
+      contents: read
+    outputs:
+      saved: ${{ steps.save.outcome == 'success' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /site/build/
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: version-copies
+          path: ${{ runner.temp }}
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - run: python -m pip install -q "$(grep -oE '^pillow==[0-9.]+' site/build/requirements.txt)"   # build_site's one package
+
+      - uses: actions/cache/restore@v6
+        with:
+          path: site/.vcache
+          key: card-versions-${{ github.run_id }}
+          restore-keys: card-versions-
+
+      - id: before
+        run: echo "names=$(ls site/.vcache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - timeout-minutes: 17
+        run: python site/build/build_site.py --versions "$RUNNER_TEMP/version-copies.txt"
+        env:
+          VERSION_BUDGET: "900"
+
+      # Saved whenever its files changed (made or pruned), after a failure too
+      - id: after
+        if: always() && steps.before.outputs.names != ''
+        run: echo "names=$(ls site/.vcache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - id: save
+        if: always() && steps.after.outputs.names != '' && steps.after.outputs.names != steps.before.outputs.names
+        uses: actions/cache/save@v6
+        with:
+          path: site/.vcache
+          key: card-versions-${{ github.run_id }}-${{ github.run_attempt }}
+
+  # Each save above is a new entry (card images ~150 MB, copies up to ~140 MB): the older ones go. After the deploy.
+  caches:
+    needs: [build, versions]
+    if: ${{ !cancelled() && (needs.build.outputs.saved == 'true' || needs.versions.outputs.saved == 'true') }}
     permissions:
       actions: write
     uses: ./.github/workflows/caches.yml
     with:
-      prefixes: card-images-v2- deck-previews-v2-
+      prefixes: card-images-v2- deck-previews-v2- card-versions-

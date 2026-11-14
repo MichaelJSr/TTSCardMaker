@@ -1,4 +1,5 @@
 dist/
 .cache/
 .og-cache/
+.vcache/
 __pycache__/

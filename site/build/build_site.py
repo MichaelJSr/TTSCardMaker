@@ -49,7 +49,8 @@ Where the data comes from:
     trailers), gives each card its first upload (fs: created's fallback), and counts
     per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
     Edits.json). Needs full history: a shallow clone stops the build. Each older version gets a 360 px copy
-    (version_images: thumbs/v/, cached by blob in site/.cache/ver; their PNG blobs fetched in batches, VERSION_BUDGET a build).
+    (version_images: thumbs/v/, cached by blob in site/.vcache; their PNG blobs fetched in batches, VERSION_BUDGET a build;
+    site.yml: none in the build, its versions job makes them with --versions).
   * Creation dates: site/Card Creation Dates.json, each card's first Discord post; a card's created is the earlier of that
     and fs (a hand-set date wins): the Cards tab's created sort, the card page's "created" fact, the person pages' newest
     cards and activity chart. Bad entries skipped.
@@ -109,6 +110,7 @@ REPO = os.path.dirname(SITE)
 DIST = os.path.join(SITE, "dist")
 CACHE = os.path.join(SITE, ".cache")
 OG_CACHE = os.path.join(SITE, ".og-cache")   # deck page montages: their own CI cache, so outside CACHE
+VCACHE = os.path.join(SITE, ".vcache")       # older versions' copies: site.yml's versions job's cache
 CARD_REPO = os.environ.get("CARD_REPO", "MichaelJSr/TTSCardMaker")
 BOT_REPO = os.environ.get("BOT_REPO", "bobberlington/AutoCroissant")
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
@@ -125,6 +127,7 @@ SMALL_SIZES = {96: (720, 60), 192: (720, 60), 480: (720, 50)}   # width -> (made
 CARD_VIEW_SIZES = "(max-width: 820px) calc(100vw - 78px), 430px"   # the card view's picture (style.css .detail, .modal, .dialog)
 VERSION_WIDTH, VERSION_QUALITY = 360, 55    # older image versions' copies (app.js versionCopy, cards.json thumbs.v): the grid's old 360 settings
 VERSION_BUDGET = float(os.environ.get("VERSION_BUDGET", "40"))   # s a build spends making them, newest first; the rest: later builds
+VERSION_LIST = os.environ.get("VERSION_LIST", "")   # some still missing: every older version's blob, newest first (site.yml versions job)
 VERSION_BATCH = 50                            # PNG blobs a git fetch
 
 
@@ -2820,19 +2823,15 @@ def image_versions(paths, commits, renamed=None, pairs=None):
     return versions
 
 
-def version_images(olds):
-    """Older image versions' VERSION_WIDTH px copies in dist thumbs/v/<stem>-<tag>.avif (olds: {stem (card id-commit
-    sha[:10], app.js versionCopy): (PNG blob, commit time)}), cached by blob in site/.cache/ver. The uncached ones, newest
-    first, are made from their blobs, fetched VERSION_BATCH a call (none one by one: a blob still missing waits), batches
-    starting until VERSION_BUDGET s have passed; the page shows the rest's PNGs."""
-    tag, cache, out = version_tag(), os.path.join(CACHE, "ver"), os.path.join(DIST, "thumbs", "v")
-    os.makedirs(cache, exist_ok=True)
-    os.makedirs(out, exist_ok=True)
-    name = lambda blob: f"{blob[:16]}-{VERSION_WIDTH}-{tag}.avif"
-    newest = {}
-    for blob, ts in sorted(olds.values(), key=lambda o: -o[1]):
-        newest.setdefault(blob, ts)
-    todo = [b for b in newest if not os.path.exists(os.path.join(cache, name(b)))]
+def version_copies(blobs, budget):
+    """The VERSION_WIDTH px copies of these PNG blobs (newest first) in VCACHE, pruned to them: those it lacks are made
+    from their blobs, fetched VERSION_BATCH a call (none one by one: a blob still missing waits), batches starting until
+    budget s have passed; one that fails stays an empty file (no retry: the page shows its PNG). Returns (blob -> its
+    file, how many are left)."""
+    tag = version_tag()
+    os.makedirs(VCACHE, exist_ok=True)
+    path = lambda blob: os.path.join(VCACHE, f"{blob[:16]}-{VERSION_WIDTH}-{tag}.avif")
+    todo = [b for b in blobs if not os.path.exists(path(b))]
     made, failed, fetched, started = [], [], 0, time.time()
 
     def one(sha, data):
@@ -2840,37 +2839,54 @@ def version_images(olds):
             with Image.open(io.BytesIO(data)) as im:
                 im = im.convert("RGBA" if im.mode in ("RGBA", "LA", "P") else "RGB")
                 im.thumbnail((VERSION_WIDTH, VERSION_WIDTH * 3), Image.LANCZOS)
-                path = os.path.join(cache, name(sha))
-                im.save(path + ".tmp", "AVIF", quality=VERSION_QUALITY, icc_profile=None, **AVIF)
-            os.replace(path + ".tmp", path)
+                im.save(path(sha) + ".tmp", "AVIF", quality=VERSION_QUALITY, icc_profile=None, **AVIF)
+            os.replace(path(sha) + ".tmp", path(sha))
             made.append(sha)
         except Exception as err:
             failed.append(sha)
+            open(path(sha), "wb").close()
             log("version image failed:", sha[:12], err)
 
     with ThreadPoolExecutor(min(16, (os.cpu_count() or 4) * 2)) as pool:
         for i in range(0, len(todo), VERSION_BATCH):
-            if time.time() - started >= VERSION_BUDGET:
+            if time.time() - started >= budget:
                 break
             listed = "".join(b + "\n" for b in todo[i:i + VERSION_BATCH])
             try:
                 fetched += fetch_blobs(listed, timeout=120)
             except subprocess.TimeoutExpired:
-                log("version images: a blob fetch timed out; the rest wait for the next build")
+                log("version images: a blob fetch timed out; the rest wait for the next run")
                 break
             list(pool.map(lambda b: one(*b), cat_blobs(listed, lazy=False).items()))
-    kept = {name(b) for b in newest}
+    kept = {os.path.basename(path(b)) for b in blobs}
     if kept:
-        for n in os.listdir(cache):
+        for n in os.listdir(VCACHE):
             if n not in kept:
-                os.remove(os.path.join(cache, n))
-    linked = 0
+                os.remove(os.path.join(VCACHE, n))
+    left = len(todo) - len(made) - len(failed)
+    log(f"version copies: {len(made)} made ({fetched} fetched), {len(failed)} failed, {left} left ({time.time() - started:.1f}s)")
+    return path, left
+
+
+def version_images(olds):
+    """Older image versions' copies (version_copies, VERSION_BUDGET) in dist thumbs/v/<stem>-<tag>.avif (olds: {stem (card
+    id-commit sha[:10], app.js versionCopy): (PNG blob, commit time)}); the page shows the PNG of one without. Some left:
+    every blob, newest first, in VERSION_LIST (site.yml's versions job makes them: --versions)."""
+    newest = {}
+    for blob, ts in sorted(olds.values(), key=lambda o: -o[1]):
+        newest.setdefault(blob, ts)
+    path, left = version_copies(list(newest), VERSION_BUDGET)
+    out, tag = os.path.join(DIST, "thumbs", "v"), version_tag()
+    os.makedirs(out, exist_ok=True)
+    sizes, linked = {b: os.path.getsize(path(b)) for b in newest if os.path.exists(path(b))}, 0
     for stem, (blob, _) in olds.items():
-        if os.path.exists(os.path.join(cache, name(blob))):
-            link_or_copy(os.path.join(cache, name(blob)), os.path.join(out, f"{stem}-{tag}.avif"))
+        if sizes.get(blob):                       # an empty one: failed
+            link_or_copy(path(blob), os.path.join(out, f"{stem}-{tag}.avif"))
             linked += 1
-    log(f"version images: {linked} of {len(olds)} older versions have a copy ({len(newest)} blobs); {len(made)} made "
-        f"({fetched} fetched), {len(failed)} failed, {len(todo) - len(made) - len(failed)} left ({time.time() - started:.1f}s)")
+    if left and VERSION_LIST:
+        with open(VERSION_LIST, "w", encoding="utf-8") as fh:
+            fh.write("".join(b + "\n" for b in newest))
+    log(f"version images: {linked} of {len(olds)} older versions have a copy ({len(newest)} blobs, {left} to make)")
 
 
 HEAVY_PSDS = 45                               # card PSDs in a commit from which GitHub's commit page fails (503 after ~10 s)
@@ -4428,6 +4444,7 @@ def dist_digest(data):
 def main():
     started = time.time()
     os.makedirs(os.path.join(CACHE, "img"), exist_ok=True)
+    shutil.rmtree(os.path.join(CACHE, "ver"), ignore_errors=True)   # the copies' cache until 11-14: now VCACHE
     if os.path.exists(DIST):
         shutil.rmtree(DIST)
     os.makedirs(os.path.join(DIST, "thumbs"))
@@ -5119,4 +5136,8 @@ def main():
 if __name__ == "__main__":
     if sys.argv[1:2] == ["--images"]:             # site.yml Images start: --images <commit> <stop file>
         sys.exit(early_images(*sys.argv[2:4]))
+    if sys.argv[1:2] == ["--versions"]:           # site.yml versions job: --versions <VERSION_LIST's file>
+        with open(sys.argv[2], encoding="utf-8") as fh:
+            version_copies(fh.read().split(), VERSION_BUDGET)
+        sys.exit(0)
     sys.exit(main())

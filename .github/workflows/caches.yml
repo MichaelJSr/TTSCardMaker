@@ -1,7 +1,7 @@
 # Deletes the Actions caches newer saves superseded, for the workflows that save caches whose keys change over time (the
-# card images and deck previews, the card wheels and fonts): GitHub keeps every entry up to 10 GB, so each new key left the
-# old copies behind. Called after a save. Per key prefix on the caller's ref: all but the newest two, and never one used
-# in the last hour (a running job may be restoring it). Warns, never fails the caller.
+# card images, older versions' copies and deck previews, the card wheels and fonts): GitHub keeps every entry up to 10 GB,
+# so each new key left the old copies behind. Called after a save. Per key prefix on the caller's ref: all but the newest
+# two, and never one used in the last hour (a running job may be restoring it). Warns, never fails the caller.
 name: Caches
 
 on:
