@@ -2059,7 +2059,8 @@ function ownOverlay(rec, path) {
   return oneColour(rec, path, /^(Color|Gradient)Overlay$/) && !(up && oneColour(rec, up));
 }
 /** Per index of R.was, the colour its letter shows under the layer's own overlay (the bake turns it off and paints the
- *  letters): the median of its ink pixels off the plate's backdrop and off the layer's Stroke colour; null when few. */
+ *  letters): the median of its ink pixels off the plate's backdrop and off the layer's Stroke colour (without one in the
+ *  record: off the colour at its ink's edge, then of two colours left the lighter); null when few. */
 function shownFill(data, W, c, k, R, layer, read) {
   const H = data.length / 4 / W, [cx0, cy0, cx1, cy1] = px(c.box.map(v => v * k), W, H), cw = cx1 - cx0, ch = cy1 - cy0;
   if (cw < 1 || ch < 1 || !String(layer?.text ?? "").trim()) return null;
@@ -2079,8 +2080,20 @@ function shownFill(data, W, c, k, R, layer, read) {
         const d = at(x, y); inks.push(d);
         if ([[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]].some(([u, v]) => u >= x0 && u < x1 && v >= y0 && v < y1 && !off(u, v))) for (let e = 0; e < 3; e++) edge[e].push(d[e]);
       }
-      const st = stroke || med(edge), got = [[], [], []];   // its Stroke, else the colour at its ink's edge (an unrecorded Stroke or glow)
-      for (const d of inks) if (!st || (d[0] - st[0]) ** 2 + (d[1] - st[1]) ** 2 + (d[2] - st[2]) ** 2 > 2500) for (let e = 0; e < 3; e++) got[e].push(d[e]);
+      const st = stroke || med(edge), got = [[], [], []], dist = (a, b) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2, far = (a, b) => dist(a, b) > 2500;
+      let keep = inks.filter(d => !st || far(d, st));   // its Stroke, else the colour at its ink's edge (a glow, a shadow or an unrecorded Stroke)
+      if (!stroke && keep.length >= 6) {               // an unrecorded Stroke inside a shadow: of two colours, the lighter (our Strokes are dark)
+        const mean = g => [0, 1, 2].map(e => g.reduce((t, d) => t + d[e], 0) / g.length);
+        let c = [mean(keep)], parts = [keep, []];      // two-means from the mean and the colour farthest from it
+        c[1] = keep.reduce((a, d) => (dist(d, c[0]) > dist(a, c[0]) ? d : a), keep[0]);
+        for (let n = 0; n < 6; n++) {
+          parts = [[], []]; for (const d of keep) parts[dist(d, c[0]) <= dist(d, c[1]) ? 0 : 1].push(d);
+          if (!parts[0].length || !parts[1].length) break;
+          c = parts.map(mean);
+        }
+        if (far(c[0], c[1]) && Math.min(parts[0].length, parts[1].length) >= 3) keep = c[0][0] + c[0][1] + c[0][2] >= c[1][0] + c[1][1] + c[1][2] ? parts[0] : parts[1];
+      }
+      for (const d of keep) for (let e = 0; e < 3; e++) got[e].push(d[e]);
       f = med(got);
     }
     memo.set(i, f); return f;
