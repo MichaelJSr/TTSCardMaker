@@ -7,20 +7,23 @@ run-name: ${{ inputs.after && format('Card browser (after {0} {1})', inputs.afte
 on:
   push:
     branches: [main]
-    # Site code and site-only files. Card inputs (PSDs, PNGs, Types/, the fonts, stoogedings.json and the card files in
-    # site/) start Card sync, whose data job dispatches this build (it waits for the data commit): none on the old data.
-    # A push of both: Early build (below).
+    # Site code and site-only files, and Card sync's data inputs (card-sync.yml's push paths but TTS/Global.lua and the
+    # save: no data commit): such a push's run is the data job's early build (Early build, below).
     paths:
       - "site/**"
-      - "!site/Card Edits.json"
-      - "!site/Card Authors.txt"
-      - "!site/Card Creation Dates.json"
       - "!site/**.md"
       - "site/rulebook/**"           # the rulebook's chapters are .md too (after the exclusion: it wins)
       - ".mailmap"
       - "MDW/Fonts/stoogedings-src/build_stoogedings.py"
       - "MDW/Fonts/stoogedings-src/requirements.txt"
       - ".github/workflows/site.yml"
+      - "**.[pP][sS][dD]"
+      - "**.[pP][nN][gG]"
+      - "Types/**"
+      - "MDW/Linked/**"
+      - "MDW/Fonts/*"
+      - "MDW/Fonts/stoogedings-src/stoogedings.json"
+      - "TTS/decks.json"
   schedule:
     - cron: "0 12 * * *"     # daily fallback: Card sync dispatches a build after each data commit
   workflow_dispatch:
@@ -95,13 +98,13 @@ jobs:
       saved: ${{ steps.og-save.outcome == 'success' || steps.cache-save.outcome == 'success' }}
       copies: ${{ steps.copies.outputs.artifact-id }}
     steps:
-      # A push that also changed Card sync's data inputs (card-sync.yml's push paths but TTS/Global.lua, Global.xml and the
+      # A push that changed Card sync's data inputs (card-sync.yml's push paths but TTS/Global.lua, Global.xml and the
       # save: no data commit) is Card sync's early build itself (after: that push run) once its data job has started (it
       # holds card-data, so the next "Card data" commit is its own): Images start and Data wait run, and this push's site
       # code goes live with the new data. No such job in 30 s: it builds as today. The push's files: the payload's lists,
       # else the compare API; neither (a big push: 422) counts as a data change while Card sync has a run for it. The
-      # data job's own early build waits behind this run in pages-build (Card sync's Site build sends none), then builds
-      # the same site and deploys nothing (build.txt), unless main moved on.
+      # data job dispatches no early build when it finds this run (Site build start), and its Site build none while this
+      # run waits for its data (past Images start, or not started).
       - name: Early build
         id: early
         if: github.event_name == 'push' && github.run_attempt == '1'    # a re-run builds

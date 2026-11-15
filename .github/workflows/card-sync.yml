@@ -175,15 +175,23 @@ jobs:
     steps: &data-steps
       # The site build and the card checks at once (a push's data job, a guards' follow-up and the after job; not a dry
       # run): they set up beside this job, then wait for its Commit data (their Data wait). In the background; Site build
-      # and Card checks below find them by their run-names.
+      # and Card checks below find them by their run-names. A push's data job dispatches no site build while the push's
+      # own site run (site.yml's push paths hold the data inputs) is unfinished and under 20 s old: its Early build waits
+      # for this job (site-push: its id). Not listed yet, ended or older (this job queued): dispatched.
       - name: Site build start
         if: env.DRY_RUN != 'true' && (github.event_name == 'push' || inputs.guards || github.job == 'after')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           at=$(date +%s)
+          own() {
+            [ "$GITHUB_EVENT_NAME:$GITHUB_JOB" = push:data ] || return 1
+            run=$(timeout 10 gh api "repos/$GITHUB_REPOSITORY/actions/workflows/site.yml/runs?event=push&head_sha=$GITHUB_SHA" \
+              --jq '[.workflow_runs[] | select(.status != "completed" and now - (.created_at | fromdate) < 20)][0].id // empty') \
+              && [ -n "$run" ] && echo "$run" > "$RUNNER_TEMP/site-push"
+          }
           for w in site card-checks; do
-            ( gh workflow run "$w.yml" --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB" \
+            ( { { [ "$w" = site ] && own; } || gh workflow run "$w.yml" --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB"; } \
               && echo "$at" > "$RUNNER_TEMP/$w-start" ) > "$RUNNER_TEMP/$w-start.log" 2>&1 < /dev/null &
           done
 
@@ -938,9 +946,10 @@ jobs:
           overwrite: true     # a re-run replaces attempt 1's
 
       # A GITHUB_TOKEN push triggers no workflow, so the site build is dispatched after a data commit and after the bake
-      # (its PNGs), whatever the data did. Card pushes start no site build of their own (site.yml): this is theirs. Not
-      # when Site build start's run is unfinished and under 19 minutes old: it is still in its Data wait (20 minutes at
-      # most) and builds this. Missing, replaced while pending in pages-build, or ended: dispatched here.
+      # (its PNGs), whatever the data did. Not when Site build start's run is unfinished and under 19 minutes old: it is
+      # still in its Data wait (20 minutes at most) and builds this. The push's own run instead (site-push): only while its
+      # build has not started or is past Images start (run for an early build only) with Data wait not failed. Missing,
+      # replaced while pending in pages-build, built on its own, or ended: dispatched here.
       - name: Site build
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.data-commit.outputs.committed == 'true' || env.AFTER != '') }}
         timeout-minutes: 2
@@ -949,10 +958,17 @@ jobs:
           EARLY: Card browser (after ${{ github.run_id }} ${{ github.job }})   # site.yml's run-name
         run: |   # 3 tries (a brief API error); a lasting one fails the job
           if at=$(cat "$RUNNER_TEMP/site-start" 2> /dev/null) && [ $(( $(date +%s) - at )) -lt 1140 ]; then
-            status=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/site.yml/runs?event=workflow_dispatch&per_page=50" \
-              --jq "[.workflow_runs[] | select(.display_title == \"$EARLY\")][0].status // \"\"") || status=""
+            if run=$(cat "$RUNNER_TEMP/site-push" 2> /dev/null); then
+              status=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run/jobs" --jq '[.jobs[] | select(.name == "build"
+                and ((.status != "in_progress" and .status != "completed") or (.status == "in_progress"
+                  and any(.steps[]?; .name == "Images start" and (.status == "in_progress" or .conclusion == "success"))
+                  and all(.steps[]?; .name != "Data wait" or .conclusion != "failure"))))][0].status // ""') || status=""
+            else
+              status=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/site.yml/runs?event=workflow_dispatch&per_page=50" \
+                --jq "[.workflow_runs[] | select(.display_title == \"$EARLY\")][0].status // \"\"") || status=""
+            fi
             if [ -n "$status" ] && [ "$status" != completed ]; then
-              echo "The site build started with this job ($status) shows this data." | tee -a "$GITHUB_STEP_SUMMARY"
+              echo "The early site build (${run:+run $run, }$status) shows this data." | tee -a "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
           fi
