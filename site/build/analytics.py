@@ -21,7 +21,7 @@ months are Pacific time (ZONE).
   * The card timelines before the repo (build_site history_stats, when the build has them): their versions' sure stats
     and stars start the card's chain for its trend and the over-time series (its start moves back to them), and their
     changes (a version's against the one before, a changelog fact, the first recorded version's against the last one
-    before it) go under its recorded changes, each with "early": where it comes from (discord, old repo, paper, text, git).
+    before it) go under its recorded changes, each with "early": where it comes from (discord, old repo, first repo, text, git).
 
 PSDs are never read here; everything comes from the bot's data.
 """

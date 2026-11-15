@@ -113,7 +113,7 @@ export function compile(query) {
   let m = lower.match(/^(\w+)\s*(<=|>=|==?|<|>)\s*(\d{4}(?:-\d{2}){0,2})$/);   // a lone = reads as ==
   if (m && DATE[m[1]]) {                                  // created>2023: after 2023; created==2023-10: in October 2023
     const get = DATE[m[1]], v = m[3], op = OPS[m[2]] || OPS["=="];
-    return c => {                                         // "before 2020" (a paper card, no day): only a < or <= it surely meets
+    return c => {                                         // "before 2020" (no day): only a < or <= it surely meets
       if (c.createdBefore && m[1] === "created") return (m[2] === "<" || m[2] === "<=") && op(`${c.createdBefore - 1}-12-31`.slice(0, v.length), v);
       const x = get(c); return x != null && op(x.slice(0, v.length), v);
     };

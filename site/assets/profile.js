@@ -328,9 +328,9 @@ export function starKinds(own, kindOf = c => c.type, kinds = []) {
   return [...new Set(own.filter(c => c.stars != null).map(kindOf).filter(Boolean))].sort((a, b) => rank(a) - rank(b) || String(a).localeCompare(String(b)));
 }
 const yearOf = c => (c.created ? +c.created.slice(0, 4) : c.fs ? new Date(c.fs * 1000).getUTCFullYear() : 0);
-const yearText = c => (c.createdBefore ? `before ${c.createdBefore}` : String(yearOf(c)));   // a paper card's: no day
-/** P14: {first, last (cards), years: [[year, n]], best: [year, n]} by createdTs (undated cards left out; a paper card's
- *  "before 2020" in no year); null without dates. */
+const yearText = c => (c.createdBefore ? `before ${c.createdBefore}` : String(yearOf(c)));   // "before 2020": no day
+/** P14: {first, last (cards), years: [[year, n]], best: [year, n]} by createdTs (undated cards left out; a "before
+ *  2020" in no year); null without dates. */
 export function careerOf(own) {
   const dated = own.filter(c => createdTs(c)).sort((a, b) => createdTs(a) - createdTs(b) || byName(a, b));
   if (!dated.length) return null;

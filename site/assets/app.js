@@ -74,7 +74,7 @@ const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand",
-  "old repo": "Its first version in the old card repo, before this one", paper: "A paper card, made before 2020 (its photo was posted later)",
+  "old repo": "Its first version in the old card repo, before this one", photo: "Made before 2020: a photo of the physical card shows it",
   "first repo": "Its first version in the first card repo (2022-23), before the old one",
   changelog: "Named in a 2019 balance-change list on Discord, before its first picture" };
 const createdText = c => (c.createdBefore ? `before ${c.createdBefore}` : day(c.created));
@@ -1071,18 +1071,18 @@ function placeholderOf(c) {
 }
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card; then
 // its versions before this repo (versions.json early, build_site history_rows: the old repo, the first repo's among them,
-// Discord, a paper card), never with a link or Revert
-const EARLY_BADGE = { discord: "Discord", "old repo": "old repo", paper: "paper card" };
+// Discord), never with a link or Revert
+const EARLY_BADGE = { discord: "Discord", "old repo": "old repo" };
 const earlyBadge = v => (v.repo === "first" ? "first repo" : EARLY_BADGE[v.early] || "");    // versions.json early r: the first repo's files
 const versionList = c => {
   if (!S.versions) return [];
   const rows = S.versions.cards[c.id] || [];
   const minor = new Set(S.versions.minor[c.id] || []);        // build_site: a picture change under the share that shows, no data change
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; })
-    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, repo: r.r, ts: r.ts, label: r.label, channel: r.ch, author: r.a, subject: r.s, as: r.as,
-      img: r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor, covered: !!r.cov })));
+    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, repo: r.r, ts: r.ts, channel: r.ch, author: r.a, subject: r.s, as: r.as,
+      img: r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor })));
 };
-const versionWhen = v => (v.ts ? date(v.ts) : esc(v.label || "Undated"));
+const versionWhen = v => (v.ts ? date(v.ts) : "Undated");
 const versionMsg = v => [v.subject, v.as && `as ${v.as}`].filter(Boolean).join(" · ");
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
 // an older version's 360 px copy on the plates branch (build_site version_images, not in the site); one not made yet: its PNG
@@ -1130,9 +1130,9 @@ function showVersion(c, i) {
       <figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }
-/** A version from before this repo (or a Morgue entry's): its picture beside the current one, with its date (a paper
- *  card: "Before 2020"), source, author and commit subject (old repo, first repo) or channel (Discord), never a link or
- *  Revert; "Text then": the ability read off it when that read is sure */
+/** A version from before this repo (or a Morgue entry's): its picture beside the current one, with its date, source,
+ *  author and commit subject (old repo, first repo) or channel (Discord), never a link or Revert; "Text then": the
+ *  ability read off it when that read is sure */
 function earlyVersion(c, vs, i) {
   const v = vs[i], cur = vs[0];
   const caption = w => `${versionWhen(w)}${w.early ? ` · ${earlyBadge(w)}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}`
@@ -1141,8 +1141,8 @@ function earlyVersion(c, vs, i) {
   const pic = (w, alt) => (src(w) ? `<img src="${esc(src(w))}" alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
     : `<div class="empty">No picture</div>`);
   if (i === 0) return `<figure>${pic(v, `${c.name}, current version`)}<figcaption>${caption(v)}<br>Current version</figcaption></figure>`;
-  const then = v.fields?.ability, under = v.covered ? `<br><span class="muted">In this photo it lies under another card: mostly hidden</span>` : "";
-  return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : v.label || ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}${under}</figcaption></figure>
+  const then = v.fields?.ability;
+  return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}</figcaption></figure>
       <figure>${pic(cur, `${c.name}, current version`)}<figcaption>Current<br><span class="muted">${cur.early ? caption(cur) : `${date(cur.ts)}${commitAfter(S.versions.repo, cur.sha, `Commit for the ${date(cur.ts)} image version`, cur.path)}`}</span></figcaption></figure></div>
       ${then && c.ability && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }

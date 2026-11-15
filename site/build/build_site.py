@@ -56,7 +56,7 @@ Where the data comes from:
     cards and activity chart. Bad entries skipped.
   * Card timelines before this repo (HISTORY_DIR: the history branch's history/ folder, or the local preview's; unset: the
     site goes without them, as before): each card's versions from the old pre-wipe repo (the first repo's among them),
-    Discord and paper cards after its own in Image versions (versions.json early; webps copied to dist/history/),
+    and Discord after its own in Image versions (versions.json early; webps copied to dist/history/),
     their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
     Morgue's entries from Discord (cards.json morgue, lost: joke or played), the MDW Morgue cards' Discord pictures
     (after their PNG's newest version here, the current one: history_mdw) and the Created dates they move earlier
@@ -258,12 +258,12 @@ MORGUE = "MDW/The Morgue/"                    # retired cards (owner 11-08): car
 # the card timelines before this repo (AutoCroissant discord_preview; docs/Future/CARD_TIMELINE.md): the history branch's
 # history/ folder, or the local preview's; unset or missing: the site goes without them
 HISTORY_DIR = os.environ.get("HISTORY_DIR", "")
-HISTORY_ROWS = ("discord", "old repo", "paper")                # Image versions' rows (changelog facts: Recorded changes only)
+HISTORY_ROWS = ("discord", "old repo")                         # Image versions' rows (changelog facts: Recorded changes only)
 HISTORY_KINDS = HISTORY_ROWS + ("text",)
 HISTORY_BEFORE = ("discord", "text")                            # before the card's first git record (stop at git; the old repo overlaps it)
-HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "first repo": "first repo", "git": "git", "paper card": "paper",
+HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "first repo": "first repo", "git": "git", "physical card photo": "photo",
                 "changelog": "changelog"}   # a proposed Created's source
-PAPER_DAY = "Before 2020"                     # a paper card's Created (owner Q6): HISTORY_DAY, createdBefore 2020
+BEFORE_DAY = "Before 2020"                    # a Created from a physical card photo (owner Q6): HISTORY_DAY, createdBefore 2020
 HISTORY_DAY = "2019-01-01"                    # before every dated card: the team's Discord began in 2019-02
 HISTORY_IMAGE = re.compile(r"[\w.-]+\.webp\Z")
 HISTORY_STATS = ("hp", "def", "atk", "spd")
@@ -1448,7 +1448,7 @@ def load_history(folder):
     for key, c in (index.get("created") or {}).items():
         day = (c or {}).get("date")
         try:
-            ok = day == PAPER_DAY or isinstance(day, str) and date.fromisoformat(day).isoformat() == day
+            ok = day == BEFORE_DAY or isinstance(day, str) and date.fromisoformat(day).isoformat() == day
         except ValueError:
             ok = False
         if ok and c.get("source") in HISTORY_FROM:
@@ -1463,7 +1463,7 @@ def load_history(folder):
 
 
 def history_ts(e):
-    """A timeline entry's date as epoch seconds; None when undated (a paper card)."""
+    """A timeline entry's date as epoch seconds; None when undated."""
     try:
         return int(datetime.fromisoformat(e["date"]).timestamp()) if isinstance(e.get("date"), str) else None
     except ValueError:
@@ -1472,10 +1472,9 @@ def history_ts(e):
 
 def history_rows(folder, t):
     """A timeline's Image versions rows, newest first (undated ones last): versions.json early (app.js versionList).
-    k: kind; r: "first" for the first repo's versions (kind old repo); ts or label ("Before 2020"); ch: Discord channel; a,
-    s: author and commit subject (old repo); as:
-    the old card it was (a split, owner Q3); img (history/<folder>/<webp>), w, h; f: its sure fields' values; minor; cov:
-    its photo shows the card under another one."""
+    k: kind; r: "first" for the first repo's versions (kind old repo); ts; ch: Discord channel; a, s: author and commit
+    subject (old repo); as: the old card it was (a split, owner Q3); img (history/<folder>/<webp>), w, h; f: its sure
+    fields' values; minor."""
     rows = []
     for e in t["entries"]:
         if e["kind"] not in HISTORY_ROWS:
@@ -1483,10 +1482,6 @@ def history_rows(folder, t):
         row = {"k": e["kind"], "ts": history_ts(e)}
         if e["kind"] == "old repo" and e.get("repo") == "first":
             row["r"] = "first"                    # the first repo's file (2022-08..2023-04)
-        if e.get("covered"):
-            row["cov"] = 1                        # its photo shows the card under another one
-        if row["ts"] is None and isinstance(e.get("label"), str):
-            row["label"] = e["label"]
         for src, key in (("channel", "ch"), ("author", "a"), ("subject", "s"), ("as", "as")):
             if isinstance(e.get(src), str) and e[src]:
                 row[key] = e[src]
@@ -1602,8 +1597,8 @@ def history_cut(t, fs):
 
 
 def history_day(first):
-    """A Morgue entry's first post as a Pacific day (its rows' dates are Pacific), else its stored day; None for a paper
-    card's "Before 2020"."""
+    """A Morgue entry's first post as a Pacific day (its rows' dates are Pacific), else its stored day; None for
+    "Before 2020" (history_morgue)."""
     try:
         when = datetime.fromisoformat(first["date"])
         if when.tzinfo:
@@ -1616,7 +1611,8 @@ def history_day(first):
 def history_morgue(hist, slug, old_slugs=()):
     """The Morgue's entries from Discord (owner Q1, Q2: joke cards and cards played but lost before git): name and
     pictures only, never a live card (cards.json morgue). Each: lost (joke | played), pic (its newest picture), first
-    (its Pacific day) and firstCh; their rows: {id: history_rows}. An entry named as a renamed card once was (old_slugs:
+    (its Pacific day) and firstCh, or a Created "Before 2020" from a physical card photo (owner Q6: M'uru) as a card's
+    (createdFrom photo); their rows: {id: history_rows}. An entry named as a renamed card once was (old_slugs:
     its old page redirects to it) is "<slug>-morgue", as one named as a card of today is."""
     out, rows = [], {}
     for folder, t in hist["morgue"]:
@@ -1629,8 +1625,10 @@ def history_morgue(hist, slug, old_slugs=()):
         e = {"id": slug(f"{base}-morgue" if base in old_slugs else base), "name": t["name"], "key": t["name"], "type": "unknown",
              "psd": None, "png": None, "morgue": True, "lost": t.get("kind_of") if t.get("kind_of") in ("joke", "played") else "joke",
              "pic": pics[0]["img"], "tw": pics[0].get("w"), "th": pics[0].get("h"), "ive": len(mine)}
-        if history_day(first):                    # a paper card's "Before 2020": no day
+        if history_day(first):
             e["first"] = history_day(first)
+        elif first.get("day") == BEFORE_DAY and first.get("source") in HISTORY_FROM:     # no day: apply_created's form
+            e.update(created=HISTORY_DAY, createdFrom=HISTORY_FROM[first["source"]], createdBefore=2020)
         if isinstance(first.get("channel"), str):
             e["firstCh"] = first["channel"]
         out.append(e)
@@ -2546,8 +2544,8 @@ def apply_created(cards, created, proposed=None):
     entry wins. createdFrom says which. Logs, never fails. The bot keeps the same rule (AutoCroissant
     card_edits.CardDates.created) with its own first upload: the earliest version its database holds.
     proposed: the card timelines' dates (load_history created): one earlier than both wins, never over a hand entry
-    (createdFrom discord, old repo, git or paper; createdWas: the date it replaced); "Before 2020" (a paper card) is
-    HISTORY_DAY with createdBefore 2020."""
+    (createdFrom discord, old repo, git, first repo, changelog or photo; createdWas: the date it replaced); "Before
+    2020" (a physical card photo, owner Q6) is HISTORY_DAY with createdBefore 2020."""
     used, later, today, moved = set(), 0, datetime.now(timezone.utc).date().isoformat(), 0
     for e in cards:
         found = created.get(card_key(e["key"]))
@@ -2560,19 +2558,19 @@ def apply_created(cards, created, proposed=None):
             e["created"], e["createdFrom"] = upload, "git"
             later += bool(found)
         p = (proposed or {}).get(card_key(e["key"]))
-        day = (HISTORY_DAY if p["date"] == PAPER_DAY else p["date"]) if p else None
+        day = (HISTORY_DAY if p["date"] == BEFORE_DAY else p["date"]) if p else None
         if day and not (found and found["from"] == "hand") and (not e.get("created") or day < e["created"]):
             if e.get("created"):
                 e["createdWas"] = e["created"]
             e["created"], e["createdFrom"] = day, HISTORY_FROM[p["source"]]
-            if p["date"] == PAPER_DAY:
+            if p["date"] == BEFORE_DAY:
                 e["createdBefore"] = 2020
             moved += 1
     if proposed:
         log(f"created: {moved} cards dated earlier by the card timelines ({len(proposed)} proposed)")
     dated = [e for e in cards if e.get("created")]
     by = Counter(e["createdFrom"] for e in dated)
-    more = "".join(f", {by[k]} {k}" for k in ("old repo", "first repo", "changelog", "paper") if by[k])   # the timelines' (proposed)
+    more = "".join(f", {by[k]} {k}" for k in ("old repo", "first repo", "changelog", "photo") if by[k])   # the timelines' (proposed)
     log(f"created: {len(dated)} of {len(cards)} cards dated ({by['discord']} first Discord post, {by['git']} first upload, "
         f"{by['hand']} by hand{more})")
     if later:

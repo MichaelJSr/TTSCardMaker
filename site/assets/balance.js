@@ -200,7 +200,7 @@ function sparkline(points) {
   return `<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(`Total stats over time: ${totals.join(", ")}`)}"><path class="line" d="${d}"/>${dots}<text class="val" x="${X(last.ts) + 8}" y="${Y(last.total) + 4}">${last.total}</text></svg>`;
 }
 
-/** a card's year created, "Before 2020" for a paper card's (cards.json createdBefore: no day), and its search */
+/** a card's year created, "Before 2020" for a physical card photo's (cards.json createdBefore: no day), and its search */
 export const createdYear = c => (c.createdBefore ? `Before ${c.createdBefore}` : c.created.slice(0, 4));
 export const createdQuery = y => (y.startsWith("Before ") ? `created<${y.slice(7)}` : `created==${y}`);
 
@@ -216,7 +216,7 @@ function factHtml(f) {
 /** where a change from before this repo comes from (analytics.py early) */
 const EARLY_SRC = { discord: ["Discord", "Read off its pictures posted on Discord"], "old repo": ["old repo", "Read off the old card repo's versions"],
   "first repo": ["first repo", "Read off the first card repo's versions (2022-23)"],
-  paper: ["paper card", "Read off a photo of the paper card"], text: ["changelog", "A change an update's changelog states (its text is not shown)"],
+  text: ["changelog", "A change an update's changelog states (its text is not shown)"],
   git: ["first record", "Its first version in this repo against its last one before it"] };
 /** plain parts of a change row (HTML), the ability diff aside */
 export function changeParts(r) {
