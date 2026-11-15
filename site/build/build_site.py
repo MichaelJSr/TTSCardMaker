@@ -55,8 +55,8 @@ Where the data comes from:
     and fs (a hand-set date wins): the Cards tab's created sort, the card page's "created" fact, the person pages' newest
     cards and activity chart. Bad entries skipped.
   * Card timelines before this repo (HISTORY_DIR: the history branch's history/ folder, or the local preview's; unset: the
-    site goes without them, as before): each card's versions from the old pre-wipe repo, Discord, paper cards and the
-    first repo's push notices after its own in Image versions (versions.json early; webps copied to dist/history/),
+    site goes without them, as before): each card's versions from the old pre-wipe repo (the first repo's among them),
+    Discord and paper cards after its own in Image versions (versions.json early; webps copied to dist/history/),
     their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
     Morgue's entries from Discord (cards.json morgue, lost: joke or played), the MDW Morgue cards' Discord pictures
     (after their PNG's newest version here, the current one: history_mdw) and the Created dates they move earlier
@@ -258,9 +258,9 @@ MORGUE = "MDW/The Morgue/"                    # retired cards (owner 11-08): car
 # the card timelines before this repo (AutoCroissant discord_preview; docs/Future/CARD_TIMELINE.md): the history branch's
 # history/ folder, or the local preview's; unset or missing: the site goes without them
 HISTORY_DIR = os.environ.get("HISTORY_DIR", "")
-HISTORY_ROWS = ("discord", "old repo", "paper", "first repo")   # Image versions' rows (changelog facts: Recorded changes only)
+HISTORY_ROWS = ("discord", "old repo", "paper")                # Image versions' rows (changelog facts: Recorded changes only)
 HISTORY_KINDS = HISTORY_ROWS + ("text",)
-HISTORY_BEFORE = ("discord", "text", "first repo")              # before the card's first git record (stop at git; the old repo overlaps it)
+HISTORY_BEFORE = ("discord", "text")                            # before the card's first git record (stop at git; the old repo overlaps it)
 HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "first repo": "first repo", "git": "git", "paper card": "paper",
                 "changelog": "changelog"}   # a proposed Created's source
 PAPER_DAY = "Before 2020"                     # a paper card's Created (owner Q6): HISTORY_DAY, createdBefore 2020
@@ -1473,7 +1473,7 @@ def history_ts(e):
 def history_rows(folder, t):
     """A timeline's Image versions rows, newest first (undated ones last): versions.json early (app.js versionList).
     k: kind; r: "first" for the first repo's versions (kind old repo); ts or label ("Before 2020"); ch: Discord channel; a,
-    s: author and commit subject (old repo, first repo); as:
+    s: author and commit subject (old repo); as:
     the old card it was (a split, owner Q3); img (history/<folder>/<webp>), w, h; f: its sure fields' values; minor; cov:
     its photo shows the card under another one."""
     rows = []
@@ -1574,7 +1574,7 @@ def history_stats(t, kind):
             if history_shown(e.get("change") or {}, shown.get(e.get("confirmed_by")) or {}):
                 continue
             row = history_fact(e.get("change") or {})
-        elif e["kind"] in HISTORY_ROWS and e["kind"] != "first repo":
+        elif e["kind"] in HISTORY_ROWS:
             fields = {k: f.get("value") for k, f in (e.get("fields") or {}).items() if isinstance(f, dict) and f.get("confidence") == "sure"}
             st = fields.get("stats") if isinstance(fields.get("stats"), dict) else {}
             line = [st.get(k) for k in HISTORY_STATS]
@@ -1594,7 +1594,7 @@ def history_stats(t, kind):
 
 
 def history_cut(t, fs):
-    """Leaves out a timeline's Discord, changelog and first-repo entries at or after the card's first version here (fs, its
+    """Leaves out a timeline's Discord and changelog entries at or after the card's first version here (fs, its
     first upload): what came before this repo comes before its first version. Returns how many."""
     keep = [e for e in t["entries"] if e["kind"] not in HISTORY_BEFORE or (history_ts(e) or 0) < fs]
     gone, t["entries"] = len(t["entries"]) - len(keep), keep
@@ -5297,7 +5297,7 @@ def main():
                 e["ivme"] = sum(1 for r in rows if r.get("minor"))
     cut += history_mdw(hist, morgue, early, versions, commits, renamed, people) if hist else 0
     if cut:
-        warn(f"card timelines: {cut} Discord, changelog or first-repo entries at or after their card's first version here left out")
+        warn(f"card timelines: {cut} Discord or changelog entries at or after their card's first version here left out")
     if early:
         versions["early"] = early
         log(f"card timelines: {sum(len(r) for r in early.values())} versions before this repo on {len(early)} cards "

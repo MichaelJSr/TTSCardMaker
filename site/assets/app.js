@@ -1070,9 +1070,9 @@ function placeholderOf(c) {
   return null;
 }
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card; then
-// its versions before this repo (versions.json early, build_site history_rows: the old repo, Discord, a paper card, the
-// first repo's push notices as text only), never with a link or Revert
-const EARLY_BADGE = { discord: "Discord", "old repo": "old repo", paper: "paper card", "first repo": "first repo" };
+// its versions before this repo (versions.json early, build_site history_rows: the old repo, the first repo's among them,
+// Discord, a paper card), never with a link or Revert
+const EARLY_BADGE = { discord: "Discord", "old repo": "old repo", paper: "paper card" };
 const earlyBadge = v => (v.repo === "first" ? "first repo" : EARLY_BADGE[v.early] || "");    // versions.json early r: the first repo's files
 const versionList = c => {
   if (!S.versions) return [];
@@ -1130,16 +1130,16 @@ function showVersion(c, i) {
       <figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }
-/** A version from before this repo (or a Morgue entry's): its picture (none: a first-repo push notice) beside the current
- *  one, with its date (a paper card: "Before 2020"), source, author and commit subject (old repo, first repo) or channel
- *  (Discord), never a link or Revert; "Text then": the ability read off it when that read is sure */
+/** A version from before this repo (or a Morgue entry's): its picture beside the current one, with its date (a paper
+ *  card: "Before 2020"), source, author and commit subject (old repo, first repo) or channel (Discord), never a link or
+ *  Revert; "Text then": the ability read off it when that read is sure */
 function earlyVersion(c, vs, i) {
   const v = vs[i], cur = vs[0];
   const caption = w => `${versionWhen(w)}${w.early ? ` · ${earlyBadge(w)}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}`
     + (w.sha ? commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path) : "") + (versionMsg(w) ? `<br><span class="muted">${esc(versionMsg(w))}</span>` : "");
   const src = w => (w.early ? w.img : img(c, 720));
   const pic = (w, alt) => (src(w) ? `<img src="${esc(src(w))}" alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
-    : `<div class="empty">${w.early === "first repo" ? "No picture: a push notice of the first repo, with no card picture of its own" : "No picture"}</div>`);
+    : `<div class="empty">No picture</div>`);
   if (i === 0) return `<figure>${pic(v, `${c.name}, current version`)}<figcaption>${caption(v)}<br>Current version</figcaption></figure>`;
   const then = v.fields?.ability, under = v.covered ? `<br><span class="muted">In this photo it lies under another card: mostly hidden</span>` : "";
   return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : v.label || ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}${under}</figcaption></figure>

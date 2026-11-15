@@ -44,11 +44,11 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   card's image, compared side by side with the current one, with the text of that time when it differs (each version,
 text or image, links its commit when it is known), and the artwork sources when set. With the card timelines
 (`HISTORY_DIR`: the `history` branch, AutoCroissant `commands/discord_preview.py`), the versions from before this repo
-follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"), Discord's (date and channel,
-never a poster or message), a paper card's ("Before 2020") and the first repo's push notices (text only, "first
-repo"); each compares with the current card like the others (its own sure ability as "Text then"), with no link and no
-Revert, and their changes (and the update changelogs' facts, as data only, each once: a fact its version also shows is
-that version's change) join Recorded changes and the balance charts; a Discord or changelog row is always before the
+follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"; the first repo's "first
+repo"), Discord's (date and channel, never a poster or message) and a paper card's ("Before 2020"); each compares
+with the current card like the others (its own sure ability as "Text then"), with no link and no Revert, and their
+changes (and the update changelogs' facts, as data only, each once: a fact its version also shows is that version's
+change) join Recorded changes and the balance charts; a Discord or changelog row is always before the
 card's first version here. A Morgue card from `MDW/The Morgue` with Discord pictures lists them after its PNG's newest
 version (the current one they compare with; nothing to revert). The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
