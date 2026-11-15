@@ -640,6 +640,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     the darkest as the outline when darker than it), else the record's colour; one colour (the card's coloured words
     aren't kept). A record's `stroke` (psd_details VERSION 7: the layer's or its nearest group's solid, Normal, 100%,
     outside Stroke) sets the letters' outline colour and width (2 x its size) instead; badges keep their own widths.
+    A record's `fx` (VERSION 8: the layer's and its groups' Drop Shadows and Outer Glows, when one shows: a glow with
+    one colour or a shadow 8 px past its level's Stroke, at 15% or more; 74 cards) is cast under the typed letters
+    (`paintEffects`: the letters, plus a Stroke set deeper, grown by the spread, blurred at sigma size / sqrt 6, moved,
+    tinted, blended), on canvases cropped to the lines; a browser without canvas blur draws the letters alone.
   - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; a timing tag text.js knows is a badge,
     any case, drawn as its pill in the site's colours; another bracket or parenthesis stays text; no break inside
     "[ice]."). Under an overlay (`oneColour(rec, layer)`: an enabled ColorOverlay, GradientOverlay or PatternOverlay in
