@@ -209,19 +209,39 @@ jobs:
       # The head's commit and trees, no card blobs (the 28 GB of PSDs and PNGs are never checked out): the push's range and
       # its PNG pairing come from the trees; the pushed PSDs and PNGs come by blob sha through the API, verified. Every
       # other commit comes in the background: the push's first head (Pushed blobs start), in check the rest (History).
-      - &card-repo
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 1
-          filter: "blob:none"
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /.github/
+      # Checked out as actions/checkout does (depth 1, /.github/ only, the header in an included file, gc.auto 0), in the
+      # background beside the venv's restore (Card sync's Cards start), exit code in cards.code; requirements-cards.txt
+      # through the API beside it (bot.reqs: Venv key's).
+      - &cards-start
+        name: Cards start
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BOT_REPO: bobberlington/AutoCroissant
+        run: |
+          ( for _ in 1 2; do
+              printf 'Authorization: Bearer %s\n' "$GH_TOKEN" | curl -sSf --max-time 5 -H @- -H "Accept: application/vnd.github.raw" \
+                -o "$RUNNER_TEMP/bot.reqs.part" "$GITHUB_API_URL/repos/$BOT_REPO/contents/requirements-cards.txt?ref=main" \
+                && mv "$RUNNER_TEMP/bot.reqs.part" "$RUNNER_TEMP/bot.reqs" && break
+            done
+            touch "$RUNNER_TEMP/reqs.done" ) < /dev/null > "$RUNNER_TEMP/reqs.log" 2>&1 &
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$auth"
+          creds=$RUNNER_TEMP/cards-credentials.config
+          git config --file "$creds" "http.$GITHUB_SERVER_URL/.extraheader" "AUTHORIZATION: basic $auth"
+          ref=refs/remotes/origin/$GITHUB_REF_NAME
+          ( code=0
+            { git init -q && git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" && git config gc.auto 0 \
+                && git config include.path "$creds" && git sparse-checkout set --no-cone /.github/ \
+                && timeout 15 git -c protocol.version=2 fetch -q --depth 1 --filter=blob:none --no-tags origin "+$GITHUB_SHA:$ref" \
+                && timeout 8 git checkout -q -B "$GITHUB_REF_NAME" "$ref"; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/cards.code" ) < /dev/null > "$RUNNER_TEMP/cards.log" 2>&1 &
 
       # A push's PSD and PNG blobs (both sides), as git's own lazy fetch asks: the checks and the guards read the clone
-      # first, so ~3 REST reads per card become none. It needs only the trees, so it starts here, in the background:
-      # first the push's first head (depth 1; in check the data branch too), then the list (blobs.ready: History start
-      # and the two checks wait for it), then the fetch. Check (and in `checks` the two checks) waits for each listed
+      # first, so ~3 REST reads per card become none. It needs only the trees, so it starts here, in the background, once
+      # checked out (Cards start's, or the checkout's below): first the push's first head (depth 1; in check the data
+      # branch too), then the list (blobs.ready: History start and the two checks wait for it), then the fetch. Check
+      # (and in `checks` the two checks) waits for each listed
       # blob it reads (CARD_BLOBS_PENDING); 5 minutes at most, its exit code in blobs.done (then a blob still missing goes
       # by REST). Blob fetches never deepen, so they run beside History start's join.
       # 8 at most to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs
@@ -242,6 +262,7 @@ jobs:
           export GIT_NO_LAZY_FETCH=1
           list=$RUNNER_TEMP/blobs
           (
+            until [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ] || [ -e "$RUNNER_TEMP/cards.done" ]; do sleep 0.02; done
             git cat-file -e "$BEFORE^{commit}" 2> /dev/null \
               || git fetch -q --depth=1 --no-tags --no-write-fetch-head --filter=blob:none origin "$BEFORE" &
             [ "$GITHUB_JOB" != check ] \
@@ -297,8 +318,8 @@ jobs:
           echo $! > "$list.pid"
           echo "listing and fetching in the background"
 
-      # In check, the depth-1 checkout and the push's first head (Pushed blobs start's, once listed) joined to Bot start's
-      # history in the background (a local fetch: 0.3 s; GitHub's history is the fallback), while Bot and the venv set up.
+      # In check, the depth-1 checkout (once in) and the push's first head (Pushed blobs start's, once listed) joined to Bot
+      # start's history in the background (a local fetch: 0.3 s; GitHub's history is the fallback), while the venv sets up.
       # Only the two deepening fetches take shallow.lock, so the join waits for the first head; History waits for it.
       - name: History start
         if: env.MODE != 'off'
@@ -308,6 +329,7 @@ jobs:
           (
             export GIT_NO_LAZY_FETCH=1
             until [ -s "$h.code" ] || [ "$SECONDS" -ge 130 ]; do sleep 0.05; done      # its fetch: 120 s at most
+            until [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ] || [ -e "$RUNNER_TEMP/cards.done" ]; do sleep 0.05; done
             [ ! -s "$list.pid" ] || while [ ! -e "$list.ready" ] && kill -0 "$(cat "$list.pid")" 2> /dev/null; do sleep 0.05; done
             code=$(cat "$h.code" 2> /dev/null) || code=none
             if [ "$code" = 0 ] && [ "$(git rev-parse --is-shallow-repository)" = true ]; then
@@ -323,6 +345,70 @@ jobs:
             touch "$RUNNER_TEMP/history.done"
           ) < /dev/null > "$RUNNER_TEMP/history.log" 2>&1 &
           echo $! > "$RUNNER_TEMP/history.pid"
+
+      # The venv's entry restored here, beside Cards start's fetch: cards-venv's key (the image's newest 3.14.x, the oxipng
+      # tag) from bot.reqs, else the bot clone's file (15 s at most); cards-venv checks it (its input restored).
+      - &venv-key
+        name: Venv key
+        id: venv-key
+        shell: bash
+        run: |
+          py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
+          until [ -e "$RUNNER_TEMP/reqs.done" ] || [ $SECONDS -ge 15 ]; do sleep 0.02; done
+          reqs=$RUNNER_TEMP/bot.reqs
+          if [ ! -s "$reqs" ]; then
+            while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
+            reqs=$RUNNER_TEMP/bot/requirements-cards.txt
+            [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] || reqs=""
+          fi
+          if [ -n "$py" ] && [ -s "$reqs" ]; then
+            sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' "$reqs" | sha256sum | cut -d' ' -f1)
+            echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - &venv-cache
+        id: venv-cache
+        if: steps.venv-key.outputs.key != ''
+        timeout-minutes: 5
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/venv
+          key: ${{ steps.venv-key.outputs.key }}
+
+      # Cards start's fetch (25 s at most: its own caps end it sooner); failed: the checkout below, as ever (it empties
+      # the workspace). The venv's hit goes to cards-venv (VENV_RESTORED).
+      - &cards
+        name: Cards
+        id: cards
+        shell: bash
+        env:
+          HIT: ${{ steps.venv-cache.outputs.cache-hit }}
+          KEY: ${{ steps.venv-key.outputs.key }}
+        run: |
+          if [ "$HIT" = true ]; then echo "VENV_RESTORED=$KEY" >> "$GITHUB_ENV"; fi
+          while [ ! -s "$RUNNER_TEMP/cards.code" ] && [ $SECONDS -lt 25 ]; do sleep 0.02; done
+          if [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::the card repo's fetch failed or took 25 s: checked out instead"; cat "$RUNNER_TEMP/cards.log" 2> /dev/null || true
+            rm -rf .git
+          fi
+
+      - &card-repo
+        if: steps.cards.outputs.ok != 'true'
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          filter: "blob:none"
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/
+
+      # That checkout's mark: Pushed blobs start's and History start's background jobs go on
+      - &checked-out
+        if: steps.cards.outputs.ok != 'true'
+        shell: bash
+        run: touch "$RUNNER_TEMP/cards.done"
 
       # The clone in bot/ (15 s at most) and the records (75) once done; a clone failed or late: checked out as ever
       - &bot
@@ -348,13 +434,15 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: ${{ env.BOT_FILES }}
 
-      # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression; the checks write no PNG)
+      # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression; the checks write no PNG); the
+      # entry is in place already (Venv key): only checked
       - &setup
         timeout-minutes: 10
         uses: ./.github/actions/cards-venv
         id: setup
         with:
           oxipng: ${{ github.job != 'checks' }}
+          restored: ${{ env.VENV_RESTORED }}
 
       # History start's join (Check, the earlier fonts and a dispatch's window read every commit): a shallow clone fails
       - name: History
@@ -802,8 +890,13 @@ jobs:
       BOT_FILES: *bot-files
     steps:
       - *bot-start
-      - *card-repo
+      - *cards-start
       - *blobs-start
+      - *venv-key
+      - *venv-cache
+      - *cards
+      - *card-repo
+      - *checked-out
       - *bot
       - *bot-repo
       - *setup
