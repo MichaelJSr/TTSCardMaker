@@ -61,7 +61,7 @@ PSDs in the repo that the bot hasn't parsed yet are still listed, image only; a 
 original is a duplicate (the card data's duplicate_of). MDW/The Morgue's retired cards (a PSD with its PNG) are
 cards.json morgue, picture only, never a live card (morgue_cards).
 
-Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
+Output (site/dist): data/cards.json (everything the first screen needs; its cards as columns), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json, data/changelog.json, data/archive.json and data/edits.json (loaded when the rulebook, a card's text or image history, the
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/changelog-minor.json (a Changelog push's minor changes, when their fold opens), data/details/<id>.json (a card's Details dropdown),
 data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
@@ -80,6 +80,7 @@ many images fail; it degrades gracefully (logs and continues) for missing histor
 """
 import base64
 import colorsys
+import graphlib
 import hashlib
 import html
 import importlib.util
@@ -1119,6 +1120,25 @@ def editor_split(cards):
     """(cards as cards.json carries them: without EDITOR_FIELDS, {card id: its EDITOR_FIELDS} for editing.json)"""
     side = {c["id"]: {k: c[k] for k in EDITOR_FIELDS if k in c} for c in cards if any(k in c for k in EDITOR_FIELDS)}
     return [{k: v for k, v in c.items() if k not in EDITOR_FIELDS} for c in cards], side
+
+
+def columns(cards):
+    """cards.json's cards as {"n", "cols": {field: [value, None where the card has none]}} (app.js rowsOf), the fields
+    in the one order every card's own keeps; the rows as they are when no order fits or a card holds a None."""
+    order = graphlib.TopologicalSorter()
+    for c in cards:
+        keys = list(c)
+        for k in keys:
+            order.add(k)
+        for a, b in zip(keys, keys[1:]):
+            order.add(b, a)
+    try:
+        fields = list(order.static_order())
+    except graphlib.CycleError:
+        return cards
+    if any(v is None for c in cards for v in c.values()):
+        return cards
+    return {"n": len(cards), "cols": {k: [c.get(k) for c in cards] for k in fields}}
 
 
 def card_fonts(cards, detail_files):
@@ -4937,7 +4957,7 @@ def main():
     chapters, rule_images = rulebook_chapters()
     cover_sizes, cover_files = cover_copies(rule_images)
     shown, editing = editor_split(cards)
-    files = {"cards.json": {**data, "cards": shown}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
+    files = {"cards.json": {**data, "cards": columns(shown)}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}

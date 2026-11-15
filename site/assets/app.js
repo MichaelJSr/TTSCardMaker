@@ -102,6 +102,13 @@ async function getJson(name) {
   if (!r.ok) throw Object.assign(new Error(`${name}: HTTP ${r.status}`), { http: r.status });
   return r.json();
 }
+/** cards.json's cards: build_site columns() back to rows, keys in the file's order; rows as they are */
+function rowsOf(d) {
+  if (Array.isArray(d)) return d;
+  const rows = Array.from({ length: d.n }, () => ({}));
+  for (const [k, vs] of Object.entries(d.cols)) vs.forEach((v, i) => { if (v !== null) rows[i][k] = v; });
+  return rows;
+}
 /** a failed load in plain words: offline (then: what happens next), else only an HTTP error's status (a failed import's
  *  TypeError is also a deploy's removed chunk, so not "no connection") */
 const failText = (what, e, then = " It will try again when you're back online.") =>
@@ -197,7 +204,7 @@ async function init() {
     view.innerHTML = failBox("card data", e);
     return;
   }
-  S.all = S.data.cards; S.icons = S.data.icons;
+  S.all = S.data.cards = rowsOf(S.data.cards); S.icons = S.data.icons;
   S.statuses = statusNames(S.all);                        // status words keep the chart's colour on the card image (textcolor.js)
   S.palette = S.data.palette;                             // the site's word colours (textcolor.js wordColors)
   S.statusFills = Object.fromEntries(Object.entries(S.palette?.statuses || {}).map(([n, c]) => [n.toLowerCase(), c]));   // as the bake prints them (the mock-up's): the chart's, else the swatch

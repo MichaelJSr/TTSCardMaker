@@ -106,13 +106,17 @@ def file_at(ref: str, path: str):
 
 
 def site_cards() -> list:
-    """The card browser's cards: $TTS_CARDS (a cards.json file), else the live website."""
+    """The card browser's cards as rows (build_site writes columns): $TTS_CARDS (a cards.json file), else the live website."""
     path = os.environ.get("TTS_CARDS")
     if path:
         with open(path, encoding="utf-8") as f:
-            return json.load(f)["cards"]
-    with urlopen(f"{SITE_URL}/data/cards.json", timeout=60) as r:
-        return json.load(r)["cards"]
+            cards = json.load(f)["cards"]
+    else:
+        with urlopen(f"{SITE_URL}/data/cards.json", timeout=60) as r:
+            cards = json.load(r)["cards"]
+    if isinstance(cards, list):
+        return cards
+    return [{k: v[i] for k, v in cards["cols"].items() if v[i] is not None} for i in range(cards["n"])]
 
 
 def copy_bot(dest: str) -> None:
