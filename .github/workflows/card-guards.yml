@@ -645,6 +645,21 @@ jobs:
           fi
           echo "card_errors=$(jq '.card_errors // 0' "$OUT/summary.json")" >> "$GITHUB_OUTPUT"
 
+      # The conversion's Types/ pixels (93 files, one fetch: 0.5-1.1 s), in the background from here; the steps up to its
+      # join only read git. The cached fonts sit outside the patterns: kept.
+      - name: Types start
+        if: ${{ !cancelled() && steps.plan.outputs.normalise > 0 }}
+        continue-on-error: true
+        shell: bash
+        env:
+          GIT_NO_LAZY_FETCH: "0"
+        run: |
+          t=$RUNNER_TEMP/types
+          git config sparse.expectFilesOutsideOfPatterns true
+          ( code=0; timeout -k 10 280 git sparse-checkout add /Types/ || code=$?
+            echo "$code" > "$t.code" ) < /dev/null > "$t.log" 2>&1 &
+          echo $! > "$t.pid"
+
       # The mark Card sync reads (its step "Guards' fixes", by this name): this push's main lane leaves it to the run
       # Start Card sync starts (else the post job's Follow up; landed or not).
       - name: Fixes to land
@@ -655,8 +670,8 @@ jobs:
       # With fixes and 25 PSDs or fewer to convert (Normalise and Land within a minute: 23 PSDs took 42 s): Card sync at
       # once, with this run's id (its lanes set up while the guards land, then wait for Landed); its run id for Follow up.
       # A bigger Normalise would hold card-data and card-main for minutes: then, or not started, Follow up starts it.
+      # In the background (the POST took 1.4-2.6 s before Decided); Landed joins it.
       - name: Start Card sync
-        id: early
         if: ${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise <= 25 }}
         continue-on-error: true
         shell: bash
@@ -664,10 +679,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
-          out=$(gh api --method POST "repos/$GH_REPO/actions/workflows/card-sync.yml/dispatches" -f ref=main -F return_run_details=true \
-            -f "inputs[dry_run]=false" -f "inputs[bake]=pending" -f "inputs[guards]=$GITHUB_RUN_ID")
-          echo "started=true" >> "$GITHUB_OUTPUT"
-          echo "run=$(jq -r '.workflow_run_id // ""' <<< "$out" 2> /dev/null)" >> "$GITHUB_OUTPUT"
+          e=$RUNNER_TEMP/early
+          ( out=$(timeout -k 5 60 gh api --method POST "repos/$GH_REPO/actions/workflows/card-sync.yml/dispatches" -f ref=main \
+              -F return_run_details=true -f "inputs[dry_run]=false" -f "inputs[bake]=pending" -f "inputs[guards]=$GITHUB_RUN_ID") \
+              && printf 'started=true\nrun=%s\n' "$(jq -r '.workflow_run_id // ""' <<< "$out" 2> /dev/null)" > "$e.out"
+            touch "$e.done" ) < /dev/null > "$e.log" 2>&1 &
+          echo $! > "$e.pid"
 
       # The verdict is in: Card sync's wait ends here (by this name), not at the job's end. Keep it after Fixes to land.
       - name: Decided
@@ -708,18 +725,18 @@ jobs:
             touch "$h.done" ) < /dev/null > "$h.log" 2>&1 &
           echo $! > "$h.pid"
 
-      # The conversion's Types/ pixels (92 files, one fetch). The cached fonts sit outside the patterns: kept.
+      # Types start's join
       - name: Types for the conversion
         id: types
         if: ${{ !cancelled() && steps.plan.outputs.normalise > 0 }}
         continue-on-error: true   # no conversion this push: the PSDs stay as pushed
         timeout-minutes: 5
         shell: bash
-        env:
-          GIT_NO_LAZY_FETCH: "0"
         run: |
-          git config sparse.expectFilesOutsideOfPatterns true
-          git sparse-checkout add /Types/
+          t=$RUNNER_TEMP/types
+          while [ ! -s "$t.code" ] && kill -0 "$(cat "$t.pid" 2> /dev/null)" 2> /dev/null; do sleep 0.05; done
+          cat "$t.log" 2> /dev/null || true
+          exit "$(cat "$t.code" 2> /dev/null || echo 1)"
 
       # The conversions into plan.json and summary.json (writes, files), silent. No card starts past minute 28 of the job;
       # one not started, or a broken step, stays as pushed: its next push converts it.
@@ -798,11 +815,17 @@ jobs:
           retention-days: 90  # unmerged records wait for a data job
 
       # Land and its uploads are done (or never ran): a follow-up Card sync's wait ends here (by this name), not at the
-      # job's end. Keep it after the uploads.
+      # job's end. Keep it after the uploads. Start Card sync's join: started and its run id for Follow up (none: failed).
       - name: Landed
+        id: early
         if: always()
         shell: bash
-        run: "true"
+        run: |
+          e=$RUNNER_TEMP/early
+          [ -s "$e.pid" ] || exit 0
+          while [ ! -e "$e.done" ] && kill -0 "$(cat "$e.pid")" 2> /dev/null; do sleep 0.05; done
+          if [ -s "$e.out" ]; then cat "$e.out" >> "$GITHUB_OUTPUT"
+          else echo "::warning::Card sync was not started here: Follow up starts it"; cat "$e.log" 2> /dev/null || true; fi
 
       # The report as a comment on the pushed commit, when it says more than "nothing to do" (summary.json's "comment":
       # told, written, a card's error, or comment-only lines such as R10). A re-run edits the oldest guards comment, and
