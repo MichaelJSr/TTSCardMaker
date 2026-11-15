@@ -22,7 +22,11 @@ const local = u => (u.startsWith(ROOT) ? u.slice(ROOT.length) : u);   // a URL u
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q"), pageH1 = $("#page-h1"), srStatus = $("#sr-status");
-{ const bar = $("header.top"); new ResizeObserver(() => document.documentElement.style.setProperty("--top-h", `${bar.offsetHeight}px`)).observe(bar); }   // style.css --bar
+{ const bar = $("header.top"), acts = $(".top-actions", bar), q = $(".search", bar), root = document.documentElement.style;
+  new ResizeObserver(() => {   // style.css --bar; a buttons row above the search row (phones) scrolls away
+    root.setProperty("--top-h", `${bar.offsetHeight}px`);
+    root.setProperty("--top-skip", `${acts.offsetTop + acts.offsetHeight <= q.offsetTop ? q.offsetTop - acts.offsetTop : 0}px`);
+  }).observe(bar); }
 const store = (() => { try { return sessionStorage; } catch { return null; } })();   // storage blocked: the Details dropdown just forgets its state
 
 const S = {

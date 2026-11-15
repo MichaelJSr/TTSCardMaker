@@ -36,7 +36,7 @@ img { max-width: 100%; }
 .hidden { display: none !important; }
 
 /* ---- header ---- */
-.top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 14px; padding: 8px 16px;
+.top { position: sticky; top: calc(0px - var(--top-skip, 0px)); z-index: 20; display: flex; align-items: center; gap: 14px; padding: 8px 16px;
   background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
 .brand { display: flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 650; white-space: nowrap; }
 .brand:hover { text-decoration: none; } .brand svg { width: 26px; height: 26px; }
@@ -63,11 +63,13 @@ button:disabled { opacity: .45; cursor: default; }
   .top { flex-wrap: wrap; } .brand span { display: none; } .tabs { order: 3; width: 100%; overflow-x: auto; }
   .search { margin-left: 0; max-width: none; }
 }
+@media (max-width: 479px) { .top-actions { order: -1; width: 100%; } }   /* phones (3 rows below ~484px): the buttons row goes first and scrolls away (--top-skip) */
+.top:has(.top-actions :focus-visible) { top: 0; }   /* keyboard focus in that row: the whole bar shows */
 @media (min-width: 981px) { .search { min-width: 0; } }   /* one-row bar: shrink, don't widen the page */
 @media (min-width: 981px) and (max-width: 1200px) { .brand span { display: none; } }
-/* focus and jumps land below the pinned bar (--top-h: its height, app.js); not the page's scroll-padding: focus in the
-   bar (its search box) would scroll the page */
-:root { --bar: calc(var(--top-h, 57px) + 8px); }
+/* focus and jumps land below the pinned bar (--top-h: its height, --top-skip: its part that scrolls away, app.js); not
+   the page's scroll-padding: focus in the bar (its search box) would scroll the page */
+:root { --bar: calc(var(--top-h, 57px) - var(--top-skip, 0px) + 8px); }
 main * { scroll-margin-top: var(--bar); }
 
 main { padding: 16px; outline: none; }
