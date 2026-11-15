@@ -268,7 +268,8 @@ button.ver-revert { padding: 2px 8px; font-size: 12px; color: var(--ink-2); }
 ins { background: color-mix(in srgb, var(--good) 30%, transparent); text-decoration: none; border-radius: 3px; }
 del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-radius: 3px; }
 .kbd { font: 12px ui-monospace, monospace; padding: 1px 6px; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 5px; }
-@media (pointer: coarse) { .card-actions .kbd, .bucket .kbd, #keys { display: none; } }   /* shortcut hints */
+@media (pointer: coarse) { .card-actions .kbd, .bucket .kbd, html:not(.no-keys) #keys { display: none; } }   /* shortcut hints; off: #keys reopens the setting */
+.no-keys .card-actions .kbd, .no-keys .bucket .kbd { display: none; }   /* single-key shortcuts off */
 .help-table td { padding: 4px 10px 4px 0; vertical-align: top; } .help-table code { font-size: 13px; }
 
 /* ---- tooltip / toast ---- */

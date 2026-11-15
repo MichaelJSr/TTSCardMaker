@@ -1902,10 +1902,16 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; try { localStorage.setItem("theme", t); } catch { /* this page only */ } if (parseHash().name === "stats") renderView(parseHash(), location.hash); tint(); });
-const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
+let charKeys = pref("keys") !== "off";   // the single-key shortcuts (WCAG 2.1.4); storage blocked: this page only
+const keysHints = () => document.documentElement.classList.toggle("no-keys", !charKeys);   // their hints on buttons too
+keysHints();
+const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><label class="check"><input type="checkbox" data-action="char-keys"${charKeys ? " checked" : ""}> Single-key shortcuts (/ ? r d c x e 1–6)</label>
+  <p class="muted keys-off"${charKeys ? " hidden" : ""}>Off: of these, only Esc and the arrows work.</p><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
   ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
   ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box (the first nine)"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
+actions["char-keys"] = el => { charKeys = el.checked; try { localStorage.setItem("keys", charKeys ? "on" : "off"); } catch { /* storage blocked: this page only */ }
+  keysHints(); const n = $(".keys-off", modal); if (n) n.hidden = charKeys; };
 $("#account").addEventListener("click", () => act("edit-hub"));
 
 // Esc in a dialog's field with typed text leaves the field first (a search clears, the rest keep their text)
@@ -1939,6 +1945,7 @@ document.addEventListener("keydown", e => {
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline], .star-pick, .type-palette");   // the inline controls are inputs; stat rows and stars take the arrows
   if (e.key === "Escape") { if (escField(e, ae)) return; if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size || S.selecting) { S.selected.clear(); if (S.selecting) { S.selecting = false; rerender(); } else inline?.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!charKeys && e.key.length === 1) return;                                      // turned off: Esc, arrows and Enter stay
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
   if (modal.hidden && editing() && S.selected.size && parseHash().name === "cards" && $(".tray", view) && tray.dropKey(e.key)) { e.preventDefault(); return; }   // 1-9: onto a pinned box on screen
