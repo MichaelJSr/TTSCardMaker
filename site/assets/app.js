@@ -1678,8 +1678,11 @@ function deckDiscord(d) {
   const build = link => [`**${md(d.name)}** · ${v.count}/${v.slots} cards · ${v.complete ? "✅ legal" : "not legal yet"}`,
     ...D.HAND.map(g => { const cs = cards.filter(c => c.type === g.kind).sort((a, b) => a.stars - b.stars); return cs.length ? `**${g.label}:** ${cs.map(link).join(", ")}` : ""; }),
     field ? `**Field:** ${link(field)}` : "", `[Open the hand](<${deckUrl(d)}>)`].filter(Boolean).join("\n");
-  const text = build(mdLink);
-  return text.length <= 2000 ? text : build(c => md(c.name));        // Discord's limit
+  const plain = new Set(), link = c => (plain.has(c.id) ? md(c.name) : mdLink(c));
+  let text = build(link);
+  const cost = c => mdLink(c).length - md(c.name).length;              // Discord's limit: the longest links go plain first, as few as fit
+  for (const c of [...cards, field].filter(Boolean).sort((a, b) => cost(b) - cost(a))) { if (text.length <= 2000) break; plain.add(c.id); text = build(link); }
+  return text;
 }
 
 // ---- interactions ----------------------------------------------------------------------------------
