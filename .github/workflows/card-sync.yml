@@ -727,14 +727,16 @@ jobs:
           echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
       # The details' "supplied" flags need only the fonts' PostScript names: font_check.save_names' file (CARD_FONT_NAMES),
-      # cached by the same sha plus Font names key: the builder's code that writes and reads it, as syntax trees without
-      # docstrings (other font_check.py edits keep the entry; a name missing or unreadable: the file's hash). The fonts
-      # are fetched only on a miss, or for a builder without save_names.
+      # cached by Font names key: MDW/Fonts' top-level files (it reads no stoogedings-src/; unread: the sha above) and the
+      # builder's code that writes and reads it, as syntax trees without docstrings (other font_check.py edits keep the
+      # entry; a name missing or unreadable: the file's hash). The fonts are fetched only on a miss, or for a builder
+      # without save_names.
       - name: Font names key
         id: names
         if: env.GO == 'true'
         working-directory: bot/commands
         run: |
+          GIT_NO_LAZY_FETCH=1 git -C "$GITHUB_WORKSPACE" ls-tree HEAD MDW/Fonts/ > "$RUNNER_TEMP/fonts.ls" & ls=$!
           if names=$("$RUNNER_TEMP/venv/bin/python" -I -c '
           import ast, hashlib
           want = {"font_check": {"ps_name", "face_names", "_font_files", "FontIndex", "dir_fonts", "save_names", "load_names",
@@ -754,13 +756,14 @@ jobs:
           else
             echo "font_check.py's hash"
           fi
+          if wait "$ls"; then echo "fonts=$(awk '$2 == "blob"' "$RUNNER_TEMP/fonts.ls" | sha256sum | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"; fi
       - name: Font names cache
         id: font-names
         if: env.GO == 'true'
         uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}/font-names.json
-          key: card-font-names-${{ steps.fonts.outputs.sha }}-${{ steps.names.outputs.names || hashFiles('bot/commands/font_check.py') }}
+          key: card-font-names-${{ steps.names.outputs.fonts || steps.fonts.outputs.sha }}-${{ steps.names.outputs.names || hashFiles('bot/commands/font_check.py') }}
 
       - name: Font names
         if: env.GO == 'true' && steps.venv.outcome == 'success'
