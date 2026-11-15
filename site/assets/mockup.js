@@ -1509,12 +1509,54 @@ function shaded(ctx, { stops, top, bottom }, y) {
   for (const [t, c] of stops) g.addColorStop(t, rgb(c));
   return g;
 }
+const FX_BLEND = { screen: "screen", multiply: "multiply", normal: "source-over" };
+/** The layer's Drop Shadows and Outer Glows (psd_details text fx, canvas px) under typed letters, as the bake casts
+ *  them: the letters (and a Stroke set deeper, ws, at its opacity) grown by the spread, blurred as the fork's tent
+ *  (sigma r / sqrt 6), moved, tinted and blended at the effect's opacity; on canvases cropped to the lines' reach. */
+function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx }) {
+  if (typeof CanvasRenderingContext2D === "undefined" || !("filter" in CanvasRenderingContext2D.prototype)) return;   // no canvas blur: the letters alone
+  const T = ctx.getTransform(), s = Math.hypot(T.a, T.b) || 1, W = ctx.canvas.width, H = ctx.canvas.height;
+  let x0 = Infinity, x1 = -Infinity;
+  for (const line of lines) { const x = at(line); x0 = Math.min(x0, x); x1 = Math.max(x1, x + line.pieces.reduce((t, p) => t + (p.w || 0), 0)); }
+  const y0 = base - 1.2 * z, y1 = base + (lines.length - 1) * pitch + 0.5 * z;
+  for (const e of effects) {
+    const blend = FX_BLEND[e.blend];
+    if (!blend || !(e.opacity > 0) || !Array.isArray(e.color) || !(x1 > x0)) continue;
+    const grow = e.size * (e.spread || 0) / 100, r = Math.max(0, e.size - grow), dx = e.dx || 0, dy = e.dy || 0;
+    const pad = (e.ws || 0) + grow + 1.5 * r + Math.abs(dx) + Math.abs(dy) + 0.2 * z + 2;
+    const xs = [], ys = [];
+    for (const [x, y] of [[x0 - pad, y0 - pad], [x1 + pad, y0 - pad], [x0 - pad, y1 + pad], [x1 + pad, y1 + pad]]) { xs.push(T.a * x + T.c * y + T.e); ys.push(T.b * x + T.d * y + T.f); }
+    const bx = Math.max(0, Math.floor(Math.min(...xs))), by = Math.max(0, Math.floor(Math.min(...ys)));
+    const bw = Math.min(W, Math.ceil(Math.max(...xs))) - bx, bh = Math.min(H, Math.ceil(Math.max(...ys))) - by;
+    if (bw <= 0 || bh <= 0) continue;
+    const c = document.createElement("canvas"); c.width = bw; c.height = bh; const g = c.getContext("2d");
+    g.setTransform(new DOMMatrix([1, 0, 0, 1, -bx, -by]).multiply(T)); g.textBaseline = "alphabetic"; g.fillStyle = g.strokeStyle = "#fff"; g.lineJoin = "round";
+    lines.forEach((line, n) => {
+      let x = at(line); const y = base + n * pitch;
+      for (const p of line.pieces) {
+        if (!p.icon && !p.badge && p.text?.trim()) {
+          g.save(); g.font = `${z}px ${fam}`; if (track) g.letterSpacing = `${track * z}px`; g.translate(x, y); g.scale(hx, 1);
+          if (e.ws > 0) { g.globalAlpha = (e.wo ?? 100) / 100; g.lineWidth = 2 * (e.ws + grow); g.strokeText(p.text, 0, 0); g.globalAlpha = 1; }   // the deeper Stroke
+          if (grow > 0) { g.lineWidth = 2 * grow; g.strokeText(p.text, 0, 0); }
+          g.fillText(p.text, 0, 0); g.restore();
+        }
+        x += p.w;
+      }
+    });
+    const c2 = document.createElement("canvas"); c2.width = bw; c2.height = bh; const g2 = c2.getContext("2d");
+    if (r > 0) g2.filter = `blur(${(r * s / Math.sqrt(6)).toFixed(3)}px)`;
+    g2.drawImage(c, dx * s, dy * s); g2.filter = "none";
+    g2.globalCompositeOperation = "source-in"; g2.fillStyle = rgb(e.color); g2.fillRect(0, 0, bw, bh);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = Math.min(1, e.opacity / 100); ctx.globalCompositeOperation = blend; ctx.drawImage(c2, bx, by); ctx.restore();
+  }
+}
 /** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills (a cooldown's ring its
  *  left end). one (an overlay on the ability): badges as outlined pills, rings in one colour and stickers as an outline
  *  round the one-colour icon, in the text's fill. shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
- *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. */
-function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null }) {
+ *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. */
+function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null }) {
   ctx.textBaseline = "alphabetic";
+  if (effects?.length) paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx });
   lines.forEach((line, n) => {
     let x = at(line), y = base + n * pitch;
     for (const p of line.pieces) {
@@ -1637,6 +1679,7 @@ function drawText(ctx, job, imgs, W) {
   }
   const own = Array.isArray(layer?.stroke) && layer.stroke.length === 4 ? layer.stroke : null;   // psd_details: the layer's or its group's Stroke
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = own ? own.slice(0, 3) : colours?.stroke, strokeW = own ? 2 * own[3] * (kc || W / 1200) : 0;
+  const fk = kc || W / 1200, effects = Array.isArray(layer?.fx) ? layer.fx.map(e => ({ ...e, dx: (e.dx || 0) * fk, dy: (e.dy || 0) * fk, size: (e.size || 0) * fk, ws: (e.ws || 0) * fk })) : null;   // psd_details: its shadows and glows
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
   if (role === "name" && geo && kc && plain(text) === plain(old) && sameWords(geo.c.text, old)) {   // a colour alone on a title (its fill hidden: tintPlan's none): each of its own lines redrawn where it stands
     const Rl = recordLayout(geo.c, lineBreaks(geo.c.text), kc), rows = (Rl ? Rl.lines.filter(l => l.para >= 0 && Rl.was.slice(l.s, l.e).trim()) : []).map(l => {
@@ -1649,19 +1692,19 @@ function drawText(ctx, job, imgs, W) {
         const m = ctx.measureText(body), inkW = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) * measure.hx; ctx.letterSpacing = "0px";
         const zl = inkW > 0 && b[1] > a[0] ? size * (b[1] - a[0]) / inkW : size;   // its own ink width
         const line = fit(colourize(tokenize(body, icons), body, colors, role, statuses, null, null, fills), Infinity, Infinity, zl, measure).lines.slice(0, 1);
-        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one });
+        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, effects });
       }
       job.lined = "own"; return false;
     }
   }
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid
-  job.lined = plan && !shrunk ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades }, pitch: pitch0, W }) : "";
+  job.lined = plan && !shrunk ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects });
   return over;
 }
 /** The lines of a redrawn Ability the edit leaves as they were (indexes): its leading and trailing lines whose pieces
