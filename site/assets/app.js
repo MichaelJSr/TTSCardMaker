@@ -1903,7 +1903,9 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; try { localStorage.setItem("theme", t); } catch { /* this page only */ } if (parseHash().name === "stats") renderView(parseHash(), location.hash); tint(); });
 let charKeys = pref("keys") !== "off";   // the single-key shortcuts (WCAG 2.1.4); storage blocked: this page only
-const keysHints = () => document.documentElement.classList.toggle("no-keys", !charKeys);   // their hints on buttons too
+const keyTips = [["#q", "placeholder"], ["#random", "title"], ["#keys", "title"]].map(([s, at]) => [$(s), at, $(s).getAttribute(at)]);   // "(press /)", "(r)", "(?)"
+const keysHints = () => { document.documentElement.classList.toggle("no-keys", !charKeys);   // their hints on buttons too
+  for (const [el, at, text] of keyTips) el.setAttribute(at, charKeys ? text : text.replace(/\s*\((?:press )?.\)$/, "")); };
 keysHints();
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><label class="check"><input type="checkbox" data-action="char-keys"${charKeys ? " checked" : ""}> Single-key shortcuts (/ ? r d c x e 1–6)</label>
   <p class="muted keys-off"${charKeys ? " hidden" : ""}>Off: of these, only Esc and the arrows work.</p><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
