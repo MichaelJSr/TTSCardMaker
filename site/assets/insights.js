@@ -21,7 +21,7 @@ export const freshYear = c => { const ts = freshTs(c); return ts ? yearOf(ts) : 
 
 // ---- History: S11, S13 -----------------------------------------------------------------------------------------------------
 /** The History section */
-export function historyHtml({ cards }, params) {
+export function historyHtml({ cards, narrow = false }, params) {
   const pool = poolOf(cards, params), charts = [], L = p => cardsHref(p, params);
 
   // S11 cards created per year, by author (owner 10-31: every author, none too alike, Zomoroko #ffa9e2): colours by rank
@@ -40,7 +40,7 @@ export function historyHtml({ cards }, params) {
       ...(made.some(c => !top.includes(c.author)) ? [{ key: "", label: "Others", color: "var(--deemph)" }] : [])];
     const get = (y, k) => counts.get(`${y}\u0001${k}`) || 0;
     const href = (y, k) => (k === "" ? null : L({ q: `created==${y}`, author: k }));     // Others: no filter
-    charts.push(card("hist-created", "Cards created per year", "By author.", stacked(years, series, get, { width: 560, href }),
+    charts.push(card("hist-created", "Cards created per year", "By author.", stacked(years, series, get, { width: 560, href, narrow }),
       table(["Year", ...series.map(s => s.label), "All"], years.map(y => [y, ...series.map(s => get(y, s.key)), series.reduce((n, s) => n + get(y, s.key), 0)])),
       { tip: "Cards by the year they were created, as on their card pages; each author a colour of their own", legend: legend(series.map(s => [s.color, s.label, s.key ? L({ author: s.key }) : null])) }));
   }
@@ -58,7 +58,7 @@ export function historyHtml({ cards }, params) {
     const ys = [...fresh.keys()].map(Number), years = [];
     for (let y = Math.min(...ys); y <= Math.max(...ys); y++) years.push(String(y));
     charts.push(card("hist-fresh", "Text freshness", "Cards by the year their ability last changed.",
-      columns(years.map(y => ({ label: y, value: fresh.get(y)?.n || 0, href: L({ fresh: y }) })), { width: 560, height: 200 }),
+      columns(years.map(y => ({ label: y, value: fresh.get(y)?.n || 0, href: L({ fresh: y }) })), { width: 560, height: 200, narrow }),
       table(["Year", "Cards", { label: "Oldest card that year", tip: "The card whose current text started earliest that year" }], years.map(y => [y, fresh.get(y)?.n || 0, fresh.get(y)?.c?.name || ""]), 1),
       { tip: "The year each card's current ability text started; without text history, the year it was created" }));
   }

@@ -1369,7 +1369,8 @@ function openPicker(tier) {                              // the shared picker (p
 }
 
 // ---- stats / changes / compare -------------------------------------------------------------------
-let statsJob = 0;
+let statsJob = 0, statsNarrow = false, statsW = innerWidth;   // narrow: the charts drawn for a phone's panel (stats.js narrowOf)
+const statsCtx = () => ({ cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage, season: S.season, seriesMode: S.seriesMode, narrow: statsNarrow });
 function renderStatsView(r) {
   if (!St) {                                             // the first open: charts.js
     view.innerHTML = `<div class="loading">Loading…</div>`;
@@ -1377,15 +1378,15 @@ function renderStatsView(r) {
     return;
   }
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
-  St.stats.renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage, season: S.season, seriesMode: S.seriesMode }, r.params);
-  const ctx = { cards: S.cards };
+  statsNarrow = St.stats.narrowOf(view);
+  St.stats.renderStats(view, statsCtx(), r.params);
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; History goes in with it
     const now = parseHash(S.renderedHash);
     if (now.name !== "stats") return;
     const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
-    if (A) put("stats-balance", St.balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
-    put("stats-history", St.insights.historyHtml(ctx, now.params));
+    if (A) put("stats-balance", St.balance.statsHtml(A, statsCtx(), now.params));
+    put("stats-history", St.insights.historyHtml(statsCtx(), now.params));
   };
   const job = ++statsJob, slot = $("#stats-balance", view);
   if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
@@ -1396,6 +1397,20 @@ function renderStatsView(r) {
     loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && onStats()) slot.innerHTML = `<p class="muted load-error">${esc(failText("the balance section", e))}</p>`; fill(null); });
   }
 }
+// a turned phone (across 600 px): each chart drawn again in place for the new width; open tables and the place stay
+addEventListener("resize", () => {
+  if (!St || innerWidth === statsW) return;
+  statsW = innerWidth;
+  if (parseHash(S.renderedHash).name !== "stats" || St.stats.narrowOf(view) === statsNarrow) return;
+  statsNarrow = !statsNarrow; hideTip();
+  const p = parseHash(S.renderedHash).params, box = document.createElement("div"), ctx = statsCtx();
+  St.stats.renderStats(box, ctx, p);
+  if (S.analytics && $("#stats-balance .charts", view)) $("#stats-balance", box).innerHTML = St.balance.statsHtml(S.analytics, ctx, p);
+  if ($("#stats-history .charts", view)) $("#stats-history", box).innerHTML = St.insights.historyHtml(ctx, p);
+  const at = $$("section.chart", view).find(s => s.getBoundingClientRect().bottom > 0), top = at?.getBoundingClientRect().top;
+  for (const s of $$("section.chart[id]", box)) { const old = $(`#${s.id} > .view-chart`, view); if (old) old.innerHTML = $(".view-chart", s).innerHTML; }
+  if (at) scrollBy(0, at.getBoundingClientRect().top - top);
+});
 function distPage(panel, step) {          // a stat distribution's pager: the next or previous page of values (stats.js)
   if (!panel?.dataset.pages) return;
   const pages = panel.dataset.pages.split(",").map(Number), to = pages[pages.indexOf(+panel.dataset.cur) + step];

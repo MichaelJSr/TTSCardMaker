@@ -37,10 +37,16 @@ function roundedTop(x, y, w, h, r = 4) {
   return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
 }
 function niceMax(v) { if (v <= 0) return 1; const p = 10 ** Math.floor(Math.log10(v)); return Math.ceil(v / p) * p; }
+/** a phone's panel (under 600 px): the Stats page's charts draw at about its width (narrow), so labels keep their size */
+export const narrowOf = el => el.clientWidth > 0 && el.clientWidth < 600;
+/** narrow x labels: every Nth, so none touch (about 6.6 units a character) */
+const thin = (labels, every, W) => Math.max(every, Math.ceil(labels.length * (Math.max(0, ...labels.map(l => String(l).length)) * 6.6 + 10) / (W - 50)));
 
 /** Horizontal bars. rows: [{label, value, html?, card?, href?, tip?}] */
-function hbar(rows, { labelWidth = 150, unit = "cards", chars = 24 } = {}) {
-  const rowH = 26, W = 560, plotW = W - labelWidth - 48;
+function hbar(rows, { labelWidth = 150, unit = "cards", chars = 24, narrow = false } = {}) {
+  const cap = rows.some(r => r.html) ? 160 : 130;          // narrow: an HTML label can't be shortened: more room
+  if (narrow && labelWidth > cap) { chars = Math.round((chars * cap) / labelWidth); labelWidth = cap; }
+  const rowH = 26, W = narrow ? 340 : 560, plotW = W - labelWidth - 48;
   const max = Math.max(1, ...rows.map(r => r.value));
   const H = rows.length * rowH + 4;
   const parts = rows.map((r, i) => {
@@ -60,10 +66,11 @@ const trunc = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
 /** Vertical columns: [{label, value, href?}] (single series; label every Nth tick; max: a fixed y scale; minH: a non-zero
     column's least height; vals: its count over it). */
 /** padT: room above the top tick's number, for a label sitting right above the chart (it would cover the number) */
-function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height = 200, width = 1000, max: fixed, minH = 0, vals = false, padT = 0 } = {}) {
-  const W = width, padL = 36, padB = 26, plotH = height - padB - padT, base = padT + plotH, n = cols.length;
+function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height = 200, width = 1000, max: fixed, minH = 0, vals = false, padT = 0, narrow = false } = {}) {
+  if (narrow && width > 360) { width = 360; every = thin(cols.map(c => c.label), every, width); }
+  const W = width, padL = 36, padR = narrow ? 14 : 0, padB = 26, plotH = height - padB - padT, base = padT + plotH, n = cols.length;
   const max = fixed ?? niceMax(Math.max(1, ...cols.map(c => c.value)));
-  const band = (W - padL) / Math.max(1, n), bw = Math.min(24, band * 0.7);
+  const band = (W - padL - padR) / Math.max(1, n), bw = Math.min(24, band * 0.7);
   const ticks = [0, max / 2, max].map(t => {
     const y = base - (t / max) * plotH;
     return `<line class="gridline" x1="${padL}" x2="${W}" y1="${y}" y2="${y}"/><text x="${padL - 6}" y="${y + 4}" text-anchor="end">${fmt(t)}</text>`;
@@ -81,11 +88,12 @@ function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height 
 
 /** Stacked columns with a 2px surface gap between segments. cats: labels; series: [{key,label,color}]; get(cat,key);
     href(cat, key?): a segment's (key) or a column's cards, or null */
-function stacked(cats, series, get, { unit = "cards", width = 1000, every = 1, href = () => null } = {}) {
-  const height = 230, W = width, padL = 36, padB = 26, plotH = height - padB, gap = 2;
+function stacked(cats, series, get, { unit = "cards", width = 1000, every = 1, href = () => null, narrow = false } = {}) {
+  if (narrow && width > 360) { width = 360; every = thin(cats, every, width); }
+  const height = 230, W = width, padL = 36, padR = narrow ? 14 : 0, padB = 26, plotH = height - padB, gap = 2;
   const totals = cats.map(c => series.reduce((s, sr) => s + get(c, sr.key), 0));
   const max = niceMax(Math.max(1, ...totals));
-  const band = (W - padL) / cats.length, bw = Math.min(24, band * 0.6);
+  const band = (W - padL - padR) / cats.length, bw = Math.min(24, band * 0.6);
   const ticks = [0, max / 2, max].map(t => {
     const y = plotH - (t / max) * plotH;
     return `<line class="gridline" x1="${padL}" x2="${W}" y1="${y}" y2="${y}"/><text x="${padL - 6}" y="${y + 4}" text-anchor="end">${fmt(t)}</text>`;
@@ -110,8 +118,8 @@ function stacked(cats, series, get, { unit = "cards", width = 1000, every = 1, h
 
 /** Scatter with emphasis: [{x, jx, y, label, card, hot}] — hot points in the accent, the rest de-emphasised. Domains and
     ticks: the star-level chart's. */
-function scatter(points, { xLabel, yLabel, xTicks }) {
-  const W = 1000, height = 300, padL = 44, padB = 34, plotH = height - padB;
+function scatter(points, { xLabel, yLabel, xTicks, narrow = false }) {
+  const W = narrow ? 360 : 1000, height = 300, padL = 44, padB = 34, plotH = height - padB;
   const xs = points.map(p => p.x), ys = points.map(p => p.y);
   const x0 = Math.min(...xs) - 0.6, x1 = Math.max(...xs) + 0.6, y0 = 0, y1 = niceMax(Math.max(...ys));
   const yTicks = [y0, y1 / 4, y1 / 2, (3 * y1) / 4, y1];
@@ -124,10 +132,11 @@ function scatter(points, { xLabel, yLabel, xTicks }) {
     <circle class="mark" cx="${X(p.jx)}" cy="${Y(p.y)}" r="${p.hot ? 5 : 4}" fill="${p.hot ? "var(--s1)" : "var(--deemph)"}" stroke="var(--surface)" stroke-width="2"/></g>`).join("");
   const placed = [];                          // selective labels: skip any that would collide with one already placed
   const labels = points.filter(p => p.label && p.showLabel).map(p => {
-    const x = X(p.jx) + 8, y = Y(p.y) - 7, w = Math.min(p.label.length, 22) * 6.6;
+    const w = Math.min(p.label.length, 22) * 6.6, left = narrow && X(p.jx) + 8 + w > W;   // narrow: past the right edge, on the dot's left
+    const x = left ? X(p.jx) - 8 - w : X(p.jx) + 8, y = Y(p.y) - 7;
     if (placed.some(q => x < q.x + q.w + 6 && q.x < x + w + 6 && Math.abs(q.y - y) < 15)) return "";
     placed.push({ x, y, w });
-    return `<text class="lbl" x="${x}" y="${y}">${esc(trunc(p.label, 22))}</text>`;
+    return `<text class="lbl" x="${left ? x + w : x}" y="${y}"${left ? ' text-anchor="end"' : ""}>${esc(trunc(p.label, 22))}</text>`;
   }).join("");
   return `<svg viewBox="0 0 ${W} ${height}" role="img">${grid}<line class="axis" x1="${padL}" x2="${W}" y1="${plotH}" y2="${plotH}"/>${xt}
     <text x="${W}" y="${height - 2}" text-anchor="end">${esc(xLabel)}</text><text x="${padL + 6}" y="12">${esc(yLabel)}</text>${dots}${labels}</svg>`;
@@ -253,13 +262,13 @@ export function tagsOf(c) {
   for (const m of (c.ability || "").matchAll(new RegExp(TAG.source, "g"))) { const t = tagInfo(m[1]); if (t && t.group !== "neutral") out.push(t.tag); }
   return out;
 }
-function cardCharts(pool, creatures, L) {
+function cardCharts(pool, creatures, L, narrow) {
   const out = [];
   // S12 stat shapes: by the single highest stat
   const shapes = new Map([...STAT_KEYS.map(([k]) => [k, 0]), ["tied", 0]]);
   for (const c of creatures) { const k = shapeOf(c); if (k) shapes.set(k, shapes.get(k) + 1); }
   const shapeRows = [...shapes].map(([k, value]) => ({ label: k === "tied" ? "Tied" : k.toUpperCase(), value, href: value ? L({ kind: MINIONS, shape: k }) : null }));
-  if (shapeRows.some(r => r.value)) out.push(card("shapes", "Stat shapes", "Creatures and minions by their highest stat.", hbar(shapeRows, { labelWidth: 80 }),
+  if (shapeRows.some(r => r.value)) out.push(card("shapes", "Stat shapes", "Creatures and minions by their highest stat.", hbar(shapeRows, { labelWidth: 80, narrow }),
     table(["Highest stat", "Cards"], shapeRows.map(r => [r.label, r.value])), { tip: "Creatures and minions with all four stats, by their highest stat; Tied: a shared top" }));
   // S15 cooldowns and uses by star level: each ability's cooldown or uses tag, by its number
   const cd = new Map();
@@ -336,7 +345,7 @@ const seasonName = s => (s === "Movie" ? "Movie" : `Season ${s}`);
 const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 /** Cards per season (stacked by kind, every season from 1); a season's column shows its episodes below
     (app.js "season" action; cur: the season picked this session, else the biggest) */
-function seasonsCard(pool, cur) {
+function seasonsCard(pool, cur, narrow) {
   const rows = pool.map(c => ({ c, s: artList(c).map(spongeOf).find(Boolean), g: spongeGroup(c) })).filter(r => r.s);   // its first SpongeBob source
   if (!rows.length) return "";
   const last = Math.max(0, ...rows.map(r => +r.s.season).filter(Number.isFinite));
@@ -346,7 +355,7 @@ function seasonsCard(pool, cur) {
   const pick = seasons.includes(cur) && of.get(cur).length ? cur : seasons.reduce((a, b) => (of.get(b).length > of.get(a).length ? b : a));
   const kinds = SPONGE_KINDS.filter(([k]) => rows.some(r => r.g === k)), n = (s, k) => of.get(s).filter(r => r.g === k).length;
   // the columns: each a button that shows its season's episodes
-  const W = 1000, height = 220, padL = 36, padB = 26, plotH = height - padB, gap = 2;
+  const W = narrow ? 360 : 1000, height = 220, padL = 36, padB = 26, plotH = height - padB, gap = 2;
   const max = niceMax(Math.max(1, ...seasons.map(s => of.get(s).length))), band = (W - padL) / seasons.length, bw = Math.min(28, band * 0.6);
   const ticks = [0, max / 2, max].map(t => { const y = plotH - (t / max) * plotH;
     return `<line class="gridline" x1="${padL}" x2="${W}" y1="${y}" y2="${y}"/><text x="${padL - 6}" y="${y + 4}" text-anchor="end">${fmt(t)}</text>`; }).join("");
@@ -360,7 +369,7 @@ function seasonsCard(pool, cur) {
       const d = top ? roundedTop(x, y, bw, Math.max(0, h - gap)) : `M${x},${y + gap}h${bw}v${Math.max(0, h - gap)}h${-bw}Z`;
       return `<path class="mark" d="${d}" fill="${color}" data-v="${v} ${kl.toLowerCase()}" data-l="${esc(seasonName(s))}"/>`;
     }).join("");
-    const tick = `<text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${s === "Movie" ? "Movie" : `S${s}`}</text>`;
+    const tick = `<text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${s === "Movie" ? "Movie" : narrow ? s : `S${s}`}</text>`;   // narrow: 1, 2, … (room)
     if (!total) return `<g class="col">${tick}</g>`;
     return `<a href="#/stats" class="season${s === pick ? " on" : ""}" role="button" aria-pressed="${s === pick}" data-action="season" data-season="${esc(s)}" aria-label="${esc(`${l}: show its episodes`)}"><g class="col">
       <rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${height}" data-v="${plural(total, "card")}" data-l="${esc(l)}"/>${segs}${tick}</g></a>`;
@@ -381,7 +390,7 @@ function seasonsCard(pool, cur) {
 }
 
 export function renderStats(root, ctx, params) {
-  const { cards, banned, icons } = ctx;
+  const { cards, banned, icons, narrow = false } = ctx;
   const kind = params.get("kind") || "", series = params.get("series") || "";
   // a duplicate (another PNG from the same PSD: Breakfast, Supper for A Snack) is the same card: count it once
   let pool = cards.filter(c => !c.dup && (!kind || c.type === kind) && (!series || c.series === series));
@@ -413,7 +422,7 @@ export function renderStats(root, ctx, params) {
 
   // 1 kinds
   const byKind = desc(count(pool, c => c.type)).map(([k, v]) => ({ label: KIND_LABEL[k] || k, value: v, href: L({ kind: k }) }));
-  charts.push(card("kinds", "Cards by kind", `${pool.length} cards`, hbar(byKind), table(["Kind", "Cards"], byKind.map(r => [r.label, r.value]))));
+  charts.push(card("kinds", "Cards by kind", `${pool.length} cards`, hbar(byKind, { narrow }), table(["Kind", "Cards"], byKind.map(r => [r.label, r.value]))));
 
   // 2 series or subseries (owner 10-31: a toggle, series first; each list whole, in a box that scrolls); cards with no
   //   series: "No series"; a subseries in two series: one row, both in its tip
@@ -429,7 +438,7 @@ export function renderStats(root, ctx, params) {
     const toggle = subRows.length > 0 ? `<div class="chart-tools"><span class="seg" role="group" aria-label="Show">${views.map(([m, l]) =>
       `<button type="button" class="${m === mode ? "on" : ""}" data-action="series-mode" data-mode="${m}" aria-pressed="${m === mode}">${l}</button>`).join("")}</span></div>` : "";
     charts.push(card("series", `${what} by series`, `${ser.length} series${subRows.length ? `, ${subRows.length} subseries` : ""}.`,
-      views.map(([m, , rows]) => `<div class="scroll-box" data-show="${m}"${shown(m)}>${hbar(rows, { labelWidth: 230, chars: 32 })}</div>`).join(""),
+      views.map(([m, , rows]) => `<div class="scroll-box" data-show="${m}"${shown(m)}>${hbar(rows, { labelWidth: 230, chars: 32, narrow })}</div>`).join(""),
       views.map(([m, l, rows]) => `<div data-show="${m}"${shown(m)}>${table([l, what], rows.map(r => [r.label, r.value]))}</div>`).join(""), { legend: toggle }));
   }
 
@@ -447,7 +456,7 @@ export function renderStats(root, ctx, params) {
   if (handRows.length) {
     const rows = handRows.map(r => ({ label: `${r.label} · hand needs ${r.need}`, value: r.value, href: r.value ? L({ kind: r.g, stars: r.st, legal: 1 }) : null, html: `<span>${esc(r.label)}</span><span class="muted">needs ${r.need}</span>` }));
     charts.push(card("hand", "Starting-hand choices", "Legal cards per star level vs the hand's need.",
-      hbar(rows, { labelWidth: 190, unit: "legal cards" }),
+      hbar(rows, { labelWidth: 190, unit: "legal cards", narrow }),
       table(["Star level", { label: "Hand needs", tip: "How many cards of this star level a constructed starting hand takes" },
         { label: "Legal cards", tip: "Cards of this kind and star level not banned in constructed; image-only cards left out" },
         { label: "Banned", tip: "Cards of this kind and star level banned in constructed; image-only cards left out" },
@@ -497,14 +506,14 @@ export function renderStats(root, ctx, params) {
     pts.filter(p => p.hot).sort((a, b) => Math.abs(b.z) - Math.abs(a.z)).slice(0, 8).forEach(p => (p.showLabel = true));
     if (pts.length > 3) {
       charts.push(card("outliers", "Total stats vs star level", "Highlighted: far from their star level's average.",
-        scatter(pts, { xLabel: "star level", yLabel: "HP + DEF + ATK + SPD", xTicks: tiers }),
+        scatter(pts, { xLabel: "star level", yLabel: "HP + DEF + ATK + SPD", xTicks: tiers, narrow }),
         table(["Card", "Stars", "Total", { label: "vs tier avg (σ)", tip: "Standard deviations between its total and its star level's average total" }], [...pts.filter(p => p.hot).sort((a, b) => b.z - a.z).map(p => [p.label, `${p.x}★`, p.y, Math.round(p.z * 10) / 10]),
           ...offChart.map(c => [c.name, `${c.stars}★`, total(c), "off the chart"])], 1),
         { wide: true, tip: "Highlighted: totals 1.5 or more standard deviations from their star level's average" }));
     }
   }
 
-  charts.splice(at < 0 ? charts.length : at, 0, ...cardCharts(pool, creatures, L));
+  charts.splice(at < 0 ? charts.length : at, 0, ...cardCharts(pool, creatures, L, narrow));
 
   // 7 creature types
   const types = new Map();
@@ -513,13 +522,13 @@ export function renderStats(root, ctx, params) {
     const ic = icons[t.toLowerCase().replace(/[\s_\-.'’]+/g, "")];
     return { label: t.replace(/_/g, " "), value: v, href: L({ types: t }), html: `${ic ? `<img${loCls(ic) ? ` class="${loCls(ic)}"` : ""} src="${esc(ic.file)}"${iconSet(ic, 18)} alt="">` : ""}<span>${esc(t.replace(/_/g, " "))}</span>` };
   });
-  if (typeRows.length) charts.push(card("types", "Types on cards", "Cards with each type.", hbar(typeRows), table(["Type", "Cards"], typeRows.map(r => [r.label, r.value]))));
+  if (typeRows.length) charts.push(card("types", "Types on cards", "Cards with each type.", hbar(typeRows, { narrow }), table(["Type", "Cards"], typeRows.map(r => [r.label, r.value]))));
 
   // 8 timing tags (not neutral ones such as Action)
   const tags = new Map();
   for (const c of pool) for (const t of tagsOf(c)) tags.set(t, (tags.get(t) || 0) + 1);     // counted under the canonical case
   const tagRows = desc(tags).slice(0, 18).map(([t, v]) => ({ label: `(${t}) ${tagInfo(t).meaning}`, value: v, href: L({ tag: t }), html: tagHtml(t) }));
-  if (tagRows.length) charts.push(card("tags", "Timing tags", "Abilities using each tag.", hbar(tagRows, { labelWidth: 110, unit: "uses" }),
+  if (tagRows.length) charts.push(card("tags", "Timing tags", "Abilities using each tag.", hbar(tagRows, { labelWidth: 110, unit: "uses", narrow }),
     table(["Tag", "Meaning", { label: "Uses", tip: "Times the tag appears in the abilities of cards in scope" }], desc(tags).map(([t, v]) => [`(${t})`, tagInfo(t).meaning, v]), 2),
     { tip: "Times each timing tag appears in these cards' abilities; (Action) isn't counted" }));
 
@@ -530,16 +539,16 @@ export function renderStats(root, ctx, params) {
   const statusRows = desc(new Map([...refCount].filter(([id]) => statusIds.has(id)))).slice(0, 15).map(([id, v]) => ({ label: byId.get(id).name, value: v, href: L({ mentions: id }) }));
   const unused = cards.filter(c => c._unused && (c.type === "buff" || c.type === "debuff") && (!series || c.series === series)).sort((a, b) => a.name.localeCompare(b.name));
   const unusedHtml = unused.length ? `<p class="muted">${noted("On no card", "Buffs and debuffs that no card names in its ability, or only Unused cards do")} (${unused.length}): ${unused.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}</p>` : "";
-  if (statusRows.length) charts.push(card("status", "Status effects mentioned", "Cards naming each one.", hbar(statusRows) + unusedHtml, table(["Status effect", "Cards"], statusRows.map(r => [r.label, r.value])),
+  if (statusRows.length) charts.push(card("status", "Status effects mentioned", "Cards naming each one.", hbar(statusRows, { narrow }) + unusedHtml, table(["Status effect", "Cards"], statusRows.map(r => [r.label, r.value])),
     { tip: "Cards in scope whose ability names each buff or debuff; the top 15" }));
-  const seasons = seasonsCard(pool, ctx.season);
+  const seasons = seasonsCard(pool, ctx.season, narrow);
   if (seasons) charts.push(seasons);
   const refRows = desc(new Map([...refCount].filter(([id]) => !statusIds.has(id)))).slice(0, 12).map(([id, v]) => ({ label: byId.get(id).name, value: v, href: L({ mentions: id }) }));
-  if (refRows.length) charts.push(card("refs", "Most referenced cards", "Cards naming them.", hbar(refRows, { labelWidth: 180 }), table(["Card", { label: "Mentioned by", tip: "Cards in scope whose ability names this card" }], refRows.map(r => [r.label, r.value]))));
+  if (refRows.length) charts.push(card("refs", "Most referenced cards", "Cards naming them.", hbar(refRows, { labelWidth: 180, narrow }), table(["Card", { label: "Mentioned by", tip: "Cards in scope whose ability names this card" }], refRows.map(r => [r.label, r.value]))));
 
   // 11 authors
   const authors = desc(count(pool, c => c.author)).map(([k, v]) => ({ label: k, value: v, href: L({ author: k }) }));
-  if (authors.length) charts.push(card("authors", "Cards per author", "", hbar(authors), table(["Author", "Cards"], authors.map(r => [r.label, r.value]))));
+  if (authors.length) charts.push(card("authors", "Cards per author", "", hbar(authors, { narrow }), table(["Author", "Cards"], authors.map(r => [r.label, r.value]))));
 
   root.innerHTML = `<div class="filters-row">
       <label>Kind <select data-action="stats-filter" data-key="kind"><option value="">All cards</option>${kinds.map(k => `<option value="${esc(k)}"${k === kind ? " selected" : ""}>${esc(KIND_LABEL[k] || k)}</option>`).join("")}</select></label>
@@ -551,4 +560,4 @@ export function renderStats(root, ctx, params) {
     <div id="stats-balance"></div><div id="stats-history"></div>`;
 }
 
-export { columns, card as chartCard, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole };   // profile.js's activity chart, balance.js, insights.js
+export { columns, card as chartCard, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole, thin };   // profile.js's activity chart, balance.js, insights.js
