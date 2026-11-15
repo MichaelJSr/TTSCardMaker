@@ -727,15 +727,40 @@ jobs:
           echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
       # The details' "supplied" flags need only the fonts' PostScript names: font_check.save_names' file (CARD_FONT_NAMES),
-      # cached by the same sha plus font_check.py's hash (the file's format is the builder's); the fonts are fetched
-      # only on a miss, or for a builder without save_names.
+      # cached by the same sha plus Font names key: the builder's code that writes and reads it, as syntax trees without
+      # docstrings (other font_check.py edits keep the entry; a name missing or unreadable: the file's hash). The fonts
+      # are fetched only on a miss, or for a builder without save_names.
+      - name: Font names key
+        id: names
+        if: env.GO == 'true'
+        working-directory: bot/commands
+        run: |
+          if names=$("$RUNNER_TEMP/venv/bin/python" -I -c '
+          import ast, hashlib
+          want = {"font_check": {"ps_name", "face_names", "_font_files", "FontIndex", "dir_fonts", "save_names", "load_names",
+                                 "FONT_EXTENSIONS"}, "github_api": {"blob_sha"}}
+          parts = []
+          for mod, names in want.items():
+              for node in ast.parse(open(mod + ".py", encoding="utf-8").read()).body:
+                  name = getattr(node, "name", None) or next((t.id for t in getattr(node, "targets", ()) if isinstance(t, ast.Name)), None)
+                  if name in names:
+                      for n in ast.walk(node):
+                          if isinstance(n, (ast.FunctionDef, ast.ClassDef)) and ast.get_docstring(n, False) is not None:
+                              n.body = n.body[1:] or [ast.Pass()]
+                      parts.append(ast.dump(node))
+          assert len(parts) == 9
+          print(hashlib.sha256("\n".join(parts).encode()).hexdigest())' 2> /dev/null); then
+            echo "names=$names" >> "$GITHUB_OUTPUT"
+          else
+            echo "font_check.py's hash"
+          fi
       - name: Font names cache
         id: font-names
         if: env.GO == 'true'
         uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}/font-names.json
-          key: card-font-names-${{ steps.fonts.outputs.sha }}-${{ hashFiles('bot/commands/font_check.py') }}
+          key: card-font-names-${{ steps.fonts.outputs.sha }}-${{ steps.names.outputs.names || hashFiles('bot/commands/font_check.py') }}
 
       - name: Font names
         if: env.GO == 'true' && steps.venv.outcome == 'success'
