@@ -423,8 +423,8 @@ jobs:
             echo "$code" > "$RUNNER_TEMP/records-in.code" ) < /dev/null > "$RUNNER_TEMP/records-in.log" 2>&1 &
 
       # One environment from requirements-cards.txt for the bake, the build, the save and the posts, on the Actions' one
-      # Python (3.14; the shared setup, .github/actions/cards-venv). --help proves the main lane's CLIs' import closure
-      # before its stages; the data jobs check none (their Build is the first import of card_data).
+      # Python (3.14; the shared setup, .github/actions/cards-venv). Bake and save's Help start proves its CLIs' import
+      # closure before its stages; the data jobs check none (their Build is the first import of card_data).
       # Always, first: before a push's or a follow-up's wait (a data job with nothing to do sets it up too). The data
       # jobs' entry is in place already (Venv key): only checked.
       - &venv
@@ -435,7 +435,6 @@ jobs:
         with:
           venv: ${{ runner.temp }}/venv
           oxipng: ${{ github.job == 'main' }}     # the data jobs write no PNG
-          help: ${{ github.job == 'main' && 'tts_save card_bake' || '' }}
           restored: ${{ env.VENV_RESTORED }}
 
       # The guards' fixes (P-2): a guards push run with fixes to land (its check job's step "Fixes to land") starts Card
@@ -1184,6 +1183,19 @@ jobs:
       - *data-checkout
       - *venv
 
+      # tts_save and card_bake --help (the import closure) in the background beside the fonts, the guards' wait, Newest
+      # and the Gate's run reads; the Gate joins it before GO (help.bg; exit code in help.code)
+      - name: Help start
+        working-directory: bot
+        run: |
+          touch "$RUNNER_TEMP/help.bg"
+          ( code=0
+            for m in tts_save card_bake; do
+              timeout 120 "$RUNNER_TEMP/venv/bin/python" -m "commands.$m" --help > /dev/null \
+                || { code=$?; echo "commands.$m --help: exit $code"; break; }
+            done
+            echo "$code" > "$RUNNER_TEMP/help.code" ) < /dev/null > "$RUNNER_TEMP/help.log" 2>&1 &
+
       # A push's lane and a follow-up's always go (Gate: a push, dispatched): their fonts (Fonts tree below) come
       # before the wait, restore only (the guards' check job saves the entry); a held lane wastes them
       - name: Fonts first
@@ -1243,7 +1255,8 @@ jobs:
       # newest passed over when its rulebook PDF was not drawn, UNDRAWN, but not the one before it: a lag that lasts costs
       # one extra lane), or none of the last 30 runs did; else (g) a website edit the bake put off (capped, main moved):
       # the Pending edits step; else (h) linked pictures not redrawn yet: the Linked due step. GO and EDITS in the
-      # env. Skipped when the guards hold a push's lane (the schedule and the failure streak pass over such a lane).
+      # env, once Help start's --help is joined (failed: the job fails, nothing goes). Skipped when the guards hold a
+      # push's lane (the schedule and the failure streak pass over such a lane).
       - name: Gate
         id: gate
         if: ${{ !steps.guards.outputs.run }}
@@ -1296,6 +1309,11 @@ jobs:
               "site/Card Edits.json")
           fi
           edits=$([ "$edits" -gt 0 ] && echo true || echo false)
+          if [ -e "$RUNNER_TEMP/help.bg" ]; then      # Help start's: failed, GO unset
+            until [ -s "$RUNNER_TEMP/help.code" ] || [ "$SECONDS" -ge 300 ]; do sleep 0.02; done
+            code=$(cat "$RUNNER_TEMP/help.code" 2> /dev/null) || code=late
+            [ "$code" = 0 ] || { cat "$RUNNER_TEMP/help.log"; echo "::error::tts_save/card_bake --help failed ($code)"; exit 1; }
+          fi
           { echo "go=$go"; echo "edits=$edits"; } >> "$GITHUB_OUTPUT"
           { echo "GO=$go"; echo "EDITS=$edits"; } >> "$GITHUB_ENV"
           {

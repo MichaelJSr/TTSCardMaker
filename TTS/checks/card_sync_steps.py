@@ -886,6 +886,21 @@ def gate_cases(flow: dict) -> None:
         check(code == 0 and out.get("go") == "false" and out.get("edits") == "true",
               f"main gate: nothing changed, a PSD-kind edit in the file -> go={out.get('go')} edits={out.get('edits')} (want false, true)"
               + ("" if code == 0 else f"\n{text}"))
+        runner = os.path.join(tmp, "runner")       # Help start's --help in the background, the Gate joins it
+        write(os.path.join(runner, "venv/bin/python"), '#!/bin/bash\n[ -n "$FAKE_HELP" ] && [ "$2" = commands.card_bake ] '
+              '&& { echo boom >&2; exit 3; }\nsleep 0.3\n')
+        os.chmod(os.path.join(runner, "venv/bin/python"), 0o755)
+        got = []
+        for bad in ("1", ""):
+            for f in ("help.bg", "help.code"):
+                if os.path.exists(os.path.join(runner, f)):
+                    os.remove(os.path.join(runner, f))
+            run_step(main, "Help start", os.path.join(ws, "bot"), {"FAKE_HELP": bad}, tmp)
+            code, text, out = run_step(main, "gate", ws, {**env, "GITHUB_EVENT_NAME": "push"}, tmp)
+            got.append((code, out.get("go"), "commands.card_bake --help: exit 3" in text and "boom" in text))
+        os.remove(os.path.join(runner, "help.bg"))
+        check(got == [(1, None, True), (0, "true", False)],
+              f"main gate: joins Help start's --help; card_bake's failed: the Gate fails before go, with its log ({got})")
 
 
 def history_cases(flow: dict) -> None:
