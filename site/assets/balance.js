@@ -2,7 +2,7 @@
 // Charts follow stats.js (dataviz method): thin marks, hairline grid, legends for two series, a table view for each.
 // DOM-free: every function returns HTML, every string goes through esc.
 import { esc, diffWords, tagHtml, dateFmt, commitLink, noted } from "./text.js";
-import { chartCard as card, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole, thin } from "./stats.js";
+import { chartCard as card, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole, thin } from "./chartkit.js";
 
 const KINDS = { creature: "creatures", minion: "minions" };
 const ITEM_KIND = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",

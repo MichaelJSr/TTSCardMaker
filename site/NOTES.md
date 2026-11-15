@@ -1369,10 +1369,16 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
   together); init() waits for it, so staged edits are there on the first draw. Until then `editor` is `IDLE` (nobody
   signed in, nothing staged: `me` null, no pending decks or profiles) and `derive()` runs in init() itself. The token
   picker's vocabulary is made on first use per `S.rev` (it was made in every `derive()`).
-- **charts.js** (stats.js, balance.js, insights.js): the Stats tab, a card's Balance block (`loadAnalytics` waits for
-  both analytics.json and charts.js, so `S.analytics` set means charts.js is in) and the grid filters the charts link to
-  (`shape`, `cd`, `tag`, `fresh`: "Loading…" until charts.js is in, as `bal`, `cohort`, `month`, `change` wait for
-  analytics.json).
+- **charts.js** (stats.js, balance.js, insights.js): the Stats tab and the grid filters the charts link to (`shape`,
+  `cd`, `tag`, `fresh`: "Loading…" until charts.js is in, as `bal`, `cohort`, `month`, `change` wait for analytics.json).
+- **balance.js** alone (2026-11-15): a card's Balance block and the `bal`, `cohort`, `month`, `change` filters
+  (`loadAnalytics` waits for analytics.json and balance.js, so `S.analytics` set means `Bal` is in; charts.js sets `Bal`
+  too, one instance in esbuild's shared chunk). The chart primitives (`fmt`, `cardsHref`, `go`, `svgRole`, `hbar`,
+  `columns`, `stacked`, `table`, `chartCard`, ...) are **chartkit.js**, imported by stats.js, balance.js, insights.js and
+  profile.js, so the Balance block, People and the editor (edit.js imports profile.js) no longer bring stats.js. Local
+  build, today's data, gzip: the Balance block's chunks 22.4 -> 11.9 KB, profile.js's 24.6 -> 14.8, the editor's
+  140.9 -> 131.1; Stats 22.4 -> 23.1 (3 files, not 2, preloaded together). Cold loads (desktop, bytes): c/the-lich-king/
+  428 -> 418 KB, c/a-snack/ 404 -> 394, #/users 254 -> 245, #/u/Croissant 263 -> 253, #/stats 357 -> 358, / unchanged.
 - **profile.js**: the People tab and person pages (`loadContrib` waits for it, `S.titles` from it). `LOGIN_RE` moved to
   text.js (profile.js re-exports it) so login.js and decks.js, which the deck pages need, don't pull it in.
 - **2026-11-12** (the first load had grown to 89.4 KB): **decks.js** with decks.json (`loadDecks`; `S.decksData` set means

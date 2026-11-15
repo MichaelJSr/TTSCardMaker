@@ -5,7 +5,7 @@
 import { esc, tagInfo, tagHtml, TAG, dateFmt, LOGIN_RE, noted } from "./text.js";
 import { editorFields, archiveTag, archiveTagHtml, fieldName } from "./changes.js";
 import { decode } from "./deck.js";
-import { columns, chartCard } from "./stats.js";
+import { columns, chartCard } from "./chartkit.js";
 
 export const RECENT_CARDS = 24;                                             // the person page's newest cards
 

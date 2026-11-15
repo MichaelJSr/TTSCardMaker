@@ -1,6 +1,6 @@
 // The Stats page's History section (app.js renderStatsView, after Balance), from cards.json (created, since). Charts
 // follow stats.js (dataviz method); DOM-free like balance.js. NOTES.md §26, §30.
-import { chartCard as card, table, stacked, columns, cardsHref } from "./stats.js";
+import { chartCard as card, table, stacked, columns, cardsHref } from "./chartkit.js";
 import { legend } from "./balance.js";
 import { yearOf } from "./history.js";
 

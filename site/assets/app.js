@@ -131,7 +131,8 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
 }).catch(e => { historyP = null; throw e; }));
 const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
 // loaded on first use (esbuild chunks; without esbuild, the modules): charts.js (stats.js, balance.js, insights.js) for the Stats
-// page, the cards' Balance blocks and the grid filters its charts link to; profile.js for the People tab and person pages.
+// page and the grid filters its charts link to; balance.js alone for the cards' Balance blocks; profile.js for the People tab
+// and person pages.
 // early(): a module's chunks all at once (index.html's meta chunks, build_site.py bundle), so the first open is one round trip
 const CHUNKS = (() => { try { return JSON.parse(document.querySelector('meta[name="chunks"]')?.content || "{}"); } catch { return {}; } })();
 const early = name => { for (const href of CHUNKS[name] || []) if (!document.querySelector(`link[href="${href}"]`)) document.head.append(Object.assign(document.createElement("link"), { rel: "modulepreload", href })); };
@@ -145,12 +146,14 @@ const sheet = name => (sheetP[name] ||= !SHEETS[name] ? Promise.resolve() : new 
   l.onerror = () => { l.remove(); delete sheetP[name]; fail(new Error(`${name}.css`)); };   // a later load tries again
   document.head.append(l);
 }));
-let St = null, chartsP = null, Pf = null, profileP = null;
-const loadCharts = () => (chartsP ||= (early("charts.js"), import("./charts.js")).then(m => { St = m; }).catch(e => { chartsP = null; throw e; }));
+let St = null, chartsP = null, Pf = null, profileP = null, Bal = null, balP = null;
+const loadCharts = () => (chartsP ||= (early("charts.js"), import("./charts.js")).then(m => { St = m; Bal = m.balance; }).catch(e => { chartsP = null; throw e; }));
+const loadBalance = () => (Bal ? Promise.resolve() : balP ||= (early("balance.js"), import("./balance.js")).then(m => { Bal = m; }).catch(e => { balP = null; throw e; }));   // or charts.js's
 const loadProfile = () => (profileP ||= (early("profile.js"), import("./profile.js")).then(m => { Pf = m; }).catch(e => { profileP = null; throw e; }));
-// balance analytics (data/analytics.json, with charts.js): the Stats page's Balance section and the cards' Balance blocks
+// balance analytics (data/analytics.json, with balance.js: S.analytics set means Bal is in): the Stats page's Balance section,
+// the cards' Balance blocks and the grid's bal, cohort, month and change filters
 let analyticsP = null;
-const loadAnalytics = () => (analyticsP ||= Promise.all([getJson("analytics.json"), loadCharts()]).then(([d]) => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
+const loadAnalytics = () => (analyticsP ||= Promise.all([getJson("analytics.json"), loadBalance()]).then(([d]) => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
 // the Changes page's Changelog, Archive and Database edits tabs, each its own file (NEEDS; build_site changelog_files), with
 // their renderers (changelog.js, loaded on first use beside the file): S.changelog[file] set means CL is in
 const changelogP = {};
@@ -516,7 +519,7 @@ function filterCards(p, { facets = true } = {}) {
   if (fin.length || fout.length) list = !S.fontUse ? [] : list.filter(c => { const f = fontsOf(c); return (!fin.length || f.some(x => fin.includes(x))) && !f.some(x => fout.includes(x)); });
   for (const [k, , test] of LINKED) { const v = p.get(k); if (v) list = list.filter(test(v)); }
   const month = p.get("month"), change = p.get("change");
-  if (month || change) list = S.analytics ? list.filter(c => St.balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
+  if (month || change) list = S.analytics ? list.filter(c => Bal.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
   return list;
 }
 // filters the Stats charts link to (stats.js cardsHref), shown as chips: [param, chip label(v), test(v)]; bal, cohort,
@@ -528,8 +531,8 @@ const LINKED = [
   ["tag", v => `(${v})`, v => c => !!St && St.stats.tagsOf(c).includes(v)],
   ["mentions", v => `Naming ${S.byId.get(v)?.name || v}`, v => c => !!S.mentionedBy.get(v)?.has(c.id)],
   ["fresh", v => `Text from ${v}`, v => c => !!St && St.insights.freshYear(c) === v],
-  ["bal", v => `${v === "top" ? "Top" : "Bottom"} 10% for its star level`, v => c => !!S.analytics && St.balance.flagged(S.analytics, c, v)],
-  ["cohort", v => (v === "any" ? "With all four stats" : St ? `${cap(St.balance.cohortName(v))} with all four stats` : v), v => c => !!S.analytics && St.balance.inCohort(S.analytics, c, v)],
+  ["bal", v => `${v === "top" ? "Top" : "Bottom"} 10% for its star level`, v => c => !!S.analytics && Bal.flagged(S.analytics, c, v)],
+  ["cohort", v => (v === "any" ? "With all four stats" : Bal ? `${cap(Bal.cohortName(v))} with all four stats` : v), v => c => !!S.analytics && Bal.inCohort(S.analytics, c, v)],
   ["nodup", () => "Duplicates hidden", () => c => !c.dup],        // Stats counts a duplicate once
 ];
 const needsAnalytics = p => ["bal", "cohort", "month", "change"].some(k => p.get(k));
@@ -627,8 +630,8 @@ function renderCards(r) {
   const xLabel = { kind: k => (KINDS.find(x => x[0] === k) || [k, KIND_PLURAL[k] || k])[1], stars: s => `${s}★`, sub: cap, types: t => t.replace(/_/g, " "),
     flags: flagName, missing: k => G.MISSING.find(x => x[0] === k)?.[1], series: v => v, subseries: v => v, author: v => `by ${v}` };
   for (const k of G.X_KEYS) for (const v of xs(k)) { const l = xLabel[k](v); if (l) active.push([`x${k}`, `not ${l}`, G.ONE.has(k) ? undefined : v, true]); }   // an old flag: ignored
-  if (p.get("month")) active.push(["month", `Changed ${St ? St.balance.monthName(p.get("month")) : p.get("month")}`]);
-  if (p.get("change")) active.push(["change", St?.balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
+  if (p.get("month")) active.push(["month", `Changed ${Bal ? Bal.monthName(p.get("month")) : p.get("month")}`]);
+  if (p.get("change")) active.push(["change", Bal?.CHANGE_LABEL[p.get("change")] || p.get("change")]);
   for (const [k, label] of LINKED) if (p.get(k)) active.push([k, label(p.get(k))]);
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
@@ -1110,7 +1113,7 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
   if (!S.analytics) return part === "balance" ? `<h3>Balance</h3><p class="muted">Loading…</p>` : "";
   const o = balanceOf(c);
   const texts = o.hv && !o.history ? null : (o.history || []).map(v => v.ability).concat(o.ability || "");
-  return (part === "balance" ? St.balance.balanceBlock : St.balance.changesBlock)(c, S.analytics, { texts, repo: S.data.repo, pathAt: (ref, ts) => pngAt(o, ref, ts) });
+  return (part === "balance" ? Bal.balanceBlock : Bal.changesBlock)(c, S.analytics, { texts, repo: S.data.repo, pathAt: (ref, ts) => pngAt(o, ref, ts) });
 }
 function closeModal() {
   if (modal.hidden) return;
@@ -1385,7 +1388,7 @@ function renderStatsView(r) {
     const now = parseHash(S.renderedHash);
     if (now.name !== "stats") return;
     const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
-    if (A) put("stats-balance", St.balance.statsHtml(A, statsCtx(), now.params));
+    if (A) put("stats-balance", Bal.statsHtml(A, statsCtx(), now.params));
     put("stats-history", St.insights.historyHtml(statsCtx(), now.params));
   };
   const job = ++statsJob, slot = $("#stats-balance", view);
@@ -1405,7 +1408,7 @@ addEventListener("resize", () => {
   statsNarrow = !statsNarrow; hideTip();
   const p = parseHash(S.renderedHash).params, box = document.createElement("div"), ctx = statsCtx();
   St.stats.renderStats(box, ctx, p);
-  if (S.analytics && $("#stats-balance .charts", view)) $("#stats-balance", box).innerHTML = St.balance.statsHtml(S.analytics, ctx, p);
+  if (S.analytics && $("#stats-balance .charts", view)) $("#stats-balance", box).innerHTML = Bal.statsHtml(S.analytics, ctx, p);
   if ($("#stats-history .charts", view)) $("#stats-history", box).innerHTML = St.insights.historyHtml(ctx, p);
   const at = $$("section.chart", view).find(s => s.getBoundingClientRect().bottom > 0), top = at?.getBoundingClientRect().top;
   for (const s of $$("section.chart[id]", box)) { const old = $(`#${s.id} > .view-chart`, view); if (old) old.innerHTML = $(".view-chart", s).innerHTML; }
