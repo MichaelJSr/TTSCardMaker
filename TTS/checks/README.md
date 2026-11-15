@@ -28,9 +28,9 @@ updater's inputs (decks.json, Card Edits.json, Global.lua, pages.json); it needs
 |---|---|---|
 | `AUTOCROISSANT` | `~/Desktop/AutoCroissant` | the updater's code (`commands/tts_save.py` and what it imports) |
 | `TTS_HISTORY` | `/tmp/tts-checks/history.git` | bare blobless clone with main's full history, made or fetched on use (the checkout is shallow; under `run_all.py`, fetched once); a file a blobless checkout lacks (an old save, a `TTS_REF` file) is fetched into it, never lazily |
-| `TTS_REF` | `origin/main` | the commit whose tree the rules checks, `drift.py` and `updater_idempotent.py` compare with |
+| `TTS_REF` | the save's own commit, else `origin/main` | the commit whose tree, `decks.json` and `Global.lua` `drift.py`, the contents checks and `verify_rules_snapshot.py` read (and `updater_idempotent.py` for an edited save); unset: the checkout's HEAD when the checkout's `origin/main` has it and the save is HEAD's (a work branch: its merge-base), else `origin/main` |
 | `TTS_REPO` | this repo | the TTSCardMaker checkout |
-| `TTS_CARDS` | the live website | a `cards.json` file: the website's cards (`contents_backs.py`, `contents_coverage.py`, `verify_rules_snapshot.py`) |
+| `TTS_CARDS` | the live website | a `cards.json` file: the website's cards (`contents_backs.py`, `contents_coverage.py`, `verify_rules_snapshot.py`), as main has them: when the commit `TTS_REF` names is behind `origin/main`, each png goes back through the `Renamed:` trailers since, and a card that commit lacks (new since) is left out |
 | `TTS_DATA_REF` | `origin/data` | the ref whose `db/stats.json` names the cards in `updater_idempotent.py` (Card sync's `--names`) |
 | `TTS_DETAILS` | the live website | a `tts.json` file for `lua_mock.py`'s card details |
 | `LUA_PYTHON` | | a Python with lupa |
@@ -57,7 +57,10 @@ Network: the website's `cards.json` and `tts.json` (`lua_mock.py`), GitHub raw (
 
 `contents_lib.py` and `checks_env.py` are shared helpers. `links_pins.py` and `updater_idempotent.py` judge the save
 at the checkout's commit (a work branch: its merge-base with `TTS_REF`) when it is that commit's save, else at main:
-a later save update on GitHub does not fail an older checkout. On a commit's own save, `updater_idempotent.py` reads
+a later save update on GitHub does not fail an older checkout. `drift.py`, the contents checks and
+`verify_rules_snapshot.py` do the same by the checkout's own `origin/main` (`TTS_REF`'s default; no history clone),
+the website's cards taken back to that commit: a later `Global.lua` or rename on main does not fail them; a save that
+lags its own commit still does. On a commit's own save, `updater_idempotent.py` reads
 the updater's inputs at that commit too: a branch's `Global.lua` is `lua_mock.py`'s, its `decks.json` and Card Edits
 reach the save in Card sync. `updater_idempotent.py` takes the names from `TTS_DATA_REF`'s `db/stats.json`, as Card
 sync's TTS save step does. When the data's names change (a Card sync data commit), it fails until the next Card sync

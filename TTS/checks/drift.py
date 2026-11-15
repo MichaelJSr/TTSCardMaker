@@ -34,7 +34,7 @@ _tree = []
 
 
 def tree():
-    """Paths on the card repo's origin/main."""
+    """Paths at REF (checks_env.ref: the save's own commit, else origin/main)."""
     if not _tree:
         out = subprocess.run(["git", "-C", REPO, "ls-tree", "-r", "-z", "--name-only", REF],
                              check=True, capture_output=True).stdout.decode("utf-8")

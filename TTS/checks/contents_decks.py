@@ -1,6 +1,6 @@
 """Decks vs TTS/decks.json rules, applied as tts_save._sync_decks does.
 
-    python contents_decks.py [save.json]    (rules: decks.json beside the save, else TTS_REF's; repo: TTS_REF, default origin/main)
+    python contents_decks.py [save.json]    (rules: decks.json beside the save, else REF's; repo: REF, see README.md)
 Complete decks: exactly the rule's repo cards, each at odd_counts or count; copies identical.
 Hand-picked decks: inside the rule, counts as recorded; with add_new_since, every rule card the save at that commit
 lacked (renames by the bake's Renamed trailers, else by blob) is in. A rule without a count: its deck untouched (none since 2026-10-22).
