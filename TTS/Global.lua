@@ -1337,15 +1337,17 @@ local function listPages(color, query)
         if sp > start then table.insert(words, q:sub(start, sp - 1)) end
         start = sp + 1
     end
+    local rest = {}                                    -- pages whose name holds every word come first ("items": Items)
     for _, p in ipairs(bookPages) do
         if #words == 0 then
             if p.chapter then table.insert(list, {p.page, (p.num ~= "" and (p.num .. ".  ") or "") .. p.name .. "   p. " .. (p.page + 1)}) end
         else
-            local at = nil
+            local at, named = nil, true
             for _, w in ipairs(words) do
                 local hit = p.low:find(w, 1, true)
                 if not hit then at = nil break end
                 at = at or hit
+                named = named and p.name:lower():find(w, 1, true) ~= nil
             end
             if at then
                 local from, to = math.max(1, at - 28), at + 44     -- the snippet on whole words
@@ -1353,11 +1355,12 @@ local function listPages(color, query)
                 if sp and sp < at then from = sp + 1 end
                 local stop = p.text:find(" ", to, true)
                 local snippet = p.text:sub(from, stop and stop - 1 or #p.text)
-                table.insert(list, {p.page, "p. " .. (p.page + 1) .. "  " .. p.name .. ":  " .. (from > 1 and "..." or "") .. snippet .. (stop and "..." or "")})
+                table.insert(named and list or rest, {p.page, "p. " .. (p.page + 1) .. "  " .. p.name .. ":  " .. (from > 1 and "..." or "") .. snippet .. (stop and "..." or "")})
             end
         end
-        if #list >= RESULTS then break end
     end
+    for _, item in ipairs(rest) do table.insert(list, item) end
+    for i = #list, RESULTS + 1, -1 do list[i] = nil end
     found[color] = list
     for i = 1, RESULTS do
         local item = list[i]
