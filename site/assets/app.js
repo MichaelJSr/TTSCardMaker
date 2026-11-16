@@ -975,7 +975,7 @@ function openCard(id, showDetails = false) {
         <h2>${esc(c.name)}</h2>
         <div class="facts">
           ${c.morgue ? `<a class="fact" href="#/cards?morgue=1" data-tip="${esc(c.lost ? `${LOST_TIP[c.lost] || LOST_TIP.joke}: from Discord, never in the card repo` : `Retired: in MDW/The Morgue${c.retired ? ` since ${date(c.retired)}` : ""}, out of play`)}">The Morgue</a>` : ""}
-          ${c.lost ? `<span class="fact" data-tip="Its first post on Discord">${c.lost === "played" ? "Played, lost before git" : "Joke card"}${c.first ? ` · first posted ${day(c.first)}` : ""}${c.firstCh ? ` in #${esc(c.firstCh)}` : ""}</span>` : ""}
+          ${c.lost ? `<span class="fact" data-tip="${c.firstOld ? "Its first record in the old repo" : "Its first post on Discord"}">${c.lost === "played" ? (c.firstOld ? "Played, lost before this repo" : "Played, lost before git") : "Joke card"}${c.first ? (c.firstOld ? ` · in the old repo ${day(c.first)}` : ` · first posted ${day(c.first)}`) : ""}${c.firstCh ? ` in #${esc(c.firstCh)}` : ""}</span>` : ""}
           ${c.morgue && c.type === "unknown" ? "" : `<a class="fact" href="#/cards?${scope}kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>`}
           ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
           ${c.stars ? `<a class="fact" href="#/cards?${scope}stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
