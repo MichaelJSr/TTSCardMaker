@@ -27,6 +27,12 @@ export const KEEP = 3, MAX_EDIT = 16384;              // MAX_EDIT: card_preview'
 // 10 s until 3, then every 30 s, giving up at 16 (the publish job's timeout is 14); "Check again" waits 10 more
 export const EARLY_MS = 12000, FIRST_MS = 17000, POLL_BRISK = 1000, BRISK_FOR = 60000, BRISK_MAX = 3, POLL_FAST = 3000, FAST_FOR = 2 * 60000, POLL_MID = 10000, MID_FOR = 3 * 60000, POLL_SLOW = 30000;
 export const HANDOVER = "card-preview";               // the preview job's artifact (card-preview.yml "Hand over")
+// the warm lane (owner D22; AutoCroissant card_preview_lane): the run that handed over this editor's newest result stays up
+// LANE_IDLE_MS after its last press (and ends LANE_CAP_MS after its start at the latest); a press names it (inputs.lane)
+// while it should still be up LANE_SAFE_MS from now and the card and edit fit LANE_MAX bytes of the run's title. Its
+// hand-over, LANE_ARTIFACT + request in that run, is looked for from LANE_FIRST_MS every LANE_POLL until LANE_FOR.
+export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 590000, LANE_SAFE_MS = 20000, LANE_MAX = 1024, LANE_FIRST_MS = 3000, LANE_POLL = 500, LANE_FOR = 15000;
+export const LANE_ARTIFACT = "card-preview-";
 export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
 // more than a day after the press means it never comes; entries go after 30 days
@@ -76,6 +82,21 @@ export function hashOf(edit) {
   h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
   h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
   return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16).padStart(14, "0");
+}
+/** The run title's check for a press named to a lane: sha256 of the request, card and edit (one line each), 16 hex digits
+ *  (AutoCroissant card_preview_lane.check_of). */
+export async function laneCheck(request, card, edit) {
+  const d = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${request}\n${card}\n${edit}`)));
+  return [...d].map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
+}
+/** The lane to name for a press now: the run that handed over the newest result (entry.from, seen at fromAt) while it
+ *  should be up LANE_SAFE_MS more (LANE_IDLE_MS after that, LANE_CAP_MS after its start when known); else null. */
+export function laneOf(store, now = Date.now()) {
+  const all = Object.values(store).flat(), e = all.filter(x => x.from && x.fromAt).sort((a, b) => b.fromAt - a.fromAt)[0];
+  if (!e) return null;
+  const started = all.find(x => x.run?.id === e.from)?.run?.started;
+  const end = Math.min(e.fromAt + LANE_IDLE_MS, Number.isFinite(started) ? started + LANE_CAP_MS : Infinity);
+  return now + LANE_SAFE_MS < end ? e.from : null;
 }
 /** A request id: login, time, random (the Action takes 8-64 of A-Z a-z 0-9 -: the folder of its result). */
 export function newRequest(login, now = Date.now(), rand = Math.random()) {
@@ -179,13 +200,15 @@ export function missed(e, now = Date.now()) {
   return null;
 }
 /** ms to the next check (null: nothing running): when the oldest reaches EARLY_MS, then POLL_BRISK while one started
- *  under BRISK_FOR ago and at most BRISK_MAX wait, POLL_FAST under FAST_FOR, POLL_MID under MID_FOR, else POLL_SLOW. */
+ *  under BRISK_FOR ago and at most BRISK_MAX wait, POLL_FAST under FAST_FOR, POLL_MID under MID_FOR, else POLL_SLOW;
+ *  a press named to a lane with nothing handed over yet: from LANE_FIRST_MS every LANE_POLL until LANE_FOR. */
 export const pollDelay = (store, now = Date.now()) => {
   const ages = waiting(store).map(e => now - e.at);
   if (!ages.length) return null;
-  if (ages.every(a => a < EARLY_MS)) return EARLY_MS - Math.max(...ages);
-  if (ages.length <= BRISK_MAX && ages.some(a => a < BRISK_FOR)) return POLL_BRISK;
-  return ages.some(a => a < FAST_FOR) ? POLL_FAST : ages.some(a => a < MID_FOR) ? POLL_MID : POLL_SLOW;
+  const lane = Math.min(...waiting(store).filter(e => e.lane && !e.fromAt && now - e.at < LANE_FOR).map(e => Math.max(LANE_FIRST_MS - (now - e.at), LANE_POLL)));
+  const late = ages.every(a => a < EARLY_MS) ? EARLY_MS - Math.max(...ages) : ages.length <= BRISK_MAX && ages.some(a => a < BRISK_FOR) ? POLL_BRISK
+    : ages.some(a => a < FAST_FOR) ? POLL_FAST : ages.some(a => a < MID_FOR) ? POLL_MID : POLL_SLOW;
+  return Math.min(lane, late);
 };
 /** One tab checks for all (the others see the results through the storage event): this tab (id `tab`) may check when it
  *  holds the lock (stored text) or the lock lapsed. -> the lock to store, or null (another tab has it). */
@@ -414,7 +437,8 @@ export function createPreviews(app) {
   // request -> its result, shown in this tab only (the store says "running" until the branch has it, so other tabs and
   // later loads use the branch); local = its images as object URLs, kept while the page lives (no reload when the
   // branch's copy lands); direct = request -> {run, tries}, or false once done or failed (the branch as ever)
-  const early = new Map(), local = new Map(), direct = new Map(), told = new Set();
+  const early = new Map(), local = new Map(), direct = new Map(), told = new Set(), laneTried = new Set();
+  let lanesOk = true;                                 // a run that never started with a lane named: none named again
   // the token goes to api.github.com only: the archive's 302 to GitHub's blob store relies on the browser dropping
   // Authorization on a cross-origin redirect (Chrome 119, Firefox 111, Safari 16.1); Set's union (Chrome 122, Firefox
   // 127, Safari 17) vouches for it
@@ -455,9 +479,14 @@ export function createPreviews(app) {
     const request = newRequest(ed.me.login), entry = { card: c.id, name: c.name, request, edit, hash: hashOf(edit), base: { blob: c.blob ?? null, img: c.img ?? null }, at: Date.now(), state: "starting" };
     set(remember(store, entry)); notify(c.id);
     try {
-      const flow = `/repos/${repo()}/actions/workflows/${CONTRACT.workflow}`;
-      await ed.github(`${flow}/dispatches`, { method: "POST", body: { ref: CONTRACT.ref, inputs: CONTRACT.inputs(c, edit, request) } });
-      set(patch(store, request, { state: "running" }));
+      const flow = `/repos/${repo()}/actions/workflows/${CONTRACT.workflow}`, inputs = CONTRACT.inputs(c, edit, request);
+      const lane = directOk && lanesOk ? laneOf(store) : null;
+      if (lane && new TextEncoder().encode(`${inputs.card} ${inputs.edit}`).length <= LANE_MAX) {
+        try { inputs.lane = `${lane}-${await laneCheck(request, inputs.card, inputs.edit)}`; } catch { /* no crypto.subtle: no lane */ }
+      }
+      const send = () => ed.github(`${flow}/dispatches`, { method: "POST", body: { ref: CONTRACT.ref, inputs } });
+      try { await send(); } catch (e) { if (!inputs.lane || e.status !== 422) throw e; delete inputs.lane; lanesOk = false; await send(); }   // a workflow without lanes
+      set(patch(store, request, { state: "running", ...(inputs.lane ? { lane } : {}) }));
       app.toast(`Preview started for ${c.name}: it takes a few minutes`);
     } catch (e) {
       const why = startProblem(e.status || 0, String(e.message || "").replace(/^GitHub \d+: ?/, ""), { scopes: ed.scopes });
@@ -482,10 +511,33 @@ export function createPreviews(app) {
     const since = new Date(e.at - 120000).toISOString().replace(/\.\d+Z$/, "Z");
     const r = await app.editor.github(`/repos/${repo()}/actions/workflows/${CONTRACT.workflow}/runs?event=workflow_dispatch&per_page=30&created=%3E%3D${since}`);
     const run = (r.workflow_runs || []).find(x => String(x.display_title || x.name || "").includes(e.request));
-    return run ? { id: run.id, url: run.html_url, status: run.status, conclusion: run.conclusion } : null;
+    return run ? { id: run.id, url: run.html_url, status: run.status, conclusion: run.conclusion, started: Date.parse(run.run_started_at || run.created_at) || null } : null;
+  }
+  async function takeArtifact(e, run, name, at) {    // run's artifact `name` once listed: true when early has e's result
+    at.step = "list";
+    const a = (await app.editor.github(`/repos/${repo()}/actions/runs/${run}/artifacts?name=${name}`)).artifacts?.find(x => x.name === name && !x.expired);
+    if (!a) return false;
+    at.step = "zip";
+    const url = new URL(a.archive_download_url);
+    if (url.origin !== "https://api.github.com") throw new Error("not GitHub's API");
+    const files = await unzip(await app.editor.github(url.pathname + url.search, { zip: true }));
+    const r = JSON.parse(new TextDecoder().decode(files["result.json"]));
+    if (r?.request !== e.request || !DONE.includes(r.state)) throw new Error("not this request's result");   // the publisher's stand-in then
+    const result = readResult(r), urls = {};
+    for (const [k, f] of Object.entries(result.files)) if (files[f]) urls[k] = URL.createObjectURL(new Blob([files[f]], { type: /\.webp$/i.test(f) ? "image/webp" : "image/avif" }));
+    result.files = Object.fromEntries(Object.keys(urls).map(k => [k, result.files[k]]));   // what the publisher keeps
+    local.set(e.request, urls); early.set(e.request, result);
+    set(patch(store, e.request, { from: run, fromAt: Date.now() }));   // the next press's lane (laneOf)
+    return true;
+  }
+  async function fromLane(e) {                        // the named lane's hand-over: true when early has e's result
+    if (!directOk || laneTried.has(e.request) || early.has(e.request) || Date.now() - e.at > LANE_FOR) return false;
+    try { return await takeArtifact(e, e.lane, LANE_ARTIFACT + e.request, {}); }
+    catch { laneTried.add(e.request); return false; }   // its own run's hand-over as ever
   }
   async function handOver(e) {                        // the run's hand-over once it's listed: true when early has its result
-    let d = direct.get(e.request), step = "run";
+    let d = direct.get(e.request);
+    const at = { step: "run" };
     if (!directOk || d === false || early.has(e.request) || Date.now() - e.at > MID_FOR) return false;   // later: 1-2 s matter no more
     if (!d) direct.set(e.request, (d = { run: e.run?.id || null, tries: 0 }));
     try {
@@ -495,22 +547,11 @@ export function createPreviews(app) {
         if (!run) return false;
         d.run = run.id; set(patch(store, e.request, { run }));
       }
-      step = "list";
-      const a = (await app.editor.github(`/repos/${repo()}/actions/runs/${d.run}/artifacts?name=${HANDOVER}`)).artifacts?.find(x => x.name === HANDOVER && !x.expired);
-      if (!a) return false;
-      step = "zip";
-      const url = new URL(a.archive_download_url);
-      if (url.origin !== "https://api.github.com") throw new Error("not GitHub's API");
-      const files = await unzip(await app.editor.github(url.pathname + url.search, { zip: true }));
-      const r = JSON.parse(new TextDecoder().decode(files["result.json"]));
-      if (r?.request !== e.request || !DONE.includes(r.state)) throw new Error("not this request's result");   // the publisher's stand-in then
-      const result = readResult(r), urls = {};
-      for (const [k, f] of Object.entries(result.files)) if (files[f]) urls[k] = URL.createObjectURL(new Blob([files[f]], { type: /\.webp$/i.test(f) ? "image/webp" : "image/avif" }));
-      result.files = Object.fromEntries(Object.keys(urls).map(k => [k, result.files[k]]));   // what the publisher keeps
-      local.set(e.request, urls); early.set(e.request, result); direct.set(e.request, false);
+      if (!(await takeArtifact(e, d.run, HANDOVER, at))) return false;
+      direct.set(e.request, false);
       return true;
     } catch (err) {
-      if (step !== "zip" && [401, 403, 404].includes(err.status)) directOk = false;   // a token without Actions read
+      if (at.step !== "zip" && [401, 403, 404].includes(err.status)) directOk = false;   // a token without Actions read
       direct.set(e.request, false);
       return false;
     }
@@ -528,6 +569,7 @@ export function createPreviews(app) {
       set(expire(store));
       for (const e of only ? [only] : due(store, Date.now(), look)) {
         const age = Date.now() - e.at, running = !only && e.state === "running";
+        if (running && e.lane && age >= LANE_FIRST_MS && await fromLane(e)) { notify(e.card); told.add(e.request); announce([withEarly(e)]); continue; }   // the warm lane's
         if (running && age < EARLY_MS) continue;                             // too soon to be done
         const [raw, got] = await Promise.all([running && age < FIRST_MS ? undefined : fetchResult(e).catch(() => undefined), running && handOver(e)]);
         if (got && raw == null) { notify(e.card); told.add(e.request); announce([withEarly(e)]); continue; }   // the branch: next rounds
@@ -544,6 +586,7 @@ export function createPreviews(app) {
         const run = await findRun(e).catch(() => null);
         set(patch(store, e.request, { runAt: Date.now() }));
         if (run) {
+          if (e.lane && run.conclusion === "startup_failure") lanesOk = false;   // the run-name with a lane didn't take
           set(patch(store, e.request, { run }));
           if (run.status === "completed" && run.conclusion !== "success" && e.run?.status === "completed") {   // seen finished twice, still no result
             set(patch(store, e.request, { state: "error", error: `The preview run ended (${run.conclusion}) without a result.` }));

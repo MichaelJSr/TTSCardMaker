@@ -321,6 +321,18 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     the one Publish puts on the branch, but for `files`, which Publish cuts to the images it has, and a result whose
     `request` isn't the run's, which Publish replaces with its "left no result" error. The branch stays the record:
     other devices and later visits read it there.
+  - Warm lane (owner D22, 2026-11-16; AutoCroissant `commands/card_preview_lane.py`): after a press that went well, the
+    preview job's process stays up 240 s for its editor's next presses (70 s before its 11-minute cap at the latest)
+    and bakes each in process, the same bake and bytes, with no setup. A press goes to it only when named: the dispatch
+    adds `"lane": "<run id>-<check>"`, the run that handed over the editor's newest result while it should still be up
+    (preview.js `laneOf`), and only when the card and edit fit `LANE_MAX` (1 KB). `check` is sha256 of
+    `request\ncard\nedit` (the input strings), its first 16 hex digits (`laneCheck`). The run-name then carries the card
+    and edit (`Card preview <request> lane <lane> <card> <edit>`), and the lane reads them there. A title GitHub cut or
+    changed doesn't check, and the press stays cold. Its hand-over is `card-preview-<request>` in the lane's run, the
+    same zip as `card-preview`, with `run` the press's own run. Every press is still dispatched, baked cold and
+    published as ever. The client shows whichever hand-over comes first. A 422 with `lane` dispatches again without it.
+    A press's run starts no lane of its own when its named lane handed it over. A lane ends at a newer press of its
+    editor it doesn't take; that press's run is the next lane.
   - The image, once result.json says `image` (`files.webp`; `files.before`: the card before the edit, for the Diff):
     `https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/previews/previews/<request>/preview.webp` (public, CORS
     `*`; the path is new per request, so the cache never serves an older one; raw serves PNGs as `image/png`, WebP's
