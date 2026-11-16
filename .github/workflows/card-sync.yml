@@ -65,7 +65,7 @@ on:
         type: boolean
         default: false
       full:
-        description: "Re-parse every card (budgeted runs of 400 downloads; approves gates G4 and G5)"
+        description: "Re-parse every card (one run of up to 800 downloads, the rest chained; approves gates G4 and G5)"
         type: boolean
         default: false
       cards:
@@ -819,7 +819,9 @@ jobs:
           if [ -n "$RECORDS" ]; then FULL=false; CARDS=; RESTORE=; ALLOW_ARCHIVE=false; fi
           db=$GITHUB_WORKSPACE/carddata/db
           mkdir -p "$db"
-          args=(--repo "$GITHUB_REPOSITORY" --checkout "$GITHUB_WORKSPACE" --head "$HEAD_SHA" --db "$db" --budget 400
+          budget=400
+          if [ "$FULL" = true ]; then budget=800; fi     # a full re-parse in one run (a chained pair's 800)
+          args=(--repo "$GITHUB_REPOSITORY" --checkout "$GITHUB_WORKSPACE" --head "$HEAD_SHA" --db "$db" --budget "$budget"
                 --run "$RUN_URL" --summary "$GITHUB_STEP_SUMMARY" --message "$RUNNER_TEMP/message.txt")
           base=$(jq -r '.card_commit // ""' "$db/manifest.json" 2> /dev/null || true)
           if [ -n "$base" ] && git -C "$GITHUB_WORKSPACE" cat-file -e "$base^{commit}" 2> /dev/null; then
