@@ -1289,7 +1289,7 @@ relies on:
   stats, as the chart), distributions kind=…&hp=v-v; stat shapes shape=; cooldowns cd=
   (CD_KEYS: 1CD, 2CD, 3CD+, 1GCD, 2GCD+, 1U, 2U, 3U+) &stars=; ability length stars&kind; items kind=item&sub=(&stars=);
   types types=; timing tags tag=; status effects and most referenced mentions=<id>; authors author=; cohort rows
-  cohort=<key> (balance.js `inCohort`: a |all key holds the kind's every member), Top/Bottom 10% legend bal=top|bottom;
+  cohort=<key> (balance.js `inCohort`: a |all key holds the kind's every member; an auxiliary creature is only in creature|all, as counted), Top/Bottom 10% legend bal=top|bottom;
   power creep cohort=any&q=created==Y; buffs and nerfs month=&change=buff|nerf
   (legend: change only); by stat change=hp+ / hp-…; recorded changes month=&change=text|stats|other (column: month,
   any counted change; a segment under 1 unit tall: no link); created per year q=created==Y&author= (legend author=);

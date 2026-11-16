@@ -59,7 +59,7 @@ export const flagged = (A, c, flag) => !!cardData(A, c)?.flags?.includes(flag);
 /** the card is in that cohort (a kind's |all one holds every card of the kind; any: in one) */
 export function inCohort(A, c, key) {
   const k = cardData(A, c)?.cohort;
-  return !!k && (key === "any" || k === key || (key.endsWith("|all") && k.split("|")[0] === key.split("|")[0]));
+  return !!k && (key === "any" || (k === key && c.type !== "creatures") || (key.endsWith("|all") && k.split("|")[0] === key.split("|")[0]));   // an auxiliary creature: counted in all creatures only
 }
 export const monthName = monthLabel;                 // app.js month= chip
 /** changes to how a card plays (analytics.py reworked): not a series, spacing or timing-tag rename alone */
