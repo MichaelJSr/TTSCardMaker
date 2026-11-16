@@ -1078,7 +1078,7 @@
   ]
  },
  "Auxiliary/Items/Party!.psd": {
-  "blob": "06a5d11e0c6758a47475fe676c031e7ef9b52616",
+  "blob": "528230395f8fb47f64665ce5a9b3c502a1700a44",
   "links": [
    {
     "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
@@ -1583,7 +1583,7 @@
   ]
  },
  "Auxiliary/Minions/Abigail.psd": {
-  "blob": "0e0cf53cfd524eee909c05e1d729097d4bde8212",
+  "blob": "3e15f81ae28283b5f170e856342aed9b5e00fa9b",
   "links": [
    {
     "drawn": "553dc3310dc8a99315877dc4c33d96d35a73fe15",
@@ -1723,7 +1723,7 @@
   ]
  },
  "Auxiliary/Minions/Artemis_Missiles.psd": {
-  "blob": "a4a86dda5c0a1b02e149604e9fbd4254949290ce",
+  "blob": "522eb46432613834cea9bc6eb85572fd178741b4",
   "links": [
    {
     "drawn": "84237e4b22982a9dd8306fa2ce86961d7a282f41",
@@ -2159,7 +2159,7 @@
   ]
  },
  "Auxiliary/Minions/Corruptor.psd": {
-  "blob": "babab00de64cfde67c6e5206de279947df357493",
+  "blob": "48c7b224d7a74411bf3f5ed2133874e465c693e1",
   "links": [
    {
     "drawn": "e66aa78af73095c9944d4b0fbe5f738621844012",
@@ -2270,7 +2270,7 @@
   ]
  },
  "Auxiliary/Minions/Delta.psd": {
-  "blob": "70d2cad4c5455a6ef093eb2176f758db8f6309d7",
+  "blob": "da6b2ecbab48ea34b952c58d18f45fadfafb6d80",
   "links": [
    {
     "drawn": "54034fc6210a87783ec27ed6c91fad62006738f6",
@@ -2700,7 +2700,7 @@
   ]
  },
  "Auxiliary/Minions/Heavy_Ion.psd": {
-  "blob": "dc745dcb7303eec3863352e6ebbf96c4a303f589",
+  "blob": "4de971c0b342b73408aec377c02debbe6a107dad",
   "links": [
    {
     "drawn": "84237e4b22982a9dd8306fa2ce86961d7a282f41",
@@ -2834,7 +2834,7 @@
   ]
  },
  "Auxiliary/Minions/Ipsilon.psd": {
-  "blob": "c9aee93514a4c49881f6ec0a1c876a9678470522",
+  "blob": "6a9248ef4318ed58c8cf80a4e55aebcfe43c666b",
   "links": [
    {
     "drawn": "54034fc6210a87783ec27ed6c91fad62006738f6",
@@ -2951,7 +2951,7 @@
   ]
  },
  "Auxiliary/Minions/Lil_Spood.psd": {
-  "blob": "13c0e338140927c70aa8f8ef0a1fe2ccf1eb94ce",
+  "blob": "9f5b5e19acd504d7e850c79b5af21fd0ad73dc9e",
   "links": [
    {
     "drawn": "cb5fa0ef961707a9f30feafebccb8bc348a07e89",
@@ -3519,7 +3519,7 @@
   ]
  },
  "Auxiliary/Minions/Pike_Beam.psd": {
-  "blob": "aeb126bd9c50f247e07a29e803bab92db458ab69",
+  "blob": "a70d6e6dd1d3b05ad9031f8ea9965777f85d5336",
   "links": [
    {
     "drawn": "84237e4b22982a9dd8306fa2ce86961d7a282f41",
@@ -4361,7 +4361,7 @@
   ]
  },
  "Auxiliary/Minions/Sigma.psd": {
-  "blob": "aed2ad869134b13df2407da3974835b8561e3b34",
+  "blob": "dc07d97a659932ee588f01d5569d72c8ced2154a",
   "links": [
    {
     "drawn": "54034fc6210a87783ec27ed6c91fad62006738f6",
@@ -6163,7 +6163,7 @@
   ]
  },
  "Creatures/Bug Fables/2 Stars/Spuder.psd": {
-  "blob": "d25d749977dcb0dff1b38a977944c26621b049f1",
+  "blob": "bba6e01b5bddf6456f4698215feac90afdff10b4",
   "links": [
    {
     "drawn": "70af758f4d24324aad4fced9277257f6bee27840",
@@ -6180,7 +6180,7 @@
   ]
  },
  "Creatures/Bug Fables/5 Stars/Tanjerin.psd": {
-  "blob": "2a37cfb33b5c70580eb72c9bd36188b4dc0c8264",
+  "blob": "71e8bc28954a66ab8310568d464d50eb2382d548",
   "links": [
    {
     "drawn": "0c6f948464a4f8f0ff51db193694c01ad17114f9",
@@ -6226,7 +6226,7 @@
   ]
  },
  "Creatures/Crypt/2 Stars/Stone_Golem.psd": {
-  "blob": "42a6fbe784237b207dcb6e5ae08b78f03c8adae5",
+  "blob": "3f5b1c04581a2c82ced863b0b1b9faa4adf22597",
   "links": [
    {
     "drawn": "cb5fa0ef961707a9f30feafebccb8bc348a07e89",
@@ -6249,7 +6249,7 @@
   ]
  },
  "Creatures/Crypt/4 Stars/Grief.psd": {
-  "blob": "8e6b1b0f1304979b4e876d5da01074f6baf9dccd",
+  "blob": "6b6fcf9d51c5d12e1efb4e30ede928d48a7bd270",
   "links": [
    {
     "drawn": "cb5fa0ef961707a9f30feafebccb8bc348a07e89",
@@ -6682,7 +6682,7 @@
   ]
  },
  "Creatures/FTL/2 Stars/Mantis.psd": {
-  "blob": "09a5431ee6c7856760f30db105cba4089a3349f2",
+  "blob": "47600fb6ecae2a270c794e4e1cbd0f01a438c056",
   "links": [
    {
     "drawn": "1f26ddeeae02185ba27620ad4f09945bafc4836c",
@@ -6711,7 +6711,7 @@
   ]
  },
  "Creatures/FTL/2 Stars/Zoltan.psd": {
-  "blob": "ad5fa339706648be43caf35812ed6c07a5706aa8",
+  "blob": "5ece6b20bc1da3256c86ebd0cdbcf2b484429907",
   "links": [
    {
     "drawn": "8e9042acfd6dfef63e8383eabbacb87b5300b12e",
@@ -6787,7 +6787,7 @@
   ]
  },
  "Creatures/FTL/4 Stars/The_Kestrel.psd": {
-  "blob": "5e05233e179bc2d848d6829cacad9e7de6e943d0",
+  "blob": "8078239791ab6c7895d36ab1926dc06a16df4c30",
   "links": [
    {
     "drawn": "84237e4b22982a9dd8306fa2ce86961d7a282f41",
@@ -7439,7 +7439,7 @@
   ]
  },
  "Creatures/Hollow Knight Silksong/4 Stars/Shakra.psd": {
-  "blob": "00ad4eb2d500a1a7f57662383105f02708bc7c61",
+  "blob": "6ba9714404b4bd236bd9d997066db6374b0e944a",
   "links": [
    {
     "drawn": "8038cdedc1967f19a82a5dc34503341f4a32ff8b",
@@ -7854,7 +7854,7 @@
   ]
  },
  "Creatures/Hollow Knight/4 Stars/White_Defender.psd": {
-  "blob": "35db618c8afe8ba8ab7e158c045c2d8619bf3693",
+  "blob": "8df648be84118440e637edd287fdcb914ccbbe73",
   "links": [
    {
     "drawn": null,
@@ -9462,7 +9462,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Spinni.psd": {
-  "blob": "a79304a32cc5e87dd644cffe974e0e4172d94ce7",
+  "blob": "3f6ad42990101d54da48504509f449ddf3ecd4e6",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9537,7 +9537,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Waddle_Dee.psd": {
-  "blob": "6e7eba740cd989cc7334db21d1b999168ea22da8",
+  "blob": "bbcdad34b5d28003b427d4bef7e0fe8a23b25650",
   "links": [
    {
     "drawn": "707f08d8e9d4b4d7853517fa942d3b48ea6e4112",
@@ -11537,7 +11537,7 @@
   ]
  },
  "Creatures/Monkey D Folder/2 Stars/Mol_D_Truffy.psd": {
-  "blob": "0b83f49b937edaaa5fc94940c27946538f4e3ab6",
+  "blob": "a2b7950f9c2de417253ccf88fc84686fb62b008c",
   "links": [
    {
     "drawn": "7e52ee17b91cdcd2f991dbe4f798f7f78fc4f1f8",
@@ -11595,7 +11595,7 @@
   ]
  },
  "Creatures/Monkey D Folder/2 Stars/Whippy_D_Cream.psd": {
-  "blob": "853765400d0806cc6230c3ac0145cb8abe1c7690",
+  "blob": "9d5413e2464214601470df921cf32ef0563c457f",
   "links": [
    {
     "drawn": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
@@ -11779,7 +11779,7 @@
   ]
  },
  "Creatures/Monkey D Folder/3 Stars/Pan_D_Luffy.psd": {
-  "blob": "143ad7db6a57a45d201e6cf25d93bfc0dfab0abf",
+  "blob": "95a59b4efcfc0d1af396eedf002ab52047798d74",
   "links": [
    {
     "drawn": "b2c191a250a153a0303f1f3d242ad2d2e5fbd64f",
@@ -13376,7 +13376,7 @@
   ]
  },
  "Creatures/Other/3 Stars/Overseer.psd": {
-  "blob": "299224368078c0ee3bf352ab1aae6e084ecd432b",
+  "blob": "75feb79f1ebc8e59a0c28ce20b3cc562e46ea22f",
   "links": [
    {
     "drawn": "49e350121052dcdec749ef50df1a2703fdc3db43",
@@ -13460,7 +13460,7 @@
   ]
  },
  "Creatures/Other/3 Stars/The_Last_Cabbage_Merchant.psd": {
-  "blob": "410cebb8e7b8eae2c6ab8071adc2af7a0fabdbe5",
+  "blob": "2429bf74ef4237283e6e8c77a7912263e5aa427c",
   "links": [
    {
     "drawn": "358cc8bef857da7e8ac0ba5f0718ad918844d8ec",
@@ -13610,7 +13610,7 @@
   "links": []
  },
  "Creatures/Other/4 Stars/Militron.psd": {
-  "blob": "cacd40d917dca91357142bc73b7287401fe9c9eb",
+  "blob": "745c66685f62283e5bfc40e3060b0c5729c47a48",
   "links": [
    {
     "drawn": "b5235b3a93adf8d6714d7bd166171b54a0368a33",
@@ -14346,7 +14346,7 @@
   ]
  },
  "Creatures/Other/5 Stars/Koro-Sensei.psd": {
-  "blob": "2e305064e134dce5f041f35f55f2970838197af4",
+  "blob": "6824d9dcbe5aee8bf602fbbffa4bd66335a7bb11",
   "links": [
    {
     "drawn": "fe802672da9441392cb036e5e85cd6f2896eeb38",
@@ -14479,7 +14479,7 @@
   ]
  },
  "Creatures/Other/5 Stars/The_Forbidden_One.psd": {
-  "blob": "177fa4d3b8e031cd201f9f8ff7aecbb41f2cb160",
+  "blob": "8be1be3db52368f1ce7379b837060bcbe54d61e2",
   "links": [
    {
     "drawn": "8ce7613d2c945b94095a3a56c5f517c6de505d4b",
@@ -14514,7 +14514,7 @@
   ]
  },
  "Creatures/Other/5 Stars/The_Queen.psd": {
-  "blob": "48fe71ec5a9a27e06cb9a51b1c36a0b4ff40e458",
+  "blob": "2e9bfdfde1577b5b963af020860db268ddb8a7ca",
   "links": [
    {
     "drawn": "54034fc6210a87783ec27ed6c91fad62006738f6",
@@ -15884,7 +15884,7 @@
   ]
  },
  "Creatures/Undertale/4 Stars/Jevil.psd": {
-  "blob": "d97757e807ba3cc7576ee9cd461065e2faf2ca42",
+  "blob": "7c9b3413c50d1ed21a5b4e140d9cf59390285e6b",
   "links": [
    {
     "drawn": "4e9e1a9ca8b97eb78b192379733d7329edeefb51",
@@ -16480,7 +16480,7 @@
   ]
  },
  "Creatures/World Of Warcraft/4 Stars/Warcraftian_Shaman.psd": {
-  "blob": "5a4deb15bac9941fff72b65e7c9d2b34d7eee338",
+  "blob": "760a9e03e3fd5f19c97e992be650c23f727d3d16",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -16609,7 +16609,7 @@
   ]
  },
  "Creatures/World Of Warcraft/5 Stars/The_Lich_King.psd": {
-  "blob": "eb7b68caadf5029037c949e687fca1d3994740bd",
+  "blob": "5beb7f775dd9ff23717cd36b44cc2efc7cf41583",
   "links": [
    {
     "drawn": "b5235b3a93adf8d6714d7bd166171b54a0368a33",
