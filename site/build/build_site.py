@@ -49,8 +49,8 @@ Where the data comes from:
     trailers), gives each card its first upload (fs: created's fallback), and counts
     per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
     Edits.json). Needs full history: a shallow clone stops the build. Each older version gets a 360 px copy
-    (version_images: thumbs/v/, cached by blob in site/.vcache; their PNG blobs fetched in batches, VERSION_BUDGET a build;
-    site.yml: none in the build, its versions job makes them with --versions).
+    on the plates branch, not in the site (version_images: v/<card id>/<commit sha[:10]>-<tag>.avif; site.yml's versions
+    job makes those missing with --versions, their PNG blobs fetched in batches, VERSION_BUDGET a run).
   * Creation dates: site/Card Creation Dates.json, each card's first Discord post; a card's created is the earlier of that
     and fs (a hand-set date wins): the Cards tab's created sort, the card page's "created" fact, the person pages' newest
     cards and activity chart. Bad entries skipped.
@@ -111,7 +111,7 @@ REPO = os.path.dirname(SITE)
 DIST = os.path.join(SITE, "dist")
 CACHE = os.path.join(SITE, ".cache")
 OG_CACHE = os.path.join(SITE, ".og-cache")   # deck page montages: their own CI cache, so outside CACHE
-VCACHE = os.path.join(SITE, ".vcache")       # older versions' copies: site.yml's versions job's cache
+VCACHE = os.path.join(SITE, ".vcache")       # older versions' copies the versions job makes (the cache before 11-16 seeds it)
 CARD_REPO = os.environ.get("CARD_REPO", "MichaelJSr/TTSCardMaker")
 BOT_REPO = os.environ.get("BOT_REPO", "bobberlington/AutoCroissant")
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
@@ -127,9 +127,13 @@ THUMB_VERSION = "1"                          # bump to re-encode every card imag
 SMALL_SIZES = {96: (720, 60), 192: (720, 60), 480: (720, 50)}   # width -> (made from that cached width, quality): table rows, lists, strips; card view at 1x
 CARD_VIEW_SIZES = "(max-width: 820px) calc(100vw - 78px), 430px"   # the card view's picture (style.css .detail, .modal, .dialog)
 VERSION_WIDTH, VERSION_QUALITY = 360, 55    # older image versions' copies (app.js versionCopy, cards.json thumbs.v): the grid's old 360 settings
-VERSION_BUDGET = float(os.environ.get("VERSION_BUDGET", "40"))   # s a build spends making them, newest first; the rest: later builds
-VERSION_LIST = os.environ.get("VERSION_LIST", "")   # some still missing: every older version's blob, newest first (site.yml versions job)
+VERSION_BUDGET = float(os.environ.get("VERSION_BUDGET", "900"))  # s the versions job spends making them, newest first; the rest: later runs
+VERSION_LIST = os.environ.get("VERSION_LIST", "")   # some not on PLATES: every older version's "<PNG blob> <file>", newest first (site.yml versions job)
+VERSION_PLATES = os.environ.get("VERSION_PLATES", "")   # PLATES' v/ files, one a line (site.yml Setup start); none: all missing
 VERSION_BATCH = 50                            # PNG blobs a git fetch
+PLATES = "plates"                             # AutoCroissant card_plates' branch; also v/<card id>/<sha[:10]>-<tag>.avif (app.js versionCopy)
+PLATES_REF = "refs/plates/head"               # where --versions fetches its head
+TRIES = 5                                     # --versions' pushes (card_plates.TRIES)
 
 
 def avif(w):
@@ -2895,24 +2899,83 @@ def version_copies(blobs, budget):
 
 
 def version_images(olds):
-    """Older image versions' copies (version_copies, VERSION_BUDGET) in dist thumbs/v/<stem>-<tag>.avif (olds: {stem (card
-    id-commit sha[:10], app.js versionCopy): (PNG blob, commit time)}); the page shows the PNG of one without. Some left:
-    every blob, newest first, in VERSION_LIST (site.yml's versions job makes them: --versions)."""
-    newest = {}
-    for blob, ts in sorted(olds.values(), key=lambda o: -o[1]):
-        newest.setdefault(blob, ts)
-    path, left = version_copies(list(newest), VERSION_BUDGET)
-    out, tag = os.path.join(DIST, "thumbs", "v"), version_tag()
-    os.makedirs(out, exist_ok=True)
-    sizes, linked = {b: os.path.getsize(path(b)) for b in newest if os.path.exists(path(b))}, 0
-    for stem, (blob, _) in olds.items():
-        if sizes.get(blob):                       # an empty one: failed
-            link_or_copy(path(blob), os.path.join(out, f"{stem}-{tag}.avif"))
-            linked += 1
+    """Older image versions' copies are on PLATES, v/<card id>/<commit sha[:10]>-<tag>.avif (olds: {"<card id>/<commit
+    sha[:10]>": (PNG blob, commit time)}; app.js versionCopy, the PNG for one without). Some not in VERSION_PLATES' list
+    (or no list): every one, "<blob> <file>" newest first, in VERSION_LIST (site.yml's versions job makes them: --versions)."""
+    tag = version_tag()
+    files = {f"v/{stem}-{tag}.avif": blob for stem, (blob, _) in sorted(olds.items(), key=lambda o: -o[1][1])}
+    try:
+        with open(VERSION_PLATES, encoding="utf-8") as fh:
+            have = set(fh.read().split())
+    except OSError:
+        have = set()
+    left = sum(1 for f in files if f not in have)
     if left and VERSION_LIST:
         with open(VERSION_LIST, "w", encoding="utf-8") as fh:
-            fh.write("".join(b + "\n" for b in newest))
-    log(f"version images: {linked} of {len(olds)} older versions have a copy ({len(newest)} blobs, {left} to make)")
+            fh.write("".join(f"{blob} {f}\n" for f, blob in files.items()))
+    log(f"version images: {len(files) - left} of {len(files)} older versions have a copy on {PLATES} ({left} to make)")
+
+
+def _git(*args, data=None):
+    """git in REPO (data: its stdin); its stdout."""
+    return subprocess.run(["git", "-C", REPO, *args], input=data, capture_output=True, text=True, check=True).stdout
+
+
+def plates_head():
+    """PLATES' head fetched (depth 1, no blobs) to PLATES_REF; "" when there is no such branch."""
+    if not _git("ls-remote", "--heads", "origin", f"refs/heads/{PLATES}").split():
+        return ""
+    _git("fetch", "-q", "--no-tags", "--no-write-fetch-head", "--depth", "1", "--filter=blob:none", "origin",
+         f"+refs/heads/{PLATES}:{PLATES_REF}")
+    return _git("rev-parse", "--verify", f"{PLATES_REF}^{{commit}}").strip()
+
+
+def publish_versions(listed):
+    """site.yml's versions job (listed: VERSION_LIST's file): the copies PLATES lacks made (version_copies, VERSION_BUDGET;
+    one of a PNG blob already there reused, one that failed an empty file: the page shows its PNG) and committed onto its
+    head, v/ pruned to the list, by plumbing as AutoCroissant card_plates.publish (no delta search: pushed blobs never
+    wanted; TRIES times from a moved head). Returns the commit ("": no change)."""
+    with open(listed, encoding="utf-8") as fh:
+        rows = [line.split(" ", 1) for line in fh.read().splitlines() if " " in line]
+    head = plates_head()
+    tree = lambda ref: dict(line.split("\t", 1)[::-1] for line in _git("ls-tree", "-z", *ref).split("\0") if "\t" in line)
+    have = {f: e.split()[2] for f, e in tree(["-r", head, "v/"]).items()} if head else {}
+    known = {blob: have[f] for blob, f in rows if f in have}
+    todo = list(dict.fromkeys(blob for blob, _ in rows if blob not in known))
+    if todo:
+        path, _ = version_copies(todo, VERSION_BUDGET)
+        made = [b for b in todo if os.path.exists(path(b))]
+        shas = _git("hash-object", "-w", "--stdin-paths", data="".join(path(b) + "\n" for b in made)).split()
+        known.update(zip(made, shas))
+    files = {f: known[blob] for blob, f in rows if blob in known}
+    if files == have:
+        log(f"version copies: {len(files)} on {PLATES}, no change")
+        return ""
+    cards = defaultdict(list)                     # v/<card id>/<file>
+    for f, sha in sorted(files.items()):
+        cards[f.split("/")[1]].append(f"100644 blob {sha}\t{f.split('/', 2)[2]}\n")
+    ids = list(cards)
+    subs = _git("mktree", "--missing", "--batch", data="\n".join("".join(cards[i]) for i in ids) + "\n").split()
+    v = _git("mktree", "--missing", data="".join(f"040000 tree {sha}\t{i}\n" for i, sha in zip(ids, subs))).strip()
+    added, dropped = sum(1 for f, sha in files.items() if have.get(f) != sha), len(set(have) - set(files))
+    why = ""
+    for attempt in range(TRIES):
+        try:
+            if attempt:
+                time.sleep(attempt * 1.5)
+                head = plates_head()
+            root = {n: e for n, e in (tree([head]) if head else {}).items() if n != "v"}
+            root_sha = _git("mktree", "--missing", data="".join(f"{e}\t{n}\n" for n, e in root.items()) + f"040000 tree {v}\tv\n").strip()
+            commit = _git("commit-tree", root_sha, *(["-p", head] if head else []), "-m",
+                          f"Card versions: {added} added, {dropped} dropped").strip()
+            _git("-c", "pack.window=0", "push", "-q", "--no-thin", "origin", f"{commit}:refs/heads/{PLATES}")
+        except subprocess.CalledProcessError as error:   # most often a push refused: the branch moved since the fetch
+            why = (error.stderr or "").strip()
+            log(f"version copies: push {attempt + 1} of {TRIES} failed: {why}")
+            continue
+        log(f"version copies: {added} added, {dropped} dropped, {len(files)} on {PLATES} ({commit[:8]})")
+        return commit
+    raise SystemExit(f"error: version copies not pushed after {TRIES} tries: {why}")
 
 
 HEAVY_PSDS = 45                               # card PSDs in a commit from which GitHub's commit page fails (503 after ~10 s)
@@ -4810,7 +4873,7 @@ def main():
                 for e in by_png[png]:
                     versions["cards"][e["id"]] = rows
                     e["iv"] = len(rows)
-                    olds.update({f"{e['id']}-{sha[:10]}": (pairs[png, sha][1], ts) for (sha, ts, _, _), _ in vs[1:] if (png, sha) in pairs})
+                    olds.update({f"{e['id']}/{sha[:10]}": (pairs[png, sha][1], ts) for (sha, ts, _, _), _ in vs[1:] if (png, sha) in pairs})
                     if minor:
                         versions["minor"][e["id"]] = minor
                         e["ivm"] = len(minor)
@@ -5172,7 +5235,6 @@ if __name__ == "__main__":
     if sys.argv[1:2] == ["--images"]:             # site.yml Images start: --images <commit> <stop file>
         sys.exit(early_images(*sys.argv[2:4]))
     if sys.argv[1:2] == ["--versions"]:           # site.yml versions job: --versions <VERSION_LIST's file>
-        with open(sys.argv[2], encoding="utf-8") as fh:
-            version_copies(fh.read().split(), VERSION_BUDGET)
+        publish_versions(sys.argv[2])
         sys.exit(0)
     sys.exit(main())

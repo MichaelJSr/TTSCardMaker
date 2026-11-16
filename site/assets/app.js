@@ -129,6 +129,7 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   for (const c of S.cards) if (h[c.id]) c.history = h[c.id];
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
+const COPIES = "https://raw.githubusercontent.com";       // the older versions' copies' host (versionCopy)
 const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
 // loaded on first use (esbuild chunks; without esbuild, the modules): charts.js (stats.js, balance.js, insights.js) for the Stats
 // page and the grid filters its charts link to; balance.js alone for the cards' Balance blocks; profile.js for the People tab
@@ -1061,8 +1062,8 @@ const versionList = c => {
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; });
 };
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
-// an older version's 360 px copy (build_site version_images); one not built yet: its PNG
-const versionCopy = (c, v) => `thumbs/v/${c.id}-${v.sha.slice(0, 10)}-${S.data.thumbs.v}.avif`;
+// an older version's 360 px copy on the plates branch (build_site version_images, not in the site); one not made yet: its PNG
+const versionCopy = (c, v) => `${COPIES}/${S.versions.repo}/plates/v/${c.id}/${v.sha.slice(0, 10)}-${S.data.thumbs.v}.avif`;
 modal.addEventListener("error", e => { const t = e.target; if (t.dataset?.png) { t.src = t.dataset.png; delete t.dataset.png; } }, true);
 /** Under the card's picture: open beside the text, closed in one column (style.css .detail), where the card's text comes
  *  after it; a redraw of the same card keeps it as it was. */

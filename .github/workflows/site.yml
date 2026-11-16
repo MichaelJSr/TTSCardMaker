@@ -217,6 +217,8 @@ jobs:
       # none when that job did not run in this attempt.
       # The data branch (Card sync's, db/) in carddata, after the checkout above (it empties the workspace): the token in a
       # header, and in carddata's config as actions/checkout keeps it (Data wait fetches there), as Card sync's clone.
+      # The plates branch's v/ (older versions' copies) by name, its trees only, in a clone of its own (a depth-1 fetch
+      # here would make the history shallow): build_site lists those missing for the versions job (none listed: all).
       - name: Setup start
         env:
           UV_PYTHON: ${{ steps.py.outputs.python || steps.python.outputs.python-path }}
@@ -270,10 +272,18 @@ jobs:
               timeout 30 git clone -q --depth 1 --no-tags --single-branch --branch data "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" carddata \
               && git -C carddata config include.path "$creds"
           }
+          plates() {
+            GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+              timeout 30 git clone -q --bare --depth 1 --filter=blob:none --no-tags --single-branch --branch plates \
+                "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$RUNNER_TEMP/plates.git" \
+              && git -C "$RUNNER_TEMP/plates.git" ls-tree -r --name-only HEAD v > "$RUNNER_TEMP/plates-v.tmp" \
+              && mv "$RUNNER_TEMP/plates-v.tmp" "$RUNNER_TEMP/plates-v.txt" && wc -l < "$RUNNER_TEMP/plates-v.txt"
+          }
           start uv packages
           start npm npm install --prefix "$RUNNER_TEMP/esbuild" --no-save --no-audit --no-fund esbuild@0.28.2
           start data data
           start versions versions
+          start plates plates
 
       # Cache key = the card PNG and MDW/Fonts blobs + the build scripts (image settings live there; the font build's draws
       # the token variants' pictures) + the build's pins (the WOFF2 fonts' names carry fontTools' and brotli's versions); the
@@ -336,13 +346,6 @@ jobs:
           path: site/.og-cache
           key: deck-previews-v2-${{ github.sha }}
           restore-keys: deck-previews-v2-
-
-      # Older image versions' copies: the versions job's cache (below), only read here
-      - uses: actions/cache/restore@v6
-        with:
-          path: site/.vcache
-          key: card-versions-${{ github.run_id }}
-          restore-keys: card-versions-
 
       # History join done (before Data wait's fetch and the build's history); History start's fetch late: raced by the
       # cached copy; still shallow: once more, else the job fails (.github/actions/history)
@@ -443,9 +446,9 @@ jobs:
             ) >> "$bg/sizes.log" 2>&1 < /dev/null &
           fi
 
-      # Setup start's uv, npm and data, and Sizes start's (versions: the deploy waits for it): uv or npm failing fails the
-      # job; the PSD sizes failing only leaves them out (a warning); the data clone failing: checked out below. Images
-      # start's: stopped first, a failure only warns.
+      # Setup start's uv, npm, data and plates, and Sizes start's (versions: the deploy waits for it): uv or npm failing
+      # fails the job; the PSD sizes failing only leaves them out (a warning); the data clone failing: checked out below;
+      # plates failing: every copy listed. Images start's: stopped first, a failure only warns.
       - name: Setup wait
         id: setup
         timeout-minutes: 10
@@ -453,11 +456,11 @@ jobs:
           bg=$RUNNER_TEMP/setup
           [ ! -e "$bg/images.log" ] || touch "$bg/images.stop"
           failed=
-          for n in uv npm sizes data; do
+          for n in uv npm sizes data plates; do
             until [ -s "$bg/$n.code" ]; do sleep 0.1; done
             code=$(cat "$bg/$n.code")
             echo "::group::$n (exit $code)"; cat "$bg/$n.log"; echo "::endgroup::"
-            [ "$code" = 0 ] || [ "$n" = sizes ] || [ "$n" = data ] || failed="$failed $n"
+            [ "$code" = 0 ] || [ "$n" = sizes ] || [ "$n" = data ] || [ "$n" = plates ] || failed="$failed $n"
           done
           [ "$(cat "$bg/sizes.code")" = 0 ] || echo "::warning::PSD sizes not all read: the site leaves those out"
           if [ "$(cat "$bg/data.code")" = 0 ]; then echo "data=true" >> "$GITHUB_OUTPUT"; else echo "::warning::the data clone failed: checked out"; fi
@@ -479,8 +482,8 @@ jobs:
 
       # IMAGE_BUDGET: images not made in 30 minutes (a full AVIF re-encode is ~11 CPU-minutes on a Mac, an estimated 20-25
       # on the runner) are left for the next run; the build then fails (nothing deployed) and the job's last step keeps what
-      # it made. The step's timeout leaves that save time to run before the job's. Older versions' copies: only those the
-      # versions cache has (some missing: their list, for the versions job).
+      # it made. The step's timeout leaves that save time to run before the job's. Older versions' copies: on the plates
+      # branch, not in the site (some missing: their list, for the versions job).
       - id: build
         timeout-minutes: 38
         run: python site/build/build_site.py
@@ -488,8 +491,8 @@ jobs:
           CARD_DATA_DIR: carddata/db
           PSD_TREE: ${{ runner.temp }}/tree.json
           IMAGE_BUDGET: "1800"
-          VERSION_BUDGET: "0"
           VERSION_LIST: ${{ runner.temp }}/version-copies.txt
+          VERSION_PLATES: ${{ runner.temp }}/plates-v.txt
           ESBUILD: ${{ runner.temp }}/esbuild/node_modules/.bin/esbuild
 
       - id: og
@@ -658,11 +661,12 @@ jobs:
           path: site/.cache
           key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'site/build/requirements.txt', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}-${{ github.run_id }}-${{ github.run_attempt }}
 
-  # Older image versions' 360 px copies (build_site version_copies), off the build's path and outside pages-build: the
-  # build links those cached and, some missing, lists every older version's PNG blob, newest first; this job makes ~15
-  # minutes of the missing ones (3-4 a second, the blobs fetched by id) into the cache the next build restores. A version
-  # without one shows its PNG. One at a time (a newer waiting run replaces one), so no two save over each other. Never
-  # fails the run (the site is out).
+  # Older image versions' 360 px copies (build_site publish_versions) on the plates branch, not in the site: off the
+  # build's path and outside pages-build. Some missing from the branch, the build lists every older version's PNG blob
+  # and file, newest first; this job makes ~15 minutes of the missing ones (3-4 a second, the blobs fetched by id) and
+  # commits them onto the branch head, v/ pruned to the list (pushes and retries as AutoCroissant card_plates.publish,
+  # the branch's other writer). A version without one shows its PNG (app.js versionCopy). One at a time (a newer waiting
+  # run replaces one). Never fails the run (the site is out).
   versions:
     needs: build
     if: ${{ !cancelled() && needs.build.outputs.copies != '' }}
@@ -673,9 +677,7 @@ jobs:
     timeout-minutes: 20
     continue-on-error: true
     permissions:
-      contents: read
-    outputs:
-      saved: ${{ steps.save.outcome == 'success' }}
+      contents: write     # the plates branch
     steps:
       - uses: actions/checkout@v7
         with:
@@ -695,38 +697,34 @@ jobs:
 
       - run: python -m pip install -q "$(grep -oE '^pillow==[0-9.]+' site/build/requirements.txt)"   # build_site's one package
 
-      - uses: actions/cache/restore@v6
+      # No v/ on the plates branch yet: the copies' last cache (before 11-16) seeds it, once
+      - id: seed
+        run: |
+          git fetch -q --no-tags --depth 1 --filter=blob:none origin +refs/heads/plates:refs/plates/head || true
+          git rev-parse -q --verify refs/plates/head:v > /dev/null || echo "seed=true" >> "$GITHUB_OUTPUT"
+
+      - if: steps.seed.outputs.seed == 'true'
+        uses: actions/cache/restore@v6
         with:
           path: site/.vcache
           key: card-versions-${{ github.run_id }}
           restore-keys: card-versions-
 
-      - id: before
-        run: echo "names=$(ls site/.vcache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
-
       - timeout-minutes: 17
         run: python site/build/build_site.py --versions "$RUNNER_TEMP/version-copies.txt"
         env:
           VERSION_BUDGET: "900"
+          GIT_AUTHOR_NAME: AutoCroissant
+          GIT_AUTHOR_EMAIL: autocroissant@gmail.com
+          GIT_COMMITTER_NAME: AutoCroissant
+          GIT_COMMITTER_EMAIL: autocroissant@gmail.com
 
-      # Saved whenever its files changed (made or pruned), after a failure too
-      - id: after
-        if: always() && steps.before.outputs.names != ''
-        run: echo "names=$(ls site/.vcache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
-
-      - id: save
-        if: always() && steps.after.outputs.names != '' && steps.after.outputs.names != steps.before.outputs.names
-        uses: actions/cache/save@v6
-        with:
-          path: site/.vcache
-          key: card-versions-${{ github.run_id }}-${{ github.run_attempt }}
-
-  # Each save above is a new entry (card images ~150 MB, copies up to ~140 MB): the older ones go. After the deploy.
+  # Each save above is a new entry (card images ~150 MB): the older ones go. After the deploy.
   caches:
-    needs: [build, versions]
-    if: ${{ !cancelled() && (needs.build.outputs.saved == 'true' || needs.versions.outputs.saved == 'true') }}
+    needs: build
+    if: ${{ !cancelled() && needs.build.outputs.saved == 'true' }}
     permissions:
       actions: write
     uses: ./.github/workflows/caches.yml
     with:
-      prefixes: card-images-v2- deck-previews-v2- card-versions-
+      prefixes: card-images-v2- deck-previews-v2-
