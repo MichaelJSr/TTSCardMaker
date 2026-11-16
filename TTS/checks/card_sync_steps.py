@@ -9,8 +9,10 @@
    main and every later step; after runs the data steps with AFTER = the main lane's last commit (M, or R on it)
    and RECORDS, also for a bake that only recorded verdicts.
 2. The data Gate on sandbox history (the data lane's depth-1 checkout from Cards start, its history from History start,
-   History join and History wait; failed, fetched once more; failed again, the job fails; site.yml's History start and
-   wait the same cases; Cards start failed: the checkout as ever): stoogedings-src/ alone
+   History join and History wait (.github/actions/history); failed, fetched once more; failed again, the job fails;
+   History start's fetch late: the cached copy, restored, fetches the commits since it and is joined first, a broken
+   one waits for the fetch; site.yml's History start, join and wait the same cases; Cards start failed: the checkout as
+   ever): stoogedings-src/ alone
    and a hand-edited save don't start the data lane; fonts, stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does, without the dispatch's inputs. The Build
    step's arguments: the dispatch's inputs, none after the bake; --own the main lane's commits since the last build.
    The main Gate: a push and a dispatch go; the schedule goes when a card input or the save changed (the lane's own
@@ -74,6 +76,7 @@ import time
 from checks_env import REPO
 
 WORKFLOW = os.path.join(REPO, ".github/workflows/card-sync.yml")
+HISTORY_ACTION = os.path.join(REPO, ".github/actions/history")         # History wait's steps, History join's join.sh
 GUARDS = os.path.join(REPO, ".github/workflows/card-guards.yml")
 BASH = ["bash", "--noprofile", "--norc", "-eo", "pipefail"]           # GitHub's `shell: bash`
 FAILED = []
@@ -559,7 +562,9 @@ def _fresh_origin(tmp: str) -> tuple:
     commit(work, {"MDW/Fonts/a.ttf": "font a", "MDW/Fonts/b.otf": "font b", "MDW/Fonts/stoogedings-src/stoogedings.json": "{}",
                   "MDW/Fonts/stoogedings-src/x.svg": "svg", "site/Card Edits.json": "{}", "site/Card Authors.txt": "a",
                   "TTS/Impossibility Simulator.json": "{}", "TTS/decks.json": "{}", "Cards/One.psd": "psd",
-                  "Cards/One.png": "png", "site/index.html": "x"}, "init")
+                  "Cards/One.png": "png", "site/index.html": "x",
+                  ".github/actions/history/join.sh": open(os.path.join(HISTORY_ACTION, "join.sh"), encoding="utf-8").read()},
+           "init")
     bare = os.path.join(tmp, "origin.git")
     subprocess.run(["git", "clone", "-q", "--bare", work, bare], check=True)
     git(bare, "config", "uploadpack.allowFilter", "true")
@@ -638,46 +643,89 @@ def checkout_data(tmp: str, bare: str, name: str, job: dict = None, url: str = "
         assert code == 0 and out.get("ok") == "true", text
         return ws
     subprocess.run(["git", "clone", "-q", "--filter=blob:none", "--depth=1", "--no-checkout", f"file://{bare}", ws], check=True)
-    git(ws, "sparse-checkout", "set", "--no-cone", "/site/Card Edits.json", "/site/Card Authors.txt",
-        "/site/Card Creation Dates.json", "/MDW/Fonts/stoogedings-src/stoogedings.json")
+    git(ws, "sparse-checkout", "set", "--no-cone", "/.github/actions/history/", "/site/Card Edits.json",
+        "/site/Card Authors.txt", "/site/Card Creation Dates.json", "/MDW/Fonts/stoogedings-src/stoogedings.json")
     git(ws, "checkout", "-q", "main")
     return ws
 
 
-def history(job: dict, ws: str, tmp: str, start: str = "", wait: str = "", fetch: str = "") -> tuple:
-    """History start (card-sync's: from fetch, else start, into history.git; History join adds it, else origin), then
-    History wait (origin at start, wait while each fetches): (exit code, output)."""
+def _written(path: str, seconds: float = 60) -> bool:
+    end = time.monotonic() + seconds
+    while (not os.path.exists(path) or not open(path).read().strip()) and time.monotonic() < end:
+        time.sleep(0.05)
+    return os.path.exists(path) and bool(open(path).read().strip())
+
+
+def history(job: dict, ws: str, tmp: str, start: str = "", wait: str = "", fetch: str = "", copy: str = None,
+            slow: float = 0) -> tuple:
+    """History start (from fetch, else start, into history.git; History join adds it, else origin), then History wait
+    (origin at start, wait while each fetches). copy: History wait's cache restore (a bare repo; "" a miss), right after
+    History join, History start's fetch `slow` s late; else History wait once history.code is in: (exit code, output)."""
     runner = os.path.join(tmp, "runner")
-    code_file = os.path.join(runner, "history.code")
-    for name in ("history.code", "history-fetch.code"):
+    for name in ("history.code", "history-fetch.code", "history-copy.code", "history-copy.started"):
         if os.path.exists(os.path.join(runner, name)):
             os.remove(os.path.join(runner, name))
-    shutil.rmtree(os.path.join(runner, "history.git"), ignore_errors=True)        # a fresh RUNNER_TEMP's
+    for name in ("history.git", "history-copy.git"):
+        shutil.rmtree(os.path.join(runner, name), ignore_errors=True)             # a fresh RUNNER_TEMP's
     was = git(ws, "remote", "get-url", "origin")
     git(ws, "remote", "set-url", "origin", start or was)
     env = served(fetch or start or was)
-    run_step(job, "History start", ws, env, tmp)
-    if any(s.get("name") == "History join" for s in job["steps"]):
-        run_step(job, "History join", ws, env, tmp)
-    end = time.monotonic() + 60
-    while (not os.path.exists(code_file) or not open(code_file).read().strip()) and time.monotonic() < end:
-        time.sleep(0.05)
-    if not os.path.exists(code_file) or not open(code_file).read().strip():  # History wait would wait forever
+    fake = os.path.join(tmp, "slow-bin")                    # History start's fetch alone waits `slow` s
+    write(os.path.join(fake, "timeout"), f'#!/bin/bash\ncase "$*" in *"/history.git "*) sleep {slow};; esac\n'
+                                         f'exec {shutil.which("timeout")} "$@"\n')
+    os.chmod(os.path.join(fake, "timeout"), 0o755)
+    run_step(job, "History start", ws, {**env, "PATH": f"{fake}:{os.environ['PATH']}"}, tmp)
+    run_step(job, "History join", ws, env, tmp)
+    if copy is None and not _written(os.path.join(runner, "history.code")):     # History wait would wait forever
         return 124, "history.code not written in 60 s"
     git(ws, "remote", "set-url", "origin", wait or was)
-    code, text, _ = run_step(job, "History wait", ws, {}, tmp)
+    code, text = history_wait(ws, tmp, copy or "")
     git(ws, "remote", "set-url", "origin", was)
+    _written(os.path.join(runner, "history-fetch.code"))                           # History start's, before the next
     return code, text
+
+
+def history_wait(ws: str, tmp: str, copy: str = "") -> tuple:
+    """History wait: .github/actions/history's steps in order, each `if:` on the steps before; its cache restore copies
+    `copy` (the newest main-history- entry) to its path, a miss without: (exit code, output)."""
+    lines = open(os.path.join(HISTORY_ACTION, "action.yml"), encoding="utf-8").read().split("\n")
+    lines = ["  " + x for x in lines[lines.index("  steps:") + 1:]]                 # a job's step indent
+    runner = os.path.join(tmp, "runner")
+    ctx, i, text = {"steps": {}, "runner": {"temp": runner}}, 0, ""
+    while i < len(lines):
+        if not lines[i].startswith("      - "):
+            i += 1
+            continue
+        s, i = _step(lines, i, {})
+        outputs = {}
+        if s.get("if") and not evaluate(s["if"], ctx):
+            pass
+        elif s.get("uses", "").startswith("actions/cache/restore@"):
+            if copy:
+                shutil.copytree(copy, s["with"]["path"].replace("${{ runner.temp }}", runner))
+                outputs = {"cache-matched-key": "main-history-2026-01-01"}
+        else:
+            env = {k: str(evaluate(v, ctx) or "") for k, v in s.get("env", {}).items()}
+            code, out, outputs = _run(s["run"], ws, env, tmp)
+            text += out
+            if code:
+                return code, text
+        ctx["steps"][s.get("id")] = {"outputs": outputs}
+    return 0, text
 
 
 def run_step(job: dict, name: str, cwd: str, env: dict, tmp: str) -> tuple:
     """A step's run: script under bash -e: (exit code, output, $GITHUB_OUTPUT as a dict)."""
+    return _run(step(job, name)["run"], cwd, env, tmp)
+
+
+def _run(script: str, cwd: str, env: dict, tmp: str) -> tuple:
     out = os.path.join(tmp, f"output-{time.monotonic_ns()}")
     open(out, "w").close()
     e = {**BASE_ENV, "GITHUB_OUTPUT": out, "GITHUB_ENV": out + ".env", "GITHUB_STEP_SUMMARY": os.path.join(tmp, "summary.md"),
          "GITHUB_WORKSPACE": cwd, "RUNNER_TEMP": os.path.join(tmp, "runner"), "GITHUB_REPOSITORY": "MichaelJSr/TTSCardMaker",
          **env}
-    r = subprocess.run(BASH + ["-c", step(job, name)["run"]], cwd=cwd, capture_output=True, text=True, env=e)
+    r = subprocess.run(BASH + ["-c", script], cwd=cwd, capture_output=True, text=True, env=e)
     outputs = dict(line.split("=", 1) for line in open(out, encoding="utf-8").read().splitlines() if "=" in line)
     return r.returncode, r.stdout + r.stderr, outputs
 
@@ -919,9 +967,11 @@ def gate_cases(flow: dict) -> None:
 
 
 def history_cases(flow: dict) -> None:
-    """The data lane's history (History start's history.git, History join; site.yml's build its own History start, the
+    """The data lane's history (History start's history.git, History join, History wait's action; site.yml's build the
     same cases): fetched in the background; failed, from GitHub, then once more; failed again, the job fails shallow.
-    The data lane's Cards start failed: its workspace emptied for the checkout."""
+    History start's fetch late at History wait: the cached copy (two commits behind) fetches the commits since it and is
+    joined first; a broken copy or none: the fetch is joined. The data lane's Cards start failed: its workspace emptied
+    for the checkout."""
     data = flow["jobs"]["data"]
     site = load(os.path.join(REPO, ".github/workflows/site.yml"))["jobs"]["build"]
     with tempfile.TemporaryDirectory() as tmp:
@@ -930,22 +980,31 @@ def history_cases(flow: dict) -> None:
         commit(work, {"Cards/Two.psd": "psd 2"}, "a card")
         git(work, "push", "-q", "origin", "main")
         gone = f"file://{tmp}/gone.git"
+        broken = os.path.join(tmp, "broken.git")
+        os.makedirs(broken)
         for label, job in (("", data), ("site.yml: ", site)):
-            joins = job is data
-            for fetch, start, wait, want, what in (
-                    ("", "", "", 0, "main moved after the checkout: its full history"),
-                    (gone, "", "", 0, "History start's fetch failed: from GitHub in the background"),
-                    ("", gone, "", 0, "the background fetch failed: once more, in the step"),
-                    ("", gone, gone, 1, "failed twice: the job fails, never a shallow build")):
-                if fetch and not joins:                                        # site.yml's History start: origin's
-                    continue
-                ws = checkout_data(tmp, bare, f"ws-{time.monotonic_ns()}", data if joins else None)
+            for fetch, start, wait, copy, want, what in (
+                    ("", "", "", None, 0, "main moved after the checkout: its full history"),
+                    (gone, "", "", None, 0, "History start's fetch failed: from GitHub in the background"),
+                    ("", gone, "", None, 0, "the background fetch failed: once more, in the step"),
+                    ("", gone, gone, None, 1, "failed twice: the job fails, never a shallow build"),
+                    ("", "", "", "copy", 0, "History start's fetch late: the cached copy joined first"),
+                    ("", "", "", broken, 0, "History start's fetch late, a broken copy: the fetch joined"),
+                    ("", "", "", "", 0, "History start's fetch late, no copy cached: the fetch joined")):
+                ws = checkout_data(tmp, bare, f"ws-{time.monotonic_ns()}", data if job is data else None)
+                if copy == "copy":                          # Card data's saved copy, two commits behind
+                    copy = os.path.join(tmp, f"copy-{time.monotonic_ns()}.git")
+                    subprocess.run(["git", "clone", "-q", "--bare", "--filter=blob:none", f"file://{bare}", copy], check=True)
+                    git(copy, "config", "uploadpack.allowFilter", "true")          # as History start's history.git
+                    git(copy, "update-ref", "refs/heads/main", git(copy, "rev-parse", "main~2"))
                 commit(work, {"Cards/Three.psd": f"psd {time.monotonic_ns()}"}, "another card")
                 git(work, "push", "-q", "origin", "main")
-                code, text = history(job, ws, tmp, start, wait, fetch)
+                code, text = history(job, ws, tmp, start, wait, fetch, copy, 3 if copy is not None else 0)
                 shallow = git(ws, "rev-parse", "--is-shallow-repository")
                 ok = (code == 0) == (want == 0) and shallow == ("false" if want == 0 else "true") and ("once more" in text) == bool(start)
-                ok = ok and (not joins or ("History join: joined" in text) == (not (fetch or start)))
+                ok = ok and ("History join: joined" in text) == (not (fetch or start))
+                ok = ok and ("joined the cached copy" in text) == (copy not in (None, "", broken))
+                ok = ok and ("History copy: exit" in text) == bool(copy) and ("History copy: exit 0" in text) == (copy not in (None, "", broken))
                 ok = ok and (want or git(ws, "rev-list", "--count", "HEAD") == git(bare, "rev-list", "--count", git(ws, "rev-parse", "HEAD")))
                 check(ok, f"{label}History wait: {what} (exit {code}, shallow {shallow})" + ("" if ok else f"\n{text}"))
         try:
@@ -956,9 +1015,10 @@ def history_cases(flow: dict) -> None:
         ok = "checked out instead" in text and not os.path.exists(os.path.join(tmp, "ws-gone", ".git"))
         check(ok, "Cards start's fetch failed: not ok, warned, its .git removed for the checkout" + ("" if ok else f"\n{text}"))
     names = [s.get("id") or s.get("name") or s.get("uses") for s in site["steps"]]
-    check(names[names.index("History start") - 1].startswith("actions/checkout")
-          and names.index("History wait") < names.index("Data wait") < names.index("build"),
-          "site.yml: History start after its checkout, History wait before Data wait's fetch and the build")
+    at = [names.index(n) for n in ("History start", "actions/checkout@v7", "History join", "History wait", "Data wait", "build")]
+    check(at == sorted(at) and names[at[1] + 1] == "History join",
+          "site.yml: History start before its checkout, History join right after it, History wait before Data wait's fetch "
+          "and the build")
 
 
 def fonts_cases(flow: dict) -> None:
@@ -1360,7 +1420,8 @@ esac
 
 def save_cases(flow: dict) -> None:
     """TTS save start: the save in the background (a fake one that ends once TTS save waits), started before the
-    rulebook PDF; TTS save waits for it: its report, changed, its exit code."""
+    rulebook PDF, once History start's fetch is in (its history clone); TTS save waits for it: its report, changed, its
+    exit code."""
     job = flow["jobs"]["main"]
     ids = [s.get("id") for s in job["steps"]]
     at, between = ids.index("pages"), [s.get("name") for s in job["steps"][ids.index("pages") + 1:ids.index("save")]]
@@ -1375,17 +1436,23 @@ def save_cases(flow: dict) -> None:
             os.makedirs(os.path.join(ws, "bot"))
             python, gate = os.path.join(tmp, "runner", "venv", "bin", "python"), os.path.join(tmp, "go")
             # the fake save ends once TTS save's wait first sleeps (10 s at most), not on a clock
-            write(python, f'#!/bin/bash\nuntil [ -e "{gate}" ] || [ "$SECONDS" -ge 10 ]; do sleep 0.01; done\n'
+            began = os.path.join(tmp, "began")
+            write(python, f'#!/bin/bash\n: > "{began}"\nuntil [ -e "{gate}" ] || [ "$SECONDS" -ge 10 ]; do sleep 0.01; done\n'
                           f'echo "report $*"\necho "a warning" >&2\n{body}\n')
             os.chmod(python, 0o755)
             env = {"AUTOCROISSANT_LOCAL_DIR": ws, "AUTOCROISSANT_HISTORY_CLONE": tmp}
+            fetched = os.path.join(tmp, "runner", "history-fetch.code")
             code, text, _ = run_step(job, "save-start", os.path.join(ws, "bot"), {**env, "GITHUB_WORKSPACE": ws}, tmp)
             quick = not os.path.exists(os.path.join(tmp, "runner", "save", "code"))     # returned with the save still running
+            time.sleep(0.3)
+            held = not os.path.exists(began)                    # History start's fetch still out: not started
+            write(fetched, "0\n")
             code2, text2, out = run_step(job, "save", ws, {"STARTED": "success",
                                                            "BASH_FUNC_sleep%%": f'() {{ : > "{gate}"; command sleep 0.02; }}'}, tmp)
-            ok = (code == 0 and quick and code2 == want and out.get("changed") == changed and "a warning" in text2
+            ok = (code == 0 and quick and held and code2 == want and out.get("changed") == changed and "a warning" in text2
                   and "report -m commands.tts_save" in text2 and "report" in open(os.path.join(tmp, "runner", "save.md")).read())
-            check(ok, f"save, {name}: the start step returns at once, TTS save waits (exit {code2}, changed={out.get('changed')})"
+            check(ok, f"save, {name}: the start step returns at once, the save waits for History start's fetch, TTS save "
+                      f"waits (exit {code2}, held={held}, changed={out.get('changed')})"
                   + ("" if ok else f"\n{text}\n{text2}"))
     with tempfile.TemporaryDirectory() as tmp:
         code, text, _ = run_step(job, "save", tmp, {"STARTED": "failure"}, tmp)
