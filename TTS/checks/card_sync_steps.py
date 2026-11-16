@@ -1231,11 +1231,14 @@ def build_cases(flow: dict) -> None:
             code, text, _ = run_step(data, "build", os.path.join(ws, "bot"), env, tmp)
             args = open(os.path.join(tmp, "build.args")).read().split("\n")
             own = args[args.index("--own") + 1] if "--own" in args else None
+            budget = args[args.index("--budget") + 1]   # a full re-parse in one run
             passed = {"--verdicts", "--events"} <= set(args)
             if passed:                                  # the merged artifacts: still listed ones kept, these added
                 passed = json.load(open(merged)) == {"merged": {"5": 50, "7": 70}}
-            check(code == 0 and all((f in args) == want_flags for f in flags) and own == want_own and passed == bool(extra.get("RECORDS")),
-                  f"build: {what} -> inputs {'passed' if want_flags else 'left out'}, --own {own}" + ("" if code == 0 else f"\n{text}"))
+            check(code == 0 and all((f in args) == want_flags for f in flags) and own == want_own and passed == bool(extra.get("RECORDS"))
+                  and budget == ("800" if want_flags else "400"),
+                  f"build: {what} -> inputs {'passed' if want_flags else 'left out'}, --own {own}, --budget {budget}"
+                  + ("" if code == 0 else f"\n{text}"))
 
 
 def tell_cases(flow: dict) -> None:
