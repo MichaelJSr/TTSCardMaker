@@ -128,7 +128,8 @@ text or image, links its commit when it is known), and the artwork sources when 
   highest, the top and bottom 10% as dots), the strongest and weakest for their star level, each star level's average
   total over time, power creep (by year created), buffs and nerfs by month and by stat, every
   recorded change by month (timing-tag-only changes left out), the most reworked cards. A star level with fewer than 5
-  cards is compared with all cards of its kind, and so are the auxiliary creatures, with all creatures.
+  cards is compared with all cards of its kind. The auxiliary creatures are compared with the creatures of the star
+  level they print (owner 2026-11-15), not counted in it (only in all creatures).
   **History**: cards created per year, text freshness. The kind and series filters apply to every section.
   A bar, column, cell or legend entry that stands for a set of cards opens the Cards grid with those cards (a link:
   Back returns to Stats); a single card opens the card.

@@ -237,8 +237,7 @@ export function balanceBlock(c, A) {
     const where = a.flags?.includes("top") ? `in the top 10% of ${name}: ${a.below} of ${of} have a lower total`
       : a.flags?.includes("bottom") ? `in the bottom 10% of ${name}: ${a.above} of ${of} have a higher total`
       : `${a.below} of ${all ? `all ${cohort.n} ${KINDS[cohort.kind]}` : `the ${cohort.n} ${name}`} have a lower total, ${a.above} a higher one`;
-    const folded = all ? (c.type === "creatures" ? " Auxiliary creatures have no star level, so they are compared with all creatures."
-      : ` Fewer than ${A.minCohort} ${KINDS[cohort.kind]} have ${c.stars ?? "no"}★, so it is compared with all of them.`) : "";
+    const folded = all ? ` Fewer than ${A.minCohort} ${KINDS[cohort.kind]} have ${c.stars ?? "no"}★, so it is compared with all of them.` : "";
     const several = c.creatures?.length > 1 ? " (creature 1)" : "";
     const rows = [["This card" + several, ...line.map(String), String(total)],
       [noted(`Median of ${name}`, "Each column's own median among these cards (Total: the median total)"), ...["hp", "def", "atk", "spd", "total"].map(k => fmt(cohort[k].p50))],

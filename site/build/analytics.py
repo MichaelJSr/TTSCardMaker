@@ -8,8 +8,9 @@ later file repeats, and its start moves to the version that holds that data. Day
 months are Pacific time (ZONE).
 
   * Cohorts: creatures and minions with all four stats, by star level. A star level with fewer than MIN_COHORT cards
-    is compared with its kind's "all stars" cohort, and so are the auxiliary creatures (no star level): they count as
-    creatures. A duplicate (another PNG of the same PSD) counts once, through its original; hidden cards not at all.
+    is compared with its kind's "all stars" cohort. The auxiliary creatures are compared with the creatures of the star
+    level their cards print (owner 2026-11-15, D21) but are not counted in it, only in all creatures. A duplicate
+    (another PNG of the same PSD) counts once, through its original; hidden cards not at all.
     A card with several creatures counts once, by its first creature (the card's own stats).
   * Per card: its cohort, how many cards of it have a lower or higher total, z of the total, "top" / "bottom" for the
     top and bottom 10% (the total's mid-rank), the stat lines it had (trend, when they changed) and its recorded changes, newest first, its old names' too (renamed). Both read the current card as its
@@ -35,7 +36,7 @@ except Exception:                          # no tz database: UTC, and build_site
 ZONE_MISSING = ZONE is timezone.utc
 
 KINDS = ("creature", "minion")             # cohorts: creatures and minions by star level
-AUX = "creatures"                          # auxiliary creatures: no star level, compared with all creatures
+AUX = "creatures"                          # auxiliary creatures: compared with their stars' creatures, counted in all creatures
 MIN_COHORT = 5                             # a smaller star level is compared with its kind's "all stars" cohort
 OFF_SCALE = 40                             # a total above this is off the scale (stats.js offChart): Tainted Lazarus' old 110s
 STATS_UNKNOWN = ("NO STATS FOUND", "OUT OF RANGE: stats")   # a reading's problems that leave its stats unknown
@@ -134,8 +135,8 @@ def make_cohorts(members):
     sizes = Counter(f"{kind}|{e.get('stars')}" for e, _, kind in members if e.get("type") != AUX)
     groups = defaultdict(list)
     for e, line, kind in members:
-        key = cohort_key(kind, e.get("stars") if e.get("type") != AUX else None, sizes)
-        if not key.endswith("|all"):
+        key = cohort_key(kind, e.get("stars"), sizes)
+        if not key.endswith("|all") and e.get("type") != AUX:   # an auxiliary creature: compared with its star level, not in it
             groups[key].append((e, line))
         groups[f"{kind}|all"].append((e, line))         # every member is in its kind's "all stars" cohort too
     cohorts = {}
@@ -479,7 +480,7 @@ def build(cards, stats, old_stats, now=None, psd_commits=None, lineage=None, int
     cohorts, groups, sizes = make_cohorts(members)
     out_cards = {}
     for e, line, kind in members:
-        key = cohort_key(kind, e.get("stars") if e.get("type") != AUX else None, sizes)
+        key = cohort_key(kind, e.get("stars"), sizes)
         out_cards[e["id"]] = card_balance(line, key, groups, cohorts[key])
     versions = 0
     for e in cards:
@@ -512,7 +513,7 @@ def summary(data):
     sizes = ", ".join(f"{k} {c['n']}" for k, c in data["cohorts"].items())
     n = data["counts"]
     return [f"balance: {n.get('creature', 0) + n.get('minion', 0)} creatures and minions with all four stats, and {n.get(AUX, 0)} "
-            f"auxiliary creatures (with all creatures); cohorts: {sizes}",
+            f"auxiliary creatures (compared by their stars); cohorts: {sizes}",
             f"balance: {data['versions']} versions; changes: {len(rows)}, reworks {sum(1 for r in rows if reworked(r))}, "
             f"buffs {sum(1 for r in rows if r.get('bal') == 'buff')}, nerfs {sum(1 for r in rows if r.get('bal') == 'nerf')}, "
             f"timing tags {sum(1 for r in rows if 'tags' in r)}, "
