@@ -1,0 +1,9 @@
+# card-preview.yml's hand-over from a process of its own: AutoCroissant card_preview_branch --hand in bot/, detached
+# (the job's end stops it), its log in $RUNNER_TEMP/hand.log, its pid in hand.pid. A JavaScript action, as only these
+# get the runtime token and results URL: they reach the process on its stdin alone (never env, argv or disk).
+name: Hand over (direct)
+description: Start card_preview_branch --hand in the background, the runtime token and results URL on its stdin
+
+runs:
+  using: node24
+  main: hand.js

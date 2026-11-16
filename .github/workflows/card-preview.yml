@@ -296,6 +296,13 @@ jobs:
           done
           touch "$RUNNER_TEMP/go"
 
+      # The hand-over from a process of its own while the preview bakes (AutoCroissant card_preview_branch --hand): the
+      # artifact created and both hosts' connections made now, its files up the moment result.json is written (upload-
+      # artifact's took 1.2 s after the preview's exit). The runtime token and results URL on its stdin alone.
+      - name: Hand
+        uses: ./.github/actions/hand-over
+        continue-on-error: true
+
       # result.json always (a refusal and an input error too); the images when the bake rendered one. Exit 2: a bad card
       # or edit; 1: any other error (the result's `transient` says whether to try again). The summary is this step's.
       - name: Preview
@@ -309,9 +316,24 @@ jobs:
           tee -a "$GITHUB_STEP_SUMMARY" < "$RUNNER_TEMP/preview.md"
           exit "$(cat "$RUNNER_TEMP/preview.code")"
 
-      # The files to publish (none if the preview never ran); not preview.png.
-      - name: Hand over
+      # Hand's end (10 s at most) and its log; not ok: stopped, upload-artifact's below.
+      - name: Handed
+        id: handed
         if: ${{ !cancelled() && steps.validate.outcome == 'success' }}
+        shell: bash
+        run: |
+          pid=$(cat "$RUNNER_TEMP/hand.pid" 2> /dev/null) || true
+          while [ -n "$pid" ] && [ ! -s "$RUNNER_TEMP/hand.done" ] && kill -0 "$pid" 2> /dev/null && [ $SECONDS -lt 10 ]; do sleep 0.02; done
+          cat "$RUNNER_TEMP/hand.log" 2> /dev/null || true
+          if [ "$(cat "$RUNNER_TEMP/hand.done" 2> /dev/null)" = ok ]; then
+            echo "done=ok" >> "$GITHUB_OUTPUT"
+          elif [ -n "$pid" ] && [ ! -s "$RUNNER_TEMP/hand.done" ]; then
+            kill "$pid" 2> /dev/null || true
+          fi
+
+      # The files to publish (none if the preview never ran); not preview.png. Overwrite: Hand's, had it got that far.
+      - name: Hand over
+        if: ${{ !cancelled() && steps.validate.outcome == 'success' && steps.handed.outputs.done != 'ok' }}
         uses: actions/upload-artifact@v7
         with:
           name: card-preview
@@ -321,6 +343,7 @@ jobs:
             ${{ runner.temp }}/preview/before.avif
           if-no-files-found: ignore
           retention-days: 1
+          overwrite: true
 
   # The only job that writes: one commit on previews. It starts beside the preview (its checkouts and Python ready
   # while the bake runs; the bake still on its own read-only runner) and publishes once the preview hands over, or ends
