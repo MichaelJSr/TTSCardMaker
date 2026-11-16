@@ -1754,30 +1754,35 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
             starts_ = [a for a in asked if a.startswith("workflow run card-sync.yml") and "bake=pending" in a]
             ok = code == want_code and len(starts_) == want_runs and not any("PATCH" in a for a in asked)
             check(ok, f"guards Follow up: {what} ({len(starts_)} dispatches, no comment edit without Land)" + ("" if ok else f"\n{text}\n{asked}"))
-        early = step(guards["jobs"]["check"], "early")
-        if os.path.exists(calls):
-            os.remove(calls)
+        check_steps = guards["jobs"]["check"]["steps"]
+        start, early = step(guards["jobs"]["check"], "Start Card sync"), step(guards["jobs"]["check"], "early")
         reply = json.dumps({"workflow_run_id": 4242, "run_url": "u", "html_url": "h"})
-        got = []
-        for answer in (reply, ""):                        # the run's details, or none (a 204): started, no id
+        post = ["api --method POST repos/o/cards/actions/workflows/card-sync.yml/dispatches -f ref=main -F return_run_details=true "
+                "-f inputs[dry_run]=false -f inputs[bake]=pending -f inputs[guards]=77"]
+        got, asked = [], []
+        for answer, fail, started in ((reply, "", True), ("", "", True), (reply, "1", True), ("", "", False)):
+            for f in ("out", "done", "pid", "log"):     # Start Card sync's POST in the background, Landed joins it
+                if os.path.exists(os.path.join(tmp, "runner", f"early.{f}")):
+                    os.remove(os.path.join(tmp, "runner", f"early.{f}"))
             if os.path.exists(calls):
                 os.remove(calls)
-            code, text, out = run_step(guards["jobs"]["check"], "early", tmp, {"PATH": f"{fake}:{os.environ['PATH']}", "GITHUB_RUN_ID": "77",
-                                                                               "GH_REPO": "o/cards", "FAKE_DISPATCH": answer}, tmp)
-            got.append((code, out.get("started"), out.get("run")))
-        asked = open(calls).read().splitlines() if os.path.exists(calls) else []
-        at = guards["jobs"]["check"]["steps"].index(early)
-        check(got == [(0, "true", "4242"), (0, "true", "")]
-              and asked == ["api --method POST repos/o/cards/actions/workflows/card-sync.yml/dispatches -f ref=main -F return_run_details=true "
-                            "-f inputs[dry_run]=false -f inputs[bake]=pending -f inputs[guards]=77"]
-              and [s.get("name") for s in guards["jobs"]["check"]["steps"][at - 1:at + 2:2]] == [mark["env"]["FIXES"], mark["env"]["DECIDED"]]
-              and early["if"] == "${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise <= 25 }}"
-              and early.get("continue-on-error") == "true"
+            e = {"PATH": f"{fake}:{os.environ['PATH']}", "GITHUB_RUN_ID": "77", "GH_REPO": "o/cards", "FAKE_DISPATCH": answer,
+                 "FAKE_FAIL": fail}
+            first = run_step(guards["jobs"]["check"], "Start Card sync", tmp, e, tmp)[0] if started else None
+            code, text, out = run_step(guards["jobs"]["check"], "early", tmp, e, tmp)
+            got.append((first, code, out.get("started"), out.get("run"), "not started here" in text))
+            asked.append(open(calls).read().splitlines() if os.path.exists(calls) else [])
+        at = check_steps.index(start)
+        check(got == [(0, 0, "true", "4242", False), (0, 0, "true", "", False), (0, 0, None, None, True), (None, 0, None, None, False)]
+              and asked == [post, post, post, []]
+              and [s.get("name") for s in check_steps[at - 1:at + 2:2]] == [mark["env"]["FIXES"], mark["env"]["DECIDED"]]
+              and start["if"] == "${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise <= 25 }}"
+              and start.get("continue-on-error") == "true" and early["name"] == mark["env"]["LANDED"]
               and guards["jobs"]["check"]["outputs"]["early"] == "${{ steps.early.outputs.started }}"
               and guards["jobs"]["check"]["outputs"]["early_run"] == "${{ steps.early.outputs.run }}"
               and follow["env"]["EARLY"] == "${{ needs.check.outputs.early }}" and follow["env"]["EARLY_RUN"] == "${{ needs.check.outputs.early_run }}",
               f"guards Start Card sync: the check job's, right after Fixes to land with fixes and 25 PSDs or fewer to convert, this run's id as guards, "
-              f"its run id by the API; failed, Follow up starts it ({got})")
+              f"in the background; Landed joins it: its run id by the API; failed or not started, Follow up starts it ({got})")
 
 
 GROUPS = {"plans": plans, "timer": timer_cases, "gate": gate_cases, "history": history_cases, "build": build_cases,
