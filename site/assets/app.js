@@ -130,7 +130,10 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
 const COPIES = "https://raw.githubusercontent.com";       // the older versions' copies' host (versionCopy)
-const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
+const preconnect = href => document.querySelector(`link[rel="preconnect"][href="${href}"]`)
+  || document.head.append(Object.assign(document.createElement("link"), { rel: "preconnect", href }));
+// with versions.json, the copies' host is connected: a pick soon after skips its TLS setup
+const loadVersions = () => (versionsP ||= (preconnect(COPIES), getJson("versions.json")).then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
 // loaded on first use (esbuild chunks; without esbuild, the modules): charts.js (stats.js, balance.js, insights.js) for the Stats
 // page and the grid filters its charts link to; balance.js alone for the cards' Balance blocks; profile.js for the People tab
 // and person pages.
