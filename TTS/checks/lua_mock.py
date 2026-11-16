@@ -1114,6 +1114,23 @@ def main():
     w.told.clear()
     w.run(w.g.showDetails, "Red", slot, what="card in Blue's third hand zone")
     check(("Red", "No details for this card.") in w.told, "a card in another player's third hand zone: no details")
+    w.seat("Red")                                           # Clubs all free: their zones home, nobody seated there
+    w.call("onPlayerDisconnect", w.players["Blue"])
+    kept, shown = dict(w.hands), []
+    free = [(c, i) for c in SIDE["Clubs"] for i in range(1, w.players[c].getHandCount() + 1)]
+    for c, i in free:
+        o = Obj.of(w, cards[1])
+        o.is_face_down = False
+        w.hands.clear()
+        w.hands[c if i == 1 else (c, i)] = [o]
+        w.told.clear()
+        w.run(w.g.showDetails, "Red", o, what=f"card in free {c}'s hand zone {i}")
+        if ("Red", "No details for this card.") not in w.told:
+            shown.append(f"{c} {i}")
+    check(free and not shown, f"a side with nobody seated: its hand zones' cards stay hidden (shown {shown} of {len(free)})")
+    w.hands.clear(), w.hands.update(kept)
+    w.seat("Red", "Blue")
+    w.call("onPlayerDisconnect", w.players["Red"])
     w.run(w.g.showDetails, "Blue", secret, what="Blue's own card")
     check(len(ui.builds) == 1 and ui.on("Blue_d1"), "Blue's panels were built with the data: none on use")
     w.seat("Red", "Blue", "Teal")

@@ -414,10 +414,11 @@ local function handOf(c)                               -- objects in all of a se
     return out
 end
 
--- the card's PNG path, or nil (not a card, or hidden from this player: face down or in another player's hand)
+-- the card's PNG path, or nil (not a card, or hidden from this player: face down or in another colour's hand, seated
+-- or not)
 local function cardPath(obj, color)
     if obj == nil or obj.isDestroyed() or obj.type ~= "Card" or obj.is_face_down then return nil end
-    for _, other in ipairs(getSeatedPlayers()) do
+    for _, other in ipairs(SEATS) do
         if other ~= color then
             for _, o in ipairs(handOf(other)) do
                 if o == obj then return nil end
