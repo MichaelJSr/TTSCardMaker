@@ -486,14 +486,19 @@ function syncUrl(r) {
   if (location.href !== want || !history.state?.drawn) history.replaceState({ ...history.state, drawn: true }, "", want);   // drawn: Back or Forward to it restores its scroll
 }
 let popped = null;                                       // a hash navigation fires popstate, then hashchange: route once
+const DOC = Math.random().toString(36).slice(2);         // this page load: the card entries it pushed (a reload starts afresh)
+let dlgDepth = 0, backing = false;                       // the card entry's entries since its view; close's Back under way
 function route(e) {
+  backing = false;
   if (e?.type === "hashchange") { const dup = e.newURL === popped; popped = null; if (dup) return; }
   else if (e?.type === "popstate") popped = location.href;
   S.restoring = e?.type === "popstate" && !!history.state?.drawn;   // Back or Forward: the browser restores the scroll after this, so no chunks
   queueMicrotask(() => { S.restoring = false; });
-  const r = parseHash();
+  const r = parseHash(), fresh = !history.state?.drawn;
   if (r.name === "card" && S.data?.moved?.[r.arg] && S.byId.has(r.arg)) r.arg = S.byId.get(r.arg).id;   // a renamed card: its new page
   syncUrl(r);
+  if (r.name === "card" && fresh && S.renderedHash && dlgDepth >= 0) history.replaceState({ ...history.state, depth: dlgDepth + 1, doc: DOC }, "");   // opened over a view: close goes Back
+  dlgDepth = r.name !== "card" ? 0 : history.state?.doc === DOC && history.state.depth || -1;   // -1: a card close can't go Back from (a link, a reload)
   hideTip();
   if (r.name === "card") {
     if (!S.renderedHash && !cardOf(r.arg)) renderView(parseHash(S.listHash), S.listHash);   // a dead link: the grid, then the toast
@@ -2252,7 +2257,12 @@ const actions = {
       })).catch(e => toast(`Couldn't open the ban list editor (${e.message})`));
     });
   },
-  "close": () => { if ($("#edit-form", modal)) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
+  "close": () => {
+    if ($("#edit-form", modal)) { actions["edit-cancel"](); return; }
+    if (parseHash().name !== "card") { closeModal(); return; }
+    const d = history.state?.doc === DOC && history.state.depth;   // Back to the view it was opened from (a twice-pressed Esc: once)
+    if (!d) location.hash = S.listHash; else if (!backing) { backing = true; history.go(-d); }
+  },
   "toggle-param": (el, exclude = false) => { const p = parseHash().params, k = el.dataset.key, cur = vals(p, k), v = el.dataset.value;
     if (!XABLE.has(k) || !el.closest(".browse .filters")) { setParams({ [k]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); return; }
     const [inc, exc] = G.flip(cur, vals(p, `x${k}`), v, exclude); setParams({ [k]: inc, [`x${k}`]: exc }); },
