@@ -1,11 +1,12 @@
-// action.yml's: python3 -S -m commands.card_preview_branch --hand $RUNNER_TEMP/preview in bot/, detached. Never fails.
+// action.yml's: python3 -S -m commands.card_preview_branch --hand $RUNNER_TEMP/preview --lane $RUNNER_TEMP/lane in bot/,
+// detached (then the warm lane's presses, until lane.end). Never fails.
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 try {
   const temp = process.env.RUNNER_TEMP, log = fs.openSync(path.join(temp, "hand.log"), "a");
   const env = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("ACTIONS_")));
-  const child = spawn("python3", ["-S", "-m", "commands.card_preview_branch", "--hand", path.join(temp, "preview")],
+  const child = spawn("python3", ["-S", "-m", "commands.card_preview_branch", "--hand", path.join(temp, "preview"), "--lane", path.join(temp, "lane")],
     { cwd: path.join(process.env.GITHUB_WORKSPACE, "bot"), env, detached: true, stdio: ["pipe", log, log] });
   child.on("error", (e) => fs.appendFileSync(path.join(temp, "hand.log"), `hand-over: ${e.message}\n`));
   child.stdin.on("error", () => {});

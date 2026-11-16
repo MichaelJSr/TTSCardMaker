@@ -5,8 +5,11 @@
 # beside the preview and waits for its hand-over).
 # Inputs reach the shell only through env and a file. The card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) come in a venv cached per that file (.github/actions/cards-python).
+# The warm lane (owner D22; AutoCroissant card_preview_lane): the preview's process stays up 4 minutes after its press
+# and bakes its editor's next presses, each named to it by the website (inputs.lane): the run-name carries the card and
+# edit to it then.
 name: Card preview
-run-name: Card preview ${{ inputs.request }}
+run-name: Card preview ${{ inputs.request }}${{ inputs.lane && format(' lane {0} {1} {2}', inputs.lane, inputs.card, inputs.edit) || '' }}
 
 on:
   workflow_dispatch:
@@ -23,6 +26,11 @@ on:
         description: "The client's id, 8-64 of A-Z a-z 0-9 -: the result goes to previews/<request>/ on the previews branch"
         type: string
         required: true
+      lane:
+        description: "The warm lane the website names for this press, <its run id>-<check> (AutoCroissant card_preview_lane); empty: none"
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: read      # the publish job alone writes (the previews branch)
@@ -36,6 +44,9 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     timeout-minutes: 11
+    permissions:
+      contents: read
+      actions: read     # the lane: its editor's runs, a named lane's hand-over
     outputs:
       ok: ${{ steps.validate.outputs.ok }}
       saved: ${{ steps.setup.outputs.wheels == 'built' || steps.font-cache.outputs.cache-hit != 'true' }}
@@ -64,6 +75,7 @@ jobs:
         /commands/card_preview_reads.py
         /commands/ability_place.py
         /commands/ability_index.json
+        /commands/card_preview_lane.py
     steps:
       # In the background: BOT_FILES at the bot's main (cloned in RUNNER_TEMP, moved into bot/ once in, then compiled by
       # the image's Python 3.14, setup-python's: Start imports them compiled), its requirements-cards.txt once through the
@@ -76,6 +88,7 @@ jobs:
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          date +%s > "$RUNNER_TEMP/job.start"     # the lane ends by the job's cap
           auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
           echo "::add-mask::$auth"
           export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
@@ -245,9 +258,10 @@ jobs:
         with:
           oxipng: "false"
 
-      # The preview, in the background from here (8 minutes at most): its imports and the card's tree run while the
-      # fonts restore; it waits in ready() for reads.done (or the go file), then bakes up to its first font, which waits
-      # for the go file (Go). Output and exit code to RUNNER_TEMP.
+      # The preview, in the background from here (8 minutes at most, the Preview step's): its imports and the card's
+      # tree run while the fonts restore; it waits in ready() for reads.done (or the go file), then bakes up to its first
+      # font, which waits for the go file (Go). Output and exit code (preview.code, written by the preview itself) to
+      # RUNNER_TEMP. Then the same process is the warm lane (Lane) until 70 s before the job's cap: lane.end, lane.log.
       - name: Start
         working-directory: bot
         shell: bash
@@ -256,13 +270,18 @@ jobs:
           PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
           CARD: ${{ inputs.card }}
           REQUEST: ${{ inputs.request }}
+          LANE: ${{ inputs.lane }}
         run: |
           export CARD_RECORDS_DIR=$RUNNER_TEMP/records CARD_PREVIEW_WAIT=$RUNNER_TEMP/go CARD_PREVIEW_READS=$RUNNER_TEMP/reads.done
+          until=$(( $(cat "$RUNNER_TEMP/job.start" 2> /dev/null || date +%s) + 590 ))
           ( code=0
-            timeout 480 python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" \
+            timeout 640 python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" \
               --out "$RUNNER_TEMP/preview" --clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" \
-              --request="$REQUEST" || code=$?
-            echo "$code" > "$RUNNER_TEMP/preview.code" ) < /dev/null > "$RUNNER_TEMP/preview.md" 2> "$RUNNER_TEMP/preview.err" &
+              --request="$REQUEST" --code "$RUNNER_TEMP/preview.code" --lane "$RUNNER_TEMP/lane" --lane-until "$until" \
+              --lane-named="$LANE" || code=$?
+            [ -s "$RUNNER_TEMP/preview.code" ] || echo "$code" > "$RUNNER_TEMP/preview.code"
+            touch "$RUNNER_TEMP/lane.end"
+            echo "$code" > "$RUNNER_TEMP/lane.code" ) < /dev/null > "$RUNNER_TEMP/preview.md" 2> "$RUNNER_TEMP/preview.err" &
 
       # Fonts as card-sync.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
       # only on a miss.
@@ -344,6 +363,22 @@ jobs:
           if-no-files-found: ignore
           retention-days: 1
           overwrite: true
+
+      # The warm lane (owner D22): after a press that went well and was handed over directly, the preview's process bakes
+      # its editor's next presses that name this run, each handed over by Hand's process as card-preview-<request>, and
+      # ends 240 s after its last one, 70 s before its job's cap, or at a newer press it doesn't take (that run is the
+      # next lane). Then Hand's last hand-over (10 s at most) and both logs. None started: at once.
+      - name: Lane
+        if: ${{ !cancelled() && steps.preview.outcome == 'success' }}
+        shell: bash
+        run: |
+          until [ -s "$RUNNER_TEMP/lane.code" ] || [ -s "$RUNNER_TEMP/lane.end" ]; do sleep 0.25; done
+          pid=$(cat "$RUNNER_TEMP/hand.pid" 2> /dev/null) || true
+          end=$((SECONDS + 10))
+          while [ -n "$pid" ] && [ ! -e "$RUNNER_TEMP/hand.lane" ] && kill -0 "$pid" 2> /dev/null && [ $SECONDS -lt $end ]; do sleep 0.05; done
+          echo "lane: $(cat "$RUNNER_TEMP/lane.end" 2> /dev/null)"
+          cat "$RUNNER_TEMP/lane.log" 2> /dev/null || true
+          grep -h "card-preview-" "$RUNNER_TEMP/hand.log" 2> /dev/null || true
 
   # The only job that writes: one commit on previews. It starts beside the preview (its checkouts and Python ready
   # while the bake runs; the bake still on its own read-only runner) and publishes once the preview hands over, or ends
