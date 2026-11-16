@@ -322,7 +322,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     `request` isn't the run's, which Publish replaces with its "left no result" error. The branch stays the record:
     other devices and later visits read it there.
   - Warm lane (owner D22, 2026-11-16; AutoCroissant `commands/card_preview_lane.py`): after a press that went well, the
-    preview job's process stays up 240 s for its editor's next presses (70 s before its 11-minute cap at the latest)
+    preview job's process stays up 240 s for its editor's next presses (none in the last 2 minutes of its 11-minute cap)
     and bakes each in process, the same bake and bytes, with no setup. A press goes to it only when named: the dispatch
     adds `"lane": "<run id>-<blob sha>"`, the run that handed over the editor's newest result while it should still be
     up (preview.js `laneOf`). The press itself (`request\ncard\nedit`, the input strings, UTF-8) goes as a git blob
