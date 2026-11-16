@@ -29,9 +29,10 @@ export const EARLY_MS = 12000, FIRST_MS = 17000, POLL_BRISK = 1000, BRISK_FOR = 
 export const HANDOVER = "card-preview";               // the preview job's artifact (card-preview.yml "Hand over")
 // the warm lane (owner D22; AutoCroissant card_preview_lane): the run that handed over this editor's newest result stays up
 // LANE_IDLE_MS after its last press (and ends LANE_CAP_MS after its start at the latest); a press names it (inputs.lane)
-// while it should still be up LANE_SAFE_MS from now and the card and edit fit LANE_MAX bytes of the run's title. Its
-// hand-over, LANE_ARTIFACT + request in that run, is looked for from LANE_FIRST_MS every LANE_POLL until LANE_FOR.
-export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 590000, LANE_SAFE_MS = 20000, LANE_MAX = 1024, LANE_FIRST_MS = 3000, LANE_POLL = 500, LANE_FOR = 15000;
+// while it should still be up LANE_SAFE_MS from now, its card and edit in a git blob posted beside the dispatch (laneBlob;
+// run titles stop at 512 characters). Its hand-over, LANE_ARTIFACT + request in that run, is looked for from
+// LANE_FIRST_MS every LANE_POLL until LANE_FOR.
+export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 590000, LANE_SAFE_MS = 20000, LANE_FIRST_MS = 3000, LANE_POLL = 500, LANE_FOR = 15000;
 export const LANE_ARTIFACT = "card-preview-";
 export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
@@ -83,11 +84,14 @@ export function hashOf(edit) {
   h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
   return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16).padStart(14, "0");
 }
-/** The run title's check for a press named to a lane: sha256 of the request, card and edit (one line each), 16 hex digits
- *  (AutoCroissant card_preview_lane.check_of). */
-export async function laneCheck(request, card, edit) {
-  const d = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${request}\n${card}\n${edit}`)));
-  return [...d].map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
+/** A press named to a lane as a git blob: the request, card and edit, one line each (AutoCroissant
+ *  card_preview_lane.press_blob). -> {sha (its git sha, which the run's title names), base64 (to post)} */
+export async function laneBlob(request, card, edit) {
+  const enc = new TextEncoder(), data = enc.encode(`${request}\n${card}\n${edit}`), head = enc.encode(`blob ${data.length}\0`);
+  const all = new Uint8Array(head.length + data.length); all.set(head); all.set(data, head.length);
+  const d = new Uint8Array(await crypto.subtle.digest("SHA-1", all));
+  let bin = ""; for (const b of data) bin += String.fromCharCode(b);
+  return { sha: [...d].map(b => b.toString(16).padStart(2, "0")).join(""), base64: btoa(bin) };
 }
 /** The lane to name for a press now: the run that handed over the newest result (entry.from, seen at fromAt) while it
  *  should be up LANE_SAFE_MS more (LANE_IDLE_MS after that, LANE_CAP_MS after its start when known); else null. */
@@ -438,7 +442,7 @@ export function createPreviews(app) {
   // later loads use the branch); local = its images as object URLs, kept while the page lives (no reload when the
   // branch's copy lands); direct = request -> {run, tries}, or false once done or failed (the branch as ever)
   const early = new Map(), local = new Map(), direct = new Map(), told = new Set(), laneTried = new Set();
-  let lanesOk = true;                                 // a run that never started with a lane named: none named again
+  let lanesOk = true;                                 // a run that never started with a lane named, or a blob not posted: none named again
   // the token goes to api.github.com only: the archive's 302 to GitHub's blob store relies on the browser dropping
   // Authorization on a cross-origin redirect (Chrome 119, Firefox 111, Safari 16.1); Set's union (Chrome 122, Firefox
   // 127, Safari 17) vouches for it
@@ -481,12 +485,16 @@ export function createPreviews(app) {
     try {
       const flow = `/repos/${repo()}/actions/workflows/${CONTRACT.workflow}`, inputs = CONTRACT.inputs(c, edit, request);
       const lane = directOk && lanesOk ? laneOf(store) : null;
-      if (lane && new TextEncoder().encode(`${inputs.card} ${inputs.edit}`).length <= LANE_MAX) {
-        try { inputs.lane = `${lane}-${await laneCheck(request, inputs.card, inputs.edit)}`; } catch { /* no crypto.subtle: no lane */ }
+      let blob = null;
+      if (lane && !inputs.card.includes("\n")) {
+        try { blob = await laneBlob(request, inputs.card, inputs.edit); inputs.lane = `${lane}-${blob.sha}`; } catch { /* no crypto.subtle: no lane */ }
       }
       const send = () => ed.github(`${flow}/dispatches`, { method: "POST", body: { ref: CONTRACT.ref, inputs } });
+      const posted = blob && ed.github(`/repos/${repo()}/git/blobs`, { method: "POST", body: { content: blob.base64, encoding: "base64" } })
+        .then(b => { if (b?.sha !== blob.sha) lanesOk = false; }, () => { lanesOk = false; });   // beside the dispatch; no ref, so no push
       try { await send(); } catch (e) { if (!inputs.lane || e.status !== 422) throw e; delete inputs.lane; lanesOk = false; await send(); }   // a workflow without lanes
-      set(patch(store, request, { state: "running", ...(inputs.lane ? { lane } : {}) }));
+      await posted;
+      set(patch(store, request, { state: "running", ...(inputs.lane && lanesOk ? { lane } : {}) }));
       app.toast(`Preview started for ${c.name}: it takes a few minutes`);
     } catch (e) {
       const why = startProblem(e.status || 0, String(e.message || "").replace(/^GitHub \d+: ?/, ""), { scopes: ed.scopes });

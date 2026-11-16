@@ -6,10 +6,10 @@
 # Inputs reach the shell only through env and a file. The card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) come in a venv cached per that file (.github/actions/cards-python).
 # The warm lane (owner D22; AutoCroissant card_preview_lane): the preview's process stays up 4 minutes after its press
-# and bakes its editor's next presses, each named to it by the website (inputs.lane): the run-name carries the card and
-# edit to it then.
+# and bakes its editor's next presses, each named to it by the website (inputs.lane, in the run-name: the lane's run and
+# the git blob the website posted with the card and edit).
 name: Card preview
-run-name: Card preview ${{ inputs.request }}${{ inputs.lane && format(' lane {0} {1} {2}', inputs.lane, inputs.card, inputs.edit) || '' }}
+run-name: Card preview ${{ inputs.request }}${{ inputs.lane && format(' lane {0}', inputs.lane) || '' }}
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ on:
         type: string
         required: true
       lane:
-        description: "The warm lane the website names for this press, <its run id>-<check> (AutoCroissant card_preview_lane); empty: none"
+        description: "The warm lane the website names for this press, <its run id>-<the press's blob sha> (AutoCroissant card_preview_lane); empty: none"
         type: string
         required: false
         default: ""

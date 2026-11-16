@@ -324,11 +324,13 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - Warm lane (owner D22, 2026-11-16; AutoCroissant `commands/card_preview_lane.py`): after a press that went well, the
     preview job's process stays up 240 s for its editor's next presses (70 s before its 11-minute cap at the latest)
     and bakes each in process, the same bake and bytes, with no setup. A press goes to it only when named: the dispatch
-    adds `"lane": "<run id>-<check>"`, the run that handed over the editor's newest result while it should still be up
-    (preview.js `laneOf`), and only when the card and edit fit `LANE_MAX` (1 KB). `check` is sha256 of
-    `request\ncard\nedit` (the input strings), its first 16 hex digits (`laneCheck`). The run-name then carries the card
-    and edit (`Card preview <request> lane <lane> <card> <edit>`), and the lane reads them there. A title GitHub cut or
-    changed doesn't check, and the press stays cold. Its hand-over is `card-preview-<request>` in the lane's run, the
+    adds `"lane": "<run id>-<blob sha>"`, the run that handed over the editor's newest result while it should still be
+    up (preview.js `laneOf`). The press itself (`request\ncard\nedit`, the input strings, UTF-8) goes as a git blob
+    the client posts beside the dispatch (`POST .../git/blobs`, base64; `laneBlob` computes its sha first; no ref, so
+    no push and no Discord post): GitHub cuts run titles at 512 characters, so only the sha rides in the run-name
+    (`Card preview <request> lane <lane>`, under 150). The lane reads the blob (a 404 tried for 5 s), checks its sha and
+    request, and takes the press; a blob that never comes ends it, and the press stays cold. A blob post that fails
+    names no lane again on that page. Its hand-over is `card-preview-<request>` in the lane's run, the
     same zip as `card-preview`, with `run` the press's own run. Every press is still dispatched, baked cold and
     published as ever. The client shows whichever hand-over comes first. A 422 with `lane` dispatches again without it.
     A press's run starts no lane of its own when its named lane handed it over. A lane ends at a newer press of its
