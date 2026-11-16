@@ -435,6 +435,7 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb img.tok { vertical-align: -.3em; }
 .rb-break { display: none; }
 .rb mark { background: #ffe066; color: inherit; border-radius: 3px; }
+.rb .badge.rb-hit { box-shadow: 0 0 0 .0229em var(--be, #1e293b), 0 0 0 .16em #ffe066; }   /* a searched "(OD)" */
 .rb-hit-none { display: none; }
 /* the Constructed ban list chapter (app.js renderRules): the book's look, drawn from the ban list file */
 .rb-bans { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5em, 1fr)); gap: .9em .7em; }

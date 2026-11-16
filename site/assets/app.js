@@ -1143,7 +1143,7 @@ function bookChapters() {
   if (sent && (same || Date.now() - sent.at > 3600e3)) { localStorage.removeItem(RB_SENT); sent = null; }   // built, or stale
   S.book.sent = sent;
   S.book.chapters = (sent ? sent.chapters : S.book.built).map(c => ({ ...c, ast: RB.parse(c.source) }));
-  for (const c of S.book.chapters) c.text = `${c.title}\n${RB.plainText(c.ast)}`.toLowerCase();
+  for (const c of S.book.chapters) c.text = `${c.title}\n${RB.plainText(c.ast)}`.toLowerCase().replace(/\s+/g, " ");   // any spaces as one (the bot's \s+)
   return S.book.chapters;
 }
 let cardNames = null;                                    // ![[Card]] and [[Card]]: printed title or file name, any case
@@ -1184,7 +1184,7 @@ function renderRules(r) {
     return;
   }
   if (r.arg === "print") { renderSheets(); return; }
-  const q = (r.params.get("q") || "").trim().toLowerCase();
+  const q = (r.params.get("q") || "").trim().toLowerCase().replace(/\s+/g, " ");
   if (document.activeElement !== qInput) qInput.value = "";
   const chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
   const banned = S.data.banlist, can = editing();
@@ -1207,8 +1207,12 @@ function renderRules(r) {
             <b>${c ? `<a class="card-ref" href="c/${encodeURIComponent(c.id)}/" data-card="${esc(c.id)}">${esc(e.name)}</a>` : esc(e.name)}</b>${e.reason ? `<i>${esc(e.reason)}</i>` : ""}</div>`; }).join("")}</div></div></section>`).join("")}</article>` : ""}
     </div></div>`;
   if (q) {                                               // only the blocks that hold it, highlighted
-    for (const el of $$(".rb-chapter > :not(.rb-head):not(.rb-tools)", view)) if (!el.textContent.toLowerCase().includes(q)) el.classList.add("rb-hit-none");
+    for (const ch of $$(".rb-chapter", view)) {
+      const els = $$(":scope > :not(.rb-head):not(.rb-tools)", ch), miss = els.filter(el => !bookWords(el).includes(q));
+      if (miss.length < els.length) for (const el of miss) el.classList.add("rb-hit-none");   // none holds it (its title): all of it
+    }
     highlight($$(".rb-chapter", view), q);
+    for (const b of $$(".rb-chapter .badge[data-tip]", view)) if (badgeWords(b).includes(q) && !b.textContent.toLowerCase().includes(q)) b.classList.add("rb-hit");
   }
   watchToc();
   const [ch, sec] = (r.arg || "").split("/");
@@ -1277,19 +1281,37 @@ async function renderSheets() {
   view.append(list);
   document.body.dataset.sheets = String(sheets.length);    // the export waits for this
 }
+// a block's words as the chapter list reads them (plainText): badges as typed, icons as [name], card pictures by name
+function bookWords(el) {
+  let s = "";
+  const walk = n => { for (let c = n.firstChild; c; c = c.nextSibling) {
+    if (c.nodeType === 3) s += c.nodeValue;
+    else if (c.nodeType !== 1) continue;
+    else if (c.matches(".badge[data-tip]")) s += badgeWords(c);
+    else if (c.tagName === "IMG") s += !c.alt ? "" : c.matches(".tok, .tokv") ? `[${c.alt}]` : c.closest(".rb-card") ? c.alt : "";
+    else if (c.tagName === "BR") s += " ";
+    else walk(c);
+  } };
+  walk(el);
+  return s.toLowerCase().replace(/\s+/g, " ");
+}
+// "(OD)" (a timing tag's tip starts with it), "(2 points)" (a cost's: "2 points: ...")
+const badgeWords = b => { const t = b.dataset.tip, m = b.classList.contains("cost") ? /^[^:]+(?=:)/.exec(t) : /^\([^)]*\)/.exec(t);
+  return (m ? (m[0][0] === "(" ? m[0] : `(${m[0]})`) : b.textContent).toLowerCase(); };
 function highlight(els, q) {
+  const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s+"), "gi");   // any spaces between the words
   for (const el of els) {
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
     for (const node of nodes) {
-      const text = node.nodeValue, idx = text.toLowerCase().indexOf(q);
-      if (idx < 0) continue;
+      const text = node.nodeValue, hits = [...text.matchAll(re)];
+      if (!hits.length) continue;
       const frag = document.createDocumentFragment();
-      let last = 0, i = idx;
-      while (i >= 0) {
-        frag.append(text.slice(last, i));
-        const m = document.createElement("mark"); m.textContent = text.slice(i, i + q.length); frag.append(m);
-        last = i + q.length; i = text.toLowerCase().indexOf(q, last);
+      let last = 0;
+      for (const h of hits) {
+        frag.append(text.slice(last, h.index));
+        const m = document.createElement("mark"); m.textContent = h[0]; frag.append(m);
+        last = h.index + h[0].length;
       }
       frag.append(text.slice(last)); node.replaceWith(frag);
     }
