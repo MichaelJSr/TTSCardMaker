@@ -833,7 +833,7 @@ function tableHtml(list, p, win) {
   const first = win.all ? list.length : Math.max(TABLE_FIRST, Math.ceil((win.y + 2 * win.h) / 30));    // rows are 30 px or taller: the scroll position stays
   const rest = list.slice(first);
   tableRest = rest.map(rowHtml);
-  return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total", "psd"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
+  return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total", "psd"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? (isDesc(sort, p.get("dir")) ? " ▾" : " ▴") : ""}</th>`).join("")}</tr></thead><tbody>
     ${list.slice(0, first).map(rowHtml).join("")}</tbody>${tableRest.length ? `<tbody class="sizer" aria-hidden="true" style="visibility:collapse">${sizerRows(rest, tableRest)}</tbody>` : ""}</table></div>`;
 }
 // hidden rows from the rest that hold the columns at their final widths while the rest comes in: per column the rows with
@@ -1816,7 +1816,8 @@ const actions = {
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },
-  "sort-by": el => { const p = parseHash().params; setParams({ sort: el.dataset.key, dir: p.get("sort") === el.dataset.key && p.get("dir") !== "asc" ? "asc" : "" }); },
+  "sort-by": el => { const p = parseHash().params, k = el.dataset.key, desc = sortOf(p) === k ? !isDesc(k, p.get("dir")) : isDesc(k, "");   // again: the other way
+    setParams({ sort: k, dir: desc === isDesc(k, "") ? "" : desc ? "desc" : "asc" }); },
   "set-pref": el => {
     if (el.dataset.key === "view" && el.dataset.value === "table") { S.selected.clear(); S.selecting = false; }   // the table shows no selection
     try { localStorage.setItem(el.dataset.key, el.dataset.value); } catch { /* storage blocked: the address keeps it */ } setParams({ [el.dataset.key]: el.dataset.value });
