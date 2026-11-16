@@ -15,11 +15,15 @@ html { scrollbar-gutter: stable; }   /* a scrollbar that appears (the grid fills
   --page: #f9f9f7; --surface: #fcfcfb; --surface-2: #f0efec; --surface-3: #e7e6e1;
   --border: rgba(11,11,11,0.10); --border-strong: rgba(11,11,11,0.20);
   --ink: #0b0b0b; --ink-2: #52514e; --muted: #686661; --grid: #e1e0d9; --axis: #c3c2b7;
-  --accent: #226cc4; --accent-fill: var(--accent); --accent-ink: #fff; --danger: #d03b3b; --good: #006300; --warn: #b07800;
+  --accent: #226cc4; --accent-fill: var(--accent); --accent-ink: #fff; --danger: #bf3030; --good: #006300; --warn: #b07800;
   --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #6250d6; --s8: #e34948; --deemph: #c3c2b7;
   --seq-100: #cde2fb; --seq-700: #0d366b;
   --shadow: 0 10px 40px rgba(0,0,0,.18);
+  --star-edge: #7a5300; --star-d: color-mix(in srgb, #7a5300 60%, transparent); --star-o: 1px; --star-n: -1px;   /* stars' edge: 3:1 on the surfaces */
+  --star-shadow: var(--star-o) 0 var(--star-edge), var(--star-n) 0 var(--star-edge), 0 var(--star-o) var(--star-edge), 0 var(--star-n) var(--star-edge),
+    var(--star-o) var(--star-o) var(--star-d), var(--star-n) var(--star-o) var(--star-d), var(--star-o) var(--star-n) var(--star-d), var(--star-n) var(--star-n) var(--star-d);
 }
+@media (min-resolution: 2dppx) { :root[data-theme="light"] { --star-d: #7a5300; --star-o: .5px; --star-n: -.5px; } }   /* one device pixel all round */
 
 * { box-sizing: border-box; }
 :where(img[width][height]) { height: auto; }   /* width/height attributes reserve space; CSS sizes still win */
@@ -88,6 +92,8 @@ main { padding: 16px; outline: none; }
 .chip.on { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--accent-ink); }
 .chip .n, .check .n { opacity: .65; margin-left: 4px; font-size: 11px; }
 .chip.on .n { opacity: 1; }
+:root[data-theme="light"] :is(.chip, .check) .n { opacity: 1; }   /* light: .65 of --ink-2 was 3.2:1 */
+:root[data-theme="light"] :is(.chip:not(.on, .x), .check:not(.x)) .n { color: var(--muted); }
 a.chip:hover { text-decoration: none; }
 .icon-toggles { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 4px; }
 .icon-toggle { width: 34px; height: 34px; padding: 3px; border-radius: 8px; background: transparent; border: 1px solid var(--border); }
@@ -133,6 +139,7 @@ a.tile { display: block; color: inherit; text-decoration: none; }   /* a tile li
 .tile.hang { overflow: visible; content-visibility: visible; z-index: 1; }
 .tile.hang .art { width: var(--hw); max-width: none; margin: var(--hm); aspect-ratio: var(--ha); clip-path: var(--hc); background: none; }
 .stars { color: #f5c542; letter-spacing: -1px; }
+:root[data-theme="light"] .stars { text-shadow: var(--star-shadow); }   /* a thin dark edge: crisp shadows, 1px at 1x (corners lighter), .5px from 2x */
 
 /* ---- table view ---- */
 table.data { width: 100%; border-collapse: collapse; font-size: 13.5px; }
@@ -834,6 +841,7 @@ body.dragging-cards .drop-list { display: flex; }
 .star-pick i { font-style: normal; padding: 0 1px; color: var(--muted); opacity: .55; }
 .star-pick i.on { color: #f5c542; opacity: 1; }
 .star-pick i:hover, .star-pick i:has(~ i:hover) { color: #f5c542; opacity: .8; }   /* the stars a click sets */
+:root[data-theme="light"] :is(.star-pick i.on, .star-pick i:hover, .star-pick i:has(~ i:hover)) { text-shadow: var(--star-shadow); }
 @media (pointer: coarse) { .star-pick i { padding: 3px 3px; font-size: 18px; } }
 .ctypes[data-inline] { min-height: 34px; } .ctypes.editing { outline: 1px solid var(--accent); outline-offset: 3px; }
 .type-palette { border: 1px solid var(--border-strong); border-radius: 12px; padding: 10px; margin: 0 0 14px; background: var(--surface-2); }
