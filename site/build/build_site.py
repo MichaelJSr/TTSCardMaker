@@ -262,7 +262,7 @@ HISTORY_ROWS = ("discord", "old repo")                         # Image versions'
 HISTORY_KINDS = HISTORY_ROWS + ("text",)
 HISTORY_BEFORE = ("discord", "text")                            # before the card's first git record (stop at git; the old repo overlaps it)
 HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "first repo": "first repo", "git": "git", "physical card photo": "photo",
-                "changelog": "changelog"}   # a proposed Created's source
+                "changelog": "changelog", "owner": "review"}   # a proposed Created's source (owner: a date typed on the review page)
 BEFORE_DAY = "Before 2020"                    # a Created from a physical card photo (owner Q6): HISTORY_DAY, createdBefore 2020
 HISTORY_DAY = "2019-01-01"                    # before every dated card: the team's Discord began in 2019-02
 HISTORY_IMAGE = re.compile(r"[\w.-]+\.webp\Z")
