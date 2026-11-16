@@ -930,6 +930,7 @@ function openCard(id, showDetails = false) {
   const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : c.morgue ? S.morgue : S.cards;
   const i = pool.findIndex(x => x.id === id), prev = pool[(i - 1 + pool.length) % pool.length], next = pool[(i + 1) % pool.length];
   const inDeck = deckHas(c.id), hang = c.png && G.hangs(c);       // hang: the art hangs out of the frame (grid.js hangVars)
+  const first = c.png && placeholderOf(c);                       // null: no src until laid out (below)
   const mentions = [...(S.mentions.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
   const mentionedBy = [...(S.mentionedBy.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
   const scope = c.morgue ? "morgue=1&" : "";                     // a Morgue card's facts link within the Morgue
@@ -945,7 +946,7 @@ function openCard(id, showDetails = false) {
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
-      <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${placeholderOf(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
+      <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img"${first === null ? "" : ` src="${first || esc(fullUrl(c))}"`} alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
         ${c.morgue ? "" : `<div class="actions card-actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
@@ -998,8 +999,10 @@ function openCard(id, showDetails = false) {
   document.body.style.overflow = "hidden";
   modal.scrollTop = 0;
   document.title = `${c.name} · Impossibility Simulator`;
-  const shown = $("#detail-img"), from = shown?.getAttribute("src"), drawn = shown?.getBoundingClientRect().width * devicePixelRatio;
+  const shown = $("#detail-img"), drawn = shown?.getBoundingClientRect().width * devicePixelRatio;
   const big = c.img && img(c, drawn > 0 && drawn <= 480 ? 480 : 720);   // sharper image once loaded: 480 px if drawn at most 480 device px (1x desktops)
+  if (first === null) shown.src = big === img(c, 480) ? big : thumbUrl(c);   // none loaded: 1x its 480 at once, else the 360 first
+  const from = shown?.getAttribute("src");
   if (big && from !== big && from !== img(c, 720)) {
     const im = new Image(); im.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big; }; im.src = big;
   }
@@ -1037,7 +1040,8 @@ const nearby = (() => {
   };
 })();
 /** The card dialog's first picture: the grid tile's when it has loaded (240 or 360 px, no new download), the one a card
- *  page shows (build_site card_frame: 480 or 720 px, as its srcset picked) or preloads (720 px), else the 360 px one */
+ *  page shows (build_site card_frame: 480 or 720 px, as its srcset picked) or preloads (720 px), any other loaded one
+ *  of 192 px or more (a strip's, a Changes row's: sized by URL), else null (openCard picks one once laid out) */
 function placeholderOf(c) {
   if (!c.img) return "";
   const t = view.querySelector(`.grid .tile[data-open="${CSS.escape(c.id)}"] img.art`);
@@ -1045,7 +1049,9 @@ function placeholderOf(c) {
   const shown = $("#detail-img")?.currentSrc;
   if (shown && local(shown).startsWith(`thumbs/${c.img}-`)) return local(shown);
   if (document.querySelector(`link[rel="preload"][as="image"][href="${img(c, 720)}"]`)) return img(c, 720);
-  return thumbUrl(c);
+  const mine = new Set(Object.keys(S.data.thumbs).filter(w => w >= 192).map(w => img(c, w)));
+  for (const i of document.images) if (i.complete && i.naturalWidth && mine.has(local(i.currentSrc))) return local(i.currentSrc);
+  return null;
 }
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card
 const versionList = c => {
