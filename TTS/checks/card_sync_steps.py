@@ -514,6 +514,21 @@ def plans(flow: dict) -> None:
 BASE_ENV = {k: v for k, v in os.environ.items() if k != "GIT_NO_LAZY_FETCH"}  # sandboxes lazy-fetch, as on a runner
 
 
+def runner_git() -> None:
+    """Every sandbox git as on a runner: the user's global config, no machine hooks, no auto maintenance. A global file,
+    not GIT_CONFIG_COUNT: Clones start sets that, and a local push's receive-pack drops it."""
+    own = [os.environ["GIT_CONFIG_GLOBAL"]] if os.environ.get("GIT_CONFIG_GLOBAL") else [
+        os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "git", "config"),
+        os.path.expanduser("~/.gitconfig")]                          # git skips a missing one
+    fd, cfg = tempfile.mkstemp(prefix="css_git_", suffix=".gitconfig")
+    with os.fdopen(fd, "w", encoding="utf-8") as fh:
+        for path in own:
+            fh.write('[include]\n\tpath = "%s"\n' % path.replace("\\", "\\\\").replace('"', '\\"'))
+        fh.write("[core]\n\thooksPath = /dev/null\n[maintenance]\n\tauto = false\n")
+    atexit.register(os.remove, cfg)
+    os.environ["GIT_CONFIG_GLOBAL"] = BASE_ENV["GIT_CONFIG_GLOBAL"] = cfg
+
+
 def git(cwd: str, *args, env: dict = None, check_: bool = True) -> str:
     e = {**BASE_ENV, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t",
          "GIT_COMMITTER_EMAIL": "t@t", **(env or {})}
@@ -1798,6 +1813,7 @@ def main():
     groups = sys.argv[1:] or list(GROUPS)
     if set(groups) - set(GROUPS):
         sys.exit(f"groups: {' '.join(GROUPS)}")
+    runner_git()
     flow = load()
     for g in groups:
         GROUPS[g](flow)
