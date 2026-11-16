@@ -1611,7 +1611,7 @@ def history_day(first):
 def history_morgue(hist, slug, old_slugs=()):
     """The Morgue's entries from Discord (owner Q1, Q2: joke cards and cards played but lost before git): name and
     pictures only, never a live card (cards.json morgue). Each: lost (joke | played), pic (its newest picture), first
-    (its Pacific day) and firstCh (firstOld: first seen in the old repo), or a Created "Before 2020" from a physical card photo (owner Q6: M'uru) as a card's
+    (its Pacific day) and firstCh (firstOld: first seen in the old repo; inGit: a file in the old or first repo), or a Created "Before 2020" from a physical card photo (owner Q6: M'uru) as a card's
     (createdFrom photo); their rows: {id: history_rows}. An entry named as a renamed card once was (old_slugs:
     its old page redirects to it) is "<slug>-morgue", as one named as a card of today is."""
     out, rows = [], {}
@@ -1632,7 +1632,9 @@ def history_morgue(hist, slug, old_slugs=()):
         if isinstance(first.get("channel"), str):
             e["firstCh"] = first["channel"]
         elif first.get("source") == "old repo" and e.get("first"):
-            e["firstOld"] = True                       # first seen in the old repo (Eldman), not on Discord
+            e["firstOld"] = True                       # first seen in the old repo, not on Discord
+        if t.get("git_file") or e.get("firstOld"):
+            e["inGit"] = True                          # a file in the old or first repo: lost before this repo
         out.append(e)
         rows[e["id"]] = mine
     return out, rows

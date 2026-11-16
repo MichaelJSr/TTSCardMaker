@@ -14,8 +14,8 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   or sort shows its results from the top; the same cards drawn another way (grid or table, tile size) keep the place.
   **The Morgue** (under Retired; `morgue=1`): the retired cards in `MDW/The Morgue` (a PSD with its PNG), picture and
   name only, never in the default list, decks, the TTS save, Stats or counts of live cards; with the card timelines
-  (below), also the joke cards and the cards played but lost before git, from Discord (picture, first post's day and
-  channel).
+  (below), also the joke cards and the cards played but lost before git (or before this repo, when an older repo had
+  their file), from Discord (picture, first post's day and channel).
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
   column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
