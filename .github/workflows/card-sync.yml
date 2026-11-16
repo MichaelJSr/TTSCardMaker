@@ -1376,6 +1376,7 @@ jobs:
           names=(--names "$ws/carddata/db/stats.json")
           mkdir -p "$bg"
           ( code=0
+            until [ -s "$RUNNER_TEMP/history-fetch.code" ]; do sleep 0.05; done   # history.git in (the copy may have won)
             timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$ws/$save" "${names[@]}" \
               > "$RUNNER_TEMP/save.md" 2> "$bg/err" &
             echo "$!" > "$bg/pid"
