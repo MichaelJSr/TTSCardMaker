@@ -297,7 +297,8 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 @font-face { font-family: "Inconsolata"; src: url("../rulebook/fonts/inconsolata-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "EB Garamond"; src: url("../rulebook/fonts/eb-garamond-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 .rules { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 20px; align-items: start; }
-@media (max-width: 860px) { .rules { grid-template-columns: 1fr; } .toc { position: static !important; max-height: none !important; } }
+@media (max-width: 860px) { .rules { grid-template-columns: 1fr; } .toc { position: static !important; max-height: none !important; }
+  .rb-searching .toc > a, .rb-searching .toc > [data-subs] { display: none; } }   /* searching: the results right under the box */
 .toc { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow: auto; font-size: 14px; }
 @media (min-width: 861px) and (max-width: 980px) { .toc { top: 112px; max-height: calc(100vh - 128px); } }   /* under the two-row bar */
 @media (max-height: 450px) { .toc { top: 8px; } }   /* the bar scrolls away (style.css end) */
