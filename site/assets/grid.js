@@ -144,8 +144,8 @@ export function toolbarHtml({ count, waiting = false, active = 0, sort, dir = ""
         <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.map(([v, l, d]) =>
           `<option value="${v}"${d !== undefined ? ` data-dir="${d}"` : ""}${v === sort && (d === undefined || (d === "asc") !== isDesc(sort, dir)) ? " selected" : ""}>${l}</option>`).join("")}</select></label>
         <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>
-        <span class="seg">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}">${l}</button>`).join("")}</span>
-        ${view === "grid" ? `<span class="seg">${[["s", "S"], ["m", "M"], ["l", "L"]].map(([v, l]) => `<button type="button" class="${v === size ? "on" : ""}" data-action="set-pref" data-key="size" data-value="${v}" title="Tile size">${l}</button>`).join("")}</span>` : ""}
+        <span class="seg" role="group" aria-label="View">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}" aria-pressed="${v === view}">${l}</button>`).join("")}</span>
+        ${view === "grid" ? `<span class="seg" role="group" aria-label="Tile size">${[["s", "S"], ["m", "M"], ["l", "L"]].map(([v, l]) => `<button type="button" class="${v === size ? "on" : ""}" data-action="set-pref" data-key="size" data-value="${v}" title="Tile size" aria-pressed="${v === size}">${l}</button>`).join("")}</span>` : ""}
         <button type="button" class="ghost" data-action="random-from-list" title="Random result">Random</button>
         ${tail}
       </div>`;

@@ -28,7 +28,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   section after route() draws, on hashchange) copies the result count into the status when it changes (not "…"); a
   view of another name empties it, so the same count is read out again. `markTab`: `aria-current="page"` on the section's
   tab only. Filter chips (app.js, changes.js) have `aria-pressed` and, with counts, "Creatures, 298 cards" (`.n` hidden);
-  the Series, Subseries and Author selects aria-labels. Table view: the name is `a.row-name` (`c/<id>/`, data-open):
+  so do the toolbar's Grid/Table and S/M/L (named groups) and the deck builder's hands (11-16);
+  the Series, Subseries and Author selects aria-labels. Table view: the sorted column's th has `aria-sort` (its ▾/▴
+  hidden); the name is `a.row-name` (`c/<id>/`, data-open):
   Tab reaches every row, Cmd/middle-click opens a tab (the sizer's copies are `visibility: collapse`, never focused).
 - Search box: `onsubmit="return false"` (Enter before app.js no longer reloads); init searches text typed before the
   scripts (read before route(), which empties an unfocused box). Enter runs a pending search first (`runSearch.flush`,

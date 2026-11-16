@@ -829,11 +829,11 @@ function adoptFirst(grid, css) {
 function tableHtml(list, p, win) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
     ["created", "Created"], ["new", "Updated"], ["psd", "PSD"]];
-  const sort = sortOf(p);
+  const sort = sortOf(p), desc = isDesc(sort, p.get("dir"));
   const first = win.all ? list.length : Math.max(TABLE_FIRST, Math.ceil((win.y + 2 * win.h) / 30));    // rows are 30 px or taller: the scroll position stays
   const rest = list.slice(first);
   tableRest = rest.map(rowHtml);
-  return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total", "psd"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? (isDesc(sort, p.get("dir")) ? " ▾" : " ▴") : ""}</th>`).join("")}</tr></thead><tbody>
+  return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total", "psd"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}${k && k === sort ? ` aria-sort="${desc ? "descending" : "ascending"}">${l}<span aria-hidden="true">${desc ? " ▾" : " ▴"}</span>` : `>${l}`}</th>`).join("")}</tr></thead><tbody>
     ${list.slice(0, first).map(rowHtml).join("")}</tbody>${tableRest.length ? `<tbody class="sizer" aria-hidden="true" style="visibility:collapse">${sizerRows(rest, tableRest)}</tbody>` : ""}</table></div>`;
 }
 // hidden rows from the rest that hold the columns at their final widths while the rest comes in: per column the rows with
@@ -1352,7 +1352,7 @@ function renderDeck(r) {
       ${readOnly ? "" : `<div class="panel"><h3>Import</h3><textarea id="deck-import" placeholder="One card name per line (“Field: name” for the field card)"></textarea>
         <div class="actions"><button type="button" data-action="deck-import">Import as new deck</button></div></div>
       <div class="panel"><h3>My decks</h3><div class="deck-list">${S.decks.map(x => { const n = x.cards.length + (x.field ? 1 : 0);
-        return `<div class="deck-row"><button type="button" class="${x.id === d.id ? "on" : ""}" data-action="deck-select" data-id="${x.id}">${esc(x.name)} <span class="muted">${n}</span></button>
+        return `<div class="deck-row"><button type="button" class="${x.id === d.id ? "on" : ""}" data-action="deck-select" data-id="${x.id}" aria-pressed="${x.id === d.id}">${esc(x.name)} <span class="muted">${n}</span></button>
           <button type="button" class="ghost" data-action="deck-publish" data-id="${x.id}"${n ? "" : " disabled"} title="${editing() ? "Publish this hand as a deck, public or private" : "Sign in to publish this hand"}">${editing() ? "Publish…" : "Sign in to publish"}</button></div>`; }).join("")}</div>
         <div class="actions"><button type="button" data-action="deck-new">New</button><button type="button" data-action="deck-dup">Duplicate</button>
         <button type="button" class="danger" data-action="deck-delete" ${S.decks.length < 2 ? "disabled" : ""}>Delete</button></div></div>`}
