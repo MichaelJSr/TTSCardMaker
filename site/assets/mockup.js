@@ -1122,6 +1122,54 @@ export function plateCuts(data, W, H, k, plate, read, ids, old = "", text = "", 
   }
   return cuts;
 }
+/** Specs for the record's follow layers (AutoCroissant psd_parts) the bake rewrites with a retyped part (psd_edit
+ *  set_parts) that have a plate crop of their own (card_plates: printed elsewhere, Autopsy Report's Evidence title,
+ *  Mosling's script name): a copy the part's new text (none: deleted with it), a watermark the joined title; none when
+ *  its crop and another wiped one's meet (one's box, the other's ink) or a layer over it is wiped or has no crop. */
+export function followSpecs(rec, plate, specs, k) {
+  const p = obj(rec?.parts), list = Array.isArray(p?.follow) ? p.follow : [], texts = Array.isArray(rec?.text) ? rec.text : [];
+  const parts = specs.filter(s => s.part && !s.added && s.id), out = [];
+  if (!list.length || !parts.length) return out;
+  const flat = t => String(t ?? "").replace(/\s+/g, " ").trim().toLowerCase(), spec = id => parts.find(s => String(s.id) === String(id));
+  const crop = id => plate.crops.find(c => String(c.id) === String(id) && !Array.isArray(c.fx));
+  const meets = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3], wiped = parts.map(s => crop(s.id));
+  const titles = printed(p, "name"), title = list => list.filter(t => t != null).join(" ");
+  for (const f of list) {
+    const t = texts.find(x => String(x?.id) === String(f?.id)), c = crop(f?.id), of = (Array.isArray(f?.of) ? f.of : []).map(spec).filter(Boolean);
+    if (!t || !c || !of.length || !Array.isArray(t.box) || !(f.how === "copy" || f.how === "watermark")) continue;
+    const text = f.how === "watermark" ? (flat(t.text) === flat(title(titles.map(x => x.text))) ? title(titles.map(x => (spec(x.id) ? spec(x.id).text : x.text))) || null : undefined)
+      : flat(t.text) !== flat(of[0].old) ? undefined : of[0].text;
+    if (text === undefined || (text != null && flat(text) === flat(t.text))) continue;
+    if ((c.over || []).some(id => !crop(id) || spec(id)) || wiped.some(w => w && (meets(w.box, c.ink) || meets(c.box, w.ink)))) continue;
+    out.push({ role: of[0].role, text, old: String(t.text), label: of[0].label, own: t.box.map(v => v * k), part: true, path: t.layer, id: String(f.id), colors: null, follow: c });
+  }
+  return out;
+}
+/** The copies stacked on the one layer ids names (its plate crop's "stacked", AutoCroissant card_plates._stacked) in its
+ *  font and size (layer: its text record): [{dx, dy (image px), above, ch, fill}] or null. */
+function stackedOf(rec, plate, ids, k, layer) {
+  const c = ids.length === 1 && k > 0 ? (plate?.crops || []).find(x => String(x.id) === String(ids[0]) && !Array.isArray(x.fx)) : null;
+  const texts = Array.isArray(rec?.text) ? rec.text : [];
+  const out = (Array.isArray(c?.stacked) ? c.stacked : []).filter(x => {
+    const t = texts.find(y => String(y?.id) === String(x?.id));
+    return t && layer && t.font === layer.font && t.size === layer.size && Array.isArray(x.at);
+  }).map(x => ({ dx: x.at[0] * k, dy: x.at[1] * k, above: !!x.above, ch: Array.isArray(x.ch) ? x.ch : null, fill: Array.isArray(x.fill) ? x.fill : null }));
+  return out.length ? out : null;
+}
+/** The layers over a follow layer back on top of its new letters (cuts: their plates, the card without each): the card's
+ *  pixels as far as it differs from them (OPAQUE's ramp). */
+function putOver(ctx, W, cuts, card) {
+  for (const [x0, y0, w, h, p] of cuts) {
+    const im = ctx.getImageData(x0, y0, w, h), d = im.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const j = (y * w + x) * 4, i = ((y0 + y) * W + x0 + x) * 4;
+      let e = 0; for (let c = 0; c < 3; c++) e = Math.max(e, Math.abs(card[i + c] - p[j + c]));
+      const a = clamp((e - OPAQUE[0]) / (OPAQUE[1] - OPAQUE[0]), 0, 1);
+      if (a > 0) for (let c = 0; c < 3; c++) d[j + c] = Math.round(a * card[i + c] + (1 - a) * d[j + c]);
+    }
+    ctx.putImageData(im, x0, y0);
+  }
+}
 /** Whether old holds a word of the FX layers on layers ids (the plate's crops without them). */
 const fxIn = (plate, ids, old) => plate.crops.some(c => Array.isArray(c.fx) && ids.some(id => String(c.id) === String(id)) && c.fx.some(w => count(old, w)));
 /** A stat's label: "HP", or "HP (creature 2)" for "hp@2". */
@@ -1336,6 +1384,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (obj(rec?.parts) && boxes) specs.length = 0;   // one box per layer: each changed layer in its own box, not the joined fields
   else specs.splice(0, specs.length, ...specs.filter(s => !tinted.includes(s.role)));   // each of its layers recoloured in its own box
   for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer, id: j.added ? "" : j.id, colors: j.colors });
+  if (sheet && kc) specs.push(...followSpecs(rec, plate, specs, kc));   // their copies elsewhere, as the bake writes them
   const fams = [];
   const look = Array.isArray(rec?.addRoom) && obj(rec?.addLook) && rec.addLook.px > 0 ? { ...rec.addLook, added: true } : null;   // how the bake sets an added ability
   for (const { role, label, path, id, added } of specs) fams.push(await family(role, label, path, id, added ? look : null));
@@ -1346,7 +1395,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (plan.text === s.text) continue;
     s.text = plan.text;
     if (!NOTDEFS.has(fam)) NOTDEFS.set(fam, { adv: (+adv || 0) / 1000, path: d && typeof Path2D !== "undefined" ? new Path2D(d) : null });
-    if (plan.boxes) out.noGlyph.push([s.label, plan.boxes, !d]);   // mockNote: a box, or a gap (an empty .notdef)
+    if (plan.boxes && !s.follow) out.noGlyph.push([s.label, plan.boxes, !d]);   // mockNote: a box, or a gap (an empty .notdef)
   }
   // the erase pass (where each old text is, erased) depends on none of the new text, colours or statuses: a redraw that
   // changed only those (typing) starts from the last one's pixels
@@ -1361,7 +1410,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const plans = reuse ? eraseMemo.plans : [];
   const cardPx = reuse ? eraseMemo.card : specs.length ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines, a title's splice
   if (reuse) pixels.data.set(eraseMemo.data);
-  for (const [k, { role, text, old, label, own: partBox, added, part, colors: shared }] of specs.entries()) {
+  for (const [k, { role, text, old, label, own: partBox, added, part, colors: shared, follow }] of specs.entries()) {
     if (tints[k]) { out.drawn.push(label); continue; }   // never erased: tinted below
     const { fam, layer } = fams[k];
     const set = role === "ability" || role === "name" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems) and letter width (psd_details)
@@ -1383,6 +1432,19 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (added) {                                      // top: at the top of the bake's area, as tall as its lines
       jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true, top: !!own });
       if (own) out.added = Array.isArray(rec?.addRoom) ? "room" : "template"; else out.boxed.push(label);   // mockNote says where
+      continue;
+    }
+    if (follow) {                                     // a follow layer elsewhere: its crop pasted, set where the bake re-lays it
+      if (!reuse) {
+        const cuts = plateCuts(pixels.data, W, H, kc, plate, readPlate, [specs[k].id], old, text, wiping), z = layer?.px * kc;
+        const above = follow.over?.length ? plateCuts(cardPx, W, H, kc, plate, readPlate, follow.over, "", "", follow.over) : [];   // the layers over it
+        const re = Array.isArray(follow.relaid) && follow.relaid.length ? follow.relaid.map(l => l.map(v => v * kc)) : null;   // its lines as the bake re-lays it
+        const block = re && { box: [Math.min(...re.map(l => l[0])), Math.min(...re.map(l => l[1])), Math.max(...re.map(l => l[2])), Math.max(...re.map(l => l[3]))], lines: re, size: z, pitch: z * LINE, align: "center", mass: 0 };
+        plans[k] = cuts && above && z > 0 && own ? (putCuts(pixels.data, W, cuts), { found: block || recordBlock(own, tokenize(old, icons), measure, z), size: z, above, plated: true,
+          colours: { fill: follow.fill || mainInk(rec, layer) || hexRgb(layer.color), stroke: null } }) : {};
+      }
+      const { found, size: z, colours, above } = plans[k];
+      if (found && text != null) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors: null, statuses, ink, kc, card: cardPx, split: false, fit: 0, geo: geoOf(plate, [specs[k].id], kc), above, quiet: true });
       continue;
     }
     let plated = false;
@@ -1423,7 +1485,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
     else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : 0,
-      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null,
+      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer) : null,
       bare: plans[k].plated && fxIn(plate, idsOf(specs[k], k), old) ? () => plateCuts(cardPx, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, "", wiping) : null });   // the crop without its FX layers
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
@@ -1485,8 +1547,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   for (const job of jobs) {
     const imgs = await iconImages(job.text, icons);
     const j = { ...job, fills: job.one ? null : fills, tex: lookImg && letterLook(lookImg, looks, job.layer?.id, kc) };   // under an overlay: painted over, as the bake's
-    if (j.look ? drawAdded(ctx, j, imgs) : j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) out.over.push(j.label);
-    out.drawn.push(job.label);
+    if ((j.look ? drawAdded(ctx, j, imgs) : j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) && !j.quiet) out.over.push(j.label);
+    if (j.above?.length) putOver(ctx, W, j.above, cardPx);
+    if (!j.quiet) out.drawn.push(job.label);
   }
   return blit();
 }
@@ -1711,9 +1774,12 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
  *  round the one-colour icon, in the text's fill. shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
  *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. tex:
  *  letterLook's, over the letters of its colour. */
-function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null }) {
+function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null }) {
   ctx.textBaseline = "alphabetic";
   if (effects?.length) paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx });
+  const copy = (c, how) => paintCopy(ctx, lines, { at, base, pitch, z, fam, track, hx, fill, stroke, strokeW, shades }, c, how);
+  if (stroke) for (const c of copies || []) copy(c, "strokeText");   // one outline round them all (the group's Stroke)
+  for (const c of copies || []) if (!c.above) copy(c, "fillText");
   lines.forEach((line, n) => {
     let x = at(line), y = base + n * pitch;
     for (const p of line.pieces) {
@@ -1767,6 +1833,42 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
       x += p.w;
     }
   });
+  for (const c of copies || []) if (c.above) copy(c, "fillText");
+}
+/** A copy stacked on the lines (stackedOf's c): their letters moved by (dx, dy), outlined (how "strokeText") or filled in
+ *  its fill, else each piece's colour; one that paints some channels only (Tainted Eden's: its blending restrictions)
+ *  drawn apart and mixed into those. */
+function paintCopy(ctx, lines, { at, base, pitch, z, fam, track, hx, fill, stroke, strokeW, shades }, c, how) {
+  const T = ctx.getTransform(), mix = how === "fillText" && c.ch && c.ch.length < 3;
+  let g = ctx, bx = 0, by = 0, bw = 0, bh = 0;
+  if (mix) {                                          // its lines' reach, device px
+    let x0 = Infinity, x1 = -Infinity;
+    for (const line of lines) { const x = at(line); x0 = Math.min(x0, x); x1 = Math.max(x1, x + line.pieces.reduce((t, p) => t + (p.w || 0), 0)); }
+    const pad = 0.3 * z + 2, xs = [], ys = [], y0 = base - 1.2 * z - pad + c.dy, y1 = base + (lines.length - 1) * pitch + 0.5 * z + pad + c.dy;
+    for (const [x, y] of [[x0 - pad + c.dx, y0], [x1 + pad + c.dx, y0], [x0 - pad + c.dx, y1], [x1 + pad + c.dx, y1]]) { xs.push(T.a * x + T.c * y + T.e); ys.push(T.b * x + T.d * y + T.f); }
+    bx = Math.max(0, Math.floor(Math.min(...xs))); by = Math.max(0, Math.floor(Math.min(...ys)));
+    bw = Math.min(ctx.canvas.width, Math.ceil(Math.max(...xs))) - bx; bh = Math.min(ctx.canvas.height, Math.ceil(Math.max(...ys))) - by;
+    if (!(bw > 0 && bh > 0) || !Number.isFinite(bw + bh)) return;
+    const cv = document.createElement("canvas"); cv.width = bw; cv.height = bh;
+    g = cv.getContext("2d", { willReadFrequently: true }); g.setTransform(new DOMMatrix([1, 0, 0, 1, -bx, -by]).multiply(T));
+  }
+  g.textBaseline = "alphabetic";
+  lines.forEach((line, n) => {
+    let x = at(line); const y = base + n * pitch;
+    for (const p of line.pieces) {
+      if (!p.icon && !p.badge && p.text?.trim()) {
+        g.save(); g.font = `${z}px ${fam}`; if (track) g.letterSpacing = `${track * z}px`; g.translate(x + c.dx, y + c.dy); g.scale(hx, 1);
+        if (how === "strokeText") { g.lineJoin = "round"; g.strokeStyle = rgb(stroke); g.lineWidth = strokeW || Math.max(1.5, z * 0.16); }
+        else g.fillStyle = c.fill ? rgb(c.fill) : p.color || (shades ? shaded(g, shades, y) : rgb(fill));
+        glyphText(g, p.text, fam, z, track, how); g.restore();
+      }
+      x += p.w;
+    }
+  });
+  if (!mix) return;
+  const src = g.getImageData(0, 0, bw, bh).data, im = ctx.getImageData(bx, by, bw, bh), d = im.data;
+  for (let i = 0; i < d.length; i += 4) { const a = src[i + 3] / 255; if (a) for (const k of c.ch) d[i + k] = Math.round(src[i + k] * a + d[i + k] * (1 - a)); }
+  ctx.putImageData(im, bx, by);
 }
 /** The old lines' pitch: the mean of their middles' gaps within 30% of the median gap (capitals, badges or descenders
  *  move a line's middle: the least gap reads the leading tight). */
@@ -1780,7 +1882,7 @@ export function steadyPitch(lines) {
  *  text) each paragraph is one line (pointLayout), re-laid at a size it shrank to past the old text's (fit_below). An
  *  Ability a bake set smaller (the card's abilityFit) starts from the card maker's size, as the next bake. */
 function drawText(ctx, job, imgs, W) {
-  let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was, tex } = job;
+  let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was, tex, copies = null } = job;
   const looked = (ps, s) => {                         // kept badges at their own size and tracking, typed ones tracked as the card's
     if (role === "ability" && Array.isArray(layer?.badges)) {
       const looks = badgeLooks(s, old, layer.badges); let i = 0;
@@ -1855,19 +1957,19 @@ function drawText(ctx, job, imgs, W) {
         const m = ctx.measureText(body), inkW = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) * measure.hx; ctx.letterSpacing = "0px";
         const zl = inkW > 0 && b[1] > a[0] ? size * (b[1] - a[0]) / inkW : size;   // its own ink width
         const line = fit(colourize(tokenize(body, icons), body, colors, role, statuses, null, null, fills), Infinity, Infinity, zl, measure).lines.slice(0, 1);
-        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, effects });
+        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, effects, copies });
       }
       job.lined = "own"; return false;
     }
   }
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid
-  job.lined = plan && !shrunk && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex }, pitch: pitch0, W }) : "";
+  job.lined = plan && !shrunk && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies });
   return over;
 }
 /** The lines of a redrawn Ability the edit leaves as they were (indexes): its leading and trailing lines whose pieces
