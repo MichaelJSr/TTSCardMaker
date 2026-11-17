@@ -27,7 +27,8 @@
    counts as pushed; main moved: M is dropped and one new run is dispatched (marked retry, the bake carried, no data
    inputs), none from a retry or while another run is unfinished; past minute 60 nothing is pushed. Re-pin: the save
    run again on M, a change is a second commit on M; none when the links were current or main moved. The save starts
-   in the background before the rulebook PDF; TTS save waits for it (its report, changed, its exit code).
+   in the background before the rulebook PDF; TTS save waits for it (its report, changed, its exit code). A look's new
+   key no landed M carried: kept at refs/rulebook-look/kept (no branch), read back for HEAD's pages.json only.
 6. The timer: the schedule's run looks for a push run about to bake (Another timer: one with its Bake and
    save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as none) and skips
    its main lane when there is one (no cancel: the data lane ran); else it goes. A push's run has no timer: its main
@@ -465,6 +466,13 @@ def plans(flow: dict) -> None:
     d = plan(flow, "main", inputs={"dry_run": True, "bake": "all"}, outputs=baked)
     check("left" in runs(p) and "left" in runs(q) and "left" not in runs(r) and "left" not in runs(d),
           "main, Leftover edits: after M, and after Pending edits found none; not after a rejected M or on a dry run")
+    keyed = {**go, "pages": {"key": "true"}}
+    got = ["Rulebook look kept" in runs(plan(flow, "main", event=e, inputs=i, outputs={**keyed, **o})) for e, i, o in (
+        ("schedule", {}, {}), ("push", {}, {"save": {"changed": "true"}, "main": {"pushed": "true", "m": "m" * 40}}),
+        ("push", {}, {"main": {"pushed": "true", "m": "", "top": "r" * 40}}), ("push", {}, {"main": {"rejected": "true"}}),
+        ("schedule", {}, {"pages": {"key": "false"}}), ("workflow_dispatch", {"dry_run": True}, {}))]
+    check(got == [True, False, True, True, False, False],
+          f"main, a look's new key that no landed M carried (R alone, a rejected M) kept for the next lane; not on a dry run ({got})")
     chain = flow["jobs"]["chain"]
     got = [bool(evaluate(chain["if"], {"github": {"event_name": e}, "inputs": i, "functions": {"cancelled": lambda: False}}))
            for e, i in (("push", {}), ("schedule", {}), ("workflow_dispatch", {"dry_run": False, "chain": "now 1 0"}),
@@ -1481,6 +1489,31 @@ def save_cases(flow: dict) -> None:
     with tempfile.TemporaryDirectory() as tmp:
         code, text, _ = run_step(job, "save", tmp, {"STARTED": "failure"}, tmp)
     check(code == 1 and "did not start" in text, "save: a start step that failed fails TTS save at once")
+
+    # Rulebook look kept on a sandbox origin: the look at refs/rulebook-look/kept (no branch or tag), the same commit
+    # again; KEPT_SH (both look steps') fetches it once and names it for HEAD's pages.json only
+    kept_sh = step(job, "pdf-start")["env"]["KEPT_SH"]
+    with tempfile.TemporaryDirectory() as tmp:
+        work, bare = origin(tmp)
+        commit(work, {"TTS/Rulebook/pages.json": '{"key": "k0", "pages": []}\n'})
+        git(work, "push", "-q", "origin", "main")
+        ws = checkout(tmp, bare)
+        base, look = git(ws, "rev-parse", "HEAD:TTS/Rulebook/pages.json"), '{"key": "k1", "pre": "p1", "pages": []}\n'
+        write(os.path.join(ws, "TTS/Rulebook/pages.json"), look)
+        tips = []
+        for _ in range(2):
+            code, text, _ = run_step(job, "Rulebook look kept", ws, {"BASE": base, "GIT_NO_LAZY_FETCH": "1"}, tmp)
+            tips.append(git(bare, "rev-parse", "-q", "--verify", "refs/rulebook-look/kept", check_=False) if code == 0 else text)
+        refs = git(bare, "for-each-ref", "--format=%(refname)").split()
+        read = lambda: _run('bash -c "$KEPT_SH" kept', ws, {**served(f"file://{bare}"), "KEPT_SH": kept_sh}, tmp)[1].strip()  # noqa: E731
+        named = read()
+        held = bool(named) and open(named, encoding="utf-8").read() == look
+        commit(ws, {"TTS/Rulebook/pages.json": '{"key": "k2", "pages": [1]}\n'})          # HEAD's pages.json moved
+        other = read()
+        ok = (len(tips[0]) == 40 and tips[0] == tips[1] and refs == ["refs/heads/main", "refs/rulebook-look/kept"]
+              and git(bare, "log", "-1", "--format=%s", "refs/rulebook-look/kept") == base and held and other == "")
+        check(ok, f"rulebook look kept: pushed outside refs/heads and refs/tags, once ({tips}); read back for HEAD's "
+                  f"pages.json ({held}), not after it moved ({other!r})")
 
 
 def records_cases(flow: dict) -> None:
