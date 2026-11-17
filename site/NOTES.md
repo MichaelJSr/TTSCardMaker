@@ -327,7 +327,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     `request` isn't the run's, which Publish replaces with its "left no result" error. The branch stays the record:
     other devices and later visits read it there.
   - Warm lane (owner D22, 2026-11-16; AutoCroissant `commands/card_preview_lane.py`): after a press that went well, the
-    preview job's process stays up 240 s for its editor's next presses (none in the last 2 minutes of its 11-minute cap)
+    preview job's process stays up 240 s for its editor's next presses (none in the last 2 minutes of its 20-minute cap)
     and bakes each in process, the same bake and bytes, with no setup. A press goes to it only when named: the dispatch
     adds `"lane": "<run id>-<blob sha>"`, the run that handed over the editor's newest result while it should still be
     up (preview.js `laneOf`). The press itself (`request\ncard\nedit`, the input strings, UTF-8) goes as a git blob
@@ -338,7 +338,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     names no lane again on that page. Its hand-over is `card-preview-<request>` in the lane's run, the
     same zip as `card-preview`, with `run` the press's own run. Every press is still dispatched, baked cold and
     published as ever. The client shows whichever hand-over comes first. A 422 with `lane` dispatches again without it.
-    A press's run starts no lane of its own when its named lane handed it over. A lane ends at a newer press of its
+    A press's run starts no lane of its own when its named lane handed it over. A press on a newer commit of the card
+    repo (a push since the lane's) is baked there: the lane fetches that commit's trees and follows it when
+    `MDW/Fonts`, `card-preview.yml` and `.github/actions` are the same there. A lane ends at a newer press of its
     editor it doesn't take; that press's run is the next lane.
   - The image, once result.json says `image` (`files.webp`; `files.before`: the card before the edit, for the Diff):
     `https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/previews/previews/<request>/preview.webp` (public, CORS
