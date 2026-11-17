@@ -85,9 +85,12 @@ function named(q, pred) {
   return c => pred(c) || squashed(c).names.includes(`\n${sq}\n`) || squashed(c).ser.has(sq);
 }
 
+/** curly quotes as plain ones (phones type them), one character each */
+export const straight = s => s.replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"');
+
 /** Compile a query into a predicate (card) => boolean, or null for an empty query. */
 export function compile(query) {
-  const q = (query || "").replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\s+/g, " ").trim();   // phones type curly quotes; a space finds a line break
+  const q = straight(query || "").replace(/\s+/g, " ").trim();   // a space finds a line break
   if (!q) return null;
   let parts = splitOut(q, "|");
   if (parts.length > 1) {

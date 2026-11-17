@@ -1,4 +1,4 @@
-import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
+import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
@@ -1143,7 +1143,7 @@ function bookChapters() {
   if (sent && (same || Date.now() - sent.at > 3600e3)) { localStorage.removeItem(RB_SENT); sent = null; }   // built, or stale
   S.book.sent = sent;
   S.book.chapters = (sent ? sent.chapters : S.book.built).map(c => ({ ...c, ast: RB.parse(c.source) }));
-  for (const c of S.book.chapters) c.text = `${c.title}\n${RB.plainText(c.ast)}`.toLowerCase().replace(/\s+/g, " ");   // any spaces as one (the bot's \s+)
+  for (const c of S.book.chapters) c.text = bookFold(`${c.title}\n${RB.plainText(c.ast)}`);
   return S.book.chapters;
 }
 let cardNames = null;                                    // ![[Card]] and [[Card]]: printed title or file name, any case
@@ -1184,7 +1184,7 @@ function renderRules(r) {
     return;
   }
   if (r.arg === "print") { renderSheets(); return; }
-  const q = (r.params.get("q") || "").trim().toLowerCase().replace(/\s+/g, " ");
+  const q = bookFold((r.params.get("q") || "").trim());
   if (document.activeElement !== qInput) qInput.value = "";
   const chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
   const banned = S.data.banlist, can = editing();
@@ -1212,7 +1212,7 @@ function renderRules(r) {
       if (miss.length < els.length) for (const el of miss) el.classList.add("rb-hit-none");   // none holds it (its title): all of it
     }
     highlight($$(".rb-chapter", view), q);
-    for (const b of $$(".rb-chapter .badge[data-tip]", view)) if (badgeWords(b).includes(q) && !b.textContent.toLowerCase().includes(q)) b.classList.add("rb-hit");
+    for (const b of $$(".rb-chapter .badge[data-tip]", view)) if (badgeWords(b).includes(q) && !bookFold(b.textContent).includes(q)) b.classList.add("rb-hit");
   }
   watchToc();
   const [ch, sec] = (r.arg || "").split("/");
@@ -1281,6 +1281,8 @@ async function renderSheets() {
   view.append(list);
   document.body.dataset.sheets = String(sheets.length);    // the export waits for this
 }
+// the rulebook's words as searched: any case, any spaces as one (the bot's \s+), a phone's curly quotes plain
+const bookFold = s => straight(s.toLowerCase().replace(/\s+/g, " "));
 // a block's words as the chapter list reads them (plainText): badges as typed, icons as [name], card pictures by name
 function bookWords(el) {
   let s = "";
@@ -1293,24 +1295,24 @@ function bookWords(el) {
     else walk(c);
   } };
   walk(el);
-  return s.toLowerCase().replace(/\s+/g, " ");
+  return bookFold(s);
 }
 // "(OD)" (a timing tag's tip starts with it), "(2 points)" (a cost's: "2 points: ...")
 const badgeWords = b => { const t = b.dataset.tip, m = b.classList.contains("cost") ? /^[^:]+(?=:)/.exec(t) : /^\([^)]*\)/.exec(t);
-  return (m ? (m[0][0] === "(" ? m[0] : `(${m[0]})`) : b.textContent).toLowerCase(); };
+  return bookFold(m ? (m[0][0] === "(" ? m[0] : `(${m[0]})`) : b.textContent); };
 function highlight(els, q) {
   const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s+"), "gi");   // any spaces between the words
   for (const el of els) {
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
     for (const node of nodes) {
-      const text = node.nodeValue, hits = [...text.matchAll(re)];
+      const text = node.nodeValue, hits = [...straight(text).matchAll(re)];   // q is straight; same length
       if (!hits.length) continue;
       const frag = document.createDocumentFragment();
       let last = 0;
       for (const h of hits) {
         frag.append(text.slice(last, h.index));
-        const m = document.createElement("mark"); m.textContent = h[0]; frag.append(m);
+        const m = document.createElement("mark"); m.textContent = text.slice(h.index, h.index + h[0].length); frag.append(m);
         last = h.index + h[0].length;
       }
       frag.append(text.slice(last)); node.replaceWith(frag);
