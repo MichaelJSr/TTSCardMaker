@@ -7,7 +7,8 @@
 # psd-tools fork's one pin) come in a venv cached per that file (.github/actions/cards-python).
 # The warm lane (owner D22; AutoCroissant card_preview_lane): the preview's process stays up 4 minutes after its press
 # and bakes its editor's next presses, each named to it by the website (inputs.lane, in the run-name: the lane's run and
-# the git blob the website posted with the card and edit).
+# the git blob the website posted with the card and edit) and rung at its doorbell (a ref, refs/preview-lane/...,
+# taken in about a second; publish deletes it).
 name: Card preview
 run-name: Card preview ${{ inputs.request }}${{ inputs.lane && format(' lane {0}', inputs.lane) || '' }}
 
@@ -456,6 +457,21 @@ jobs:
         run: |
           python -S -m commands.card_preview_branch --out "$RUNNER_TEMP/preview" --request="$REQUEST" --git "$GITHUB_WORKSPACE" \
             | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # The press's doorbell at its lane (the website's ref, AutoCroissant card_preview_lane.RUNG), had the website's
+      # delete not come: gone with the run.
+      - name: Doorbell
+        if: ${{ always() && inputs.lane != '' }}
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LANE: ${{ inputs.lane }}
+          REQUEST: ${{ inputs.request }}
+        run: |
+          [[ "$REQUEST" =~ ^[A-Za-z0-9-]{8,64}$ ]] && [[ "$LANE" =~ ^([0-9]{1,20})-([0-9a-f]{40})$ ]] || exit 0
+          ref="preview-lane/${BASH_REMATCH[1]}/$REQUEST-${BASH_REMATCH[2]}"
+          if gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/$ref" --silent 2> /dev/null; then echo "refs/$ref deleted"; else echo "no refs/$ref"; fi
 
   # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
   caches:
