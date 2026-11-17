@@ -15,7 +15,7 @@ months are Pacific time (ZONE).
   * Per card: its cohort, how many cards of it have a lower or higher total, z of the total, "top" / "bottom" for the
     top and bottom 10% (the total's mid-rank), the stat lines it had (trend, when they changed) and its recorded changes, newest first, its old names' too (renamed). Both read the current card as its
     page shows it. A version with the same date as the one after it is the same PSD read again by a newer parser: the
-    newer reading replaces it.
+    newer reading replaces it. A field a version changed and the next one put back within a day (UNDONE) is no change.
   * Over time (a card's start is its first upload): each month, the total stats of each star cohort's cards as they
     were then.
 
@@ -315,6 +315,32 @@ def page_chain(e, stats, old_stats):
     out = [v for v, w in zip(chain, chain[1:]) if when(v) != when(w)] + chain[len(chain) - 1:]
     if out and out[len(out) - 1] is stats.get(e["key"]):
         out[len(out) - 1] = shown(e, out[len(out) - 1])
+    return undone(out)
+
+
+UNDONE = 24 * 3600                            # a change the next version puts back this soon: a mistake undone
+
+
+def fields_of(v):
+    """What change() compares, by attribute."""
+    return {"stats": line_of(getattr(v, "stats", None)), "stars": getattr(v, "stars", None), "card_type": getattr(v, "card_type", None),
+            "subtype": getattr(v, "subtype", None), "series": getattr(v, "series", None), "types": Counter(getattr(v, "types", None) or []),
+            "creatures": max(len(getattr(v, "creatures", None) or []), 1), "ability": text_key(getattr(v, "ability", None))}
+
+
+def undone(chain):
+    """chain with each field a version changed and the next version put back within UNDONE kept as before: no change
+    (a stat bar mistake fixed the same day is no buff and nerf)."""
+    out = list(chain)
+    for i in range(1, len(out) - 1):
+        if when(out[i + 1]) - when(out[i]) > UNDONE:
+            continue
+        a, b, c = fields_of(out[i - 1]), fields_of(out[i]), fields_of(out[i + 1])
+        back = [k for k in b if b[k] != a[k] and c[k] == a[k]]
+        if back:
+            out[i] = copy.copy(out[i])
+            for k in back:
+                setattr(out[i], k, getattr(out[i - 1], k, None))
     return out
 
 
