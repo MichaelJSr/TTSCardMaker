@@ -68,7 +68,7 @@ data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/editing.json (the card fields only edit mode reads, EDITOR_FIELDS: loaded with the editor),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
-its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
+its MDW/Fonts file and the typed characters it can't draw, both cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
 assets (with esbuild: one bundle, assets/app.js, and its source map; else the modules one by one) and one share page per card, per person and per public deck (its preview image a montage of its cards).
 index.html carries the plain grid's first tiles (first_screen, drawn by grid.js in node). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
 content and its imports' (the bundle's from its code and map), each data file's from its content without the build time (cards.json: all the data's); build.txt digests the whole site (which build is live),
@@ -905,6 +905,9 @@ WEB_FONTS = (".ttf", ".otf")                  # what the mock-up loads from raw 
 FONT_NAMES = "fonts.json"                     # in CACHE: each font file's face names and size, by blob sha
 FONT_NAMES_VERSION = 2                        # bump when font_faces changes (2: PostScript names only, as font_check since 2026-10-23)
 FONT_WEB_MAX = 8 * 1024 * 1024                # a bigger font (its WOFF2 copy, else the file) isn't offered: the mock-up draws a stand-in
+GLYPH_SET = "".join(map(chr, range(33, 127))) + "\u2122\u00ae\u00a9\u00e9\u2019\u2014\u2013\u2026\u201c\u201d"   # typed characters
+#   mockup.js checks (psd_edit.PLAIN_MARKS among them)
+NOTDEF_MAX = 600                              # a longer .notdef path: a frame of its bounds
 
 
 def ps_name(name):
@@ -965,6 +968,40 @@ def font_faces(data):
         raise ValueError(f"not a font file ({e})")
 
 
+def font_gaps(data):
+    """
+    Per face of a font file: [the GLYPH_SET characters its cmap lacks, its .notdef as [advance, SVG path] in 1/1000 em,
+    y up ([advance] when empty; a frame of its bounds past NOTDEF_MAX)], or None when it lacks none. The bake draws such
+    a typed character as the .notdef (psd_edit.no_glyph), and mockup.js so.
+    """
+    import struct
+    from fontTools.pens.boundsPen import BoundsPen
+    from fontTools.pens.svgPathPen import SVGPathPen
+    from fontTools.ttLib import TTFont
+    out, many = [], data[:4] == b"ttcf"
+    for i in range(struct.unpack_from(">I", data, 8)[0] if many else 1):
+        font = TTFont(io.BytesIO(data), lazy=True, fontNumber=i if many else -1)
+        cmap = font.getBestCmap() or {}
+        lacks = "".join(c for c in GLYPH_SET if ord(c) not in cmap)
+        if not lacks:
+            out.append(None)
+            continue
+        em, name = 1000 / font["head"].unitsPerEm, font.getGlyphOrder()[0]
+        glyphs = font.getGlyphSet()
+        pen = SVGPathPen(glyphs, lambda v: str(round(v * em)))
+        glyphs[name].draw(pen)
+        path = pen.getCommands()
+        if len(path) > NOTDEF_MAX:
+            bounds = BoundsPen(glyphs)
+            glyphs[name].draw(bounds)
+            x0, y0, x1, y1 = (round(v * em) for v in bounds.bounds)
+            t = max(1, round(min(x1 - x0, y1 - y0) / 12))
+            path = f"M{x0} {y0}H{x1}V{y1}H{x0}ZM{x0 + t} {y0 + t}V{y1 - t}H{x1 - t}V{y0 + t}Z"
+        adv = round(font["hmtx"][name][0] * em)
+        out.append([lacks, [adv, path] if path else [adv]])
+    return out
+
+
 def font_bytes(path):
     local = os.path.join(REPO, path)
     if os.path.isfile(local):
@@ -975,9 +1012,11 @@ def font_bytes(path):
 
 def web_fonts(tree, names):
     """
-    {font name: {"file": MDW/Fonts path, "_bytes": its size, "_face": its index in a .ttc / .otc}} for the PSD fonts in
+    {font name: {"file": MDW/Fonts path, "_bytes": its size, "_face": its index in a .ttc / .otc, "lacks" and "notdef":
+    font_gaps'}} for the PSD fonts in
     names a top-level MDW/Fonts file supplies, as font_check decides it (a face with exactly that PostScript name; the
-    first file by path wins), for the mock-up to load as a web font (web_woff2 keeps those it can). Face names are cached by blob sha
+    first file by path wins), for the mock-up to load as a web font (web_woff2 keeps those it can). Face names (and a used
+    file's gaps) are cached by blob sha
     in CACHE/fonts.json (a file is read, from the checkout or downloaded, only when its blob is new); never fails.
     """
     path = os.path.join(CACHE, FONT_NAMES)
@@ -1010,6 +1049,25 @@ def web_fonts(tree, names):
         for i, ps in enumerate(row["faces"]):
             if isinstance(ps, str) and ps:
                 exact.setdefault(ps, (p, i))
+    names = sorted(n for n in names if isinstance(n, str) and n in exact)
+
+    def gaps(p):                                  # None: not read (tried again next build)
+        try:
+            data = font_bytes(p)
+        except Exception as e:
+            log(f"font {p}: {e}")
+            return None
+        try:
+            return font_gaps(data)
+        except Exception as e:                    # no fontTools, or a font it can't read: its characters drawn as today
+            log(f"font gaps {p}: {type(e).__name__}: {e}")
+            return []
+    todo = sorted(p for p in {exact[n][0] for n in names} if not isinstance(used[tree[p]].get("gaps"), list))
+    if todo and importlib.util.find_spec("fontTools"):
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            for p, row in zip(todo, pool.map(gaps, todo)):
+                if row is not None:
+                    used[tree[p]]["gaps"] = row
     try:
         os.makedirs(CACHE, exist_ok=True)
         with open(path + ".tmp", "w", encoding="utf-8") as fh:
@@ -1019,10 +1077,12 @@ def web_fonts(tree, names):
         log(f"font names not cached: {e}")
     size = {p: used[tree[p]]["bytes"] for p in files if tree[p] in used}
     out = {}
-    for name in sorted(n for n in names if isinstance(n, str) and n):
-        if name in exact:
-            p, i = exact[name]
-            out[name] = {"file": p, "_bytes": size[p], **({} if p.lower().endswith(WEB_FONTS) else {"_face": i})}
+    for name in names:
+        p, i = exact[name]
+        row = used[tree[p]].get("gaps") or []
+        gap = row[i] if i < len(row) else None
+        out[name] = {"file": p, "_bytes": size[p], **({} if p.lower().endswith(WEB_FONTS) else {"_face": i}),
+                     **({"lacks": gap[0], "notdef": gap[1]} if gap else {})}
     return out
 
 
