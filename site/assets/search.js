@@ -4,7 +4,7 @@
 //                     counter damage CDMG; and back), as the bot
 //   "draw 2"          whole-word match
 //   !die              exclude (works on any term here, e.g. !type==creature)
-//   a & b   a | b     both / either  (| binds looser than &, as in the bot)
+//   a & b   a | b     both / either  (| binds looser than &, as in the bot; inside "quotes" they are text)
 //   hp>5  def<=3  atk==2  spd>=7  stars<4  total>=24        numbers
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
 //                   (series== and series~ match a subseries too; a known field's lone = reads as ==)
@@ -66,17 +66,38 @@ function synonymRe(t) {
   }).join(""));
 }
 
+/** q split on sep, except inside "double quotes" (the bot's _split_unquoted: subseries=="mario & luigi") */
+function splitOut(q, sep) {
+  const parts = [];
+  let at = 0, quoted = false;
+  for (let i = 0; i < q.length; i++) {
+    if (q[i] === '"') quoted = !quoted;
+    else if (q[i] === sep && !quoted) { parts.push(q.slice(at, i)); at = i + 1; }
+  }
+  return [...parts, q.slice(at)];
+}
+const NOT_TERM = /(?:^|[&|])\s*!/;                       // a term starting with !
+/** pred, and the cards a name, alias, old name or (sub)series is q, squashed (the bot's _named): typed with & or |
+ *  ("Kirby & The Amazing Mirror", "Mario & Luigi"), its cards too; not with quotes or a !term */
+function named(q, pred) {
+  const sq = squash(q);
+  if (!sq || q.includes('"') || NOT_TERM.test(q)) return pred;
+  return c => pred(c) || squashed(c).names.includes(`\n${sq}\n`) || squashed(c).ser.has(sq);
+}
+
 /** Compile a query into a predicate (card) => boolean, or null for an empty query. */
 export function compile(query) {
   const q = (query || "").replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\s+/g, " ").trim();   // phones type curly quotes; a space finds a line break
   if (!q) return null;
-  if (q.includes("|")) {
-    const parts = q.split("|").map(compile).filter(Boolean);
-    return c => parts.some(p => p(c));
+  let parts = splitOut(q, "|");
+  if (parts.length > 1) {
+    parts = parts.map(compile).filter(Boolean);
+    return named(q, c => parts.some(p => p(c)));
   }
-  if (q.includes("&")) {
-    const parts = q.split("&").map(compile).filter(Boolean);
-    return c => parts.every(p => p(c));
+  parts = splitOut(q, "&");
+  if (parts.length > 1) {
+    parts = parts.map(compile).filter(Boolean);
+    return named(q, c => parts.every(p => p(c)));
   }
   if (q.startsWith("!")) {
     const inner = compile(q.slice(1));
