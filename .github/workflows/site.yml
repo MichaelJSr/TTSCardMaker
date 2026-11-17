@@ -758,7 +758,8 @@ jobs:
             echo "The live site is this build ($live): nothing to deploy" | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          tar --dereference --hard-dereference --directory site/dist -cf "$RUNNER_TEMP/artifact2.tar" --exclude=.git --exclude=.github --exclude='.[^/]*' .
+          mkdir -p "$RUNNER_TEMP/r2"           # artifact.tar, as every deploy's
+          tar --dereference --hard-dereference --directory site/dist -cf "$RUNNER_TEMP/r2/artifact.tar" --exclude=.git --exclude=.github --exclude='.[^/]*' .
           echo "deploy=true" >> "$GITHUB_OUTPUT"
 
       - name: Follow-up upload
@@ -767,7 +768,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: github-pages-2
-          path: ${{ runner.temp }}/artifact2.tar
+          path: ${{ runner.temp }}/r2/artifact.tar
           retention-days: 1
           if-no-files-found: error
           compression-level: 1        # never 0
