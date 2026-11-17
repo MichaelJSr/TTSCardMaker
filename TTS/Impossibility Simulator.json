@@ -136554,7 +136554,14 @@
         152300,
         154100,
         155400,
-        157300
+        157300,
+        172800,
+        172900,
+        173000,
+        173100,
+        173200,
+        173300,
+        173400
       ],
       "CustomDeck": {
         "64": {
@@ -137090,6 +137097,69 @@
         },
         "1573": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1728": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bc7794a2245d77ad72782d2eb718dd5690a73ce3/Items/Attack/1%20Stars/Mighty_Pebble.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1729": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/caa7fa2470cf66bd0551ee2a3c966106073f63ef/Items/Equip/1%20Stars/Copper_Sword.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1730": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/aef1f4eb6c54c61ee24b771b2c891cfc6c677b8e/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1731": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/105a2e9805a80174c5098fdf619a47beb3f5097d/Items/Equip/3%20Stars/Newspaper.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1732": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a85b2ba9a50b9efb72bfe63e48e9adf190d8ea5e/Items/Heal/1%20Stars/Bolts_and_Screws.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1733": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/49869f590a850d3cd79d4950e05cfd5a161eff56/Items/Heal/2%20Stars/Grapes.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1734": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c665f522ab71fcea45ac72437ce8ed6e760afa59/Items/Infliction/4%20Stars/Pandora's_Box.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -140581,6 +140651,412 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "e2f05a",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Mighty Pebble",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172800,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1728": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bc7794a2245d77ad72782d2eb718dd5690a73ce3/Items/Attack/1%20Stars/Mighty_Pebble.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "2297a4",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Copper Sword",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172900,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1729": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/caa7fa2470cf66bd0551ee2a3c966106073f63ef/Items/Equip/1%20Stars/Copper_Sword.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "750b21",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Tomorrow I'll",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173000,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1730": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/aef1f4eb6c54c61ee24b771b2c891cfc6c677b8e/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "064929",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Newspaper",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173100,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1731": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/105a2e9805a80174c5098fdf619a47beb3f5097d/Items/Equip/3%20Stars/Newspaper.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "feb6a1",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Bolts and Screws",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173200,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1732": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a85b2ba9a50b9efb72bfe63e48e9adf190d8ea5e/Items/Heal/1%20Stars/Bolts_and_Screws.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "8a9da6",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Grapes",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173300,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1733": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/49869f590a850d3cd79d4950e05cfd5a161eff56/Items/Heal/2%20Stars/Grapes.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "9affbc",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Pandora's Box",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173400,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1734": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c665f522ab71fcea45ac72437ce8ed6e760afa59/Items/Infliction/4%20Stars/Pandora's_Box.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -140686,7 +141162,14 @@
         152300,
         154100,
         155400,
-        157300
+        157300,
+        172800,
+        172900,
+        173000,
+        173100,
+        173200,
+        173300,
+        173400
       ],
       "CustomDeck": {
         "64": {
@@ -141222,6 +141705,69 @@
         },
         "1573": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1728": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bc7794a2245d77ad72782d2eb718dd5690a73ce3/Items/Attack/1%20Stars/Mighty_Pebble.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1729": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/caa7fa2470cf66bd0551ee2a3c966106073f63ef/Items/Equip/1%20Stars/Copper_Sword.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1730": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/aef1f4eb6c54c61ee24b771b2c891cfc6c677b8e/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1731": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/105a2e9805a80174c5098fdf619a47beb3f5097d/Items/Equip/3%20Stars/Newspaper.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1732": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a85b2ba9a50b9efb72bfe63e48e9adf190d8ea5e/Items/Heal/1%20Stars/Bolts_and_Screws.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1733": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/49869f590a850d3cd79d4950e05cfd5a161eff56/Items/Heal/2%20Stars/Grapes.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1734": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c665f522ab71fcea45ac72437ce8ed6e760afa59/Items/Infliction/4%20Stars/Pandora's_Box.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -144713,6 +145259,412 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "7e32bf",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Mighty Pebble",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172800,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1728": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bc7794a2245d77ad72782d2eb718dd5690a73ce3/Items/Attack/1%20Stars/Mighty_Pebble.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "f95e47",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Copper Sword",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172900,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1729": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/caa7fa2470cf66bd0551ee2a3c966106073f63ef/Items/Equip/1%20Stars/Copper_Sword.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "61fd3f",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Tomorrow I'll",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173000,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1730": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/aef1f4eb6c54c61ee24b771b2c891cfc6c677b8e/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "169ce3",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Newspaper",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173100,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1731": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/105a2e9805a80174c5098fdf619a47beb3f5097d/Items/Equip/3%20Stars/Newspaper.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "fad219",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Bolts and Screws",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173200,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1732": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a85b2ba9a50b9efb72bfe63e48e9adf190d8ea5e/Items/Heal/1%20Stars/Bolts_and_Screws.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "3e640f",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Grapes",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173300,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1733": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/49869f590a850d3cd79d4950e05cfd5a161eff56/Items/Heal/2%20Stars/Grapes.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "482f00",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Pandora's Box",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173400,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1734": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c665f522ab71fcea45ac72437ce8ed6e760afa59/Items/Infliction/4%20Stars/Pandora's_Box.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -144818,7 +145770,14 @@
         152300,
         154100,
         155400,
-        157300
+        157300,
+        172800,
+        172900,
+        173000,
+        173100,
+        173200,
+        173300,
+        173400
       ],
       "CustomDeck": {
         "64": {
@@ -145354,6 +146313,69 @@
         },
         "1573": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1728": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bc7794a2245d77ad72782d2eb718dd5690a73ce3/Items/Attack/1%20Stars/Mighty_Pebble.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1729": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/caa7fa2470cf66bd0551ee2a3c966106073f63ef/Items/Equip/1%20Stars/Copper_Sword.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1730": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/aef1f4eb6c54c61ee24b771b2c891cfc6c677b8e/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1731": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/105a2e9805a80174c5098fdf619a47beb3f5097d/Items/Equip/3%20Stars/Newspaper.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1732": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a85b2ba9a50b9efb72bfe63e48e9adf190d8ea5e/Items/Heal/1%20Stars/Bolts_and_Screws.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1733": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/49869f590a850d3cd79d4950e05cfd5a161eff56/Items/Heal/2%20Stars/Grapes.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1734": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c665f522ab71fcea45ac72437ce8ed6e760afa59/Items/Infliction/4%20Stars/Pandora's_Box.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -148834,6 +149856,412 @@
           "CustomDeck": {
             "1573": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "4f6dec",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Mighty Pebble",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172800,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1728": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bc7794a2245d77ad72782d2eb718dd5690a73ce3/Items/Attack/1%20Stars/Mighty_Pebble.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "b18976",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Copper Sword",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172900,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1729": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/caa7fa2470cf66bd0551ee2a3c966106073f63ef/Items/Equip/1%20Stars/Copper_Sword.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "d9f078",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Tomorrow I'll",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173000,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1730": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/aef1f4eb6c54c61ee24b771b2c891cfc6c677b8e/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "66b51e",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Newspaper",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173100,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1731": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/105a2e9805a80174c5098fdf619a47beb3f5097d/Items/Equip/3%20Stars/Newspaper.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "96c839",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Bolts and Screws",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173200,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1732": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a85b2ba9a50b9efb72bfe63e48e9adf190d8ea5e/Items/Heal/1%20Stars/Bolts_and_Screws.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "13aa72",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Grapes",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173300,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1733": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/49869f590a850d3cd79d4950e05cfd5a161eff56/Items/Heal/2%20Stars/Grapes.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "79c951",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": 75.9607239,
+            "posY": 2.0046494,
+            "posZ": 19.682869,
+            "rotX": 359.983551,
+            "rotY": 359.9672,
+            "rotZ": 359.919464,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Pandora's Box",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173400,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1734": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c665f522ab71fcea45ac72437ce8ed6e760afa59/Items/Infliction/4%20Stars/Pandora's_Box.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
