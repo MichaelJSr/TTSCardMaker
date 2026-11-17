@@ -1558,9 +1558,9 @@ def history_shown(change, parts):
 
 def history_stats(t, kind):
     """A timeline's part in the balance analytics (analytics.build early): points [{ts, line, stars, kind}] for each dated
-    version (its sure stats and stars, else None) and rows: each version's and changelog fact's change, "early" saying
-    where it comes from, and its first recorded version's change from the last one before (git_first; approx: the card
-    had versions before that one). A confirmed fact whose confirming version records the same change is that version's
+    version (its sure stats and stars, else None; none for a Meme folder copy) and rows: each version's and changelog
+    fact's change, "early" saying where it comes from, and its first recorded version's change from the last one before
+    (git_first; approx: the card had versions before that one). A confirmed fact whose confirming version records the same change is that version's
     row (counted once)."""
     points, rows = [], []
     shown = {e.get("id"): history_change(e.get("changes") or {}) for e in t["entries"] if e["kind"] in HISTORY_ROWS}
@@ -1576,8 +1576,9 @@ def history_stats(t, kind):
             fields = {k: f.get("value") for k, f in (e.get("fields") or {}).items() if isinstance(f, dict) and f.get("confidence") == "sure"}
             st = fields.get("stats") if isinstance(fields.get("stats"), dict) else {}
             line = [st.get(k) for k in HISTORY_STATS]
-            points.append({"ts": ts, "line": line if all(isinstance(x, int) for x in line) else None,
-                           "stars": fields.get("stars") if isinstance(fields.get("stars"), int) else None, "kind": kind})
+            if not e.get("meme_copy"):                # a Meme folder copy: a row, never a point (owner 11-17)
+                points.append({"ts": ts, "line": line if all(isinstance(x, int) for x in line) else None,
+                               "stars": fields.get("stars") if isinstance(fields.get("stars"), int) else None, "kind": kind})
             row = history_change(e.get("changes") or {})
         else:
             continue

@@ -49,7 +49,8 @@ repo") and Discord's (date and channel, never a poster or message); each compare
 with the current card like the others (its own sure ability as "Text then", a blank ability box as "No ability
 then"), with no link and no Revert, and their changes (and the update changelogs' facts, as data only, each once: a
 fact its version also shows is that version's change; a blank box after a text "Ability removed") join Recorded
-changes and the balance charts; a Discord or changelog row is always before the
+changes and the balance charts (an owner-mapped Meme folder copy is a row only: no change, no chart point); a
+Discord or changelog row is always before the
 card's first version here. A Morgue card from `MDW/The Morgue` with Discord pictures lists them after its PNG's newest
 version (the current one they compare with; nothing to revert). The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
