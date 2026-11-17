@@ -221,6 +221,8 @@ jobs:
       # header, and in carddata's config as actions/checkout keeps it (Data wait fetches there), as Card sync's clone.
       # The plates branch's v/ (older versions' copies) by name, its trees only, in a clone of its own (a depth-1 fetch
       # here would make the history shallow): build_site lists those missing for the versions job (none listed: all).
+      # The card timelines (the history branch, AutoCroissant scripts/history_branch.py): that branch alone, depth 1, in
+      # $RUNNER_TEMP/history (HISTORY_DIR); no branch or a failed clone: the site builds without them.
       - name: Setup start
         env:
           UV_PYTHON: ${{ steps.py.outputs.python || steps.python.outputs.python-path }}
@@ -281,11 +283,16 @@ jobs:
               && git -C "$RUNNER_TEMP/plates.git" ls-tree -r --name-only HEAD v > "$RUNNER_TEMP/plates-v.tmp" \
               && mv "$RUNNER_TEMP/plates-v.tmp" "$RUNNER_TEMP/plates-v.txt" && wc -l < "$RUNNER_TEMP/plates-v.txt"
           }
+          history() {
+            GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+              timeout 300 git clone -q --depth 1 --no-tags --single-branch --branch history "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$RUNNER_TEMP/history"
+          }
           start uv packages
           start npm npm install --prefix "$RUNNER_TEMP/esbuild" --no-save --no-audit --no-fund esbuild@0.28.2
           start data data
           start versions versions
           start plates plates
+          start history history
 
       # Cache key = the card PNG and MDW/Fonts blobs + the build scripts (image settings live there; the font build's draws
       # the token variants' pictures) + the build's pins (the WOFF2 fonts' names carry fontTools' and brotli's versions); the
@@ -450,7 +457,8 @@ jobs:
 
       # Setup start's uv, npm, data and plates, and Sizes start's (versions: the deploy waits for it): uv or npm failing
       # fails the job; the PSD sizes failing only leaves them out (a warning); the data clone failing: checked out below;
-      # plates failing: every copy listed. Images start's: stopped first, a failure only warns.
+      # plates failing: every copy listed; no history: the site goes without the card timelines (a warning). Images
+      # start's: stopped first, a failure only warns.
       - name: Setup wait
         id: setup
         timeout-minutes: 10
@@ -458,14 +466,16 @@ jobs:
           bg=$RUNNER_TEMP/setup
           [ ! -e "$bg/images.log" ] || touch "$bg/images.stop"
           failed=
-          for n in uv npm sizes data plates; do
+          for n in uv npm sizes data plates history; do
             until [ -s "$bg/$n.code" ]; do sleep 0.1; done
             code=$(cat "$bg/$n.code")
             echo "::group::$n (exit $code)"; cat "$bg/$n.log"; echo "::endgroup::"
-            [ "$code" = 0 ] || [ "$n" = sizes ] || [ "$n" = data ] || [ "$n" = plates ] || failed="$failed $n"
+            [ "$code" = 0 ] || [ "$n" = sizes ] || [ "$n" = data ] || [ "$n" = plates ] || [ "$n" = history ] || failed="$failed $n"
           done
           [ "$(cat "$bg/sizes.code")" = 0 ] || echo "::warning::PSD sizes not all read: the site leaves those out"
           if [ "$(cat "$bg/data.code")" = 0 ]; then echo "data=true" >> "$GITHUB_OUTPUT"; else echo "::warning::the data clone failed: checked out"; fi
+          if [ "$(cat "$bg/history.code")" = 0 ] && [ -s "$RUNNER_TEMP/history/index.json" ]; then echo "history=$RUNNER_TEMP/history" >> "$GITHUB_OUTPUT"
+          else echo "::warning::no history branch fetched: the site goes without the card timelines"; fi
           if [ -e "$bg/images.log" ]; then
             until [ -s "$bg/images.code" ]; do sleep 0.1; done
             code=$(cat "$bg/images.code")
@@ -491,6 +501,7 @@ jobs:
         run: python site/build/build_site.py
         env:
           CARD_DATA_DIR: carddata/db
+          HISTORY_DIR: ${{ steps.setup.outputs.history }}
           PSD_TREE: ${{ runner.temp }}/tree.json
           IMAGE_BUDGET: "1800"
           VERSION_LIST: ${{ runner.temp }}/version-copies.txt
@@ -663,6 +674,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           CARD_DATA_DIR: carddata/db
+          HISTORY_DIR: ${{ steps.setup.outputs.history }}
           PSD_TREE: ${{ runner.temp }}/tree.json
           IMAGE_BUDGET: "300"
           VERSION_LIST: ${{ runner.temp }}/version-copies.txt

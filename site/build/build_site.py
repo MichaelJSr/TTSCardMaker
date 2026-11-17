@@ -54,7 +54,7 @@ Where the data comes from:
   * Creation dates: site/Card Creation Dates.json, each card's first Discord post; a card's created is the earlier of that
     and fs (a hand-set date wins): the Cards tab's created sort, the card page's "created" fact, the person pages' newest
     cards and activity chart. Bad entries skipped.
-  * Card timelines before this repo (HISTORY_DIR: the history branch's history/ folder, or the local preview's; unset: the
+  * Card timelines before this repo (HISTORY_DIR: the history branch's checkout, site.yml's, or the local preview's; unset: the
     site goes without them, as before): each card's versions from the old pre-wipe repo (the first repo's among them),
     and Discord after its own in Image versions (versions.json early; webps copied to dist/history/),
     their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
@@ -256,7 +256,7 @@ FIXED_BY_ALL = {("hp", "def", "atk", "spd"): ("NO STATS FOUND",)}    # answered 
 SKIP_PARTS = ("MDW", "Markers")
 MORGUE = "MDW/The Morgue/"                    # retired cards (owner 11-08): cards.json morgue, picture only, never a live card
 # the card timelines before this repo (AutoCroissant discord_preview; docs/Future/CARD_TIMELINE.md): the history branch's
-# history/ folder, or the local preview's; unset or missing: the site goes without them
+# checkout (site.yml's), or the local preview's; unset or missing: the site goes without them
 HISTORY_DIR = os.environ.get("HISTORY_DIR", "")
 HISTORY_ROWS = ("discord", "old repo")                         # Image versions' rows (changelog facts: Recorded changes only)
 HISTORY_KINDS = HISTORY_ROWS + ("text",)

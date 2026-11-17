@@ -43,7 +43,8 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   phone): every commit that changed the
   card's image, compared side by side with the current one, with the text of that time when it differs (each version,
 text or image, links its commit when it is known), and the artwork sources when set. With the card timelines
-(`HISTORY_DIR`: the `history` branch, AutoCroissant `commands/discord_preview.py`), the versions from before this repo
+(`HISTORY_DIR`: the `history` branch, which site.yml fetches alone and shallow; AutoCroissant `commands/discord_preview.py`
+builds it, `scripts/history_branch.py` commits it), the versions from before this repo
 follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"; the first repo's "first
 repo") and Discord's (date and channel, never a poster or message); each compares
 with the current card like the others (its own sure ability as "Text then", a blank ability box as "No ability
