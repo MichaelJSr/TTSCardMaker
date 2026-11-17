@@ -600,7 +600,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   bars, the stats a Card checks note names (`handStats`: card_checks' stat notes in `checks.hand`) aren't drawn
   either. Baba's bars print their value (2026-11-13): the plate's pictures carry the bake's new digit. Stars (2026-11-12): the plate's `icons` (`card_plates.with_stars`: the bake's stars at every count 1-7, a
   folder card's in its "N Stars" folder) are pasted the same way, no erase and no `starPlan`; a count with none
-  takes section 23's way.
+  takes section 23's way. Types (2026-11-16): the plate's `under` (`card_plates.with_under`: the card drawn without its
+  type icons, a mask of each icon's ink and, where two inks meet, the card without each one alone) shows the art where a
+  removed or moved icon was (`pasteUnder`, matched to the header row by layer box; kept icons stay), in place of
+  `fillBox`, which stays for a plate without it (or one off the image).
   A title in the picture (parts.js `titleInPicture`, the dialog's note) isn't drawn either. Stars and types: section 23.
   An added ability ("+ Add an ability", 2026-11-13): the details' `addRoom` (build_site from AutoCroissant card_checks'
   `room`, ability_place's room rule on a card with no ability) is the box the bake puts it in (`partJobs` draws it

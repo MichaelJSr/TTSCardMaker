@@ -958,8 +958,8 @@ export function starPlan(stars, from, to) {
 /** Type icons for `now` on the record's header.types, as psd_edit.plan_types does it: kept icons stay in their
  *  slot, removed ones are erased, a kept icon past the new count moves to the first free slot (centre on centre, its own
  *  size), new ones take the next free slots (spots[count] past the row). -> {erase: [box], draw: [{name, core}], refused,
- *  boxed}. A token row, no icon to line up with or no spots for the count: boxed. first: the template's spot (canvas px)
- *  when the card has no type icon; one new icon goes there. */
+ *  boxed, gone: the erased icons' row indexes}. A token row, no icon to line up with or no spots for the count: boxed.
+ *  first: the template's spot (canvas px) when the card has no type icon; one new icon goes there. */
 export function typePlan(types, now, first = null) {
   const ty = obj(types), row = Array.isArray(ty?.row) ? ty.row : [];
   if (!ty && first && now.length === 1) return { erase: [], draw: [{ name: now[0], core: first }], refused: null, boxed: false };
@@ -975,17 +975,17 @@ export function typePlan(types, now, first = null) {
   if (count > row.length && !row.length) return { erase: [], draw: [], refused: refused || "no type icon on the card to line a new one up with", boxed: true };
   const more = count > row.length ? obj(ty.spots)?.[count] : [];
   if (!Array.isArray(more) || more.length !== Math.max(0, count - row.length)) return { erase: [], draw: [], refused, boxed: true };
-  const spots = [...row.slice(0, count).map(u => u.core), ...more], erase = [], draw = [];
+  const spots = [...row.slice(0, count).map(u => u.core), ...more], erase = [], draw = [], gone = [];
   const free = spots.map((_, i) => i).filter(i => !(i < row.length && kept[i]));
   row.forEach((u, i) => {
-    if (!kept[i]) erase.push(u.box);
+    if (!kept[i]) { erase.push(u.box); gone.push(i); }
     else if (i >= count) {
       const to = centreOf(spots[free.shift()]), c = centreOf(u.core), dx = Math.round(to[0] - c[0]), dy = Math.round(to[1] - c[1]);
-      erase.push(u.box); draw.push({ name: u.name, core: [u.core[0] + dx, u.core[1] + dy, u.core[2] + dx, u.core[3] + dy] });
+      erase.push(u.box); gone.push(i); draw.push({ name: u.name, core: [u.core[0] + dx, u.core[1] + dy, u.core[2] + dx, u.core[3] + dy] });
     }
   });
   for (const name of added) draw.push({ name, core: spots[free.shift()] });
-  return { erase, draw, refused, boxed: false };
+  return { erase, draw, refused, boxed: false, gone };
 }
 /** Fill box (px) of RGBA data in place from the pixels around it: each pixel the mean of the left-right and top-bottom
  *  blends of the ring just outside (pad px deep), weighted by nearness, so a gradient goes on through it. */
@@ -1009,6 +1009,29 @@ export function fillBox(data, W, H, box, { pad = 3 } = {}) {
   }
 }
 const PLATE_OFF = 20;                               // off the ink, a plate's mean distance from the card's pixels (max channel) at most
+/** The plate's card without its type icons (AutoCroissant card_plates.with_under) where a types edit takes icons away:
+ *  a pixel in a gone icon's mask takes bare (the card without its icons), or in a kept icon's reach each gone one's
+ *  patch (the card without it alone) adds its change; kept icons stay. data: RGBA W px wide; cut: [x, y, w, h] (image
+ *  px); bare, card (the image there), masks and patches (per icon; null: none): RGBA w x h; reach: per icon [x0, y0,
+ *  x1, y1] in the cut; gone: the icons' indexes. -> false, nothing pasted: bare off the masks unlike the image
+ *  (PLATE_OFF: another picture's). */
+export function pasteUnder(data, W, [x0, y0, w, h], bare, card, masks, patches, reach, gone) {
+  const out = masks.map((_, k) => gone.includes(k)), kept = reach.filter((_, k) => !out[k]);
+  let n = 0, sum = 0;
+  for (let j = 0; j < w * h * 4; j += 4) if (masks.every(m => m[j] < 128)) { n++; sum += Math.max(Math.abs(bare[j] - card[j]), Math.abs(bare[j + 1] - card[j + 1]), Math.abs(bare[j + 2] - card[j + 2])); }
+  if (n >= 50 && sum > PLATE_OFF * n) return false;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const j = (y * w + x) * 4, i = ((y0 + y) * W + x0 + x) * 4;
+    if (!masks.some((m, k) => out[k] && m[j] >= 128)) continue;
+    if (!kept.some(r => x >= r[0] && x < r[2] && y >= r[1] && y < r[3])) { data[i] = bare[j]; data[i + 1] = bare[j + 1]; data[i + 2] = bare[j + 2]; continue; }
+    for (let c = 0; c < 3; c++) {                       // a kept icon may show here: each gone one's own change
+      let d = 0;
+      masks.forEach((m, k) => { if (out[k] && m[j] >= 128) d += (patches[k] || bare)[j + c] - card[j + c]; });
+      data[i + c] += d;
+    }
+  }
+  return true;
+}
 const count = (t, w) => String(t ?? "").toLowerCase().split(w.toLowerCase()).length - 1;
 /** The plate crops (AutoCroissant card_plates) of layer ids, cut to the image (W x H, k px per canvas px; read(crop, w,
  *  h): its RGBA at that size), each checked against the card's pixels (data) off its ink: [[x, y, w, h, rgba]], or null
@@ -1361,7 +1384,18 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (todo.stars) icons2.push(["stars", k ? starPlan(head?.stars, ...todo.stars) : { boxed: true, refused: null }]);
   const first = head?.types === null && tpl.first ? scaled(tpl.first).map(v => v / k) : null;   // no type icon on the card
   if (todo.types) icons2.push(["types", k ? typePlan(head?.types, todo.types[1], first) : { boxed: true, refused: null }]);
-  for (const [, plan] of icons2) if (!plan.boxed) for (const b of plan.erase) { const g = at(b); fillBox(pixels.data, W, H, [g[0] - 2, g[1] - 2, g[2] + 2, g[3] + 2], { pad: Math.max(2, Math.round(W * 0.004)) }); }
+  const tp = icons2.find(([label]) => label === "types")?.[1], under = ours && tp?.gone?.length && obj(plate.under) && ["icons", "patch", "reach"].every(f => Array.isArray(plate.under[f])) ? plate.under : null;
+  const which = under ? tp.gone.map(i => under.icons.findIndex(b => String(b) === String(head.types.row[i].box))) : [];   // the plate's icon for each gone
+  const uImg = under && !which.includes(-1) ? await loadImage(under.img) : null;   // the card without its type icons
+  if (stale()) return null;
+  let pasted = false;
+  if (uImg?.naturalWidth && Array.isArray(under.box)) {
+    const p = under.pitch, last = under.icons.length + under.patch.filter(Boolean).length, uh = uImg.naturalHeight - last * p;
+    const [x0, y0, x1, y1] = px(at(under.box), W, H), w = x1 - x0, h = y1 - y0, band = b => drawn(uImg, 0, b * p, uImg.naturalWidth, uh, w, h).getImageData(0, 0, w, h).data;
+    if (p > 0 && uh > 0 && w > 0 && h > 0) pasted = pasteUnder(pixels.data, W, [x0, y0, w, h], band(0), drawn(img, x0, y0, w, h, w, h).getImageData(0, 0, w, h).data,
+      under.icons.map((_, k) => band(k + 1)), under.patch.map(b => (b ? band(b) : null)), under.reach.map(r => { const q = px(at(r), W, H); return [q[0] - x0, q[1] - y0, q[2] - x0, q[3] - y0]; }), which);
+  }
+  for (const [label, plan] of icons2) if (!plan.boxed && !(pasted && label === "types")) for (const b of plan.erase) { const g = at(b); fillBox(pixels.data, W, H, [g[0] - 2, g[1] - 2, g[2] + 2, g[3] + 2], { pad: Math.max(2, Math.round(W * 0.004)) }); }   // types pasted: no fill
   ctx.putImageData(pixels, 0, 0);
   for (const [label, plan] of icons2) {
     if (plan.refused) out.refused.push([label, plan.refused]);
