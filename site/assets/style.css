@@ -111,6 +111,7 @@ select, .range-row input { width: 100%; padding: 5px 8px; border-radius: 8px; bo
 .seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 8px; overflow: hidden; }
 .seg button { border: 0; border-radius: 0; background: transparent; padding: 5px 10px; }
 .seg button.on { background: var(--surface-3); }
+.seg button:focus-visible { outline-offset: -2px; }   /* .seg clips an outside ring */
 .active-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .active-filters .chip { background: var(--surface-2); }
 
@@ -1223,4 +1224,5 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
   }
   :is(.chip.on, .seg button.on, .tabs a.active, .icon-toggle.on, .sel-row .not[aria-pressed="true"], .ver-item[aria-pressed="true"],
     .deck-list button.on, .pv-older .chip[aria-pressed="true"], .tok-picker li.on, .part-variant button.on) * { color: inherit; background-color: transparent; }
+  .seg button.on:focus-visible { outline-color: HighlightText; }   /* its inset ring on Highlight */
 }
