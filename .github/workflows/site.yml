@@ -44,9 +44,10 @@ env:
   SITE_URL: https://michaeljsr.github.io/TTSCardMaker   # Pages' base_url, as card-sync.yml's
 
 jobs:
-  # The deploy's versions (deploy.sh below): two commits on no branch, the run's commit their parent and its tree theirs,
-  # one a try. The one job that writes the repo, beside the build (which runs uv's and npm's packages: read-only); its
-  # hand-over an artifact the build fetches in the background (empty when the calls failed). Never fails the run.
+  # The deploy's versions (deploy.sh below): two commits on no branch (a push's run four: its Follow-up build deploys under
+  # 3 and 4), the run's commit their parent and its tree theirs, one a try. The one job that writes the repo, beside the
+  # build (which runs uv's and npm's packages: read-only); its hand-over an artifact the build fetches in the background
+  # (empty when the calls failed). Never fails the run.
   version:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -62,7 +63,8 @@ jobs:
           call() { for wait in 0 2 5; do sleep "$wait"; out=$(timeout 20 gh api "$@") && { printf '%s\n' "$out"; return; }; done; return 1; }
           : > "$RUNNER_TEMP/versions.txt"
           tree=$(call "$api/$GITHUB_SHA" --jq .tree.sha)
-          for try in 1 2; do
+          n=2; [ "$GITHUB_EVENT_NAME" != push ] || n=4
+          for try in $(seq "$n"); do
             call -X POST "$api" -f message="Pages deploy: run $GITHUB_RUN_ID, try $try" -f tree="$tree" -f "parents[]=$GITHUB_SHA" --jq .sha
           done > "$RUNNER_TEMP/versions.txt"
           cat "$RUNNER_TEMP/versions.txt"
@@ -77,7 +79,7 @@ jobs:
 
   # A running build is never cut off: it finishes and deploys (in this job, as GitHub's static.yml). One run waits, the
   # newest (a newer one replaces it), and reads the data branch when it starts (an early build: after its Data wait).
-  # Deploys go one at a time, in order.
+  # Deploys go one at a time, in order; a push's early build may deploy twice (Follow-up build).
   build:
     concurrency:
       group: pages-build
@@ -92,8 +94,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url || steps.retry.outputs.page_url || steps.pages.outputs.page_url }}
     runs-on: ubuntu-latest
     # the first run downloads every card PNG (~1.6 GB); three stuck deploys add ~19 min; an early build's Data wait 25
-    # (a push's: Early build)
-    timeout-minutes: ${{ (inputs.after || github.event_name == 'push') && 92 || 67 }}
+    # (a push's: Early build, and its Follow-up build 10 with three more deploys)
+    timeout-minutes: ${{ github.event_name == 'push' && 121 || inputs.after && 92 || 67 }}
     outputs:
       saved: ${{ steps.og-save.outcome == 'success' || steps.cache-save.outcome == 'success' }}
       copies: ${{ steps.copies.outputs.artifact-id }}
@@ -495,19 +497,28 @@ jobs:
           VERSION_PLATES: ${{ runner.temp }}/plates-v.txt
           ESBUILD: ${{ runner.temp }}/esbuild/node_modules/.bin/esbuild
 
-      - id: og
+      # A push's early build (Follow-up build, below): main's head by git every 0.5 s from here; past this build's commit,
+      # its card PNGs the cache lacks made in the background (build_site.py early_images, as Data wait's follow), so the
+      # guards' re-made pictures are in before that build. Follow-up build (or the cache save) stops it.
+      - name: Landing images
+        if: steps.early.outputs.after && steps.build.outcome == 'success'
         run: |
-          if [ -n "$(ls -A site/.og-cache 2>/dev/null)" ]; then
-            echo "names=$(ls site/.og-cache | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
-          fi
-
-      - id: og-save
-        if: steps.og.outputs.names != '' && steps.og.outputs.names != steps.og-before.outputs.names
-        uses: actions/cache/save@v6
-        continue-on-error: true    # a failed save never stops the deploy
-        with:
-          path: site/.og-cache
-          key: deck-previews-v2-${{ steps.og.outputs.names }}-${{ github.run_id }}-${{ github.run_attempt }}
+          bg=$RUNNER_TEMP/setup
+          (
+            code=0 at=$(git rev-parse HEAD)
+            for _ in $(seq 1200); do              # 10 minutes or more: the job's end stops it
+              [ ! -e "$bg/landing.stop" ] || break
+              main=$(timeout 5 git ls-remote origin refs/heads/main | cut -f1) || main=
+              if [ -n "$main" ] && [ "$main" != "$at" ] \
+                  && timeout 60 git fetch -q --no-tags --no-write-fetch-head --filter=blob:none origin "$main"; then
+                at=$main
+                python site/build/build_site.py --images "$main" "$bg/landing.stop" || code=$?
+              fi
+              for _ in 1 2 3 4 5; do [ ! -e "$bg/landing.stop" ] || break; sleep 0.1; done
+            done
+            echo "$code" > "$bg/landing.code"
+          ) > "$bg/landing.log" 2>&1 < /dev/null &
+          echo $! > "$bg/landing.pid"
 
       # Pages dates every file by its deploy (the ETag too), so each deploy makes returning browsers download the whole
       # site again: deploy only a site that differs from the live one. build.txt is a digest of the whole site without the
@@ -547,13 +558,7 @@ jobs:
       # cancelled, and that build deploys (all this).
       # Not to an early build (its Data wait may be long), nor under GITHUB_SHA to one at it. stuck: a version commit's
       # deploy still syncing files at the end (Pages took it; a retry under the same version hung again, run 42753587574).
-      - id: deployment
-        if: steps.changed.outputs.deploy == 'true'
-        continue-on-error: true       # a failed deploy gets one more try, below
-        env:
-          GH_TOKEN: ${{ github.token }}
-          ARTIFACT: ${{ steps.artifact.outputs.artifact-id }}
-          TRY: "1"
+      - name: Deploy script
         run: |
           cat > "$RUNNER_TEMP/deploy.sh" << 'EOF'
           api=repos/$GITHUB_REPOSITORY/pages/deployments
@@ -605,7 +610,15 @@ jobs:
             echo "Run $run waits: cancel failed"
           done
           EOF
-          exec bash "$RUNNER_TEMP/deploy.sh"
+
+      - id: deployment
+        if: steps.changed.outputs.deploy == 'true'
+        continue-on-error: true       # a failed deploy gets one more try, below
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT: ${{ steps.artifact.outputs.artifact-id }}
+          TRY: "1"
+        run: exec bash "$RUNNER_TEMP/deploy.sh"
 
       - if: steps.deployment.outcome == 'failure'
         run: sleep 10                 # lets the cancel settle
@@ -632,6 +645,182 @@ jobs:
           reporting_interval: 1000    # ms between status checks (5000)
           error_count: 15             # HTTP errors before it gives up (10)
 
+      # A push's early build whose guards land fixes (card-guards.yml's check job: Fixes to land, and Start Card sync: the
+      # follow-up Card sync it started) builds again here as that follow-up's early build: its Site build start dispatches
+      # none while this run is unfinished, and its Site build counts this run while this step runs (card-sync.yml). 90 s at
+      # most from here, the guards' Decided included: main's and the data's heads by git every 0.5 s, for the guards'
+      # landing (a commit after this push naming it in Guarded-push) and then a "Card data" commit on a main holding it (its
+      # subject's "(main X)", among the data's newest 10: Card checks' may be on top; only Card sync's data jobs write
+      # those, one at a time: the follow-up's first; this build's own data one: nothing to do); till the landing, the jobs
+      # API every 8th look (Landed with none on main: nothing landed). Then that main and data, the PSD sizes when a PSD
+      # moved, the build (Landing images made the landing's pictures meanwhile) and the deploy below, under versions 3 and
+      # 4. No fixes, none in time, or a failure: the job ends as before (that Site build dispatches one).
+      - name: Follow-up build
+        id: build2
+        if: steps.early.outputs.after && steps.build.outcome == 'success'
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CARD_DATA_DIR: carddata/db
+          PSD_TREE: ${{ runner.temp }}/tree.json
+          IMAGE_BUDGET: "300"
+          VERSION_LIST: ${{ runner.temp }}/version-copies.txt
+          VERSION_PLATES: ${{ runner.temp }}/plates-v.txt
+          ESBUILD: ${{ runner.temp }}/esbuild/node_modules/.bin/esbuild
+        run: |
+          bg=$RUNNER_TEMP/setup
+          api=repos/$GITHUB_REPOSITORY/actions
+          end=$((SECONDS + 90))
+          stop() {                              # Landing images: none started after; its log
+            [ -s "$bg/landing.pid" ] || return 0
+            touch "$bg/landing.stop"
+            while [ ! -s "$bg/landing.code" ] && kill -0 "$(cat "$bg/landing.pid")" 2> /dev/null; do sleep 0.1; done
+            echo "::group::landing images (exit $(cat "$bg/landing.code" 2> /dev/null))"; cat "$bg/landing.log"; echo "::endgroup::"
+          }
+          check() {                             # the guards' check job: "<past Decided> <fixes, Card sync started> <past Landed>"
+            timeout 10 gh api "$api/runs/$guards/jobs" --jq '([.jobs[] | select(.name == "check")][0] // {}) as $c
+              | def past(n): $c.status == "completed" or any($c.steps[]?; .name == n and .status == "completed");
+              def ran(n): any($c.steps[]?; .name == n and .conclusion == "success");
+              "\(past("Decided")) \(ran("Fixes to land") and ran("Start Card sync")) \(past("Landed"))"' || echo "false false false"
+          }
+          search() {                            # the landing: the newest commit after this push naming it
+            { git log --format='%H %(trailers:key=Guarded-push,valueonly,separator=%x20)' "$GITHUB_SHA..$1" || true; } \
+              | awk -v p="$GITHUB_SHA" '!f { for (i = 2; i <= NF; i++) if ($i == p) f = $1 } END { print f }'
+          }
+          holds() {                             # 0: a "Card data" commit of the data's newest 10 is on a main holding the landing
+            for x in $(git -C carddata log -10 --format=%s "$1" | sed -n 's/^Card data:.*(main \([0-9a-f]\{7,40\}\))$/\1/p'); do
+              git merge-base --is-ancestor "$landing" "$x" 2> /dev/null && return 0
+            done
+            return 1
+          }
+          look() {                              # 0: such a commit, the data and main fetched (a Card checks one may be on top)
+            refs=$(timeout 5 git ls-remote origin refs/heads/main refs/heads/data) || return 1
+            main='' data=''
+            while read -r sha ref; do case $ref in refs/heads/main) main=$sha ;; refs/heads/data) data=$sha ;; esac; done <<< "$refs"
+            if [ -z "$landing" ] && [ -n "$main" ] && [ "$main" != "$at" ] \
+                && timeout 30 git fetch -q --no-tags --filter=blob:none origin main; then
+              at=$main landing=$(search FETCH_HEAD)
+            fi
+            [ -n "$landing" ] && [ -n "$data" ] && [ "$data" != "$seen" ] || return 1
+            timeout 30 git fetch -q --no-tags --filter=blob:none origin main & m=$!
+            timeout 30 git -C carddata fetch -q --depth 10 origin data || { wait "$m"; return 1; }
+            seen=$(git -C carddata rev-parse FETCH_HEAD)
+            wait "$m" && holds FETCH_HEAD
+          }
+          guards=$(timeout 10 gh api "$api/workflows/card-guards.yml/runs?event=push&head_sha=$GITHUB_SHA" --jq '.workflow_runs[0].id // empty') || guards=
+          fixes=false
+          while [ -n "$guards" ] && [ "$SECONDS" -lt "$end" ]; do
+            read -r decided fixes _ <<< "$(check)"
+            [ "$decided" != true ] || break
+            sleep 2
+          done
+          if [ "$fixes" != true ]; then
+            stop
+            echo "No guards' fixes with a follow-up Card sync for this push${guards:+ (guards run $guards)}: no second round."
+            exit 0
+          fi
+          was=$(git rev-parse HEAD) seen=$(git -C carddata rev-parse HEAD 2> /dev/null) || seen=
+          landing=$(search HEAD) at=$was got='' i=0
+          if [ -n "$landing" ] && holds HEAD; then
+            stop
+            echo "This build had the guards' landing ${landing:0:8} and its data: no second round."
+            exit 0
+          fi
+          while [ "$SECONDS" -lt "$end" ]; do
+            look && { got=1; break; }
+            if [ -z "$landing" ] && [ $(( i++ % 8 )) = 0 ]; then
+              read -r _ _ landed <<< "$(check)"
+              if [ "$landed" = true ] && timeout 30 git fetch -q --no-tags --filter=blob:none origin main; then
+                at=$(git rev-parse FETCH_HEAD) landing=$(search FETCH_HEAD)
+                [ -n "$landing" ] || break      # past Landed with none on main: nothing landed
+              fi
+            fi
+            sleep 0.5
+          done
+          stop
+          [ -n "$got" ] || ! look || got=1      # once more after the stop: the follow-up's Site build saw this step running
+          if [ -z "$got" ]; then
+            echo "The guards' landing ${landing:-(none)} has no data commit after $SECONDS s: no second round." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git reset -q --hard FETCH_HEAD
+          git -C carddata reset -q --hard FETCH_HEAD
+          head=$(git rev-parse HEAD)
+          echo "Follow-up: data $(git -C carddata rev-parse --short HEAD) on main ${head:0:8} (the guards' landing ${landing:0:8}) after $SECONDS s." \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ -n "$(GIT_NO_LAZY_FETCH=1 git diff --no-renames --name-only "$was" "$head" -- ':(icase)*.psd')" ]; then
+            python -S site/build/psd_sizes.py "$head" "$RUNNER_TEMP/tree.json" || echo "::warning::PSD sizes at ${head:0:8} not all read"
+          fi
+          python site/build/build_site.py
+          live=$(curl -fsSL --max-time 30 "$SITE_URL/build.txt?run=$GITHUB_RUN_ID-2" || true)
+          if [ -n "$live" ] && [ "$live" = "$(cat site/dist/build.txt)" ]; then
+            echo "The live site is this build ($live): nothing to deploy" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          tar --dereference --hard-dereference --directory site/dist -cf "$RUNNER_TEMP/artifact2.tar" --exclude=.git --exclude=.github --exclude='.[^/]*' .
+          echo "deploy=true" >> "$GITHUB_OUTPUT"
+
+      - name: Follow-up upload
+        id: artifact2
+        if: steps.build2.outputs.deploy == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: github-pages-2
+          path: ${{ runner.temp }}/artifact2.tar
+          retention-days: 1
+          if-no-files-found: error
+          compression-level: 1        # never 0
+
+      # As the deploy above: deploy.sh under version 3, version 4 when that one is stuck, else deploy-pages
+      - name: Follow-up deploy
+        id: deployment2
+        if: steps.artifact2.outcome == 'success'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT: ${{ steps.artifact2.outputs.artifact-id }}
+          TRY: "3"
+        run: exec bash "$RUNNER_TEMP/deploy.sh"
+
+      - name: Follow-up retry
+        id: retry2
+        if: steps.deployment2.outcome == 'failure'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT: ${{ steps.artifact2.outputs.artifact-id }}
+          TRY: "4"
+          STUCK: ${{ steps.deployment2.outputs.stuck }}
+        run: |
+          sleep 10                    # lets the cancel settle
+          [ "$STUCK" = true ] || exit 1
+          bash "$RUNNER_TEMP/deploy.sh" || { sleep 10; exit 1; }
+
+      - name: Follow-up deploy-pages
+        if: steps.retry2.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages-2
+          timeout: 360000
+          reporting_interval: 1000
+          error_count: 15
+
+      - id: og
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          if [ -n "$(ls -A site/.og-cache 2>/dev/null)" ]; then
+            echo "names=$(ls site/.og-cache | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: og-save
+        if: ${{ !cancelled() && steps.og.outputs.names != '' && steps.og.outputs.names != steps.og-before.outputs.names }}
+        uses: actions/cache/save@v6
+        continue-on-error: true    # a failed save never fails the run (after the deploys)
+        with:
+          path: site/.og-cache
+          key: deck-previews-v2-${{ steps.og.outputs.names }}-${{ github.run_id }}-${{ github.run_attempt }}
+
       # The versions job's list (none: nothing to make)
       - id: copies
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -651,7 +840,11 @@ jobs:
       # the deploy; a build that stopped before the images adds no copy. Keep these last.
       - id: cache-after
         if: always() && contains(fromJSON('["failure", "success", "cancelled"]'), steps.build.outcome)
-        run: echo "names=$({ find site/.cache 2>/dev/null | LC_ALL=C sort; cat site/.cache/*.json 2>/dev/null; } | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+        run: |
+          bg=$RUNNER_TEMP/setup         # Landing images stopped first
+          [ ! -s "$bg/landing.pid" ] || touch "$bg/landing.stop"
+          while [ -s "$bg/landing.pid" ] && [ ! -s "$bg/landing.code" ] && kill -0 "$(cat "$bg/landing.pid")" 2> /dev/null; do sleep 0.1; done
+          echo "names=$({ find site/.cache 2>/dev/null | LC_ALL=C sort; cat site/.cache/*.json 2>/dev/null; } | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       - id: cache-save
         if: always() && steps.cache-after.outputs.names != '' && steps.cache-after.outputs.names != steps.cache-before.outputs.names
