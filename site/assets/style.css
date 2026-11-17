@@ -1112,8 +1112,9 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 /* tray.js padTop: focus scrolls clear of the sticky tray (--tray-pad on the section while it pins, the tray itself 0; else
    the bar's); not ".tray ~ * *", whose matching walked every earlier tile or row for each element */
 .browse > section * { scroll-margin-top: var(--tray-pad, var(--bar)); } .browse > section > .tray { --tray-pad: 0px; }
-.tray-skip { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* past nine boxes: shown on focus */
+.tray-skip, .skip-cards { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* past nine boxes, past the filters: shown on focus */
 .tray-skip:focus { position: static; grid-column: 1 / -1; justify-self: start; width: auto; height: auto; overflow: visible; clip-path: none; }
+.skip-cards:focus { position: static; width: auto; height: auto; overflow: visible; clip-path: none; margin-top: 4px; }
 .bucket-wrap { position: relative; display: flex; min-width: 0; }
 .bucket { flex: 1 1 auto; min-width: 0; min-height: 64px; padding: 8px 54px 8px 12px; border: 2px dashed var(--border-strong); border-radius: 12px;
   display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; background: var(--surface); color: var(--ink); }

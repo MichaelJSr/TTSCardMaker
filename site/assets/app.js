@@ -653,6 +653,7 @@ function renderCards(r) {
 
   const browse = `<div class="browse">
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
+      <button type="button" class="skip-cards" data-action="to-cards">Skip to cards</button>
       ${mine.length ? `<h3>My filters</h3>${mine.map(v => { const x = cfOut.includes(v), f = CF.pred(v), n = x ? cfRemoves(v) : f ? list.filter(f).length : list.length;
         return `<div class="cf-row"><label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="cf" data-value="${esc(v)}"${!x && cfIn.includes(v) ? " checked" : ""}${x ? ` aria-label="${esc(v)}: excluded"` : ""}> <span class="cf-q">${esc(v)}</span><span class="n">${x ? `−${n}` : n}</span></label><button type="button" class="ghost cf-del" data-action="cf-delete" data-value="${esc(v)}" title="Remove this filter" aria-label="Remove the filter ${esc(v)}">✕</button></div>`; }).join("")}` : ""}
       <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts, xs("kind"), removes)}
@@ -1907,6 +1908,8 @@ const actions = {
   "flag-issue": el => { const box = document.getElementById(el.getAttribute("aria-controls") || ""); if (!box) return;   // Needs handling: a flag's issue (flags.js)
     box.hidden = !box.hidden; el.setAttribute("aria-expanded", String(!box.hidden)); hideTip(); },
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
+  "to-cards": () => { const sec = $(".browse > section", view), to = sec && $(".grid > .tile, .row-name, .empty a", sec);   // past the filters: the first card
+    if (to) to.focus(); else if (sec) { sec.tabIndex = -1; sec.focus(); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },
   // My filters: a link's search saved; ✕ forgets one (and drops it from the address), Undo puts both back
