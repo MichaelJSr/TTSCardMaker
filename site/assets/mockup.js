@@ -987,6 +987,12 @@ export function typePlan(types, now, first = null) {
   for (const name of added) draw.push({ name, core: spots[free.shift()] });
   return { erase, draw, refused, boxed: false, gone };
 }
+/** The bake's own icon moves undone (the record's header.types_back, psd_edit's types memo, D14): back to the card
+ *  maker's types, in any order, -> {erase, draw} as typePlan's; else null. */
+export function backPlan(back, now) {
+  const b = obj(back), key = list => JSON.stringify([...list].map(norm).sort());
+  return b && Array.isArray(b.types) && key(b.types) === key(now || []) ? { erase: b.erase || [], draw: b.draw || [], refused: null, boxed: false } : null;
+}
 /** Fill box (px) of RGBA data in place from the pixels around it: each pixel the mean of the left-right and top-bottom
  *  blends of the ring just outside (pad px deep), weighted by nearness, so a gradient goes on through it. */
 export function fillBox(data, W, H, box, { pad = 3 } = {}) {
@@ -1383,7 +1389,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const icons2 = [];                                  // [label, plan] for the stars and types
   if (todo.stars) icons2.push(["stars", k ? starPlan(head?.stars, ...todo.stars) : { boxed: true, refused: null }]);
   const first = head?.types === null && tpl.first ? scaled(tpl.first).map(v => v / k) : null;   // no type icon on the card
-  if (todo.types) icons2.push(["types", k ? typePlan(head?.types, todo.types[1], first) : { boxed: true, refused: null }]);
+  if (todo.types) icons2.push(["types", k ? backPlan(head?.types_back, todo.types[1]) || typePlan(head?.types, todo.types[1], first) : { boxed: true, refused: null }]);
   const tp = icons2.find(([label]) => label === "types")?.[1], under = ours && tp?.gone?.length && obj(plate.under) && ["icons", "patch", "reach"].every(f => Array.isArray(plate.under[f])) ? plate.under : null;
   const which = under ? tp.gone.map(i => under.icons.findIndex(b => String(b) === String(head.types.row[i].box))) : [];   // the plate's icon for each gone
   const uImg = under && !which.includes(-1) ? await loadImage(under.img) : null;   // the card without its type icons
