@@ -32,7 +32,7 @@ export const HANDOVER = "card-preview";               // the preview job's artif
 // while it should still be up LANE_SAFE_MS from now, its card and edit in a git blob posted beside the dispatch (laneBlob;
 // run titles stop at 512 characters). Its hand-over, LANE_ARTIFACT + request in that run, is looked for from
 // LANE_FIRST_MS every LANE_POLL until LANE_FOR.
-export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 540000, LANE_SAFE_MS = 20000, LANE_FIRST_MS = 3000, LANE_POLL = 500, LANE_FOR = 15000;
+export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 1080000, LANE_SAFE_MS = 20000, LANE_FIRST_MS = 3000, LANE_POLL = 500, LANE_FOR = 15000;
 export const LANE_ARTIFACT = "card-preview-";
 export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404

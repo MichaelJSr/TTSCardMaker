@@ -43,7 +43,7 @@ concurrency:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 11
+    timeout-minutes: 20
     permissions:
       contents: read
       actions: read     # the lane: its editor's runs, a named lane's hand-over
@@ -277,9 +277,9 @@ jobs:
           export CARD_RECORDS_DIR=$RUNNER_TEMP/records CARD_PREVIEW_WAIT=$RUNNER_TEMP/go CARD_PREVIEW_READS=$RUNNER_TEMP/reads.done
           export CARD_BLOBS_DIR=$RUNNER_TEMP/blobs
           start=$(cat "$RUNNER_TEMP/job.start" 2> /dev/null || date +%s)
-          until=$(( start + 540 ))                      # the lane's last press
-          left=$(( start + 625 - $(date +%s) ))         # the process's end, by the job's start
-          [ "$left" -le 640 ] || left=640
+          until=$(( start + 1080 ))                     # the lane's last press
+          left=$(( start + 1165 - $(date +%s) ))        # the process's end, by the job's start
+          [ "$left" -le 1180 ] || left=1180
           [ "$left" -ge 1 ] || left=1
           ( code=0
             timeout "$left" python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" \
@@ -330,17 +330,20 @@ jobs:
         continue-on-error: true
 
       # result.json always (a refusal and an input error too); the images when the bake rendered one. Exit 2: a bad card
-      # or edit; 1: any other error (the result's `transient` says whether to try again). The summary is this step's.
+      # or edit; 1: any other error (the result's `transient` says whether to try again); 124: none 625 s into the job
+      # (publish's take waits 12 minutes). The summary is this step's.
       - name: Preview
         id: preview
         timeout-minutes: 8
         shell: bash
         run: |
-          until [ -s "$RUNNER_TEMP/preview.code" ]; do sleep 0.05; done
+          start=$(cat "$RUNNER_TEMP/job.start" 2> /dev/null || date +%s)
+          left=$(( start + 625 - $(date +%s) ))          # the first press's end, as the 11-minute job's
+          until [ -s "$RUNNER_TEMP/preview.code" ] || [ $SECONDS -ge $left ]; do sleep 0.05; done
           sed 's/^/reads: /' "$RUNNER_TEMP/reads.log" 2> /dev/null || true
           cat "$RUNNER_TEMP/preview.err" >&2
           tee -a "$GITHUB_STEP_SUMMARY" < "$RUNNER_TEMP/preview.md"
-          exit "$(cat "$RUNNER_TEMP/preview.code")"
+          exit "$(cat "$RUNNER_TEMP/preview.code" 2> /dev/null || echo 124)"
 
       # Hand's end (10 s at most) and its log; not ok: stopped, upload-artifact's below.
       - name: Handed
@@ -393,7 +396,7 @@ jobs:
   # (a failed preview: published as try again; one that never validated: nothing).
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 14       # the preview's 11, then the publish
+    timeout-minutes: 14       # the take's 12 (the first press's hand-over), then the publish
     permissions:
       contents: write
       actions: read           # the preview job and its hand-over
