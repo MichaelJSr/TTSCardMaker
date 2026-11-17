@@ -2131,19 +2131,20 @@ function geoOf(plate, ids, k) {
 }
 /** Spans of the FX layers' words (fx) in text, lowercased match. */
 const fxSpans = (text, fx) => (fx || []).flatMap(w => { const out = [], t = text.toLowerCase(), k = String(w).toLowerCase(); if (!k) return out; for (let i = t.indexOf(k); i >= 0; i = t.indexOf(k, i + 1)) out.push([i, i + k.length]); return out; });
-/** A splice (geoPlan's sp; now: was with it) inside one timing tag: {a, b, at, run, was}, the old tag was[a, b) (one
- *  pill glyph on the card), the new one run at text index at; null unless one non-cost badge becomes another. */
+/** A splice (geoPlan's sp; now: was with it) inside one badge: {a, b, at, run, was}, the old badge was[a, b) (one
+ *  pill glyph on the card), the new one run at text index at; null unless one badge (a timing tag or a cost) becomes another. */
 function tagSwap(R, sp, now, icons) {
   const { was, x: X } = R, { a, b, run } = sp, l = R.lines[sp.i];
-  const tag = (t, j) => { const s = t.lastIndexOf("(", a), e = t.indexOf(")", j - 1); return s >= 0 && e >= 0 && e - s <= 9 && !/[\s()]/.test(t.slice(s + 1, e)) ? [s, e + 1] : null; };
-  const pill = t => { const ps = tokenize(t, icons); return ps.length === 1 && ps[0].length === 1 && ps[0][0].length === 1 && !!ps[0][0][0].badge && !ps[0][0][0].cost; };
+  const tag = (t, j) => { const s = t.lastIndexOf("(", a), e = t.indexOf(")", j - 1), inner = t.slice(s + 1, e);   // a timing tag, or a cost
+    return s >= 0 && e >= 0 && ((e - s <= 9 && !/[\s()]/.test(inner)) || (!/[()\n]/.test(inner) && costInfo(inner))) ? [s, e + 1] : null; };
+  const pill = t => { const ps = tokenize(t, icons); return ps.length === 1 && ps[0].length === 1 && ps[0][0].length === 1 && !!ps[0][0][0].badge; };
   const o = tag(was, Math.max(b, a + 1)), n = tag(now, Math.max(a + run.length, a + 1));
   if (!o || !n || o[0] !== n[0] || o[0] < l.s || o[1] > l.e || !pill(was.slice(...o)) || !pill(now.slice(...n)) || !X.has(o[0])) return null;
   let e = o[1]; while (e < l.e && !X.has(e)) e++;
   return e === o[1] ? { a: o[0], b: o[1], at: sp.at - (a - o[0]), run: now.slice(...n), was: was.slice(...o) } : null;   // its glyph ends there
 }
 /** A splice (geoPlan's) set as the bake would: the run's width from the line's own letters (their pen steps), else this
- *  font's scaled to the card's line; a timing tag for another (tagSwap) the old pill's width times the new one's over
+ *  font's scaled to the card's line; a badge for another (tagSwap) the old pill's width times the new one's over
  *  it in this font; the line moved as its alignment moves it. {xa, cutA, cutB, dp, ds, hx, z, tag: {at, w} | null,
  *  width, k, space} (image px: the old run's pen start and the cuts between its letters' ink and its neighbours', prefix
  *  and suffix shifts, its letters' width scale, their size; the line's new width, card over this font, a space) or null
@@ -2285,7 +2286,7 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
   let fit = plan.splice && spliceFit(R, plan.splice, { measure, z, icons, fx, W }), useBare = false;
   if (!fit && plan.splice && bare && fx?.length && !fxSpans(R.was, fx).some(([s, e]) => s < plan.splice.b && plan.splice.a < e)) {   // FX words shift, unedited
     fit = spliceFit(R, plan.splice, { measure, z, icons, fx: [], W }); useBare = !!fit; }
-  const pill = fit?.tag && pillAt(paras, now, fit.tag.at, fit.tag.w);   // a timing tag's new pill alone
+  const pill = fit?.tag && pillAt(paras, now, fit.tag.at, fit.tag.w);   // a badge's new pill alone
   if (pill && !pill.length) fit = null;
   let sps = fit ? [plan.splice] : null, fits = [fit], pills = [pill];
   if (!fit && plan.splices) {                         // several lines changed: each spliced on its own when all fit
