@@ -1407,8 +1407,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       for (const b of plan.draw) drawIcon(ctx, look ? recolour(src, look, at(b)) : src, at(b));
     }
     else {
-      const look = plan.draw.length ? await iconLook(img, head?.types?.row, icons, k) : null;   // the bake copies a shown icon's look
-      for (const d of plan.draw) { const im = await iconOf(icons, d.name); drawIcon(ctx, look && im ? recolour(im, look, at(d.core)) : im, at(d.core)); }
+      const look = plan.draw.length ? await iconLook(img, head?.types?.row, icons, k, true) : null;   // the bake copies a shown icon's look
+      for (const d of plan.draw) { const im = await iconOf(icons, d.name); drawIcon(ctx, look && im ? recolour(im, look, at(d.core), true) : im, at(d.core), true); }
     }
     out.drawn.push(label);
   }
@@ -1436,14 +1436,15 @@ function drawn(im, sx, sy, sw, sh, w, h) {
   return g;
 }
 /** The card's own colours on its type or star icons (fitLook), or null: each shown icon's stock picture fitted into its
- *  core, against the image there. */
-async function iconLook(img, row, icons, k) {
+ *  core (solid: by its opaque part), against the image there. */
+async function iconLook(img, row, icons, k, solid = false) {
   const pairs = [];
   for (const u of Array.isArray(row) ? row : []) {
     const im = await iconOf(icons, u.name), sw = im?.naturalWidth, sh = im?.naturalHeight;
     if (!sw || !sh || !Array.isArray(u.core)) continue;
-    const b = u.core.map(v => v * k), s = Math.min((b[2] - b[0]) / sw, (b[3] - b[1]) / sh), w = Math.round(sw * s), h = Math.round(sh * s);
-    const x = Math.round(b[0] + (b[2] - b[0] - w) / 2), y = Math.round(b[1] + (b[3] - b[1] - h) / 2);
+    const o = solid ? opaqueBox(im) : [0, 0, sw, sh], b = u.core.map(v => v * k), s = Math.min((b[2] - b[0]) / (o[2] - o[0]), (b[3] - b[1]) / (o[3] - o[1]));
+    const w = Math.round(sw * s), h = Math.round(sh * s), ow = solid ? (o[2] - o[0]) * s : w, oh = solid ? (o[3] - o[1]) * s : h;
+    const x = Math.round(b[0] + (b[2] - b[0] - ow) / 2 - o[0] * s), y = Math.round(b[1] + (b[3] - b[1] - oh) / 2 - o[1] * s);
     const x0 = Math.max(0, x), y0 = Math.max(0, y), cw = Math.min(img.naturalWidth, x + w) - x0, ch = Math.min(img.naturalHeight, y + h) - y0;
     if (w < 4 || h < 4 || cw < 1 || ch < 1) continue;
     pairs.push([drawn(im, 0, 0, sw, sh, w, h).getImageData(x0 - x, y0 - y, cw, ch).data, drawn(img, x0, y0, cw, ch, cw, ch).getImageData(0, 0, cw, ch).data]);   // its part on the card
@@ -1484,23 +1485,42 @@ export function lookMap(look, r, g, b) {
   if (look.luma) { const [x, y, t] = at(look.luma, 0.299 * r + 0.587 * g + 0.114 * b); return x.map((v, i) => v + (y[i] - v) * t); }
   return [r, g, b].map((v, ch) => { const [x, y, t] = at(look.chan[ch], v); return x + (y - x) * t; });
 }
-/** A stock icon through a look, at box's size: {img, crop} for drawIcon. */
-function recolour(im, look, box) {
-  const sw = im.naturalWidth, sh = im.naturalHeight, s = Math.min((box[2] - box[0]) / sw, (box[3] - box[1]) / sh);
+/** A stock icon through a look, at box's size (solid: its opaque part's): {img, crop, solid?} for drawIcon. */
+function recolour(im, look, box, solid = false) {
+  const sw = im.naturalWidth, sh = im.naturalHeight, o = solid ? opaqueBox(im) : [0, 0, sw, sh];
+  const s = Math.min((box[2] - box[0]) / (o[2] - o[0]), (box[3] - box[1]) / (o[3] - o[1]));
   const w = Math.max(1, Math.round(sw * s)), h = Math.max(1, Math.round(sh * s));
   const g = drawn(im, 0, 0, sw, sh, w, h), d = g.getImageData(0, 0, w, h);
   for (let i = 0; i < d.data.length; i += 4) d.data.set(lookMap(look, d.data[i], d.data[i + 1], d.data[i + 2]), i);
   g.putImageData(d, 0, 0);
-  return { img: g.canvas, crop: [0, 0, w, h] };
+  return { img: g.canvas, crop: [0, 0, w, h], ...(solid ? { solid: [o[0] * w / sw, o[1] * h / sh, o[2] * w / sw, o[3] * h / sh] } : {}) };
 }
-/** An icon (an image, or {img, crop}) fitted into box with a soft shadow for the PSD's drop shadow and glow. */
-function drawIcon(ctx, src, box) {
+/** The box [x0, y0, x1, y1] of RGBA data's pixels at alpha >= 128 (psd_edit._icon_image's opaque part), or null. */
+export function opaquePart(d, w, h) {
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] >= 128) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  return x1 < 0 ? null : [x0, y0, x1 + 1, y1 + 1];
+}
+const opaque = new WeakMap();
+/** An icon image's opaque part, read once; the whole image when none. */
+function opaqueBox(im) {
+  if (!opaque.has(im)) { const w = im.naturalWidth, h = im.naturalHeight; opaque.set(im, opaquePart(drawn(im, 0, 0, w, h, w, h).getImageData(0, 0, w, h).data, w, h) || [0, 0, w, h]); }
+  return opaque.get(im);
+}
+/** Where an sw x sh image goes so its part o fills box, centred, aspect kept: [x, y, w, h, the part's w, h]. */
+export function fitPart(sw, sh, o, box) {
+  const bw = box[2] - box[0], bh = box[3] - box[1], s = Math.min(bw / (o[2] - o[0]), bh / (o[3] - o[1])), ow = (o[2] - o[0]) * s, oh = (o[3] - o[1]) * s;
+  return [box[0] + (bw - ow) / 2 - o[0] * s, box[1] + (bh - oh) / 2 - o[1] * s, sw * s, sh * s, ow, oh];
+}
+/** An icon (an image, or {img, crop}) fitted into box with a soft shadow for the PSD's drop shadow and glow. solid (a
+ *  type icon): its opaque part fills the box, the glow around it, as the bake places it. */
+function drawIcon(ctx, src, box, solid = false) {
   if (!src) return;
   const im = src.img || src, [sx, sy, sw, sh] = src.crop || [0, 0, im.naturalWidth, im.naturalHeight];
   if (!sw || !sh) return;
-  const bw = box[2] - box[0], bh = box[3] - box[1], s = Math.min(bw / sw, bh / sh), w = sw * s, h = sh * s;
-  ctx.save(); ctx.shadowColor = "rgba(0,0,0,.55)"; ctx.shadowBlur = 0.06 * Math.max(w, h);
-  ctx.drawImage(im, sx, sy, sw, sh, box[0] + (bw - w) / 2, box[1] + (bh - h) / 2, w, h); ctx.restore();
+  const o = solid ? src.solid || (src.img ? [0, 0, sw, sh] : opaqueBox(im)) : [0, 0, sw, sh], [x, y, w, h, ow, oh] = fitPart(sw, sh, o, box);
+  ctx.save(); ctx.shadowColor = "rgba(0,0,0,.55)"; ctx.shadowBlur = 0.06 * Math.max(ow, oh);
+  ctx.drawImage(im, sx, sy, sw, sh, x, y, w, h); ctx.restore();
 }
 /** No place found for the stars or types: a dark box over the template's area with the new stars in rows of two (the
  *  star icon, else a ★) or the type icons down a column. */
