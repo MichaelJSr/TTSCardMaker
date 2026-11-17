@@ -1080,11 +1080,11 @@ const versionList = c => {
   const rows = S.versions.cards[c.id] || [];
   const minor = new Set(S.versions.minor[c.id] || []);        // build_site: a picture change under the share that shows, no data change
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; })
-    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, repo: r.r, ts: r.ts, channel: r.ch, author: r.a, subject: r.s, as: r.as,
+    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, repo: r.r, ts: r.ts, channel: r.ch, author: r.a, subject: r.s, file: r.fl, as: r.as,
       img: r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor })));
 };
 const versionWhen = v => (v.ts ? date(v.ts) : "Undated");
-const versionMsg = v => [v.subject, v.as && `as ${v.as}`].filter(Boolean).join(" · ");
+const versionMsg = v => [v.subject, v.file && `file ${v.file}`, v.as && `as ${v.as}`].filter(Boolean).join(" · ");
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
 // an older version's 360 px copy on the plates branch (build_site version_images, not in the site); one not made yet: its PNG
 const versionCopy = (c, v) => `${COPIES}/${S.versions.repo}/plates/v/${c.id}/${v.sha.slice(0, 10)}-${S.data.thumbs.v}.avif`;

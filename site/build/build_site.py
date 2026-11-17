@@ -1473,7 +1473,8 @@ def history_ts(e):
 def history_rows(folder, t):
     """A timeline's Image versions rows, newest first (undated ones last): versions.json early (app.js versionList).
     k: kind; r: "first" for the first repo's versions (kind old repo); ts; ch: Discord channel; a, s: author and commit
-    subject (old repo); as: the old card it was (a split, owner Q3); img (history/<folder>/<webp>), w, h; f: its sure
+    subject (old repo); fl: its file's name when not the card's (a rename, an MDW draft); as: the old card it was (a split,
+    owner Q3); img (history/<folder>/<webp>), w, h; f: its sure
     fields' values; minor."""
     rows = []
     for e in t["entries"]:
@@ -1482,7 +1483,7 @@ def history_rows(folder, t):
         row = {"k": e["kind"], "ts": history_ts(e)}
         if e["kind"] == "old repo" and e.get("repo") == "first":
             row["r"] = "first"                    # the first repo's file (2022-08..2023-04)
-        for src, key in (("channel", "ch"), ("author", "a"), ("subject", "s"), ("as", "as")):
+        for src, key in (("channel", "ch"), ("author", "a"), ("subject", "s"), ("as", "as"), ("file", "fl")):
             if isinstance(e.get(src), str) and e[src]:
                 row[key] = e[src]
         if isinstance(e.get("image"), str) and HISTORY_IMAGE.match(e["image"]):
