@@ -30,9 +30,10 @@ export const HANDOVER = "card-preview";               // the preview job's artif
 // the warm lane (owner D22; AutoCroissant card_preview_lane): the run that handed over this editor's newest result stays up
 // LANE_IDLE_MS after its last press (and ends LANE_CAP_MS after its start at the latest); a press names it (inputs.lane)
 // while it should still be up LANE_SAFE_MS from now, its card and edit in a git blob posted beside the dispatch (laneBlob;
-// run titles stop at 512 characters). Its hand-over, LANE_ARTIFACT + request in that run, is looked for from
+// run titles stop at 512 characters), and rings its doorbell (laneBell: a ref the lane lists in about a second, a new
+// run 2-6 s; deleted once its hand-over is in). Its hand-over, LANE_ARTIFACT + request in that run, is looked for from
 // LANE_FIRST_MS every LANE_POLL until LANE_FOR.
-export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 1080000, LANE_SAFE_MS = 20000, LANE_FIRST_MS = 3000, LANE_POLL = 500, LANE_FOR = 15000;
+export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 1080000, LANE_SAFE_MS = 20000, LANE_FIRST_MS = 2000, LANE_POLL = 500, LANE_FOR = 15000;
 export const LANE_ARTIFACT = "card-preview-";
 export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
@@ -102,6 +103,10 @@ export function laneOf(store, now = Date.now()) {
   const end = Math.min(e.fromAt + LANE_IDLE_MS, Number.isFinite(started) ? started + LANE_CAP_MS : Infinity);
   return now + LANE_SAFE_MS < end ? e.from : null;
 }
+/** A press's doorbell at its lane (AutoCroissant card_preview_lane.RUNG, without "refs/"), and the lane's commit it
+ *  points at (laneHead: the base.commit of a result it handed over, fromHead; an object the repo has, so no wait). */
+export const laneBell = (lane, request, sha) => `preview-lane/${lane}/${request}-${sha}`;
+export const laneHead = (store, lane) => Object.values(store).flat().find(e => e.from === lane && /^[0-9a-f]{40}$/.test(e.fromHead || ""))?.fromHead ?? null;
 /** A request id: login, time, random (the Action takes 8-64 of A-Z a-z 0-9 -: the folder of its result). */
 export function newRequest(login, now = Date.now(), rand = Math.random()) {
   const who = String(login || "editor").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 39) || "editor";
@@ -450,7 +455,9 @@ export function createPreviews(app) {
   // later loads use the branch); local = its images as object URLs, kept while the page lives (no reload when the
   // branch's copy lands); direct = request -> {run, tries}, or false once done or failed (the branch as ever)
   const early = new Map(), local = new Map(), direct = new Map(), told = new Set(), laneTried = new Set();
-  let lanesOk = true;                                 // a run that never started with a lane named, or a blob not posted: none named again
+  let lanesOk = true, bellsOk = true;                // a run that never started with a lane named, or a blob not posted: none named again; a ref refused: none rung
+  const ring = (bell, sha) => app.editor.github(`/repos/${repo()}/git/refs`, { method: "POST", body: { ref: `refs/${bell}`, sha } }).then(() => bell, () => { bellsOk = false; return null; });
+  const unring = bell => bell && app.editor.github(`/repos/${repo()}/git/refs/${bell}`, { method: "DELETE" }).catch(() => {});   // card-preview.yml's publish deletes it too
   // the token goes to api.github.com only: the archive's 302 to GitHub's blob store relies on the browser dropping
   // Authorization on a cross-origin redirect (Chrome 119, Firefox 111, Safari 16.1); Set's union (Chrome 122, Firefox
   // 127, Safari 17) vouches for it
@@ -490,6 +497,7 @@ export function createPreviews(app) {
     if (editBytes(edit) > MAX_EDIT) { app.toast("This edit is over 16 KB: the preview takes less"); return; }
     const request = newRequest(ed.me.login), entry = { card: c.id, name: c.name, request, edit, hash: hashOf(edit), base: { blob: c.blob ?? null, img: c.img ?? null }, at: Date.now(), state: "starting" };
     set(remember(store, entry)); notify(c.id);
+    let rang = null;
     try {
       const flow = `/repos/${repo()}/actions/workflows/${CONTRACT.workflow}`, inputs = CONTRACT.inputs(c, edit, request);
       const lane = directOk && lanesOk ? laneOf(store) : null;
@@ -499,12 +507,17 @@ export function createPreviews(app) {
       }
       const send = () => ed.github(`${flow}/dispatches`, { method: "POST", body: { ref: CONTRACT.ref, inputs } });
       const posted = blob && ed.github(`/repos/${repo()}/git/blobs`, { method: "POST", body: { content: blob.base64, encoding: "base64" } })
-        .then(b => { if (b?.sha !== blob.sha) lanesOk = false; }, () => { lanesOk = false; });   // beside the dispatch; no ref, so no push
+        .then(b => { if (b?.sha !== blob.sha) lanesOk = false; }, () => { lanesOk = false; });   // beside the dispatch
+      const head = blob && bellsOk && laneHead(store, lane);
+      rang = head ? ring(laneBell(lane, request, blob.sha), head) : null;   // and the doorbell: the lane takes the press at once
       try { await send(); } catch (e) { if (!inputs.lane || e.status !== 422) throw e; delete inputs.lane; lanesOk = false; await send(); }   // a workflow without lanes
       await posted;
-      set(patch(store, request, { state: "running", ...(inputs.lane && lanesOk ? { lane } : {}) }));
+      const named = !!inputs.lane && lanesOk, bell = await rang;
+      if (!named) unring(bell);
+      set(patch(store, request, { state: "running", ...(named ? { lane, ...(bell ? { bell } : {}) } : {}) }));
       app.toast(`Preview started for ${c.name}: it takes a few minutes`);
     } catch (e) {
+      rang?.then(unring);
       const why = startProblem(e.status || 0, String(e.message || "").replace(/^GitHub \d+: ?/, ""), { scopes: ed.scopes });
       set(patch(store, request, { state: "error", error: why, seen: true }));   // said at once: no badge
       app.toast("The preview didn't start");
@@ -543,12 +556,12 @@ export function createPreviews(app) {
     for (const [k, f] of Object.entries(result.files)) if (files[f]) urls[k] = URL.createObjectURL(new Blob([files[f]], { type: /\.webp$/i.test(f) ? "image/webp" : "image/avif" }));
     result.files = Object.fromEntries(Object.keys(urls).map(k => [k, result.files[k]]));   // what the publisher keeps
     local.set(e.request, urls); early.set(e.request, result);
-    set(patch(store, e.request, { from: run, fromAt: Date.now() }));   // the next press's lane (laneOf)
+    set(patch(store, e.request, { from: run, fromAt: Date.now(), fromHead: result.base.commit || null }));   // the next press's lane (laneOf, laneHead)
     return true;
   }
   async function fromLane(e) {                        // the named lane's hand-over: true when early has e's result
     if (!directOk || laneTried.has(e.request) || early.has(e.request) || Date.now() - e.at > LANE_FOR) return false;
-    try { return await takeArtifact(e, e.lane, LANE_ARTIFACT + e.request, {}); }
+    try { return (await takeArtifact(e, e.lane, LANE_ARTIFACT + e.request, {})) && (unring(e.bell), true); }
     catch { laneTried.add(e.request); return false; }   // its own run's hand-over as ever
   }
   async function handOver(e) {                        // the run's hand-over once it's listed: true when early has its result
