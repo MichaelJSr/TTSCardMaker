@@ -14,7 +14,7 @@ word's start, every name typed with or without its punctuation listed first) on 
 website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or pinned to the commit of the Rulebooks bag's
 PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
-face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name plain,
+face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden (a teammate's hand shown); the name plain,
 the ability in the website's palette (tts.json ac), every "<" of a text kept from starting a tag; every card's details at each
 size: the text only the kind line, the stats and the ability (no rule sections, no ban), each chapter a whole Rules button, rows
 fit, each "+ name" spawns its card; the ability laid out line by line as one text would draw it, each status word, timing
@@ -1104,16 +1104,18 @@ def main():
     down.is_face_down = True
     w.run(w.g.showDetails, "Red", down, what="face-down card")
     check(("Red", "No details for this card.") in w.told, "a face-down card: no details")
+    for c in ("Red", "Orange", "Blue"):                     # as onPlayerChangeColor sets them
+        w.players[c]._team = TEAM[c]
     secret = Obj.of(w, cards[1])
     w.hands["Blue"] = [secret]
     w.told.clear()
     w.run(w.g.showDetails, "Red", secret, what="card in Blue's hand")
-    check(("Red", "No details for this card.") in w.told, "a card in another player's hand: no details")
+    check(("Red", "No details for this card.") in w.told, "a card in an opponent's hand: no details")
     slot = Obj.of(w, cards[1])
     w.hands[("Blue", 3)] = [slot]
     w.told.clear()
     w.run(w.g.showDetails, "Red", slot, what="card in Blue's third hand zone")
-    check(("Red", "No details for this card.") in w.told, "a card in another player's third hand zone: no details")
+    check(("Red", "No details for this card.") in w.told, "a card in an opponent's third hand zone: no details")
     w.seat("Red")                                           # Clubs all free: their zones home, nobody seated there
     w.call("onPlayerDisconnect", w.players["Blue"])
     kept, shown = dict(w.hands), []
@@ -1150,6 +1152,23 @@ def main():
         check(bool(sp) and sp["position"] == [p.x + 2.6, p.y + 1.5, p.z] and sp["rotation"][2] == 0,
               f"a seat with no hand: + name after the card left spawns at the pointer {sp and sp['position']}")
         w.call("closeDetails", teal, None, "Teal_d1_close")
+    w.seat("Red", "Orange", "Blue", "White", "Teal")        # a teammate's zones: TTS shows them to the team
+    w.call("onPlayerDisconnect", w.players["Green"])        # Green's zones to Red
+    kept, wrong, n = dict(w.hands), [], w.players["Red"].getHandCount()
+    asks = [("Red", i, who) for i in range(1, n + 1) for who in ("Orange", "Blue")]   # strips, Green's, item holders
+    for c, i, who in asks + [("White", 1, "Teal")]:         # two seats on no side: hidden
+        o = Obj.of(w, cards[1])
+        o.is_face_down = False
+        w.hands.clear()
+        w.hands[c if i == 1 else (c, i)] = [o]
+        w.told.clear()
+        w.run(w.g.showDetails, who, o, what=f"{who}: card in {c}'s hand zone {i}")
+        if ((who, "No details for this card.") not in w.told) != (who == "Orange"):
+            wrong.append(f"{who}: {c} {i}")
+    check(n > 1 and not wrong, f"Red's {n} hand zones: details for teammate Orange, not opponent Blue; White's not for Teal {wrong}")
+    w.hands.clear(), w.hands.update(kept)
+    w.seat("Red", "Blue", "Teal")
+    w.call("onPlayerDisconnect", w.players["Orange"])
 
     # ---- deck buttons ----
     block = re.search(r"\nlocal DECKS = \{\n(.*?)\n\}", script, re.DOTALL)

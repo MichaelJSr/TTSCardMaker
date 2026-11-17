@@ -414,12 +414,18 @@ local function handOf(c)                               -- objects in all of a se
     return out
 end
 
+local function teamOf(c)                               -- a seated player's TTS team, nil for none
+    local ok, t = pcall(function() return Player[c].seated and Player[c].team end)
+    if ok and t and t ~= "None" then return t end
+end
+
 -- the card's PNG path, or nil (not a card, or hidden from this player: face down or in another colour's hand, seated
--- or not)
+-- or not, but a seated teammate's: TTS shows a team each other's hand zones)
 local function cardPath(obj, color)
     if obj == nil or obj.isDestroyed() or obj.type ~= "Card" or obj.is_face_down then return nil end
+    local team = teamOf(color)
     for _, other in ipairs(SEATS) do
-        if other ~= color then
+        if other ~= color and (team == nil or teamOf(other) ~= team) then
             for _, o in ipairs(handOf(other)) do
                 if o == obj then return nil end
             end
