@@ -3883,12 +3883,15 @@ def tag_meanings(chapters):
 
 
 def rulebook_text(source):
-    """A chapter's words without markup (rulebook.js plainText): pictures and fences dropped, card pictures and links as
-    their names, list markers as typed."""
+    """A chapter's words without markup (rulebook.js plainText): pictures and fences dropped (a fence's "Title" kept),
+    card pictures and links as their names, list markers as typed."""
     out = []
     for line in str(source or "").replace("\r\n", "\n").split("\n"):
         t = line.strip()
-        if re.match(r"^:{3,}", t) or re.match(r"^=+\s*page\s*=+$", t, re.I) or re.match(r"^(?:-{3,}|\*{3,})$", t) \
+        titled = re.match(r'^:{3,}\s*[a-z][\w-]*\s*["“](.*)["”]\s*(?:\{[^{}]*\})?$', t, re.I)   # ::: panel "Title"
+        if titled and titled.group(1).strip():
+            t = titled.group(1)
+        elif re.match(r"^:{3,}", t) or re.match(r"^=+\s*page\s*=+$", t, re.I) or re.match(r"^(?:-{3,}|\*{3,})$", t) \
                 or re.match(r"^\{[^}]*\}$", t) or re.match(r"^\|[\s|:-]+\|$", t) and "-" in t:
             continue
         t = re.sub(r"^#{1,3}\s+", "", t)
