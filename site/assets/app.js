@@ -129,6 +129,8 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   for (const c of S.cards) if (h[c.id]) c.history = h[c.id];
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
+let recentP = null;                                       // Recently updated's earlier texts (build_site recent_texts)
+const loadRecent = () => (recentP ||= getJson("recent.json").then(d => { S.recent = new Map(Object.entries(d)); }).catch(e => { recentP = null; throw e; }));
 const COPIES = "https://raw.githubusercontent.com";       // the older versions' copies' host (versionCopy)
 const preconnect = href => document.querySelector(`link[rel="preconnect"][href="${href}"]`)
   || document.head.append(Object.assign(document.createElement("link"), { rel: "preconnect", href }));
@@ -1464,7 +1466,7 @@ function distPage(panel, step) {          // a stat distribution's pager: the ne
 // (a link to one survives a refresh), and each shows its own sections only
 const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"],
   ["parser", "Parser notes"]];
-const NEEDS = { "": "history", changelog: "changelog.json", archive: "archive.json", edits: "edits.json" };   // the data a tab loads first
+const NEEDS = { "": "recent", changelog: "changelog.json", archive: "archive.json", edits: "edits.json" };   // the data a tab loads first
 // a minor fold's lines, drawn on its first open (changelog.js foldHtml; capture: toggle doesn't bubble); the Changelog's
 // come from changelog-minor.json, loaded then (a failed load: the next open tries again)
 const MINOR = "changelog-minor.json";
@@ -1487,15 +1489,15 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   };
   const here = () => { const now = parseHash(); return now.name === "changes" && (now.arg || "") === (r.arg || "") ? now : null; };
   const again = () => { const now = here(); if (now) renderChanges(now, held); };
-  const file = NEEDS[tab] !== "history" && NEEDS[tab], C = file && S.changelog[file];
+  const file = NEEDS[tab] !== "recent" && NEEDS[tab], C = file && S.changelog[file];
   if (file && !C) {
     page(`<div class="loading">Loading the changelog…</div>`);
     loadChangelog(file).then(again, e => { if (here()) page(failBox("the changelog", e)); });
     return;
   }
-  if (NEEDS[tab] === "history" && (!historyP || !S.history)) {
+  if (NEEDS[tab] === "recent" && !S.recent && !S.history) {   // history.json (a card's dialog) has the texts too
     page(`<div class="loading">Loading recent changes…</div>`);
-    whenLoaded(loadHistory(), "card history", again);
+    whenLoaded(loadRecent(), "recent changes", again);
     return;
   }
   const updated = `<p class="muted">Site updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific), the last build that changed it, from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
@@ -1503,13 +1505,14 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   if (tab === "archive") { page(CL.archiveHtml(C.archived, C.repo, r.params)); return; }
   if (tab === "edits") { page(CL.editsHtml(C, r.params)); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
-  const item = (c, diff = true) => {          // diff: the text change since the last earlier text
-    const last = diff && c.history && c.history.length ? c.history[c.history.length - 1] : null;
+  const item = (c, diff = true) => {          // diff: the text change since the last earlier text (history.json's once loaded)
+    const last = !diff ? null : c.history?.length ? c.history[c.history.length - 1].ability : S.recent?.get(c.id);
     return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="" data-open="${c.id}">` : "<div></div>"}<div>
       <a href="#/card/${c.id}"><b>${esc(c.name)}</b></a> <span class="muted">${esc(KIND_LABEL[c.type] || c.type)}${c.stars ? ` · ${c.stars}★` : ""}${c.ts ? ` · ${date(c.ts)}` : ""}${c.author ? ` · ${esc(c.author)}` : ""}</span>
-      ${last && c.ability ? `<div class="ability" style="margin-top:4px;font-size:14px">${diffWords(last.ability, c.ability)}</div>` : ""}</div></div>`;
+      ${last != null && c.ability ? `<div class="ability" style="margin-top:4px;font-size:14px">${diffWords(last, c.ability)}</div>` : ""}</div></div>`;
   };
   const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
+  if (!S.history && recent.some(c => c.hv && c.ability && textChanged(c) && !S.recent.has(c.id))) loadHistory().then(again, () => {});   // a hidden card shown (edit mode)
   page(`<section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted (none when the update kept the text).</p><div class="feed">${recent.map(c => item(c, textChanged(c))).join("")}</div></section>${updated}`);
 }
 /** The Parser notes tab: the cards the bot hasn't parsed yet, and the parser's notes */

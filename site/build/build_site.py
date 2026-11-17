@@ -63,7 +63,7 @@ cards.json morgue, picture only, never a live card (morgue_cards).
 
 Output (site/dist): data/cards.json (everything the first screen needs; its cards as columns), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json, data/changelog.json, data/archive.json and data/edits.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/changelog-minor.json (a Changelog push's minor changes, when their fold opens), data/details/<id>.json (a card's Details dropdown),
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/recent.json (the Recently updated tab's earlier texts), data/changelog-minor.json (a Changelog push's minor changes, when their fold opens), data/details/<id>.json (a card's Details dropdown),
 data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/editing.json (the card fields only edit mode reads, EDITOR_FIELDS: loaded with the editor),
@@ -520,6 +520,18 @@ def set_updated(cards, real, data_key, shown_at):
         if e.get("since") is not None and e.get("since") == e.get("ts"):
             del e["since"]                        # the text started with the last change
     return moved
+
+
+RECENT_ROWS = 60                              # app.js renderChanges: Recently updated's rows
+
+
+def recent_texts(cards, history):
+    """recent.json: {id: its last earlier text} for the Recently updated rows (newest ts, ties at the last row kept)
+    whose text changed with the update (history.js textChanged), so that tab needs no history.json."""
+    rows = sorted((e for e in cards if e.get("ts") and not e.get("hidden")), key=lambda e: -e["ts"])
+    last = rows[RECENT_ROWS - 1]["ts"] if len(rows) >= RECENT_ROWS else 0
+    return {e["id"]: history[e["id"]][-1]["ability"] for e in rows if e["ts"] >= last and e.get("ability") and e["id"] in history
+            and not (e.get("since") and e["since"] < e["ts"])}
 
 
 def merge_flags(entry, record, cleared, second=False):
@@ -5083,7 +5095,7 @@ def main():
     chapters, rule_images = rulebook_chapters()
     cover_sizes, cover_files = cover_copies(rule_images)
     shown, editing = editor_split(cards)
-    files = {"cards.json": {**data, "cards": columns(shown)}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
+    files = {"cards.json": {**data, "cards": columns(shown)}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "recent.json": recent_texts(cards, history), "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
