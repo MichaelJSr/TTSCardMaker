@@ -887,8 +887,8 @@ jobs:
           done
 
       # db/ and the cursor as one commit on data, never forced; a rejected push fails the job (gate G6's case), but over
-      # a Card checks commit (card_data._checks_only, card-checks.yml), which it goes on top of. Tried 3
-      # times (a dropped connection), unless it landed after all.
+      # a Card checks commit (card_data._checks_only, card-checks.yml), which it goes on top of. Tried 4
+      # times, unless it landed after all; with data unmoved (GitHub refused it, as 11-16's 403) after 10, 20 and 30 s.
       - name: Commit data
         id: data-commit
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.build.outcome == 'success' }}
@@ -900,15 +900,19 @@ jobs:
           if [ ! -s "$RUNNER_TEMP/message.txt" ]; then echo "Card data: posted cursor moved" > "$RUNNER_TEMP/message.txt"; fi
           me=(-c user.name=AutoCroissant -c user.email=autocroissant@gmail.com)
           git "${me[@]}" commit -q -F "$RUNNER_TEMP/message.txt"
-          for i in 1 2 3; do
+          for i in 1 2 3 4; do
             git push origin HEAD:refs/heads/data && break
-            [ "$(git ls-remote origin refs/heads/data | cut -f1)" = "$(git rev-parse HEAD)" ] && break
+            now=$(git ls-remote origin refs/heads/data | cut -f1) || now=""
+            [ "$now" = "$(git rev-parse HEAD)" ] && break
+            pause=0                               # data unmoved or unread: a refusal, so a pause before the next try
+            if [ -z "$now" ] || [ "$now" = "$(git rev-parse HEAD~1)" ]; then pause=$((i * 10)); fi
             # card-checks.yml's commit (db/card_checks.json alone) came between: on top of it; anyone else's stays a failure
             if git fetch -q origin data && [ -z "$(git diff --name-only HEAD...FETCH_HEAD -- . ':!db/card_checks.json')" ]; then
               git "${me[@]}" rebase -q FETCH_HEAD
             fi
             echo "::warning::data push failed (try $i)"
-            [ "$i" = 3 ] && exit 1
+            [ "$i" = 4 ] && exit 1
+            sleep "$pause"
           done
           echo "committed=true" >> "$GITHUB_OUTPUT"
           git log -1 --format="Data commit \`%h\`: %s." | tee -a "$GITHUB_STEP_SUMMARY"
