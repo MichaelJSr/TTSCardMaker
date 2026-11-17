@@ -7,11 +7,14 @@ Content-Length); the blob itself is decoded with PIL, and a blob that decoded on
 (assets are in MDW/Assets since 2026-10-30). The global script's links are live data (TTS/Global.lua): each loads, a
 .json one parses; a bare prefix is skipped. 8 requests at a time.
 Pinned blobs the checkout lacks are fetched first, in a few batches: a blobless repo would fetch each one on the spot,
-one fetch and one pack per blob. Blobs are read by one `git cat-file --batch` per repo. Exit 1 on a defect.
+one fetch and one pack per blob. Blobs are read by one `git cat-file --batch` per repo. A pinned link can't change
+what it serves: one that passed is listed with its blob in served-links.txt beside the history clone and not fetched
+again, but for 16 random ones each run (delete the file for a full check). Exit 1 on a defect.
 """
 import functools
 import json
 import os
+import random
 import re
 import subprocess
 import sys
@@ -35,6 +38,7 @@ PREFIX = 65536
 FORMATS = {".png": "PNG", ".jpg": "JPEG", ".jpeg": "JPEG"}
 REQUIRED = ("FaceURL", "BackURL", "ImageURL", "MeshURL", "DiffuseURL", "AssetbundleURL", "PDFUrl")
 TEXT_FIELDS = ("/Description", "/GMNotes", "/Memo", "/XmlUI")   # links for people to open: status only
+AGAIN = 16                                                      # served links checked again each run
 
 
 def strings(v, where=""):
@@ -281,13 +285,13 @@ def main():
         except Exception as e:
             return {"url": url, "fail": [f"{type(e).__name__}: {e}"], "note": []}
 
-    pins = []                                           # the repo links check_repo reads a blob for
+    pins = {}                                           # the repo links check_repo reads a blob for
     for url in urls:
         m = LINK.fullmatch(url)
         if m and urls[url] != {"/LuaScript"}:
-            pins.append((m.group(1), unquote(m.group(2))))
+            pins[url] = (m.group(1), unquote(m.group(2)))
 
-    ids = blob_ids(clone, pins)
+    ids = blob_ids(clone, list(pins.values()))
     blobs = Blobs(checkout, clone)
     known = os.path.join(os.path.dirname(clone.rstrip("/")), "decoded-blobs.txt")
     try:
@@ -295,14 +299,27 @@ def main():
             decoded.update(f.read().split())
     except OSError:
         pass
+    seen = os.path.join(os.path.dirname(clone.rstrip("/")), "served-links.txt")   # "url blob": served it, matched
+    try:
+        with open(seen) as f:
+            served = set(f.read().splitlines())
+    except OSError:
+        served = set()
+
+    def key(url):
+        blob = url in pins and ids.get(pins[url])
+        return blob and f"{url} {blob}"
+    cached = sorted(u for u in urls if key(u) in served)
+    skip = set(cached) - set(random.sample(cached, min(AGAIN, len(cached))))
+    todo = [u for u in sorted(urls) if u not in skip]
 
     with ThreadPoolExecutor(8) as pool:
         try:
-            prefetch(checkout, clone, set(ids.values()), pool)
+            prefetch(checkout, clone, {ids[pins[u]] for u in todo if pins.get(u) in ids}, pool)
         except Exception as e:                          # only a speed-up: the checks fetch on demand without it
             print(f"note: no prefetch ({type(e).__name__}: {e})")
         try:
-            results = list(pool.map(one, sorted(urls)))
+            results = list(pool.map(one, todo))
         finally:
             blobs.close()
     if new_decoded:
@@ -311,11 +328,23 @@ def main():
                 f.write("".join(f"{b}\n" for b in sorted(new_decoded)))
         except OSError:
             pass
+    fresh = {k for r in results if not r["fail"] and (k := key(r["url"]))} - served
+    stale = {k for r in results if r["fail"] and (k := key(r["url"]))} & served
+    try:
+        if stale:                                       # failed again: checked every run till it passes
+            with open(seen, "w") as f:
+                f.write("".join(f"{k}\n" for k in sorted(served - stale | fresh)))
+        elif fresh:
+            with open(seen, "a") as f:
+                f.write("".join(f"{k}\n" for k in sorted(fresh)))
+    except OSError:
+        pass
     fails = [r for r in results if r["fail"]]
     types = {}
     for r in results:
         types[(r.get("status"), r.get("type"))] = types.get((r.get("status"), r.get("type")), 0) + 1
-    print(f"{len(urls)} URLs; status/type: {types}")
+    print(f"{len(urls)} URLs, {len(skip)} served before and not fetched ({len(cached) - len(skip)} such again); "
+          f"status/type: {types}")
     for r in results:
         if not r["url"].startswith(RAW):
             print("other:", r["url"], r.get("status"), r.get("type"), r.get("size"), r["note"],
