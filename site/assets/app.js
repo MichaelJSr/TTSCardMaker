@@ -559,11 +559,11 @@ function sortCards(list, sort = "name", dir = "") {
   if (sort === "created") {                                // no date last, by name; one day by first upload, then name
     const s = desc ? -1 : 1, cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
     return list.sort((a, b) => (!a.created - !b.created) || (a.created ? s * cmp(a.created, b.created) || s * ((a.fs || 0) - (b.fs || 0)) : 0)
-      || a.name.localeCompare(b.name));
+      || G.byName(a, b));
   }
   if (sort === "psd") {                                    // no size last; ties (one PSD's pictures) by name either way
     const s = desc ? -1 : 1;
-    return list.sort((a, b) => (!a.psdSize - !b.psdSize) || s * ((a.psdSize || 0) - (b.psdSize || 0)) || a.name.localeCompare(b.name));
+    return list.sort((a, b) => (!a.psdSize - !b.psdSize) || s * ((a.psdSize || 0) - (b.psdSize || 0)) || G.byName(a, b));
   }
   return list.sort(G.byKey(key, desc));
 }

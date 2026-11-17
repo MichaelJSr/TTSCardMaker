@@ -55,14 +55,16 @@ export const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total sta
 export const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "created", "mentioned", "psd"].includes(sort));
 /** a file size: "812 KB", "34.7 MB" (1000s, as the Finder counts) */
 export const fileSize = n => { const kb = Math.round(n / 1e3); return kb < 1000 ? `${Math.max(1, kb)} KB` : `${(n / 1e6).toFixed(1)} MB`; };
-export const nameKey = c => c.name.toLowerCase();
+export const nameKey = c => c.name.toLowerCase().replace(/^[^\p{L}\p{N}]+/u, "");   // leading punctuation skipped: "[Thunderfury…]" under T
+/** by name, as the Name sort: nameKey, ties by the name itself */
+export const byName = (a, b) => { const x = nameKey(a), y = nameKey(b); return x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name); };
 /** sort by key (or keys in turn), ties by name; a card without the value (null) goes last either way, those in name order */
 export const byKey = (key, desc = false) => { const keys = [].concat(key), s = desc ? -1 : 1;
   return (a, b) => {
     for (const k of keys) { const x = k(a), y = k(b);
-      if (x == null || y == null) return x == null && y == null ? a.name.localeCompare(b.name) : x == null ? 1 : -1;
+      if (x == null || y == null) return x == null && y == null ? byName(a, b) : x == null ? 1 : -1;
       if (x !== y) return x < y ? -s : s; }
-    return s * a.name.localeCompare(b.name);
+    return s * byName(a, b);
   }; };
 
 const STATS = ["hp", "def", "atk", "spd"];

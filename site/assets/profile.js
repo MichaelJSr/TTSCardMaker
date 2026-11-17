@@ -6,6 +6,7 @@ import { esc, tagInfo, tagHtml, TAG, dateFmt, LOGIN_RE, noted } from "./text.js"
 import { editorFields, archiveTag, archiveTagHtml, fieldName } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./chartkit.js";
+import { byName } from "./grid.js";
 
 export const RECENT_CARDS = 24;                                             // the person page's newest cards
 
@@ -80,7 +81,6 @@ export function cardFacts(list, { kindOf = c => c.type, kinds = [] } = {}) {
   const count = (f, m = new Map()) => { for (const c of list) { const k = f(c); if (k) m.set(k, (m.get(k) || 0) + 1); } return m; };
   const order = new Map(kinds.map(([k], i) => [k, i]));
   const rank = k => (order.has(k) ? order.get(k) : kinds.length);
-  const byName = (a, b) => a.name.localeCompare(b.name);
   const newest = list.slice().sort((a, b) => createdTs(b) - createdTs(a) || (b.fs || 0) - (a.fs || 0) || byName(a, b));
   return {
     kinds: [...count(kindOf)].sort((a, b) => b[1] - a[1] || rank(a[0]) - rank(b[0])),
@@ -330,7 +330,7 @@ export function starKinds(own, kindOf = c => c.type, kinds = []) {
 const yearOf = c => (c.created ? +c.created.slice(0, 4) : c.fs ? new Date(c.fs * 1000).getUTCFullYear() : 0);
 /** P14: {first, last (cards), years: [[year, n]], best: [year, n]} by createdTs (undated cards left out); null without dates. */
 export function careerOf(own) {
-  const dated = own.filter(c => createdTs(c)).sort((a, b) => createdTs(a) - createdTs(b) || a.name.localeCompare(b.name));
+  const dated = own.filter(c => createdTs(c)).sort((a, b) => createdTs(a) - createdTs(b) || byName(a, b));
   if (!dated.length) return null;
   const years = new Map();
   for (const c of dated) years.set(yearOf(c), (years.get(yearOf(c)) || 0) + 1);
@@ -351,7 +351,7 @@ export function seriesOf(key, own, all) {
 /** P16: [card, n]: their card the most other cards name (mentionedBy: Map id -> Set), n >= 2; ties by name; else null. */
 export function mostReferenced(own, mentionedBy) {
   let best = null;
-  for (const c of own) { const n = mentionedBy.get(c.id)?.size || 0; if (n >= 2 && (!best || n > best[1] || (n === best[1] && c.name.localeCompare(best[0].name) < 0))) best = [c, n]; }
+  for (const c of own) { const n = mentionedBy.get(c.id)?.size || 0; if (n >= 2 && (!best || n > best[1] || (n === best[1] && byName(c, best[0]) < 0))) best = [c, n]; }
   return best;
 }
 /** Map author -> {words (mean words per ability), n (abilities)}, from every card (cardsOf's rule). */

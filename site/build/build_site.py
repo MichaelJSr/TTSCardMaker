@@ -1595,7 +1595,7 @@ def grid_preload(cards, ids=None, version="", lazy=None, sheets=None):
     ids: the grid's first cards in order (first_screen), else Name order. A link to the Rulebook starts app.js loadBook's
     files instead: rules.json at getJson's URL (version: its stamp) and the rulebook's chunks (lazy: bundle()'s)."""
     by_id = {c["id"]: c for c in cards}
-    order = [by_id[i] for i in ids] if ids else sorted((c for c in cards if not c.get("hidden")), key=lambda c: c["name"].lower())
+    order = [by_id[i] for i in ids] if ids else sorted((c for c in cards if not c.get("hidden")), key=lambda c: re.sub(r"^[\W_]+", "", c["name"].lower()))   # grid.js nameKey
     first = [c["img"] for c in order if c.get("img")][:GRID_PRELOADS]
     book = [["preload", f"data/rules.json{f'?v={version}' if re.fullmatch(r'[0-9a-f]+', version or '') else ''}", "fetch"]]   # app.js V
     book += [["preload", sheets["rulebook"], "style"]] if (sheets or {}).get("rulebook") else []   # its sheet (sheet_tags')

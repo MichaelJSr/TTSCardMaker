@@ -3,16 +3,16 @@
 // click listener (app.js) leaves them alone. Used by the profile editor (edit.js) and the deck builder's dialog (app.js).
 import { esc } from "./text.js";
 import { compile } from "./search.js";
+import { byName } from "./grid.js";
 
 export const CAP = 240;                                                   // tiles shown at most: narrow the search for the rest
-const byName = (a, b) => { const x = a.name.toLowerCase(), y = b.name.toLowerCase(); return x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name); };   // as app.js sortCards
 
 /** The cards to show: those passing `filter` and the query, on the chosen kinds and stars, by name, capped.
  *  -> {list, total}; kindOf(card) groups status effects (app.js kindOf). */
 export function pickList(cards, { query = "", kinds = [], stars = [], filter = null, kindOf = c => c.type } = {}) {
   const pred = compile(query);
   const list = cards.filter(c => (!filter || filter(c)) && (!pred || pred(c)) && (!kinds.length || kinds.includes(kindOf(c)))
-    && (!stars.length || stars.includes(c.stars))).sort(byName);
+    && (!stars.length || stars.includes(c.stars))).sort(byName);   // as app.js sortCards
   return { list: list.slice(0, CAP), total: list.length };
 }
 
