@@ -8,6 +8,7 @@
 //   hp>5  def<=3  atk==2  spd>=7  stars<4  total>=24        numbers
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
 //                   (series== and series~ match a subseries too; a known field's lone = reads as ==)
+//   alias==zote  alias~clot                                 any one alias (as the bot)
 //   created>=2025  created==2023-10  created<2021-06-01                   dates at the precision given (as the bot)
 //   has:alias  flag:hand  flag:bars  flag:name  flag:any
 import { flagged, hasFlag } from "./flags.js";
@@ -25,7 +26,7 @@ const OPS = { "<": (a, b) => a < b, "<=": (a, b) => a <= b, "==": (a, b) => a ==
 const STR = {
   type: c => c.type, subtype: c => c.subtype, series: c => c.series, subseries: c => c.subseries, author: c => c.author,
   path: c => c.psd || c.png, ability: c => c.ability, types: c => (c.types || []).join(" "),
-  name: c => c.name, alias: c => (c.aliases || []).join(" "), aliases: c => (c.aliases || []).join(" "), created: c => c.created,
+  name: c => c.name, alias: c => c.aliases || [], aliases: c => c.aliases || [], created: c => c.created,   // aliases: each its own
 };
 export const FLAGS = {
   "has:alias": c => !!(c.aliases && c.aliases.length),
@@ -124,7 +125,7 @@ export function compile(query) {
     const k = m[1].toLowerCase(), v = m[3].trim().toLowerCase().replace(/^"(.*)"$/, "$1");
     const gets = k === "series" ? [STR.series, STR.subseries] : [STR[k]];   // a subseries counts as a series
     const ok = m[2] === "~" ? x => x.includes(v) : x => x === v;
-    return c => gets.some(get => ok((get(c) || "").toString().toLowerCase()));
+    return c => gets.flatMap(get => get(c)).some(x => ok((x || "").toString().toLowerCase()));
   }
   if (q.length > 1 && q.startsWith('"') && q.endsWith('"')) {
     const t = lower.slice(1, -1), edge = ch => (ch && /\w/.test(ch) ? "\\b" : "");   // a word's edge; a tag's ( and ) are their own
