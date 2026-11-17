@@ -262,7 +262,7 @@ mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inhe
 .segs i { height: 10px; background: var(--surface-3); }
 .segs i:nth-child(10n + 1) { border-radius: 4px 0 0 4px; } .segs i:nth-child(10n) { border-radius: 0 4px 4px 0; }   /* a row per 10 */
 .segs i.on { background: var(--c); }
-.detail .ability { font-size: 16px; background: var(--surface-2); border-radius: 12px; padding: 12px 14px; }
+.detail .ability { font-size: 16px; background: var(--surface-2); border-radius: 12px; padding: 12px 14px; overflow-wrap: anywhere; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
 .related h3, .related h4 { margin: 18px 0 8px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 .strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
@@ -672,6 +672,7 @@ ol.bal-changes { list-style: none; padding: 0; margin: 6px 0; }
 .feed .item { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--grid); }
 .feed img { width: 64px; border-radius: 6px; cursor: pointer; }
 .compare { display: grid; grid-template-columns: repeat(var(--n, 2), minmax(min(220px, calc((100% - 14px) / 2)), 1fr)); gap: 14px; overflow-x: auto; }   /* phones: two cards side by side */
+.compare .col { overflow-wrap: anywhere; }   /* long names, a/b/c chains */
 .compare .col img { width: 100%; border-radius: 10px; }
 .diff-up { color: var(--good); } .diff-down { color: var(--danger); }
 /* the Changes page's category tabs: a row across its top, the chosen one underlined */
