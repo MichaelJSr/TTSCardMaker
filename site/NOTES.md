@@ -603,7 +603,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   takes section 23's way. Types (2026-11-16): the plate's `under` (`card_plates.with_under`: the card drawn without its
   type icons, a mask of each icon's ink and, where two inks meet, the card without each one alone) shows the art where a
   removed or moved icon was (`pasteUnder`, matched to the header row by layer box; kept icons stay), in place of
-  `fillBox`, which stays for a plate without it (or one off the image).
+  `fillBox`, which stays for a plate without it (or one off the image). Textured letters (2026-11-17): the plate's
+  `letters` (`card_plates.letter_look`: a title or Ability with a pixel, smart-object or fill layer clipped onto it or
+  its groups, drawn as an opaque band of its colour `fill`, the card's width by its box and a quarter of its height
+  past it) fill the typed letters of that colour over the flat one (`letterLook`, `texture`, paintLines' `tex`):
+  Earth Totem's stone, Yin Yarn's knit; past the band, or in another colour, the flat colour stays.
   A title in the picture (parts.js `titleInPicture`, the dialog's note) isn't drawn either. Stars and types: section 23.
   An added ability ("+ Add an ability", 2026-11-13): the details' `addRoom` (build_site from AutoCroissant card_checks'
   `room`, ability_place's room rule on a card with no ability) is the box the bake puts it in (`partJobs` draws it
