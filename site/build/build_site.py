@@ -2145,7 +2145,8 @@ def icon_ink(path):
 
 def build_icons(tree):
     """Types/ icons into dist/icons as 96 px WebP (<name>.<stamp>.webp) and 68 px (<name>.<stamp>.68.webp), and the
-    variant images (<name>.<stamp>.<variant>.webp) of those in the font. Returns ({normalized spelling: {file, name, kind, v: [variants with an image]}}, {variant: reach}); no
+    variant images (<name>.<stamp>.<variant>.webp) of those in the font. Returns ({normalized spelling: {file, name, kind, a: width over
+    height, v: [variants with an image]}}, {variant: reach}); no
     variant images without FONT_BUILD's packages."""
     manifest_path = os.path.join(REPO, "MDW/Fonts/stoogedings-src/stoogedings.json")
     if os.path.exists(manifest_path):
@@ -2194,7 +2195,8 @@ def build_icons(tree):
         out_name = f"{slugify(name)}.{stamp}.webp"
         link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)
         link_or_copy(made[ICON_SMALL], os.path.join(DIST, "icons", out_name.replace(".webp", f".{ICON_SMALL}.webp")), replace=True)
-        entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
+        with Image.open(cached) as im:                        # cropped to its ink: the font's glyph shape (mockup.js iconEm)
+            entry = {"file": f"icons/{out_name}", "name": name, "kind": kind, "a": round(im.width / im.height, 3)}
         low = icon_low(cached)
         if low:
             entry["lo"] = low
