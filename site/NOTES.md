@@ -353,6 +353,13 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     `lane` dispatches again without it. A press's run starts no lane of its own when its named lane handed it over; a
     rung press's run, listed later, is served. A lane ends at a newer press of its editor it doesn't take; that press's
     run is the next lane.
+    Next cards (2026-11-17): the first PSD-kind change on a card in the Edit dialog while a lane is up (`laneOf`,
+    lanes and doorbells still on) rings `refs/preview-lane/<lane>/next/<PSD blob>` (`laneNext`; the card's `blob`, its
+    first 8 hex digits) at `laneHead`, once per card and lane, none for a card that lane handed over. The lane, listing
+    its doorbell anyway, reads that PSD, its PNG and the status chart into its clone on a background thread (one card at
+    a time, none started while it takes a press; a press joins a read still going), so the press's reads are the
+    records alone (about 0.2 s, where a 3-59 MB PSD took 1-5 s). The client deletes the ref at that card's press and
+    when its lane is no longer the one it would name; publish's `Next cards` sweeps those of lanes whose run ended.
   - The image, once result.json says `image` (`files.webp`; `files.before`: the card before the edit, for the Diff):
     `https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/previews/previews/<request>/preview.webp` (public, CORS
     `*`; the path is new per request, so the cache never serves an older one; raw serves PNGs as `image/png`, WebP's

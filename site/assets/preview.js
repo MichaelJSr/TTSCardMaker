@@ -106,6 +106,9 @@ export function laneOf(store, now = Date.now()) {
 /** A press's doorbell at its lane (AutoCroissant card_preview_lane.RUNG, without "refs/"), and the lane's commit it
  *  points at (laneHead: the base.commit of a result it handed over, fromHead; an object the repo has, so no wait). */
 export const laneBell = (lane, request, sha) => `preview-lane/${lane}/${request}-${sha}`;
+/** A card its editor started editing, rung so the lane reads its PSD and PNG before the press (card_preview_lane.NEXT):
+ *  the PSD blob's first hex digits (card.blob). */
+export const laneNext = (lane, blob) => `preview-lane/${lane}/next/${blob}`;
 export const laneHead = (store, lane) => Object.values(store).flat().find(e => e.from === lane && /^[0-9a-f]{40}$/.test(e.fromHead || ""))?.fromHead ?? null;
 /** A request id: login, time, random (the Action takes 8-64 of A-Z a-z 0-9 -: the folder of its result). */
 export function newRequest(login, now = Date.now(), rand = Math.random()) {
@@ -458,6 +461,17 @@ export function createPreviews(app) {
   let lanesOk = true, bellsOk = true;                // a run that never started with a lane named, or a blob not posted: none named again; a ref refused: none rung
   const ring = (bell, sha) => app.editor.github(`/repos/${repo()}/git/refs`, { method: "POST", body: { ref: `refs/${bell}`, sha } }).then(() => bell, () => { bellsOk = false; return null; });
   const unring = bell => bell && app.editor.github(`/repos/${repo()}/git/refs/${bell}`, { method: "DELETE" }).catch(() => {});   // card-preview.yml's publish deletes it too
+  const nexts = new Map();                           // lane -> Map(PSD blob -> its ref's POST, true once made; null once deleted)
+  const unnext = (lane, blob) => { const m = nexts.get(lane), made = m?.get(blob); if (made) { m.set(blob, null); made.then(ok => ok && unring(laneNext(lane, blob))); } };
+  const unnextBut = lane => { for (const [l, m] of nexts) if (l !== lane) for (const b of m.keys()) unnext(l, b); };   // a lane gone: publish sweeps them too
+  /** A PSD-kind change on c: its PSD rung as the lane's next card, once per card and lane, unless the lane baked it. */
+  function editing(c) {
+    const lane = directOk && lanesOk && bellsOk ? laneOf(store) : null, blob = String(c?.blob || "");
+    unnextBut(lane);
+    const head = lane && laneHead(store, lane), m = head && (nexts.get(lane) || nexts.set(lane, new Map()).get(lane));
+    if (!m || !/^[0-9a-f]{8,40}$/.test(blob) || m.has(blob) || Object.values(store).flat().some(e => e.from === lane && e.base?.blob === blob)) return;
+    m.set(blob, app.editor.github(`/repos/${repo()}/git/refs`, { method: "POST", body: { ref: `refs/${laneNext(lane, blob)}`, sha: head } }).then(() => true, () => false));
+  }
   // the token goes to api.github.com only: the archive's 302 to GitHub's blob store relies on the browser dropping
   // Authorization on a cross-origin redirect (Chrome 119, Firefox 111, Safari 16.1); Set's union (Chrome 122, Firefox
   // 127, Safari 17) vouches for it
@@ -514,6 +528,7 @@ export function createPreviews(app) {
       await posted;
       const named = !!inputs.lane && lanesOk, bell = await rang;
       if (!named) unring(bell);
+      unnextBut(named ? lane : null); unnext(lane, c.blob);   // pressed: its next ref goes
       set(patch(store, request, { state: "running", ...(named ? { lane, ...(bell ? { bell } : {}) } : {}) }));
       app.toast(`Preview started for ${c.name}: it takes a few minutes`);
     } catch (e) {
@@ -720,6 +735,7 @@ export function createPreviews(app) {
     const later = () => { clearTimeout(t); t = setTimeout(() => {      // the mock-up follows the inputs; the rest repaints when the edit changed
       const v = getV(), cv = iv.querySelector("[data-pv-mock]");
       if (cv && v.n) drawMock(cv, c, v, iv); else if (v.hash !== last) paint();
+      if (v.n) editing(c);                           // the warm lane reads its PSD now
       last = v.hash;
     }, 120); };
     form.addEventListener("input", later); form.addEventListener("change", later);
@@ -768,7 +784,7 @@ export function createPreviews(app) {
   const soon = () => { first = true; if (due(store, Date.now(), true).length) schedule(1000); };
   function init() { set(expire(store)); soon(); }
   return {
-    init, mountTiles, mountCard, mountForm, start,
+    init, mountTiles, mountCard, mountForm, start, editing,
     onAuth() { if (app.editor.me) soon(); },
     entries: listOf,
     /** how many finished previews Trash all would throw away; trashAll() does it and says how many */
