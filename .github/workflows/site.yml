@@ -705,8 +705,9 @@ jobs:
             [ -n "$landing" ] && [ -n "$data" ] && [ "$data" != "$seen" ] || return 1
             timeout 30 git fetch -q --no-tags --filter=blob:none origin main & m=$!
             timeout 30 git -C carddata fetch -q --depth 10 origin data || { wait "$m"; return 1; }
+            wait "$m" || return 1               # main not in: this data looked at again
             seen=$(git -C carddata rev-parse FETCH_HEAD)
-            wait "$m" && holds FETCH_HEAD
+            holds FETCH_HEAD
           }
           guards=$(timeout 10 gh api "$api/workflows/card-guards.yml/runs?event=push&head_sha=$GITHUB_SHA" --jq '.workflow_runs[0].id // empty') || guards=
           fixes=false
@@ -741,6 +742,7 @@ jobs:
           stop
           [ -n "$got" ] || ! look || got=1      # once more after the stop: the follow-up's Site build saw this step running
           if [ -z "$got" ]; then
+            landing=${landing:0:8}
             echo "The guards' landing ${landing:-(none)} has no data commit after $SECONDS s: no second round." | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
