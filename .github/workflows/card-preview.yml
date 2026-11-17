@@ -81,8 +81,9 @@ jobs:
       # the image's Python 3.14, setup-python's: Start imports them compiled), its requirements-cards.txt once through the
       # API (bot.reqs: the venv's key without the clone), and the card repo at this commit in the workspace (14 s at most),
       # every tree (cards.trees) and no file contents (the 16 GB of card folders are never checked out): the card's PSD
-      # and PNG, the status chart, the icon manifest and the Types/ PNGs it needs come by blob sha through the API,
-      # verified, as Card sync's bake does; the fonts below. The token in a header, never saved.
+      # and PNG, the status chart and the icon manifest come through the API at this commit (Reads), the Types/ PNGs it
+      # needs by blob sha, each verified by its blob sha as Card sync's bake does; the fonts below. The token in a header,
+      # never saved.
       - name: Clone
         shell: bash
         env:
@@ -135,8 +136,8 @@ jobs:
 
       # The preview's first reads, in the background once the bot (bot.code 0, else bot.in: its checkout) and the card
       # repo's trees are in, while the venv restores (the runner's python3, stdlib only): the data's render and spot
-      # records (db/ on the data branch; AutoCroissant psd_edit.RECORDS_DIR) to records/, and the card's blobs into this
-      # checkout's object store, where the bake reads first. Go waits for reads.done.
+      # records (db/ on the data branch; AutoCroissant psd_edit.RECORDS_DIR) to records/, and the card's files at this
+      # commit to blobs/ (a file per blob sha; CARD_BLOBS_DIR), where the bake reads first. Go waits for reads.done.
       - name: Reads
         shell: bash
         env:
@@ -147,7 +148,7 @@ jobs:
                 && { [ -e "$RUNNER_TEMP/cards.trees" ] || [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ]; } \
                 || [ $SECONDS -ge 60 ]; do sleep 0.02; done
             cd bot && python3 -S -m commands.card_preview_reads --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --clone "$GITHUB_WORKSPACE" \
-              --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --records "$RUNNER_TEMP/records" || true
+              --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --records "$RUNNER_TEMP/records" --blobs "$RUNNER_TEMP/blobs" || true
             touch "$RUNNER_TEMP/reads.done"; } < /dev/null > "$RUNNER_TEMP/reads.log" 2>&1 &
 
       # The venv as cards-python restores it on a hit, without its setup-python and setup-uv downloads (about 1 s): the
@@ -274,6 +275,7 @@ jobs:
           LANE: ${{ inputs.lane }}
         run: |
           export CARD_RECORDS_DIR=$RUNNER_TEMP/records CARD_PREVIEW_WAIT=$RUNNER_TEMP/go CARD_PREVIEW_READS=$RUNNER_TEMP/reads.done
+          export CARD_BLOBS_DIR=$RUNNER_TEMP/blobs
           start=$(cat "$RUNNER_TEMP/job.start" 2> /dev/null || date +%s)
           until=$(( start + 540 ))                      # the lane's last press
           left=$(( start + 625 - $(date +%s) ))         # the process's end, by the job's start
