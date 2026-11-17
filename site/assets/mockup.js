@@ -1480,9 +1480,11 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     }
     out.drawn.push(label);
   }
+  const looks = mine && kc && Array.isArray(plate.letters) ? plate.letters : [], lookImg = looks.length ? await loadImage(plate.img) : null;
+  if (stale()) return null;
   for (const job of jobs) {
     const imgs = await iconImages(job.text, icons);
-    const j = { ...job, fills: job.one ? null : fills };   // under an overlay: painted over, as the bake's
+    const j = { ...job, fills: job.one ? null : fills, tex: lookImg && letterLook(lookImg, looks, job.layer?.id, kc) };   // under an overlay: painted over, as the bake's
     if (j.look ? drawAdded(ctx, j, imgs) : j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) out.over.push(j.label);
     out.drawn.push(job.label);
   }
@@ -1490,6 +1492,24 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
 }
 /** An icon's image by name (S.icons, norm keys), or null. */
 const iconOf = async (icons, name) => { const ic = icons?.[norm(name)]; return ic?.file ? loadImage(ic.file) : null; };
+/** A text layer's letter look (card_plates letters: the card with its letters an opaque band of their colour under its
+ *  clipped textures) cut from the plate's sheet: {img, box (image px), fill}, or null. */
+function letterLook(sheet, looks, id, kc) {
+  const t = id == null ? null : looks.find(x => String(x.id) === String(id) && Array.isArray(x.box) && x.box.length === 4 && Array.isArray(x.at) && x.at[2] > 0 && x.at[3] > 0);
+  if (!t) return null;
+  const img = document.createElement("canvas"); img.width = t.at[2]; img.height = t.at[3];
+  img.getContext("2d").drawImage(sheet, ...t.at, 0, 0, t.at[2], t.at[3]);
+  return { img, box: t.box.map(v => v * kc), fill: hexRgb(t.fill) };
+}
+/** tex (letterLook) as a fill style: its pixels where they sit on the card, under any transform; null when a letter of
+ *  colour c (a run's, else the layer's) is not tex's (its look was made in that colour). */
+function texture(ctx, tex, c) {
+  const k = c ? hexRgb(c) : null;
+  if (!tex || (c && !(k && tex.fill && k.every((v, i) => Math.abs(v - tex.fill[i]) <= 3)))) return null;
+  const [x0, y0, x1, y1] = tex.box, pat = ctx.createPattern(tex.img, "no-repeat");
+  pat.setTransform(ctx.getTransform().invertSelf().translateSelf(x0, y0).scaleSelf((x1 - x0) / tex.img.width, (y1 - y0) / tex.img.height));
+  return pat;
+}
 /** What a new star is drawn with: the star icon the bake copies (header.stars.icon), else the last shown star's pixels. */
 async function starSource(stars, icons, img, k) {
   const im = stars.icon ? await iconOf(icons, stars.icon) : null;
@@ -1689,8 +1709,9 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
 /** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills (a cooldown's ring its
  *  left end). one (an overlay on the ability): badges as outlined pills, rings in one colour and stickers as an outline
  *  round the one-colour icon, in the text's fill. shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
- *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. */
-function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null }) {
+ *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. tex:
+ *  letterLook's, over the letters of its colour. */
+function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null }) {
   ctx.textBaseline = "alphabetic";
   if (effects?.length) paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx });
   lines.forEach((line, n) => {
@@ -1738,7 +1759,10 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
       } else if (p.text.trim()) {
         ctx.save(); ctx.font = `${z}px ${fam}`; if (track) ctx.letterSpacing = `${track * z}px`; ctx.translate(x, y); ctx.scale(hx, 1);
         if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = strokeW || Math.max(1.5, z * 0.16); glyphText(ctx, p.text, fam, z, track, "strokeText"); }
-        ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); glyphText(ctx, p.text, fam, z, track, "fillText"); ctx.restore();
+        ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); glyphText(ctx, p.text, fam, z, track, "fillText");
+        const look = texture(ctx, tex, p.color);       // over the flat fill: past its band, the flat colour
+        if (look) { ctx.fillStyle = look; glyphText(ctx, p.text, fam, z, track, "fillText"); }
+        ctx.restore();
       }
       x += p.w;
     }
@@ -1756,7 +1780,7 @@ export function steadyPitch(lines) {
  *  text) each paragraph is one line (pointLayout), re-laid at a size it shrank to past the old text's (fit_below). An
  *  Ability a bake set smaller (the card's abilityFit) starts from the card maker's size, as the next bake. */
 function drawText(ctx, job, imgs, W) {
-  let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was } = job;
+  let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was, tex } = job;
   const looked = (ps, s) => {                         // kept badges at their own size and tracking, typed ones tracked as the card's
     if (role === "ability" && Array.isArray(layer?.badges)) {
       const looks = badgeLooks(s, old, layer.badges); let i = 0;
@@ -1838,12 +1862,12 @@ function drawText(ctx, job, imgs, W) {
   }
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid
-  job.lined = plan && !shrunk && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects }, pitch: pitch0, W }) : "";
+  job.lined = plan && !shrunk && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex });
   return over;
 }
 /** The lines of a redrawn Ability the edit leaves as they were (indexes): its leading and trailing lines whose pieces
