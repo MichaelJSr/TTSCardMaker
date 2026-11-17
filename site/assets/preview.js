@@ -388,13 +388,20 @@ export function plainReason(reason) {
   const s = String(reason ?? ""), parts = s.split("; ").map(x => REFUSALS.map(([re, say]) => { const m = re.exec(x); return m && say(m); }).find(Boolean));
   return s && parts.every(Boolean) ? parts.join(" ") : s.replace(LEDGER, "");
 }
-/** A result note: "stars not baked: <code>: <why>" -> "The stars weren't baked: <plainWhy>."; others without ledger codes. */
+const FIELD = { name: "title", text: "ability", ability: "ability" };
+const quoted = c => (c.includes("'") ? `"${c}"` : `'${c}'`), or = l => (l.length > 1 ? `${l.slice(0, -1).join(", ")} or ${l[l.length - 1]}` : l[0]);
+/** "The title's font has no '.' or '-'" (chars: the letters). */
+const noGlyph = (field, chars) => `The ${FIELD[field] || field}'s font has no ${or([...chars].map(quoted))}`;
+/** A result note: "stars not baked: <code>: <why>" -> "The stars weren't baked: <plainWhy>."; psd_edit no_glyph's "font:
+ *  name: '.' has no glyph in its font (drawn as a box)" -> "The title's font has no '.': ..."; others without ledger codes. */
 export function plainNote(note) {
   const s = String(note ?? ""), m = /^(stars|types) not baked: [a-z-]+: (.*)$/s.exec(s);
+  const g = /^font: (name|ability): (['"])(.+)\2 has no glyph in its font \(drawn as a box\)$/s.exec(s);
+  if (g) return `${noGlyph(g[1], g[3].replace(/\\(.)/g, "$1"))}: it prints as a box or a gap.`;
   return m ? `The ${m[1]} weren't baked: ${plainWhy(m[2])}.` : s.replace(LEDGER, "");
 }
 /** The mock-up's caption note from draw()'s result: what went in a box (an added ability: where), ran over, wasn't drawn,
- *  the bake would refuse, stays on the website only or stays printed as it is. */
+ *  the bake would refuse, stays on the website only or stays printed as it is, and typed letters the font can't draw. */
 export function mockNote(out) {
   const lost = Object.entries(out.fonts || {}).filter(([, f]) => !f).map(([n]) => n), cap = s => s[0].toUpperCase() + s.slice(1);
   const boxed = out.boxed || [], many = boxed.length > 1 || /s$/.test(boxed[0] || "");
@@ -407,6 +414,7 @@ export function mockNote(out) {
     out.site?.some(([label]) => label === "name") ? "The title is part of the picture: the new title shows on the website only until it's drawn in Photoshop." : "",
     ...reasons.map(w => { const l = site.filter(([, x]) => x === w).map(([label]) => label); return `${and(l)} ${l.length > 1 ? "show" : "shows"} on the website only: ${w}.`; }),
     out.starsKept ? `The printed stars stay as they are (${plainWhy(out.starsKept.why)}): the card only moves to the ${out.starsKept.to.replace(/\/$/, "").split("/").pop()} folder.` : "",
+    ...new Set((out.noGlyph || []).map(([label, chars, gap]) => `${noGlyph(label, chars)}: the bake ${gap ? "leaves a gap" : "prints a box"} there.`)),
     out.skipped?.length ? `Not drawn: ${[...new Set(out.skipped)].join(", ")}.` : "", lost.length ? `Stand-in font for ${lost.join(", ")}.` : "",
     out.standIn?.length ? `Stand-in font for the ${out.standIn.join(" and the ")} (the card's isn't known).` : ""].filter(Boolean).join(" ");
 }

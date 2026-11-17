@@ -481,6 +481,56 @@ export function bakeInk(was, list, now) {
   out.forEach((c, k) => { const r = runs[runs.length - 1]; if (c && r?.color === c && r.end === k) r.end++; else if (c) runs.push({ start: k, end: k + 1, color: c }); });
   return runs;
 }
+/** Per letter of now, edited from was: null where the edit keeps it, else the index in was of the letter whose run the
+ *  bake types it in (psd_edit changed_range's span, edit_parts' changed parts; plain_typed: a replacement's first
+ *  letter, an insertion's letter before). */
+export function typedAt(was, now) {
+  was = String(was ?? ""); now = String(now ?? "");
+  const out = Array(now.length).fill(null);
+  let a = 0, b = 0;
+  while (a < was.length && a < now.length && was[a] === now[a]) a++;
+  while (b < was.length - a && b < now.length - a && was[was.length - 1 - b] === now[now.length - 1 - b]) b++;
+  const segs = align(was.slice(a, was.length - b), now.slice(a, now.length - b)) || [[0, was.length - a - b, 0, now.length - a - b, false]];
+  const parts = [];                                   // a short kept stretch joins the change
+  for (const [a0, a1, b0, b1, kept] of segs) {
+    const last = parts[parts.length - 1];
+    if (kept && (a1 - a0 >= SAME_RUN || was.slice(a + a0, a + a1).includes("\n"))) parts.push(null);
+    else if (last) { last[1] = a + a1; last[3] = a + b1; } else parts.push([a + a0, a + a1, a + b0, a + b1]);
+  }
+  for (const p of parts) if (p) out.fill(p[1] > p[0] || !p[0] ? p[0] : p[0] - 1, p[2], p[3]);
+  return out;
+}
+const PLAIN_MARKS = { "\u2014": "-", "\u2013": "-", "\u2026": "...", "\u201c": '"', "\u201d": '"' };   // psd_edit.PLAIN_MARKS (owner D13)
+const AS = { "\ufdd0": 1, "\ufdd1": 3, "\ufdd2": "-", "\ufdd3": "...", "\ufdd4": '"' }, STAND = { 1: "\ufdd0", 3: "\ufdd1", "-": "\ufdd2", "...": "\ufdd3", '"': "\ufdd4" };   // glyphPlan's
+const STOOD = /[\ufdd0-\ufdd4]/;                     // stand-ins (noncharacters): that many .notdefs, or a mark plain
+/** text as the bake sets the typed letters its font can't draw (lacks: data/fonts.json's): a D13 mark plain
+ *  (psd_edit.plain_typed), any other, or a plain one it lacks too, as its .notdef (no_glyph); kept letters, icons and
+ *  badges as they are, and letters typed into another font's run (one the font lacks, yet printed: The Structure's
+ *  digits). {text: the same length, with stand-ins glyphRuns reads, boxes: the letters set as .notdef}. */
+export function glyphPlan(text, old, lacks) {
+  text = String(text ?? ""); old = String(old ?? "");
+  if (!lacks || !text) return { text, boxes: "" };
+  const typed = typedAt(old, text), drawn = drawnSpans(old);
+  for (const [a, b] of drawnSpans(text)) typed.fill(null, a, b);
+  const other = j => j >= 0 && j < old.length && !/\s/.test(old[j]) && lacks.includes(old[j]) && !drawn.some(([a, b]) => a <= j && j < b);
+  let out = "", boxes = "";
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], plain = PLAIN_MARKS[c];
+    if (typed[i] == null || !lacks.includes(c) || other(typed[i])) out += c;
+    else if (plain && !lacks.includes(plain[0])) out += STAND[plain];
+    else { out += STAND[plain?.length || 1]; boxes += plain?.[0] || c; }
+  }
+  return { text: out, boxes: [...new Set(boxes)].join("") };
+}
+/** A text's runs as drawn: strings (a stand-in mark plain) and numbers (that many .notdefs). */
+export function glyphRuns(t) {
+  const out = [];
+  for (const c of t) {
+    const x = AS[c] ?? c, last = out.length - 1;
+    if (typeof x === "string" && typeof out[last] === "string") out[last] += x; else out.push(x);
+  }
+  return out;
+}
 /** The card's own colours on a redrawn text, as the bake gives them (bakeInk; past its size, as its page keeps them over
  *  a staged edit: textcolor.js inkOf): the field's; a part's (old: its layer's text) the field's colours where that
  *  text is in the field, followed to the new; null without any. */
@@ -1159,7 +1209,8 @@ export function mainInk(rec, t) {
 
 // ---- drawing (canvas; the browser)
 const fontFaces = new Map();                          // font name -> Promise<family | "">
-let fontsP = null;                                    // data/fonts.json
+let fontsP = null, fontMap = null;                    // data/fonts.json: its promise, its fonts once loaded
+const NOTDEFS = new Map();                            // family (draw's fam) -> {adv: ems, path: Path2D | null}: its .notdef
 /** The family to draw a PSD font in: a FontFace from MDW/Fonts when data/fonts.json maps it (loaded once), else "".
  *  Its WOFF2 copy on the site first, the TTF/OTF from raw when that copy fails (fontSrc). */
 /** The badges' letters: LABEL_FONT's family once style.css's @font-face for it has loaded, else "". */
@@ -1171,7 +1222,7 @@ export function labelFont() {
 export function loadFont(name, { getFonts, raw }) {
   if (!name || typeof FontFace === "undefined") return Promise.resolve("");
   if (!fontFaces.has(name)) {
-    fontsP ||= getFonts().then(d => (d && typeof d.fonts === "object" ? d.fonts : {}), () => ({}));
+    fontsP ||= getFonts().then(d => (d && typeof d.fonts === "object" ? d.fonts : {}), () => ({})).then(m => (fontMap = m));
     fontFaces.set(name, fontsP.then(async map => {
       const f = map[name];
       if (!f || typeof f.file !== "string") return "";
@@ -1227,7 +1278,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
   const nix = paintedOver(rec, edit.colors, typed, edit);   // the bake refuses them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
-  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], site: [], starsKept: null, added: null };
+  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], site: [], starsKept: null, added: null, noGlyph: [] };
   const hand = pics ? [] : handStats(card);           // the bake won't draw them: not drawn, nothing said (owner 11-11); a plate's bars tell value by value
   for (const k of Object.keys(todo.stats)) if (hand.includes(k.split("@")[0])) delete todo.stats[k];
   todo.skipped = todo.skipped.filter(label => !hand.includes(label.toLowerCase()));
@@ -1268,7 +1319,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const ready = await Promise.race([pending, new Promise(r => setTimeout(() => r(null), 60))]);   // a loaded font draws at once
     if (ready === null) pending.then(f => { if (f) onFont?.(); }); else fam = ready;
     if (name) out.fonts[name] = fam; else out.standIn.push(label);
-    return { fam: fam ? `"${fam}", ${STAND_IN}` : STAND_IN, layer };
+    return { fam: fam ? `"${fam}", ${STAND_IN}` : STAND_IN, layer, gaps: fam ? fontMap?.[name] : null };
   };
   const badgeFont = labelFont();
   let bfam = await Promise.race([badgeFont, new Promise(r => setTimeout(() => r(null), 60))]);
@@ -1288,6 +1339,15 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const fams = [];
   const look = Array.isArray(rec?.addRoom) && obj(rec?.addLook) && rec.addLook.px > 0 ? { ...rec.addLook, added: true } : null;   // how the bake sets an added ability
   for (const { role, label, path, id, added } of specs) fams.push(await family(role, label, path, id, added ? look : null));
+  for (const [k, s] of specs.entries()) {             // typed letters its font can't draw: as the bake sets them
+    const { fam, gaps } = fams[k];
+    if (s.text == null || typeof gaps?.lacks !== "string" || !Array.isArray(gaps.notdef)) continue;
+    const plan = glyphPlan(s.text, s.added ? "" : s.old, gaps.lacks), [adv, d] = gaps.notdef;
+    if (plan.text === s.text) continue;
+    s.text = plan.text;
+    if (!NOTDEFS.has(fam)) NOTDEFS.set(fam, { adv: (+adv || 0) / 1000, path: d && typeof Path2D !== "undefined" ? new Path2D(d) : null });
+    if (plan.boxes) out.noGlyph.push([s.label, plan.boxes, !d]);   // mockNote: a box, or a gap (an empty .notdef)
+  }
   // the erase pass (where each old text is, erased) depends on none of the new text, colours or statuses: a redraw that
   // changed only those (typing) starts from the last one's pixels
   const fxWords = sheet ? plate.crops.flatMap(c => c.fx || []) : [];   // the plate picked follows these (plateCuts)
@@ -1305,11 +1365,13 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (tints[k]) { out.drawn.push(label); continue; }   // never erased: tinted below
     const { fam, layer } = fams[k];
     const set = role === "ability" || role === "name" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems) and letter width (psd_details)
-    const measure = (t, z) => {
+    const width = (t, z) => {
       ctx.font = `${z}px ${fam}`;
       if (!track) return ctx.measureText(t).width * hx;
       ctx.letterSpacing = `${track * z}px`; const w = ctx.measureText(t).width * hx; ctx.letterSpacing = "0px"; return w;
     };
+    const nd = NOTDEFS.get(fam), measure = (t, z) => (nd && STOOD.test(t)   // glyphPlan's stand-ins: as glyphText draws them
+      ? glyphRuns(t).reduce((w, r) => w + (typeof r === "number" ? r * (nd.adv + track) * z * hx : width(r, z)), 0) : width(t, z));
     measure.track = track; measure.hx = hx;
     measure.cap = z => capOf(ctx, fam, z);
     measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
@@ -1569,6 +1631,20 @@ function shaded(ctx, { stops, top, bottom }, y) {
   for (const [t, c] of stops) g.addColorStop(t, rgb(c));
   return g;
 }
+/** ctx[how] ("fillText" | "strokeText") of t at 0, 0, glyphPlan's stand-ins as the bake draws them: a mark plain, a
+ *  .notdef as the font's own (NOTDEFS: its outline, empty: a gap) at its advance, tracked. */
+function glyphText(ctx, t, fam, z, track, how) {
+  const nd = NOTDEFS.get(fam);
+  if (!nd || !STOOD.test(t)) return ctx[how](t, 0, 0);
+  let x = 0;
+  for (const r of glyphRuns(t)) {
+    if (typeof r === "string") { ctx[how](r, x, 0); x += ctx.measureText(r).width; continue; }
+    for (let n = 0; n < r; n++, x += (nd.adv + track) * z) if (nd.path) {
+      const path = new Path2D(); path.addPath(nd.path, new DOMMatrix([z / 1000, 0, 0, -z / 1000, x, 0]));   // font units, y up
+      if (how === "fillText") ctx.fill(path); else ctx.stroke(path);
+    }
+  }
+}
 const FX_BLEND = { screen: "screen", multiply: "multiply", normal: "source-over" };
 /** The layer's Drop Shadows and Outer Glows (psd_details text fx, canvas px) under typed letters, as the bake casts
  *  them: the letters (and a Stroke set deeper, ws, at its opacity) grown by the spread, blurred as the fork's tent
@@ -1596,9 +1672,9 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
       for (const p of line.pieces) {
         if (!p.icon && !p.badge && p.text?.trim()) {
           g.save(); g.font = `${z}px ${fam}`; if (track) g.letterSpacing = `${track * z}px`; g.translate(x, y); g.scale(hx, 1);
-          if (e.ws > 0) { g.globalAlpha = (e.wo ?? 100) / 100; g.lineWidth = 2 * (e.ws + grow); g.strokeText(p.text, 0, 0); g.globalAlpha = 1; }   // the deeper Stroke
-          if (grow > 0) { g.lineWidth = 2 * grow; g.strokeText(p.text, 0, 0); }
-          g.fillText(p.text, 0, 0); g.restore();
+          if (e.ws > 0) { g.globalAlpha = (e.wo ?? 100) / 100; g.lineWidth = 2 * (e.ws + grow); glyphText(g, p.text, fam, z, track, "strokeText"); g.globalAlpha = 1; }   // the deeper Stroke
+          if (grow > 0) { g.lineWidth = 2 * grow; glyphText(g, p.text, fam, z, track, "strokeText"); }
+          glyphText(g, p.text, fam, z, track, "fillText"); g.restore();
         }
         x += p.w;
       }
@@ -1661,8 +1737,8 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
         if (p.ring && one) drawRing(ctx, p.ring, p.group, x0 + r, top + r, h / 22, { fill, stroke, width: Math.max(1.5, z * 0.16) });
       } else if (p.text.trim()) {
         ctx.save(); ctx.font = `${z}px ${fam}`; if (track) ctx.letterSpacing = `${track * z}px`; ctx.translate(x, y); ctx.scale(hx, 1);
-        if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = strokeW || Math.max(1.5, z * 0.16); ctx.strokeText(p.text, 0, 0); }
-        ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); ctx.fillText(p.text, 0, 0); ctx.restore();
+        if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = strokeW || Math.max(1.5, z * 0.16); glyphText(ctx, p.text, fam, z, track, "strokeText"); }
+        ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); glyphText(ctx, p.text, fam, z, track, "fillText"); ctx.restore();
       }
       x += p.w;
     }

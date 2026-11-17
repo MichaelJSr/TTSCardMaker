@@ -698,6 +698,18 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     as a `FontFace` when first drawn: its WOFF2 copy on the site, else from raw.githubusercontent.com (§32) (60 ms for a loaded one, else drawn in a stand-in and
     redrawn when it arrives); the caption names a stand-in, and a role whose record names no font ("Stand-in font for the
     name (the card's isn't known)": 266 of 818 records have no name layer). The last 24 images used stay decoded.
+  - Typed letters the font can't draw (2026-11-16): a used font's entry also has `lacks` (the printable ASCII, TM, (R),
+    (C), e acute, right quote and D13's dashes, ellipsis and curly double quotes its cmap lacks) and `notdef` ([advance,
+    SVG path] in 1/1000 em, y up; [advance] when empty), read once per blob with fontTools (`font_gaps`, cached beside
+    the face names). mockup.js `glyphPlan`, typed letters only (psd_edit changed_range less edit_parts' kept stretches;
+    icons and badges never): a D13 mark the font lacks is drawn plain (plain_typed), any other the font's own .notdef at
+    its advance (no_glyph: a box, or a gap when empty), said in the caption ("The ability's font has no '+': the bake
+    prints a box there."); a letter typed into another font's run (the replaced letter, else the one before, is one the
+    font lacks yet the card prints: The Structure's digits) is drawn as before. The text keeps its length (stand-in
+    noncharacters U+FDD0-FDD4 that `measure` and `glyphText` expand). The Rendered preview's note "font: name: '.' has
+    no glyph in its font (drawn as a box)" reads "The title's font has no '.': it prints as a box or a gap.". Measured
+    on 22 website-shaped edits (18 boxes or gaps, 4 typed dashes; plates on): wrong px against the bake 178,816 -> 62,659,
+    median 4,321 -> 275, mock-up worse than drawing nothing on 4 -> 0.
   - Label: a "Mock-up" ribbon on the image and the caption "Mock-up: the real image comes from the bake".
     Caption notes (`mockNote`, exported): what went in a box ("Stars in a box: their places on the image weren't
     found."), ran over, wasn't drawn, the bake would refuse ("The bake would refuse the stars: <why>."), stand-in fonts.
