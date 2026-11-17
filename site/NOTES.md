@@ -38,7 +38,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   exact name opens from any section, the pending search cancelled); on `pointer: coarse` the box then blurs.
 - Browser bar (`meta[name=theme-color]`): index.html's theme script sets #f9f9f7 when light (the default #0d0d0d meta
   only: share pages keep the card's); `tint()` (renderView, the theme button) sets `--page` once per theme, so a card
-  page keeps its card's colour until the view first draws.
+  page keeps its card's colour until the view first draws. `readPage()` reads `--page` before init's first route()
+  (cached per theme): read after the view draws, it restyled the whole view inside the drawing task (#/rules on a 4x
+  phone: longest task 202 -> 118 ms, 2026-11-17).
 
 ## 2. Data loading
 - `getJson(name)` app.js:~58: `fetch("data/"+name+"?v=<build>")` relative to `<base>`; ordinary HTTP cache keyed by the `?v=` build hash. `cards.json` is preloaded in index.html:12 and awaited in `init()` before first render.

@@ -241,6 +241,7 @@ async function init() {
   const typed = qInput.value;                            // typed before the scripts ran (route() clears an unfocused box)
   const at = takeAt();                                   // a reload: the reader's place
   if (at?.list && parseHash().name === "card") S.listHash = at.list;   // the list under its card dialog
+  readPage();                                            // tint()'s colour, while only the shell is drawn
   route();
   if (typed.trim() && typed !== (parseHash().params.get("q") || "")) { qInput.value = typed; runSearch(); }
   restoreAt(at);
@@ -462,13 +463,16 @@ function pageName(r) {
 }
 const titleOf = r => `${pageName(r)} · Impossibility Simulator`;
 function setTitle(r) { S.title = document.title = titleOf(r); if (pageH1) pageH1.textContent = pageName(r); }   // the page's h1 (screen readers)
-// the browser bar's colour: the page's (a card page keeps its card's until the view first draws)
+// the browser bar's colour: the page's (a card page keeps its card's until the view first draws). --page is read once
+// per theme, before a view draws (read after one, it restyles the whole view at once)
 let tinted = "";
+const pageColor = {};
+const readPage = () => { const t = document.documentElement.dataset.theme; pageColor[t] ??= getComputedStyle(document.documentElement).getPropertyValue("--page").trim(); return pageColor[t]; };
 function tint() {
   const t = document.documentElement.dataset.theme;
   if (t === tinted) return;
   tinted = t;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--page").trim());
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", readPage());
 }
 // what a card dialog can change under it (edits, hands, the comparison, sign-in, the theme): a dialog closes without a redraw while this holds
 function viewSig() { return `${S.rev}|${S.compare.join(",")}|${JSON.stringify(S.decks)}|${editor.me?.login || ""}|${document.documentElement.dataset.theme}`; }
