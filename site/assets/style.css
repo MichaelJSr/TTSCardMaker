@@ -659,8 +659,8 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 .bal-line { margin: 0 0 8px; font-size: 14px; }
 .bal-vs { max-width: 460px; font-size: 13px; } .bal-vs td, .bal-vs th { padding: 4px 8px; }
 .related .table-wrap:has(.bal-vs) { max-height: none; }
-.bal-trend { display: flex; align-items: center; gap: 10px; margin: 8px 0 0; font-size: 13px; }
-.spark { width: 240px; height: auto; overflow: visible; } .spark text { fill: var(--ink); font-size: 11.5px; font-weight: 600; } .spark .hit { fill: transparent; }
+.bal-trend { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 8px 0 0; font-size: 13px; }   /* narrow: the sparkline under its label */
+.spark { width: 240px; max-width: 100%; height: auto; overflow: visible; } .spark text { fill: var(--ink); font-size: 11.5px; font-weight: 600; } .spark .hit { fill: transparent; }
 ol.bal-changes { list-style: none; padding: 0; margin: 6px 0; }
 .bal-changes li { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 10px; border-left: 2px solid var(--border-strong); padding: 4px 0 4px 12px; margin: 8px 0; font-size: 14px; }
 .bal-changes .when { color: var(--muted); font-size: 13px; } .bal-changes .badge { font-size: 11px; }
@@ -671,7 +671,7 @@ ol.bal-changes { list-style: none; padding: 0; margin: 6px 0; }
 /* ---- changes / compare ---- */
 .feed .item { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--grid); }
 .feed img { width: 64px; border-radius: 6px; cursor: pointer; }
-.compare { display: grid; grid-template-columns: repeat(var(--n, 2), minmax(220px, 1fr)); gap: 14px; overflow-x: auto; }
+.compare { display: grid; grid-template-columns: repeat(var(--n, 2), minmax(min(220px, calc((100% - 14px) / 2)), 1fr)); gap: 14px; overflow-x: auto; }   /* phones: two cards side by side */
 .compare .col img { width: 100%; border-radius: 10px; }
 .diff-up { color: var(--good); } .diff-down { color: var(--danger); }
 /* the Changes page's category tabs: a row across its top, the chosen one underlined */
