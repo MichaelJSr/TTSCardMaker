@@ -331,17 +331,28 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     and bakes each in process, the same bake and bytes, with no setup. A press goes to it only when named: the dispatch
     adds `"lane": "<run id>-<blob sha>"`, the run that handed over the editor's newest result while it should still be
     up (preview.js `laneOf`). The press itself (`request\ncard\nedit`, the input strings, UTF-8) goes as a git blob
-    the client posts beside the dispatch (`POST .../git/blobs`, base64; `laneBlob` computes its sha first; no ref, so
-    no push and no Discord post): GitHub cuts run titles at 512 characters, so only the sha rides in the run-name
-    (`Card preview <request> lane <lane>`, under 150). The lane reads the blob (a 404 tried for 5 s), checks its sha and
-    request, and takes the press; a blob that never comes ends it, and the press stays cold. A blob post that fails
-    names no lane again on that page. Its hand-over is `card-preview-<request>` in the lane's run, the
-    same zip as `card-preview`, with `run` the press's own run. Every press is still dispatched, baked cold and
-    published as ever. The client shows whichever hand-over comes first. A 422 with `lane` dispatches again without it.
-    A press's run starts no lane of its own when its named lane handed it over. A press on a newer commit of the card
-    repo (a push since the lane's) is baked there: the lane fetches that commit's trees and follows it when
-    `MDW/Fonts`, `card-preview.yml` and `.github/actions` are the same there. A lane ends at a newer press of its
-    editor it doesn't take; that press's run is the next lane.
+    the client posts beside the dispatch (`POST .../git/blobs`, base64; `laneBlob` computes its sha first): GitHub
+    cuts run titles at 512 characters, so only the sha rides in the run-name (`Card preview <request> lane <lane>`,
+    under 150). Beside both the client rings the lane's doorbell: `POST .../git/refs` with
+    `refs/preview-lane/<lane>/<request>-<blob sha>` (`laneBell`) at the lane's commit (`laneHead`: the `base.commit` of
+    a result that run handed over, kept as the entry's `fromHead`; an object the repo has, so it waits for nothing). A
+    ref outside refs/heads and refs/tags starts no workflow (every push trigger is `branches: [main]`) and no ls-remote
+    here names it. The lane lists `git/matching-refs/preview-lane/<its run id>/` beside its runs (both every 0.3 s,
+    If-None-Match) and takes a rung press at once, where a new run shows in GitHub's runs lists 2-6 s after it is made
+    (by then a fresh runner has often started that press's cold job); it reads the card repo's main in place of the
+    run's `head_sha`, and a request rung twice is none (a ref doesn't say who made it: the run's title still does). A
+    press on a newer commit of the card repo (a push since the lane's) is baked there: the lane fetches that commit's
+    trees and follows it when `MDW/Fonts`, `card-preview.yml` and `.github/actions` are the same there. The
+    client deletes the ref once the lane's hand-over is in (and when it names no lane after all); the press's run's
+    publish job deletes it too (`Doorbell`). A refused ref rings no more on that page; the run-name still names the
+    lane. The lane reads the blob (a 404 tried for 5 s), checks its sha and request, and takes the press; a blob that
+    never comes ends it, and the press stays cold. A blob post that fails names no lane again on that page. Its
+    hand-over is `card-preview-<request>` in the lane's run, the same zip as `card-preview`, with `run` the press's own
+    run (none for a rung press: its run isn't listed yet). Every press is still dispatched, baked cold and published as
+    ever. The client shows whichever hand-over comes first, looking for the lane's from 2 s after the press. A 422 with
+    `lane` dispatches again without it. A press's run starts no lane of its own when its named lane handed it over; a
+    rung press's run, listed later, is served. A lane ends at a newer press of its editor it doesn't take; that press's
+    run is the next lane.
   - The image, once result.json says `image` (`files.webp`; `files.before`: the card before the edit, for the Diff):
     `https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/previews/previews/<request>/preview.webp` (public, CORS
     `*`; the path is new per request, so the cache never serves an older one; raw serves PNGs as `image/png`, WebP's
