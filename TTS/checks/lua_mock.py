@@ -9,7 +9,7 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel (a search lists the pages its words name first) and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food", a series
+rulebook panel (a search lists the pages its words name first, then those with them as whole words, then the rest) and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food", a series
 word's start, every name typed with or without its punctuation listed first) on the
 website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or pinned to the commit of the Rulebooks bag's
 PDF, as AutoCroissant tts_save writes it into the save; the seated
@@ -1254,17 +1254,22 @@ def main():
     listed = [ui.text(f"Red_rb_g{i}") for i in range(1, slots + 1) if ui.on(f"Red_rb_g{i}")]
     check(ui.on("Red_rb") and len(chapters) <= slots and len(listed) == len(chapters),
           f"Contents: {len(listed)} of {len(chapters)} chapters listed ({slots} slots)")
+    whole = lambda x, t: len(x) == 1 or re.search(rf"(?<![a-z0-9]){re.escape(x)}(?![a-z0-9])", t)   # no letter or digit beside it
     def search(query):
         words = query.lower().replace("(", " ").replace(")", " ").split()       # "(1CD)" finds the drawn 1CD
         hits = [i for i, p in enumerate(pages) if words and all(x in (p.get("t") or "").lower() for x in words)]
-        return sorted(hits, key=lambda i: not all(x in (pages[i].get("name") or "").lower() for x in words))   # named first
-    for query in ("stall", "true damage", "(1CD)", "(1cd) 50%", "zzqqxx", "items", "Status Effects"):
+        named = lambda i: all(re.search(rf"(?<![a-z0-9]){re.escape(x)}", (pages[i].get("name") or "").lower()) for x in words)
+        return sorted(hits, key=lambda i: (not named(i), not all(whole(x, (pages[i].get("t") or "").lower()) for x in words)))
+    for query in ("stall", "true damage", "(1CD)", "(1cd) 50%", "zzqqxx", "items", "Status Effects", "(OS)", "(Action)"):
         w.call("rulebookSearch", red, query)
         hits = search(query)
         listed = [int(ui.text(f"Red_rb_g{i}").split()[1]) - 1 for i in range(1, slots + 1) if ui.on(f"Red_rb_g{i}")]
         title = ui.values.get("Red_rb_title")
         check(listed == hits[:slots] and (title == "Nothing found") == (not hits) and ("+" in (title or "")) == (len(hits) >= slots),
               f"search {query!r}: pages {[i + 1 for i in listed]} ({title})")
+        if query == "(OS)":
+            snip = ui.text("Red_rb_g1").split(":  ", 1)[-1].lower()
+            check(whole("os", snip), f"search '(OS)': the snippet shows OS, not 'most' ({snip!r})")
         if hits and query == "stall":
             w.log.clear()
             w.call("rulebookGo", red, None, "Red_rb_g1")
