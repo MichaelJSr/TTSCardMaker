@@ -1521,8 +1521,10 @@ def history_change(ch):
         row["types"] = {"add": list(ch["types"].get("add") or []), "drop": list(ch["types"].get("drop") or [])}
     if isinstance(ch.get("name"), list) and len(ch["name"]) == 2:
         row["name"] = ch["name"]
-    if ch.get("ability_change") == "changed":
+    if ch.get("ability_change") in ("changed", "removed"):
         row["words"] = True
+    if ch.get("ability_change") == "removed":
+        row["gone"] = True                        # a blank ability box after a text (owner 11-17)
     return row
 
 

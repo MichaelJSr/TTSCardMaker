@@ -1145,7 +1145,8 @@ function earlyVersion(c, vs, i) {
   const then = v.fields?.ability;
   return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}</figcaption></figure>
       <figure>${pic(cur, `${c.name}, current version`)}<figcaption>Current<br><span class="muted">${cur.early ? caption(cur) : `${date(cur.ts)}${commitAfter(S.versions.repo, cur.sha, `Commit for the ${date(cur.ts)} image version`, cur.path)}`}</span></figcaption></figure></div>
-      ${then && c.ability && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
+      ${then && c.ability && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>`
+        : then === "" && c.ability ? `<div class="ver-text muted">No ability then</div>` : ""}`;
 }
 // ---- revert (editors): a History or Image versions "Revert to this version", the card's files as they were at that
 // version's commit (edit.js revertCard). A picture-only duplicate's texts are its original's PSD's: no Revert there

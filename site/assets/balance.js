@@ -240,7 +240,7 @@ export function changeParts(r) {
   if (r.types) parts.push(`<b>Types:</b> ${[...r.types.add.map(t => `+${t.replace(/_/g, " ")}`), ...r.types.drop.map(t => `−${t.replace(/_/g, " ")}`)].map(esc).join(", ")}`);
   if (r.series) parts.push(`<b>Series:</b> ${esc(r.series[0] || "none")} → ${esc(r.series[1] || "none")}`);
   if (r.tags) parts.push(`<b>Timing tags:</b> ${r.tags.map(([a, b]) => `${runHtml(a)} → ${runHtml(b)}`).join(", ")}`);
-  if (r.words) parts.push(`<b>Ability reworded</b>`);
+  if (r.words) parts.push(r.gone ? `<b>Ability removed</b>` : `<b>Ability reworded</b>`);
   return parts;
 }
 

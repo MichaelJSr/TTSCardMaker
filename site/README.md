@@ -46,9 +46,10 @@ text or image, links its commit when it is known), and the artwork sources when 
 (`HISTORY_DIR`: the `history` branch, AutoCroissant `commands/discord_preview.py`), the versions from before this repo
 follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"; the first repo's "first
 repo") and Discord's (date and channel, never a poster or message); each compares
-with the current card like the others (its own sure ability as "Text then"), with no link and no Revert, and their
-changes (and the update changelogs' facts, as data only, each once: a fact its version also shows is that version's
-change) join Recorded changes and the balance charts; a Discord or changelog row is always before the
+with the current card like the others (its own sure ability as "Text then", a blank ability box as "No ability
+then"), with no link and no Revert, and their changes (and the update changelogs' facts, as data only, each once: a
+fact its version also shows is that version's change; a blank box after a text "Ability removed") join Recorded
+changes and the balance charts; a Discord or changelog row is always before the
 card's first version here. A Morgue card from `MDW/The Morgue` with Discord pictures lists them after its PNG's newest
 version (the current one they compare with; nothing to revert). The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
