@@ -1,0 +1,63 @@
+{
+ "v": 2,
+ "request": "probe-bk9cqq23cgy2",
+ "card": "Mini Doomer",
+ "path": "Auxiliary/Minions/Mini_Doomer.psd",
+ "png": "Auxiliary/Minions/Mini_Doomer.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "d6374aa43b85c567c5fe70256bfb239555f12beb",
+  "psd_blob": "3973c05aa4226ee26bb7015e81a39845a934546a",
+  "png_blob": "26e0414988e2e04cb4465be26cd9389333247dfa"
+ },
+ "edit": {
+  "ability": "Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the f"
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "baked"
+ },
+ "reason": "ability",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Has stats equal to the base stats -2 of the creature that summoned it. \u0003(BOT) Destroy this creature.",
+   "new": "Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the field, then heal 1 HP. Deal 2 damage to every creature on the f"
+  }
+ ],
+ "notes": [
+  "ability: the new text prints past the old text onto the design below it (240360 px, 'Clip Main Image to this'); check the card"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.11,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  237,
+  1186,
+  2343
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.avif",
+  "before": "before.avif"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/44296504002",
+ "took_s": 9.5,
+ "at": "2026-11-18T11:38:36Z",
+ "variant": null,
+ "parts": {},
+ "size": [
+  1200,
+  2400
+ ]
+}
