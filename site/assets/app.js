@@ -1172,11 +1172,18 @@ function pinVersion(c, i) {
     if (c.hv && !c.history) loadHistory().then(again, () => {});
   }
   verBase = was === i ? null : { id: c.id, i };
-  const slot = $("#versions-slot"), open = versionsOpen(c.id);
-  if (slot) slot.innerHTML = versionsHtml(c, open);
+  const vs = versionList(c), base = verBase ? i : -1;     // marked in place: the minor list, the scroll, the focus stay
+  for (const row of $$(".ver-row", modal)) {
+    const item = $(".ver-item", row), pin = $(".ver-pin", row), k = +item.dataset.i, on = k === base;
+    row.classList.toggle("ver-base", on);
+    $(".ver-base-tag", item)?.remove();
+    if (on) $(".when", item).insertAdjacentHTML("beforeend", ` <span class="fact ver-base-tag">base</span>`);
+    const fresh = new DOMParser().parseFromString(pinButton(vs[k], k, on), "text/html").body.firstChild;
+    for (const name of ["aria-pressed", "aria-label", "data-tip"]) pin.setAttribute(name, fresh.getAttribute(name));
+  }
   const now = picked ? +picked.dataset.i : -1;
   if (now >= 0 && (!verBase || now !== i)) showVersion(c, now);
-  $(`.ver-pin[data-i="${i}"]`, modal)?.focus({ preventScroll: true });
+  else if (now < 0 && $("#ver-compare")) $("#ver-compare").innerHTML = `<p class="muted">${verBase ? `Base: ${esc(versionWhen(vs[i]))}. Pick a version to compare with it (↑ ↓).` : "Pick a version to compare (↑ ↓). Pin one (right-click, long-press or its pin) to compare others with it."}</p>`;
   srStatus.textContent = verBase ? `Pinned the ${versionWhen(versionList(c)[i])} version: picked versions are compared with it.` : "Unpinned: picked versions are compared with the current card.";
 }
 const ITEM_KINDS = new Set(["equip", "fragile equip", "fragile_equip", "active", "heal", "food", "support", "attack", "infliction", "counter", "negation", "deploy", "offense", "protective", "nme"]);   // an item's kinds: no timeline reads them (AutoCroissant discord_chain ITEM_KINDS)
