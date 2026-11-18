@@ -92,8 +92,8 @@ function heatTable(head, rows, { shade = null, all = false, href = () => null } 
 }
 
 // ---- stat distributions: page 0 is 0–10, page k is 10k+1 … 10k+10; one y scale per stat, counts over pages above 0 ---
-/** values -> Map(value, cards): one pass */
-export const countValues = (cards, k) => { const m = new Map(); for (const c of cards) { const v = c[k]; if (v != null) m.set(v, (m.get(v) || 0) + 1); } return m; };
+/** values -> Map(value, cards): a card once at each of its creatures' values (as the range filter meets any creature) */
+export const countValues = (cards, k) => { const m = new Map(); for (const c of cards) for (const v of new Set((c.creatures?.length ? c.creatures : [c]).map(x => x[k]))) if (v != null) m.set(v, (m.get(v) || 0) + 1); return m; };
 /** the pages holding a value: 0 always */
 export const distPages = counts => [...new Set([0, ...[...counts.keys()].filter(v => v > 10).map(v => Math.ceil((v - 10) / 10))])].sort((a, b) => a - b);
 export const pageRange = k => (k ? [10 * k + 1, 10 * k + 10] : [0, 10]);
@@ -370,7 +370,7 @@ export function renderStats(root, ctx, params) {
     });
     const values = [...new Set([...Array.from({ length: 11 }, (_, i) => i), ...dist.flatMap(d => [...d.counts.keys()].filter(v => v > 10))])].sort((a, b) => a - b);
     charts.push(card("dist", "Stat distributions", "Creatures and minions per value.", `<div class="dist-grid">${dist.map(distPanel).join("")}</div>`,
-      table(["Value", ...keys.map(([, l]) => l)], values.map(v => [String(v), ...dist.map(d => d.counts.get(v) || 0)])), { wide: true }));
+      table(["Value", ...keys.map(([, l]) => l)], values.map(v => [String(v), ...dist.map(d => d.counts.get(v) || 0)])), { wide: true, tip: "A card with several creatures counts once at each of their values" }));
 
     // 6 power outliers (emphasis scatter)
     const complete = creatures.filter(c => c.stars && [c.hp, c.def, c.atk, c.spd].every(v => v != null));
