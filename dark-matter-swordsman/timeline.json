@@ -1,0 +1,804 @@
+{
+ "card": "dark-matter-swordsman",
+ "key": "Dark Matter Swordsman",
+ "name": "Dark Matter Swordsman",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f2e13dc0fcf",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "field": "def",
+    "by": -1,
+    "unit": "bars"
+   }
+  },
+  {
+   "id": "D-P-763dec287e2b",
+   "kind": "discord",
+   "date": "2020-07-22T02:52:41+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-763dec287e2b.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Swordsman attacks an opponent's creature you can activate this ability before the attack or after the attack; Swordsman gains the ability of the attack target. You can also gain the ability of a teammate in exchange for not attacking or defending this turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 390,
+   "h": 789
+  },
+  {
+   "id": "F-fd024581531",
+   "kind": "text",
+   "date": "2020-08-04T18:49:27+00:00",
+   "day": "2020-08-04",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "hp",
+    "from": 5,
+    "to": 4,
+    "unit": "points"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-b4d8f03da07c"
+  },
+  {
+   "id": "D-P-b4d8f03da07c",
+   "kind": "discord",
+   "date": "2020-08-04T18:57:29+00:00",
+   "day": "2020-08-04",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-b4d8f03da07c.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an opponent's creature you can activate this ability before the attack or after the attack; this card gains the ability of the attack target. You can also gain the ability of a teammate in exchange for not attacking or defending this turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "darkmatter"
+     ],
+     "drop": [
+      "dark"
+     ]
+    },
+    "stats": [
+     {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 5 -> 4"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "F-fbfac8743b2",
+   "kind": "text",
+   "date": "2021-08-04T21:31:06+00:00",
+   "day": "2021-08-04",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-8b598c577b38",
+   "kind": "discord",
+   "date": "2021-08-11T19:53:41+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-8b598c577b38.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an opponent's creature you can activate this ability before or after the attack; this card gains the ability of the attack target. This card can also use an action to gain the ability of a teammate. (Cannot gain the abilities of 5 star creatures)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "D-P-fbcbbb694aab",
+   "kind": "discord",
+   "date": "2021-12-15T11:15:23+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-fbcbbb694aab.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an opponent's creature you can activate this ability before or after the attack; this card gains the ability of the attack target. This card can also use an action to gain the ability of a teammate. (Cannot gain the abilities of 5 star creatures)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-5b0b5fd2d63b.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an opponent's creature you can activate this ability before or after the attack; this card gains the ability of the attack target. This card can also use an action to gain the ability of a teammate. (Cannot gain the abilities of 5 star creatures)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-70a5c877640e.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this card gains the ability of the attack target. This card can also use an action to gain the ability of a teammate. (Cannot gain the abilities of 5 star creatures)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-386bdb5b1345:Cards/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-04-06T23:48:36+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Card to Creature lingo kriby cards",
+   "repo": "first",
+   "image": "O-f506f1c519e7.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this creature gains the ability of the attack target. This creature can also use an action to gain the ability of a teammate. (Cannot gain the abilities of 5 star creatures)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-f506f1c519e7.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this creature gains the ability of the attack target. This creature can also use an action to gain the ability of a teammate. (Cannot gain the abilities of 5 star creatures)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-f506f1c519e7.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this creature gains the ability of the attack target. This creature can also use an action to gain the ability of a teammate. (Cannot gain the abilities of 5 star creatures)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c35b370ae908:Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-04-25T03:03:39+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Mantis Lords Redesign",
+   "image": "O-414c35ed14d5.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this creature gains the ability of the attack target. \nThis creature can also use an action to gain the ability of a teammate. (Cannot gain the abilities of 5 star creatures)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-dd7a47e48a1f.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this creature gains the ability of the attack target.\nThis creature can also use an action to gain the ability of a teammate. \n(Cannot gain the abilities of 5 star creatures)\nCan only have 1 copied ability at a time, copying a new ability will remove the current one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "unknown"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-b16a7db4f0eb.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this creature gains the ability of the attack target.\nThis creature can also use an action to gain the ability of a teammate. \n(Cannot gain the abilities of 5 star creatures)\nCan only have 1 copied ability at a time, copying a new ability will remove the current one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-cf6aa822357a.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this creature gains the ability of the attack target.\nThis creature can also use an action to gain the ability of a teammate. \n(Cannot gain the abilities of 5 star creatures)\nCan only have 1 copied ability at a time, copying a new ability will remove the current one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-d26dba264415.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Matter Swordsman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks an opponent's creature you can activate this ability before or after the attack; this creature gains the ability of the attack target.\nThis creature can also use an action to gain the ability of a teammate. \n(Cannot gain the abilities of 5 star creatures)\nCan only have 1 copied ability at a time, copying a new ability will remove the current one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

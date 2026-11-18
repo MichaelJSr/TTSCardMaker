@@ -1,0 +1,967 @@
+{
+ "card": "nme-salesman",
+ "key": "NME Salesman",
+ "name": "NME Salesman",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fbff82585dc",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f7d95fd208d",
+   "kind": "text",
+   "date": "2019-05-14T01:49:17+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-939d7d64b824",
+   "kind": "discord",
+   "date": "2020-07-22T02:55:18+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-939d7d64b824.webp",
+   "fields": {
+    "name": {
+     "value": "NME Salesman",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (AAT) either Pay 1 point to summon Evil warrior (3/4/6/5), or on odd turns, Pay 2 points summon Ice dragon: (5/4/5/5) Whoever attacks/is attacked by Ice Dragon Is chilled, or on even turns pay 3 points to summon Masher: (6/6/6/4) Masher is immune to counter damage. Cannot be negated. Minions do not die if salesman dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 3,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 385,
+   "h": 788
+  },
+  {
+   "id": "D-P-4125e37653ad",
+   "kind": "discord",
+   "date": "2020-07-26T01:15:26+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-4125e37653ad.webp",
+   "fields": {
+    "name": {
+     "value": "NME Salesman",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (AAT) (Activates before items can hit NME) either Pay 1 point to summon Bugsy, or on odd turns Pay 2 points to summon Ice dragon, or on even turns pay 3 points to summon Masher. Cannot be negated. Minions do not die if salesman dies, and stay to protect the next creature",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 3,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "F-f13def248cc",
+   "kind": "text",
+   "date": "2020-08-09T08:52:20+00:00",
+   "day": "2020-08-09",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-4c9d36cae905",
+   "kind": "discord",
+   "date": "2020-08-09T23:36:42+00:00",
+   "day": "2020-08-09",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-4c9d36cae905.webp",
+   "fields": {
+    "name": {
+     "value": "NME Salesman",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (AAT) (Activates before items can hit NME) either Pay 1 point to summon Bugsy, or on odd turns Pay 2 points to summon Ice dragon, or on even turns pay 3 points to summon Masher. This ability cannot be negated or copied. Minions do not die if salesman dies, and stay to protect the next creature",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 3,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "F-f7d61e6d007",
+   "kind": "text",
+   "date": "2020-08-10T06:30:40+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f5015d658f1",
+   "kind": "text",
+   "date": "2020-08-10T10:21:15+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "spd",
+    "from": 6,
+    "to": 5,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-692337c5c336"
+  },
+  {
+   "id": "F-f8dfb6a1630",
+   "kind": "text",
+   "date": "2020-08-10T10:21:15+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "def",
+    "from": 3,
+    "to": 2,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-692337c5c336"
+  },
+  {
+   "id": "F-fca54f28485",
+   "kind": "text",
+   "date": "2020-08-10T10:21:15+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "hp",
+    "from": 2,
+    "to": 3,
+    "unit": "points"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-692337c5c336"
+  },
+  {
+   "id": "F-ff1a4ff7077",
+   "kind": "text",
+   "date": "2020-08-10T10:21:15+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-692337c5c336",
+   "kind": "discord",
+   "date": "2020-08-13T10:33:33+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-692337c5c336.webp",
+   "fields": {
+    "name": {
+     "value": "NME Salesman",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (AAT) (Activates before items can hit NME) either pay 1 point to summon Bugsy, pay 2 points to summon Ice dragon, or (EOT) pay 3 points to summon Masher. This ability cannot be negated or copied. If Salesman dies, the minions stay alive to protect the next creature",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 2,
+      "def": 3,
+      "atk": 3,
+      "spd": 6
+     },
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [
+     "HP 2 -> 3"
+    ],
+    "nerfs": [
+     "DEF 3 -> 2",
+     "SPD 6 -> 5"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "D-P-7f25f235a533",
+   "kind": "discord",
+   "date": "2021-12-15T08:42:53+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-7f25f235a533.webp",
+   "fields": {
+    "name": {
+     "value": "NME Salesman",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) (Activates before items can hit NME) either pay 1 point to summon Bugsy, pay 2 points to summon Ice dragon, or (EOT) pay 3 points to summon Masher. This ability cannot be negated or copied. If Salesman dies, the minions stay alive to protect the next creature",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "D-P-04f29c3e88bc",
+   "kind": "discord",
+   "date": "2021-12-16T12:17:53+00:00",
+   "day": "2021-12-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-04f29c3e88bc.webp",
+   "fields": {
+    "name": {
+     "value": "NME Salesman",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) (Activates before items can hit NME) either pay 1 point to summon Bugsy, pay 2 points to summon Ice dragon, or (EOT) pay 3 points to summon Masher. This ability cannot be negated or copied. If Salesman dies, the minions stay alive to protect the next creature",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "F-fc3ef2beba9",
+   "kind": "text",
+   "date": "2022-01-28T13:01:32+00:00",
+   "day": "2022-01-28",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-4fb30ce317fa.webp",
+   "fields": {
+    "name": {
+     "value": "NME Salesman",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) (Activates before items can hit NME) either pay 1 point to summon Bugsy, pay 2 points to summon Ice dragon, or (EOT) pay 3 points to summon Masher. This ability cannot be negated or copied. If Salesman dies, the minions stay alive to protect the next creature",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-456c835bf8ff.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is at full health and were to die from an attack, it will survive with 0.5 HP instead. (OPT) (AAT) (Activates before items can hit This card) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or 3 points to summon Masher(OPG). This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-13242de0e1dc:Cards/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-04-02T02:00:37+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Deleted unused assets from the rest of the kirby cards",
+   "repo": "first",
+   "image": "O-c5c312ead076.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is at full health and were to die from an attack, it will survive with 0.5 HP instead. (OPT) (AAT) (Activates before items can hit This card) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or 3 points to summon Masher(OPG). This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-386bdb5b1345:Cards/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-04-06T23:48:36+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Card to Creature lingo kriby cards",
+   "repo": "first",
+   "image": "O-aa1324035537.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead. (OPT) (AAT) (Activates before items can hit This creature) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or 3 points to summon Masher(OPG). This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8bfd95cf3494:Cards/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-04-08T22:12:00+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Nve text change",
+   "repo": "first",
+   "image": "O-a0f768ae3be9.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\n(OPGT) (Activates before items can hit this creature) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or 3 points to summon Masher (OPG). \nThis ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-a0f768ae3be9.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\n(OPGT) (Activates before items can hit this creature) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or 3 points to summon Masher (OPG). \nThis ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-a0f768ae3be9.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\n(OPGT) (Activates before items can hit this creature) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or 3 points to summon Masher (OPG). \nThis ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-1f309324d21c.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\n(OPGT) (Activates before items can hit this creature) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or 3 points to summon Masher (OPG). \nThis ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-75443b2188db:Creatures/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-10-22T20:37:13+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "a",
+   "image": "O-706c8e957401.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) (Activates before items can hit this creature) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or (OPG) 3 points to summon Masher.\nAt least 3 lanes' turns must end before another minion can be summoned.\nIf this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\nThis ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/4 Stars/NME_Salesman.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-a4f2cf573241.webp",
+   "fields": {
+    "name": {
+     "value": "NME SALESMAN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) (Activates before items can hit this creature) either pay 1 point to summon Bugzzy, 2 points to summon Ice dragon, or (OPG) 3 points to summon Masher.\nAt least 3 lanes' turns must end before another minion can be summoned.\nIf this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\nThis ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

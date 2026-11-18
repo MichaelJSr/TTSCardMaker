@@ -1,0 +1,56 @@
+{
+ "card": "teleport",
+ "key": "Teleport",
+ "name": "Teleport",
+ "morgue": "candidate",
+ "first": {
+  "date": "2023-10-05T15:40:02+00:00",
+  "day": "2023-10-05",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-fea1e3aba4f1",
+   "kind": "discord",
+   "date": "2023-10-05T15:40:02+00:00",
+   "day": "2023-10-05",
+   "badge": "Discord",
+   "image": "P-fea1e3aba4f1.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c206b713bbf0:Items/Support/2 Stars/Teleport.png",
+   "kind": "old repo",
+   "date": "2023-10-05T17:23:03+00:00",
+   "day": "2023-10-05",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "teleport and tainted lost",
+   "image": "O-4f2e159776a0.webp",
+   "fields": {
+    "name": {
+     "value": "Teleport",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "kind_of": "played",
+ "git_file": "old repo"
+}

@@ -1,0 +1,317 @@
+{
+ "card": "burdened",
+ "key": "Burdened",
+ "name": "Burdened",
+ "kind": "debuff",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fd7e3bdef57",
+   "kind": "text",
+   "date": "2020-08-14T00:28:07+00:00",
+   "day": "2020-08-14",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-f8be5573e17f",
+   "kind": "discord",
+   "date": "2022-01-16T07:09:26+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-f8be5573e17f.webp",
+   "fields": {
+    "name": {
+     "value": "Burdened",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 SPD, 2 turns",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "D-P-56b524f5f3cb",
+   "kind": "discord",
+   "date": "2022-01-25T09:20:09+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-56b524f5f3cb.webp",
+   "fields": {
+    "name": {
+     "value": "Burdened",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 SPD, 2 turns, can't affect [panda]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Status Effects/Debuffs/3 Stars/Burdened.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-cfd1639059d0.webp",
+   "fields": {
+    "name": {
+     "value": "Burdened",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 SPD, 2 turns, can’t affect [panda]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-b316785629cd:Auxillary/Status Effects/Debuffs/1 Stars/Burdened.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:15:05+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First round of redoing buffs and debuffs",
+   "repo": "first",
+   "image": "O-d492f7bb029b.webp",
+   "fields": {
+    "name": {
+     "value": "Burdened",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     1
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-df4782564913:Auxillary/Status Effects/Debuffs/1 Stars/Burdened.png",
+   "kind": "old repo",
+   "date": "2023-04-05T05:14:58+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "added arrows to the t1 debuffs",
+   "repo": "first",
+   "image": "O-0766148833bc.webp",
+   "fields": {
+    "name": {
+     "value": "Burdened",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "debuffstack"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Status Effects/Debuffs/1 Stars/Burdened.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-0766148833bc.webp",
+   "fields": {
+    "name": {
+     "value": "Burdened",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/1 Stars/Burdened.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "image": "O-17eb7e39a388.webp",
+   "fields": {
+    "name": {
+     "value": "Burdened",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 SPD",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2020-08-14",
+  "sort": "2020-08-14",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "card": "shattered-omori",
+ "key": "Shattered Omori",
+ "name": "Shattered OMORI",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-7bf2565e6cb0",
+   "kind": "discord",
+   "date": "2025-03-12T08:11:54+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7bf2565e6cb0.webp",
+   "fields": {
+    "name": {
+     "value": "Shattered OMORI",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Mark an enemy creature. If this creature is attacked by the marked enemy, this creature instantly dies, but inflicts afraid for 3 turns and resentful glare indefinitely on that creature. If the marked enemy dies, you must choose a new enemy to mark.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-04-04T05:04:04+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-12",
+  "sort": "2025-03-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

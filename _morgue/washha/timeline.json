@@ -1,0 +1,29 @@
+{
+ "card": "washha",
+ "key": "Washha",
+ "name": "Washha",
+ "morgue": "candidate",
+ "first": {
+  "date": "2023-05-05T23:12:16.949000+00:00",
+  "day": "2023-05-05",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-44df5f84e7d0",
+   "kind": "discord",
+   "date": "2023-05-05T23:12:16.949000+00:00",
+   "day": "2023-05-05",
+   "badge": "Discord",
+   "image": "P-44df5f84e7d0.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

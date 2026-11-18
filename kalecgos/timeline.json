@@ -1,0 +1,934 @@
+{
+ "card": "kalecgos",
+ "key": "Kalecgos",
+ "name": "Kalecgos",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1eaf9f2f1b99",
+   "kind": "discord",
+   "date": "2019-04-27T01:55:53+00:00",
+   "day": "2019-04-27",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-1eaf9f2f1b99.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict, at random, chill, smoldering, or deal 2 extra piercing damage. Once every 2 turns, a random enemy is transported into a \"mind realm\" for 2 turns. Inside the mind realm, there is a 5/3/4/4 corruptor enemy whose attacks inflict sickness. While in the mind realm, the enemy character cannot attack anything but the corruptor, nor can its ability affect anything outside the mind realm. If the corruptor is defeated the character within the mind realm is immediately ejected, and no more characters can enter the mind realm. If Kalecgos is defeated first he enters stasis, and any enemy can enter/exit the mind realm at will until the corruptor is defeated as well.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 5,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 375,
+   "h": 760
+  },
+  {
+   "id": "D-P-e476027d513f",
+   "kind": "discord",
+   "date": "2019-04-28T22:13:18+00:00",
+   "day": "2019-04-28",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-e476027d513f.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once every 2 turns, a random enemy is transported into a \"mind realm\" for 2 turns. Inside the mind realm, there is a 5/3/4/4 corruptor enemy whose attacks inflict sickness. Any character currently within the mind realm cannot interact with characters outside of it. If either Kalecgos or the corruptor is defeated, then the mind realm ceases to exist and any creature in it at the time gets ejected. Both Kalecgos and the corruptor must be defeated to earn points from this card.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 5,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 373,
+   "h": 757
+  },
+  {
+   "id": "D-P-2d58150d2f16",
+   "kind": "discord",
+   "date": "2019-05-10T04:58:31+00:00",
+   "day": "2019-05-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-2d58150d2f16.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once every 2 turns, a random enemy is transported into a \"mind realm\" for 2 turns. Inside the mind realm, there is a 5/4/4/4 corruptor enemy whose attacks inflict sickness. Any creature within the mind realm cannot interact with anything outside of it. If either Kalecgos, or the corruptor is defeated, the mind realm ceases to exist and all creatures currently within it are immediately ejected. Both Kalecgos and the corruptor must be defeated to earn points for this card.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 4,
+      "spd": 3
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 5,
+      "atk": 5,
+      "spd": 4
+     },
+     {
+      "hp": 5,
+      "def": 5,
+      "atk": 4,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 6 -> 5",
+     "ATK 5 -> 4",
+     "SPD 4 -> 3"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 591,
+   "h": 1200
+  },
+  {
+   "id": "D-P-9409dc923f98-c2",
+   "kind": "discord",
+   "date": "2019-05-11T23:23:01+00:00",
+   "day": "2019-05-11",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-9409dc923f98-c2.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once every 2 turns, a random enemy is transported into a \"mind realm\" for 2 turns. Inside the mind realm, there is a 5/4/4/4 corruptor enemy whose attacks inflict sickness. Any creature within the mind realm cannot interact with anything outside of it. If either Kalecgos, or the corruptor is defeated, the mind realm ceases to exist and all creatures currently within it are immediately ejected. Both Kalecgos and the corruptor must be defeated to earn points for this card.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 5,
+      "atk": 4,
+      "spd": 3
+     },
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 5 -> 6",
+     "DEF 5 -> 6",
+     "ATK 4 -> 5",
+     "SPD 3 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 315,
+   "h": 631
+  },
+  {
+   "id": "D-P-a84ef166144a-c2",
+   "kind": "discord",
+   "date": "2019-06-10T04:24:17+00:00",
+   "day": "2019-06-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-a84ef166144a-c2.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once every 2 turns, a random enemy is transported into a \"mind realm\" for 2 turns. Inside it, there is a 5/4/4/4 corruptor enemy whose attacks inflict sickness. Any creature within the mind realm cannot interact with anything outside of it. If either Kalecgos, or the corruptor is defeated, the mind realm ceases to exist and all creatures currently within it are immediately ejected. Both Kalecgos and the corruptor must be defeated to earn points for this card.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 312,
+   "h": 625
+  },
+  {
+   "id": "D-P-27ef061bdd7d",
+   "kind": "discord",
+   "date": "2020-07-18T12:42:40+00:00",
+   "day": "2020-07-18",
+   "badge": "Discord",
+   "channel": "update-01",
+   "image": "P-27ef061bdd7d.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once every 2 turns, a random enemy creature is transported into a \"mind realm\" alongside a 5/4/4/4 corrupter who's attacks inflict sickness. If a creature kills its corrupter, then it is ejected from the realm. Any creature within the realm cannot interact with anything outside of it. If Kalecgos dies, all creatures are ejected from the realm",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "D-P-cfabea8b3b1e",
+   "kind": "discord",
+   "date": "2020-07-22T02:56:59+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-cfabea8b3b1e.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once every 2 turns, a random enemy is transported into a \"mind realm\" for 2 turns. Inside it, there is a 5/4/4/4 corruptor enemy whose attacks inflict sickness. Any creature within the mind realm cannot interact with anything outside of it. If either Kalecgos, or the corruptor is defeated, the mind realm ceases to exist and all creatures currently within it are immediately ejected.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 386,
+   "h": 787
+  },
+  {
+   "id": "D-P-62c84a40326e",
+   "kind": "discord",
+   "date": "2020-07-26T00:43:50+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-62c84a40326e.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once every 2 turns, a random enemy creature is transported into a \"mind realm\" alongside a Corrupter. Any creatures within the realm take their turns before anything else and cannot interact with anything outside of it. If Kalecgos dies, all creatures are ejected from the realm",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "F-f9e3da92878",
+   "kind": "text",
+   "date": "2020-08-30T08:10:21+00:00",
+   "day": "2020-08-30",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-2cae7b62400e",
+   "kind": "discord",
+   "date": "2020-09-08T09:56:29+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-2cae7b62400e.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This card's first attack sends the target into the \"mind realm\" alongside a Corrupter. Any creatures within the realm take their turns before anything else and cannot interact with anything outside of it. If Kalecgos dies, all creatures are ejected from the realm",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "D-P-a8383bda7fd4",
+   "kind": "discord",
+   "date": "2021-11-22T10:20:01+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-a8383bda7fd4.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack sends the target into a mind realm that has a single corruptor minion in it. Any creatures within the mind realm take their turns before anything else and cannot interact with anything outside it. If Kalecgos dies, all creatures are ejected from the mind realm. If the corruptor dies, all creatures are ejected from the mind realm and Kalecgos's ability is negated.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 307,
+   "h": 629
+  },
+  {
+   "id": "D-P-d9ee7cd41f8c",
+   "kind": "discord",
+   "date": "2021-11-22T23:42:12+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d9ee7cd41f8c.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack sends the target into a mind realm that has a single corruptor minion in it. Any creatures within the mind realm take their turns before anything else and cannot interact with anything outside it. If Kalecgos dies, all creatures are ejected from the mind realm. If the corruptor dies, all creatures are ejected from the mind realm and Kalecgos's ability is negated.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 4 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 307,
+   "h": 629
+  },
+  {
+   "id": "F-fb403bf5f60",
+   "kind": "text",
+   "date": "2021-11-23T00:12:34+00:00",
+   "day": "2021-11-23",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-a4657ea53764",
+   "kind": "discord",
+   "date": "2022-01-16T03:34:35+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-a4657ea53764.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack sends the target into a mind realm that has a single corruptor minion in it. Any creatures within the mind realm take their turns before anything else and cannot interact with anything outside it. If Kalecgos dies, all creatures are ejected from the mind realm. If the corruptor dies, all creatures are ejected from the mind realm and Kalecgos's ability is negated.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 306,
+   "h": 627
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/World Of Warcraft/4 Stars/Kalecgos.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-1203ea8f3c83.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack sends the target into a mind realm that has a single corruptor minion in it. Any creatures within the mind realm take their turns before anything else and cannot interact with anything outside it. If Kalecgos dies, all creatures are ejected from the mind realm. If the corruptor dies, all creatures are ejected from the mind realm and Kalecgos's ability is negated.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 306,
+   "h": 627
+  },
+  {
+   "id": "O-257dc970a875:Cards/World Of Warcraft/4 Stars/Kalecgos.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-27efcda6d8c3.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack sends the target into a mind realm that has a single corruptor minion in it. Any creatures within the mind realm take their turns before anything else and cannot interact with anything outside it. If Kalecgos dies, all creatures are ejected from the mind realm. If the corruptor dies, all creatures are ejected from the mind realm and this creature’s ability is negated.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/World Of Warcraft/4 Stars/Kalecgos.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-27efcda6d8c3.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack sends the target into a mind realm that has a single corruptor minion in it. Any creatures within the mind realm take their turns before anything else and cannot interact with anything outside it. If Kalecgos dies, all creatures are ejected from the mind realm. If the corruptor dies, all creatures are ejected from the mind realm and this creature’s ability is negated.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/World Of Warcraft/4 Stars/Kalecgos.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-27efcda6d8c3.webp",
+   "fields": {
+    "name": {
+     "value": "Kalecgos",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack sends the target into a mind realm that has a single corruptor minion in it. Any creatures within the mind realm take their turns before anything else and cannot interact with anything outside it. If Kalecgos dies, all creatures are ejected from the mind realm. If the corruptor dies, all creatures are ejected from the mind realm and this creature’s ability is negated.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-04-27",
+  "sort": "2019-04-27",
+  "source": "discord",
+  "status": "same"
+ }
+}

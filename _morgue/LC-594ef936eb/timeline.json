@@ -1,0 +1,54 @@
+{
+ "card": "LC-594ef936eb",
+ "key": "Poison Incantation",
+ "name": "Poison Incantation",
+ "morgue": "mdw",
+ "first": {
+  "date": "2023-10-14T07:33:37.763000+00:00",
+  "day": "2023-10-14",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-594ef936ebbd",
+   "kind": "discord",
+   "date": "2023-10-14T07:33:37.763000+00:00",
+   "day": "2023-10-14",
+   "badge": "Discord",
+   "image": "P-594ef936ebbd.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-0d145c6e2e6f:Items/Offense/1 Stars/Poison_Incantation.png",
+   "kind": "old repo",
+   "date": "2023-10-14T08:19:48+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "item ideas",
+   "image": "O-6fb309ad28e3.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Incantation",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ]
+}

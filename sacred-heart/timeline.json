@@ -1,0 +1,103 @@
+{
+ "card": "sacred-heart",
+ "key": "Sacred Heart",
+ "name": "Sacred Heart",
+ "kind": "item",
+ "stop": {
+  "day": "2023-11-15",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-4f81c2782747",
+   "kind": "discord",
+   "date": "2023-11-15T03:35:36+00:00",
+   "day": "2023-11-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-4f81c2782747.webp",
+   "fields": {
+    "name": {
+     "value": "Sacred Heart",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 ATK +25% ATK",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-8c4aed96a4a3",
+   "kind": "discord",
+   "date": "2023-11-15T05:15:59+00:00",
+   "day": "2023-11-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8c4aed96a4a3.webp",
+   "fields": {
+    "name": {
+     "value": "Sacred Heart",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+ 50% ATK ATTACKS CAN HIT ANY FIELD AND IGNORE INTERCEPTS, BUT WILL NOT RECEIVE THE ATK BOOST IF THIS IS DONE.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-10T23:29:04+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-15",
+  "sort": "2023-11-15",
+  "source": "discord",
+  "status": "same"
+ }
+}

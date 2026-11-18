@@ -1,0 +1,844 @@
+{
+ "card": "landia",
+ "key": "Landia",
+ "name": "Landia",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f9d3b351e3f",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-16a47fa4dfb5",
+   "kind": "discord",
+   "date": "2020-07-22T02:57:31+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-16a47fa4dfb5.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. Once per turn (AAT) Landia can decrease attack by 4 to attack 3 times (these do not give smoldering). When Landia dies (you can kill Landia at any time) equip dragon mounts to your team's creatures that are currently on the field +2ATK and +20% SPD",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 396,
+   "h": 790
+  },
+  {
+   "id": "D-P-6c7d30fd6717",
+   "kind": "discord",
+   "date": "2020-07-25T12:56:56+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-6c7d30fd6717.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. (OPT)(AAT) Landia can decrease attack by 4 to attack 3 times (these do not give smoldering). When Landia dies (you can kill Landia (OYT)) equip Dragon Mounts to your team's creatures that are currently on the field",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 399,
+   "h": 791
+  },
+  {
+   "id": "D-P-99cbefbbeb34",
+   "kind": "discord",
+   "date": "2020-09-27T23:12:30+00:00",
+   "day": "2020-09-27",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-99cbefbbeb34.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. (OPT)(AAT) Landia can decrease attack by 4 to attack 3 times per action (these do not give smoldering). When Landia dies (you can kill Landia (OYT)) equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 396,
+   "h": 789
+  },
+  {
+   "id": "D-P-6db6b5af8265",
+   "kind": "discord",
+   "date": "2020-10-06T05:48:20+00:00",
+   "day": "2020-10-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-6db6b5af8265.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. (OPT)(AAT) Landia can decrease attack by 4 to attack 3 times per action (these do not give smoldering). When Landia dies (you can kill Landia (OYT)) equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 790
+  },
+  {
+   "id": "D-P-d37e1db0a47e",
+   "kind": "discord",
+   "date": "2020-10-06T06:15:01+00:00",
+   "day": "2020-10-06",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-d37e1db0a47e.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. (OPT) (AAT) Landia can decrease attack by 4 to attack 3 times per action (these do not give smoldering). When Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 6
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "SPD 6 -> 5"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 789
+  },
+  {
+   "id": "D-P-10cf557f4b75",
+   "kind": "discord",
+   "date": "2021-12-15T10:41:53+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-10cf557f4b75.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. (OPT) (AAT) Landia can decrease attack by 4 to attack 3 times per action (these do not give smoldering). When Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-dd1bfb38782f.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. (OPT) (AAT) Landia can decrease attack by 4 to attack 3 times per action (these do not give smoldering). When Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "O-32479ad32efa:Cards/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2023-04-13T07:33:44+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-62463bdec3d7.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. (OPGT) Landia can decrease attack by 4 to attack 3 times per action (these do not give smoldering). \nWhen Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e12f3bae271:Cards/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2023-04-16T23:31:53+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-1ec26329b72a.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give smoldering. (OPGT) Landia can decrease attack by 4 to attack 3 times per action (these do not give smoldering). \nWhen Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8ebbd6be396f:Cards/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2023-04-20T22:28:24+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugged through all pending updates",
+   "repo": "first",
+   "image": "O-cd432765cbdf.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give 2 turns of Smouldering. (OPGT) Landia can decrease attack by 4 to attack 3 times per action (these do not give Smouldering).\nWhen Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-cd432765cbdf.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give 2 turns of Smouldering. (OPGT) Landia can decrease attack by 4 to attack 3 times per action (these do not give Smouldering).\nWhen Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-cd432765cbdf.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give 2 turns of Smouldering. (OPGT) Landia can decrease attack by 4 to attack 3 times per action (these do not give Smouldering).\nWhen Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-269b7cceb938:Creatures/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:52:08+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-546e4b04d4aa.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give 2 turns of Smouldering. (OPGT) Landia can decrease attack by 4 to attack 3 times per action (these do not give Smouldering).\nWhen Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3518261d375b:Creatures/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-d126b820ea54.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give 2 turns of Smouldering. (OPGT) Landia can decrease attack by 4 to attack 3 times per action (these do not give Smouldering).\nWhen Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/5 Stars/Landia.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-c5476c025128.webp",
+   "fields": {
+    "name": {
+     "value": "Landia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks give 2 turns of Smouldering. (OPGT) Landia can decrease attack by 4 to attack 3 times per action (these do not give Smouldering).\nWhen Landia dies, equip Dragon Mounts to your team's creatures that are currently on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-03-22",
+  "sort": "2019-03-22",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

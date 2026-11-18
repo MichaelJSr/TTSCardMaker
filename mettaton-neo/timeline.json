@@ -1,0 +1,62 @@
+{
+ "card": "mettaton-neo",
+ "key": "Mettaton NEO",
+ "name": "Mettaton NEO",
+ "kind": "creatures",
+ "stop": {
+  "day": "2025-03-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "F-fa94580886e",
+   "kind": "text",
+   "date": "2020-07-28T08:59:29+00:00",
+   "day": "2020-07-28",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-ff4d0411019",
+   "kind": "text",
+   "date": "2020-09-12T03:39:43+00:00",
+   "day": "2020-09-12",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f9fdcc206a0",
+   "kind": "text",
+   "date": "2021-11-30T22:43:37+00:00",
+   "day": "2021-11-30",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f1054b7d273",
+   "kind": "text",
+   "date": "2022-01-25T09:00:30+00:00",
+   "day": "2022-01-25",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  }
+ ],
+ "created": {
+  "date": "2020-07-28",
+  "sort": "2020-07-28",
+  "source": "git",
+  "status": "owner"
+ }
+}

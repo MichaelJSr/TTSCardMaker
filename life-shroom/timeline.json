@@ -1,0 +1,302 @@
+{
+ "card": "life-shroom",
+ "key": "Life Shroom",
+ "name": "Life Shroom",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-95fec86de853-c3",
+   "kind": "discord",
+   "date": "2019-03-30T23:41:45+00:00",
+   "day": "2019-03-30",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-95fec86de853-c3.webp",
+   "fields": {
+    "name": {
+     "value": "Life Shroom",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip to a creature, When they are killed they are revived with 6 HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 280,
+   "h": 421
+  },
+  {
+   "id": "D-P-3be30a5b884a",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:06+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-3be30a5b884a.webp",
+   "fields": {
+    "name": {
+     "value": "Life Shroom",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip to a creature, When they are killed their current form is revived with 5 HP, and reset to their base stats",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 390,
+   "h": 615
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/3 Stars/Life_Shroom.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-e9074b5a5d0d.webp",
+   "fields": {
+    "name": {
+     "value": "Life Shroom",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip to a creature, When they are killed their current form is revived with 5 HP, and reset to their base stats.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 615
+  },
+  {
+   "id": "O-bd31b798dcd0:Items/Heal/3 Stars/Life_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-08T08:51:46+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "sfds",
+   "repo": "first",
+   "image": "O-56eed0e6b39a.webp",
+   "fields": {
+    "name": {
+     "value": "Life shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip to a creature, When they are killed their current form is revived with 5 HP, and reset to their base stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c9f2ee957c56:Items/Heal/3 Stars/Life_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-08T20:53:44+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "item standardization",
+   "repo": "first",
+   "image": "O-5d68b07e4215.webp",
+   "fields": {
+    "name": {
+     "value": "Life shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip to a creature, When they are killed their current form is revived with 5 HP, and reset to their base stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/3 Stars/Life_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-5d68b07e4215.webp",
+   "fields": {
+    "name": {
+     "value": "Life shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip to a creature, When they are killed their current form is revived with 5 HP, and reset to their base stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/3 Stars/Life_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-20df05c8a51f.webp",
+   "fields": {
+    "name": {
+     "value": "Life shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip to a creature, When they are killed their current form is revived with 5 HP, and reset to their base stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-60c362fee78c:Items/Heal/3 Stars/Life_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-10-24T21:43:59+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field items",
+   "image": "O-0d9e438e898b.webp",
+   "fields": {
+    "name": {
+     "value": "Life shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip to a creature, When they are killed their current form is revived with 5 HP, and reset to their base stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-30",
+  "sort": "2019-03-30",
+  "source": "discord",
+  "status": "same"
+ }
+}

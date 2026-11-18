@@ -1,0 +1,343 @@
+{
+ "card": "portal",
+ "key": "Portal",
+ "name": "Portal",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f0d9eca466e",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f54552c6800",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "field": "stars",
+    "to": 3
+   }
+  },
+  {
+   "id": "D-P-0c79b96780a6",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:14+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-0c79b96780a6.webp",
+   "fields": {
+    "name": {
+     "value": "Portal",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When an attack or item usage (lv 3 or lower) is declared you may redirect the damage and effects randomly to any other creature excluding the original target.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A-item",
+   "w": 388,
+   "h": 609
+  },
+  {
+   "id": "F-fc0c677dd61",
+   "kind": "text",
+   "date": "2020-09-12T03:48:09+00:00",
+   "day": "2020-09-12",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-901cd5bdc0e0",
+   "kind": "discord",
+   "date": "2020-09-17T03:27:41+00:00",
+   "day": "2020-09-17",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-901cd5bdc0e0.webp",
+   "fields": {
+    "name": {
+     "value": "Portal",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When an attack is declared you may redirect the damage and effects randomly to any other creature excluding the original target. This item cannot target attacks from 4 star items",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 390,
+   "h": 609
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/3 Stars/Portal.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-a15535ff5801.webp",
+   "fields": {
+    "name": {
+     "value": "Portal",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When an attack is declared you may redirect the damage and effects randomly to any other creature excluding the original target. This item cannot target attacks from 4 star items",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 609
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Offense/3 Stars/Portal.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-a15535ff5801.webp",
+   "fields": {
+    "name": {
+     "value": "Portal",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When an attack is declared you may redirect the damage and effects randomly to any other creature excluding the original target. This item cannot target attacks from 4 star items",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 390,
+   "h": 609
+  },
+  {
+   "id": "O-ce0145080ca0:Items/Offense/3 Stars/Portal.png",
+   "kind": "old repo",
+   "date": "2023-04-09T04:01:05+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-43579788e102.webp",
+   "fields": {
+    "name": {
+     "value": "PORTAL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May redirect an attacks damange and effects randomly to any other creature excluding the original target. \nThis item cannot target attacks from 4 star items.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-80766bae4ed2:Items/Offense/3 Stars/Portal.png",
+   "kind": "old repo",
+   "date": "2023-04-09T04:23:28+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "guesst and portsal",
+   "repo": "first",
+   "image": "O-70b3210429fa.webp",
+   "fields": {
+    "name": {
+     "value": "PORTAL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May redirect an attacks damage and effects randomly to any other creature excluding the original target. \nThis item cannot target attacks from 4 star items.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Offense/3 Stars/Portal.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-70b3210429fa.webp",
+   "fields": {
+    "name": {
+     "value": "PORTAL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May redirect an attacks damage and effects randomly to any other creature excluding the original target. \nThis item cannot target attacks from 4 star items.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-af33a661175f:Items/Support/3 Stars/Portal.png",
+   "kind": "old repo",
+   "date": "2023-10-13T03:36:21+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "support update",
+   "image": "O-52459356c5e5.webp",
+   "fields": {
+    "name": {
+     "value": "PORTAL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May redirect an attacks damage and effects randomly to any other creature excluding the original target. \nThis item cannot target attacks from 4 star items.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-05-14",
+  "sort": "2019-05-14",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

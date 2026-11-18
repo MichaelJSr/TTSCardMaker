@@ -1,0 +1,878 @@
+{
+ "card": "heavy-mole",
+ "key": "Heavy Mole",
+ "name": "Heavy Mole",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f5e2668a973",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-01d916892423",
+   "kind": "discord",
+   "date": "2020-07-22T02:52:55+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-01d916892423.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (OYT) Heavy mole can summon a Mini Drill (3/4/5/5) even when he is in the secondary or farther field. Mini Drills take 3 damage each time they attack, but decrease the DEF of whatever they attack by 1",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 391,
+   "h": 785
+  },
+  {
+   "id": "D-P-ef3e77cd10f6",
+   "kind": "discord",
+   "date": "2020-07-26T00:34:33+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-ef3e77cd10f6.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (OYT) Heavy mole can summon a Mini Drill",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 392,
+   "h": 791
+  },
+  {
+   "id": "F-f9fb41d3ed5",
+   "kind": "text",
+   "date": "2020-07-29T11:13:47+00:00",
+   "day": "2020-07-29",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "hp",
+    "to": 4,
+    "unit": "points"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-1a0ef786011b"
+  },
+  {
+   "id": "D-P-1a0ef786011b",
+   "kind": "discord",
+   "date": "2020-08-02T01:02:41+00:00",
+   "day": "2020-08-02",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-1a0ef786011b.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (OYT) Heavy mole can summon a Mini Drill",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 4,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 5 -> 4"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 391,
+   "h": 790
+  },
+  {
+   "id": "D-P-ea2c8ccd2ab0",
+   "kind": "discord",
+   "date": "2020-08-15T11:14:46+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-ea2c8ccd2ab0.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (OYT) Heavy mole can summon a Mini Drill",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "A",
+   "w": 321,
+   "h": 648
+  },
+  {
+   "id": "D-P-b56d4b761ce5",
+   "kind": "discord",
+   "date": "2021-08-11T19:41:19+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-b56d4b761ce5.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) Heavy mole can summon a Mini Drill",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 3,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 4 -> 3"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 391,
+   "h": 790
+  },
+  {
+   "id": "D-P-73d8efc6df20",
+   "kind": "discord",
+   "date": "2021-12-15T10:59:55+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-73d8efc6df20.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) Heavy mole can summon a Mini Drill",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "machine"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 391,
+   "h": 790
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-48011f7728e7.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) Heavy mole can summon a Mini Drill",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 790
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-486b043655bf.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) Heavy mole can summon a Mini Drill",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 7,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 6 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e78c25b45bc3:Cards/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2023-04-07T04:59:14+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "OPT/OYT Reduction",
+   "repo": "first",
+   "image": "O-0580168e49f3.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)Heavy mole can summon a Mini Drill",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2096fe459bca:Cards/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2023-04-13T08:11:48+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "maga",
+   "repo": "first",
+   "image": "O-4134dff44540.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This Creature can summon a Mini Drill",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-4134dff44540.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This Creature can summon a Mini Drill",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-4134dff44540.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This Creature can summon a Mini Drill",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-cc2f46f1221c:Creatures/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2023-04-30T11:18:10+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "small touch ups",
+   "image": "O-03be0e1adeee.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This Creature can summon a Mini Drill",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-570eda6d7972.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This Creature can summon a Mini Drill.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/3 Stars/Heavy_Mole.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-ac8742da5779.webp",
+   "fields": {
+    "name": {
+     "value": "Heavy Mole",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This Creature can summon a Mini Drill.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-03-22",
+  "sort": "2019-03-22",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

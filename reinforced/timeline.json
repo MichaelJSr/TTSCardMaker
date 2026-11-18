@@ -1,0 +1,231 @@
+{
+ "card": "reinforced",
+ "key": "Reinforced",
+ "name": "Reinforced",
+ "kind": "buff",
+ "stop": {
+  "day": "2023-04-04",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "O-4ba8c01c6e19:Auxillary/Status Effects/Buffs/Reinforced.png",
+   "kind": "old repo",
+   "date": "2023-04-04T22:13:30+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made all buffs more stackable, and made linear or percent buffs for missing stats",
+   "repo": "first",
+   "image": "O-d56c942ce774.webp",
+   "fields": {
+    "name": {
+     "value": "Reinforced",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+50% DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-b316785629cd:Auxillary/Status Effects/Buffs/Reinforced.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:15:05+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First round of redoing buffs and debuffs",
+   "repo": "first",
+   "image": "O-2db1884b2aa5.webp",
+   "fields": {
+    "name": {
+     "value": "Reinforced",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+50% DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-cad29ec520b2:Auxillary/Status Effects/Buffs/Reinforced.png",
+   "kind": "old repo",
+   "date": "2023-04-05T05:46:16+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "All buffs have the type in the correct location",
+   "repo": "first",
+   "image": "O-a0bce58d3367.webp",
+   "fields": {
+    "name": {
+     "value": "Reinforced",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+50% DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-bd49fce9de01:Auxillary/Status Effects/Unused/Reinforced.png",
+   "kind": "old repo",
+   "date": "2023-04-28T22:58:04+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Exported the unused buffs/debuffs just in case raid bosses use them (still a separate pile)",
+   "image": "O-d9bfa4347af4.webp",
+   "fields": {
+    "name": {
+     "value": "Reinforced",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+50% DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-342a3042b4c4:Auxillary/Status Effects/Buffs/Reinforced.png",
+   "kind": "old repo",
+   "date": "2023-10-14T05:46:22+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Moving buffs/debuffs and removing Unused",
+   "image": "O-d9bfa4347af4.webp",
+   "fields": {
+    "name": {
+     "value": "Reinforced",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+50% DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-512be6cd13fd:Auxillary/Status Effects/Buffs/Reinforced.png",
+   "kind": "old repo",
+   "date": "2023-10-17T14:11:38+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates and upscaled buffs",
+   "image": "O-483616b542ea.webp",
+   "fields": {
+    "name": {
+     "value": "Reinforced",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+50% DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2023-04-04",
+  "sort": "2023-04-04",
+  "source": "first repo",
+  "status": "same"
+ }
+}

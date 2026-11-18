@@ -1,0 +1,463 @@
+{
+ "card": "kyle",
+ "key": "Kyle",
+ "name": "hdckighfkvhvgmk",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-05-31",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-aa4cefa28801",
+   "kind": "discord",
+   "date": "2023-05-31T11:46:18+00:00",
+   "day": "2023-05-31",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-aa4cefa28801.webp",
+   "fields": {
+    "name": {
+     "value": "hdckighfkvhvgmk",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time the opponent uses a healing item, negates/redirects an attack, negates an ability, or kills a creature that hasn’t gone this global turn, this card gains +2 ATK.\n If this card is destroyed it revives with 3/4/X/7 where X is the ATK it had at the moment of its death, and it cannot be damaged until it ends its first turn after reviving.\n While this card is on the field, the opponent gets to choose the outcome of dice rolls and coin flips.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6013bc939cf8:Creatures/Other/5 Stars/Kyle.png",
+   "kind": "old repo",
+   "date": "2023-05-31T12:59:09+00:00",
+   "day": "2023-05-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "nut and kyle",
+   "image": "O-58608ead498c.webp",
+   "fields": {
+    "name": {
+     "value": "hdckighfkvhvgmk",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time the opponent uses a healing item, negates/redirects an attack, negates an ability, or kills a creature that hasn’t gone this global turn, this card gains +2 ATK.\n If this card is destroyed it revives with 3/4/X/7 where X is the ATK it had at the moment of its death, and it cannot be damaged until it ends its first turn after reviving.\n While this card is on the field, the opponent gets to choose the outcome of dice rolls and coin flips.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7c81e69404f3:Creatures/Other/5 Stars/Kyle.png",
+   "kind": "old repo",
+   "date": "2023-10-12T17:53:51+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "chestnut and kyle",
+   "image": "O-b3e75b1a18fd.webp",
+   "fields": {
+    "name": {
+     "value": "hdckighfkvhvgmk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time the opponent uses a healing item, negates/redirects an attack, negates an ability, or kills a creature that hasn’t gone this global turn, this card gains +2 ATK.\n If this card is destroyed it revives with 3/4/X/7 where X is the ATK it had at the moment of its death, and it cannot be damaged until it ends its first turn after reviving.\n While this card is on the field, the opponent gets to choose the outcome of dice rolls and coin flips.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-033ce3aeb17b:Creatures/Other/5 Stars/Kyle.png",
+   "kind": "old repo",
+   "date": "2023-10-24T03:50:36+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "proposed changes",
+   "image": "O-3d93bd1e6317.webp",
+   "fields": {
+    "name": {
+     "value": "hdckighfkvhvgmk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon and (BOGT), you may reveal an unused 2/3/4 star creature from your hand.\nAfter revealing the creature, draw 3 creatures of the corresponding star level from a copy of the deck face up.\nPlace a counter on the creature you want.\nYour opponent places a counter on the creature you get.\nIf the counters are on different cards, this gains +1 bars to all its stats.\nSwap your revealed creature with the one your opponents counter is on, and shuffle them back into the copy deck.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 7
+     },
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "DEF 5 -> 6",
+     "ATK 5 -> 6"
+    ],
+    "nerfs": [
+     "HP 7 -> 6",
+     "SPD 7 -> 6"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-07f89e3ee65c:Creatures/Other/5 Stars/Kyle.png",
+   "kind": "old repo",
+   "date": "2023-10-28T18:22:57+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-d3324978e958.webp",
+   "fields": {
+    "name": {
+     "value": "hdckighfkvhvgmk",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon and (BOGT), you may reveal an unused 2/3/4 star creature from your hand.\nAfter revealing the creature, draw 3 creatures of the corresponding star level from a copy of the deck face up.\nPlace a counter on the creature you want.\nYour opponent places a counter on the creature you get.\nIf the counters are on different cards, this gains +1 bars to all its stats.\nSwap your revealed creature with the one your opponents counter is on, and shuffle them back into the copy deck.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "unknown"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/5 Stars/Kyle.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-d6f368a91211.webp",
+   "fields": {
+    "name": {
+     "value": "hdckighfkvhvgmk",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon and (BOGT), you may reveal an unused 2/3/4 star creature from your hand.\nAfter revealing the creature, draw 3 creatures of the corresponding star level from a copy of the deck face up.\nPlace a counter on the creature you want.\nYour opponent places a counter on the creature you get.\nIf the counters are on different cards, this gains +1 bars to all its stats.\nSwap your revealed creature with the one your opponents counter is on, and shuffle them back into the copy deck.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-69cd01cf9df6:Creatures/Other/5 Stars/Kyle.png",
+   "kind": "old repo",
+   "date": "2023-11-01T06:56:53+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending",
+   "image": "O-efec5b116eee.webp",
+   "fields": {
+    "name": {
+     "value": "hdckighfkvhvgmk",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon attacking, steal all of the attacked creature's types and attributes and add them to itself.\nFor each type this has, gain +1 bar to the lowest stat (owner chooses for ties).\nFor each attribute this has, gain +1 bar to a stat of choice.\nIf this has atleast one of every type, it gains +1 actions.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 8,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [
+     "HP 6 -> 8"
+    ],
+    "nerfs": [
+     "ATK 6 -> 4",
+     "SPD 6 -> 4"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Other/5 Stars/Kyle.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-d17709d0f401.webp",
+   "fields": {
+    "name": {
+     "value": "hdckighfkvhvgmk",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon attacking, steal all of the attacked creature's types and attributes and add them to itself.\nFor each type this has, gain +1 bar to the lowest stat (owner chooses for ties).\nFor each attribute this has, gain +1 bar to a stat of choice.\nIf this has atleast one of every type, it gains +1 actions.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-05-31",
+  "sort": "2023-05-31",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,63 @@
+{
+ "card": "ominous-red-circle",
+ "key": "Ominous Red Circle",
+ "name": "Ominous Red Circle",
+ "kind": "item",
+ "stop": {
+  "day": "2025-10-30",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-451e15261931",
+   "kind": "discord",
+   "date": "2025-10-30T23:47:56+00:00",
+   "day": "2025-10-30",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-451e15261931.webp",
+   "fields": {
+    "name": {
+     "value": "Ominous Red Circle",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (BOGT)\n(ENDT) All creatures in this slot take 9 damage and this is removed.\nThe prime creature in this slot may use an action to destroy this item.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-10-22T14:28:23+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-10-30",
+  "sort": "2025-10-30",
+  "source": "discord",
+  "status": "same"
+ }
+}

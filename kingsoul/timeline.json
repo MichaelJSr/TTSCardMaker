@@ -1,0 +1,267 @@
+{
+ "card": "kingsoul",
+ "key": "Kingsoul",
+ "name": "Kingsoul",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-019d9c9b356d-c2",
+   "kind": "discord",
+   "date": "2020-07-30T04:39:07+00:00",
+   "day": "2020-07-30",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-019d9c9b356d-c2.webp",
+   "fields": {
+    "name": {
+     "value": "Kingsoul",
+     "method": "ocr+name (repost P-7f2a96137e83)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye (repost P-7f2a96137e83)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains 1 ATK and SPD at the end of the end of their turn",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C-item",
+   "w": 391,
+   "h": 612
+  },
+  {
+   "id": "D-P-a8097d180bc7",
+   "kind": "discord",
+   "date": "2020-09-13T06:19:49+00:00",
+   "day": "2020-09-13",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-a8097d180bc7.webp",
+   "fields": {
+    "name": {
+     "value": "Kingsoul",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains 1 ATK and SPD at the beginning of their turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C-item",
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/4 Stars/Kingsoul.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-307949cf4378.webp",
+   "fields": {
+    "name": {
+     "value": "Kingsoul",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains 1 ATK and SPD at the beginning of their turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-51c240a78396:Items/Equip/4 Stars/Kingsoul.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:00:17+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Charms",
+   "repo": "first",
+   "image": "O-106dc8903a8e.webp",
+   "fields": {
+    "name": {
+     "value": "Kingsoul",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains +1 ATK and +1 SPD at the beginning of their turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/4 Stars/Kingsoul.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-106dc8903a8e.webp",
+   "fields": {
+    "name": {
+     "value": "Kingsoul",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains +1 ATK and +1 SPD at the beginning of their turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-0ceb4a40829a:Items/Equip/4 Stars/Kingsoul.png",
+   "kind": "old repo",
+   "date": "2023-10-18T12:04:15+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "image": "O-ff088fb02012.webp",
+   "fields": {
+    "name": {
+     "value": "Kingsoul",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item costs 3 SP to equip.\nEquipped creature gains +1 ATK and +1 SPD at the beginning of their turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-23e7f4a10214:Items/Equip/4 Stars/Kingsoul.png",
+   "kind": "old repo",
+   "date": "2023-10-30T02:54:47+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-27a9ed75e7c0.webp",
+   "fields": {
+    "name": {
+     "value": "Kingsoul",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item costs 3 SP to equip.\nEquipped creature gains +1 ATK and +1 SPD at the beginning of their turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-30",
+  "sort": "2020-07-30",
+  "source": "discord",
+  "status": "same"
+ }
+}

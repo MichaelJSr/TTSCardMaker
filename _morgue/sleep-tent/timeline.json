@@ -1,0 +1,88 @@
+{
+ "card": "sleep-tent",
+ "key": "Sleep Tent",
+ "name": "Sleep Tent",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-13T07:23:47.365000+00:00",
+  "day": "2020-07-13",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-6f45ac30359a",
+   "kind": "discord",
+   "date": "2020-07-13T07:23:47.365000+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "image": "P-6f45ac30359a.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 391,
+   "h": 610
+  },
+  {
+   "id": "P-bda433d4a490",
+   "kind": "discord",
+   "date": "2020-07-15T13:02:07.711000+00:00",
+   "day": "2020-07-15",
+   "badge": "Discord",
+   "image": "P-bda433d4a490.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 391,
+   "h": 610
+  },
+  {
+   "id": "P-32cba2a6bc71",
+   "kind": "discord",
+   "date": "2020-08-10T00:39:38.539000+00:00",
+   "day": "2020-08-10",
+   "badge": "Discord",
+   "image": "P-32cba2a6bc71.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-02-port",
+   "w": 391,
+   "h": 610
+  },
+  {
+   "id": "P-83a0cedb8d18",
+   "kind": "discord",
+   "date": "2020-09-04T21:58:17.895000+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "image": "P-83a0cedb8d18.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-03-port",
+   "w": 391,
+   "h": 610
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/Sleep_Tent.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-71eb2d1d5ee2.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 391,
+   "h": 610
+  }
+ ],
+ "kind_of": "played",
+ "git_file": "first repo"
+}

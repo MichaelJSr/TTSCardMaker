@@ -1,0 +1,251 @@
+{
+ "card": "joy",
+ "key": "Joy",
+ "name": "Joy",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-687bd8c26c07",
+   "kind": "discord",
+   "date": "2023-09-02T10:21:48+00:00",
+   "day": "2023-09-02",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-687bd8c26c07.webp",
+   "fields": {
+    "name": {
+     "value": "Joy",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 6 HP and give 3 hardened, 2 empowered, and hyper, for 3 turns each. Once the buffs run out apply 2 enfeebled and 3 soft for 3 turns each.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-fa4fb2bf1401:Auxillary/Items/3 Stars/Joy.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:39:33+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "some stuff",
+   "image": "O-063f44a95031.webp",
+   "fields": {
+    "name": {
+     "value": "Joy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 6 HP and give 3 hardened, 2 empowered, and hyper, for 3 turns each. Once the buffs run out apply 2 enfeebled and 3 soft for 3 turns each.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-724b8cad3222:Auxillary/Items/3 Stars/Joy.png",
+   "kind": "old repo",
+   "date": "2023-09-27T09:51:32+00:00",
+   "day": "2023-09-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "quality",
+   "image": "O-4f3474d8d27d.webp",
+   "fields": {
+    "name": {
+     "value": "Joy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 6 HP and give 3 hardened, 2 empowered, and hyper, for 3 turns each. Once the buffs run out apply 2 enfeebled and 3 soft for 3 turns each.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d23247c423cd:Auxillary/Items/3 Stars/Joy.png",
+   "kind": "old repo",
+   "date": "2023-10-03T19:05:18+00:00",
+   "day": "2023-10-03",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuffs",
+   "image": "O-b8f0a126fc3f.webp",
+   "fields": {
+    "name": {
+     "value": "Joy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 6 HP and give 3 hardened, 2 enraged, and hyper, for 3 turns each.\n Once the buffs run out apply 2 enfeebled and 3 soft for 3 turns each.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Auxillary/Items/3 Stars/Joy.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-cc339384b620.webp",
+   "fields": {
+    "name": {
+     "value": "Joy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 6 HP and inflict 3 Hardened, 2 Enraged, and Hyper, for 3 turns each.\n Once the buffs run out apply 2 Enfeebled and 3 Softened for 3 turns each.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ded592628667:Auxillary/Items/3 Stars/Joy.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:07:10+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "joy nerf",
+   "image": "O-910c0e649853.webp",
+   "fields": {
+    "name": {
+     "value": "Joy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 6 HP and inflict 3 Hardened, 2 Enraged, and Hyper, for 2 turns each.\n Once the buffs run out apply 2 Enfeebled and 3 Softened for 3 turns each.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Items/Joy.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-910c0e649853.webp",
+   "fields": {
+    "name": {
+     "value": "Joy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 6 HP and inflict 3 Hardened, 2 Enraged, and Hyper, for 2 turns each.\n Once the buffs run out apply 2 Enfeebled and 3 Softened for 3 turns each.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-09-02",
+  "sort": "2023-09-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

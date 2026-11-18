@@ -1,0 +1,29 @@
+{
+ "card": "monke-circle",
+ "key": "Monke Circle",
+ "name": "Monke Circle",
+ "morgue": "candidate",
+ "first": {
+  "date": "2023-10-17T22:44:54.856000+00:00",
+  "day": "2023-10-17",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-b12967953943",
+   "kind": "discord",
+   "date": "2023-10-17T22:44:54.856000+00:00",
+   "day": "2023-10-17",
+   "badge": "Discord",
+   "image": "P-b12967953943.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

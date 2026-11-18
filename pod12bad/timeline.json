@@ -1,0 +1,663 @@
+{
+ "card": "pod12bad",
+ "key": "PoD12BAD",
+ "name": "B.A.D.",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-4e2345506492",
+   "kind": "discord",
+   "date": "2020-08-13T05:53:42+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-4e2345506492.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. Persists after the death of its summoner. (TPT) (AAT) May intercept an attack to the protectee. (EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-90c40f9201e3",
+   "kind": "discord",
+   "date": "2020-08-15T00:36:42+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-90c40f9201e3.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. (TPT) (AAT) May intercept an attack to the protectee. (EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     5
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/5 Stars/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-849a92493f92.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D.",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. (TPT) (AAT) May intercept an attack to the protectee. (EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-5e6b7c86df33:Auxillary/Minions/5 Stars/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-03-19T22:30:57+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated all bloon changes",
+   "repo": "first",
+   "image": "O-e6d030561cdf.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D.",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. Its speed cannot be reduced. (TPT) (AAT) May intercept an attack to the protectee. (EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     },
+     {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 6 -> 4",
+     "SPD 4 -> 3"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-fce881480cba:Auxillary/Minions/5 Stars/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-03-30T05:29:02+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Remade DDT, BFB, ZOMG, and BAD, and made summong (BOT)",
+   "repo": "first",
+   "image": "O-758fb5ce1f65.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion.\nDoesn't grant souls.\nIts speed cannot be reduced.\n(TPT) (AAT) May intercept an attack to the protectee.\n(EOT) (BOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-37451eba2f36:Auxillary/Minions/5 Stars/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-04-03T10:39:58+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed all psd minions to use the new types for protective/not",
+   "repo": "first",
+   "image": "O-487ba0cec924.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Doesn't grant souls.\nIts speed cannot be reduced.\n(TPT) (AAT) May intercept an attack to the protectee.\n(EOT) (BOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8f60c13069e1:Auxillary/Minions/5 Stars/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-04-13T04:31:21+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "does not say not gain souls",
+   "repo": "first",
+   "image": "O-e6ce32036717.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Its speed cannot be reduced.\n(TPT) (AAT) May intercept an attack to the protectee.\n(EOT) (BOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-de92dbe542e1:Auxillary/Minions/5 Stars/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-04-20T10:14:05+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "POD change",
+   "repo": "first",
+   "image": "O-b19028d12845.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Its SPD cannot be reduced.\n(TPGT) May intercept an attack to the protectee.\n(EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d24c6d10c672:Auxillary/Minions/5 Stars/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:26:54+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the auxillary",
+   "image": "O-b19028d12845.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Its SPD cannot be reduced.\n(TPGT) May intercept an attack to the protectee.\n(EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-af2d608f17ab:Auxillary/Minions/5 Stars/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-10-08T21:52:34+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "bloon text formatting",
+   "image": "O-3087bbbca7ff.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Its SPD cannot be reduced.\n(TPGT) May intercept an attack to the equipped creature.\n(EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-3087bbbca7ff.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Its SPD cannot be reduced.\n(TPGT) May intercept an attack to the equipped creature.\n(EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/PoD12BAD.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-60d0f20f5f6a.webp",
+   "fields": {
+    "name": {
+     "value": "B.A.D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 8,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Its SPD cannot be reduced.\n(TPGT) May intercept an attack to the equipped creature.\n(EOT) Summon a M.O.A.B. on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-08-13",
+  "sort": "2020-08-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

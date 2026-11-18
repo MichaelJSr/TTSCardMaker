@@ -1,0 +1,427 @@
+{
+ "card": "stalwart-shell",
+ "key": "Stalwart Shell",
+ "name": "Stalwart Shell",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-019d9c9b356d-c1",
+   "kind": "discord",
+   "date": "2020-07-30T04:39:07+00:00",
+   "day": "2020-07-30",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-019d9c9b356d-c1.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart Shell",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Only 2 instances of damage can be dealt to the equipped creature per turn",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 390,
+   "h": 612
+  },
+  {
+   "id": "D-P-c3748eb686fc",
+   "kind": "discord",
+   "date": "2020-08-03T07:46:05+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-c3748eb686fc.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart Shell",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Only 2 instances of damage can be dealt to the equipped creature per turn",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 387,
+   "h": 615
+  },
+  {
+   "id": "D-P-132ce29a9c0f",
+   "kind": "discord",
+   "date": "2020-08-04T18:24:16+00:00",
+   "day": "2020-08-04",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-132ce29a9c0f.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart Shell",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Only 2 instances of damage can be dealt to the equipped creature per turn (Does not count damage from de-buffs)",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "F-f3170b0fb8a",
+   "kind": "text",
+   "date": "2020-08-26T09:46:38+00:00",
+   "day": "2020-08-26",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-3f4a97de5cb5",
+   "kind": "discord",
+   "date": "2020-09-08T07:49:44+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-3f4a97de5cb5.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart Shell",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature cannot be damaged if it has taken 2 or more instances of damage this turn (does not count/negate damage from de- buffs)",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 389,
+   "h": 614
+  },
+  {
+   "id": "D-P-e148a87d832f",
+   "kind": "discord",
+   "date": "2021-08-11T18:43:07+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e148a87d832f.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart Shell",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time the equipped creature is damaged, it cannot be damaged again until 2 slots on the primary field have ended their turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C-item",
+   "w": 388,
+   "h": 615
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/3 Stars/Stalwart_Shell.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-b7bb3467eb53.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart Shell",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time the equipped creature is damaged, it cannot be damaged again until 2 slots on the primary field have ended their turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 388,
+   "h": 615
+  },
+  {
+   "id": "O-257dc970a875:Items/Equip/3 Stars/Stalwart_Shell.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-fe714fb35533.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart Shell",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time the equipped creature is damaged, it cannot be damaged again until 3 slots on the primary field have ended their turns.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 387,
+   "h": 615
+  },
+  {
+   "id": "O-51c240a78396:Items/Equip/3 Stars/Stalwart_Shell.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:00:17+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Charms",
+   "repo": "first",
+   "image": "O-b96072e9a0c3.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart shell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time the equipped creature is damaged, it cannot be damaged again until 3 slots on the primary field have ended their turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Stalwart_Shell.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-b96072e9a0c3.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart shell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time the equipped creature is damaged, it cannot be damaged again until 3 slots on the primary field have ended their turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-632801c5c9cf:Items/Equip/3 Stars/Stalwart_Shell.png",
+   "kind": "old repo",
+   "date": "2023-10-14T05:35:48+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "rest of the pending updates",
+   "image": "O-be4c3fb6763e.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart shell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time the equipped creature is damaged, it gains +8 DEF until 3 slots on the primary field have ended their turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-1ce084ae08be:Items/Equip/3 Stars/Stalwart_Shell.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:36:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-734c0b250111.webp",
+   "fields": {
+    "name": {
+     "value": "Stalwart shell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time the equipped creature is damaged, it gains +8 DEF until 3 slots on the primary field have ended their turns. Cannot be triggered again until duration runs out.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-30",
+  "sort": "2020-07-30",
+  "source": "discord",
+  "status": "same"
+ }
+}

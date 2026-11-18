@@ -1,0 +1,1177 @@
+{
+ "card": "lord-crump",
+ "key": "Lord Crump",
+ "name": "Lord Crump",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-bccac2dcd2c2",
+   "kind": "discord",
+   "date": "2019-02-25T05:25:32+00:00",
+   "day": "2019-02-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-bccac2dcd2c2.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)Can equip X Nauts once per turn and only one at a time. X barricade: +2 ATK +3 DEF. X Acrobats(cannot be equipped on his first turn) +3 ATK +1 SPD can attack over minions but canbnot deal more than half of the targets max health in damage. X Ball(can only be equipped if lord crump has less tsfdhan half health) : +5ATK +2 DEF. X Suit(pay 4 points to equip, and cannot be equipped on his first turn): + 4DEF +3ATK +1SPD",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 591,
+   "h": 1200
+  },
+  {
+   "id": "F-f2cd140a4ed",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-261e187ba9c3",
+   "kind": "discord",
+   "date": "2020-07-22T02:54:16+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-261e187ba9c3.webp",
+   "fields": {
+    "name": {
+     "value": "LORD CRUMP",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (AAT) Lord crump may assume one form: Barricade: +2 DEF for your whole team. Acrobat: Lord crump can attack twice. X Ball: +3 ATK +1 SPD, - Lord crump can only be attacked by people with more speed then him.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 395,
+   "h": 786
+  },
+  {
+   "id": "F-f64a31be23c",
+   "kind": "text",
+   "date": "2020-07-28T10:47:51+00:00",
+   "day": "2020-07-28",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-792548b613df",
+   "kind": "discord",
+   "date": "2020-07-28T11:11:50+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-792548b613df.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (AAT) Lord crump may gain the benefits of one of the following forms: Barricade: +2 DEF for your whole team. Acrobat: Lord crump can attack twice. X Ball: +3 ATK +1 SPD, Lord crump can only be attacked by people with more speed then him.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 792
+  },
+  {
+   "id": "D-P-2a9bc7650d9e",
+   "kind": "discord",
+   "date": "2020-08-14T07:19:31+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-2a9bc7650d9e.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) Lord crump may gain the benefits of one of the following forms: Barricade: +2 DEF for your whole team. Acrobat: Lord crump can attack twice. X Ball: +3 ATK +1 SPD and Lord crump cannot be attacked by people with less speed than him",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "F-f64faf49a4a",
+   "kind": "text",
+   "date": "2020-08-16T09:07:56+00:00",
+   "day": "2020-08-16",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-faa2d13647f",
+   "kind": "text",
+   "date": "2020-08-16T22:48:55+00:00",
+   "day": "2020-08-16",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-9edd1836eb7c",
+   "kind": "discord",
+   "date": "2020-08-18T11:20:15+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-9edd1836eb7c.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) this card may have the benefits of one of the following forms: Barricade: 2 creatures on your team gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this card takes 3 less damage from creatures with less speed than him",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 387,
+   "h": 788
+  },
+  {
+   "id": "D-P-6435d63042f8",
+   "kind": "discord",
+   "date": "2021-12-15T10:04:00+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-6435d63042f8.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) this card may have the benefits of one of the following forms: Barricade: 2 creatures on your team gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this card takes 3 less damage from creatures with less speed than him",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 388,
+   "h": 789
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-bd6300e6e998.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) this card may have the benefits of one of the following forms: Barricade: 2 creatures on your team gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this card takes 3 less damage from creatures with less speed than him",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 388,
+   "h": 789
+  },
+  {
+   "id": "O-257dc970a875:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-c43264c7f8da.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) this card may have the benefits of one of the following forms: barricade: 2 creatures on your team gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this card takes 3 less damage from creatures with In less speed than him",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-db2cd048f95e:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-03-30T07:50:20+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "font change",
+   "repo": "first",
+   "image": "O-2f82bfa0dbe3.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) this card may have the benefits of one of the following forms: barricade: 2 creatures on your team gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this card takes 3 less damage from creatures with In less speed than him",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8c12e021fb3a:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-1f7137b1f2ba.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) this card may have the benefits of one of the following forms: barricade: 2 creatures on your team gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this card takes 3 less damage from creatures with In less speed than him",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b584a785d959:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-07T02:34:05+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "can i push this while theyre all open?",
+   "repo": "first",
+   "image": "O-8cc2ad119520.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) this creature may have the benefits of one of the following forms: barricade: 2 creatures on your team gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this creature takes 3 less damage from creatures with In less speed than him",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-cece3b1905a7:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-13T05:30:39+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some stuff",
+   "repo": "first",
+   "image": "O-af9de6d6aebf.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: barricade: 2 creatures on your team gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this creature takes 3 less damage from creatures with In less speed than him",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-420140c756bd:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-13T08:56:05+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "repo": "first",
+   "image": "O-44b9424a6d34.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: barricade: 2 creatures of your choice gain 2 DEF for this turn. Acrobat Gain 1 extra action. X Ball: +3 ATK +1SPD and this creature takes 3 less damage from creatures with In less speed than him",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fbf9b2007d81:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-14T19:11:31+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some mario touch ups",
+   "repo": "first",
+   "image": "O-ff0c631f7135.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain 2 DEF for this turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1SPD and this creature takes 3 less damage from creatures with In less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-af409cb5284f:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-49a9edc1d4d3.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain 2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1SPD and this creature takes 3 less damage from creatures with In less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1f36d08ac576:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:02:03+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-9638bc713226.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain 2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +2 ATK +1SPD and this creature takes 3 less damage from creatures with In less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8ebbd6be396f:Cards/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-20T22:28:24+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugged through all pending updates",
+   "repo": "first",
+   "image": "O-90710a8c36fc.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain 2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1SPD and this creature takes 2 less damage from creatures with In less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-90710a8c36fc.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain 2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1SPD and this creature takes 2 less damage from creatures with In less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-90710a8c36fc.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain 2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1SPD and this creature takes 2 less damage from creatures with In less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-48eb0bc97c36:Creatures/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-04-28T18:47:52+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "finished updates",
+   "image": "O-cb4e9660dff4.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) this creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain 2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1SPD and this creature takes 2 less damage from creatures with In less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-ed8e502ba1d0.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain 2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1SPD and this creature takes 2 less damage from creatures with less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-e148c18c08d4.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain +2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1 SPD and this creature takes 2 less damage from creatures with less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/3 Stars/Lord_Crump.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-5fafdda1aa1a.webp",
+   "fields": {
+    "name": {
+     "value": "Lord Crump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may have the benefits of one of the following forms: \nBarricade: 2 creatures of your choice gain +2 DEF for this global turn.\n Acrobat: Gain 1 extra action.\n X Ball: +3 ATK +1 SPD and this creature takes 2 less damage from creatures with less speed than him.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-25",
+  "sort": "2019-02-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

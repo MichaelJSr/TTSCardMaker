@@ -1,0 +1,1083 @@
+{
+ "card": "avatar-of-wrath",
+ "key": "Avatar of Wrath",
+ "name": "Avatar of Wrath",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-b8e5b60ec86a",
+   "kind": "discord",
+   "date": "2020-07-13T06:59:29+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-b8e5b60ec86a.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time this creature deals damage, permanently increase its ATK by 2.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "F-f6ddf8449e7",
+   "kind": "text",
+   "date": "2020-07-23T10:16:46+00:00",
+   "day": "2020-07-23",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-aed3619b1564",
+   "kind": "discord",
+   "date": "2020-07-25T03:53:36+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-aed3619b1564.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains 1 ATK and SPD per star above 9 that the teams' creatures total up to.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "stats": [
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 4 -> 3",
+     "SPD 6 -> 5"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "F-f1407776894",
+   "kind": "text",
+   "date": "2020-08-05T11:19:11+00:00",
+   "day": "2020-08-05",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "atk",
+    "to": 7,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-83e9e23fe783"
+  },
+  {
+   "id": "F-f6a1fd7c593",
+   "kind": "text",
+   "date": "2020-08-05T11:19:11+00:00",
+   "day": "2020-08-05",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fe1b21a09e1",
+   "kind": "text",
+   "date": "2020-08-05T11:19:11+00:00",
+   "day": "2020-08-05",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "spd",
+    "to": 5,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-83e9e23fe783"
+  },
+  {
+   "id": "D-P-83e9e23fe783",
+   "kind": "discord",
+   "date": "2020-08-08T10:28:14+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-83e9e23fe783.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar Of Wrath",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10 This creature loses -1 ATK and -0.5 SPD per star below 10.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-215872a7134f",
+   "kind": "discord",
+   "date": "2020-09-08T09:51:53+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-215872a7134f.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10. This creature loses -1 ATK and -0.5 SPD per star below 10.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "magic"
+     ],
+     "drop": []
+    },
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-a9caecbe5dad",
+   "kind": "discord",
+   "date": "2021-12-12T05:28:51+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-a9caecbe5dad.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar Of Wrath",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10. This creature loses -1 ATK and -0.5 SPD per star below 10",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-d5f2ccbb5997",
+   "kind": "discord",
+   "date": "2022-06-10T07:10:17+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-d5f2ccbb5997.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar Of Wrath",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10. This creature loses -1 ATK and -0.5 SPD per star below 10.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-fc5061736cb9",
+   "kind": "discord",
+   "date": "2022-06-10T07:17:56+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-fc5061736cb9.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar Of Wrath",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10. This creature loses -1 ATK and -0.5 SPD per star below 10.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-725f06262822",
+   "kind": "discord",
+   "date": "2022-06-10T07:23:22+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-725f06262822.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar Of Wrath",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10. This creature loses -1 ATK and -0.5 SPD per star below 10.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "magic"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/BTD6/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-87bbc8146b98.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar Of Wrath",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10. This creature loses -1 ATK and -0.5 SPD per star below 10.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-e5d555e5123e:Cards/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2022-08-24T19:02:04+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moved BTD6 to Other and merged updates",
+   "repo": "first",
+   "image": "O-87bbc8146b98.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar Of Wrath",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10. This creature loses -1 ATK and -0.5 SPD per star below 10.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-3adb347c1ccb:Cards/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2023-04-10T10:13:04+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "avatar of wrath",
+   "repo": "first",
+   "image": "O-0d9306b1a594.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams point yielding creatures’ stars on the (PF).\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 3 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-662d9ab22c70:Cards/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2023-04-10T18:50:19+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some grodus cards clean up and Dark ritual",
+   "repo": "first",
+   "image": "O-eefc274a4121.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams point yielding creatures’ stars on the (PF).\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-eefc274a4121.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams point yielding creatures’ stars on the (PF).\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-eefc274a4121.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams point yielding creatures’ stars on the (PF).\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e77e974616e9:Creatures/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:22:03+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "undertale magic",
+   "image": "O-ead6b7bb112a.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams point yielding creatures’ stars on the (PF).\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-a8ba96eb2f44.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams point yielding creatures’ stars on the (PF).\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-76bee437ed35.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams point yielding creatures’ stars on the (PF).\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a43fa5827a23:Creatures/Other/4 Stars/Avatar_Of_Wrath.png",
+   "kind": "old repo",
+   "date": "2023-11-03T09:40:20+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "updates",
+   "image": "O-84d4cfd9de0d.webp",
+   "fields": {
+    "name": {
+     "value": "Avatar of Wrath",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Total an enemy teams point yielding creatures’ stars on the (PF).\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-13",
+  "sort": "2020-07-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

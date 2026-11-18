@@ -1,0 +1,67 @@
+{
+ "card": "inkhole",
+ "key": "Inkhole",
+ "name": "Inkhole",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-11-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-566b8b0a051f",
+   "kind": "discord",
+   "date": "2023-11-12T01:28:51+00:00",
+   "day": "2023-11-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-566b8b0a051f.webp",
+   "fields": {
+    "name": {
+     "value": "Inkhole",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns. creatures in this slot are inflicted with Afraid, cannot affect [light]",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2023-11-12T04:59:56+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2023-11-12",
+  "sort": "2023-11-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

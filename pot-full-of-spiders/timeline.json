@@ -1,0 +1,81 @@
+{
+ "card": "pot-full-of-spiders",
+ "key": "Pot Full of Spiders!",
+ "name": "Pot Full of Spiders!",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-119850b841fe",
+   "kind": "discord",
+   "date": "2025-03-12T03:08:09+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-119850b841fe.webp",
+   "fields": {
+    "name": {
+     "value": "Pot of Spiders!",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 counters and gains 2 counters per turn. When damaged, it converts each of its counters into Lil Spoods If it has 4 or more counters, it can convert any additional counters into Lil Spoods immediately .",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 0,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-01-30T23:54:46+00:00",
+  "changes": {
+   "name": [
+    "Pot of Spiders!",
+    "Pot Full of Spiders!"
+   ],
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-12",
+  "sort": "2025-03-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

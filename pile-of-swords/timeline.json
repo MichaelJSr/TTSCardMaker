@@ -1,0 +1,66 @@
+{
+ "card": "pile-of-swords",
+ "key": "Pile Of Swords",
+ "name": "Pile Of Swords",
+ "kind": "item",
+ "stop": {
+  "day": "2025-05-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-60796a17ff8f",
+   "kind": "discord",
+   "date": "2025-04-29T06:10:56+00:00",
+   "day": "2025-04-29",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-60796a17ff8f.webp",
+   "fields": {
+    "name": {
+     "value": "Pile Of Swords",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip 8 free Copper Swords onto any creatures (counts as a single item usage). A single creature cannot hold more than 6 Copper Swords from this item. Copper Swords from this item are discarded when unequipped. Infinite use.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-05-02T01:30:20+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-04-29",
+  "sort": "2025-04-29",
+  "source": "discord",
+  "status": "same"
+ }
+}

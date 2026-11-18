@@ -1,0 +1,1096 @@
+{
+ "card": "dark-mind-eye",
+ "key": "Dark Mind Eye",
+ "name": "Dark Mind Eye",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c1a607fcca96",
+   "kind": "discord",
+   "date": "2020-07-20T10:53:43+00:00",
+   "day": "2020-07-20",
+   "badge": "Discord",
+   "channel": "update-01",
+   "image": "P-c1a607fcca96.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If Dark mind is not attacked during a turn, he gains 3 ATK next turn. If dark mind is attacked you can make the attacker's attack piercing and deal 4 DEF piercing damage to any creature on the Primary field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 392,
+   "h": 754
+  },
+  {
+   "id": "D-P-758b34f85b56",
+   "kind": "discord",
+   "date": "2020-07-22T02:57:27+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-758b34f85b56.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If dark mind is attacked you can make the attacker's attack piercing and deal 4 DEF piercing damage to any creature on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 9 -> 8"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "D-P-343f997f34b6",
+   "kind": "discord",
+   "date": "2020-07-22T07:57:08+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-343f997f34b6.webp",
+   "fields": {
+    "name": {
+     "value": "Dark mind Eye",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If Dark mind is not attacked during a turn, he gains 3 ATK next turn. If dark mind is attacked you can make the attacker's attack piercing and deal 4 DEF piercing damage to any creature on the Primary field.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 8 -> 9"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 340,
+   "h": 660
+  },
+  {
+   "id": "F-f2bc7532d8d",
+   "kind": "text",
+   "date": "2020-09-12T06:16:40+00:00",
+   "day": "2020-09-12",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-b0e716e9e593",
+   "kind": "discord",
+   "date": "2020-09-19T05:30:25+00:00",
+   "day": "2020-09-19",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-b0e716e9e593.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is not attacked during a turn, it has 3 more ATK next turn. If this card is attacked by a non-piercing attack you can make that attack piercing and deal 4 DEF piercing damage to any creature on the (PF)",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "D-P-fc65dfab084d",
+   "kind": "discord",
+   "date": "2021-08-11T16:39:14+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-fc65dfab084d.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye (repost P-8fdcc92edb93)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is not attacked during a full turn, it has 3 more ATK next full turn. If this card is attacked by a non- piercing attack, you can make that attack piercing and deal 4 DEF piercing damage to any creature on the (PF)",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "light"
+     ]
+    },
+    "stats": [
+     {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 388,
+   "h": 789
+  },
+  {
+   "id": "D-P-48bfe11317d6",
+   "kind": "discord",
+   "date": "2021-12-15T10:28:07+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-48bfe11317d6.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is not attacked during a full turn, it has 3 more ATK next full turn. If this card is attacked by a non- piercing attack, you can make that attack piercing and deal 4 DEF piercing damage to any creature on the (PF)",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 388,
+   "h": 789
+  },
+  {
+   "id": "F-f86ddec36b1",
+   "kind": "text",
+   "date": "2021-12-16T14:02:07+00:00",
+   "day": "2021-12-16",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "field": "spd",
+    "from": 6,
+    "to": 5,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-7853c9a027a6"
+  },
+  {
+   "id": "D-P-7853c9a027a6",
+   "kind": "discord",
+   "date": "2022-01-31T09:56:37+00:00",
+   "day": "2022-01-31",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-7853c9a027a6.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is not attacked during a full turn, it has 3 more ATK next full turn. If this card is attacked by a non- piercing attack, you can make that attack piercing and deal 4 DEF piercing damage to any creature on the (PF)",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 6
+     },
+     {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "SPD 6 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 387,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-cf139880af03.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is not attacked during a full turn, it has 3 more ATK next full turn. If this card is attacked by a non-piercing attack, you can make that attack piercing and deal 4 DEF piercing damage to any creature on the (PF)",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 387,
+   "h": 787
+  },
+  {
+   "id": "O-6f27bc72e81d:Cards/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-04-06T07:36:06+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "card fixes",
+   "repo": "first",
+   "image": "O-525a7c42a9df.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is not attacked during a global turn, it has 3 more ATK next global turn if this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 4 DEF piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ebdb5c55cc00:Cards/Kirby/5 Stars/Dark_Mind_Eye-assets/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-04-06T18:03:37+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "dark mind eye",
+   "repo": "first",
+   "image": "O-d33479167ab7.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked during a global turn, it has 3 more ATK next global turn if this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 4 DEF piercing damage to any creature on the PF.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6e7e0d25d19a:Cards/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-04-06T18:15:48+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "this creature to this card automatically with kirby cards",
+   "repo": "first",
+   "image": "O-d33479167ab7.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked during a global turn, it has 3 more ATK next global turn if this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 4 DEF piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-aeafcfa254b9:Cards/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-04-06T18:24:23+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "idk",
+   "repo": "first",
+   "image": "O-a87e54eef3be.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked during a global turn, it has 3 more ATK next global turn if this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 4 DEF piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e12f3bae271:Cards/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-04-16T23:31:53+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-3000caedbedb.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked during a global turn, it has 3 more ATK next global turn. \nIf this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 4 piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-3000caedbedb.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked during a global turn, it has 3 more ATK next global turn. \nIf this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 4 piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-3000caedbedb.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked during a global turn, it has 3 more ATK next global turn. \nIf this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 4 piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-33228b5f2d64:Creatures/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:01:41+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "proposed changes",
+   "image": "O-551d9946f410.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked during a global turn, it has 3 more ATK next global turn. \nIf this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 5 piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c4a8c4891806:Creatures/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-10-01T15:54:05+00:00",
+   "day": "2023-10-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-dbee3997074b.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked by the end of a global turn while on the field, it has 3 more ATK next global turn. \nIf this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 5 piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-6492d3ef9981.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked by the end of a global turn while on the field, it has +3 ATK next global turn. \nIf this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 5 piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/5 Stars/Dark_Mind_Eye.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-b3ae67e27292.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Mind Eye",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 4,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creature is not attacked by the end of a global turn while on the field, it has +3 ATK next global turn. \nIf this creature is attacked by a non-piercing attack, you can make that attack piercing and deal 5 piercing damage to any creature on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-20",
+  "sort": "2020-07-20",
+  "source": "discord",
+  "status": "same"
+ }
+}

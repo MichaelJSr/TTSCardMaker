@@ -1,0 +1,235 @@
+{
+ "card": "mighty-pebble",
+ "key": "Mighty Pebble",
+ "name": "Mighty Pebble",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e9725b698861",
+   "kind": "discord",
+   "date": "2020-09-02T21:41:29+00:00",
+   "day": "2020-09-02",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-e9725b698861.webp",
+   "fields": {
+    "name": {
+     "value": "Mighty Pebble",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 4.5 damage.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-ffd437bd9c22",
+   "kind": "discord",
+   "date": "2020-09-02T21:42:57+00:00",
+   "day": "2020-09-02",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-ffd437bd9c22.webp",
+   "fields": {
+    "name": {
+     "value": "Mighty Pebble",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5.5 damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/1 Stars/Mighty_Pebble.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-500808925f6e.webp",
+   "fields": {
+    "name": {
+     "value": "Mighty Pebble",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5.5 damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a1c92317dc13:Items/Attack/1 Stars/Mighty_Pebble.png",
+   "kind": "old repo",
+   "date": "2023-04-01T23:34:57+00:00",
+   "day": "2023-04-01",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pebble",
+   "repo": "first",
+   "image": "O-abebfa2056bd.webp",
+   "fields": {
+    "name": {
+     "value": "Mighty Pebble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-64f0f144aba8:Items/Attack/1 Stars/Mighty_Pebble.png",
+   "kind": "old repo",
+   "date": "2023-04-07T08:52:51+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Flower Of Decay, Mighty Pebble, Deleted Aux Bomb and Gas",
+   "repo": "first",
+   "image": "O-1c1bff41fa1b.webp",
+   "fields": {
+    "name": {
+     "value": "Mighty Pebble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/1 Stars/Mighty_Pebble.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-1c1bff41fa1b.webp",
+   "fields": {
+    "name": {
+     "value": "Mighty Pebble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-02",
+  "sort": "2020-09-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

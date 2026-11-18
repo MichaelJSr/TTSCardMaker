@@ -1,0 +1,235 @@
+{
+ "card": "smoke-bomb",
+ "key": "Smoke Bomb",
+ "name": "Smoke Bomb",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9ee3bdc91cbd",
+   "kind": "discord",
+   "date": "2020-09-04T21:57:39+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-9ee3bdc91cbd.webp",
+   "fields": {
+    "name": {
+     "value": "Smoke Bomb",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflict blindness",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 600,
+   "h": 720
+  },
+  {
+   "id": "D-P-e8423c3b1df6",
+   "kind": "discord",
+   "date": "2020-09-04T22:06:24+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-e8423c3b1df6.webp",
+   "fields": {
+    "name": {
+     "value": "Smoke Bomb",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflict blindness for one turn",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 600,
+   "h": 720
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/1 Stars/Smoke_Bomb.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-d49adba9ff30.webp",
+   "fields": {
+    "name": {
+     "value": "Smoke Bomb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflict blindness for one turn",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 600,
+   "h": 720
+  },
+  {
+   "id": "O-450e89506676:Items/Attack/1 Stars/Smoke_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-05T01:28:44+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items",
+   "repo": "first",
+   "image": "O-eb134e745a54.webp",
+   "fields": {
+    "name": {
+     "value": "Smoke Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflict blindness for one turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/1 Stars/Smoke_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-eb134e745a54.webp",
+   "fields": {
+    "name": {
+     "value": "Smoke Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflict blindness for one turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/1 Stars/Smoke_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-167ccd91409a.webp",
+   "fields": {
+    "name": {
+     "value": "Smoke Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflict blindness for one turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-04",
+  "sort": "2020-09-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

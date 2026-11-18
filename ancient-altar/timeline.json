@@ -1,0 +1,653 @@
+{
+ "card": "ancient-altar",
+ "key": "Ancient Altar",
+ "name": "Ancient Altar",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-f0195dca2e3c",
+   "kind": "discord",
+   "date": "2020-07-14T07:16:57+00:00",
+   "day": "2020-07-14",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-f0195dca2e3c.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Played as an active item. Allows the player to equivalently exchange items for other items as long as the star cost is equivalent.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "D-P-ed41bbe08ca6",
+   "kind": "discord",
+   "date": "2020-08-07T06:19:20+00:00",
+   "day": "2020-08-07",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-ed41bbe08ca6.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. (OPT) (AAT) Equivalently exchange non-damaged items for other items as long as the SP is equivalent.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f131efcf712",
+   "kind": "text",
+   "date": "2020-08-26T11:01:17+00:00",
+   "day": "2020-08-26",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-ec2ea983ea59",
+   "kind": "discord",
+   "date": "2020-08-31T08:29:45+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-ec2ea983ea59.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. (OPT) (AAT) Equivalently exchange one non-damaged item for a random item of the same SP.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-fc6af6278f0",
+   "kind": "text",
+   "date": "2021-05-13T08:50:45+00:00",
+   "day": "2021-05-13",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-d26819e6001a",
+   "kind": "discord",
+   "date": "2021-08-23T05:54:02+00:00",
+   "day": "2021-08-23",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-d26819e6001a.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. (OPT)(AAT) Equivalently exchange one non-damaged item for any item of the same SP from item shop.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/3 Stars/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-887ef44f0718.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. (OPT)(AAT) Equivalently exchange one non-damaged item for any item of the same SP from item shop.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Active/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-887ef44f0718.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. (OPT)(AAT) Equivalently exchange one non-damaged item for any item of the same SP from item shop.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-37f4b5694101:Items/Active/3 Stars/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:37:43+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized items",
+   "repo": "first",
+   "image": "O-887ef44f0718.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. (OPT)(AAT) Equivalently exchange one non-damaged item for any item of the same SP from item shop.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-da00f02f4b5f:Items/Active/3 Stars/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2023-04-11T15:41:08+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some fixes",
+   "repo": "first",
+   "image": "O-eb425a864ceb.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Equivalently exchange one non-damaged item for any item of the same SP from item shop.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic",
+      "rock"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-af409cb5284f:Items/Active/3 Stars/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-641025a38d74.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Equivalently exchange one non-damaged item for any item of the same SP from item shop.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 0
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Active/3 Stars/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-641025a38d74.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Equivalently exchange one non-damaged item for any item of the same SP from item shop.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-733ddef6a721:Items/Active/3 Stars/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2023-04-23T08:46:25+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "some pending updates",
+   "image": "O-fa12c7936158.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Equivalently exchange one unused item for any item of the same SP cost from item shop.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-75443b2188db:Items/Active/3 Stars/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2023-10-22T20:37:13+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "a",
+   "image": "O-25ba01eda98c.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Exchange one unused item in the hand for any item of the same SP cost from item shop.\n(OPG) Instead Exchange an item for one of the next tier up. (Cannot upgrade tier 3).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c19d8b91a709:Items/Active/3 Stars/Ancient_Altar.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-5180f0b5c4ae.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Altar",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Exchange one unused item in the hand for any item of the same SP cost from item shop.\n(OPG) Instead Exchange an item for one of the next tier up. (Cannot upgrade tier 3).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-14",
+  "sort": "2020-07-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,108 @@
+{
+ "card": "nasty-patty",
+ "key": "Nasty Patty",
+ "name": "Nasty Patty",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-11-08",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-de3446f1bc53",
+   "kind": "discord",
+   "date": "2023-11-08T01:55:55+00:00",
+   "day": "2023-11-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-de3446f1bc53.webp",
+   "fields": {
+    "name": {
+     "value": "Nasty Patty",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts: 1 Turn of Disgusted, Sickness, and Poision.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-210269147c5e",
+   "kind": "discord",
+   "date": "2023-11-08T02:09:57+00:00",
+   "day": "2023-11-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-210269147c5e.webp",
+   "fields": {
+    "name": {
+     "value": "Nasty Patty",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 Turns of Disgusted, Sickness, and Poision.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2024-02-02T01:54:06+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "stars",
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-08",
+  "sort": "2023-11-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

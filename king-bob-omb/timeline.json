@@ -1,0 +1,77 @@
+{
+ "card": "king-bob-omb",
+ "key": "King Bob-omb",
+ "name": "King Bob-omb",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-05-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1df8f3f2b5ed",
+   "kind": "discord",
+   "date": "2025-04-29T05:37:38+00:00",
+   "day": "2025-04-29",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1df8f3f2b5ed.webp",
+   "fields": {
+    "name": {
+     "value": "King Bob-omb",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "machine"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks do no damage, and instead, you draw a Lit Bob-omb when attacking.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-05-02T01:30:20+00:00",
+  "changes": {
+   "ability_change": "same"
+  }
+ },
+ "created": {
+  "date": "2025-04-29",
+  "sort": "2025-04-29",
+  "source": "discord",
+  "status": "same"
+ }
+}

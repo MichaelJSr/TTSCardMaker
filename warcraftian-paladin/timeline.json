@@ -1,0 +1,952 @@
+{
+ "card": "warcraftian-paladin",
+ "key": "Warcraftian Paladin",
+ "name": "Warcraftian Paladin",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-6ad965a76da4",
+   "kind": "discord",
+   "date": "2021-11-11T08:11:36+00:00",
+   "day": "2021-11-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6ad965a76da4.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (AAT) Create a shield on a creature that lasts 1 turn. (OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns: (4 points) Blessing of Kings: +1 to all stats. (3 points) Blessing of Might: +2 ATK (2 points) Blessing of Sacrifice: up to 2 damage transferred to the paladin per instance of damage. (2 points) Blessing of Sanctuary: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "D-P-b758c1365e7a",
+   "kind": "discord",
+   "date": "2021-11-12T09:40:05+00:00",
+   "day": "2021-11-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b758c1365e7a.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (AAT) Create a shield on a creature that cleanses all debuffs and makes it immune to damage for 1 turn. (OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns: (4 points) Blessing of Kings: +1 to all stats. (3 points) Blessing of Might: +2 ATK (2 points) Blessing of Sacrifice: up to 2 damage transferred to the paladin per instance of damage. (2 points) Blessing of Sanctuary: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 309,
+   "h": 628
+  },
+  {
+   "id": "D-P-31f798d6a363",
+   "kind": "discord",
+   "date": "2021-11-12T09:57:41+00:00",
+   "day": "2021-11-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-31f798d6a363.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (AAT) Create a shield on a creature that cleanses all tier 3 and below debuffs and makes it immune to damage for 1 turn. (OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns: (4 points) Blessing of Kings: +1 to all stats. (3 points) Blessing of Might: +2 ATK (2 points) Blessing of Sacrifice: up to 2 damage transferred to the paladin per instance of damage. (2 points) Blessing of Sanctuary: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 627
+  },
+  {
+   "id": "D-P-7400c52dae71",
+   "kind": "discord",
+   "date": "2021-11-12T09:59:58+00:00",
+   "day": "2021-11-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7400c52dae71.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (AAT) Create a shield on a creature that cleanses all tier 3 and below debuffs and makes it immune to damage for 1 turn. (OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns only one blessing can exist on a creature at a time: (4 points) Blessing of Kings: +1 to all stats. (3 points) Blessing of Might: +2 ATK (2 points) Blessing of Sacrifice: up to 2 damage transferred to the paladin per instance of damage. (2 points) Blessing of Sanctuary: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 629
+  },
+  {
+   "id": "D-P-cd9faeb4c3c1",
+   "kind": "discord",
+   "date": "2021-11-22T09:21:57+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-cd9faeb4c3c1.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (AAT) (5 points) Create a shield on a creature that cleanses all tier 3 and below debuffs and makes it immune to damage for 1 turn. (OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns only one blessing can exist on a creature at a time: (1 point) Blessing of Kings: +1 to all stats. Blessing of Might: +2 ATK Blessing of Sacrifice: up to 2 damage transferred to the paladin per instance of damage. Blessing of Sanctuary: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 313,
+   "h": 630
+  },
+  {
+   "id": "D-P-a03e0a48045e",
+   "kind": "discord",
+   "date": "2021-11-22T23:58:55+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-a03e0a48045e.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (AAT) (5 points) Create a shield on a creature that cleanses all tier 3 and below debuffs and makes it immune to damage for 1 turn. (OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns only one blessing can exist on a creature at a time: (2 points) Blessing of Kings: +1 to all stats. (1 point) Blessing of Might: +2 ATK Blessing of Sacrifice: up to 1.5 damage transferred to the paladin per instance of damage. Blessing of Sanctuary: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 312,
+   "h": 630
+  },
+  {
+   "id": "F-f1b235717eb",
+   "kind": "text",
+   "date": "2021-11-23T00:32:48+00:00",
+   "day": "2021-11-23",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-2ab6f8df074e",
+   "kind": "discord",
+   "date": "2021-12-11T09:11:54+00:00",
+   "day": "2021-12-11",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-2ab6f8df074e.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (AAT) (5 points) Create a shield on a creature that cleanses all tier 3 and below debuffs and makes it immune to damage for 1 turn. (OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns only one blessing can exist on a creature at a time: (2 points) Blessing of Kings: +1 to all stats. (1 point) Blessing of Might: +2 ATK Blessing of Sacrifice: up to 1.5 damage transferred to the paladin per instance of damage. Blessing of Sanctuary: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 627
+  },
+  {
+   "id": "F-fd16af10227",
+   "kind": "text",
+   "date": "2022-01-28T13:38:49+00:00",
+   "day": "2022-01-28",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-8a0ccd870aa4.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns only one blessing can exist on a creature at a time:\n(2 points) Kings: +1 to all stats.\n(1 point) Might: +2 ATK.\nSanctuary: +2 DEF.\n(OPG) (AAT) (5 points) Bubble: cleanse all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 311,
+   "h": 627
+  },
+  {
+   "id": "O-257dc970a875:Cards/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-919c1210d5cb.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) may apply one of the following blessings to a friendly creature for 3 turns only one blessing can exist on a creature at a time:\n(2 points) Kings: +1 to all stats.\n(1 point) Might: +2 ATK.\nSanctuary: +2 DEF.\n(OPG) (AAT) (5 points) Bubble: cleanse all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ee0df0483864:Cards/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-03-31T07:35:18+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made a lot of pending changes and made bubble 1 star instead of 2 stars",
+   "repo": "first",
+   "image": "O-82de75bde1bd.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) may apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats.\n(1 point) Might: +2 ATK.\nSanctuary: +2 DEF.\n(OPG) (AAT) (5 points) Bubble: cleanse all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d3daaff5316c:Cards/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:59:11+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Slight Shaman Nerf and other updates",
+   "repo": "first",
+   "image": "O-f93995e7a77b.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) May apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats.\n(1 point) Might: +2 ATK.\nSanctuary: +2 DEF.\n(OPG) (AAT) (5 points) Bubble: cleanse all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-f93995e7a77b.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) May apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats.\n(1 point) Might: +2 ATK.\nSanctuary: +2 DEF.\n(OPG) (AAT) (5 points) Bubble: cleanse all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-f93995e7a77b.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) May apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats.\n(1 point) Might: +2 ATK.\nSanctuary: +2 DEF.\n(OPG) (AAT) (5 points) Bubble: cleanse all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-417d4162d0a4.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) May apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats.\n(1 point) Might: +2 ATK.\nSanctuary: +2 DEF.\n(OPG) (AAT) (5 points) Bubble: cleanse all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-af6594e27842.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) May apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats\n(1 point) Might: +2 ATK\nSanctuary: +2 DEF\n(OPG) (AAT) (5 points) Bubble: Cleanse a friendly creature’s all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8ecdec8f177:Creatures/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-10-13T03:11:51+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "warcraftian attribute color coding",
+   "image": "O-7093ae32bc3f.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) May apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats\n(1 point) Might: +2 ATK\nSanctuary: +2 DEF\n(OPG) (AAT) (5 points) Bubble: Cleanse a friendly creature’s all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-656d2ded7299.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) May apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats\n(1 point) Might: +2 ATK\nSanctuary: +2 DEF\n(OPG) (AAT) (5 points) Bubble: Cleanse a friendly creature’s all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/World Of Warcraft/4 Stars/Warcraftian_Paladin.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-033f4c9c4f57.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Paladin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) May apply one of the following blessings to a friendly creature for 2 turns (only one blessing can exist on a creature at a time):\n(2 points) Kings: +1 to all stats\n(1 point) Might: +2 ATK\nSanctuary: +2 DEF\n(OPG) (AAT) (5 points) Bubble: Cleanse a friendly creature’s all tier 3 and below debuffs and make it immune to damage for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-11-11",
+  "sort": "2021-11-11",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,815 @@
+{
+ "card": "grodus-x",
+ "key": "Grodus X",
+ "name": "Grodus X",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-3e210e3d0fbf",
+   "kind": "discord",
+   "date": "2020-07-23T10:26:31+00:00",
+   "day": "2020-07-23",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-3e210e3d0fbf.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Buff protectee's DEF by 2. Overkill damage carries over to the next Grodus X. If there are 3 or more Grodus X's, they may all sacrifice themselves in order to deal double their combined ATK as damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "D-P-19d3587fb17d",
+   "kind": "discord",
+   "date": "2020-07-27T22:14:14+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-19d3587fb17d.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Buff protectee's DEF by 2. Overkill damage carries over to the next Grodus X. If there are 3 or more Grodus X's, they may all sacrifice themselves in order to deal their combined ATK as damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 2,
+      "def": 2,
+      "atk": 3,
+      "spd": 4
+     },
+     {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [
+     "SPD 4 -> 5"
+    ],
+    "nerfs": [
+     "HP 2 -> 1",
+     "DEF 2 -> 1"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-9f1db827c38e",
+   "kind": "discord",
+   "date": "2020-07-27T22:18:14+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-9f1db827c38e.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Buff protectee's DEF by 2. Overkill damage carries over to the next Grodus X. If there are 3 or more Grodus X's, they may all sacrifice themselves in order to deal their combined ATK as damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-5c5816ab03c0",
+   "kind": "discord",
+   "date": "2020-07-27T22:25:41+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-5c5816ab03c0.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Buff protectee's DEF by 2. Overkill damage carries over to the next Grodus X as piercing. If there are 3 or more Grodus X's, they may all sacrifice themselves in order to deal their combined ATK as damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 1 -> 2"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-cd7596407497",
+   "kind": "discord",
+   "date": "2020-07-27T22:33:43+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-cd7596407497.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Buff protectee's DEF by 2. Overkill damage carries over to the next Grodus X as piercing. If there are 3 or more Grodus X's, they may all sacrifice themselves in order to deal their combined ATK as damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-b2f2b81c0334",
+   "kind": "discord",
+   "date": "2020-07-27T22:42:36+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-b2f2b81c0334.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Buff protectee's DEF by 2. Overkill damage carries over to the next Grodus X. If there are 3 or more Grodus X's, they may all sacrifice themselves in order to deal their combined ATK as damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 2 -> 1"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-33c660d18571",
+   "kind": "discord",
+   "date": "2020-09-01T05:23:37+00:00",
+   "day": "2020-09-01",
+   "badge": "Discord",
+   "channel": "michaels-delusional-wonderland",
+   "image": "P-33c660d18571.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Buff protectee's DEF by 2. Overkill damage carries over to the next Grodus X. If there are 4 Grodus X's, instead of attacking they may all sacrifice themselves in order to deal combined ATK as damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/4 Stars/Grodus_X.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-783213df3c77.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Buff protectee's DEF by 2. Overkill damage carries over to the next Grodus X. If there are 4 Grodus X's, instead of attacking they may all sacrifice themselves in order to deal combined ATK as damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-4c558a3ae2dd:Auxillary/Minions/4 Stars/Grodus_X.png",
+   "kind": "old repo",
+   "date": "2023-04-11T01:31:35+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "grodus",
+   "repo": "first",
+   "image": "O-14bcb6ae7942.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Buff creature this was placed onto's DEF by 2 while this is alive. \nOverkill damage carries over to the next Grodus X. \nIf there are 4 Grodus X's, instead of attacking they may all sacrifice themselves in order to deal combined ATK as damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a18b9e4c8c48:Auxillary/Minions/4 Stars/Grodus_X.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:59:18+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Auxillary minions",
+   "image": "O-14bcb6ae7942.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Buff creature this was placed onto's DEF by 2 while this is alive. \nOverkill damage carries over to the next Grodus X. \nIf there are 4 Grodus X's, instead of attacking they may all sacrifice themselves in order to deal combined ATK as damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0d03699866e4:Auxillary/Minions/4 Stars/Grodus_X.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:43:43+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "equipped creature",
+   "image": "O-ed116e66169f.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains +2 DEF while this is alive.\nOverkill damage carries over to the next Grodus X. \nIf there are 4 Grodus X's, instead of attacking they may all sacrifice themselves in order to deal combined ATK as damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0a8e8cfc0098:Auxillary/Minions/4 Stars/Grodus_X.png",
+   "kind": "old repo",
+   "date": "2023-09-11T20:49:51+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "x",
+   "image": "O-104385e69515.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "offensive_minion",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains +2 DEF while this is alive.\nOverkill damage carries over to the next Grodus X. \nIf there are 4 Grodus X's, instead of attacking they may all sacrifice themselves in order to deal combined ATK as damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Grodus_X.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-429aa7bc37c8.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "offensive_minion",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains +2 DEF while this is alive.\nOverkill damage carries over to the next Grodus X in this slot. \nIf there are 4 Grodus X's, instead of attacking they may all sacrifice themselves in order to deal combined ATK as damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     1
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Grodus_X.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-8bbace35f58c.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus X",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "offensive_minion",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 1,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature gains +2 DEF while this is alive.\nOverkill damage carries over to the next Grodus X in this slot. \nIf there are 4 Grodus X's, instead of attacking they may all sacrifice themselves in order to deal combined ATK as damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-23",
+  "sort": "2020-07-23",
+  "source": "discord",
+  "status": "same"
+ }
+}

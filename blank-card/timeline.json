@@ -1,0 +1,414 @@
+{
+ "card": "blank-card",
+ "key": "Blank Card",
+ "name": "Blank Card",
+ "kind": "item",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e5359d6443fc",
+   "kind": "discord",
+   "date": "2023-09-01T04:46:38+00:00",
+   "day": "2023-09-01",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e5359d6443fc.webp",
+   "fields": {
+    "name": {
+     "value": "Blank Card",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 1,
+      "atk": "none",
+      "spd": "none"
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Can preform the effect of one of your non 4 star facedown item, costing it's tier +2 in points.\nIf used on an equip item, effect only lasts for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-065b8dfd5f8a:Items/Equip/3 Stars/Blank_Card.png",
+   "kind": "old repo",
+   "date": "2023-09-11T07:14:51+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "scap blank",
+   "image": "O-736ebaf2fade.webp",
+   "fields": {
+    "name": {
+     "value": "Blank Card",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 1
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Can preform the effect of one of your non 4 star facedown item, costing it's tier +2 in points.\nIf used on an equip item, effect only lasts for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 1,
+      "atk": "none",
+      "spd": "none"
+     },
+     {
+      "hp": 6,
+      "def": 1
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4716c17f8e90:Items/Active/3 Stars/Blank_Card.png",
+   "kind": "old repo",
+   "date": "2023-09-11T07:27:29+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "whops",
+   "image": "O-736ebaf2fade.webp",
+   "fields": {
+    "name": {
+     "value": "Blank Card",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 1
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Can preform the effect of one of your non 4 star facedown item, costing it's tier +2 in points.\nIf used on an equip item, effect only lasts for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ffd303f0efae:Items/Active/Blank_Card.png",
+   "kind": "old repo",
+   "date": "2023-09-11T10:46:53+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "file reduction",
+   "image": "O-736ebaf2fade.webp",
+   "fields": {
+    "name": {
+     "value": "Blank Card",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 1
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Can preform the effect of one of your non 4 star facedown item, costing it's tier +2 in points.\nIf used on an equip item, effect only lasts for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9bad00afd223:Items/Active/3 Stars/Blank_Card.png",
+   "kind": "old repo",
+   "date": "2023-09-26T19:29:50+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "flip and fixes",
+   "image": "O-39c1e64ced6b.webp",
+   "fields": {
+    "name": {
+     "value": "Blank card",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Can preform the effect of one of your non 4 star facedown item, costing it's tier +2 in points.\nIf used on an equip item, effect only lasts for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 1
+     },
+     {
+      "hp": 7,
+      "def": 4
+     }
+    ],
+    "buffs": [
+     "HP 6 -> 7",
+     "DEF 1 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-3ffad7b0b449:Items/Active/3 Stars/Blank_Card.png",
+   "kind": "old repo",
+   "date": "2023-09-26T19:55:05+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "flip blank card changes",
+   "image": "O-c4eab3407287.webp",
+   "fields": {
+    "name": {
+     "value": "Blank card",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 1
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Can preform the effect of one of your non 4 star facedown item, costing it's tier +2 in points.\nIf used on an equip item, effect only lasts for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 4
+     },
+     {
+      "hp": 6,
+      "def": 1
+     }
+    ],
+    "buffs": [],
+    "nerfs": [
+     "HP 7 -> 6",
+     "DEF 4 -> 1"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2af66f5c66bb:Items/Active/3 Stars/Blank_Card.png",
+   "kind": "old repo",
+   "date": "2023-10-10T01:08:35+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-c659f80d844a.webp",
+   "fields": {
+    "name": {
+     "value": "Blank card",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 1
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPGT) Can preform the effect of one of your non 4 star facedown item, costing it's tier +2 in points.\nIf used on an equip item, effect only lasts for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-64bfa8bf4c63:Items/Active/3 Stars/Blank_Card.png",
+   "kind": "old repo",
+   "date": "2023-10-20T21:27:01+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "claw rework",
+   "image": "O-516a280b9e2b.webp",
+   "fields": {
+    "name": {
+     "value": "Blank card",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 1
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPGT) Can preform the effect of one of your non 4 star facedown items, costing it's tier +2 in points.\nIf used on an equip item, effect only lasts for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-09-01",
+  "sort": "2023-09-01",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "card": "a-snack",
+ "key": "A Snack",
+ "name": "A Snack",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-13",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-7ff2460443be",
+   "kind": "discord",
+   "date": "2023-10-13T04:25:00+00:00",
+   "day": "2023-10-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7ff2460443be.webp",
+   "fields": {
+    "name": {
+     "value": "A Snack",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 max HP  \nheal for 1 HP",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-3f3ad48d903c:Items/Heal/2 Stars/A_Snack.png",
+   "kind": "old repo",
+   "date": "2023-10-13T09:26:45+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Kyle Isaac Items",
+   "image": "O-14e1c1207e03.webp",
+   "fields": {
+    "name": {
+     "value": "A Snack",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 max HP  \nheal for 1 HP",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-13",
+  "sort": "2023-10-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

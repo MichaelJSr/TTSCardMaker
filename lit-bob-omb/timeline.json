@@ -1,0 +1,62 @@
+{
+ "card": "lit-bob-omb",
+ "key": "Lit Bob-omb",
+ "name": "Lit Bob-omb",
+ "kind": "aux item",
+ "stop": {
+  "day": "2025-05-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-c0148131f044",
+   "kind": "discord",
+   "date": "2025-04-29T05:37:38+00:00",
+   "day": "2025-04-29",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c0148131f044.webp",
+   "fields": {
+    "name": {
+     "value": "Lit Bob-omb",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 0 SP. Deal 7 DMG.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-05-02T01:30:20+00:00",
+  "changes": {
+   "ability_change": "same",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-04-29",
+  "sort": "2025-04-29",
+  "source": "discord",
+  "status": "same"
+ }
+}

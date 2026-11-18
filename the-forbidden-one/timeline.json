@@ -1,0 +1,313 @@
+{
+ "card": "the-forbidden-one",
+ "key": "The Forbidden One",
+ "name": "The Forbidden One",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-05-31",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-7c35f63de878",
+   "kind": "discord",
+   "date": "2023-05-31T12:53:45+00:00",
+   "day": "2023-05-31",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7c35f63de878.webp",
+   "fields": {
+    "name": {
+     "value": "ABRASON LINCDOLT",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, summon a fledgling creation on any friendly creature, giving it stats and an ability by spending creation counters from a pool of 15.\n(1 counter) 1 bar of any stat (cannot exceed 7 bars)\n(1 counter) gives protectee +1 DEF while alive.\n(2 counters) attacks inflict 1 stack of (soft/smeckeldorfed/thinned) for 2 turns.\n(3 counters) attacks inflict 1 stack of (burdened/enfeebled/smoldering) for 2 turns.\n(3 counters) persists on the field.\n(3 counters) immune to tier 1 debuffs (+2 counters) and tier 2.\n(4 counters) Intercept an attack directed at the protectee (+3 counters) any attack instead.\n(4 counters) attacks are peircing.\n(5 counters) (OPT) summon a fledgling minion on the same field as this.\nfledgling creation (non-protective) 2/2/2/2 Ability is chosen by the summoner.\nfledgling minion (non-protective) 1/2/3/4 (summoned by fledgling creation)",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6013bc939cf8:Creatures/Other/5 Stars/Chestnut.png",
+   "kind": "old repo",
+   "date": "2023-05-31T12:59:09+00:00",
+   "day": "2023-05-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "nut and kyle",
+   "file": "Chestnut",
+   "image": "O-d0e6b3305253.webp",
+   "fields": {
+    "name": {
+     "value": "ABRASON LINCDOLT",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, summon a fledgling creation on any friendly creature, giving it stats and an ability by spending creation counters from a pool of 15.\n(1 counter) 1 bar of any stat (cannot exceed 7 bars)\n(1 counter) gives protectee +1 DEF while alive.\n(2 counters) attacks inflict 1 stack of (soft/smeckeldorfed/thinned) for 2 turns.\n(3 counters) attacks inflict 1 stack of (burdened/enfeebled/smoldering) for 2 turns.\n(3 counters) persists on the field.\n(3 counters) immune to tier 1 debuffs (+2 counters) and tier 2.\n(4 counters) Intercept an attack directed at the protectee (+3 counters) any attack instead.\n(4 counters) attacks are peircing.\n(5 counters) (OPT) summon a fledgling minion on the same field as this.\nfledgling creation (non-protective) 2/2/2/2 Ability is chosen by the summoner.\nfledgling minion (non-protective) 1/2/3/4 (summoned by fledgling creation)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8425fb416a26:Creatures/Other/5 Stars/Chestnut.png",
+   "kind": "old repo",
+   "date": "2023-10-08T23:06:12+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "nut",
+   "file": "Chestnut",
+   "image": "O-cab2f3a8cb42.webp",
+   "fields": {
+    "name": {
+     "value": "ABRASON LINCDOLT",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, summon a non-protective 2/2/2/2 Fledgling Creation on any friendly creature, giving it stats and an ability by spending creation counters from a pool of 15.\n(1 counter) 1 bar of any stat (cannot exceed 7 bars)\n(1 counter) Gives equipped creature +1 DEF while alive.\n(2 counters) Attacks inflict 1 stack of (Softened/Smeckeldorfed/Thinned) for 2 turns.\n(3 counters) Attacks inflict 1 stack of (Burdened/Enfeebled/Smoldering) for 2 turns.\n(3 counters) Persists on the field.\n(3 counters) Immune to tier 1 debuffs, +2 more counters for tier 2.\n(4 counters) Intercept an attack directed at the equpped creature, +3 more counters to make it any attack instead.\n(4 counters) Attacks are peircing.\n(5 counters) (OPT) summon a non-protective 1/2/3/4 Fledgling Minion on the same field as this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8c1efc5e23ba:Creatures/Other/5 Stars/Chestnut.png",
+   "kind": "old repo",
+   "date": "2023-10-12T04:41:49+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some updates",
+   "file": "Chestnut",
+   "image": "O-2c3cf60f767b.webp",
+   "fields": {
+    "name": {
+     "value": "ABRASON LINCDOLT",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, summon a non-protective 2/2/2/2 Fledgling Creation on any friendly creature, giving it stats and an ability by spending creation counters from a pool of 15.\n(1 counter) 1 bar of any stat (cannot exceed 7 bars)\n(1 counter) Gives equipped creature +1 DEF while alive.\n(2 counters) Attacks inflict 1 stack of (Softened/Smeckeldorfed/Thinned) for 2 turns.\n(3 counters) Attacks inflict 1 stack of (Burdened/Enfeebled/Smoldering) for 2 turns.\n(3 counters) Persists on the field.\n(3 counters) Immune to tier 1 debuffs, +2 more counters for tier 2.\n(4 counters) Intercept an attack directed at the equpped creature, +3 more counters to make it any attack instead.\n(4 counters) Attacks are piercing.\n(5 counters) (OPT) summon a non-protective 1/2/3/4 Fledgling Minion on the same field as this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7c81e69404f3:Creatures/Other/5 Stars/Chestnut.png",
+   "kind": "old repo",
+   "date": "2023-10-12T17:53:51+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "chestnut and kyle",
+   "file": "Chestnut",
+   "image": "O-ecd103629152.webp",
+   "fields": {
+    "name": {
+     "value": "ABRASON LINCDOLT",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, summon a Chestnutter on any friendly creature, giving it stats and an ability by spending creation counters from a pool of 15.\n(1 counter) +1 bar of any stat (cannot exceed 7 bars)\n(2 counters) attacks inflict 1 stack of (Softened/Smeckeldorfed/Thinned) for 2 turns (can stack).\n(3 counters) attacks inflict 1 stack of (Burdened/Enfeebled/Smoldering) for 2 turns (can stack).\n(3 counters) immune to tier 1 debuffs.\n(4 counters) (OPGT) Intercept an attack directed at the equipped creature.\n(4 counters) attacks are peircing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/5 Stars/Chestnut.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "file": "Chestnut",
+   "image": "O-4b1a4a01c9ad.webp",
+   "fields": {
+    "name": {
+     "value": "ABRASON LINCDOLT",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, summon a Chestnutter on any friendly creature, giving it stats and an ability by spending creation counters from a pool of 15.\n(1 counter) +1 bar of any stat (cannot exceed 7 bars)\n(2 counters) attacks inflict 1 stack of (Softened/Smeckeldorfed/Thinned) for 2 turns (can stack).\n(3 counters) attacks inflict 1 stack of (Burdened/Enfeebled/Smoldering) for 2 turns (can stack).\n(3 counters) immune to tier 1 debuffs.\n(4 counters) (OPGT) Intercept an attack directed at the equipped creature.\n(4 counters) attacks are peircing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-10-14",
+  "sort": "2020-10-14",
+  "source": "discord",
+  "status": "owner"
+ }
+}

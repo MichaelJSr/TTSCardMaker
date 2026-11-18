@@ -1,0 +1,728 @@
+{
+ "card": "masked-dedede",
+ "key": "Masked Dedede",
+ "name": "Masked Dedede",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-97f75502d8f8",
+   "kind": "discord",
+   "date": "2020-07-22T02:57:45+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-97f75502d8f8.webp",
+   "fields": {
+    "name": {
+     "value": "Masked Dedede",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Masked Dedede may assume one of 3 forms per turn (AAT). Spinning Doom: -2ATK hits 2 opponents and all who attack him during this form receive 5 counter damage. Missile Barrage: -4 ATK can attack 4 times. Flamethrower: Attack gives blazing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 388,
+   "h": 789
+  },
+  {
+   "id": "F-fed7892433c",
+   "kind": "text",
+   "date": "2020-08-08T11:21:19+00:00",
+   "day": "2020-08-08",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-6b2bbc493494",
+   "kind": "discord",
+   "date": "2020-08-08T11:32:51+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-6b2bbc493494.webp",
+   "fields": {
+    "name": {
+     "value": "Masked Dedede",
+     "method": "ocr+name (repost P-d6ff22d31ce4)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card may consume food. (OPT)(AAT) This card may assume one of 3 forms until the end of the turn. Spinning Doom: -2ATK hits 2 opponents and deals 6 counter damage to attackers. Missile Barrage: -4 ATK, can attack 4 times. Flamethrower: Attack gives Blazing.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "machine"
+     ],
+     "drop": [
+      "rock"
+     ]
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 400,
+   "h": 787
+  },
+  {
+   "id": "D-P-5534f2b02b24",
+   "kind": "discord",
+   "date": "2021-08-11T19:12:32+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-5534f2b02b24.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card may consume food. (OPT)(AAT) This card may assume one of 3 forms until the end of the turn. Spinning Doom: -2ATK hits 2 opponents and deals 6 counter damage to attackers. Missile Barrage: -4 ATK, can attack 4 times. Flamethrower: Attack gives Blazing.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 399,
+   "h": 786
+  },
+  {
+   "id": "D-P-cfbf1925f095",
+   "kind": "discord",
+   "date": "2021-12-15T08:35:18+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-cfbf1925f095.webp",
+   "fields": {
+    "name": {
+     "value": "Masked Dedede",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card may consume food. (OPT) (AAT) This card may assume one of 3 forms until the end of the turn. Spinning Doom: -2ATK hits 2 opponents and deals 6 counter damage to attackers. Missile Barrage: -4 ATK, can attack 4 times. Flamethrower: Attack gives Blazing.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "machine"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 399,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-06d8e64497bc.webp",
+   "fields": {
+    "name": {
+     "value": "Masked Dedede",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card may consume food. (OPT) (AAT) This card may assume one of 3 forms until the end of the turn. Spinning Doom: -2ATK hits 2 opponents and deals 6 counter damage to attackers. Missile Barrage: -4 ATK, can attack 4 times. Flamethrower: Attack gives Blazing.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 787
+  },
+  {
+   "id": "O-65dbc6ea48e9:Cards/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2023-04-12T19:23:24+00:00",
+   "day": "2023-04-12",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "KIRBY CARDS",
+   "repo": "first",
+   "image": "O-01fa38c858a7.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card may consume food.\n(OPGT) This card may assume one of 3 forms until the end of the turn.\n Spinning Doom: -2ATK hits 2 opponents and deals counter damage to attackers. \nMissile Barrage: -4 ATK, can attack 4 times. \nFlamethrower: Attack gives Blazing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-dc9a0cc020be:Cards/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2023-04-19T06:12:19+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "warrior patients dedede masher",
+   "repo": "first",
+   "image": "O-b2a9aba94b1e.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This may consume food.\n(OPGT) This may assume 1 of 3 forms until the end of the global turn.\n Spinning Doom: -2 ATK, can attack 2 times, and deals 6 counter damage to attackers.\nMissile Barrage: -5 ATK, can attack 4 times.\nFlamethrower: Attacks inflict Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-b2a9aba94b1e.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This may consume food.\n(OPGT) This may assume 1 of 3 forms until the end of the global turn.\n Spinning Doom: -2 ATK, can attack 2 times, and deals 6 counter damage to attackers.\nMissile Barrage: -5 ATK, can attack 4 times.\nFlamethrower: Attacks inflict Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-b2a9aba94b1e.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This may consume food.\n(OPGT) This may assume 1 of 3 forms until the end of the global turn.\n Spinning Doom: -2 ATK, can attack 2 times, and deals 6 counter damage to attackers.\nMissile Barrage: -5 ATK, can attack 4 times.\nFlamethrower: Attacks inflict Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-24b8cea989d2.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature may consume food.\n(OPGT) This may assume 1 of 3 forms until the end of the global turn;\n Spinning Doom: -2 ATK, can attack 2 times, and deals 6 counter damage to attackers.\nMissile Barrage: -5 ATK, can attack 4 times.\nFlamethrower: Attacks inflict Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a965a75e90a4:Creatures/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2023-10-18T15:22:12+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new stuff",
+   "image": "O-14138d9dd5e5.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature may consume food.\n(OPGT) This may assume 1 of 3 forms until the end of the global turn;\n Spinning Doom: -2 ATK, can attack 2 seperate creatures, and deals 6 counter damage to attackers.\nMissile Barrage: -5 ATK, can attack 4 times.\nFlamethrower: Attacks inflict Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-cdfca4390168.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature may consume food.\n(OPGT) This may assume 1 of 3 forms until the end of the global turn;\n Spinning Doom: -2 ATK, can attack 2 seperate creatures, and deals 6 counter damage to attackers.\nMissile Barrage: -5 ATK, can attack 4 times.\nFlamethrower: Attacks inflict Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Kirby/5 Stars/Masked_Dedede.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-928db568f65a.webp",
+   "fields": {
+    "name": {
+     "value": "MAsked Dedede",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature may consume food.\n(OPGT) This may assume 1 of 3 forms until the end of the global turn;\n Spinning Doom: -2 ATK, can attack 2 seperate creatures, and deals 6 counter damage to attackers.\nMissile Barrage: -5 ATK, can attack 4 times.\nFlamethrower: Attacks inflict Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

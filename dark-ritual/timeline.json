@@ -1,0 +1,403 @@
+{
+ "card": "dark-ritual",
+ "key": "Dark Ritual",
+ "name": "Dark Ritual",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f1ed39761a9",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f63536fa3f0",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-314e0efafdeb",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:43+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-314e0efafdeb.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Ritual",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Revives one of your dead creatures in exchange for a sacrifice of 3 stars worth of items that have not yet been used",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "D-P-f81cbeb7193e",
+   "kind": "discord",
+   "date": "2020-07-22T07:50:40+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-f81cbeb7193e.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Ritual",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Revives one of your dead creatures in exchange for a sacrifice of the creature's level -1 stars worth of items that have not yet been used",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "D-P-47d82d164621",
+   "kind": "discord",
+   "date": "2020-08-03T00:17:55+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-47d82d164621.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Ritual",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Revives one of your dead creatures in exchange for a sacrifice of the creature's level -1 stars worth of items that have not yet been used",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 398,
+   "h": 615
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/4 Stars/Dark_Ritual.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-f54b5863ca3b.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Ritual",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Revives one of your dead\ncreatures in exchange for a sacrifice of the creature's level -1 stars worth of items that have not yet been used.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 398,
+   "h": 615
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/4 star/Dark_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-f54b5863ca3b.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Ritual",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Revives one of your dead creatures in exchange for a sacrifice of the creature’s level -1 stars worth of items that have not yet been used",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 398,
+   "h": 615
+  },
+  {
+   "id": "O-662d9ab22c70:Items/Support/4 star/Dark_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-10T18:50:19+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some grodus cards clean up and Dark ritual",
+   "repo": "first",
+   "image": "O-a5522636c685.webp",
+   "fields": {
+    "name": {
+     "value": "Dark ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Revives one of your dead\ncreatures in exchange for a sacrifice of the creature's level -1 stars worth of items that have not yet been used.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/4 Stars/Dark_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-a5522636c685.webp",
+   "fields": {
+    "name": {
+     "value": "Dark ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Revives one of your dead\ncreatures in exchange for a sacrifice of the creature's level -1 stars worth of items that have not yet been used.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/4 Stars/Dark_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-a5522636c685.webp",
+   "fields": {
+    "name": {
+     "value": "Dark ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Revives one of your dead\ncreatures in exchange for a sacrifice of the creature's level -1 stars worth of items that have not yet been used.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8d151d6b4904:Items/Support/4 Stars/Dark_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-10-08T22:03:14+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Pending Changes",
+   "image": "O-0b5460348edf.webp",
+   "fields": {
+    "name": {
+     "value": "Dark ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be used from facedown.\nTarget a creature, and sacrifice unused items equal to its (Star Cost - 2).\nAfter that creature dies, revive it immediately, but inflict it with permanent Corruption, or Cursed Inferno if it has no ability.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-87c5a11e7c56:Items/Support/4 Stars/Dark_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-10-12T04:07:33+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-6622fdd21de8.webp",
+   "fields": {
+    "name": {
+     "value": "Dark ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be used from facedown.\nTarget a creature, and sacrifice unused items equal to its (Star Cost - 2).\nAfter that creature dies, revive it immediately, but inflict it with permanent Corruption, or Cursed Inferno if it has no ability.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

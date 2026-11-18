@@ -1,0 +1,78 @@
+{
+ "card": "pandanoko",
+ "key": "Pandanoko",
+ "name": "Pandanoko",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-07-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-2e44830b1643",
+   "kind": "discord",
+   "date": "2025-07-03T04:32:27+00:00",
+   "day": "2025-07-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2e44830b1643.webp",
+   "fields": {
+    "name": {
+     "value": "Pandanoko",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature cannot deal combo damage. (1PT) Inflict a creature with 1 Regen for 3 turns. (1PG) (OYT) Heal all friendly creatures for 3 HP. (1PT) Use an action to swap out this creature for no cost and gain 3 points.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 9
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-07-03T07:10:27+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-07-03",
+  "sort": "2025-07-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

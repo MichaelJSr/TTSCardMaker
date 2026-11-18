@@ -1,0 +1,60 @@
+{
+ "card": "stoogopoly",
+ "key": "Stoogopoly",
+ "name": "Stoogopoly",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-03-03T06:47:49.610000+00:00",
+  "day": "2020-03-03",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-1f6a26869fcb",
+   "kind": "discord",
+   "date": "2020-03-03T06:47:49.610000+00:00",
+   "day": "2020-03-03",
+   "badge": "Discord",
+   "image": "P-1f6a26869fcb.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 720,
+   "h": 1454
+  },
+  {
+   "id": "P-144cb92e5546",
+   "kind": "discord",
+   "date": "2020-08-15T01:43:03.601000+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "image": "P-144cb92e5546.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 680,
+   "h": 1373
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/5 Stars/Stoogopoly.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-00f32874900d.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 680,
+   "h": 1373
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

@@ -1,0 +1,362 @@
+{
+ "card": "reflection",
+ "key": "Reflection",
+ "name": "Reflection",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-14c5120aab13",
+   "kind": "discord",
+   "date": "2020-07-26T00:26:55+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-14c5120aab13.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on your team, swap the stats of two of your creatures If used on the enemy team, swap the stats of two of their creatures.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "F-f96bc838573",
+   "kind": "text",
+   "date": "2020-08-05T09:12:24+00:00",
+   "day": "2020-08-05",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "stars",
+    "to": 4
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-7fcd135bddd6"
+  },
+  {
+   "id": "D-P-7fcd135bddd6",
+   "kind": "discord",
+   "date": "2020-08-08T08:19:35+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-7fcd135bddd6.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on your team, swap the current stats of two of your creatures. If used on the enemy team swap the current stats of two of their creatures.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "D-P-0dc97e296c3c",
+   "kind": "discord",
+   "date": "2020-08-31T08:52:27+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-0dc97e296c3c.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Swap the current and max HP of two of your creatures.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     3
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/3 Stars/Reflection.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-1faa4a604f3b.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Swap the current and max HP of two of your creatures.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-563fdf303c4c:Items/Active/3 Stars/Reflection.png",
+   "kind": "old repo",
+   "date": "2023-03-31T05:54:06+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Remade reflection",
+   "repo": "first",
+   "image": "O-112e5e2e7001.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Swap either the HP (current and max), DEF, ATK, or SPD stats between two of your creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/3 star/Reflection.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-112e5e2e7001.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Swap either the HP (current and max), DEF, ATK, or SPD stats between two of your creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6cfb610a3e83:Items/Support/3 star/Reflection.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:01:31+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-db2b93a07c01.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Swap either the HP (current and max), DEF, ATK, or SPD stats between two of your creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/3 Stars/Reflection.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-db2b93a07c01.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Swap either the HP (current and max), DEF, ATK, or SPD stats between two of your creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/3 Stars/Reflection.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-db2b93a07c01.webp",
+   "fields": {
+    "name": {
+     "value": "Reflection",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Swap either the HP (current and max), DEF, ATK, or SPD stats between two of your creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-26",
+  "sort": "2020-07-26",
+  "source": "discord",
+  "status": "same"
+ }
+}

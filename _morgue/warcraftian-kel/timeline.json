@@ -1,0 +1,71 @@
+{
+ "card": "warcraftian-kel",
+ "key": "Warcraftian Kel",
+ "name": "Warcraftian Kel",
+ "morgue": "candidate",
+ "first": {
+  "date": "2022-02-04T00:07:19.341000+00:00",
+  "day": "2022-02-04",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-cbc16dd56c15",
+   "kind": "discord",
+   "date": "2022-02-04T00:07:19.341000+00:00",
+   "day": "2022-02-04",
+   "badge": "Discord",
+   "image": "P-cbc16dd56c15.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 400,
+   "h": 2332
+  },
+  {
+   "id": "P-de7a27edac27",
+   "kind": "discord",
+   "date": "2022-03-12T11:06:34.269000+00:00",
+   "day": "2022-03-12",
+   "badge": "Discord",
+   "image": "P-de7a27edac27.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 400,
+   "h": 2332
+  },
+  {
+   "id": "P-ad64c402de6e",
+   "kind": "discord",
+   "date": "2023-12-13T12:48:51.012000+00:00",
+   "day": "2023-12-13",
+   "badge": "Discord",
+   "image": "P-ad64c402de6e.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 400,
+   "h": 2332
+  },
+  {
+   "id": "P-7ccfb5d73141",
+   "kind": "discord",
+   "date": "2026-11-06T08:05:06.284000+00:00",
+   "day": "2026-11-06",
+   "badge": "Discord",
+   "image": "P-7ccfb5d73141.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "voice-chat",
+   "w": 400,
+   "h": 2332
+  }
+ ],
+ "kind_of": "joke"
+}

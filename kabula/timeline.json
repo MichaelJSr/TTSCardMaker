@@ -1,0 +1,661 @@
+{
+ "card": "kabula",
+ "key": "Kabula",
+ "name": "Kabula",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fb6cb825dde",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e3479b0028c4",
+   "kind": "discord",
+   "date": "2020-07-22T02:52:58+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-e3479b0028c4.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Kabula is immune to counter damage. When below half health: -1ATK +1SPD Kabula can now attack twice",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 394,
+   "h": 787
+  },
+  {
+   "id": "F-f99bdb838f4",
+   "kind": "text",
+   "date": "2020-09-12T06:09:12+00:00",
+   "day": "2020-09-12",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-1a8b873015fe",
+   "kind": "discord",
+   "date": "2020-09-19T05:10:57+00:00",
+   "day": "2020-09-19",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-1a8b873015fe.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Kabula is immune to counter damage. When at or below half health: - 1ATK +1SPD Kabula can now attack twice",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 396,
+   "h": 790
+  },
+  {
+   "id": "D-P-ea2611cf6ad5",
+   "kind": "discord",
+   "date": "2020-09-28T00:09:00+00:00",
+   "day": "2020-09-28",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-ea2611cf6ad5.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card is at or below 50% HP It gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 396,
+   "h": 790
+  },
+  {
+   "id": "D-P-b28ed019a3cc",
+   "kind": "discord",
+   "date": "2021-12-15T09:33:34+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-b28ed019a3cc.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card is at or below 50% HP It gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 396,
+   "h": 790
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/3 Stars/Kabula.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-6f3f4c06e68b.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card is at or below 50% HP It gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 396,
+   "h": 790
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/3 Stars/Kabula.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-0b720d453092.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card is at or below 50% HP It gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-386bdb5b1345:Cards/Kirby/3 Stars/Kabula.png",
+   "kind": "old repo",
+   "date": "2023-04-06T23:48:36+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Card to Creature lingo kriby cards",
+   "repo": "first",
+   "image": "O-cdbb96c734af.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature is at or below 50% HP It gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/3 Stars/Kabula.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-cdbb96c734af.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature is at or below 50% HP It gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/3 Stars/Kabula.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-cdbb96c734af.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature is at or below 50% HP It gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-cc2f46f1221c:Creatures/Kirby/3 Stars/Kabula.png",
+   "kind": "old repo",
+   "date": "2023-04-30T11:18:10+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "small touch ups",
+   "image": "O-2f80570e2866.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature is at or below 50% HP it gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/3 Stars/Kabula.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-55a81be533f0.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature is at or below 50% HP it gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/3 Stars/Kabula.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-41eabd69132f.webp",
+   "fields": {
+    "name": {
+     "value": "Kabula",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature is at or below 50% HP it gains 1 SPD loses 1 ATK, can attack twice per action, and is immune to counter damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-05-14",
+  "sort": "2019-05-14",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

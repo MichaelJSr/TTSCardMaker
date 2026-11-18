@@ -1,0 +1,80 @@
+{
+ "card": "ipsilon",
+ "key": "Ipsilon",
+ "name": "Ipsilon",
+ "kind": "minion",
+ "stop": {
+  "day": "2025-05-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-69acc1c30a49",
+   "kind": "discord",
+   "date": "2025-05-03T07:23:19+00:00",
+   "day": "2025-05-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-69acc1c30a49.webp",
+   "fields": {
+    "name": {
+     "value": "Ipsilon",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Heal a friendly creature by 3 HP, or generate points equal to half of this ability's healing value.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-01-30T23:44:57+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-05-03",
+  "sort": "2025-05-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

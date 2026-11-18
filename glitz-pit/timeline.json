@@ -1,0 +1,141 @@
+{
+ "card": "glitz-pit",
+ "key": "Glitz Pit",
+ "name": "Glitz Pit",
+ "kind": "field",
+ "stop": {
+  "day": "2023-10-27",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-2ad629dafc7c",
+   "kind": "discord",
+   "date": "2023-10-27T15:59:11+00:00",
+   "day": "2023-10-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2ad629dafc7c.webp",
+   "fields": {
+    "name": {
+     "value": "Glitz Pit",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Brute: +2 ATK Martial Artist: +2 SPD Performer: Heal 3 HP (ENDT) Your team gets 1 extra point for every kill.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-8d9086edde49",
+   "kind": "discord",
+   "date": "2023-10-27T19:42:35+00:00",
+   "day": "2023-10-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8d9086edde49.webp",
+   "fields": {
+    "name": {
+     "value": "Glitz Pit",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Brute: +2 ATK\nMartial Artist: +2 SPD \nPerformer: Heal 3 HP (ENDT) \nYour team gets 1 extra point for every kill.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6aa34293d3b0:Field/3 Stars/Glitz_Pit.png",
+   "kind": "old repo",
+   "date": "2023-10-27T20:29:11+00:00",
+   "day": "2023-10-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new cards",
+   "image": "O-5b3948e120c3.webp",
+   "fields": {
+    "name": {
+     "value": "Glitz Pit",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Brute: +2 ATK\nMartial Artist: +2 SPD \nPerformer: Heal 3 HP (ENDT) \nYour team gets 1 extra point for every kill.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-27",
+  "sort": "2023-10-27",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,484 @@
+{
+ "card": "amazing-mirror",
+ "key": "Amazing Mirror",
+ "name": "Amazing Mirror",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f70ada4c5e6",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f06fc40d5da",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fd6c231f730",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "field": "stars",
+    "to": 4
+   }
+  },
+  {
+   "id": "D-P-40f3c3711c8e",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:16+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-40f3c3711c8e.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing Mirror",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field; create a protective minion with all the attributes of the creature but with -4 HP -1 DEF - 1 ATK -1 SPD (stat reductions apply to minions summoned by the mirrored creature)",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 3,
+   "era": "A-item",
+   "w": 390,
+   "h": 612
+  },
+  {
+   "id": "D-P-b3d25bb6404f",
+   "kind": "discord",
+   "date": "2020-08-09T07:34:35+00:00",
+   "day": "2020-08-09",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-b3d25bb6404f.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing Mirror",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field; create a protective minion in front of any creature with all the attributes of the creature but with -4 HP -1 DEF - 1 ATK -1 SPD (same reductions apple to its minions) This minion cannot be placed behind the creature it was summoned on",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 391,
+   "h": 611
+  },
+  {
+   "id": "D-P-c3612cfdc3d1",
+   "kind": "discord",
+   "date": "2020-10-04T01:15:01+00:00",
+   "day": "2020-10-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c3612cfdc3d1.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing Mirror",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field; create a protective minion in front of any creature with all the attributes of the creature but with -4 HP -1 DEF -1 ATK -1 SPD (same reductions apple to its minions) This minion cannot be placed behind the creature it was summoned on",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 389,
+   "h": 610
+  },
+  {
+   "id": "F-f2ec26d9ccd",
+   "kind": "text",
+   "date": "2021-05-07T08:15:30+00:00",
+   "day": "2021-05-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-b9ce3b247c68",
+   "kind": "discord",
+   "date": "2021-08-11T14:28:48+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-b9ce3b247c68.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing Mirror",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature anywhere on the field; create a protective minion in front of any creature with all the base Attributes/ Types/Abilities of the creature but with max stats reduced by: 50% HP, 1 DEF, 1 ATK, and 1 SPD (same reductions apple to its minions) This minion must remain on the Primary field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C-item",
+   "w": 388,
+   "h": 610
+  },
+  {
+   "id": "F-fe846a94487",
+   "kind": "text",
+   "date": "2022-01-29T11:53:25+00:00",
+   "day": "2022-01-29",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/4 Stars/Amazing_Mirror.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-a4570d0ac272.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing Mirror",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature anywhere on the field; create a protective minion in front of any creature with all the base Attributes/ Types/Abilities of the creature but with max stats reduced by: 50% HP, 1 DEF, 1 ATK, and 1 SPD (same reductions apple to its minions) This minion must remain on the Primary field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 388,
+   "h": 610
+  },
+  {
+   "id": "O-257dc970a875:Items/Active/4 Stars/Amazing_Mirror.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-94e5d0e30112.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing Mirror",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature anywhere on the field; create a protective minion in front of any creature with all the base Attributes/ Types/Abilities of the creature but with max stats reduced by: 50% HP, 1 DEF, 1 ATK, and 1 SPD (same reductions apple to its minions) This minion must remain on the Primary field as long as it is on the field",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 610
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/4 star/Amazing_Mirror.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-94e5d0e30112.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing Mirror",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature anywhere on the field; create a protective minion in front of any creature with all the base Attributes/ Types/Abilities of the creature but with max stats reduced by: 50% HP, 1 DEF, 1 ATK, and 1 SPD (same reductions apple to its minions) This minion must remain on the Primary field as long as it is on the field",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 389,
+   "h": 610
+  },
+  {
+   "id": "O-7baa52ab3ad7:Items/Support/4 star/Amazing_Mirror.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:57:03+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "last items",
+   "repo": "first",
+   "image": "O-bd248c7a21a5.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing mirror",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature anywhere on the primary field;\ncreate a protective minion in front of any creature with all the base attributes/types/abilities of the creature but with max stats reduced by: 50% HP, 1 DEF, 1 ATK, and 1 SPD \n(same reductions apply to its minions) \nThis minion must remain on the  Primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/4 Stars/Amazing_Mirror.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-bd248c7a21a5.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing mirror",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature anywhere on the primary field;\ncreate a protective minion in front of any creature with all the base attributes/types/abilities of the creature but with max stats reduced by: 50% HP, 1 DEF, 1 ATK, and 1 SPD \n(same reductions apply to its minions) \nThis minion must remain on the  Primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/4 Stars/Amazing_Mirror.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-bd248c7a21a5.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing mirror",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature anywhere on the primary field;\ncreate a protective minion in front of any creature with all the base attributes/types/abilities of the creature but with max stats reduced by: 50% HP, 1 DEF, 1 ATK, and 1 SPD \n(same reductions apply to its minions) \nThis minion must remain on the  Primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c2b1b3fecc90:Items/Support/4 Stars/Amazing_Mirror.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-f33cd7013b48.webp",
+   "fields": {
+    "name": {
+     "value": "Amazing mirror",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Create a protective minion of any creature on the primary field in front of any creature with all the base attributes/types/abilities of the creature but with the stat reductions of: \n-50% HP, -1 DEF, -1 ATK, & -1 SPD.\nThe same reductions apply to its minions and any revives.\nThis minion must remain on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-22",
+  "sort": "2019-03-22",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

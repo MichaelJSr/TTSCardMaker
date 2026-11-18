@@ -1,0 +1,806 @@
+{
+ "card": "masher",
+ "key": "Masher",
+ "name": "Masher",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f282c1d5409",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "spd",
+    "to": 4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-27ea88c6c1d5"
+  },
+  {
+   "id": "F-f7184feee0f",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "def",
+    "to": 6,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-27ea88c6c1d5"
+  },
+  {
+   "id": "F-fa20cd7cb5a",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "hp",
+    "to": 6,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-27ea88c6c1d5"
+  },
+  {
+   "id": "F-fb7b500cc01",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "atk",
+    "to": 6,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-27ea88c6c1d5"
+  },
+  {
+   "id": "D-P-27ea88c6c1d5",
+   "kind": "discord",
+   "date": "2020-07-25T12:39:35+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-27ea88c6c1d5.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective minion. Masher is immune to counter damage. Summoned by NME Salesman.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-d86edc727181",
+   "kind": "discord",
+   "date": "2020-08-29T00:52:29+00:00",
+   "day": "2020-08-29",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-d86edc727181.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective minion. Masher is immune to counter damage. Summoned by NME Salesman.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "machine"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/4 Stars/Masher.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-8d0d93404f2d.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective minion. Masher is immune to counter damage. Summoned by NME Salesman.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-257dc970a875:Auxillary/Minions/4 Stars/Masher.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-d811a62cec6e.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective minion. All minions \nprotecting the same creature as \nthis one gain 1 DEF. This creature\ngains 1 ATK for every minion\nprotecting the same creature\nas this one.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 6 -> 5"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-b9796d438c3d:Auxillary/Minions/4 Stars/Masher.png",
+   "kind": "old repo",
+   "date": "2023-03-20T00:40:38+00:00",
+   "day": "2023-03-20",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "Add files via upload",
+   "repo": "first",
+   "image": "O-8f55fee3e334.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective minion. All minions \nprotecting the same creature as \nthis one gain 1 DEF. This creature\ngains 1 ATK for every minion\nprotecting the same creature\nas this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-b16c6736c20c:Auxillary/Minions/4 Stars/Masher.png",
+   "kind": "old repo",
+   "date": "2023-04-02T00:20:11+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Touched a bunch of auxillary cards to standardize their size and delete some unused assets",
+   "repo": "first",
+   "image": "O-4962186aebe6.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective minion. All minions \nprotecting the same creature as \nthis one gain 1 DEF. This creature\ngains 1 ATK for every minion\nprotecting the same creature\nas this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-37451eba2f36:Auxillary/Minions/4 Stars/Masher.png",
+   "kind": "old repo",
+   "date": "2023-04-03T10:39:58+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed all psd minions to use the new types for protective/not",
+   "repo": "first",
+   "image": "O-0fd48e445062.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "dark",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All minions protecting the same\ncreature as this one gain +1 DEF\nwhile this is alive.\nThis creature gains +1 ATK\nfor every minion protecting\nthe same creature as this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "defensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-dc9a0cc020be:Auxillary/Minions/4 Stars/Masher.png",
+   "kind": "old repo",
+   "date": "2023-04-19T06:12:19+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "warrior patients dedede masher",
+   "repo": "first",
+   "image": "O-ea6c3ce07410.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "dark",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All other minions protecting the\nsame creature as this one gain\n+1 DEF while this is alive.\nThis creature gains +1 ATK\nfor every other minion protecting\nthe same creature as this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 5 -> 4"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a18b9e4c8c48:Auxillary/Minions/4 Stars/Masher.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:59:18+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Auxillary minions",
+   "image": "O-ea6c3ce07410.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "dark",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All other minions protecting the\nsame creature as this one gain\n+1 DEF while this is alive.\nThis creature gains +1 ATK\nfor every other minion protecting\nthe same creature as this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8a1a518be3d0:Auxillary/Minions/4 Stars/Masher.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:38:03+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-540396e8e5fb.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "dark",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All other minions protecting the\nsame creature as this one gain\n+1 DEF while this is alive.\nThis creature gains +1 ATK\nfor every other minion protecting\nthe same creature as this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Masher.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-540396e8e5fb.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "dark",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All other minions protecting the\nsame creature as this one gain\n+1 DEF while this is alive.\nThis creature gains +1 ATK\nfor every other minion protecting\nthe same creature as this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a40cf4e9d8c5:Auxillary/Minions/Masher.png",
+   "kind": "old repo",
+   "date": "2023-10-27T14:47:18+00:00",
+   "day": "2023-10-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Elemental Wrold",
+   "image": "O-9f6f49923899.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "dark",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All other minions protecting the\nsame creature as this one gain\n+1 DEF while this is alive.\nThis creature gains +1 ATK\nfor every other minion protecting\nthe same creature as this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Masher.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-df191a8b1aca.webp",
+   "fields": {
+    "name": {
+     "value": "Masher",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "dark",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All other minions protecting the\nsame creature as this one gain\n+1 DEF while this is alive.\nThis creature gains +1 ATK\nfor every other minion protecting\nthe same creature as this one.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-25",
+  "sort": "2020-07-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

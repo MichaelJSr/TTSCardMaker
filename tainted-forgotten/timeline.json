@@ -1,0 +1,77 @@
+{
+ "card": "tainted-forgotten",
+ "key": "Tainted Forgotten",
+ "name": "Tainted Forgotten",
+ "kind": "creature",
+ "stop": {
+  "day": "2026-11-06",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1907ba69266a",
+   "kind": "discord",
+   "date": "2026-11-06T03:35:20+00:00",
+   "day": "2026-11-06",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1907ba69266a.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Forgotten",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Summon Tainted Soul. Immune to damage. Destroyed when Tainted Soul is defeated. +3 ATK against creatures in the same slot. (1GCD)(2U) Intercept an attack or infliction towards another creature in this slot. (1/2GCD) Intercept an attack or infliction made by another creature in this slot.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 0,
+      "atk": 6,
+      "spd": 1
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "bars-other",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-06T07:14:52+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2026-11-06",
+  "sort": "2026-11-06",
+  "source": "discord",
+  "status": "owner"
+ }
+}

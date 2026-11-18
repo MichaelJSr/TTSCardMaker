@@ -1,0 +1,428 @@
+{
+ "card": "dimension-d",
+ "key": "Dimension D",
+ "name": "Dimension D",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-4b4dc18fbc0c",
+   "kind": "discord",
+   "date": "2022-01-16T12:27:57+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-4b4dc18fbc0c.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: -1 cost for each type your creatures have. All attributes and types: +1 ATK per type/attribute.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 392,
+   "h": 607
+  },
+  {
+   "id": "D-P-fca4f75bcd85",
+   "kind": "discord",
+   "date": "2022-01-17T20:38:08+00:00",
+   "day": "2022-01-17",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-fca4f75bcd85.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "git look: icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: -1 cost for each type\nthe creatures on your side of\nthe field have.\n\nAll attributes and types: +1 ATK \nper type/attribute.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "F",
+   "w": 392,
+   "h": 607
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/4 Stars/Dimension_D.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-041050309f09.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: -1 cost for each type\nthe creatures on your side of\nthe field have.\n\nAll attributes and types: +1 ATK \nper type/attribute.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 392,
+   "h": 607
+  },
+  {
+   "id": "O-8c12e021fb3a:Field/4 Stars/Dimension_D.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-a32cd1e9f72f.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: -1 cost for each type\nthe creatures on your side of\nthe field have.\n\nAll attributes and types: +1 ATK \nper type/attribute.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-52be4ee73b9e:Field/4 Stars/Dimension_D.png",
+   "kind": "old repo",
+   "date": "2023-04-20T03:26:14+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "dimension d, panda future",
+   "repo": "first",
+   "image": "O-7ff61e6b7903.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost for each type the creatures on your side of the field have.\n\nAll creatures on your side gain +1 ATK for each type/attribute they have.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/4 Stars/Dimension_D.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-7ff61e6b7903.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost for each type the creatures on your side of the field have.\n\nAll creatures on your side gain +1 ATK for each type/attribute they have.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/4 Stars/Dimension_D.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-8f5182f5a80f.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost for each type the creatures on your side of the field have.\n\nAll creatures on your side gain +1 ATK for each type/attribute they have.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-628ccc86b4ea:Field/4 Stars/Dimension_D.png",
+   "kind": "old repo",
+   "date": "2023-09-27T11:07:12+00:00",
+   "day": "2023-09-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "tree",
+   "image": "O-bbf0a328cfba.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost for each type the creatures on your side of the field have.\n\nAll creatures on your side gain +1 ATK for each type/attribute they have.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8d87798f1ba:Field/2 Stars/Dimension_D.png",
+   "kind": "old repo",
+   "date": "2023-10-14T04:41:31+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Pending updates",
+   "image": "O-c2de511e7ea3.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The point yielding creatures in the center lane on both sides gain +2 ATK and +4 DEF.\n\nPlaying this item from the hand costs 2 star points more than usual.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-632801c5c9cf:Field/2 Stars/Dimension_D.png",
+   "kind": "old repo",
+   "date": "2023-10-14T05:35:48+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "rest of the pending updates",
+   "image": "O-328f8b07b09e.webp",
+   "fields": {
+    "name": {
+     "value": "Dimension D",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The point yielding creatures in the center lane on both sides gain +2 ATK and +4 DEF.\n\nPlaying this item from the hand costs 2 star points more than usual.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     2
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-01-16",
+  "sort": "2022-01-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

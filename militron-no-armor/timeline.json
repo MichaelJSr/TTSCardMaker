@@ -1,0 +1,116 @@
+{
+ "card": "militron-no-armor",
+ "key": "Militron (No Armor)",
+ "name": "Militron (No Armor)",
+ "kind": "creatures",
+ "stop": {
+  "day": "2023-11-05",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-0e16d18efb93",
+   "kind": "discord",
+   "date": "2023-11-04T18:14:07+00:00",
+   "day": "2023-11-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-0e16d18efb93.webp",
+   "fields": {
+    "name": {
+     "value": "Militron No Armor",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 0,
+      "atk": 0,
+      "spd": 8
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature may switch for free. If this creature goes into the hand, it dies instantly, but the enemy team gets no points for its death.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f496bf7e6935:Auxillary/Minions/Militron_No_Armor.png",
+   "kind": "old repo",
+   "date": "2023-11-05T06:31:35+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "new cards",
+   "image": "O-fed1168e08f7.webp",
+   "fields": {
+    "name": {
+     "value": "Militron No Armor",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 0,
+      "atk": 0,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature may switch for free. If this creature goes into the hand, it dies instantly, but the enemy team gets no points for its death.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-11-04",
+  "sort": "2023-11-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

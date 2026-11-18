@@ -1,0 +1,227 @@
+{
+ "card": "blasphemous-blade",
+ "key": "Blasphemous Blade",
+ "name": "Blasphemous Blade",
+ "kind": "item",
+ "stop": {
+  "day": "2023-05-07",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c40a0bb5f62f",
+   "kind": "discord",
+   "date": "2023-05-07T07:00:56+00:00",
+   "day": "2023-05-07",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c40a0bb5f62f.webp",
+   "fields": {
+    "name": {
+     "value": "Blashphemous Blade",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Burn(2) and grants Lifesteal, but decreases your star points by 2 at (BOGT) while equipped",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ec77129166a3:Items/Equip/4 Stars/Blashemous Blade.png",
+   "kind": "old repo",
+   "date": "2023-05-07T07:04:46+00:00",
+   "day": "2023-05-07",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Blasphemous Blade",
+   "file": "Blashemous Blade",
+   "image": "O-4dee485bf970.webp",
+   "fields": {
+    "name": {
+     "value": "Blashphemous Blade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Burn(2) and grants Lifesteal, but decreases your star points by 2 at (BOGT) while equipped",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9e1fff00d39d:Items/Equip/4 Stars/Blashemous Blade.png",
+   "kind": "old repo",
+   "date": "2023-05-08T00:06:41+00:00",
+   "day": "2023-05-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fuxes",
+   "file": "Blashemous Blade",
+   "image": "O-742ebe6327a6.webp",
+   "fields": {
+    "name": {
+     "value": "Blashphemous Blade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Burn for two turns and grants 100% Lifesteal.\n(BOGT) decreases your star points by 2 while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Items/Equip/4 Stars/Blashemous Blade.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "file": "Blashemous Blade",
+   "image": "O-588ecba101ff.webp",
+   "fields": {
+    "name": {
+     "value": "Blasphemous Blade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Burn for two turns and grants 100% Lifesteal.\n(BOGT) decreases your star points by 2 while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Blashphemous Blade",
+     "Blasphemous Blade"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-961ba228ed1c:Items/Equip/4 Stars/Blashemous Blade.png",
+   "kind": "old repo",
+   "date": "2023-09-26T20:56:12+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "quality",
+   "file": "Blashemous Blade",
+   "image": "O-2d9f6eac6355.webp",
+   "fields": {
+    "name": {
+     "value": "Blasphemous Blade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Burn for two turns and grants 100% Lifesteal.\n(BOGT) decreases your star points by 2 while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-23e7f4a10214:Items/Equip/4 Stars/Blashemous Blade.png",
+   "kind": "old repo",
+   "date": "2023-10-30T02:54:47+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "file": "Blashemous Blade",
+   "image": "O-dc264f398d6c.webp",
+   "fields": {
+    "name": {
+     "value": "Blasphemous Blade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Burning for two turns and grants 100% Lifesteal.\n(BOGT) -2 star points while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-05-07",
+  "sort": "2023-05-07",
+  "source": "discord",
+  "status": "same"
+ }
+}

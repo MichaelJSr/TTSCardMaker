@@ -1,0 +1,405 @@
+{
+ "card": "joel-miller",
+ "key": "Joel Miller",
+ "name": "Joel Miller",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-10-15",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-bd93cc11fbf8",
+   "kind": "discord",
+   "date": "2023-10-15T02:36:09+00:00",
+   "day": "2023-10-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-bd93cc11fbf8.webp",
+   "fields": {
+    "name": {
+     "value": "Joel Miller",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May consume an action to do inflict one of the following debuffs: Afraid, Paralyzed, 4 stack of Softened, or 3 stacks of Enfeebled for 2 turns. (OPG) Increase this creature's ATK by 10 for it's next attack, then negate this creature permanently after it attacks.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-e96a4b1b52f5",
+   "kind": "discord",
+   "date": "2023-10-15T03:02:44+00:00",
+   "day": "2023-10-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e96a4b1b52f5.webp",
+   "fields": {
+    "name": {
+     "value": "Joel Miller",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May consume an action to do inflict one of the following debuffs: Afraid, Paralyzed, 4 stack of Softened, or 3 stacks of Enfeebled for 2 turns.\n(OPG) Increase this creature's ATK by 10 for it's next attack, then negate this creature permanently after it attacks.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-16ccd1630912:Creatures/Other/3 Stars/Joel_Miller.png",
+   "kind": "old repo",
+   "date": "2023-10-15T03:05:10+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-35ed6d45b5e7.webp",
+   "fields": {
+    "name": {
+     "value": "Joel Miller",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May consume an action to do inflict one of the following debuffs: Afraid, Paralyzed, 4 stack of Softened, or 3 stacks of Enfeebled for 2 turns.\n(OPG) Increase this creature's ATK by 10 for it's next attack, then negate this creature permanently after it attacks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-427f4812b8ac:Creatures/Lisa/3 Stars/Joel_Miller.png",
+   "kind": "old repo",
+   "date": "2023-10-16T03:25:10+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Moved stuff to correct folders",
+   "image": "O-35ed6d45b5e7.webp",
+   "fields": {
+    "name": {
+     "value": "Joel Miller",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May consume an action to do inflict one of the following debuffs: Afraid, Paralyzed, 4 stack of Softened, or 3 stacks of Enfeebled for 2 turns.\n(OPG) Increase this creature's ATK by 10 for it's next attack, then negate this creature permanently after it attacks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c2b1b3fecc90:Creatures/Lisa/3 Stars/Joel_Miller.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-e54e6c7f7451.webp",
+   "fields": {
+    "name": {
+     "value": "Joel Miller",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May consume an action to inflict one of the following debuffs: Afraid, Paralyzed, 4 stack of Softened, or 3 stacks of Enfeebled for 2 turns.\n(OPG) Increase this creature's ATK by 10 for it's next attack, then negate this creature permanently after it attacks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3518261d375b:Creatures/Lisa/3 Stars/Joel_Miller.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-93439a2ecf77.webp",
+   "fields": {
+    "name": {
+     "value": "Joel Miller",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May consume an action to inflict one of the following debuffs: Afraid, Paralyzed, 4 stack of Softened, or 3 stacks of Enfeebled for 2 turns.\n(OPG) Increase this creature's ATK by 10 for it's next attack, then negate this creature permanently after it attacks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Lisa/3 Stars/Joel_Miller.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-6e1233c54967.webp",
+   "fields": {
+    "name": {
+     "value": "Joel Miller",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May consume an action to inflict one of the following debuffs: Afraid, Paralyzed, 4 stack of Softened, or 3 stacks of Enfeebled for 2 turns.\n(OPG) Increase this creature's ATK by 10 for it's next attack, then negate this creature permanently after it attacks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-69cd01cf9df6:Creatures/Lisa/3 Stars/Joel_Miller.png",
+   "kind": "old repo",
+   "date": "2023-11-01T06:56:53+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending",
+   "image": "O-894dc2489348.webp",
+   "fields": {
+    "name": {
+     "value": "Joel Miller",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May consume an action to inflict one of the following debuffs: Afraid, Paralyzed, 4 stack of Softened, or 3 stacks of Enfeebled for 2 turns.\n(OPG) During an attack, you may choose to increase this creature's ATK by 10, then negate this creature permanently after the attack resolves.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-15",
+  "sort": "2023-10-15",
+  "source": "discord",
+  "status": "same"
+ }
+}

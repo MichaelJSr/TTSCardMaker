@@ -1,0 +1,241 @@
+{
+ "card": "maxim-tomato",
+ "key": "Maxim Tomato",
+ "name": "Maxim Tomato",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1444dd626223",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:07+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-1444dd626223.webp",
+   "fields": {
+    "name": {
+     "value": "Meta Mato",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 7 health.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 399,
+   "h": 618
+  },
+  {
+   "id": "D-P-1a405ce37008",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:08+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-1a405ce37008.webp",
+   "fields": {
+    "name": {
+     "value": "Meta Mato",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 7 health.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 618
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/3 Stars/Meta_Mato.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Meta Mato",
+   "repo": "first",
+   "image": "O-648bdb05bd03.webp",
+   "fields": {
+    "name": {
+     "value": "Meta Mato",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 7 health.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 399,
+   "h": 618
+  },
+  {
+   "id": "O-bd31b798dcd0:Items/Heal/3 Stars/Meta_Mato.png",
+   "kind": "old repo",
+   "date": "2023-04-08T08:51:46+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "sfds",
+   "file": "Meta Mato",
+   "repo": "first",
+   "image": "O-61f8b337f9b7.webp",
+   "fields": {
+    "name": {
+     "value": "Meta Mato",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 7 health.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/3 Stars/Meta_Mato.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "file": "Meta Mato",
+   "image": "O-61f8b337f9b7.webp",
+   "fields": {
+    "name": {
+     "value": "Meta Mato",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 7 health.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/3 Stars/Meta_Mato.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "file": "Meta Mato",
+   "image": "O-8a952e6ed2da.webp",
+   "fields": {
+    "name": {
+     "value": "Meta Mato",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 7 health.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,474 @@
+{
+ "card": "the-panda-future",
+ "key": "The Panda Future",
+ "name": "The Panda Future",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-4e0aea4307a3",
+   "kind": "discord",
+   "date": "2021-04-29T08:34:59+00:00",
+   "day": "2021-04-29",
+   "badge": "Discord",
+   "channel": "meme-cards",
+   "image": "P-4e0aea4307a3.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Takes everyone to the future where most of the cards are Pandas. All creatures' SPD values are changed to 10 - their SPD. Does not change the turn order until the next global turn, and does not change the turn order when the effect ends. Effect lasts until all 3 lanes have finished moving once.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "D-P-08f9335a9ba4",
+   "kind": "discord",
+   "date": "2022-01-17T07:09:33+00:00",
+   "day": "2022-01-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-08f9335a9ba4.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest:  -1 cost per creature on your team with\n5 or less base SPD.\nAll creature’s base SPD is replaced with 10\nminus their base SPD. All speed modifiers are\ninverted so that additions become subtractions\nand vice versa.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "F",
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "The Panda Future2",
+   "repo": "first",
+   "image": "O-c92a53735eac.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest:  -1 cost per creature on your team with\n5 or less base SPD.\nAll creature’s base SPD is replaced with 10\nminus their base SPD. All speed modifiers are\ninverted so that additions become subtractions\nand vice versa.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "O-8c12e021fb3a:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "file": "The Panda Future2",
+   "repo": "first",
+   "image": "O-b97206c0dc2b.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest:  -1 cost per creature on your team with\n5 or less base SPD.\nAll creature’s base SPD is replaced with 10\nminus their base SPD. All speed modifiers are\ninverted so that additions become subtractions\nand vice versa.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7b199b9bca33:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2023-04-19T23:25:34+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated existing photoshop field items",
+   "file": "The Panda Future2",
+   "repo": "first",
+   "image": "O-32a7edb7bb99.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per creature on your team with 5 or less base SPD.\nAll creature’s base SPD is replaced with 10 minus their base SPD.\nAll speed modifiers are inverted so that additions become subtractions and vice versa.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-52be4ee73b9e:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2023-04-20T03:26:14+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "dimension d, panda future",
+   "file": "The Panda Future2",
+   "repo": "first",
+   "image": "O-548d173698b3.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per creature on your team with 5 or less base SPD.\nAll creature’s base SPD is replaced with 10 minus their base SPD.\nAll speed modifiers are inverted so that additions become subtractions and vice versa.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "file": "The Panda Future2",
+   "image": "O-548d173698b3.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per creature on your team with 5 or less base SPD.\nAll creature’s base SPD is replaced with 10 minus their base SPD.\nAll speed modifiers are inverted so that additions become subtractions and vice versa.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "file": "The Panda Future2",
+   "image": "O-28b4d7c64c4a.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per creature on your team with 5 or less base SPD.\nFriendly creature’s base SPD is replaced with 10 minus their base SPD.\nAll speed modifiers are inverted so that additions become subtractions and vice versa.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-fb768d2198a7:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2023-10-05T07:13:18+00:00",
+   "day": "2023-10-05",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "futuree",
+   "file": "The Panda Future2",
+   "image": "O-6cc6395e4ee3.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per creature on your field with 4 or less base SPD.\nFriendly creature’s base SPD is replaced with 10 minus their base SPD.\nAll speed modifiers are inverted so that additions become subtractions and vice versa.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "file": "The Panda Future2",
+   "image": "O-ff456b2f39aa.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per creature on your field with 4 or less base SPD.\nFriendly creature’s base SPD is replaced with 10 minus their base SPD.\nAll speed modifiers are inverted so that additions become subtractions and vice versa.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-69cd01cf9df6:Field/4 Stars/The_Panda_Future2.png",
+   "kind": "old repo",
+   "date": "2023-11-01T06:56:53+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending",
+   "file": "The Panda Future2",
+   "image": "O-5a4f0aabbbb1.webp",
+   "fields": {
+    "name": {
+     "value": "The Panda Future",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per friendly creature with 4 or less base SPD.\nFriendly creature’s base SPD is replaced with 10 minus their base SPD while this is in play.\nSPD modifiers applied to your team  are inverted so that additions become subtractions and vice versa.\n[panda]: Inflicted with 2 Burdened while this is in play.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2021-04-29",
+  "sort": "2021-04-29",
+  "source": "discord",
+  "status": "same"
+ }
+}

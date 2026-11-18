@@ -1,0 +1,889 @@
+{
+ "card": "wigfrid",
+ "key": "Wigfrid",
+ "name": "Wigfrid",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-53bdc227d2cf",
+   "kind": "discord",
+   "date": "2019-05-05T11:23:28+00:00",
+   "day": "2019-05-05",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-53bdc227d2cf.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Twice per turn (OYT), you may pay 2 points to create a Battle Spear or Battle Helmet. Battle Spear: The creature the battle spear is equipped to gets a 25% boost to their total attack Battle Helmet: The creature the Battle Helmet is equipped to gains a 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 317,
+   "h": 640
+  },
+  {
+   "id": "D-P-8d26dd50a691",
+   "kind": "discord",
+   "date": "2020-07-25T08:40:57+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-8d26dd50a691.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 2 points to create a Battle Spear or Battle Helmet. Battle Spear: 25% boost to base attack Battle Helmet: 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 317,
+   "h": 640
+  },
+  {
+   "id": "F-f75bf89871e",
+   "kind": "text",
+   "date": "2020-07-27T11:51:51+00:00",
+   "day": "2020-07-27",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-286a6864f3b0",
+   "kind": "discord",
+   "date": "2020-07-27T12:00:16+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-286a6864f3b0.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to create a Battle Spear or Battle Helmet. Battle Spear: 25% boost to base attack Battle Helmet: 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 317,
+   "h": 640
+  },
+  {
+   "id": "D-P-18e035ea5a5f",
+   "kind": "discord",
+   "date": "2020-08-03T07:25:46+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-18e035ea5a5f.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to create a Battle Spear or Battle Helmet. Battle Spear: 25% boost to base attack Battle Helmet: 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 500,
+   "h": 1009
+  },
+  {
+   "id": "D-P-2aad532c3902",
+   "kind": "discord",
+   "date": "2020-08-16T11:05:59+00:00",
+   "day": "2020-08-16",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-2aad532c3902.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to create a Battle Spear or Battle Helmet. Battle Spear: 25% boost to base attack Battle Helmet: 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 321,
+   "h": 648
+  },
+  {
+   "id": "D-P-f9d0e32c94b2",
+   "kind": "discord",
+   "date": "2021-09-13T05:53:14+00:00",
+   "day": "2021-09-13",
+   "badge": "Discord",
+   "channel": "tyler",
+   "image": "P-f9d0e32c94b2.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to create a Battle Spear or Battle Helmet. Battle Spear: 25% boost to base attack Battle Helmet: 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "w": 126,
+   "h": 256
+  },
+  {
+   "id": "D-P-cd7f9156a5a7",
+   "kind": "discord",
+   "date": "2021-09-15T08:05:01+00:00",
+   "day": "2021-09-15",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-cd7f9156a5a7.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Wigfrid heals 2 HP when she attacks. (OPT) (OYT), you may pay 3 points to create a Battle Spear or Battle Helmet. Battle Spear: 25% boost to base attack Battle Helmet: 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 317,
+   "h": 640
+  },
+  {
+   "id": "F-ff42b4491f6",
+   "kind": "text",
+   "date": "2021-09-15T08:05:20+00:00",
+   "day": "2021-09-15",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-a6a5248afe98",
+   "kind": "discord",
+   "date": "2021-12-18T10:18:53+00:00",
+   "day": "2021-12-18",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-a6a5248afe98.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to create a Battle Spear or Battle Helmet. Battle Spear: 25% boost to base attack Battle Helmet: 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 317,
+   "h": 640
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-63fdf817bcdf.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to create a Battle Spear or Battle Helmet. Battle Spear: 25% boost to base attack Battle Helmet: 25% damage reduction",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 317,
+   "h": 640
+  },
+  {
+   "id": "O-d700e31b8a56:Cards/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2023-04-05T21:53:10+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Dst cards",
+   "repo": "first",
+   "image": "O-44c4f742f2ef.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to\ncreate a Battle Spear or Battle Helmet.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "magic"
+     ],
+     "drop": []
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-44c4f742f2ef.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to\ncreate a Battle Spear or Battle Helmet.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-44c4f742f2ef.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT), you may pay 3 points to\ncreate a Battle Spear or Battle Helmet.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-51747d4f9e50:Creatures/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2023-04-25T08:52:36+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "DST touch ups",
+   "image": "O-934e7ad57126.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You may pay 3 points to\ncreate a Battle Spear \nor Battle Helmet.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-cd1435e200f5.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You may pay 3 points to\ncreate a Battle Spear \nor Battle Helmet.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Creatures/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-22bc4b1415c2.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You may pay 3 points to\ncreate a Battle Spear \nor Battle Helmet.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-867869361f2a.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You may pay 3 points to\ncreate a Battle Spear \nor Battle Helmet.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/DST/3 Stars/Wigfrid.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-7c34812e57da.webp",
+   "fields": {
+    "name": {
+     "value": "Wigfrid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You may pay 3 points to\ncreate a Battle Spear \nor Battle Helmet.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-05-05",
+  "sort": "2019-05-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

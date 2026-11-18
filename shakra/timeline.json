@@ -1,0 +1,75 @@
+{
+ "card": "shakra",
+ "key": "Shakra",
+ "name": "Shakra",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-10-31",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-6e2c9e376aea",
+   "kind": "discord",
+   "date": "2025-10-31T23:26:58+00:00",
+   "day": "2025-10-31",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6e2c9e376aea.webp",
+   "fields": {
+    "name": {
+     "value": "Shakra",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks do shockwave DMG equal to 50% of ATK. Shockwave DMG dealt by this creature can count as a combo.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 6,
+      "spd": 9
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-16T14:50:28+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-10-31",
+  "sort": "2025-10-31",
+  "source": "discord",
+  "status": "same"
+ }
+}

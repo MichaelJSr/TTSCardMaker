@@ -1,0 +1,1043 @@
+{
+ "card": "marilyn",
+ "key": "Marilyn",
+ "name": "Marilyn",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-db05ec26a36c",
+   "kind": "discord",
+   "date": "2020-10-12T06:41:11+00:00",
+   "day": "2020-10-12",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-db05ec26a36c.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack all opponents. While attacking with this ability, all boosts to this card's base attack are twice as effective.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "D-P-20c4dd016d96",
+   "kind": "discord",
+   "date": "2020-10-12T06:46:43+00:00",
+   "day": "2020-10-12",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-20c4dd016d96.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "electric"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are twice as effective.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 786
+  },
+  {
+   "id": "D-P-c20ed865f4c2",
+   "kind": "discord",
+   "date": "2020-10-12T06:57:51+00:00",
+   "day": "2020-10-12",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c20ed865f4c2.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "electric"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are 1.5x as effective.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 388,
+   "h": 788
+  },
+  {
+   "id": "D-P-fbdd2ff70481",
+   "kind": "discord",
+   "date": "2020-10-12T07:04:49+00:00",
+   "day": "2020-10-12",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-fbdd2ff70481.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "electric"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are 1.5x as effective.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 787
+  },
+  {
+   "id": "D-P-13d828791e5e",
+   "kind": "discord",
+   "date": "2021-05-19T12:22:26+00:00",
+   "day": "2021-05-19",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-13d828791e5e.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are 1.5x as effective.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 786
+  },
+  {
+   "id": "D-P-a234c9e36ee4",
+   "kind": "discord",
+   "date": "2021-12-15T09:37:19+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-a234c9e36ee4.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are 1.5x as effective.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "electric"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 386,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-ba0ecbc325e1.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are 1.5x as effective.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 386,
+   "h": 788
+  },
+  {
+   "id": "O-257dc970a875:Cards/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-987526f9a828.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "SPD 5 -> 7"
+    ],
+    "nerfs": [
+     "ATK 7 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-08374e6003fb:Cards/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-03-29T02:09:57+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "res increase, hrh ability description change",
+   "repo": "first",
+   "image": "O-ae68e6e7a1fb.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ee0df0483864:Cards/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-03-31T07:35:18+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made a lot of pending changes and made bubble 1 star instead of 2 stars",
+   "repo": "first",
+   "image": "O-678ea55e0a86.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this card's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "ATK 5 -> 7"
+    ],
+    "nerfs": [
+     "SPD 7 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b584a785d959:Cards/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-04-07T02:34:05+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "can i push this while theyre all open?",
+   "repo": "first",
+   "image": "O-5c1eb068b9d1.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage. While attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fbf9b2007d81:Cards/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-04-14T19:11:31+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some mario touch ups",
+   "repo": "first",
+   "image": "O-e51482588025.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage.\nWhile attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-e51482588025.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage.\nWhile attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-e51482588025.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage.\nWhile attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-1c118ebb7495.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage.\nWhile attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-a985c14a1326.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage.\nWhile attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-0b345fefd36c.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage.\nWhile attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-a7a8e2171dd1.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage.\nWhile attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1097c67e252:Creatures/Mario/3 Stars/Marilyn.png",
+   "kind": "old repo",
+   "date": "2023-11-02T22:28:51+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "templaticidasd",
+   "image": "O-39a1470f615b.webp",
+   "fields": {
+    "name": {
+     "value": "Marilyn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can decrease its attack by 5 to attack 2 creatures with piercing damage.\nWhile attacking with this ability, all boosts to this creature's base attack are 1.5x as effective.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-10-12",
+  "sort": "2020-10-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

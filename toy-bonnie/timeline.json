@@ -1,0 +1,1260 @@
+{
+ "card": "toy-bonnie",
+ "key": "Toy Bonnie",
+ "name": "Toy Bonnie",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-84bcbb67afdb",
+   "kind": "discord",
+   "date": "2020-07-12T11:50:04+00:00",
+   "day": "2020-07-12",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-84bcbb67afdb.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Bonnie gains defense equal to the attack of the creature he attacks for 1 turn. If Bonnie attacks someone on the left side of field, his attack is increased by 2 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 0,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "D-P-af510b9c18d3",
+   "kind": "discord",
+   "date": "2020-07-22T10:48:04+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-af510b9c18d3.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks Toy Bonnie, swap the two creatures' defense. If Bonnie attacks someone on the left side of the field, his attack is increased by 2 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "dark"
+     ]
+    },
+    "stats": [
+     {
+      "hp": 5,
+      "def": 0,
+      "atk": 6,
+      "spd": 7
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 0 -> 2"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "F-f1455dd39f3",
+   "kind": "text",
+   "date": "2020-07-27T12:35:14+00:00",
+   "day": "2020-07-27",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-a60a638add0d",
+   "kind": "discord",
+   "date": "2020-07-28T01:29:19+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-a60a638add0d.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks Toy Bonnie, you may swap the two creatures' defense. If Bonnie attacks someone on the left side of the field, his attack is increased by 2 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-f016ea851cde",
+   "kind": "discord",
+   "date": "2020-07-28T02:41:35+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-f016ea851cde.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks Toy Bonnie, you may swap the two creatures' DEF. If Bonnie attacks someone on the left side of the field, his attack is increased by 2 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     3
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-f5909e761b54",
+   "kind": "discord",
+   "date": "2021-08-21T05:08:55+00:00",
+   "day": "2021-08-21",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-f5909e761b54.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT)(OPT) Swap this creature's DEF with any other creature's DEF until the end of the global turn.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     {
+      "hp": 4,
+      "def": 0,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 5 -> 4",
+     "DEF 2 -> 0",
+     "SPD 7 -> 6"
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-5aaae42f9db2",
+   "kind": "discord",
+   "date": "2021-12-12T07:12:49+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-5aaae42f9db2.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT)(OPT) Swap this creature's DEF with any other creature's DEF until the end of the global turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-947590a04894",
+   "kind": "discord",
+   "date": "2021-12-15T12:19:16+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-947590a04894.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT)(OPT) Swap this creature's DEF with any other creature's DEF until the end of the global turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-90234858a130",
+   "kind": "discord",
+   "date": "2022-06-10T21:54:52+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-90234858a130.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT)(OPT) Swap this creature's\nDEF with any other creatures DEF until the end of the global turn.",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 0,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 6 -> 5",
+     "SPD 6 -> 5"
+    ],
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 2,
+   "git_look": true,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-ea136548f025.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT)(OPT) Swap this creature's\nDEF with any other creatures DEF until the end of the global turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-257dc970a875:Cards/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-ca68c1361275.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT)(OPT) Swap this creature's\nDEF with any other creatures DEF until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ee0df0483864:Cards/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-03-31T07:35:18+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made a lot of pending changes and made bubble 1 star instead of 2 stars",
+   "repo": "first",
+   "image": "O-49674bdc208b.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT/ENF)(OPT) Swap this creature's\nDEF with any other (AF) creatures DEF until (ENDGT).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d895453fb633:Cards/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:39:26+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Living bread toy bonnie unbread twins puppet blockade burly bombs",
+   "repo": "first",
+   "image": "O-d252cc744ba1.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8d96a785a32:Cards/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-13T21:02:20+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuffs",
+   "repo": "first",
+   "image": "O-2c8a729c1a76.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-22f334c5e1f4:Cards/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-15T01:07:28+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Toy Bonnie",
+   "repo": "first",
+   "image": "O-a7d79dab1bc8.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-a7d79dab1bc8.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-a7d79dab1bc8.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e63eaf98bf16:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-06-17T09:36:05+00:00",
+   "day": "2023-06-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "better hp bars for old cards",
+   "image": "O-e960cf1f0a84.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-bad1c6f2a16e.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-9dc6872becf6.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-bb1e81ef008c.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-2f7a5588560c.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-d9d76e17cd9f.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Swap this creature's DEF with any other creatures DEF until the end of the global turn or until it dies.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fc867e901ef9:Creatures/Fnaf/3 Stars/Toy_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-11-05T06:25:45+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "grimora and pending updates",
+   "image": "O-acbdac3385a8.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT and on summon) Steal up to 6 of any creatures’ DEF until the end of the global turn, then return it.\n(OD) Return its stolen DEF to the creature it stole it from.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-12",
+  "sort": "2020-07-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,698 @@
+{
+ "card": "frog",
+ "key": "Frog",
+ "name": "Frog",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-fedb58af77c8-c2",
+   "kind": "discord",
+   "date": "2021-08-15T17:16:54+00:00",
+   "day": "2021-08-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-fedb58af77c8-c2.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 4 ATK for every full turn that has ended and loses 2 ATK for every point yielding creature that has died. This card cannot be attacked if it has less than 10 ATK",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 393,
+   "h": 788
+  },
+  {
+   "id": "D-P-5bcc0c637ca4",
+   "kind": "discord",
+   "date": "2021-08-23T05:54:56+00:00",
+   "day": "2021-08-23",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-5bcc0c637ca4.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 4 ATK for every full turn that has ended and loses 2 ATK for every point yielding creature that has died. While this card has less than 10 ATK, It has 50% reduction to all damage types.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "F-f0ed5dd3c74",
+   "kind": "text",
+   "date": "2021-11-23T21:43:03+00:00",
+   "day": "2021-11-23",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-02e595f99a1b",
+   "kind": "discord",
+   "date": "2021-11-27T23:57:01+00:00",
+   "day": "2021-11-27",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-02e595f99a1b.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 5 ATK for every full turn that has ended and loses 2 ATK for every point yielding creature that has died. While this card has less than 10 ATK, It has 50% reduction to all damage types.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 388,
+   "h": 787
+  },
+  {
+   "id": "D-P-e9f3af994b59",
+   "kind": "discord",
+   "date": "2021-12-15T12:07:21+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-e9f3af994b59.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 5 ATK for every full turn that has ended and loses 2 ATK for every point yielding creature that has died. While this card has less than 10 ATK, It has 50% reduction to all damage types.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 388,
+   "h": 786
+  },
+  {
+   "id": "F-f647e46e6dc",
+   "kind": "text",
+   "date": "2022-01-26T09:09:16+00:00",
+   "day": "2022-01-26",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-073448d3da92.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 5 ATK for every full turn that has ended and loses 2 ATK for every point yielding creature that has died. While this card has less than 10 ATK, It has 50% reduction to all damage types.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 388,
+   "h": 786
+  },
+  {
+   "id": "O-257dc970a875:Cards/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-0c53e687e5ac.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 3 ATK for every full turn that has ended and loses 1 ATK for every point yielding creature that has died. While this card has less than 10 ATK, it has 50% reduction to all damage types.",
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "O-7e1d422781cf:Cards/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2023-04-17T11:53:13+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some everhood",
+   "repo": "first",
+   "image": "O-940491407d81.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 3 ATK for every global that has ended and loses 1 ATK for every point yielding creature that has died.\n While this creature has less than 10 ATK, it has 50% reduction to all damage types.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-940491407d81.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 3 ATK for every global that has ended and loses 1 ATK for every point yielding creature that has died.\n While this creature has less than 10 ATK, it has 50% reduction to all damage types.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-940491407d81.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 3 ATK for every global that has ended and loses 1 ATK for every point yielding creature that has died.\n While this creature has less than 10 ATK, it has 50% reduction to all damage types.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d23247c423cd:Creatures/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2023-10-03T19:05:18+00:00",
+   "day": "2023-10-03",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuffs",
+   "image": "O-d633a92acf6d.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains 3 ATK for every global that has ended and loses 1 ATK for every point yielding creature that has died.\n While this creature has less than 10 ATK, it has 50% reduction to all damage types.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-a5c1b9e5f06c.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains +3 ATK for every global that has ended and loses -1 ATK for every point yielding creature that has died.\n While this creature has less than 10 ATK, it has 50% reduction to all damage types.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-269b7cceb938:Creatures/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:52:08+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-7b157c84389b.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains +3 ATK for every global turn that has ended and loses -1 ATK for every point yielding creature that has died.\n While this creature has less than 10 ATK, it has 50% reduction to all damage types.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Everhood/5 Stars/Frog.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-18bd5dee6a3a.webp",
+   "fields": {
+    "name": {
+     "value": "Frog",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card gains +3 ATK for every global turn that has ended and loses -1 ATK for every point yielding creature that has died.\n While this creature has less than 10 ATK, it has 50% reduction to all damage types.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-08-15",
+  "sort": "2021-08-15",
+  "source": "discord",
+  "status": "same"
+ }
+}

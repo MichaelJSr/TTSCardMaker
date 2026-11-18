@@ -1,0 +1,123 @@
+{
+ "card": "steady-body",
+ "key": "Steady Body",
+ "name": "Steady Body",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-14",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-4bd466f96ff9",
+   "kind": "discord",
+   "date": "2023-10-14T07:30:36+00:00",
+   "day": "2023-10-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-4bd466f96ff9.webp",
+   "fields": {
+    "name": {
+     "value": "Steady Body",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be equipped (OYT) Equipped creature cannot be combo attacked.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-145d4e3b6cad:Items/Equip/1 Stars/Steady_Body.png",
+   "kind": "old repo",
+   "date": "2023-10-14T07:34:47+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "charms",
+   "image": "O-713c7dd755cf.webp",
+   "fields": {
+    "name": {
+     "value": "Steady Body",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be equipped (OYT) Equipped creature cannot be combo attacked.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-625569d5b9b9:Items/Equip/1 Stars/Steady_Body.png",
+   "kind": "old repo",
+   "date": "2023-10-14T09:31:55+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Fix Steady body to be 1 star",
+   "image": "O-3e121e670dc3.webp",
+   "fields": {
+    "name": {
+     "value": "Steady Body",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be equipped (OYT) Equipped creature cannot be combo attacked.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-14",
+  "sort": "2023-10-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

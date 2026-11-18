@@ -1,0 +1,594 @@
+{
+ "card": "abbi",
+ "key": "ABBI",
+ "name": "ABBI",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-03-19",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-b8017b526918",
+   "kind": "discord",
+   "date": "2022-12-18T08:54:39+00:00",
+   "day": "2022-12-18",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b8017b526918.webp",
+   "fields": {
+    "name": {
+     "value": "Abbi",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "starts with 2 Dark tentacles. Attacks inflict afraid. May use an action to give this creature and all living dark tentacles +1 ATK permanently or to summon a new dark tentacle (max 4).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "git_look": true,
+   "era": "C",
+   "w": 311,
+   "h": 630
+  },
+  {
+   "id": "O-257dc970a875:Cards/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-e5534211ef88.webp",
+   "fields": {
+    "name": {
+     "value": "Abbi",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark tentacles. Attacks inflict afraid. May use an action to give this creature and all living dark tentacles +1 ATK permanently or to summon a new dark tentacle (max 4).",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 311,
+   "h": 630
+  },
+  {
+   "id": "O-2c7fe493de3d:Cards/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-03-26T08:35:31+00:00",
+   "day": "2023-03-26",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "ABBI update",
+   "repo": "first",
+   "image": "O-74a620108bdf.webp",
+   "fields": {
+    "name": {
+     "value": "Abbi",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark tentacles. Attacks inflict afraid. May use an action to give this creature and all living dark tentacles +1 ATK permanently or to summon a new dark tentacle (max 4).",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 4 -> 3"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 402,
+   "h": 816
+  },
+  {
+   "id": "O-ad393b411878:Cards/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-04-04T11:11:10+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "ABBI update",
+   "repo": "first",
+   "image": "O-c68b6c76db5f.webp",
+   "fields": {
+    "name": {
+     "value": "ABBI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark tentacles. Attacks inflict afraid. May use an action to give this creature and all living dark tentacles +1 ATK permanently or to summon a new dark tentacle (max 4).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8ebbd6be396f:Cards/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-04-20T22:28:24+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugged through all pending updates",
+   "repo": "first",
+   "image": "O-0567065aff96.webp",
+   "fields": {
+    "name": {
+     "value": "ABBI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark Tentacles.\nAttacks inflict Afraid for 2 turns.\nMay use an action to give this creature and all living Dark Tentacles +1 ATK permanently or to summon a new Dark Tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-0567065aff96.webp",
+   "fields": {
+    "name": {
+     "value": "ABBI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark Tentacles.\nAttacks inflict Afraid for 2 turns.\nMay use an action to give this creature and all living Dark Tentacles +1 ATK permanently or to summon a new Dark Tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-0567065aff96.webp",
+   "fields": {
+    "name": {
+     "value": "ABBI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark Tentacles.\nAttacks inflict Afraid for 2 turns.\nMay use an action to give this creature and all living Dark Tentacles +1 ATK permanently or to summon a new Dark Tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-4289b2217723.webp",
+   "fields": {
+    "name": {
+     "value": "ABBI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark Tentacles.\nAttacks inflict Afraid for 2 turns.\nMay use an action to give this creature and all living Dark Tentacles +1 ATK permanently or to summon a new Dark Tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-626eaae25c89:Creatures/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-10-22T18:00:01+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-ce65fca7d596.webp",
+   "fields": {
+    "name": {
+     "value": "ABBI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark Tentacles.\nAttacks inflict Afraid for 2 turns.\nMay use an action to give this creature and all living Dark Tentacles +1 ATK permanently or to summon a new Dark Tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-a70ab6888cb7.webp",
+   "fields": {
+    "name": {
+     "value": "ABBI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark Tentacles.\nAttacks inflict Afraid for 2 turns.\nMay use an action to give this creature and all living Dark Tentacles +1 ATK permanently or to summon a new Dark Tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Omori/5 Stars/Abbi.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-8f4305b09f5e.webp",
+   "fields": {
+    "name": {
+     "value": "ABBI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with 2 Dark Tentacles.\nAttacks inflict Afraid for 2 turns.\nMay use an action to give this creature and all living Dark Tentacles +1 ATK permanently or to summon a new Dark Tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2022-12-18",
+  "sort": "2022-12-18",
+  "source": "discord",
+  "status": "same"
+ }
+}

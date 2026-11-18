@@ -1,0 +1,77 @@
+{
+ "card": "monkey-d-pression",
+ "key": "Monkey D Pression",
+ "name": "Monkey D. Pression",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-24",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1b21d0f5d64e",
+   "kind": "discord",
+   "date": "2025-03-21T10:10:23+00:00",
+   "day": "2025-03-21",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1b21d0f5d64e.webp",
+   "fields": {
+    "name": {
+     "value": "Monkey D Pression",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "For every 3 HP this creature loses when being attacked, this is inflicted with 1 enfeebled for 1 turn.\nAll applications of enfeebled on this creature last 1 turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 1,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-04-07T00:04:04+00:00",
+  "changes": {
+   "ability_change": "same",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-03-21",
+  "sort": "2025-03-21",
+  "source": "discord",
+  "status": "same"
+ }
+}

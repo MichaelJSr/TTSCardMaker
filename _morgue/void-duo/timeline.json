@@ -1,0 +1,57 @@
+{
+ "card": "void-duo",
+ "key": "Void Duo",
+ "name": "Void Duo",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-27T07:55:15.988000+00:00",
+  "day": "2020-07-27",
+  "channel": "update-01-port",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-d0d370ce130d",
+   "kind": "discord",
+   "date": "2020-07-27T07:55:15.988000+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "image": "P-d0d370ce130d.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-01-port",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-3cc1bb6d0c40",
+   "kind": "discord",
+   "date": "2020-08-14T04:53:25.813000+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "image": "P-3cc1bb6d0c40.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-8df34b57c596",
+   "kind": "discord",
+   "date": "2020-08-14T04:59:04.605000+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "image": "P-8df34b57c596.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-02-port",
+   "w": 350,
+   "h": 518
+  }
+ ],
+ "kind_of": "played"
+}

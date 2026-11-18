@@ -1,0 +1,29 @@
+{
+ "card": "morrrr",
+ "key": "MORRRR",
+ "name": "MORRRR",
+ "morgue": "candidate",
+ "first": {
+  "date": "2024-08-30T20:15:10.142000+00:00",
+  "day": "2024-08-30",
+  "channel": "cursed",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-63e32c2da1dc",
+   "kind": "discord",
+   "date": "2024-08-30T20:15:10.142000+00:00",
+   "day": "2024-08-30",
+   "badge": "Discord",
+   "image": "P-63e32c2da1dc.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "cursed",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

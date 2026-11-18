@@ -1,0 +1,80 @@
+{
+ "card": "lil-spood",
+ "key": "Lil Spood",
+ "name": "Lil Spood",
+ "kind": "minion",
+ "stop": {
+  "day": "2025-03-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-0d158cb90f82",
+   "kind": "discord",
+   "date": "2025-03-12T03:08:28+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-0d158cb90f82.webp",
+   "fields": {
+    "name": {
+     "value": "Lil Spood",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict 3 turns of 1 poison.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-12T05:07:57+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-12",
+  "sort": "2025-03-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

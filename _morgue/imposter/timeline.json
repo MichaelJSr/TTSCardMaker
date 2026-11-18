@@ -1,0 +1,60 @@
+{
+ "card": "imposter",
+ "key": "Imposter",
+ "name": "Imposter",
+ "morgue": "candidate",
+ "first": {
+  "date": "2022-04-01T14:05:24.356000+00:00",
+  "day": "2022-04-01",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-36151ad033de",
+   "kind": "discord",
+   "date": "2022-04-01T14:05:24.356000+00:00",
+   "day": "2022-04-01",
+   "badge": "Discord",
+   "image": "P-36151ad033de.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/5 Stars/Imposter.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-d8b572d9997a.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "P-175a8bd9f551",
+   "kind": "discord",
+   "date": "2023-05-06T06:47:12.296000+00:00",
+   "day": "2023-05-06",
+   "badge": "Discord",
+   "image": "P-175a8bd9f551.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

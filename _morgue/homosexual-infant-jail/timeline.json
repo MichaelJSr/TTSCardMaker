@@ -1,0 +1,46 @@
+{
+ "card": "homosexual-infant-jail",
+ "key": "Homosexual Infant Jail",
+ "name": "Homosexual Infant Jail",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-22T09:52:28.711000+00:00",
+  "day": "2020-07-22",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-5b4a55ca90e7",
+   "kind": "discord",
+   "date": "2020-07-22T09:52:28.711000+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "image": "P-5b4a55ca90e7.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/3 Stars/Homosexual_Infant_Jail.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-919ee91c99d6.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 350,
+   "h": 537
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

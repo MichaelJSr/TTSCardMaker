@@ -1,0 +1,80 @@
+{
+ "card": "the-man-behind-the-slaughter",
+ "key": "The Man Behind The Slaughter",
+ "name": "The Man Behind The Slaughter",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-10-17",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-69f0a4f8d686",
+   "kind": "discord",
+   "date": "2025-10-17T08:14:42+00:00",
+   "day": "2025-10-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-69f0a4f8d686.webp",
+   "fields": {
+    "name": {
+     "value": "The Man Behind The Slaughter",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) If one of your undamaged prime creatures declares an attack and this has not yet entered the field, you may swap it with this creature and attack the target with +3 damage.\n(OD) Summon Springtrap at (ENDGT) on a slot of your choice.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 1,
+      "atk": 9,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-10-20T00:57:45+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-10-17",
+  "sort": "2025-10-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

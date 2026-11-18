@@ -1,0 +1,29 @@
+{
+ "card": "zhonya-s-glass",
+ "key": "Zhonya's Glass",
+ "name": "Zhonya's Glass",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-08-14T05:51:45.444000+00:00",
+  "day": "2020-08-14",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-42b552389d50",
+   "kind": "discord",
+   "date": "2020-08-14T05:51:45.444000+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "image": "P-42b552389d50.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 240,
+   "h": 351
+  }
+ ],
+ "kind_of": "played"
+}

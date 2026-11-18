@@ -1,0 +1,30 @@
+{
+ "card": "pants-guy",
+ "key": "Pants Guy",
+ "name": "Pants Guy",
+ "morgue": "candidate",
+ "first": {
+  "date": "2022-06-09T23:58:05.581000+00:00",
+  "day": "2022-06-09",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-55a315955411",
+   "kind": "discord",
+   "date": "2022-06-09T23:58:05.581000+00:00",
+   "day": "2022-06-09",
+   "badge": "Discord",
+   "image": "P-55a315955411.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 400,
+   "h": 800
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

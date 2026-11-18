@@ -1,0 +1,504 @@
+{
+ "card": "knight-lost-a-lot",
+ "key": "Knight Lost A Lot",
+ "name": "Knight Lost A Lot",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-fedb58af77c8-c1",
+   "kind": "discord",
+   "date": "2021-08-15T17:16:54+00:00",
+   "day": "2021-08-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-fedb58af77c8-c1.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2 (after the attack) or decrease the ATK of the target by 1.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 392,
+   "h": 788
+  },
+  {
+   "id": "D-P-d0f0f047c67d",
+   "kind": "discord",
+   "date": "2021-08-21T04:53:06+00:00",
+   "day": "2021-08-21",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d0f0f047c67d.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack) or decrease the ATK of the target by 1.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "D-P-371c10bbc9a1",
+   "kind": "discord",
+   "date": "2021-12-15T12:06:10+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-371c10bbc9a1.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack)\nor decrease the ATK of the target by 1.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 389,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Everhood/2 Stars/Knight_Lost_A_Lot.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-ea74a9d5f34d.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack)\nor decrease the ATK of the target by 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 787
+  },
+  {
+   "id": "O-7e1d422781cf:Cards/Everhood/2 Stars/Knight_Lost_A_Lot.png",
+   "kind": "old repo",
+   "date": "2023-04-17T11:53:13+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some everhood",
+   "repo": "first",
+   "image": "O-494552810cbe.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack)\nor decrease the ATK of the target by 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Everhood/2 Stars/Knight_Lost_A_Lot.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-494552810cbe.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack)\nor decrease the ATK of the target by 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Everhood/2 Stars/Knight_Lost_A_Lot.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-494552810cbe.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack)\nor decrease the ATK of the target by 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Everhood/2 Stars/Knight_Lost_A_Lot.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-dfb6691d5d1a.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack)\nor decrease the ATK of the target by 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Everhood/2 Stars/Knight_Lost_A_Lot.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-247cc21cd8e1.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack)\nor decrease the ATK of the target by 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Everhood/2 Stars/Knight_Lost_A_Lot.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-fcb576010d75.webp",
+   "fields": {
+    "name": {
+     "value": "Knight Lost A Lot",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks it can either decrease the DEF of the target by 2(after the attack)\nor decrease the ATK of the target by 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-08-15",
+  "sort": "2021-08-15",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "card": "mrs-softener",
+ "key": "Mrs. Softener",
+ "name": "Mrs. Softener",
+ "morgue": "candidate",
+ "first": {
+  "date": "2022-11-20T09:28:08.681000+00:00",
+  "day": "2022-11-20",
+  "channel": "general-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-40f107725d65",
+   "kind": "discord",
+   "date": "2022-11-20T09:28:08.681000+00:00",
+   "day": "2022-11-20",
+   "badge": "Discord",
+   "image": "P-40f107725d65.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 397,
+   "h": 610
+  },
+  {
+   "id": "P-55f940975e52",
+   "kind": "discord",
+   "date": "2023-04-04T20:46:11.409000+00:00",
+   "day": "2023-04-04",
+   "badge": "Discord",
+   "image": "P-55f940975e52.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 397,
+   "h": 610
+  }
+ ],
+ "kind_of": "joke"
+}

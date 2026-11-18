@@ -1,0 +1,85 @@
+{
+ "card": "burst-laser-ii",
+ "key": "Burst Laser II",
+ "name": "Burst Laser II",
+ "kind": "minion",
+ "stop": {
+  "day": "2025-03-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1f46ddb04cb1",
+   "kind": "discord",
+   "date": "2025-02-28T13:42:27+00:00",
+   "day": "2025-02-28",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1f46ddb04cb1.webp",
+   "fields": {
+    "name": {
+     "value": "Burst Laser II",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "offensive_minion"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Does not die upon reaching 0 HP, but can no longer act. Attacks 3 times per action. Attacks inflict 1 soft for 1 turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 0,
+      "atk": 2,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-18T04:30:21+00:00",
+  "changes": {
+   "stars": [
+    4,
+    2
+   ],
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-02-28",
+  "sort": "2025-02-28",
+  "source": "discord",
+  "status": "same"
+ }
+}

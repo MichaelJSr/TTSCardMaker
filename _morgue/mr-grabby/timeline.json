@@ -1,0 +1,99 @@
+{
+ "card": "mr-grabby",
+ "key": "Mr. Grabby",
+ "name": "Mr. Grabby",
+ "morgue": "candidate",
+ "first": {
+  "date": "2019-05-06T04:38:36.215000+00:00",
+  "day": "2019-05-06",
+  "channel": "general-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-0ce0969636fe",
+   "kind": "discord",
+   "date": "2019-05-06T04:38:36.215000+00:00",
+   "day": "2019-05-06",
+   "badge": "Discord",
+   "image": "P-0ce0969636fe.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "P-e8fddd3bcfc6",
+   "kind": "discord",
+   "date": "2019-05-07T01:30:18.402000+00:00",
+   "day": "2019-05-07",
+   "badge": "Discord",
+   "image": "P-e8fddd3bcfc6.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "P-6427b6fd056b",
+   "kind": "discord",
+   "date": "2019-05-29T03:23:05.026000+00:00",
+   "day": "2019-05-29",
+   "badge": "Discord",
+   "image": "P-6427b6fd056b.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 410,
+   "h": 638
+  },
+  {
+   "id": "P-040794177061",
+   "kind": "discord",
+   "date": "2020-03-02T05:06:06.219000+00:00",
+   "day": "2020-03-02",
+   "badge": "Discord",
+   "image": "P-040794177061.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 352,
+   "h": 534
+  },
+  {
+   "id": "P-774e3c1ce2c2",
+   "kind": "discord",
+   "date": "2021-07-23T08:13:00.209000+00:00",
+   "day": "2021-07-23",
+   "badge": "Discord",
+   "image": "P-774e3c1ce2c2.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "P-4a49d29dfa57",
+   "kind": "discord",
+   "date": "2023-03-25T02:18:11.276000+00:00",
+   "day": "2023-03-25",
+   "badge": "Discord",
+   "image": "P-4a49d29dfa57.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 400,
+   "h": 800
+  }
+ ],
+ "kind_of": "joke"
+}

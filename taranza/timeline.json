@@ -1,0 +1,469 @@
+{
+ "card": "taranza",
+ "key": "Taranza",
+ "name": "Taranza",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-05-04",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-bcf4308415cc",
+   "kind": "discord",
+   "date": "2023-05-04T01:55:55+00:00",
+   "day": "2023-05-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-bcf4308415cc.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) may use an action to inflict puppeteer on an enemy 3 star or lower creature(or any leveled minion)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2983952af132:Creatures/Kirby/3 Stars/Taranza.png",
+   "kind": "old repo",
+   "date": "2023-05-04T01:58:04+00:00",
+   "day": "2023-05-04",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Taranza",
+   "image": "O-b89cb1c501ce.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) may use an action to inflict puppeteered on an enemy 3 star or lower creature(or any leveled minion)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-605e6482b198:Creatures/Kirby/3 Stars/Taranza.png",
+   "kind": "old repo",
+   "date": "2023-05-04T14:12:32+00:00",
+   "day": "2023-05-04",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Taranza Touch ups",
+   "image": "O-f44e6185c0b8.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) May use an action to inflict puppeteered on an enemy 3 star or lower creature (or any leveled minion).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Kirby/3 Stars/Taranza.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-bd6569b38e76.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) May use an action to inflict Puppeteered on an enemy 3 star or lower creature (or any leveled minion).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2af66f5c66bb:Creatures/Kirby/3 Stars/Taranza.png",
+   "kind": "old repo",
+   "date": "2023-10-10T01:08:35+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-5b0bd7a92a06.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) May use an action to inflict 1 turn of Puppeteered on an enemy 3 star or lower creature (or any leveled minion).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/3 Stars/Taranza.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-2f2c7be04b04.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) May use an action to inflict 1 turn of Puppeteered on an enemy 3 star or lower creature (or any leveled minion).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f2a5c96615a0:Creatures/Kirby/3 Stars/Taranza.png",
+   "kind": "old repo",
+   "date": "2023-10-19T19:53:24+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "removal magic",
+   "image": "O-b4b02336df85.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) May use an action to inflict 1 turn of Puppeteered on an enemy 3 star or lower creature (or any leveled minion).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-75443b2188db:Creatures/Kirby/3 Stars/Taranza.png",
+   "kind": "old repo",
+   "date": "2023-10-22T20:37:13+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "a",
+   "image": "O-87a8121add09.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) May use an action to immediately take and control the turn of a 3 star or lower creature (or any leveled minion).\nThe controlled creature’s next turn is skipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/3 Stars/Taranza.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-43c54f53626b.webp",
+   "fields": {
+    "name": {
+     "value": "Taranza",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) May use an action to immediately take and control the turn of a 3 star or lower creature (or any leveled minion).\nThe controlled creature’s next turn is skipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-05-04",
+  "sort": "2023-05-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

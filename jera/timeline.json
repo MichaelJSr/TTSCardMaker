@@ -1,0 +1,151 @@
+{
+ "card": "jera",
+ "key": "Jera",
+ "name": "Jera",
+ "kind": "nme",
+ "stop": {
+  "day": "2023-11-14",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-2f765c8f26b8",
+   "kind": "discord",
+   "date": "2023-11-14T02:41:10+00:00",
+   "day": "2023-11-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2f765c8f26b8.webp",
+   "fields": {
+    "name": {
+     "value": "Jera",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Recursion for 1 turn",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-39bbb433240f",
+   "kind": "discord",
+   "date": "2023-11-14T03:09:11+00:00",
+   "day": "2023-11-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-39bbb433240f.webp",
+   "fields": {
+    "name": {
+     "value": "Jera",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Double all stackable buffs and debuffs on a crature",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-b7aa232ff8a4",
+   "kind": "discord",
+   "date": "2023-11-14T03:14:12+00:00",
+   "day": "2023-11-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b7aa232ff8a4.webp",
+   "fields": {
+    "name": {
+     "value": "Jera",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Double/upgrade all stackable/upgradable status effects.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-22T10:49:25+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-14",
+  "sort": "2023-11-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

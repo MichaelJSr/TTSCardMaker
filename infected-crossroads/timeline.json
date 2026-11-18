@@ -1,0 +1,220 @@
+{
+ "card": "infected-crossroads",
+ "key": "Infected Crossroads",
+ "name": "Infected Crossroads",
+ "kind": "field",
+ "stop": {
+  "day": "2023-10-24",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-251e30ac27b8",
+   "kind": "discord",
+   "date": "2023-10-24T17:46:34+00:00",
+   "day": "2023-10-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-251e30ac27b8.webp",
+   "fields": {
+    "name": {
+     "value": "Infected Crossroads",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 Cost per Infected Enemy Explorer: -2 SPD Infected: +2ATK (OPGT) Choose a creature to gain Infected On summon and (EOGT) Inflict Infected to any creature.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-d7c27b712720",
+   "kind": "discord",
+   "date": "2023-10-24T17:55:52+00:00",
+   "day": "2023-10-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d7c27b712720.webp",
+   "fields": {
+    "name": {
+     "value": "Infected Crossroads",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 Cost per Infected Enemy Explorer: -2 SPD Infected: +2 ATK (OPGT) Choose a creature to gain Infected On summon and (EOGT) Inflict Infected to any creature.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-60c362fee78c:Field/4 Stars/Infected_Crossroads.png",
+   "kind": "old repo",
+   "date": "2023-10-24T21:43:59+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field items",
+   "image": "O-b9bca81fc7fe.webp",
+   "fields": {
+    "name": {
+     "value": "Infected Crossroads",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 Cost per Infected\nEnemy Explorer: -2 SPD\nInfected: +2 ATK\n(OPGT) Choose a creature to gain Infected\nOn first placement and (EOGT) Inflict Infected to any creature for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-821fa8453c74:Field/4 Stars/Infected_Crossroads.png",
+   "kind": "old repo",
+   "date": "2023-10-26T11:46:07+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item changes",
+   "image": "O-523eed729eb3.webp",
+   "fields": {
+    "name": {
+     "value": "Infected Crossroads",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 Cost per Brainwashed\nEnemy Explorer: -2 SPD\nBrainwashed: +2 ATK\n(OPGT) Choose a creature to gain Brainwashed.\nOn first placement and (EOGT) Inflict Infected to any creature for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-a80caf229327:Field/4 Stars/Infected_Crossroads.png",
+   "kind": "old repo",
+   "date": "2023-11-02T23:10:12+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "hivemind",
+   "image": "O-174912048c78.webp",
+   "fields": {
+    "name": {
+     "value": "Infected Crossroads",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 Cost per Hivemind\nEnemy Explorer: -2 SPD\nHivemind: +2 ATK\n(OPGT) Choose a creature to gain Hivemind.\nOn first placement and (EOGT) Inflict Infected to any creature for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-24",
+  "sort": "2023-10-24",
+  "source": "discord",
+  "status": "same"
+ }
+}

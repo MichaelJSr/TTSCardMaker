@@ -1,0 +1,558 @@
+{
+ "card": "eden-s-soul",
+ "key": "Eden's Soul",
+ "name": "Eden's Soul",
+ "kind": "item",
+ "stop": {
+  "day": "2023-04-01",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-09f662aca99c",
+   "kind": "discord",
+   "date": "2023-04-01T22:12:10+00:00",
+   "day": "2023-04-01",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-09f662aca99c.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of Eden",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 12 points have been collected, spawn two 4 star items",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-673bcd632388",
+   "kind": "discord",
+   "date": "2023-04-01T22:22:03+00:00",
+   "day": "2023-04-01",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-673bcd632388.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 12 points of enemy creatures have died, take two 4 star items from the item pile.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 4,
+      "atk": 0,
+      "spd": 0
+     },
+     {
+      "hp": 4,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 0 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8fd884c6b2ff:Items/Active/4 Stars/Soul of eden.png",
+   "kind": "old repo",
+   "date": "2023-04-01T22:22:59+00:00",
+   "day": "2023-04-01",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "soul of eden and active item ajustment",
+   "file": "Soul of eden",
+   "repo": "first",
+   "image": "O-f616bb8bb874.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 12 points of enemy creatures have died, take two 4 star items from the item pile.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4236799e1a4e:Items/Active/4 Stars/soul of eden.png",
+   "kind": "old repo",
+   "date": "2023-04-01T22:29:41+00:00",
+   "day": "2023-04-01",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "soul of eden",
+   "file": "soul of eden",
+   "repo": "first",
+   "image": "O-398e120c4169.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 12 points worth of enemy creatures have died while this is on the field, take two 4 star items from the item pile.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8c12e021fb3a:Items/Equip/4 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "file": "Soul of Eden",
+   "repo": "first",
+   "image": "O-22524f2c5f08.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 12 points worth of enemy creatures have died while this is equipped, take two 4 star items from the item pile, and discard this item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-daf0097b23d0:Items/Equip/4 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-04-03T15:02:02+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "soul of eden size adjustment",
+   "file": "Soul of Eden",
+   "repo": "first",
+   "image": "O-3addefeaadc9.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 12 points worth of enemy creatures have died while this is equipped, take two 4 star items from the item pile, and discard this item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ed00e5cab953:Items/Equip/4 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-04-11T22:19:59+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "eden clause",
+   "file": "Soul of Eden",
+   "repo": "first",
+   "image": "O-d50f2fe54280.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 12 points worth of enemy creatures have died while this is equipped, draw two 4 star items from the item pile, and discard this item.\nIf equipped creature dies, does not loose charge.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d0ee1c24415f:Items/Equip/4 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-04-15T02:15:20+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "file": "Soul of Eden",
+   "repo": "first",
+   "image": "O-cee6a8c29612.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 12 points worth of enemy creatures have died while this is equipped, draw two 4 star items from the item pile, and discard this item.\nIf equipped creature dies, keep charge.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-10e8baf701c0:Items/Equip/3 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-04-15T02:24:23+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "soul of eden rework",
+   "file": "Soul of Eden",
+   "repo": "first",
+   "image": "O-54b5b449face.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 6 points worth of enemy creatures have died while this is equipped, draw two random 3 star items from the item pile, and discard this item.\nIf equipped creature dies, keep charge.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     3
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "file": "Soul of Eden",
+   "image": "O-54b5b449face.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 6 points worth of enemy creatures have died while this is equipped, draw two random 3 star items from the item pile, and discard this item.\nIf equipped creature dies, keep charge.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-42dfc8b77db9:Items/Equip/3 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-05-12T00:34:07+00:00",
+   "day": "2023-05-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some changes",
+   "file": "Soul of Eden",
+   "image": "O-25d6b5fd28a5.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 6 points worth of enemy creatures have died while this is equipped, draw two random 3 star items from the item pile, and discard this item.\nIf equipped creature dies, keep charge.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ca7ed7bedeaf:Items/Equip/3 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-09-26T10:02:54+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "soul of eden",
+   "file": "Soul of Eden",
+   "image": "O-2b301cae85dd.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 6 points worth of enemy creatures have died while this is equipped, draw two random 3 star items from the item pile, and discard this item.\nIf unequipped, keep charge.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-91189038796f:Items/Equip/2 Stars/Soul_of_Eden.png",
+   "kind": "old repo",
+   "date": "2023-10-10T06:24:39+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "proposed changes",
+   "file": "Soul of Eden",
+   "image": "O-7b78c2820544.webp",
+   "fields": {
+    "name": {
+     "value": "Soul of eden",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After 6 points worth of enemy creatures have died while this is equipped, draw two random 3 star items from the item pile, and discard this item.\nIf unequipped, keep charge.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     2
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-04-01",
+  "sort": "2023-04-01",
+  "source": "discord",
+  "status": "same"
+ }
+}

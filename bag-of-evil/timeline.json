@@ -1,0 +1,242 @@
+{
+ "card": "bag-of-evil",
+ "key": "Bag of Evil",
+ "name": "Bag of Evil",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f6c7638fec9",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-40f4ffa7068b",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:11+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-40f4ffa7068b.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of Evil",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following de-buffs: Paralyzed Venom Frostbite Burning",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/2 Stars/Bag_of_Evil.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-ccf75ba9c71d.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of Evil",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following de-buffs: Paralyzed Venom Frostbite Burning",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "O-450e89506676:Items/Attack/2 Stars/Bag_of_Evil.png",
+   "kind": "old repo",
+   "date": "2023-04-05T01:28:44+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items",
+   "repo": "first",
+   "image": "O-d56907b6b6be.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of evil",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following de-buffs:\n-Paralyzed\n-Frostbite\n-Burning",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-1f36d08ac576:Items/Attack/2 Stars/Bag_of_Evil.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:02:03+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-cd6cde8a6484.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of evil",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following de-buffs for 2 turns:\n-Paralyzed\n-Frostbite \n-Burning",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/2 Stars/Bag_of_Evil.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-cd6cde8a6484.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of evil",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following de-buffs for 2 turns:\n-Paralyzed\n-Frostbite \n-Burning",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/2 Stars/Bag_of_Evil.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-23adedaa94a6.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of evil",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following de-buffs for 2 turns:\n-Paralyzed\n-Frostbite \n-Burning",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

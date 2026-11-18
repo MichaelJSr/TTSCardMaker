@@ -1,0 +1,319 @@
+{
+ "card": "block-hopper",
+ "key": "Block Hopper",
+ "name": "Block Hopper",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d22c064e122f",
+   "kind": "discord",
+   "date": "2023-06-03T22:48:04+00:00",
+   "day": "2023-06-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d22c064e122f.webp",
+   "fields": {
+    "name": {
+     "value": "Block Hopper",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When using an action, gain 2 bricks.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-43acfedd0fc4:Creatures/Mario/2 Stars/Block_Hopper.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:19:27+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-e6050f4f6258.webp",
+   "fields": {
+    "name": {
+     "value": "Block Hopper",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When using an action, gain 2 bricks.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d23247c423cd:Creatures/Mario/2 Stars/Block_Hopper.png",
+   "kind": "old repo",
+   "date": "2023-10-03T19:05:18+00:00",
+   "day": "2023-10-03",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuffs",
+   "image": "O-9ee108c05319.webp",
+   "fields": {
+    "name": {
+     "value": "Block Hopper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When using an action, gain 2 bricks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/2 Stars/Block_Hopper.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-560239a70eae.webp",
+   "fields": {
+    "name": {
+     "value": "Block Hopper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When using an action, gain 2 bricks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/2 Stars/Block_Hopper.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-3d10acfcb249.webp",
+   "fields": {
+    "name": {
+     "value": "Block Hopper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When using an action, gain 2 bricks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d030a1a35f96:Creatures/Mario/2 Stars/Block_Hopper.png",
+   "kind": "old repo",
+   "date": "2023-10-31T01:40:31+00:00",
+   "day": "2023-10-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "newcaeds",
+   "image": "O-1dcf0fd37918.webp",
+   "fields": {
+    "name": {
+     "value": "Block Hopper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When using an action, gain 2 bricks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "rock"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-06-03",
+  "sort": "2023-06-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

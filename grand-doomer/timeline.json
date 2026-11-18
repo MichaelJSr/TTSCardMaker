@@ -1,0 +1,703 @@
+{
+ "card": "grand-doomer",
+ "key": "Grand Doomer",
+ "name": "Grand Doomer",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fa470f86779",
+   "kind": "text",
+   "date": "2020-07-21T09:25:11+00:00",
+   "day": "2020-07-21",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-b975baff46b2",
+   "kind": "discord",
+   "date": "2020-07-22T02:55:11+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-b975baff46b2.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks give imprisonment. While Grand Doomer is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. When Grand Doomer runs out of health its new max and current health becomes 1 bar and its defense is increased by 6",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "D-P-c2cf29802c4a",
+   "kind": "discord",
+   "date": "2020-07-24T07:43:57+00:00",
+   "day": "2020-07-24",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-c2cf29802c4a.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks give imprisonment. While Grand Doomer is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. When Grand Doomer runs out of health, it is revived with the stats 1/9/7/6(only once)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 394,
+   "h": 792
+  },
+  {
+   "id": "D-P-99fc423cbe6b",
+   "kind": "discord",
+   "date": "2020-08-17T11:08:45+00:00",
+   "day": "2020-08-17",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-99fc423cbe6b.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "wind"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks give imprisonment. While Grand Doomer is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. When Grand Doomer runs out of health, it is revived with the stats 1/9/7/6(only once)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "A",
+   "w": 333,
+   "h": 670
+  },
+  {
+   "id": "D-P-27c7371ba2c0",
+   "kind": "discord",
+   "date": "2020-08-31T04:34:29+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-27c7371ba2c0.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks give imprisonment. While This card is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OPG) When This card runs out of HP, it is revived with the stats 1/9/7/6",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 391,
+   "h": 789
+  },
+  {
+   "id": "D-P-60b9ad14a3a0",
+   "kind": "discord",
+   "date": "2020-09-27T22:35:46+00:00",
+   "day": "2020-09-27",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-60b9ad14a3a0.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This card's first attack gives imprisonment. While This card is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OPG) When This card runs out of HP, it is revived with the stats 1/9/7/6",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 392,
+   "h": 790
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/4 Stars/Grand_Doomer.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-4c15bbccd523.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This card's first attack gives imprisonment. While This card is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OPG) When This card runs out of HP, it is revived with the stats 1/9/7/6",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 392,
+   "h": 790
+  },
+  {
+   "id": "O-4a5749116404:Cards/Kirby/4 Stars/Grand_Doomer.png",
+   "kind": "old repo",
+   "date": "2023-03-29T01:27:16+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "grand doomer",
+   "repo": "first",
+   "image": "O-f8456916f855.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This card's first attack gives imprisonment. While This card is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OPG) When This card runs out of HP, it is revived with the stats 1/9/7/6",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-13242de0e1dc:Cards/Kirby/4 Stars/Grand_Doomer.png",
+   "kind": "old repo",
+   "date": "2023-04-02T02:00:37+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Deleted unused assets from the rest of the kirby cards",
+   "repo": "first",
+   "image": "O-e40a146477b4.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This card's first attack gives imprisonment. While This card is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OPG) When This card runs out of HP, it is revived with the stats 1/9/7/6",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-386bdb5b1345:Cards/Kirby/4 Stars/Grand_Doomer.png",
+   "kind": "old repo",
+   "date": "2023-04-06T23:48:36+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Card to Creature lingo kriby cards",
+   "repo": "first",
+   "image": "O-c3e5bda7c3ab.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack gives imprisonment. While This creature is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OPG) When This creature runs out of HP, it is revived with the stats 1/9/7/6",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/4 Stars/Grand_Doomer.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-c3e5bda7c3ab.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack gives imprisonment. While This creature is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OPG) When This creature runs out of HP, it is revived with the stats 1/9/7/6",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/4 Stars/Grand_Doomer.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-c3e5bda7c3ab.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack gives imprisonment. While This creature is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OPG) When This creature runs out of HP, it is revived with the stats 1/9/7/6",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/4 Stars/Grand_Doomer.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-72bb52267922.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack inflicts imprisoned. \nWhile this creature is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OD) This creature is revived with the stats 1/9/7/6.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/4 Stars/Grand_Doomer.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-ef729291140e.webp",
+   "fields": {
+    "name": {
+     "value": "Grand Doomer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This creature's first attack inflicts imprisoned. \nWhile this creature is imprisoning a creature, your teammates gain DEF equal to half of the imprisoned creature's DEF. (OD) This creature is revived with the stats 1/9/7/6.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-21",
+  "sort": "2020-07-21",
+  "source": "discord",
+  "status": "owner"
+ }
+}

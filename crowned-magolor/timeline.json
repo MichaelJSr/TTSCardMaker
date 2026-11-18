@@ -1,0 +1,804 @@
+{
+ "card": "crowned-magolor",
+ "key": "Crowned Magolor",
+ "name": "Crowned Magolor",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-3bd4e5e60a7b",
+   "kind": "discord",
+   "date": "2019-02-25T05:25:20+00:00",
+   "day": "2019-02-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-3bd4e5e60a7b.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) you can pay 5 points to increase Magolor's ATK DEF SPD by 1 permanently (can be done only once). On Magolor's 1st turn(OYT) he can decrease his attack by 2 to attack all opponents. On his second turn (before attacking) he can summon a minion with his stats but -3HP -0DEF -2ATK -1SPD the minion dies at the beginning of the next turn. On his 3rd turn (OYT) he can decrease his DEF by 50% and gain 5ATK. After his third turn his turn count is set back to one",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 591,
+   "h": 1200
+  },
+  {
+   "id": "D-P-8ec0d7109bfb",
+   "kind": "discord",
+   "date": "2020-07-22T02:57:26+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-8ec0d7109bfb.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) you can pay 5 points to increase Magolor's ATK DEF SPD by 1 permanently (Only once). On Magolor's 1st turn (OYT) he can decrease his attack by 2 to attack all opponents. At the start of his 2nd turn he can summon a minion with his current stats -6 HP -2ATK -1SPD the minion dies at the beginning of the next turn. On his 3rd turn (OYT) he can decrease his DEF by 50% and gain 5ATK for 1 turn. After his third turn his turn count is set back to one",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     5
+    ],
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 6 -> 7",
+     "DEF 3 -> 4",
+     "ATK 6 -> 7",
+     "SPD 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-b5a4030f1d72",
+   "kind": "discord",
+   "date": "2020-07-23T22:45:29+00:00",
+   "day": "2020-07-23",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-b5a4030f1d72.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) you can pay 5 points to increase Magolor's ATK DEF SPD by 1 permanently (Only once). On Magolor's 1st turn (OYT) he can decrease his attack by 2 to attack all opponents. At the start of his 2nd turn he can summon a minion with Magolor's stats -6 HP -2ATK -1SPD the minion dies at the beginning of his next turn. On his 3rd turn (OYT) he can decrease his DEF by 2 and gain 5ATK for 1 turn. After his third turn his turn count is set back to one",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 388,
+   "h": 786
+  },
+  {
+   "id": "D-P-0f8b19cc0e2a",
+   "kind": "discord",
+   "date": "2020-07-25T13:07:50+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-0f8b19cc0e2a.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) you can pay 5 points to increase Magolor's ATK DEF SPD by 1 permanently (Only once). On Magolor's 1st turn (OYT) he can decrease his attack by 2 to attack all opponents. At the start of his 2nd turn he can summon a Mini Doomer. On his 3rd turn (OYT) he can decrease his DEF by 2 and gain 5ATK for 1 turn. After his third turn his turn count is set back to one",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 387,
+   "h": 787
+  },
+  {
+   "id": "D-P-78f80c24f6a7",
+   "kind": "discord",
+   "date": "2020-09-13T05:26:42+00:00",
+   "day": "2020-09-13",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-78f80c24f6a7.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to increase this card's ATK DEF SPD by 1 permanently. On this card's 1st turn (OYT) it can decrease its ATK by 2 this turn to make its next attack hit all enemies on the (PF). At the start of its 2nd turn it can summon a Mini Doomer. 3rd turn (OPT) (OYT)Can decrease its DEF by 2 to gain 5ATK for 1 turn. After 3rd turn, turn counter is reset to 1",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 388,
+   "h": 788
+  },
+  {
+   "id": "D-P-d5b29296a86d",
+   "kind": "discord",
+   "date": "2021-12-15T12:04:38+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-d5b29296a86d.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (OYT) Pay 5 points to increase this card's ATK DEF SPD by 1 permanently. On this card's 1st turn (OYT) it can decrease its ATK by 2 this turn to make its next attack hit all enemies on the (PF). At the start of its 2nd turn it can summon a Mini Doomer. 3rd turn (OPT) (OYT) Can decrease its DEF by 2 to gain 5ATK for 1 turn. After 3rd turn, turn counter is reset to 1",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 387,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-9b28aaa7f029.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) (OYT) Pay 5 points to increase this card's ATK DEF SPD by 1 permanently. On this card's 1st turn (OYT) it can decrease its ATK by 2 this turn to make its next attack hit all enemies on the (PF). At the start of its 2nd turn it can summon a Mini Doomer. 3rd turn (OPT) (OYT) Can decrease its DEF by 2 to gain 5ATK for 1 turn. After 3rd turn, turn counter is reset to 1",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 387,
+   "h": 787
+  },
+  {
+   "id": "O-8211f8137a5b:Cards/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2023-04-08T00:16:06+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "crowned magalor",
+   "repo": "first",
+   "image": "O-e3d1d2d568de.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to gain +1 ATK DEF SPD. \nTurn 1 may decrease ATK by 2 to make attacks hit entire (PF).\nTurn 2 may summon a Mini Doomer. \nTurn 3 may decrease DEF by 2 to gain +5 ATK until (ENDT). \nAfter turn 3, reset to turn 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8ebbd6be396f:Cards/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2023-04-20T22:28:24+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugged through all pending updates",
+   "repo": "first",
+   "image": "O-af2222b77269.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to gain +1 ATK DEF SPD. \nTurn 1 may decrease ATK by 2 to make attacks hit entire (PF).\nTurn 2 (BOT) may summon a Mini Doomer. \nTurn 3 may decrease DEF by 2 to gain +5 ATK until (ENDT). \nAfter turn 3, reset to turn 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-af2222b77269.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to gain +1 ATK DEF SPD. \nTurn 1 may decrease ATK by 2 to make attacks hit entire (PF).\nTurn 2 (BOT) may summon a Mini Doomer. \nTurn 3 may decrease DEF by 2 to gain +5 ATK until (ENDT). \nAfter turn 3, reset to turn 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-af2222b77269.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to gain +1 ATK DEF SPD. \nTurn 1 may decrease ATK by 2 to make attacks hit entire (PF).\nTurn 2 (BOT) may summon a Mini Doomer. \nTurn 3 may decrease DEF by 2 to gain +5 ATK until (ENDT). \nAfter turn 3, reset to turn 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-512be6cd13fd:Creatures/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2023-10-17T14:11:38+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates and upscaled buffs",
+   "image": "O-71e1366a564e.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to gain +1 ATK DEF SPD. \nTurn 1 may decrease ATK by 2 to make attacks hit entire (PF).\nTurn 2 (BOT) may summon a Mini Doomer. \nTurn 3 may decrease DEF by 2 to gain +5 ATK until (ENDT). \nAfter turn 3, reset to turn 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-c032d0e6fd1d.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to gain +1 ATK DEF SPD. \nTurn 1 may decrease ATK by 2 to make attacks hit entire (PF).\nTurn 2 (BOT) may summon a Mini Doomer. \nTurn 3 may decrease DEF by 2 to gain +5 ATK until (ENDT). \nAfter turn 3, reset to turn 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-29561e31c1cf.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to gain +1 ATK DEF SPD. \nTurn 1 may decrease ATK by 2 to make attacks hit entire (PF).\nTurn 2 (BOT) may summon a Mini Doomer. \nTurn 3 may decrease DEF by 2 to gain +5 ATK until (ENDT). \nAfter turn 3, reset to turn 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/5 Stars/Crowned_Magolor.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-7dbc746b67c9.webp",
+   "fields": {
+    "name": {
+     "value": "Crowned Magolor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(OYT) Pay 5 points to gain +1 ATK DEF SPD. \nTurn 1 may decrease ATK by 2 to make attacks hit entire (PF).\nTurn 2 (BOT) may summon a Mini Doomer. \nTurn 3 may decrease DEF by 2 to gain +5 ATK until (ENDT). \nAfter turn 3, reset to turn 1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-25",
+  "sort": "2019-02-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,920 @@
+{
+ "card": "pure-vessel",
+ "key": "Pure Vessel",
+ "name": "Pure Vessel",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c0fe0670dfc7-c1",
+   "kind": "discord",
+   "date": "2020-07-13T11:10:03+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c0fe0670dfc7-c1.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time he attacks or is attacked the counter switches colors. If the counter is black, then the Pure Vessel can deal 7 counter damage to attackers., If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are Def piercing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 392,
+   "h": 791
+  },
+  {
+   "id": "D-P-72873b523688",
+   "kind": "discord",
+   "date": "2021-08-11T20:47:37+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-72873b523688.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time he is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are Def piercing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 789
+  },
+  {
+   "id": "D-P-11a653e2dd22",
+   "kind": "discord",
+   "date": "2021-12-15T11:46:13+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-11a653e2dd22.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time he is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are Def piercing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 388,
+   "h": 789
+  },
+  {
+   "id": "D-P-0ca0d0cdfcc8",
+   "kind": "discord",
+   "date": "2022-01-31T09:55:47+00:00",
+   "day": "2022-01-31",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-0ca0d0cdfcc8.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time he is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are Def piercing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "dark"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "light"
+     ],
+     "drop": [
+      "hollow"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-df75d301fa18.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time he is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are def piercing.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "O-257dc970a875:Cards/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-e984719c0177.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time he is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are def piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "hollow"
+     ],
+     "drop": [
+      "light"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-f2fac7110ea1.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time he is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are def piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b584a785d959:Cards/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-04-07T02:34:05+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "can i push this while theyre all open?",
+   "repo": "first",
+   "image": "O-2fba7164446f.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time it is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are def piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-2fba7164446f.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time it is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are def piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-2fba7164446f.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time it is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are def piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ece0f955f388:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-04-23T17:53:55+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Attribute fixes",
+   "image": "O-58255ad8b049.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The Pure Vessel has a battle counter that can be either black or white and starts as white. Every time it is attacked the counter switches colors. It can also switch the counter at the end of its turn. If the counter is black, Pure Vessel can deal 7 counter damage to attackers. If the counter is white, the pure vessel can decrease attack by 2 to attack all opponents. When at <= 50% hp Pure vessel's attacks are def piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-715767ae8046:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-04-25T12:03:14+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "touch ups?",
+   "image": "O-2713a6794028.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "hollow"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has a battle counter that can be either black or white and starts as white. \nEvery time it is attacked the counter switches colors.\n (ENDT) Can switch counter.\n If the counter is black, it can deal 7 counter damage to attackers. \nIf the counter is white, it can decrease attack by 2 to attack all opponents. \nWhen below 50% HP, attacks are piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e0093faafca4:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-05-27T13:19:23+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "soul removal",
+   "image": "O-afc5f19ddd6b.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has a battle counter that can be either black or white and starts as white. \nEvery time it is attacked the counter switches colors.\n (ENDT) Can switch counter.\n If the counter is black, it can deal 7 counter damage to attackers. \nIf the counter is white, it can decrease attack by 2 to attack all opponents. \nWhen below 50% HP, attacks are piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "hollow"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6ab60b5679ae:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-10-12T05:14:39+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "somestuf",
+   "image": "O-279e2cff843e.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has a battle counter that can be either black or white and starts as white. \nEvery time it is attacked the counter switches colors.\n (ENDT) Can switch counter.\n If the counter is black, it can deal 7 counter damage to attackers. \nIf the counter is white, it can decrease attack by 2 to attack all opponents. \nWhen below 50% HP, attacks are piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-512be6cd13fd:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-10-17T14:11:38+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates and upscaled buffs",
+   "image": "O-cf1acdf6c7eb.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has a battle token that can be either black or white and starts as white. \n If the token is black, it can deal 7 counter damage to attackers. \nIf the token is white, it can decrease attack by 2 to attack all opponents. \nEvery time it is attacked the token switches colors.\n (ENDT) Can switch token.\nWhen below 50% HP, attacks are piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1ce084ae08be:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:36:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-5b6a8ffa8fd2.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has a battle token that can be either black or white and starts as white. \n If the token is black, it can deal 7 counter damage to attackers. \nIf the token is white, it can decrease attack by 2 to attack all opponents. \nEvery time it is attacked the token switches colors.\n (ENDT) Can switch token.\nWhen below 50% HP, attacks are piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "light"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-365dca3b0b63.webp",
+   "fields": {
+    "name": {
+     "value": "Pure Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has a battle token that can be either black or white and starts as white. \n If the token is black, it can deal 7 counter damage to attackers. \nIf the token is white, it can decrease attack by 2 to attack all opponents. \nEvery time it is attacked the token switches colors.\n (ENDT) Can switch token.\nWhen below 50% HP, attacks are piercing.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-13",
+  "sort": "2020-07-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,72 @@
+{
+ "card": "poorly-drawn-cabbage",
+ "key": "Poorly Drawn Cabbage",
+ "name": "Poorly Drawn Cabbage",
+ "kind": "aux item",
+ "stop": {
+  "day": "2025-02-04",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1fc840114336",
+   "kind": "discord",
+   "date": "2025-02-04T03:39:32+00:00",
+   "day": "2025-02-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1fc840114336.webp",
+   "fields": {
+    "name": {
+     "value": "Poorly Drawn Cabbage",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals eight damage",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-02-22T05:54:21+00:00",
+  "changes": {
+   "stars": [
+    3,
+    2
+   ],
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-02-04",
+  "sort": "2025-02-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

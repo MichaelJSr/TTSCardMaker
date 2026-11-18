@@ -1,0 +1,1170 @@
+{
+ "card": "toy-freddy",
+ "key": "Toy Freddy",
+ "name": "Toy Freddy",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-b1a859df3878",
+   "kind": "discord",
+   "date": "2020-07-12T11:21:42+00:00",
+   "day": "2020-07-12",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-b1a859df3878.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The number of attacks Toy Freddy has is the number of items used in the turn. If Freddy attacks someone in the middle of field (your perspective) his attack is increased by 2 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "D-P-382aef9d1c2b",
+   "kind": "discord",
+   "date": "2020-07-22T11:12:28+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-382aef9d1c2b.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The number of attacks Toy Freddy has is the number of items used before he attacks. If freddy attacks someone in the middle of field (your perspective), his attack is increased by 1 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "D-P-0496cc0afe0c",
+   "kind": "discord",
+   "date": "2020-07-28T11:03:59+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-0496cc0afe0c.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each item used while Toy Freddy is on the field, gain a counter. Each counter consumed is an attack. If he attacks someone in the middle of field, his attack is increased by 1 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-9ca0ff30e4c0",
+   "kind": "discord",
+   "date": "2020-07-28T11:09:19+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-9ca0ff30e4c0.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each item used while Toy Freddy is on the field, gain a counter. Each counter consumed is an attack. If he attacks someone in the middle of field, his attack is increased by 1 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-fb7a5722d14",
+   "kind": "text",
+   "date": "2020-07-29T01:59:35+00:00",
+   "day": "2020-07-29",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f5124f76be2",
+   "kind": "text",
+   "date": "2020-08-15T10:03:40+00:00",
+   "day": "2020-08-15",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-6bbfa0eb5d1e",
+   "kind": "discord",
+   "date": "2020-08-15T21:03:35+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-6bbfa0eb5d1e.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter for each item used while this is on the field (max 4). Each counter consumed is an attack. If he attacks the middle field, his ATK is increased by 1 for that attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-50c1719e36de",
+   "kind": "discord",
+   "date": "2021-08-21T04:50:03+00:00",
+   "day": "2021-08-21",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-50c1719e36de.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Has no innate actions. Gain a counter for each item used while this is on the field (max 4). Each counter consumed is an action.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-1bbc37a8d32a",
+   "kind": "discord",
+   "date": "2021-08-21T04:51:50+00:00",
+   "day": "2021-08-21",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-1bbc37a8d32a.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Has no innate actions. Gain a counter for each item used while this is on the field (max 4). Consume a counter to gain an action.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-21c8cc4bd8d0",
+   "kind": "discord",
+   "date": "2021-12-12T07:26:12+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-21c8cc4bd8d0.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Has no innate actions. Gain a counter for each item used while this is on the field (max 4). Consume a counter to gain an action.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-81194b53c114",
+   "kind": "discord",
+   "date": "2021-12-15T12:23:52+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-81194b53c114.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Has no innate actions. Gain a counter for each item used while this is on the field (max 4). Consume a counter to gain an action.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-a92cdeb2497d",
+   "kind": "discord",
+   "date": "2022-06-10T22:05:26+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-a92cdeb2497d.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (max 4). Consume a counter to gain an action.",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "dark"
+     ]
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "git_look": true,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-086a3db53ce3.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (max 4). Consume a counter to gain an action.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-257dc970a875:Cards/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-a376110a55f4.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (max 4). Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4169bf7a0f60:Cards/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-04-17T09:55:20+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "touch ups",
+   "repo": "first",
+   "image": "O-8dd18a498e27.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-8dd18a498e27.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-8dd18a498e27.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e63eaf98bf16:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-06-17T09:36:05+00:00",
+   "day": "2023-06-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "better hp bars for old cards",
+   "image": "O-285bcf9739e2.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-b3f60aae40af.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-b76ce370b5a2.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-4a142803fed0.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-b831c3d356f6.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-68846f109034.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter for each item used while this creature is on the field (MAX 4).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-35750bbc7649:Creatures/Fnaf/3 Stars/Toy_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-11-03T13:07:03+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "3",
+   "image": "O-15a17a412914.webp",
+   "fields": {
+    "name": {
+     "value": "Toy Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has no innate actions. Gain a counter per item used while this is on the field (MAX 4 per global turn).\n Consume a counter to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-12",
+  "sort": "2020-07-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

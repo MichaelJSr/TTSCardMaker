@@ -1,0 +1,29 @@
+{
+ "card": "tmtrainer",
+ "key": "TMTRAINER",
+ "name": "TMTRAINER",
+ "morgue": "candidate",
+ "first": {
+  "date": "2023-04-20T10:34:10.238000+00:00",
+  "day": "2023-04-20",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-3cafc4a14b18",
+   "kind": "discord",
+   "date": "2023-04-20T10:34:10.238000+00:00",
+   "day": "2023-04-20",
+   "badge": "Discord",
+   "image": "P-3cafc4a14b18.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "kind_of": "joke"
+}

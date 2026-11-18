@@ -1,0 +1,169 @@
+{
+ "card": "shellphone",
+ "key": "Shellphone",
+ "name": "Shellphone",
+ "kind": "item",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-daea0972fc25",
+   "kind": "discord",
+   "date": "2023-06-03T22:22:40+00:00",
+   "day": "2023-06-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-daea0972fc25.webp",
+   "fields": {
+    "name": {
+     "value": "Cellphone",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature may switch out with no point cost.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-43acfedd0fc4:Items/Equip/1 Stars/Cellphone.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:19:27+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "file": "Cellphone",
+   "image": "O-ac4aca0972a5.webp",
+   "fields": {
+    "name": {
+     "value": "Cellphone",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature may switch out with no point cost.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4e4d58f627c3:Items/Equip/1 Stars/Cellphone.png",
+   "kind": "old repo",
+   "date": "2023-09-21T09:54:28+00:00",
+   "day": "2023-09-21",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "psds",
+   "file": "Cellphone",
+   "image": "O-7fdc3c4f9ed0.webp",
+   "fields": {
+    "name": {
+     "value": "Cellphone",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature may switch out with no point cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-75443b2188db:Items/Equip/1 Stars/Cellphone.png",
+   "kind": "old repo",
+   "date": "2023-10-22T20:37:13+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "a",
+   "file": "Cellphone",
+   "image": "O-5f14b0d285e3.webp",
+   "fields": {
+    "name": {
+     "value": "Shellphone",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature may switch out with no point cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Cellphone",
+     "Shellphone"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-06-03",
+  "sort": "2023-06-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

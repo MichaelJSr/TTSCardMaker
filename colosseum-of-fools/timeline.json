@@ -1,0 +1,178 @@
+{
+ "card": "colosseum-of-fools",
+ "key": "Colosseum of Fools",
+ "name": "Colosseum of Fools",
+ "kind": "field",
+ "stop": {
+  "day": "2023-10-24",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-60c362fee78c:MDW/Croissant's Special Folder/Colosseum_Of_Fools.psd",
+   "kind": "old repo",
+   "date": "2023-10-24T21:43:59+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field items",
+   "image": "O-08421a61285b.webp",
+   "fields": {
+    "name": {
+     "value": "Colosseum of Fools",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Infected:\nProdigy:\nMonster:",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 320,
+   "h": 480
+  },
+  {
+   "id": "O-b9542b717b64:MDW/Croissant's Special Folder/Colosseum_Of_Fools.psd",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-13b2f72722ae.webp",
+   "fields": {
+    "name": {
+     "value": "Colosseum of Fools",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Brute:\nEnemy Infected, Monster:\nProdigy:",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 320,
+   "h": 480
+  },
+  {
+   "id": "O-268c2b127d6d:Field/3 Stars/Colosseum_Of_Fools.png",
+   "kind": "old repo",
+   "date": "2023-10-25T18:43:05+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fields",
+   "image": "O-4a3b17646249.webp",
+   "fields": {
+    "name": {
+     "value": "Colosseum of Fools",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per Prodigy\nBrute: +3 ATK\nEnemy Infected, Monster: -1.5 SPD\nProdigy: +3 ATK for each point-yielding creature they’ve killed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-821fa8453c74:Field/3 Stars/Colosseum_Of_Fools.png",
+   "kind": "old repo",
+   "date": "2023-10-26T11:46:07+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item changes",
+   "image": "O-f75570d5dfdc.webp",
+   "fields": {
+    "name": {
+     "value": "Colosseum of Fools",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Brute: +1.5 ATK for each point-yielding creature they’ve killed. \nEnemy Brainwashed, -1.5 SPD\nMartial Artist: Double Speed  = 2x combo damage,  Triple speed = 3x combo damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-24",
+  "sort": "2023-10-24",
+  "source": "old repo (PSD)",
+  "status": "owner"
+ }
+}

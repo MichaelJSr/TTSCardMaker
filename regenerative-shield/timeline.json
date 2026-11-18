@@ -1,0 +1,224 @@
+{
+ "card": "regenerative-shield",
+ "key": "Regenerative Shield",
+ "name": "Regenerative Shield",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-10-29",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-8ff0ae89c558",
+   "kind": "discord",
+   "date": "2023-10-29T17:03:24+00:00",
+   "day": "2023-10-29",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8ff0ae89c558.webp",
+   "fields": {
+    "name": {
+     "value": "Regenerative Sheild",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "git look: icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 0,
+      "atk": 0,
+      "spd": 4
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) Restore the equipped creature to full HP",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b00120bddb76:Auxillary/Minions/Regenerative_Shield.png",
+   "kind": "old repo",
+   "date": "2023-10-29T17:04:44+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Eldman",
+   "image": "O-f5c02b2c0ae1.webp",
+   "fields": {
+    "name": {
+     "value": "Regenerative Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 0,
+      "atk": 0,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) Restore the equipped creature to full HP",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6d844ee4c942:Auxillary/Minions/Regenerative_Shield.png",
+   "kind": "old repo",
+   "date": "2023-11-01T08:14:17+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "sheild",
+   "image": "O-14ff21bfb378.webp",
+   "fields": {
+    "name": {
+     "value": "Regenerative Shield",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 0,
+      "atk": 0,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) Restore the equipped creature to full HP",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Regenerative Sheild",
+     "Regenerative Shield"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a43fa5827a23:Auxillary/Minions/Regenerative_Shield.png",
+   "kind": "old repo",
+   "date": "2023-11-03T09:40:20+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "updates",
+   "image": "O-9cb8eac68ffd.webp",
+   "fields": {
+    "name": {
+     "value": "Regenerative Shield",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 0,
+      "atk": 0,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) Restore all creatures in this slot to full HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-29",
+  "sort": "2023-10-29",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,435 @@
+{
+ "card": "jack-in-the-box-zombie",
+ "key": "Jack-in-the-Box Zombie",
+ "name": "Jack-in-the-Box Zombie",
+ "kind": "minion",
+ "stop": {
+  "day": "2023-04-01",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-de94359c36fe",
+   "kind": "discord",
+   "date": "2023-04-01T16:14:46+00:00",
+   "day": "2023-04-01",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-de94359c36fe.webp",
+   "fields": {
+    "name": {
+     "value": "Jack-In-The-Box Zombie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects only against the opposing lane. After it's 2nd turn alive, destroy this minion and deal 5 damage to all enemy creatures on the PF",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d62c828e0154:Auxillary/Minions/5 Stars/jack-in-the-box_zombie.png",
+   "kind": "old repo",
+   "date": "2023-04-01T16:17:59+00:00",
+   "day": "2023-04-01",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "zombie minions",
+   "repo": "first",
+   "image": "O-3f6a60ae6119.webp",
+   "fields": {
+    "name": {
+     "value": "jack-in-the-box zombie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects only against the opposing lane. After it's 2nd turn alive, destroy this minion and deal 5 damage to all enemy creatures on the PF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b16c6736c20c:Auxillary/Minions/5 Stars/jack-in-the-box_zombie.png",
+   "kind": "old repo",
+   "date": "2023-04-02T00:20:11+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Touched a bunch of auxillary cards to standardize their size and delete some unused assets",
+   "repo": "first",
+   "image": "O-7d13351ede24.webp",
+   "fields": {
+    "name": {
+     "value": "jack-in-the-box zombie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects only against the opposing lane. After it's 2nd turn alive, destroy this minion and deal 5 damage to all enemy creatures on the PF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-37451eba2f36:Auxillary/Minions/5 Stars/jack-in-the-box_zombie.png",
+   "kind": "old repo",
+   "date": "2023-04-03T10:39:58+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed all psd minions to use the new types for protective/not",
+   "repo": "first",
+   "image": "O-7380dae81de2.webp",
+   "fields": {
+    "name": {
+     "value": "jack-in-the-box zombie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects only against the opposing lane. After it's 2nd turn alive, destroy this minion and deal 5 damage to all enemy creatures on the PF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d24c6d10c672:Auxillary/Minions/5 Stars/Jack-In-The-Box_Zombie.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:26:54+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the auxillary",
+   "image": "O-849147824151.webp",
+   "fields": {
+    "name": {
+     "value": "jack-in-the-box zombie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects only against the opposing lane. After it's 2nd turn alive, destroy this minion and deal 5 damage to all enemy creatures on the PF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4b6f8b7307a7:Auxillary/Minions/5 Stars/Jack-In-The-Box_Zombie.png",
+   "kind": "old repo",
+   "date": "2023-04-30T18:45:47+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Touch ups and fixes",
+   "image": "O-83c4d1d2a193.webp",
+   "fields": {
+    "name": {
+     "value": "jack-in-the-box zombie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects only against the opposing lane. \nAfter it's 2nd turn alive, destroy this minion and deal 5 damage to all enemy creatures on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "undead"
+     ],
+     "drop": []
+    },
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Jack-In-The-Box_Zombie.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-6841147bacf4.webp",
+   "fields": {
+    "name": {
+     "value": "jack-in-the-box zombie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects only against the opposing lane. \nAfter it's 2nd turn alive, destroy this minion and deal 5 damage to all enemy creatures on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     5,
+     3
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Jack-In-The-Box_Zombie.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-8f7e1aa5c425.webp",
+   "fields": {
+    "name": {
+     "value": "jack-in-the-box zombie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects only against the opposing lane. \nAfter it's 2nd turn alive, destroy this minion and deal 5 damage to all enemy creatures on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-04-01",
+  "sort": "2023-04-01",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,680 @@
+{
+ "card": "rasta-beast",
+ "key": "Rasta Beast",
+ "name": "Pasta Beast",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1beb6546b48d",
+   "kind": "discord",
+   "date": "2021-05-20T05:07:13+00:00",
+   "day": "2021-05-20",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-1beb6546b48d.webp",
+   "fields": {
+    "name": {
+     "value": "Rasta Beast",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This card gains 4 speed for one turn. This card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 385,
+   "h": 787
+  },
+  {
+   "id": "D-P-fc01d7ff465c",
+   "kind": "discord",
+   "date": "2021-05-20T05:08:16+00:00",
+   "day": "2021-05-20",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-fc01d7ff465c.webp",
+   "fields": {
+    "name": {
+     "value": "Rasta Beast",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This card gains 4 speed for one turn. This card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 386,
+   "h": 788
+  },
+  {
+   "id": "D-P-14d3705042fd",
+   "kind": "discord",
+   "date": "2021-12-15T11:54:22+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-14d3705042fd.webp",
+   "fields": {
+    "name": {
+     "value": "Rasta Beast",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) This card gains 4 speed for one turn. This card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 387,
+   "h": 788
+  },
+  {
+   "id": "F-fcb2279dda5",
+   "kind": "text",
+   "date": "2022-01-31T07:51:02+00:00",
+   "day": "2022-01-31",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-4c5a385eb8d7",
+   "kind": "discord",
+   "date": "2022-01-31T08:04:26+00:00",
+   "day": "2022-01-31",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-4c5a385eb8d7.webp",
+   "fields": {
+    "name": {
+     "value": "Rasta Beast",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (BOGT) This card gains 4 speed for 1 turn. This card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 387,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Everhood/4 Stars/Rasta_Beast.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-4bd77404fdd4.webp",
+   "fields": {
+    "name": {
+     "value": "Rasta Beast",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(BOGT)This card gains 4 speed for 1 turn.\nThis card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 387,
+   "h": 787
+  },
+  {
+   "id": "O-7e1d422781cf:Cards/Everhood/4 Stars/Rasta_Beast.png",
+   "kind": "old repo",
+   "date": "2023-04-17T11:53:13+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some everhood",
+   "repo": "first",
+   "image": "O-12095bdc78bf.webp",
+   "fields": {
+    "name": {
+     "value": "Pasta Beast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(BOGT)This card gains 4 speed for 1 turn.\nThis card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Rasta Beast",
+     "Pasta Beast"
+    ],
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 6,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d1294a9b20a7:Cards/Everhood/4 Stars/Rasta_Beast.png",
+   "kind": "old repo",
+   "date": "2023-04-17T23:19:21+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "everhood",
+   "repo": "first",
+   "image": "O-9d8f420bb69d.webp",
+   "fields": {
+    "name": {
+     "value": "Pasta Beast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(BOGT)This card gains 4 speed for 1 turn.\nThis card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 6,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 6 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Everhood/4 Stars/Rasta_Beast.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-9d8f420bb69d.webp",
+   "fields": {
+    "name": {
+     "value": "Pasta Beast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(BOGT)This card gains 4 speed for 1 turn.\nThis card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Everhood/4 Stars/Rasta_Beast.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-9d8f420bb69d.webp",
+   "fields": {
+    "name": {
+     "value": "Pasta Beast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(BOGT)This card gains 4 speed for 1 turn.\nThis card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c206b713bbf0:Creatures/Everhood/4 Stars/Rasta_Beast.png",
+   "kind": "old repo",
+   "date": "2023-10-05T17:23:03+00:00",
+   "day": "2023-10-05",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "teleport and tainted lost",
+   "image": "O-fdcd9dbd0dad.webp",
+   "fields": {
+    "name": {
+     "value": "Pasta Beast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(BOGT)This card gains 4 speed for 1 turn.\nThis card gains 1 ATK every time a friendly point yielding creature dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Everhood/4 Stars/Rasta_Beast.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-e5191a22dc14.webp",
+   "fields": {
+    "name": {
+     "value": "Pasta Beast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(BOGT)This card gains +4 SPD for 1 turn.\nThis card gains +1 ATK every time a friendly point yielding creature dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Everhood/4 Stars/Rasta_Beast.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-198b6c273bed.webp",
+   "fields": {
+    "name": {
+     "value": "Pasta Beast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(BOGT)This card gains +4 SPD for 1 turn.\nThis card gains +1 ATK every time a friendly point yielding creature dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-05-20",
+  "sort": "2021-05-20",
+  "source": "discord",
+  "status": "same"
+ }
+}

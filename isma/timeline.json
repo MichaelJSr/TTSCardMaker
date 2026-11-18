@@ -1,0 +1,80 @@
+{
+ "card": "isma",
+ "key": "Isma",
+ "name": "Isma",
+ "kind": "creature",
+ "stop": {
+  "day": "2024-01-14",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1ed31bb5d17f",
+   "kind": "discord",
+   "date": "2024-01-14T20:15:24+00:00",
+   "day": "2024-01-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1ed31bb5d17f.webp",
+   "fields": {
+    "name": {
+     "value": "Isma",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May attack while not on the Primary field. First turn and (EOT) Pay 1 Point Summon a Fool Eater onto a creature. (OPT) Summon a Gulka onto a creatue. May use an action to inflict 4 Poison for 2 turns. (E3T) May attack evertyhing on the primary field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-18T02:59:46+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-03-20",
+  "sort": "2023-03-20",
+  "source": "discord",
+  "status": "owner"
+ }
+}

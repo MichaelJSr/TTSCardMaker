@@ -1,0 +1,419 @@
+{
+ "card": "return-to-sender",
+ "key": "Return to Sender",
+ "name": "RETURN TO SENDER",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fed8fda03b2",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-1a6b8074fd4d",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:19+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-1a6b8074fd4d.webp",
+   "fields": {
+    "name": {
+     "value": "RETURN TO SENDER",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Infinite uses.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 609
+  },
+  {
+   "id": "F-f83e6ad6628",
+   "kind": "text",
+   "date": "2020-08-02T23:34:02+00:00",
+   "day": "2020-08-02",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-07ada0f7587f",
+   "kind": "discord",
+   "date": "2020-08-03T01:11:12+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-07ada0f7587f.webp",
+   "fields": {
+    "name": {
+     "value": "RETURN TO SENDER",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can reflect 50% of the damage of an attack as piercing counter damage. Both damaged creatures are inflicted with any status effects given by the attack. A reflected item is sent to the creature across from the original target Infinite uses.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 611
+  },
+  {
+   "id": "D-P-4963451e869a",
+   "kind": "discord",
+   "date": "2021-08-11T20:56:10+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-4963451e869a.webp",
+   "fields": {
+    "name": {
+     "value": "Return To Sender",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can reflect 50% of the damage of an attack as piercing counter damage. Both damaged creatures are inflicted with any status effects given by the attack. A reflected item is sent to the creature across from the original target 4 uses.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "F-f355664529c",
+   "kind": "text",
+   "date": "2021-08-11T20:56:22+00:00",
+   "day": "2021-08-11",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/4 Stars/Return_To_Sender.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-c644eb4a5738.webp",
+   "fields": {
+    "name": {
+     "value": "Return To Sender",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can reflect 50% of the damage of an attack as piercing counter damage. Both damaged creatures are inflicted with any status effects given by the attack. A reflected item is sent to the creature across from the original target 4 uses.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/4 star/Return_To_Sender.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-c644eb4a5738.webp",
+   "fields": {
+    "name": {
+     "value": "Return To Sender",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can reflect 50% of the damage of an attack as piercing counter damage. Both damaged creatures are inflicted with any status effects given by the attack. A reflected item is sent to the creature across from the original target 4 uses.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "O-7baa52ab3ad7:Items/Support/4 star/Return_To_Sender.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:57:03+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "last items",
+   "repo": "first",
+   "image": "O-bdbf87e8e373.webp",
+   "fields": {
+    "name": {
+     "value": "RETURN TO SENDER",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: 4\nCan reflect 50% of the damage of an attack as piercing counter damage. Both damaged creatures are inflicted with any status effects given by the attack. A reflected item is sent to the creature across from the original target.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-160ea5bef7b7:Items/Support/4 star/Return_To_Sender.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:04:00+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "return to sender",
+   "repo": "first",
+   "image": "O-b625af8dd3bd.webp",
+   "fields": {
+    "name": {
+     "value": "RETURN TO SENDER",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: 3\nCan reflect 50% of the damage of an attack as piercing counter damage. Both damaged creatures are inflicted with any status effects given by the attack. A reflected item is sent to the creature across from the original target.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/4 Stars/Return_To_Sender.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-b625af8dd3bd.webp",
+   "fields": {
+    "name": {
+     "value": "RETURN TO SENDER",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: 3\nCan reflect 50% of the damage of an attack as piercing counter damage. Both damaged creatures are inflicted with any status effects given by the attack. A reflected item is sent to the creature across from the original target.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/4 Stars/Return_To_Sender.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-b625af8dd3bd.webp",
+   "fields": {
+    "name": {
+     "value": "RETURN TO SENDER",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: 3\nCan reflect 50% of the damage of an attack as piercing counter damage. Both damaged creatures are inflicted with any status effects given by the attack. A reflected item is sent to the creature across from the original target.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-87c5a11e7c56:Items/Support/4 Stars/Return_To_Sender.png",
+   "kind": "old repo",
+   "date": "2023-10-12T04:07:33+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-9f15d424f35f.webp",
+   "fields": {
+    "name": {
+     "value": "RETURN TO SENDER",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: 3\nCan reflect 50% of the damage of an attack as piercing counter damage. \nBoth creatures are inflicted with any status effects given by the attack. \nThe reflected attack from an item is sent to the creature across from the original target.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-05-14",
+  "sort": "2019-05-14",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,787 @@
+{
+ "card": "wolfgang",
+ "key": "Wolfgang",
+ "name": "Wolfgang",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-fb58d1b5067f",
+   "kind": "discord",
+   "date": "2020-07-25T07:26:06+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-fb58d1b5067f.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Loses 1 attack and 1 speed if no food item is used on him by the end of the turn. May regain lost stats by feeding him food items, regaining 1 ATK and SPD for each star point of food items spent on him.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 9,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 600,
+   "h": 950
+  },
+  {
+   "id": "F-f88a1d9a5b0",
+   "kind": "text",
+   "date": "2020-10-14T08:42:07+00:00",
+   "day": "2020-10-14",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "atk",
+    "by": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-72c91e2500ab"
+  },
+  {
+   "id": "F-fc978ab91ed",
+   "kind": "text",
+   "date": "2020-10-14T08:42:07+00:00",
+   "day": "2020-10-14",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "spd",
+    "by": -1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-72c91e2500ab"
+  },
+  {
+   "id": "F-f3c5cc2251e",
+   "kind": "text",
+   "date": "2021-08-04T09:15:15+00:00",
+   "day": "2021-08-04",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-72c91e2500ab",
+   "kind": "discord",
+   "date": "2021-09-13T05:51:59+00:00",
+   "day": "2021-09-13",
+   "badge": "Discord",
+   "channel": "tyler",
+   "image": "P-72c91e2500ab.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Loses 1 attack and 1 speed if no food item is used on him by the end of the turn. May regain lost stats by feeding him food items, regaining 1 ATK and SPD for each star point of food items spent on him.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 9,
+      "spd": 7
+     },
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "ATK 9 -> 10"
+    ],
+    "nerfs": [
+     "SPD 7 -> 6"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 161,
+   "h": 256
+  },
+  {
+   "id": "D-P-b32f81042e68",
+   "kind": "discord",
+   "date": "2021-12-18T09:08:58+00:00",
+   "day": "2021-12-18",
+   "badge": "Discord",
+   "channel": "tyler",
+   "image": "P-b32f81042e68.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lose 1 ATK and SPD if he doesn't use a food item by the end of turn. Gains ATK and SPD equal to star cost of consumed food item. Regain 2 bar of stats lost from killing point yielding creature, 1 bar from non point yielding creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 600,
+   "h": 950
+  },
+  {
+   "id": "D-P-4e49c5570ddf",
+   "kind": "discord",
+   "date": "2021-12-18T10:18:53+00:00",
+   "day": "2021-12-18",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-4e49c5570ddf.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Loses 1 attack and 1 speed if no food item is used on him by the end of the turn. May regain lost stats by feeding him food items, regaining 1 ATK and SPD for each star point of food items spent on him.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 600,
+   "h": 950
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-2988be8ed8b9.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Loses 1 attack and 1 speed if no food item is used on him by the end of the turn. May regain lost stats by feeding him food items, regaining 1 ATK and SPD for each star point of food items spent on him.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 600,
+   "h": 950
+  },
+  {
+   "id": "O-d700e31b8a56:Cards/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-04-05T21:53:10+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Dst cards",
+   "repo": "first",
+   "image": "O-9cb67523bdbf.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature loses 1 ATK and 1 SPD if no\nfood item is used on them by the end of the turn. Regains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. Regains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-9cb67523bdbf.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature loses 1 ATK and 1 SPD if no\nfood item is used on them by the end of the turn. Regains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. Regains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-9cb67523bdbf.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature loses 1 ATK and 1 SPD if no\nfood item is used on them by the end of the turn. Regains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. Regains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-51747d4f9e50:Creatures/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-04-25T08:52:36+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "DST touch ups",
+   "image": "O-597c73d149eb.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature loses 1 ATK and 1 SPD if no\nfood item is used on them by the end of the turn. \nRegains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. \nRegains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-234456cf6cab.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature loses 1 ATK and 1 SPD if no\nfood item is used on them by the end of the turn. \nRegains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. \nRegains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Creatures/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-c06bb0a00a89.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) -1 ATK, -1 SPD\nRegains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. \nRegains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-145d4e3b6cad:Creatures/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-10-14T07:34:47+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "charms",
+   "image": "O-2151a73d358b.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) -1 ATK, -1 SPD\nRegains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. \nRegains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-8b2d561fa695.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) -1 ATK, -1 SPD\nRegains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. \nRegains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/DST/4 Stars/Wolfgang.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-700e0e2c835f.webp",
+   "fields": {
+    "name": {
+     "value": "Wolfgang",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 10,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) -1 ATK, -1 SPD\nRegains 2 bars of each stat lost from this ability if this kills a point yielding creature, 1 bar if this kills a non-point yielding creature. \nRegains ATK and SPD lost to this ability equal to the star cost of a consumed food item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-25",
+  "sort": "2020-07-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

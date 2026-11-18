@@ -1,0 +1,338 @@
+{
+ "card": "healing-ritual",
+ "key": "Healing Ritual",
+ "name": "Healing Ritual",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-15bb731e414d",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:05+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-15bb731e414d.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and heal it by 25% of its max HP and give it a regen rate of 3 health per turn for 3 turns. Heal the creature of all negative conditions.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 397,
+   "h": 613
+  },
+  {
+   "id": "D-P-2d2bc4ca60ce",
+   "kind": "discord",
+   "date": "2020-08-03T01:15:32+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-2d2bc4ca60ce.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and heal it by 25% of its max HP and give it a regen rate of 3 health per turn for 3 turns. Heal the creature of tier 3 or lower conditions",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 611
+  },
+  {
+   "id": "D-P-c893e0f53b98",
+   "kind": "discord",
+   "date": "2020-10-04T00:52:55+00:00",
+   "day": "2020-10-04",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-c893e0f53b98.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature: heal it by 25% of its max HP, give it 3 stacks of regen, and heal the creature of tier 3 or lower conditions",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 397,
+   "h": 612
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/3 Stars/Healing_Ritual.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-be7e4d529f55.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature: heal it by 25% of its max HP, give it 3 stacks of regen, and heal the creature of tier 3 or lower conditions",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 397,
+   "h": 612
+  },
+  {
+   "id": "O-f65f7785a7ed:Items/Heal/3 Stars/Healing_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-09T04:51:26+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "healing ritual",
+   "repo": "first",
+   "image": "O-3da6a32283a0.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature: heal it by 25% of its max HP, give it 3 stacks of regen, and heal the creature of tier 3 or lower debuffs",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-97bab8f1ceec:Items/Heal/3 Stars/Healing_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-11T13:35:04+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "More updates for new buff wording",
+   "repo": "first",
+   "image": "O-6eb8e2d71d8e.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature: heal it by 25% of its max HP, give it 2 stacks of regen for 3 turns, and cure the creature of tier 3 or lower debuffs",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/3 Stars/Healing_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-6eb8e2d71d8e.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature: heal it by 25% of its max HP, give it 2 stacks of regen for 3 turns, and cure the creature of tier 3 or lower debuffs",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Heal/3 Stars/Healing_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-42a16581b7a6.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature: heal it by 25% of its max HP, give it 2 stacks of Regen for 3 turns, and cure the creature of tier 3 or lower debuffs",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/3 Stars/Healing_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-bdc1cad2c350.webp",
+   "fields": {
+    "name": {
+     "value": "Healing Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature: heal it by 25% of its max HP, give it 2 stacks of Regen for 3 turns, and cure the creature of tier 3 or lower debuffs",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,509 @@
+{
+ "card": "the-plaguelands",
+ "key": "The Plaguelands",
+ "name": "The Plaguelands",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c16836a6610b",
+   "kind": "discord",
+   "date": "2022-01-16T03:49:27+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c16836a6610b.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[undead]: Inflicts 2 poison on attack. Nature: Sickened so long as this is on the field. Haunted and Spectral: Deals 4 piercing counter damage to the last creature that attacked it when it dies.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 547,
+   "h": 709
+  },
+  {
+   "id": "D-P-02c9896f0413",
+   "kind": "discord",
+   "date": "2022-01-16T03:57:33+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-02c9896f0413.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[undead]: Inflicts 2 poison on attack. Nature: Sickened so long as this is on the field. Haunted and Spectral: Deals 4 piercing counter damage to the last creature that attacked it when it dies. Costs 2 less per [undead] on the field.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 548,
+   "h": 709
+  },
+  {
+   "id": "D-P-202d805cedad",
+   "kind": "discord",
+   "date": "2022-01-16T03:58:44+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-202d805cedad.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[undead]: Inflicts 2 poison on attack. Nature: Sickened so long as this is on the field. Haunted and Spectral: Deals 4 piercing counter damage to the last creature that attacked it when it dies. Costs 2 less per [undead] on your side of the field.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 548,
+   "h": 708
+  },
+  {
+   "id": "D-P-df9c683850d4",
+   "kind": "discord",
+   "date": "2022-01-16T04:21:04+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-df9c683850d4.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field. [undead]: Inflicts 2 poison on attack. Nature: Sickened so long as this is on the field. Haunted and Spectral: Deals 4 piercing counter damage to the last creature that attacked it when it dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     3
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "F",
+   "w": 547,
+   "h": 708
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/3 Stars/The_Plaguelands.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-f79b1909d025.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field. [undead]: Inflicts 2 poison on attack. Nature: Sickened so long as this is on the field. Haunted and Spectral: Deals 4 piercing counter damage to the last creature that attacked it when it dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 548,
+   "h": 708
+  },
+  {
+   "id": "O-cc544db1c462:Field/3 Stars/The_Plaguelands.png",
+   "kind": "old repo",
+   "date": "2023-03-30T14:15:51+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Plaguelands update",
+   "repo": "first",
+   "image": "O-2621ac030436.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field.: Inflicts 2 poison on attack.\nNature attribute creatures on the other side are sickened.\nHaunted and Spectral: Deals 4 piercing counter damage to the last creature that attacked it when it dies. [undead]",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7b199b9bca33:Field/3 Stars/The_Plaguelands.png",
+   "kind": "old repo",
+   "date": "2023-04-19T23:25:34+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated existing photoshop field items",
+   "repo": "first",
+   "image": "O-eb0335824499.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field.\n[undead]: Inflict 2 Poison for 5 turns on attack.\nEnemy Nature creatures are inflicted with Sickness while this is on the field.\nHaunted and Spectral: Deal 4 piercing counter damage to the last creature that attacked them when they die.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/3 Stars/The_Plaguelands.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-eb0335824499.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field.\n[undead]: Inflict 2 Poison for 5 turns on attack.\nEnemy Nature creatures are inflicted with Sickness while this is on the field.\nHaunted and Spectral: Deal 4 piercing counter damage to the last creature that attacked them when they die.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/3 Stars/The_Plaguelands.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-0d3e5424bcef.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field.\n[undead]: Inflict 2 Poison for 5 turns on attack.\nHaunted, Spectral: Deal 4 piercing counter damage to the last creature that attacked them when they die.\nEnemy Nature creatures are inflicted with Sickness while this is on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/3 Stars/The_Plaguelands.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-8d03b927966b.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field.\n[undead]: Inflict 2 Poison for 5 turns on attack.\nHaunted, Spectral: Deal 4 piercing counter damage to the last creature that attacked them when they die.\nEnemy Nature creatures are inflicted with Sickness while this is on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41578087f264:Field/3 Stars/The_Plaguelands.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-b937d9c130bf.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field.\n[undead]: Inflict 2 Poison for 5 turns on attack.\nSpooky: Deal 4 piercing counter damage to the last creature that attacked them when they die.\nEnemy Nature creatures are inflicted with Sickness while this is on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-bbd217da4e5c:Field/3 Stars/The_Plaguelands.png",
+   "kind": "old repo",
+   "date": "2023-10-25T17:11:26+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field",
+   "image": "O-95e6dafdead9.webp",
+   "fields": {
+    "name": {
+     "value": "The Plaguelands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per [undead] on your side of the field.\n[undead]: Inflict 2 Poison for 5 turns on attack.\nGhostly: Deal 4 piercing counter damage to the last creature that attacked them when they die.\nEnemy Nature creatures are inflicted with Sickness while this is on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-01-16",
+  "sort": "2022-01-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

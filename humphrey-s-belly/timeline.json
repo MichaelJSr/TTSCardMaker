@@ -1,0 +1,751 @@
+{
+ "card": "humphrey-s-belly",
+ "key": "Humphrey's Belly",
+ "name": "Humphrey's Belly",
+ "kind": "aux item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d31f2e8d672e",
+   "kind": "discord",
+   "date": "2022-02-08T05:03:55+00:00",
+   "day": "2022-02-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d31f2e8d672e.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey's Belly",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. Removed upon Humphrey's second death. (BOGT)(OPT) Gain bricks equal to the combined star level of the enemy's creatures divided by 5, rounded down to the nearest half.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "F",
+   "w": 469,
+   "h": 715
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Field/4 Stars/Hupmphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Hupmphreys Belly",
+   "repo": "first",
+   "image": "O-934c3840e9c1.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey's Belly",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. Removed upon Humphrey's second death. (BOGT)(OPT) Gain bricks equal to the combined star level of the enemy's creatures divided by 5, rounded down to the nearest half.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 469,
+   "h": 715
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/4 Stars/Hupmphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Hupmphreys Belly",
+   "repo": "first",
+   "image": "O-934c3840e9c1.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey's Belly",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. Removed upon Humphrey's second death. (BOGT)(OPT) Gain bricks equal to the combined star level of the enemy's creatures divided by 5, rounded down to the nearest half.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 469,
+   "h": 715
+  },
+  {
+   "id": "O-fa2d2a15adbf:Field/4 Stars/Hupmphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2023-03-25T05:27:30+00:00",
+   "day": "2023-03-25",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Humphrey update",
+   "file": "Hupmphreys Belly",
+   "repo": "first",
+   "image": "O-e3ea9140d47c.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey's belly",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. Removed upon Humphrey’s second death.\n(BOGT)(OPT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 505,
+   "h": 792
+  },
+  {
+   "id": "O-4036412c78c7:Field/4 Stars/Humphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2023-03-25T11:57:35+00:00",
+   "day": "2023-03-25",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed to be the correct name",
+   "repo": "first",
+   "image": "O-e3ea9140d47c.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey's belly",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. Removed upon Humphrey’s second death.\n(BOGT)(OPT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 505,
+   "h": 792
+  },
+  {
+   "id": "O-68675f1eb3eb:Auxillary/Items/4 Stars/Humphrey's_Belly.PNG",
+   "kind": "old repo",
+   "date": "2023-04-04T15:45:14+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Humphrey remake",
+   "repo": "first",
+   "image": "O-0fe0c5944715.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. Removed upon Humphrey’s second death.\n(BOGT)(OPT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ce3611f8719f:Field/4 Stars/Humphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2023-04-08T11:19:23+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "a couple field items",
+   "repo": "first",
+   "image": "O-0fe0c5944715.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. Removed upon Humphrey’s second death.\n(BOGT)(OPT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-5bb566d5928b:Auxillary/Items/4 Stars/Humphrey's_Belly.PNG",
+   "kind": "old repo",
+   "date": "2023-04-13T19:46:20+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-e6300662067d.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced.\n Removed upon Humphrey’s second death.\n(BOGT)(OPT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-af409cb5284f:Field/4 Stars/Humphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-ab1d7b6d9d5b.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. \nRemoved upon Humphrey’s second death.\n(BOGT)(OPT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7b199b9bca33:Field/4 Stars/Humphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2023-04-19T23:25:34+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated existing photoshop field items",
+   "repo": "first",
+   "image": "O-91e1fb725aeb.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. \nRemoved upon Humphrey’s second death.\n(BOGT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/4 Stars/Humphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-91e1fb725aeb.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. \nRemoved upon Humphrey’s second death.\n(BOGT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Items/4 Stars/Humphrey's_Belly.PNG",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-e6300662067d.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced.\n Removed upon Humphrey’s second death.\n(BOGT)(OPT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8bee0a031028:Auxillary/Field/Humphreys_Belly.png",
+   "kind": "old repo",
+   "date": "2023-05-26T14:05:57+00:00",
+   "day": "2023-05-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-91e1fb725aeb.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced. \nRemoved upon Humphrey’s second death.\n(BOGT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-e737ab639518:Auxillary/Items/4 Stars/Humphrey's_Belly.PNG",
+   "kind": "old repo",
+   "date": "2023-09-27T10:55:18+00:00",
+   "day": "2023-09-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-06317bcd3531.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced.\n Removed upon Humphrey’s second death.\n(BOGT)(OPT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Auxillary/Items/4 Stars/Humphrey's_Belly.PNG",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-2b3160bb16a3.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced.\n Removed upon Humphrey’s second death.\n(BOGT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Items/Humphrey's_Belly.PNG",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-2b3160bb16a3.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced.\n Removed upon Humphrey’s second death.\n(BOGT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-69cd01cf9df6:Auxillary/Items/Humphrey's_Belly.PNG",
+   "kind": "old repo",
+   "date": "2023-11-01T06:56:53+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending",
+   "image": "O-183d46021aeb.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced.\n Removed when Humphrey leaves the field.\n(BOGT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4ddc820971da:Auxillary/Items/Humphrey's_Belly.png",
+   "kind": "old repo",
+   "date": "2023-11-03T12:45:11+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "1",
+   "image": "O-183d46021aeb.webp",
+   "fields": {
+    "name": {
+     "value": "Humphrey’s Belly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be replaced.\n Removed when Humphrey leaves the field.\n(BOGT) The owner of Humphrey gains bricks equal to the combined star level of this side’s creatures divided by 5, rounded down to the nearest half.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-02-08",
+  "sort": "2022-02-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

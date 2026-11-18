@@ -1,0 +1,29 @@
+{
+ "card": "toy-bonnie-vvvvvvv",
+ "key": "Toy Bonnie (vvvvvvv)",
+ "name": "Toy Bonnie (vvvvvvv)",
+ "morgue": "candidate",
+ "first": {
+  "date": "2025-02-07T09:34:04.418000+00:00",
+  "day": "2025-02-07",
+  "channel": "joke-ideas",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-1eb214392d7e",
+   "kind": "discord",
+   "date": "2025-02-07T09:34:04.418000+00:00",
+   "day": "2025-02-07",
+   "badge": "Discord",
+   "image": "P-1eb214392d7e.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "joke-ideas",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

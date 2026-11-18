@@ -1,0 +1,682 @@
+{
+ "card": "sumo-panda",
+ "key": "Sumo Panda",
+ "name": "Sumo Panda",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9ef8310c6797",
+   "kind": "discord",
+   "date": "2020-07-22T02:54:22+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-9ef8310c6797.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Sumo Panda may intercept an attack towards one of your creatures If a creature attacked Sumo Panda, Sumo Panda's next attack towards that creature will imprison and poison that creature. Attackers of sumo panda receive counter damage equal to their attack -2",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "D-P-3723ecf8ae36",
+   "kind": "discord",
+   "date": "2021-12-15T11:31:35+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-3723ecf8ae36.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this is attacked, then this creature's next attack towards that attacker inflicts Imprison and Poison. Attackers take CD = to their ATK -1.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "panda"
+     ],
+     "drop": [
+      "rock"
+     ]
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-3f27cb227d59.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this is attacked, then this creature's next attack towards that attacker inflicts Imprison and Poison. Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-ce8794b8b9ae:Cards/Pandas/PSDs/sumo outside.psd",
+   "kind": "old repo",
+   "date": "2023-03-25T07:57:50+00:00",
+   "day": "2023-03-25",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "panda psds",
+   "file": "sumo outside",
+   "repo": "first",
+   "image": "O-cd6190e33305.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this is attacked, then this creature's next attack towards that attacker inflicts Imprison and Poison. Attackers take CD = to their ATK -1.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 428,
+   "h": 480
+  },
+  {
+   "id": "O-7522a5685624:Cards/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-03-25T10:47:51+00:00",
+   "day": "2023-03-25",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized psd files and ported more cards",
+   "repo": "first",
+   "image": "O-0ad5c74a5302.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this is attacked, then this creature's next attack towards that attacker inflicts Imprison and Poison. Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8fd9aa7ab869:Cards/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-04-15T07:59:08+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fat",
+   "repo": "first",
+   "image": "O-f8ec152824cc.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this is attacked, then this creature's next attack towards that attacker inflicts Imprison and Poison. Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-21636310bce5:Cards/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:29:19+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-8af25e278edc.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this creature is attacked, then it’s next attack towards that attacker inflicts Imprisoned and Suffocation. Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-8af25e278edc.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this creature is attacked, then it’s next attack towards that attacker inflicts Imprisoned and Suffocation. Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-8af25e278edc.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this creature is attacked, then it’s next attack towards that attacker inflicts Imprisoned and Suffocation. Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6d37ecf07ea1:Creatures/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-04-23T11:11:40+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Sumo, Magic Shield, Golden Metronome, Dedede",
+   "image": "O-79f7c62c0483.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT)(AAT) Intercept an attack. If this creature is attacked, then it’s next attack towards that attacker inflicts Imprisoned for 1 turn, and Suffocation for 3 turns. Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-8dacc9b1bf01.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Intercept an attack. \nIf this creature is attacked, then it's next attack towards that attacker inflicts Imprisoned for 1 turn, and Suffocation for 3 turns.\n Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-14e9918f6ede:Creatures/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-10-16T05:19:48+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute coloring",
+   "image": "O-f97f66adddc4.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Intercept an attack. \nIf this creature is attacked, then it's next attack towards that attacker inflicts Imprisoned for 1 turn, and Suffocation for 3 turns.\n Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d9c974c66706:Creatures/Pandas/3 Stars/Sumo_Panda.png",
+   "kind": "old repo",
+   "date": "2023-11-01T07:13:50+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "star bat rbbix",
+   "image": "O-9d15d2778ad7.webp",
+   "fields": {
+    "name": {
+     "value": "Sumo Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Intercept an attack. \nIf this creature is attacked, then it's next attack towards that attacker inflicts Imprisoned for 1 turn, and Suffocation for 3 turns.\n Attackers take CD = to their ATK -1.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

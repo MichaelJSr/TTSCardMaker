@@ -1,0 +1,626 @@
+{
+ "card": "acrophobia",
+ "key": "Acrophobia",
+ "name": "Acrophobia",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-03-19",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-affa4b35d2c3",
+   "kind": "discord",
+   "date": "2022-12-18T09:54:19+00:00",
+   "day": "2022-12-18",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-affa4b35d2c3.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "cannot go in defense. (EOT) Attacks inflict afraid. can consume an action to reduce all enemies on the PF attack by 0.5. At the end of this creature's 5th turn alive it deals 10 damage to all enemies on the PF.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "git_look": true,
+   "era": "C",
+   "w": 310,
+   "h": 628
+  },
+  {
+   "id": "O-257dc970a875:Cards/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-6c8f3b149003.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "cannot go in defense. (EOT) Attacks inflict afraid. can consume an action to reduce all enemies on the PF attack by 0.5. At the end of this creature's 5th turn alive it deals 10 damage to all enemies on the PF.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 310,
+   "h": 628
+  },
+  {
+   "id": "O-deb4c07f4f35:Cards/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-04-03T08:33:40+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Fear",
+   "repo": "first",
+   "image": "O-c63cfc90f39e.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot go in defense. (EOT) Attacks inflict afraid. Can consume an action to reduce all enemies on the PF ATK by 1. At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-af409cb5284f:Cards/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-4551fa7f1178.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot go into defense mode.\n (EOT) Attacks inflict afraid. \nAttacks reduce enemy speed by 1.\nCan consume an action to reduce all enemies on the PF ATK by 1.\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a75fd40bb3af:Cards/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-04-17T10:10:15+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "whoops",
+   "repo": "first",
+   "image": "O-8faa482dbb6e.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot go into defense mode.\n (EOT) Attacks inflict afraid. \nCan consume an action to reduce all enemies on the PF ATK by 1.\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1a4528e9e53b:Cards/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-04-18T20:28:40+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Acrophobia",
+   "repo": "first",
+   "image": "O-03ebdbf66fbd.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot go into defense mode.\n (EOT) Attacks inflict afraid for 2 turns. \nCan consume an action to reduce all enemies on the PF ATK by 1.\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-03ebdbf66fbd.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot go into defense mode.\n (EOT) Attacks inflict afraid for 2 turns. \nCan consume an action to reduce all enemies on the PF ATK by 1.\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-03ebdbf66fbd.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot go into defense mode.\n (EOT) Attacks inflict afraid for 2 turns. \nCan consume an action to reduce all enemies on the PF ATK by 1.\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c2b1b3fecc90:Creatures/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-2c052c837d3b.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict afraid for 2 turns. \nCan consume an action to reduce -1 ATK from all enemy creature’s on the primary field.\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.\nThis creature cannot go into defense mode.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-7e14707876fa.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict afraid for 2 turns. \nCan consume an action to reduce the ATK of all enemy creature’s on the primary field by 1\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.\nThis creature cannot go into defense mode.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-626eaae25c89:Creatures/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-10-22T18:00:01+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-5405fc58bfd3.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict afraid for 2 turns. \nCan consume an action to reduce the ATK of all enemy creature’s on the primary field by 1\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.\nThis creature cannot go into defense mode.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Omori/4 Stars/Acrophobia.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-4e7933bc9e3d.webp",
+   "fields": {
+    "name": {
+     "value": "Acrophobia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 10,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict afraid for 2 turns. \nCan consume an action to reduce the ATK of all enemy creature’s on the primary field by 1\n At the end of this creature’s 5th turn alive it deals 10 damage to all enemies on the PF.\nThis creature cannot go into defense mode.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2022-12-18",
+  "sort": "2022-12-18",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,425 @@
+{
+ "card": "gasoline",
+ "key": "Gasoline",
+ "name": "Gasoline",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f98adfbe0e0",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-c81155809437",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:13+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-c81155809437.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a fire type it increases its ATK by 2, if used on a machine it will increase SPD by 2. If used on any other type, a fire type attack will cause that creature to be inflicted with blazing.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 617
+  },
+  {
+   "id": "D-P-62b711198ca1",
+   "kind": "discord",
+   "date": "2020-08-03T00:33:19+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-62b711198ca1.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a fire type it increases its ATK by 2, if used on a machine it will increase SPD by 2. If used on any other type, a fire type attack will cause that creature to be inflicted with blazing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 400,
+   "h": 617
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Items/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-e659384f3435.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a fire type it increases its ATK by 2, if used on a machine it will increase SPD by 2. If used on any other type, a fire type attack will cause that creature to be inflicted with blazing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 617
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-e659384f3435.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a fire type it increases its ATK by 2, if used on a machine it will increase SPD by 2. If used on any other type, a fire type attack will cause that creature to be inflicted with blazing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 617
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Offense/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-e659384f3435.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a fire type it increases its ATK by 2, if used on a machine it will increase SPD by 2. If used on any other type, a fire type attack will cause that creature to be inflicted with blazing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 617
+  },
+  {
+   "id": "O-6a29e6879520:Items/Offense/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2023-04-08T10:32:59+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Danger badges Gasoline The Hydrant",
+   "repo": "first",
+   "image": "O-01d2e792f37f.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, gain +2 ATK.\nIf used on a [machine] type, gain +2 SPD.\nIf used on a non [fire] / [machine] type, then inflict 2 Sickened for 2 turns.\nIf the inflicted creature is attacked by a [fire] type while Sickened, convert Sickened into 2 turns of Blazing instead.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b54076b3055b:Items/Offense/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2023-04-19T10:32:37+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First set of debuff fixes on items",
+   "repo": "first",
+   "image": "O-4a66929533c5.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, gain +2 ATK.\nIf used on a [machine] type, gain +2 SPD.\nIf used on a non [fire] / [machine] type, then inflict 2 Burdened, 2 Enfeebled, 2 Softened for 2 turns.\nIf the inflicted creature is attacked by a [fire] type within 2 turns, convert all tier 1 debuffs on it into 2 turns of Blazing instead.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Offense/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-4a66929533c5.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, gain +2 ATK.\nIf used on a [machine] type, gain +2 SPD.\nIf used on a non [fire] / [machine] type, then inflict 2 Burdened, 2 Enfeebled, 2 Softened for 2 turns.\nIf the inflicted creature is attacked by a [fire] type within 2 turns, convert all tier 1 debuffs on it into 2 turns of Blazing instead.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-733ddef6a721:Items/Offense/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2023-04-23T08:46:25+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "some pending updates",
+   "image": "O-19ce29cb7dce.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, gain +2 ATK.\nIf used on a [machine] type, gain +2 SPD.\nIf used on a non [fire] / [machine] type, then inflict Sickness for 2 turns.\nIf the inflicted creature is attacked by a [fire] type within 2 turns, convert all tier 1 debuffs on it into 2 turns of Blazing instead.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-dbe9e62152bf:Items/Offense/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2023-05-11T04:42:22+00:00",
+   "day": "2023-05-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "gas",
+   "image": "O-4228e06c6b80.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, gain +2 ATK.\nIf used on a [machine] type, gain +2 SPD.\nIf used on a non [fire] / [machine] type, then inflict Sickness for 2 turns.\nIf the inflicted creature is attacked by a [fire] type within 2 turns, convert all tier 1 debuffs on it into 2 turns of Blazing instead.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Offense/2 Stars/Gasoline.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-454c8fe8ece1.webp",
+   "fields": {
+    "name": {
+     "value": "Gasoline",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, gain +2 ATK.\nIf used on a [machine] type, gain +2 SPD.\nIf used on a non [fire] / [machine] type, then inflict Sickness for 2 turns.\nIf the inflicted creature is attacked by a [fire] type within 2 turns, convert all tier 1 debuffs on it into 2 turns of Blazing instead.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-22",
+  "sort": "2019-03-22",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

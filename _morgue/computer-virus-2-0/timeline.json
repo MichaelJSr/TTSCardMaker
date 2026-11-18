@@ -1,0 +1,69 @@
+{
+ "card": "computer-virus-2-0",
+ "key": "Computer Virus 2.0",
+ "name": "Computer Virus 2.0",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-22T02:54:56.908000+00:00",
+  "day": "2020-07-22",
+  "channel": "port",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "F-fc8991a23f7",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "field": "stars",
+    "to": 4
+   }
+  },
+  {
+   "id": "F-f0940f9bfd3",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "P-b4f2fb0e508e",
+   "kind": "discord",
+   "date": "2020-07-22T02:54:56.908000+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "image": "P-b4f2fb0e508e.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "port",
+   "w": 388,
+   "h": 791
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/4 Stars/Computer_Virus_2.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-94584c399f2d.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 388,
+   "h": 791
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

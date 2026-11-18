@@ -1,0 +1,447 @@
+{
+ "card": "erasure",
+ "key": "Erasure",
+ "name": "Erasure",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fe9870c6970",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "field": "stars",
+    "to": 1
+   }
+  },
+  {
+   "id": "D-P-c2670f39caac",
+   "kind": "discord",
+   "date": "2020-07-22T03:00:42+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-c2670f39caac.webp",
+   "fields": {
+    "name": {
+     "value": "Seppuku",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "You can destroy one of your creatures that has 25% health or more and the opposing team receives no points for its death.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 388,
+   "h": 609
+  },
+  {
+   "id": "D-P-fcaaf74ed865",
+   "kind": "discord",
+   "date": "2020-08-02T23:44:52+00:00",
+   "day": "2020-08-02",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-fcaaf74ed865.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrifice",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "You can destroy one of your creatures, and the opposing team receives no points for its death.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Seppuku",
+     "Sacrifice"
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 391,
+   "h": 611
+  },
+  {
+   "id": "F-f46b6f547e3",
+   "kind": "text",
+   "date": "2020-08-02T23:45:19+00:00",
+   "day": "2020-08-02",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "name",
+    "to": "Sacrifice"
+   }
+  },
+  {
+   "id": "F-f43471fb7be",
+   "kind": "text",
+   "date": "2020-08-10T10:28:20+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "stars",
+    "to": 2
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-ec7c786370e3"
+  },
+  {
+   "id": "D-P-ec7c786370e3",
+   "kind": "discord",
+   "date": "2020-08-13T08:59:49+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-ec7c786370e3.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrifice",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If the enemy team kills one of your creatures, you can activate this card to prevent them from gaining point for that kill",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     1,
+     2
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 391,
+   "h": 612
+  },
+  {
+   "id": "D-P-5f10841dcc05",
+   "kind": "discord",
+   "date": "2020-09-08T09:31:01+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-5f10841dcc05.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrifice",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If one of your creatures are destroyed, you can activate this card to prevent the enemy team from gaining points for that kill",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 389,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/2 Stars/Sacrifice.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Sacrifice",
+   "repo": "first",
+   "image": "O-fbdac93e9ea0.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrifice",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If one of your creatures are destroyed, you can activate this card to prevent the enemy team from gaining points for that kill.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 611
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/2 star/Sacrifice.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "file": "Sacrifice",
+   "repo": "first",
+   "image": "O-fbdac93e9ea0.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrifice",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If one of your creatures are destroyed, you can activate this card to prevent the enemy team from gaining points for that kill.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 389,
+   "h": 611
+  },
+  {
+   "id": "O-6cfb610a3e83:Items/Support/2 star/Sacrifice.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:01:31+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "file": "Sacrifice",
+   "repo": "first",
+   "image": "O-275d220e0650.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrafice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If one of your creatures are destroyed, you can activate this card to prevent the enemy team from gaining points for that kill.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Sacrifice",
+     "Sacrafice"
+    ],
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ed3b5f3ce298:Items/Support/2 star/Sacrifice.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:03:22+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "sac",
+   "file": "Sacrifice",
+   "repo": "first",
+   "image": "O-7d5d8503cccc.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrifice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If one of your creatures are destroyed, you can activate this card to prevent the enemy team from gaining points for that kill.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Sacrafice",
+     "Sacrifice"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/2 Stars/Sacrifice.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "file": "Sacrifice",
+   "repo": "first",
+   "image": "O-7d5d8503cccc.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrifice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If one of your creatures are destroyed, you can activate this card to prevent the enemy team from gaining points for that kill.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/2 Stars/Sacrifice.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "file": "Sacrifice",
+   "image": "O-7d5d8503cccc.webp",
+   "fields": {
+    "name": {
+     "value": "Sacrifice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If one of your creatures are destroyed, you can activate this card to prevent the enemy team from gaining points for that kill.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-05-14",
+  "sort": "2019-05-14",
+  "source": "discord",
+  "status": "owner"
+ }
+}

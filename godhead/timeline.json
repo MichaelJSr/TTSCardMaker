@@ -1,0 +1,86 @@
+{
+ "card": "godhead",
+ "key": "Godhead",
+ "name": "Godhead",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-14",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-ce3249d90e23",
+   "kind": "discord",
+   "date": "2023-10-14T08:56:57+00:00",
+   "day": "2023-10-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-ce3249d90e23.webp",
+   "fields": {
+    "name": {
+     "value": "Godhead",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK\nAttacks deal 2 piercing DMG to everything in the adjacent enemy lanes.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-21715d68a159:Items/Equip/4 Stars/Godhead.png",
+   "kind": "old repo",
+   "date": "2023-10-14T09:09:41+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "2 more item ideas",
+   "image": "O-03f4b2d1a7ad.webp",
+   "fields": {
+    "name": {
+     "value": "Godhead",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK\nAttacks deal 2 piercing DMG to everything in the adjacent enemy lanes.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-14",
+  "sort": "2023-10-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

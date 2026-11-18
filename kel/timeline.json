@@ -1,0 +1,713 @@
+{
+ "card": "kel",
+ "key": "Kel",
+ "name": "Kel",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-47852ec56338",
+   "kind": "discord",
+   "date": "2021-11-24T10:24:57+00:00",
+   "day": "2021-11-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-47852ec56338.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use SPD instead of ATK to determine damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-a7e9200604a0",
+   "kind": "discord",
+   "date": "2021-11-24T10:26:47+00:00",
+   "day": "2021-11-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-a7e9200604a0.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use SPD instead of ATK to determine damage.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-6edc1a34756b",
+   "kind": "discord",
+   "date": "2021-11-24T10:42:06+00:00",
+   "day": "2021-11-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6edc1a34756b.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use SPD instead of ATK to determine damage.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 7
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 7 -> 8"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-d828218bcdbf",
+   "kind": "discord",
+   "date": "2021-12-19T03:03:11+00:00",
+   "day": "2021-12-19",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-d828218bcdbf.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use SPD instead of ATK to determine damage.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-ca78d00d63d5.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use\nSPD instead of ATK to determine \ndamage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-8c12e021fb3a:Cards/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-a024a04194b7.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use\nSPD instead of ATK to determine \ndamage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-a024a04194b7.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use\nSPD instead of ATK to determine \ndamage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-a024a04194b7.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use\nSPD instead of ATK to determine \ndamage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7538d4bd2f5e:Creatures/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2023-04-25T04:49:19+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "touch ups",
+   "image": "O-5e560a7e4f11.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use\nSPD instead of ATK to determine \ndamage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-43c7adf5a966.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use\nSPD instead of ATK to determine \ndamage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-a209d26795ea.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use SPD instead of ATK to determine damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ceb4a40829a:Creatures/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2023-10-18T12:04:15+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "image": "O-6f2fa50391a1.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use SPD instead of ATK to determine damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 8
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 8
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 4 -> 2"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Omori/3 Stars/Kel.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-3d64529618d6.webp",
+   "fields": {
+    "name": {
+     "value": "Kel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, use SPD instead of ATK to determine damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-11-24",
+  "sort": "2021-11-24",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,42 @@
+{
+ "card": "LC-dd919fd1b6",
+ "key": "The Developper",
+ "name": "The Developper",
+ "morgue": "mdw",
+ "first": {
+  "date": "2025-03-02T01:57:32.028000+00:00",
+  "day": "2025-03-02",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-dd919fd1b6d3",
+   "kind": "discord",
+   "date": "2025-03-02T01:57:32.028000+00:00",
+   "day": "2025-03-02",
+   "badge": "Discord",
+   "image": "P-dd919fd1b6d3.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-ed610468e7df",
+   "kind": "discord",
+   "date": "2025-03-02T01:57:32.028000+00:00",
+   "day": "2025-03-02",
+   "badge": "Discord",
+   "image": "P-ed610468e7df.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  }
+ ]
+}

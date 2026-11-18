@@ -1,0 +1,116 @@
+{
+ "card": "militron",
+ "key": "Militron",
+ "name": "Militron",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-05",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-5f210348e15a",
+   "kind": "discord",
+   "date": "2023-11-04T18:14:06+00:00",
+   "day": "2023-11-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-5f210348e15a.webp",
+   "fields": {
+    "name": {
+     "value": "Militron",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip items don't lower this creature's stats.\n(EOT) Attacks inflict smouldering.\nOn death, revive as Militron (No Armor).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f496bf7e6935:Creatures/Other/4 Stars/Militron.png",
+   "kind": "old repo",
+   "date": "2023-11-05T06:31:35+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "new cards",
+   "image": "O-ebff12fd1d80.webp",
+   "fields": {
+    "name": {
+     "value": "Militron",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equip items don't lower this creature's stats.\n(EOT) Attacks inflict smouldering.\nOn death, revive as Militron (No Armor).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-11-04",
+  "sort": "2023-11-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

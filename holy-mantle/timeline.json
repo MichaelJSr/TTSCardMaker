@@ -1,0 +1,123 @@
+{
+ "card": "holy-mantle",
+ "key": "Holy Mantle",
+ "name": "Holy Mantle",
+ "kind": "item",
+ "stop": {
+  "day": "2023-09-26",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-0be48f8b2694",
+   "kind": "discord",
+   "date": "2023-09-01T04:45:44+00:00",
+   "day": "2023-09-01",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-0be48f8b2694.webp",
+   "fields": {
+    "name": {
+     "value": "Holy Mantle",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be equipped (OYT). Negates the first instance of damage per global turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-44770d7b716c:Items/Equip/4 Stars/Holy_Mantle.png",
+   "kind": "old repo",
+   "date": "2023-09-26T20:48:33+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mantle",
+   "image": "O-fc8de7215fa1.webp",
+   "fields": {
+    "name": {
+     "value": "Holy Mantle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be equipped (oyT). Negates the first instance of damage per global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Equip/4 Stars/Holy_Mantle.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-a521114c6ad8.webp",
+   "fields": {
+    "name": {
+     "value": "Holy Mantle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be equipped (oyT). Negates the first instance of damage per global turn.\nThis item is destroyed after 4 negations.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-09-01",
+  "sort": "2023-09-01",
+  "source": "discord",
+  "status": "same"
+ }
+}

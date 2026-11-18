@@ -1,0 +1,309 @@
+{
+ "card": "blindness",
+ "key": "Blindness",
+ "name": "Blindness",
+ "kind": "debuff",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-5ade22d83e46",
+   "kind": "discord",
+   "date": "2022-01-16T07:09:26+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-5ade22d83e46.webp",
+   "fields": {
+    "name": {
+     "value": "Blindness",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks hit a random enemy creature. 2 turns.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Status Effects/Debuffs/2 Stars/Blindness.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-e4c7374b4d54.webp",
+   "fields": {
+    "name": {
+     "value": "Blindness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks hit a random enemy creature. 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-b316785629cd:Auxillary/Status Effects/Debuffs/1 Stars/Blindness.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:15:05+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First round of redoing buffs and debuffs",
+   "repo": "first",
+   "image": "O-311562052709.webp",
+   "fields": {
+    "name": {
+     "value": "Blindness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks hit a random\nenemy creature",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "types": {
+     "add": [
+      "debuff"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-4b6da9c75aa4:Auxillary/Status Effects/Debuffs/1 Stars/Blindness.png",
+   "kind": "old repo",
+   "date": "2023-04-05T06:07:10+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Fixed up all tier 2 debuffs",
+   "repo": "first",
+   "image": "O-4a32ca7832c7.webp",
+   "fields": {
+    "name": {
+     "value": "Blindness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks hit a random\nenemy creature",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Status Effects/Debuffs/1 Stars/Blindness.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-4a32ca7832c7.webp",
+   "fields": {
+    "name": {
+     "value": "Blindness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks hit a random\nenemy creature",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-2a78e5c90bfa:Auxillary/Status Effects/Debuffs/1 Stars/Blindness.png",
+   "kind": "old repo",
+   "date": "2023-05-28T08:29:35+00:00",
+   "day": "2023-05-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-d3cae671f1ed.webp",
+   "fields": {
+    "name": {
+     "value": "Blindness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks hit a random\nenemy creature\ncant affect [light]",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/1 Stars/Blindness.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "image": "O-5aef245bd86d.webp",
+   "fields": {
+    "name": {
+     "value": "Blindness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks hit a random\nenemy creature\ncant affect [light]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2022-01-16",
+  "sort": "2022-01-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

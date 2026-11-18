@@ -1,0 +1,57 @@
+{
+ "card": "ahegao",
+ "key": "Ahegao",
+ "name": "Ahegao",
+ "morgue": "candidate",
+ "first": {
+  "date": "2022-06-10T00:11:03.611000+00:00",
+  "day": "2022-06-10",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-8c2995843359",
+   "kind": "discord",
+   "date": "2022-06-10T00:11:03.611000+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "image": "P-8c2995843359.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 321,
+   "h": 472
+  },
+  {
+   "id": "P-7c51d52e13bc",
+   "kind": "discord",
+   "date": "2022-06-10T07:51:12.930000+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "image": "P-7c51d52e13bc.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 346,
+   "h": 524
+  },
+  {
+   "id": "P-9ffaf050db2a",
+   "kind": "discord",
+   "date": "2022-06-10T07:52:34.938000+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "image": "P-9ffaf050db2a.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 355,
+   "h": 527
+  }
+ ],
+ "kind_of": "joke"
+}

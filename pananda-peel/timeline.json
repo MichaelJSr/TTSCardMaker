@@ -1,0 +1,63 @@
+{
+ "card": "pananda-peel",
+ "key": "Pananda Peel",
+ "name": "Pananda Peel",
+ "kind": "item",
+ "stop": {
+  "day": "2026-02-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-764c78731545",
+   "kind": "discord",
+   "date": "2026-02-03T04:55:54+00:00",
+   "day": "2026-02-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-764c78731545.webp",
+   "fields": {
+    "name": {
+     "value": "Pananda Peel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Rots away after 4 turns.\nCreatures in the slot gain +2 SPD and, when performing an attack, take 2 piercing CDMG for every 4 SPD they have. Upon dealing CDMG, this item is sent to a different random creature slot.\nAny creature who is able to eat food may choose to eat this on their turn, removing it from the field and becoming inflicted with 4T Withering.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-09T14:22:03+00:00",
+  "changes": {
+   "ability_change": "same",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2026-02-03",
+  "sort": "2026-02-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

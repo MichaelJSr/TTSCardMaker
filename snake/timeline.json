@@ -1,0 +1,67 @@
+{
+ "card": "snake",
+ "key": "Snake",
+ "name": "Snake",
+ "kind": "aux item",
+ "stop": {
+  "day": "2025-03-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1c5c2b6474fb",
+   "kind": "discord",
+   "date": "2025-03-02T07:17:25+00:00",
+   "day": "2025-03-02",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1c5c2b6474fb.webp",
+   "fields": {
+    "name": {
+     "value": "Snake",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 ATK. Gain +1 ATK for every Dorito Counter on the equipped creature. At 2 Dorito Counters, attacks are piercing.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-22T05:23:47+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-02",
+  "sort": "2025-03-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

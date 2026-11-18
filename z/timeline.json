@@ -1,0 +1,85 @@
+{
+ "card": "z",
+ "key": "Z!!!!!",
+ "name": "Z!!!!!",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-10-10",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-284cecf61b6f",
+   "kind": "discord",
+   "date": "2025-10-10T02:06:21+00:00",
+   "day": "2025-10-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-284cecf61b6f.webp",
+   "fields": {
+    "name": {
+     "value": "Zoey!!!!!",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "girl",
+      "girl"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(WOF) All other friendly creatures gain 1 Marked For Life that cannot stack higher than 1. Friendly prime creatures gain the ability to (1PG) spend an action to give special attention to this creature, which lets this creature distribute 1 stat bar among its stats per star level of the creature that gave attention. (1PT) Spend 4 points to heal a creature by 5 and increase its star level by 1, but not higher than 4.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-04-15T09:21:04+00:00",
+  "changes": {
+   "name": [
+    "Zoey!!!!!",
+    "Z!!!!!"
+   ],
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-10-10",
+  "sort": "2025-10-10",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,282 @@
+{
+ "card": "mechanical-shield",
+ "key": "Mechanical Shield",
+ "name": "Mechanical Shield",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f0cf59eec7c",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e29b39837f8b",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:41+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-e29b39837f8b.webp",
+   "fields": {
+    "name": {
+     "value": "Mechanical Shield",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEF: +4 Speed -1",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 617
+  },
+  {
+   "id": "D-P-688413b17973",
+   "kind": "discord",
+   "date": "2020-08-07T10:16:20+00:00",
+   "day": "2020-08-07",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-688413b17973.webp",
+   "fields": {
+    "name": {
+     "value": "Mechanical Shield",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEF: +4 SPD: -2",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 389,
+   "h": 617
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/3 Stars/Mechanical_Shield.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-410d452d4d84.webp",
+   "fields": {
+    "name": {
+     "value": "Mechanical Shield",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEF: +4 SPD: -2",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 383,
+   "h": 608
+  },
+  {
+   "id": "O-41bc9e741d1a:Items/Equip/3 Stars/Mechanical_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-08T11:53:30+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "sheilds and",
+   "repo": "first",
+   "image": "O-c7f2157c649e.webp",
+   "fields": {
+    "name": {
+     "value": "Mechanical Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+4 DEF -2 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Mechanical Shield",
+     "Mechanical Sheild"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Mechanical_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-c7f2157c649e.webp",
+   "fields": {
+    "name": {
+     "value": "Mechanical Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+4 DEF -2 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a140ee435b1:Items/Equip/3 Stars/Mechanical_Shield.png",
+   "kind": "old repo",
+   "date": "2023-09-26T13:18:11+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-3fa415956987.webp",
+   "fields": {
+    "name": {
+     "value": "Mechanical Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+4 DEF -2 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-91189038796f:Items/Equip/3 Stars/Mechanical_Shield.png",
+   "kind": "old repo",
+   "date": "2023-10-10T06:24:39+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "proposed changes",
+   "image": "O-92ef989aefae.webp",
+   "fields": {
+    "name": {
+     "value": "Mechanical Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+4 DEF -1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-22",
+  "sort": "2019-03-22",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,1338 @@
+{
+ "card": "waxwell",
+ "key": "Waxwell",
+ "name": "Waxwell",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-a6c1be3e842a",
+   "kind": "discord",
+   "date": "2019-05-15T08:12:35+00:00",
+   "day": "2019-05-15",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-a6c1be3e842a.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon being summoned, get the Codex Umbra. Cannot take damage until his minions are destroyed. He and his minions are both on the main field. Negate the first instance of damage. Pay points/star points equivalent to the item to sacrifice it on Codex Umbra -> Used as minions, item negated for 2 turns after destroyed.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "D-P-4d04029e1161",
+   "kind": "discord",
+   "date": "2019-05-29T03:38:15+00:00",
+   "day": "2019-05-29",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-4d04029e1161.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon being summoned, get the Codex Umbra. Cannot take damage until his minions are destroyed. He and his minions are both on the main field. Negate the first instance of damage. Pay points/star points equivalent to the item to sacrifice it on the Codex Umbra. The item is then used as a minion, and the item is negated for 2 turns after destroyed.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "dark"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 410,
+   "h": 638
+  },
+  {
+   "id": "D-P-8b2704552d81",
+   "kind": "discord",
+   "date": "2020-03-02T05:06:01+00:00",
+   "day": "2020-03-02",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-8b2704552d81.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. He cannot die until his minions die. He and his minions are on the main field. His first instance of taking damage is negated. Pay points/star points equivalent to an item to sacrifice it on the Codex Umbra. Item is then used as a minion, negated for 2 turns after its killed.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 352,
+   "h": 534
+  },
+  {
+   "id": "D-P-b82fbb1d200d",
+   "kind": "discord",
+   "date": "2020-07-22T13:06:42+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-b82fbb1d200d.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. His minions are non protective and persist after his death. Pay points/star points equivalent to an item to sacrifice it on the codex umbra. Item is then used as a minion, negated for 2 turns after its killed.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 9,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "dark"
+     ]
+    },
+    "stats": [
+     {
+      "hp": 3,
+      "def": 5,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 4,
+      "def": 9,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 3 -> 4",
+     "DEF 5 -> 9"
+    ],
+    "nerfs": [
+     "ATK 6 -> 5"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "F-f7a981914a8",
+   "kind": "text",
+   "date": "2020-08-01T09:27:35+00:00",
+   "day": "2020-08-01",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-3a1001e24152",
+   "kind": "discord",
+   "date": "2020-08-03T08:00:32+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-3a1001e24152.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. His minions persist after his death. Pay points/SP equivalent to an item to sacrifice it on the codex umbra. The item is used as a minion, negated for 2 turns when killed. If you don't have any applicable items, you may summon a single 3-star minion of your choice.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 9,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "dark"
+     ],
+     "drop": []
+    },
+    "stats": [
+     {
+      "hp": 4,
+      "def": 9,
+      "atk": 5,
+      "spd": 5
+     },
+     {
+      "hp": 4,
+      "def": 9,
+      "atk": 6,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 598
+  },
+  {
+   "id": "F-f546d6a7e04",
+   "kind": "text",
+   "date": "2020-08-05T09:12:35+00:00",
+   "day": "2020-08-05",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-20df72781638",
+   "kind": "discord",
+   "date": "2020-08-08T08:21:19+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-20df72781638.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, his base DEF is capped at 10. He may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 10,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 9,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 4,
+      "def": 10,
+      "atk": 6,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 9 -> 10"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f30161c8c00",
+   "kind": "text",
+   "date": "2020-08-14T11:22:50+00:00",
+   "day": "2020-08-14",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "def",
+    "to": 8,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-c15610b8dc6f"
+  },
+  {
+   "id": "D-P-c15610b8dc6f",
+   "kind": "discord",
+   "date": "2020-08-14T22:06:02+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-c15610b8dc6f.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, his base DEF is capped at 10. He may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 10,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 4,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 10 -> 8"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f3aaf3f0f9a",
+   "kind": "text",
+   "date": "2020-08-25T12:45:35+00:00",
+   "day": "2020-08-25",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "field": "hp",
+    "to": 3,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-8aaef33c9a80"
+  },
+  {
+   "id": "D-P-8aaef33c9a80",
+   "kind": "discord",
+   "date": "2020-08-25T12:52:39+00:00",
+   "day": "2020-08-25",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-8aaef33c9a80.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, his base DEF is capped at 10. He may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 4 -> 3"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f09a342ad74",
+   "kind": "text",
+   "date": "2021-12-08T10:03:38+00:00",
+   "day": "2021-12-08",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-b9689881323f",
+   "kind": "discord",
+   "date": "2021-12-12T05:48:42+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-b9689881323f.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, his base DEF is capped at 10. He may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-6d59508a89b1.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, his base DEF is capped at 10. He may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-d700e31b8a56:Cards/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-05T21:53:10+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Dst cards",
+   "repo": "first",
+   "image": "O-86a8c24e1ee0.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, his base DEF is capped at 10. He may sacrifice 3 DEF in order to summon a minionfrom the Codex Umbra.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ebdb5c55cc00:Cards/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-06T18:03:37+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "dark mind eye",
+   "repo": "first",
+   "image": "O-4a6c1c2f4887.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, his base DEF is capped at 10. He may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b584a785d959:Cards/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-07T02:34:05+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "can i push this while theyre all open?",
+   "repo": "first",
+   "image": "O-04fc8f1ce417.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, their base DEF is capped at 10. it may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6587b57efd2c:Cards/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-07T04:46:04+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "update",
+   "repo": "first",
+   "image": "O-8e5bd93633fd.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Get Codex Umbra. This creature gains 1 DEF at the end of its turn, Their base DEF is capped at 10. it may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-510ebe059d53:Cards/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-13T22:31:51+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Waxwell Bloon Boy and MK A balance attempts",
+   "repo": "first",
+   "image": "O-d9b008951929.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Gain +1 DEF,\nTheir base DEF is capped at 10.\n(OPT) May sacrifice 3 DEF to summon either a Shadow Chopper, Shadow Duelist, or Shadow Miner on any creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-d9b008951929.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Gain +1 DEF,\nTheir base DEF is capped at 10.\n(OPT) May sacrifice 3 DEF to summon either a Shadow Chopper, Shadow Duelist, or Shadow Miner on any creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-d9b008951929.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Gain +1 DEF,\nTheir base DEF is capped at 10.\n(OPT) May sacrifice 3 DEF to summon either a Shadow Chopper, Shadow Duelist, or Shadow Miner on any creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-51747d4f9e50:Creatures/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-25T08:52:36+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "DST touch ups",
+   "image": "O-551c6bd54529.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Gain +1 DEF,\nTheir base DEF is capped at 10.\n(OPT) May sacrifice 3 DEF to summon either a Shadow Chopper, Shadow Duelist, or Shadow Miner on any creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-6f17540cbaf6.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Gain +1 DEF,\nTheir base DEF is capped at 10.\n(OPT) May sacrifice 3 DEF to summon either a Shadow Chopper, Shadow Duelist, or Shadow Miner on any creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-1fdecb4ae2d7.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Gain +1 DEF,\nThis creatures base DEF is capped at 10.\n(OPT) May sacrifice 3 DEF to summon either a Shadow Chopper, Shadow Duelist, or Shadow Miner on any creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f2a5c96615a0:Creatures/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-10-19T19:53:24+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "removal magic",
+   "image": "O-cfe2eb95cf12.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Gain +1 DEF,\nThis creatures base DEF is capped at 10.\n(OPT) May sacrifice 3 DEF to summon either a Shadow Chopper, Shadow Duelist, or Shadow Miner on any creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/DST/3 Stars/Waxwell.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-6ee912035925.webp",
+   "fields": {
+    "name": {
+     "value": "Waxwell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Gain +1 DEF,\nThis creatures base DEF is capped at 10.\n(OPT) May sacrifice 3 DEF to summon either a Shadow Chopper, Shadow Duelist, or Shadow Miner on any creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-05-15",
+  "sort": "2019-05-15",
+  "source": "discord",
+  "status": "same"
+ }
+}

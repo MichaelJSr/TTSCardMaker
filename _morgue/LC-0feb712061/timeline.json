@@ -1,0 +1,197 @@
+{
+ "card": "LC-0feb712061",
+ "key": "Satou Matsustaka",
+ "name": "Satou Matsustaka",
+ "morgue": "mdw",
+ "first": {
+  "date": "2023-09-08T01:12:14.524000+00:00",
+  "day": "2023-09-08",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-0feb712061ff",
+   "kind": "discord",
+   "date": "2023-09-08T01:12:14.524000+00:00",
+   "day": "2023-09-08",
+   "badge": "Discord",
+   "image": "P-0feb712061ff.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-a3e548df2ebe",
+   "kind": "discord",
+   "date": "2023-09-08T01:16:42.011000+00:00",
+   "day": "2023-09-08",
+   "badge": "Discord",
+   "image": "P-a3e548df2ebe.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-c270ca7a3ced",
+   "kind": "discord",
+   "date": "2023-09-08T04:16:42.326000+00:00",
+   "day": "2023-09-08",
+   "badge": "Discord",
+   "image": "P-c270ca7a3ced.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-4c14d95398e2",
+   "kind": "discord",
+   "date": "2023-09-09T01:39:14.227000+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "image": "P-4c14d95398e2.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-4fc55c142da8",
+   "kind": "discord",
+   "date": "2023-09-09T07:11:50.762000+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "image": "P-4fc55c142da8.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-7efe21a0c421",
+   "kind": "discord",
+   "date": "2023-09-09T07:14:40.164000+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "image": "P-7efe21a0c421.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-ae9fec23eaf8",
+   "kind": "discord",
+   "date": "2023-09-09T07:21:21.055000+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "image": "P-ae9fec23eaf8.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-f15247ce04ff",
+   "kind": "discord",
+   "date": "2023-09-09T07:29:00.125000+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "image": "P-f15247ce04ff.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-e2bd43b32881",
+   "kind": "discord",
+   "date": "2023-09-09T09:08:16.682000+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "image": "P-e2bd43b32881.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-f809409afc63",
+   "kind": "discord",
+   "date": "2023-09-09T09:23:12.808000+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "image": "P-f809409afc63.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-365fdc385722:Creatures/Other/4 Stars/Satou_Matsustaka.png",
+   "kind": "old repo",
+   "date": "2023-09-09T12:25:01+00:00",
+   "day": "2023-09-09",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "anime",
+   "image": "O-aea4ec56a85f.webp",
+   "fields": {
+    "name": {
+     "value": "Satou Matsustaka",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 10,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ]
+}

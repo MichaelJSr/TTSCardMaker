@@ -1,0 +1,234 @@
+{
+ "card": "grimora",
+ "key": "Grimora",
+ "name": "Grimora",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-05",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-75735b1d654c",
+   "kind": "discord",
+   "date": "2023-10-21T06:59:34+00:00",
+   "day": "2023-10-21",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-75735b1d654c.webp",
+   "fields": {
+    "name": {
+     "value": "Grimora",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On Summon, choose a creature. When that creature dies, it is revived at one health. EOT: Summon a SKELETON MATE.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 1,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-300d462aba2d",
+   "kind": "discord",
+   "date": "2023-11-05T05:45:40+00:00",
+   "day": "2023-11-05",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-300d462aba2d.webp",
+   "fields": {
+    "name": {
+     "value": "Grimora",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Choose a creature. If this is on the field when that creature dies, revive it with 1 HP. (EOT) Summon a SKELETON MATE.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 1,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 4 -> 5",
+     "DEF 1 -> 2"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-7477bccbcc94",
+   "kind": "discord",
+   "date": "2023-11-05T06:06:23+00:00",
+   "day": "2023-11-05",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-7477bccbcc94.webp",
+   "fields": {
+    "name": {
+     "value": "GRIMORA",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Choose a creature. If this is on the field when that creature dies, revive it with 1 HP.\n\n(EOT) Summon a SKELETON MATE.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "bars-other",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fc867e901ef9:Creatures/Other/3 Stars/Grimora.png",
+   "kind": "old repo",
+   "date": "2023-11-05T06:25:45+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "grimora and pending updates",
+   "image": "O-3a6921575d37.webp",
+   "fields": {
+    "name": {
+     "value": "GRIMORA",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Choose a creature. If this is on the field when that creature dies, revive it with 1 HP.\n\n(EOT) Summon a SKELETON MATE.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-21",
+  "sort": "2023-10-21",
+  "source": "discord",
+  "status": "same"
+ }
+}

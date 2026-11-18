@@ -1,0 +1,236 @@
+{
+ "card": "time-riddle",
+ "key": "Time Riddle",
+ "name": "Time Riddle",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-259be6311e66",
+   "kind": "discord",
+   "date": "2020-08-22T00:11:42+00:00",
+   "day": "2020-08-22",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-259be6311e66.webp",
+   "fields": {
+    "name": {
+     "value": "Time Riddle",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ability usage; (OPG) -> (TPG) (TPG) -> (4PG) (EOT) -> (OPT) (OPT) -> (TPT) (TPT) -> (4PT)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-07e4e0297a1b-c3",
+   "kind": "discord",
+   "date": "2020-08-25T09:56:59+00:00",
+   "day": "2020-08-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-07e4e0297a1b-c3.webp",
+   "fields": {
+    "name": {
+     "value": "Time Riddle",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ability usage; (OPG) -> (TPG) (TPG) -> (4PG) (EOT) -> (OPT) (OPT) -> (TPT) (TPT) -> (4PT)",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 224,
+   "h": 341
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/4 Stars/Time_Riddle.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-2e937458031d.webp",
+   "fields": {
+    "name": {
+     "value": "Time Riddle",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ability usage; (OPG) -> (TPG) (TPG) -> (4PG) (EOT) -> (OPT) (OPT) -> (TPT) (TPT) -> (4PT)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-afee0c101ceb:Items/Equip/4 Stars/Time_Riddle.png",
+   "kind": "old repo",
+   "date": "2023-04-08T09:28:23+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Time riddle and energy ritual",
+   "repo": "first",
+   "image": "O-d308d8e54ed6.webp",
+   "fields": {
+    "name": {
+     "value": "Time Riddle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Doubles ability usage, for example:\n(EOT) -> (OPT)\n(OPT) -> (2PT)\n(OPGT) -> (2PGT)\n(OPG) -> (2PG)\n(MAX 2) -> (MAX 4)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d0ee1c24415f:Items/Equip/4 Stars/Time_Riddle.png",
+   "kind": "old repo",
+   "date": "2023-04-15T02:15:20+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-28b6974e270a.webp",
+   "fields": {
+    "name": {
+     "value": "Time Riddle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Doubles all ability usage, for example:\n(EOT) -> (OPT)\n(OPT) -> (2PT)\n(OPGT) -> (2PGT)\n(OPG) -> (2PG)\n(MAX 2) -> (MAX 4)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/4 Stars/Time_Riddle.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-28b6974e270a.webp",
+   "fields": {
+    "name": {
+     "value": "Time Riddle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Doubles all ability usage, for example:\n(EOT) -> (OPT)\n(OPT) -> (2PT)\n(OPGT) -> (2PGT)\n(OPG) -> (2PG)\n(MAX 2) -> (MAX 4)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-08-22",
+  "sort": "2020-08-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,302 @@
+{
+ "card": "disgusted",
+ "key": "Disgusted",
+ "name": "Disgusted",
+ "kind": "debuff",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-09dccd8e9064",
+   "kind": "discord",
+   "date": "2022-01-25T07:38:38+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-09dccd8e9064.webp",
+   "fields": {
+    "name": {
+     "value": "Disgusted",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot consume healing items, 1 turn",
+     "method": "git look: ocr",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Status Effects/Debuffs/1 Stars/Disgusted.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-3ef96761c867.webp",
+   "fields": {
+    "name": {
+     "value": "Disgusted",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot consume healing items, 1 turn",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-257dc970a875:Auxillary/Status Effects/Debuffs/1 Stars/Disgusted.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-67768c152ecc.webp",
+   "fields": {
+    "name": {
+     "value": "Disgusted",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot consume healing items, 2 turns",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-b316785629cd:Auxillary/Status Effects/Debuffs/1 Stars/Disgusted.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:15:05+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First round of redoing buffs and debuffs",
+   "repo": "first",
+   "image": "O-b0c337bfcd7f.webp",
+   "fields": {
+    "name": {
+     "value": "Disgusted",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot consume healing items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-df4782564913:Auxillary/Status Effects/Debuffs/1 Stars/Disgusted.png",
+   "kind": "old repo",
+   "date": "2023-04-05T05:14:58+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "added arrows to the t1 debuffs",
+   "repo": "first",
+   "image": "O-0cd382880290.webp",
+   "fields": {
+    "name": {
+     "value": "Disgusted",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot consume healing items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "debuff"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Status Effects/Debuffs/1 Stars/Disgusted.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-0cd382880290.webp",
+   "fields": {
+    "name": {
+     "value": "Disgusted",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot consume healing items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/1 Stars/Disgusted.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "image": "O-2f1a436e9f23.webp",
+   "fields": {
+    "name": {
+     "value": "Disgusted",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot consume healing items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2022-01-25",
+  "sort": "2022-01-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

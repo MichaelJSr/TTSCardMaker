@@ -1,0 +1,381 @@
+{
+ "card": "freeze-spell",
+ "key": "Freeze Spell",
+ "name": "Freeze Spell",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fcef8ac7a1b",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-9f2ccd3cdf5b",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:13+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-9f2ccd3cdf5b.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze Spell",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and freeze it, if that creature has a combined ATK and SPD of 15 or more while being frozen by this effect, Give it frostbite instead",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/2 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-7ef2573ba05f.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze Spell",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and freeze it, if that creature has a combined ATK and SPD of 15 or more while being frozen by this effect, Give it frostbite instead",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-722dcad588eb:Items/Attack/2 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:12:12+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items",
+   "repo": "first",
+   "image": "O-29ad87167759.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze spell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and freeze it, if that creature has a combined ATK and SPD of 15 or more while being frozen by this effect, Give it frostbite instead",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-09f761e9a8e3:Items/Attack/3 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2023-04-11T14:06:16+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Lots more buff/debuff updates",
+   "repo": "first",
+   "image": "O-d780f0a5f6e5.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze spell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and freeze it.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     3
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6f75ca603df9:Items/Attack/3 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2023-04-11T22:07:06+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "repo": "first",
+   "image": "O-5a15469ea60f.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze spell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and freeze it, if that creature has a combined ATK and SPD of 15 or more while being frozen by this effect, Give it frostbite instead.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-32479ad32efa:Items/Attack/3 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2023-04-13T07:33:44+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-b9afe98909f8.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze spell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and freeze it.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b54076b3055b:Items/Attack/3 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2023-04-19T10:32:37+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First set of debuff fixes on items",
+   "repo": "first",
+   "image": "O-3f78b6872481.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze spell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and inflict Frozen for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/3 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-3f78b6872481.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze spell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and inflict Frozen for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/3 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-70da920b19db.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze spell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and inflict Frozen for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c6bddc9bcbb:Items/Attack/3 Stars/Freeze_Spell.png",
+   "kind": "old repo",
+   "date": "2023-10-08T20:28:14+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "freeze spell res increase",
+   "image": "O-62da29007300.webp",
+   "fields": {
+    "name": {
+     "value": "Freeze spell",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature on the field and inflict Frozen for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

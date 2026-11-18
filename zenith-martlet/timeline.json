@@ -1,0 +1,205 @@
+{
+ "card": "zenith-martlet",
+ "key": "Zenith Martlet",
+ "name": "Martlet Zenith of Monsterkind",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-9c25da06fb2d",
+   "kind": "discord",
+   "date": "2025-02-28T14:18:53+00:00",
+   "day": "2025-02-28",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9c25da06fb2d.webp",
+   "fields": {
+    "name": {
+     "value": "Martlet Zenith of Monsterkind",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "wind"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 ATK/SPD against enemy creatures for each point-yielding creature it has killed. After taking 12 damage (before DEF reductions), lose 6 DEF and gain 3 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-c586b1b17223",
+   "kind": "discord",
+   "date": "2025-02-28T14:24:57+00:00",
+   "day": "2025-02-28",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c586b1b17223.webp",
+   "fields": {
+    "name": {
+     "value": "Martlet Zenith of Monsterkind",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "wind"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 ATK/SPD against enemy creatures for each point-yielding creature it has killed. (OPG) After taking 12 damage (before DEF reductions), lose -6 DEF and gain +3 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 8,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-0ae1fbe1c78d",
+   "kind": "discord",
+   "date": "2025-02-28T14:27:35+00:00",
+   "day": "2025-02-28",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-0ae1fbe1c78d.webp",
+   "fields": {
+    "name": {
+     "value": "Martlet Zenith of Monsterkind",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "wind"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 ATK/SPD against enemy creatures for each point-yielding creature it has killed. (OPG) After taking 12 damage (before DEF reductions), lose -6 DEF and gain +3 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 8,
+      "atk": 7,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 8,
+      "atk": 8,
+      "spd": 8
+     },
+     {
+      "hp": 7,
+      "def": 8,
+      "atk": 7,
+      "spd": 8
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 8 -> 7",
+     "ATK 8 -> 7"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-18T07:34:40+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-02-28",
+  "sort": "2025-02-28",
+  "source": "discord",
+  "status": "same"
+ }
+}

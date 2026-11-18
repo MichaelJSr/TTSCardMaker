@@ -1,0 +1,423 @@
+{
+ "card": "the-spire",
+ "key": "The Spire",
+ "name": "The Spire",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-0bc557a6a3af",
+   "kind": "discord",
+   "date": "2022-01-25T07:27:24+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-0bc557a6a3af.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Your 5 star creature dies, Reward: -6 cost. [magic]: Upon death, inflict Corruption onto a creature of your choice. Higher Being: +2 ATK, +1 SPD. God: Upon death, lose the God attribute and heal to full, but become inflicted with Condemned for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 968
+  },
+  {
+   "id": "D-P-87f9f3c1b482",
+   "kind": "discord",
+   "date": "2022-01-25T07:29:42+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-87f9f3c1b482.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: 2 of your creatures die, reward: -6 cost. [magic] : Upon death, inflict Corruption onto a creature of your choice. Higher Being: +2 ATK, +1 SPD. God: Upon death, lose the God attribute and heal to full, but become inflicted with Condemned for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 968
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/4 Stars/The_Spire.PNG",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-96cd13ff2562.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: 2 of your creatures die, reward: -6 cost. [magic] : Upon death, inflict Corruption onto a creature of your choice. Higher Being: +2 ATK, +1 SPD. God: Upon death, lose the God attribute and heal to full, but become inflicted with Condemned for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 968
+  },
+  {
+   "id": "O-6470fb430faf:Field/4 Stars/The_Spire.PNG",
+   "kind": "old repo",
+   "date": "2023-04-20T00:52:08+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "The Spire",
+   "repo": "first",
+   "image": "O-2922b6f0a331.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per dead point-yielding creature on your side.\n[magic]: On death, inflict 2 turns of Corruption to any creature on the primary field.\nHigher Being: +2 ATK +1 SPD.\nGod: Instead of dying, lose the God attribute and heal to full, but become inflicted with 2 turns of Condemned, affects all teams.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6473138c321:Field/4 Stars/The_Spire.PNG",
+   "kind": "old repo",
+   "date": "2023-04-20T01:08:14+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Spire",
+   "repo": "first",
+   "image": "O-20042ef31471.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per dead point-yielding creature on your side.\n[magic]: On death, inflict 2 turns of Corruption to any creature on the primary field.\nHigher Being: +2 ATK +1 SPD.\nGod: Instead of dying, lose the God attribute and heal to full, but become inflicted with 2 turns of Condemned, affects all teams.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/4 Stars/The_Spire.PNG",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-20042ef31471.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per dead point-yielding creature on your side.\n[magic]: On death, inflict 2 turns of Corruption to any creature on the primary field.\nHigher Being: +2 ATK +1 SPD.\nGod: Instead of dying, lose the God attribute and heal to full, but become inflicted with 2 turns of Condemned, affects all teams.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-a573f87ffea8:Field/4 Stars/The_Spire.PNG",
+   "kind": "old repo",
+   "date": "2023-04-23T18:52:18+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Spire Nerf",
+   "image": "O-fe42444f5d94.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[magic]: On death, inflict 2 turns of Corruption to any creature on the primary field.\nHigher Being: +2 ATK +1 SPD.\nGod: Instead of dying, lose the God attribute and heal to half, but become inflicted with 1 turn of Condemned.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/4 Stars/The_Spire.PNG",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-8b8b01b430c3.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[magic]: On death, inflict 2 turns of Corruption to any creature on the primary field.\nHigher Being: +2 ATK +1 SPD.\nGod: Instead of dying, lose the God attribute and heal to half, but become inflicted with 1 turn of Condemned.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/4 Stars/The_Spire.PNG",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-546acbe47dce.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[magic]: On death, inflict 2 turns of Corruption to any creature on the primary field.\nHigher Being: +2 ATK +1 SPD\nGod: Instead of dying, lose the God attribute and heal to half, but become inflicted with 1 turn of Condemned.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8733064b6273:Field/4 Stars/The_Spire.PNG",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-4746d785f203.webp",
+   "fields": {
+    "name": {
+     "value": "The Spire",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "God: +1 Bar to all stats\nCreator: (BOT) Gain +1 bar to any stat permanently. (AAT) After a creature is dealt a killing blow, you may spend 8 points or 8 bricks to destroy this field item and restore that creature to half HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-01-25",
+  "sort": "2022-01-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

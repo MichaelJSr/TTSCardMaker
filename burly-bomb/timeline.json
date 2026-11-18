@@ -1,0 +1,387 @@
+{
+ "card": "burly-bomb",
+ "key": "Burly Bomb",
+ "name": "Burly Bomb",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-35f98f40d994",
+   "kind": "discord",
+   "date": "2020-09-06T23:35:36+00:00",
+   "day": "2020-09-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-35f98f40d994.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 4 piercing damage and 5 damage to a creature on the primary field.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-e317678dcd07",
+   "kind": "discord",
+   "date": "2020-09-06T23:40:22+00:00",
+   "day": "2020-09-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-e317678dcd07.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals damage equal to the DEF of the creature this is used on.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-c77900647ef4",
+   "kind": "discord",
+   "date": "2020-09-06T23:46:04+00:00",
+   "day": "2020-09-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c77900647ef4.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals damage equal to (3 + DEF) of the creature this is used on.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "F-f844cede0a2",
+   "kind": "text",
+   "date": "2021-08-04T18:43:42+00:00",
+   "day": "2021-08-04",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-c00af0e0eada",
+   "kind": "discord",
+   "date": "2021-08-23T06:01:09+00:00",
+   "day": "2021-08-23",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-c00af0e0eada.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals damage equal to (4 + DEF) of the creature this is used on.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/3 Stars/Burly_Bomb.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-1edb4ef93585.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals damage equal to (4 + DEF) of the creature this is used on.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-722dcad588eb:Items/Attack/3 Stars/Burly_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:12:12+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items",
+   "repo": "first",
+   "image": "O-fd824aa915cd.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature for 2 full turns, the next 2 creatures that attack that creature are paralyzed",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d895453fb633:Items/Attack/3 Stars/Burly_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:39:26+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Living bread toy bonnie unbread twins puppet blockade burly bombs",
+   "repo": "first",
+   "image": "O-42b1d91541df.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals DMG equal to (4 + DEF) of the creature this is used on.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c9f2ee957c56:Items/Attack/3 Stars/Burly_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-08T20:53:44+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "item standardization",
+   "repo": "first",
+   "image": "O-ee33b9c9ad46.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals DMG equal to (4 + DEF) of the creature this is used on.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/3 Stars/Burly_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-ee33b9c9ad46.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals DMG equal to (4 + DEF) of the creature this is used on.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-23e7f4a10214:Items/Attack/3 Stars/Burly_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-10-30T02:54:47+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-2ee326b126e5.webp",
+   "fields": {
+    "name": {
+     "value": "Burly Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals DMG equal to (DEF + 4) of the target this is used on.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-06",
+  "sort": "2020-09-06",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,140 @@
+{
+ "card": "the-maelstrom",
+ "key": "The Maelstrom",
+ "name": "The Maelstrom",
+ "kind": "field",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9921002b55cc",
+   "kind": "discord",
+   "date": "2023-08-14T13:36:14+00:00",
+   "day": "2023-08-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9921002b55cc.webp",
+   "fields": {
+    "name": {
+     "value": "The Maelstrom",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon killing an enemy point-yielding creature, draw a random “discarded emotion” item (motivation, love, or regret) from the auxiliary item deck.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-fa4fb2bf1401:Field/4 Stars/The_Maelstrom.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:39:33+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "some stuff",
+   "image": "O-60b03e9fd1de.webp",
+   "fields": {
+    "name": {
+     "value": "The Maelstrom",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon killing an enemy point-yielding creature, draw a random “discarded emotion” item (motivation, love, or regret) from the auxiliary item deck.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6ae40d155724:Field/4 Stars/The_Maelstrom.png",
+   "kind": "old repo",
+   "date": "2023-10-18T11:17:20+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "giegue",
+   "image": "O-7f7f5d860233.webp",
+   "fields": {
+    "name": {
+     "value": "The Maelstrom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon killing an enemy point-yielding creature, draw a random “discarded emotion” item (motivation, love, or regret) from the auxiliary item deck.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-08-14",
+  "sort": "2023-08-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

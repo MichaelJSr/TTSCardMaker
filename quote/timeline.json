@@ -1,0 +1,79 @@
+{
+ "card": "quote",
+ "key": "Quote",
+ "name": "Quote",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-e3e8caad33ea",
+   "kind": "discord",
+   "date": "2025-03-02T07:17:12+00:00",
+   "day": "2025-03-02",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e3e8caad33ea.webp",
+   "fields": {
+    "name": {
+     "value": "Quote",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with the POLAR STAR equipped. Every time a point-yielding creature is killed when this is on the field, gain Dorito Counters equal to the star level of the killed creature. Whenever this creature is attacked, it loses a Dorito Counter for each 2 HP lost.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-02T07:24:17+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-03-02",
+  "sort": "2025-03-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

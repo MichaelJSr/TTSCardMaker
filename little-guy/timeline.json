@@ -1,0 +1,244 @@
+{
+ "card": "little-guy",
+ "key": "Little Guy",
+ "name": "Little Guy",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-02-22",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-6b02029f8f5e",
+   "kind": "discord",
+   "date": "2025-02-20T03:46:22+00:00",
+   "day": "2025-02-20",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6b02029f8f5e.webp",
+   "fields": {
+    "name": {
+     "value": "Little Guy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(3PGT) may do 1 piercing damage.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 2,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-9acb90ec20cb",
+   "kind": "discord",
+   "date": "2025-02-20T03:52:06+00:00",
+   "day": "2025-02-20",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9acb90ec20cb.webp",
+   "fields": {
+    "name": {
+     "value": "Little Guy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(3PGT) may do 1 piercing damage.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 2,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 377,
+   "h": 759
+  },
+  {
+   "id": "D-P-696636a5b75c",
+   "kind": "discord",
+   "date": "2025-02-20T03:53:43+00:00",
+   "day": "2025-02-20",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-696636a5b75c.webp",
+   "fields": {
+    "name": {
+     "value": "Little Guy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(3PGT) may do 1 piercing damage.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 2,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "A",
+   "w": 351,
+   "h": 683
+  },
+  {
+   "id": "D-P-3701be4102c6",
+   "kind": "discord",
+   "date": "2025-02-22T04:13:13+00:00",
+   "day": "2025-02-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-3701be4102c6.webp",
+   "fields": {
+    "name": {
+     "value": "Little Guy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks are piercing. (2PGT) May perform an Attack.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 1,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 2,
+      "atk": 2,
+      "spd": 4
+     },
+     {
+      "hp": 4,
+      "def": 2,
+      "atk": 1,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 2 -> 1"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 450,
+   "h": 891
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-22T09:33:35+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-02-20",
+  "sort": "2025-02-20",
+  "source": "discord",
+  "status": "same"
+ }
+}

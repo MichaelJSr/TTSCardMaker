@@ -1,0 +1,187 @@
+{
+ "card": "unbreakable-heart",
+ "key": "Unbreakable Heart",
+ "name": "Unbreakable Heart",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-04-04",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d78fa3e951ad",
+   "kind": "discord",
+   "date": "2023-04-04T18:01:46+00:00",
+   "day": "2023-04-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d78fa3e951ad.webp",
+   "fields": {
+    "name": {
+     "value": "Unbreakable heart",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nCannot be unquipped",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-345aced1ab76:Items/Equip/3 Stars/Unbreakable_heart.png",
+   "kind": "old repo",
+   "date": "2023-04-04T18:03:03+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates and ucharms",
+   "repo": "first",
+   "image": "O-711126a7d445.webp",
+   "fields": {
+    "name": {
+     "value": "Unbreakable heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nCannot be unquipped",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-166225e6fddf:Auxillary/Items/3 Stars/Unbreakable_heart.png",
+   "kind": "old repo",
+   "date": "2023-04-05T10:29:48+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moved the unbreakable charms to the right folder",
+   "repo": "first",
+   "image": "O-711126a7d445.webp",
+   "fields": {
+    "name": {
+     "value": "Unbreakable heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nCannot be unquipped",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Items/3 Stars/Unbreakable_heart.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-711126a7d445.webp",
+   "fields": {
+    "name": {
+     "value": "Unbreakable heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nCannot be unquipped",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Items/Unbreakable_heart.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-711126a7d445.webp",
+   "fields": {
+    "name": {
+     "value": "Unbreakable heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nCannot be unquipped",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-04-04",
+  "sort": "2023-04-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,807 @@
+{
+ "card": "fuzzy-horde",
+ "key": "Fuzzy Horde",
+ "name": "Fuzzy Horde",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-215206766330",
+   "kind": "discord",
+   "date": "2020-08-15T23:46:25+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-215206766330.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective minion. Permanently gain an attack at the end of each turn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-e7eeba2a4b4d",
+   "kind": "discord",
+   "date": "2020-08-15T23:57:59+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-e7eeba2a4b4d.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Permanently gain an attack at the end of each turn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-fc2dc3e4845",
+   "kind": "text",
+   "date": "2020-08-25T10:58:06+00:00",
+   "day": "2020-08-25",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e64e3c1f742b",
+   "kind": "discord",
+   "date": "2020-08-25T11:16:19+00:00",
+   "day": "2020-08-25",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-e64e3c1f742b.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. This ability can't be stolen. (OPT) (AAT) May intercept an attack towards the protectee. Permanently gain an extra action at the end of each turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-c9b6f9f14847",
+   "kind": "discord",
+   "date": "2021-12-12T09:24:10+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-c9b6f9f14847.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. This ability can't be stolen. (OPT)(AAT) May intercept an attack towards the protectee. Permanently gain an extra action at the end of each turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/2 Stars/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-ba19c1d3398f.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. This ability can't be stolen. (OPT)(AAT) May intercept an attack towards the protectee. Permanently gain an extra action at the end of each turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-aa006ca3d73e:Auxillary/Minions/2 Stars/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-04-13T00:03:52+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "minions",
+   "repo": "first",
+   "image": "O-b57fc6e8d9b7.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the creature this was summoned to. Permanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bcc1ca1a9b3c:Auxillary/Minions/2 Stars/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-04-13T03:04:13+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fuzzy",
+   "repo": "first",
+   "image": "O-3ba46d0c0724.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the creature this was summoned to. Permanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a18b9e4c8c48:Auxillary/Minions/2 Stars/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:59:18+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Auxillary minions",
+   "image": "O-3ba46d0c0724.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the creature this was summoned to. Permanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0d03699866e4:Auxillary/Minions/2 Stars/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:43:43+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "equipped creature",
+   "image": "O-0820feab9e0c.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "electric"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the equipped creature.\nPermanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8bee0a031028:Auxillary/Minions/2 Stars/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-05-26T14:05:57+00:00",
+   "day": "2023-05-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-44d6beb398d6.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the equipped creature.\nPermanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "electric"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-4ffaf97f82bf.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the equipped creature.\nPermanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     4
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8733064b6273:Auxillary/Minions/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-d8ca15b7844c.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the equipped creature.\nPermanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Auxillary/Minions/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-3bcfd237943a.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the equipped creature.\nPermanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-7c5466a1cb81.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the equipped creature.\nPermanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c7a531af6e09:Auxillary/Minions/Fuzzy_Horde.png",
+   "kind": "old repo",
+   "date": "2023-11-05T00:53:40+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "space saving",
+   "image": "O-376972cebfaa.webp",
+   "fields": {
+    "name": {
+     "value": "Fuzzy Horde",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 1,
+      "atk": 3,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This ability cannot be stolen. \n(OPGT) May intercept an attack to the equipped creature.\nPermanently gain an extra action per turn at the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-08-15",
+  "sort": "2020-08-15",
+  "source": "discord",
+  "status": "same"
+ }
+}

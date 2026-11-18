@@ -1,0 +1,1567 @@
+{
+ "card": "prince-of-darkness",
+ "key": "Prince of Darkness",
+ "name": "Prince of Darkness",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-05c44741d18f",
+   "kind": "discord",
+   "date": "2020-08-12T22:17:33+00:00",
+   "day": "2020-08-12",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-05c44741d18f.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Darkness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "undead"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Remove buffs from the attacked creature. When a creature dies, gain souls equivalent to creature's max HP. (TPT) (AAT) May summon minions on any creature, regrow 1.5x cost, camo 1.5x cost, regrow camo 2x cost: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (12 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "D-P-f1d3355559e5",
+   "kind": "discord",
+   "date": "2020-08-14T09:02:57+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-f1d3355559e5.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Darkness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "undead"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Remove buffs from the attacked creature. When a creature dies, gain souls equivalent to creature's max HP. (TPT) (OYT) May summon minions on any creature, regrow 1.5x cost, camo 1.5x cost, regrow camo 2x cost: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (12 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     5
+    ],
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 6
+     },
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "ATK 5 -> 6"
+    ],
+    "nerfs": [
+     "DEF 5 -> 4"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "D-P-e826db9aeea9",
+   "kind": "discord",
+   "date": "2020-08-14T23:09:26+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-e826db9aeea9.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Darkness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Remove buffs from the attacked creature. When a creature dies, gain souls equivalent to creature's max HP. (AAT) May sacrifice its minions for souls equivalent to their current HP. (TPT) (OYT) May summon minions on any creature: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (12 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "magic"
+     ],
+     "drop": [
+      "dark"
+     ]
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "F-f5d2cdcd87b",
+   "kind": "text",
+   "date": "2020-08-17T10:35:51+00:00",
+   "day": "2020-08-17",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "spd",
+    "by": -1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-1e9c335bf59a"
+  },
+  {
+   "id": "F-f67cb44b750",
+   "kind": "text",
+   "date": "2020-08-17T10:35:51+00:00",
+   "day": "2020-08-17",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "def",
+    "by": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-1e9c335bf59a"
+  },
+  {
+   "id": "F-fc740d7bc98",
+   "kind": "text",
+   "date": "2020-08-17T10:35:51+00:00",
+   "day": "2020-08-17",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "atk",
+    "by": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-1e9c335bf59a"
+  },
+  {
+   "id": "D-P-1e9c335bf59a",
+   "kind": "discord",
+   "date": "2020-08-19T07:43:42+00:00",
+   "day": "2020-08-19",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-1e9c335bf59a.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Darkness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Remove buffs from the attacked creature. When a creature dies, gain souls equivalent to creature's max HP. (AAT) May sacrifice its minions for souls equivalent to their current HP. (TPT) (OYT) May summon minions on any creature: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (12 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 4 -> 5",
+     "ATK 6 -> 7"
+    ],
+    "nerfs": [
+     "SPD 6 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "F-f429a055163",
+   "kind": "text",
+   "date": "2020-09-02T03:31:28+00:00",
+   "day": "2020-09-02",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "field": "spd",
+    "to": 6,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-b527efb32f7d"
+  },
+  {
+   "id": "D-P-b527efb32f7d",
+   "kind": "discord",
+   "date": "2020-09-04T23:51:01+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-b527efb32f7d.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Darkness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Remove buffs from the attacked creature. When a creature dies, gain souls equivalent to creature's max HP. (AAT) May sacrifice its minions for souls equivalent to their current HP. (TPT) (OYT) May summon minions on any creature: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (12 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "D-P-bd50fa09ed32",
+   "kind": "discord",
+   "date": "2020-09-05T00:01:48+00:00",
+   "day": "2020-09-05",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-bd50fa09ed32.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Darkness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Remove buffs from the attacked creature. When a creature dies, gain souls equivalent to creature's max HP. (AAT) May sacrifice its minions for souls equivalent to their current HP. (TPT) (OYT) May summon minions on any creature: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (12 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "D-P-0799a38fcec9",
+   "kind": "discord",
+   "date": "2020-09-05T00:20:53+00:00",
+   "day": "2020-09-05",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-0799a38fcec9.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Darkness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Remove buffs from the attacked creature. When a creature dies, gain souls equivalent to creature's max HP. (AAT) May sacrifice its minions for souls equivalent to their current HP. (TPT) (OYT) May summon minions on any creature: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (12 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "F-f899386dea8",
+   "kind": "text",
+   "date": "2021-04-24T08:49:56+00:00",
+   "day": "2021-04-24",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-28045cfb399a",
+   "kind": "discord",
+   "date": "2021-08-12T10:12:04+00:00",
+   "day": "2021-08-12",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-28045cfb399a.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Darkness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature dies, gain souls equivalent to creature's max HP. (TPT)(OYT) May summon minions on any creature: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (16 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "D-P-b67c8807c9e7",
+   "kind": "discord",
+   "date": "2021-12-12T05:39:18+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-b67c8807c9e7.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Of Darkness",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature dies, gain souls equivalent to creature's max HP. (TPT)(OYT) May summon minions on any creature: (4 Souls) Red Bloon. (8 Souls) Black Bloon. (8 Souls) White Bloon. (12 Souls) Zebra Bloon. (16 Souls) Lead Bloon. (16 Souls) Rainbow Bloon. (16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B. (32 Souls) D.D.T. (36 Souls) B.F.B. (48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Prince Darkness",
+     "Prince Of Darkness"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/BTD6/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-8a7be02b53c0.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Of Darkness",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature dies, gain souls equivalent to creature's max HP.\n(TPT)(OYT) May summon minions on any creature:\n(4 Souls) Red Bloon. (8 Souls) Black Bloon.\n(8 Souls) White Bloon. (12 Souls) Zebra Bloon.\n(16 Souls) Lead Bloon. (16 Souls) Rainbow Bloon.\n(16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B.\n(32 Souls) D.D.T. (36 Souls) B.F.B.\n(48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "O-e5d555e5123e:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2022-08-24T19:02:04+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moved BTD6 to Other and merged updates",
+   "repo": "first",
+   "image": "O-8a7be02b53c0.webp",
+   "fields": {
+    "name": {
+     "value": "Prince Of Darkness",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature dies, gain souls equivalent to creature's max HP.\n(TPT)(OYT) May summon minions on any creature:\n(4 Souls) Red Bloon. (8 Souls) Black Bloon.\n(8 Souls) White Bloon. (12 Souls) Zebra Bloon.\n(16 Souls) Lead Bloon. (16 Souls) Rainbow Bloon.\n(16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B.\n(32 Souls) D.D.T. (36 Souls) B.F.B.\n(48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "O-2db810705f96:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-03-29T09:56:33+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Remade POD",
+   "repo": "first",
+   "image": "O-bbbbdf168d9b.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature dies, gain souls equivalent to creature's max HP.\n(TPT)(OYT) May summon minions on any creature:\n(4 Souls) Red Bloon. (8 Souls) Black Bloon.\n(8 Souls) White Bloon. (12 Souls) Zebra Bloon.\n(16 Souls) Lead Bloon. (16 Souls) Rainbow Bloon.\n(16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B.\n(32 Souls) D.D.T. (36 Souls) B.F.B.\n(48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-da62208a7c9b:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-03-29T10:01:45+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Fiddled with POD's stars",
+   "repo": "first",
+   "image": "O-36250c1d31da.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature dies, gain souls equivalent to creature's max HP.\n(TPT)(OYT) May summon minions on any creature:\n(4 Souls) Red Bloon. (8 Souls) Black Bloon.\n(8 Souls) White Bloon. (12 Souls) Zebra Bloon.\n(16 Souls) Lead Bloon. (16 Souls) Rainbow Bloon.\n(16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B.\n(32 Souls) D.D.T. (36 Souls) B.F.B.\n(48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c89e0bd693af:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-03-29T11:19:12+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Prince of darkness",
+   "repo": "first",
+   "image": "O-badde540259e.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature dies, gain souls equivalent to creature's max HP.\n(TPT)(OYT) May summon minions on any creature:\n(4 Souls) Red Bloon. (8 Souls) Black Bloon.\n(8 Souls) White Bloon. (12 Souls) Zebra Bloon.\n(16 Souls) Lead Bloon. (16 Souls) Rainbow Bloon.\n(16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B.\n(32 Souls) D.D.T. (36 Souls) B.F.B.\n(48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-44aff9f836b2:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-03-29T14:04:19+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made the first line of text for PoD same size as rest, made new abbreviation",
+   "repo": "first",
+   "image": "O-571d8afca4e8.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(WCD) Gain souls equal to creature's max HP.\n(TPT)(OYT) May summon minions on any creature:\n(4 Souls) Red Bloon. (8 Souls) Black Bloon.\n(8 Souls) White Bloon. (12 Souls) Zebra Bloon.\n(16 Souls) Lead Bloon. (16 Souls) Rainbow Bloon.\n(16 Souls) Ceramic Bloon. (24 Souls) M.O.A.B.\n(32 Souls) D.D.T. (36 Souls) B.F.B.\n(48 Souls) Z.O.M.G. (60 Souls) B.A.D.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-662d9ab22c70:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-04-10T18:50:19+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some grodus cards clean up and Dark ritual",
+   "repo": "first",
+   "image": "O-21efa7f34a94.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(WCD) Gain souls    equal to creature's max HP.\n(TPT) May use souls to summon minions on any creature:",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0f83dcf6e7b9:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-04-10T22:05:15+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-cb6691552fc6.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(WCD) Gain souls    equal to creature's max HP.\n(TPT) May use souls to summon minions on any creature:",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bcc1ca1a9b3c:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-04-13T03:04:13+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fuzzy",
+   "repo": "first",
+   "image": "O-1f11a0180987.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(WCD) Gain souls    equal to creature's max HP.\n(TPT) May use souls to summon non soul gaining minions on any creature:",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-de92dbe542e1:Cards/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-04-20T10:14:05+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "POD change",
+   "repo": "first",
+   "image": "O-77e44df3a9f6.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max hp.\n(TPT) May use souls to summon non-soul gaining minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-77e44df3a9f6.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max hp.\n(TPT) May use souls to summon non-soul gaining minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-77e44df3a9f6.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max hp.\n(TPT) May use souls to summon non-soul gaining minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-e03d6fc8f589.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max hp.\n(TPT) May use souls to summon non-soul gaining minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c4d403d82af7:Creatures/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-bf7b79974b0f.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max hp.\n(TPT) May use souls to summon non-soul yeilding minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f2a5c96615a0:Creatures/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-10-19T19:53:24+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "removal magic",
+   "image": "O-ef5d0bca656c.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max hp.\n(TPT) May use souls to summon non-soul yeilding minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-060c8de14168.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max HP.\n(TPT) May use souls to summon non-soul yeilding minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-5ddb1a6427d7.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max HP.\n(TPT) May use souls to summon non-soul yeilding minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Other/5 Stars/Prince_Of_Darkness.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-37f7bd646a07.webp",
+   "fields": {
+    "name": {
+     "value": "Prince of Darkness",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When any creature dies while this is on the field, gain souls equal to their max HP.\n(TPT) May use souls to summon non-soul yeilding minions on any creature:\n4 souls for a Red Bloon.\n12 souls for a Ceramic Bloon.\n24 souls for a M.O.A.B.\n36 souls for a B.F.B.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-08-12",
+  "sort": "2020-08-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

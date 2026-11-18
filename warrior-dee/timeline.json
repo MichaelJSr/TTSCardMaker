@@ -1,0 +1,763 @@
+{
+ "card": "warrior-dee",
+ "key": "Warrior Dee",
+ "name": "Warrior Dee",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1264a263ca7e",
+   "kind": "discord",
+   "date": "2020-07-22T11:05:48+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-1264a263ca7e.webp",
+   "fields": {
+    "name": {
+     "value": "Waddle Dee Warrior",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-7895299ec3e7",
+   "kind": "discord",
+   "date": "2020-07-22T11:17:33+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-7895299ec3e7.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior Dee",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Waddle Dee Warrior",
+     "Warrior Dee"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-86a341c069f2",
+   "kind": "discord",
+   "date": "2020-07-23T10:04:21+00:00",
+   "day": "2020-07-23",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-86a341c069f2.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior Dee",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Warrior Dee protects the summoner.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-5cf83bfed147",
+   "kind": "discord",
+   "date": "2020-07-25T12:27:20+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-5cf83bfed147.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior Dee",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Warrior Dee protects the summoner. Summoned by King Dedede.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-87dea1dd4c8d",
+   "kind": "discord",
+   "date": "2021-11-22T10:14:59+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-87dea1dd4c8d.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior Dee",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective Minion.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/3 Stars/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Waddle Dee Warrior",
+   "repo": "first",
+   "image": "O-56367a485d32.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior Dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective Minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-b16c6736c20c:Auxillary/Minions/3 Stars/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2023-04-02T00:20:11+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Touched a bunch of auxillary cards to standardize their size and delete some unused assets",
+   "file": "Waddle Dee Warrior",
+   "repo": "first",
+   "image": "O-8ff7ad5609b9.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior Dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protective Minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-37451eba2f36:Auxillary/Minions/3 Stars/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2023-04-03T10:39:58+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed all psd minions to use the new types for protective/not",
+   "file": "Waddle Dee Warrior",
+   "repo": "first",
+   "image": "O-c4b952017fda.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior Dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "rock",
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "defensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "removed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-aa006ca3d73e:Auxillary/Minions/3 Stars/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2023-04-13T00:03:52+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "minions",
+   "file": "Waddle Dee Warrior",
+   "repo": "first",
+   "image": "O-9c36ff66b65e.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "light",
+      "defensive_minion"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-9e34e917f6e7:Auxillary/Minions/3 Stars/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2023-04-18T21:21:49+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "small fx",
+   "file": "Waddle Dee Warrior",
+   "repo": "first",
+   "image": "O-f4380519dc4a.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "light",
+      "defensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a18b9e4c8c48:Auxillary/Minions/3 Stars/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:59:18+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Auxillary minions",
+   "file": "Waddle Dee Warrior",
+   "image": "O-f4380519dc4a.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "light",
+      "defensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8ecdec8f177:Auxillary/Minions/3 Stars/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2023-10-13T03:11:51+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "warcraftian attribute color coding",
+   "file": "Waddle Dee Warrior",
+   "image": "O-0b106cd026b7.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "light",
+      "defensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "file": "Waddle Dee Warrior",
+   "image": "O-dc61e7220b30.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "light",
+      "defensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     1
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Waddle_Dee_Warrior.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "file": "Waddle Dee Warrior",
+   "image": "O-76a2cb51b3bc.webp",
+   "fields": {
+    "name": {
+     "value": "Warrior dee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "light",
+      "defensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

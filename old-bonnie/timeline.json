@@ -1,0 +1,1062 @@
+{
+ "card": "old-bonnie",
+ "key": "Old Bonnie",
+ "name": "Old Bonnie",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-8b5b06d07993",
+   "kind": "discord",
+   "date": "2020-07-18T11:48:56+00:00",
+   "day": "2020-07-18",
+   "badge": "Discord",
+   "channel": "update-01",
+   "image": "P-8b5b06d07993.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When bonnie attacks opponents he gains attack equal to their defense for that attack. If Bonnie attacks someone on the left side of field, his attack is increased by 2 for that attack",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 391,
+   "h": 792
+  },
+  {
+   "id": "D-P-b6e3f269f720",
+   "kind": "discord",
+   "date": "2020-07-22T02:56:00+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-b6e3f269f720.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When bonnie attacks opponents he gains attack equal to their defense for that attack. If Bonnie attacks someone on the left side of field, his attack is increased by 2 for that attack",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 2,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 3,
+      "spd": 6
+     },
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 2,
+      "spd": 6
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 3 -> 2"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 784
+  },
+  {
+   "id": "D-P-487e27daa8bc",
+   "kind": "discord",
+   "date": "2020-07-22T03:29:23+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-487e27daa8bc.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When bonnie attacks opponents he gains attack equal to their defense for that attack. If Bonnie attacks someone on the left side of field, his attack is increased by 2 for that attack",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 2,
+      "spd": 6
+     },
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 3,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 2 -> 3"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 321,
+   "h": 655
+  },
+  {
+   "id": "F-f8f8825b747",
+   "kind": "text",
+   "date": "2021-08-07T08:05:57+00:00",
+   "day": "2021-08-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "atk",
+    "by": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-f9dd5f59245e"
+  },
+  {
+   "id": "D-P-f9dd5f59245e",
+   "kind": "discord",
+   "date": "2021-08-11T13:13:09+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-f9dd5f59245e.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When bonnie attacks opponents he gains attack equal to their defense for that attack. If Bonnie attacks someone on the left side of field, his attack is increased by 2 for that attack",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 3,
+      "spd": 6
+     },
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 3 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "D-P-03bfafc474e2",
+   "kind": "discord",
+   "date": "2021-12-15T09:46:58+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-03bfafc474e2.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When bonnie attacks opponents he gains attack equal to their defense for that attack. If Bonnie attacks someone on the left side of field, his attack is increased by 2 for that attack",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "dark"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "D-P-670ef0587c21",
+   "kind": "discord",
+   "date": "2021-12-16T12:22:39+00:00",
+   "day": "2021-12-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-670ef0587c21.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When bonnie attacks opponents he gains attack equal to their defense for that attack. If Bonnie attacks someone on the left side of field, his attack is increased by 2 for that attack",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "D-P-60afce3fd894",
+   "kind": "discord",
+   "date": "2022-06-10T20:30:54+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-60afce3fd894.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gains attack equal to their defense for that attack. If this creature attacks someone on the left side of field, their attack is increased by 2 for that",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "git_look": true,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-eb41c817ab91.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gains attack equal to their defense for that attack. If this creature attacks someone on the left side of field, their attack is increased by 2 for that",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-257dc970a875:Cards/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-da6674ebb079.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gains attack equal to their defense for that attack. If this creature attacks someone on the left side of field, their attack is increased by 2 for that\nattack",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f50936799d74:Cards/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-16T04:48:31+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "fixed text being cut off for old bon and old fox",
+   "repo": "first",
+   "image": "O-73d80fc5a103.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gains attack equal to their defense for that attack. If this creature attacks someone on the left side of field, their attack is increased by 2 for that\nattack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-73d80fc5a103.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gains attack equal to their defense for that attack. If this creature attacks someone on the left side of field, their attack is increased by 2 for that\nattack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-73d80fc5a103.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gains attack equal to their defense for that attack. If this creature attacks someone on the left side of field, their attack is increased by 2 for that\nattack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-095e59dc0b36:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-04-25T02:06:33+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fanf file size reduction/touch ups",
+   "image": "O-0d0a9c162d88.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gain ATK equal to their defense for that attack.\n If this creature attacks someone on the left side of field, their attack is increased by 2 for that attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e63eaf98bf16:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-06-17T09:36:05+00:00",
+   "day": "2023-06-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "better hp bars for old cards",
+   "image": "O-d2b83911994c.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gain ATK equal to the opponents defense for that attack.\n If this creature attacks someone on the left side of field, (your perspective) their attack is increased by 2 for that attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-3d77d68c9fb6.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gain ATK equal to the opponents defense for that attack.\n If this creature attacks someone on the left side of field, (your perspective) their attack is increased by 2 for that attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-7575aa2aa9f4.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gain ATK equal to the opponents defense for that attack.\n If this creature attacks someone on the left side of field, (your perspective) their attack is increased by 2 for that attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-e79696ba53ac.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gain ATK equal to the opponents defense for that attack.\n If this creature attacks someone on the left side of field, (your perspective) their attack is increased by 2 for that attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-f07ae11546aa.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gain ATK equal to the opponents DEF for that attack.\n If this creature attacks someone on the left side of field, (your perspective) their ATK is increased by 2 for that attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-1633346b3b10.webp",
+   "fields": {
+    "name": {
+     "value": "Old Bonnie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks opponents they gain ATK equal to the opponents DEF for that attack.\n If this creature attacks someone on the left side of field, (your perspective) their ATK is increased by 2 for that attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-18",
+  "sort": "2020-07-18",
+  "source": "discord",
+  "status": "same"
+ }
+}

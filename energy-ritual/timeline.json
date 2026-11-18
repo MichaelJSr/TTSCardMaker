@@ -1,0 +1,416 @@
+{
+ "card": "energy-ritual",
+ "key": "Energy Ritual",
+ "name": "Energy Ritual",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-41c26e5179db",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:11+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-41c26e5179db.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Allows one creature and that one only to gain 4 points for its abilities only and all of its limited use effects are regained.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A-item",
+   "w": 398,
+   "h": 615
+  },
+  {
+   "id": "D-P-caabf74a1fd0",
+   "kind": "discord",
+   "date": "2020-08-13T11:04:47+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-caabf74a1fd0.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gives one creature 4 points to use for its abilities, and resets all of their (OPT)(TPT) and (OPG) abilities",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 399,
+   "h": 617
+  },
+  {
+   "id": "D-P-07e4e0297a1b-c4",
+   "kind": "discord",
+   "date": "2020-08-25T09:56:59+00:00",
+   "day": "2020-08-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-07e4e0297a1b-c4.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gives one creature 4 points to use for its abilities, and resets all of their (OPT)(TPT) and (OPG) abilities",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 223,
+   "h": 341
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/3 Stars/Energy_Ritual.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-9283e665664f.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gives one creature 4 points to use for its abilities, and resets all of their (OPT)(TPT) and (OPG) abilities",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 399,
+   "h": 617
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/3 star/Energy_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-9283e665664f.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gives one creature 4 points to use for its abilities, and resets all of their (OPT)(TPT) and (OPG) abilities",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 399,
+   "h": 617
+  },
+  {
+   "id": "O-afee0c101ceb:Items/Support/3 star/Energy_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-08T09:28:23+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Time riddle and energy ritual",
+   "repo": "first",
+   "image": "O-46cfe76b8513.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lets a creature use 4 points worth of abilities for free, and resets all abilities.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6cfb610a3e83:Items/Support/3 star/Energy_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:01:31+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-1c7a01325f1f.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lets a creature use 4 points worth of abilities for free, and resets all abilities.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-cce9285993f7:Items/Support/3 star/Energy_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-11T13:15:29+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Updating a bunch of outdated item text",
+   "repo": "first",
+   "image": "O-af69c51bd3f4.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lets a creature use 4 points worth of abilities for free, and refreshes all abilities.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-420140c756bd:Items/Support/3 star/Energy_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-13T08:56:05+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "repo": "first",
+   "image": "O-4d70a24d0325.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lets a creature use 4 points worth of abilities for free, and refreshes all abilities that have or can be used this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/3 Stars/Energy_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-4d70a24d0325.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lets a creature use 4 points worth of abilities for free, and refreshes all abilities that have or can be used this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/3 Stars/Energy_Ritual.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-4d70a24d0325.webp",
+   "fields": {
+    "name": {
+     "value": "Energy Ritual",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lets a creature use 4 points worth of abilities for free, and refreshes all abilities that have or can be used this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

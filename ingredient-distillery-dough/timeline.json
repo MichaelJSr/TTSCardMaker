@@ -1,0 +1,63 @@
+{
+ "card": "ingredient-distillery-dough",
+ "key": "Ingredient Distillery Dough",
+ "name": "Distillery Dough",
+ "kind": "item",
+ "stop": {
+  "day": "2023-11-17",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-209da0df8c90",
+   "kind": "discord",
+   "date": "2023-11-17T06:50:38+00:00",
+   "day": "2023-11-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-209da0df8c90.webp",
+   "fields": {
+    "name": {
+     "value": "Distillery Dough",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 10 HP across different creatures. Per 4 HP healed from this, inlict 1 Burdened for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-02-22T04:42:12+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-17",
+  "sort": "2023-11-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

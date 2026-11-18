@@ -1,0 +1,934 @@
+{
+ "card": "retro-kirby",
+ "key": "Retro Kirby",
+ "name": "Retro Kirby",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-6f49568bc541",
+   "kind": "discord",
+   "date": "2020-07-25T05:55:45+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-6f49568bc541.webp",
+   "fields": {
+    "name": {
+     "value": "Old School Kirby",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, Kirby gains attack equal to 33% of the combined base damage of every attack that has occurred so far this turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 401,
+   "h": 788
+  },
+  {
+   "id": "D-P-92cf0bdd6157",
+   "kind": "discord",
+   "date": "2020-07-25T06:15:29+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-92cf0bdd6157.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, Kirby's attack becomes equal to 33% of the combined base damage of every attack that has occurred so far this turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Old School Kirby",
+     "Retro Kirby"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 3,
+   "era": "C",
+   "w": 401,
+   "h": 790
+  },
+  {
+   "id": "F-f32dee0b8c6",
+   "kind": "text",
+   "date": "2020-08-09T23:28:54+00:00",
+   "day": "2020-08-09",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-318c5ec70492",
+   "kind": "discord",
+   "date": "2020-08-09T23:31:10+00:00",
+   "day": "2020-08-09",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-318c5ec70492.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, Kirby's attack becomes equal to 33% of the combined ATK of every attack that has occurred so far this turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 398,
+   "h": 786
+  },
+  {
+   "id": "D-P-f3d97f31df2a",
+   "kind": "discord",
+   "date": "2021-12-15T11:11:29+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-f3d97f31df2a.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, this card's attack becomes equal to 33% of the combined ATK of every attack that has occurred so far this turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 399,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-c5714f7af1d3.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, this card's attack becomes equal to 33% of the combined ATK of every attack that has occurred so far this turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 788
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-e1703391ae73.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 10,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, this cards attack becomes equal to 33% of the combined ATK of every attack that has occurred so far this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 10,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 0 -> 10"
+    ],
+    "nerfs": [],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-0f20e5dad65d.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 10,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, this cards attack becomes equal to 33% of the combined ATK of every attack that has occurred so far this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-386bdb5b1345:Cards/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-04-06T23:48:36+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Card to Creature lingo kriby cards",
+   "repo": "first",
+   "image": "O-a1f9fb41b77e.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, this creatures attack becomes equal to 33% of the combined ATK of every attack that has occurred so far this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 10,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 10 -> 6"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-32479ad32efa:Cards/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-04-13T07:33:44+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-dc093d2350ab.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking, this creatures attack becomes equal to 33% of the combined ATK of every attack that has occurred so far this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1f36d08ac576:Cards/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:02:03+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-37cfda6661e7.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Can change it's speed to any value between 3 and 7, this effect ends when it's turn begins.\nWhen attacking, this creatures attack becomes equal to 33% of the combined ATK of every attack that has occurred so far this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7c159970914e:Cards/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-04-19T06:57:24+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugg chugg choo choo",
+   "repo": "first",
+   "image": "O-05f4d1c260cd.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Can change its SPD to any value between 3 and 7, this effect ends when its turn begins.\nWhen attacking, this creatures ATK becomes equal to 33% of the combined ATK of every attack that has occurred so far this global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-05f4d1c260cd.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Can change its SPD to any value between 3 and 7, this effect ends when its turn begins.\nWhen attacking, this creatures ATK becomes equal to 33% of the combined ATK of every attack that has occurred so far this global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-05f4d1c260cd.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Can change its SPD to any value between 3 and 7, this effect ends when its turn begins.\nWhen attacking, this creatures ATK becomes equal to 33% of the combined ATK of every attack that has occurred so far this global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-988c8acb30e4.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Can change its SPD to any value between 3 and 7, this effect ends when its turn begins.\nWhen attacking, this creatures ATK becomes equal to 33% of the combined ATK of every attack that has occurred so far this global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3518261d375b:Creatures/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-6a290f835f2c.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Can change its SPD to any value between 3 and 7, this effect ends when its turn begins.\nWhen attacking, this creatures ATK becomes equal to 33% of the combined ATK of every attack that has occurred so far this global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-19e3b5d1f9a7.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Can change its SPD to any value between 3 and 7, this effect ends when its turn begins.\nWhen attacking, this creatures ATK becomes equal to 33% of the combined ATK of every attack that has occurred so far this global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8a1062c2a56:Creatures/Kirby/3 Stars/Retro_Kirby.png",
+   "kind": "old repo",
+   "date": "2023-11-01T07:32:17+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "kirb no prod",
+   "image": "O-0a00019b4c9f.webp",
+   "fields": {
+    "name": {
+     "value": "Retro Kirby",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Can change its SPD to any value between 3 and 7, this effect ends when its turn begins.\nWhen attacking, this creatures ATK becomes equal to 33% of the combined ATK of every attack that has occurred so far this global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-25",
+  "sort": "2020-07-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,127 @@
+{
+ "card": "LC-697901d443",
+ "key": "White Palace",
+ "name": "White Palace",
+ "morgue": "mdw",
+ "first": {
+  "date": "2023-10-24T18:34:59.256000+00:00",
+  "day": "2023-10-24",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-697901d4430d",
+   "kind": "discord",
+   "date": "2023-10-24T18:34:59.256000+00:00",
+   "day": "2023-10-24",
+   "badge": "Discord",
+   "image": "P-697901d4430d.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-60c362fee78c:Field/4 Stars/White_Palace.png",
+   "kind": "old repo",
+   "date": "2023-10-24T21:43:59+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field items",
+   "image": "O-9d811b2b08ba.webp",
+   "fields": {
+    "name": {
+     "value": "White Palace",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-821fa8453c74:Field/4 Stars/White_Palace.png",
+   "kind": "old repo",
+   "date": "2023-10-26T11:46:07+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item changes",
+   "image": "O-d2a61d4fe483.webp",
+   "fields": {
+    "name": {
+     "value": "White Palace",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2087bbad1e2b:Field/4 Stars/White_Palace.png",
+   "kind": "old repo",
+   "date": "2023-11-03T00:20:15+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "drak brablme",
+   "image": "O-a32a4d92a5b6.webp",
+   "fields": {
+    "name": {
+     "value": "White Palace",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ]
+}

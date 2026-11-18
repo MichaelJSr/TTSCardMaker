@@ -1,0 +1,599 @@
+{
+ "card": "the-kingchin",
+ "key": "The Kingchin",
+ "name": "The Kingchin",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-18048a39a27b",
+   "kind": "discord",
+   "date": "2021-11-30T09:23:03+00:00",
+   "day": "2021-11-30",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-18048a39a27b.webp",
+   "fields": {
+    "name": {
+     "value": "THE KINGCHIN",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every point-yielding creature gains a (OPG) ability to intercept for this creature. (BOGT)Decide the turn order. (TPG) Manipulate the RNG of anything to have the outcome you want.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-47286f978dff",
+   "kind": "discord",
+   "date": "2021-12-12T10:03:22+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-47286f978dff.webp",
+   "fields": {
+    "name": {
+     "value": "The Kingchin",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every point-yielding creature gains a (OPG) ability to intercept for this creature. (BOGT)Decide the turn order. (TPG) Manipulate the RNG of anything to have the outcome you want.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-2bd63caecb38.webp",
+   "fields": {
+    "name": {
+     "value": "The Kingchin",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every point-yielding creature gains a (OPG) ability to intercept for this creature. (BOGT)Decide the turn order. (TPG) Manipulate the RNG of anything to have the outcome you want.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-cdae71a37142:Cards/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2023-04-10T09:22:48+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Kingchin and bob-ulk",
+   "repo": "first",
+   "image": "O-e3b7194e7761.webp",
+   "fields": {
+    "name": {
+     "value": "The Kingchin",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this is on the field, your team may manipulate dice and coin flips to your result of choice.\n(OPT) May choose a friendly creatures’ ATK stat to copy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "unknown"
+     ],
+     "drop": []
+    },
+    "stats": [
+     {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 4 -> 8",
+     "SPD 5 -> 7"
+    ],
+    "nerfs": [
+     "DEF 2 -> 0",
+     "ATK 5 -> 4"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-662d9ab22c70:Cards/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2023-04-10T18:50:19+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some grodus cards clean up and Dark ritual",
+   "repo": "first",
+   "image": "O-7c88d069abcc.webp",
+   "fields": {
+    "name": {
+     "value": "THE KINGCHIN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this is on the field, your team may manipulate dice and coin flips to your result of choice.\n(OPT) May choose a friendly creatures’ ATK stat to copy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-075210be9803:Cards/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2023-04-16T00:56:45+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Peter Panda rework, and Kingchin clarification",
+   "repo": "first",
+   "image": "O-05541a6e1415.webp",
+   "fields": {
+    "name": {
+     "value": "THE KINGCHIN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this is on the field, your team may manipulate dice and coin flips to your result of choice.\n(OPT) May choose a friendly creatures ATK stat (including equips) to copy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-05541a6e1415.webp",
+   "fields": {
+    "name": {
+     "value": "THE KINGCHIN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this is on the field, your team may manipulate dice and coin flips to your result of choice.\n(OPT) May choose a friendly creatures ATK stat (including equips) to copy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-05541a6e1415.webp",
+   "fields": {
+    "name": {
+     "value": "THE KINGCHIN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this is on the field, your team may manipulate dice and coin flips to your result of choice.\n(OPT) May choose a friendly creatures ATK stat (including equips) to copy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c2b1b3fecc90:Creatures/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-b3afb0000eac.webp",
+   "fields": {
+    "name": {
+     "value": "THE KINGCHIN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this is on the field, your team may manipulate dice and coin flips to your result of choice.\n(OPT) May choose a friendly creatures ATK stat (including equips) to copy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-7317cd988ea1.webp",
+   "fields": {
+    "name": {
+     "value": "THE KINGCHIN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this is on the field, your team may manipulate dice and coin flips to your result of choice.\n(OPT) May choose a friendly creatures ATK stat (including equips) to copy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/4 Stars/The_Kingchin.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-d4194708a5c8.webp",
+   "fields": {
+    "name": {
+     "value": "THE KINGCHIN",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this is on the field, your team may manipulate dice and coin flips to your result of choice.\n(OPT) May choose a friendly creatures ATK stat (including equips) to copy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-11-30",
+  "sort": "2021-11-30",
+  "source": "discord",
+  "status": "same"
+ }
+}

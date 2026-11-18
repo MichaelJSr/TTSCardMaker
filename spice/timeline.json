@@ -1,0 +1,458 @@
+{
+ "card": "spice",
+ "key": "Spice",
+ "name": "Spice",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d7e3d5153bcb",
+   "kind": "discord",
+   "date": "2020-09-04T01:02:07+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-d7e3d5153bcb.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Reusable, can't use on machines. (FCO) Grants +1 ATK +1 SPD -2 HP. Creatures that use Spice take half their max HP as damage if not used before end of every global turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-c7170797bb14",
+   "kind": "discord",
+   "date": "2020-09-04T01:04:19+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c7170797bb14.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Reusable. (FCO) Grants +1 ATK +1 SPD -2 HP. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-88e36f3a5e42",
+   "kind": "discord",
+   "date": "2020-09-04T01:19:27+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-88e36f3a5e42.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Reusable (FCO). Grants +1 ATK and +1 SPD. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-880d15c2a5ee",
+   "kind": "discord",
+   "date": "2020-09-04T01:33:14+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-880d15c2a5ee.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Reusable (FCO). Grants +1 Atk +1 Spd -2 max Hp. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     2
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/Spice.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-cb1e04c276b6.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Reusable (FCO). Grants +1 Atk +1 Spd -2 max Hp. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/2 star/Spice.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-cb1e04c276b6.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Reusable (FCO). Grants +1 Atk +1 Spd -2 max Hp. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-1c4bbf9fef7c:Items/Support/2 star/Spice.png",
+   "kind": "old repo",
+   "date": "2023-04-10T08:46:57+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-770d8ec1a329.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Reusable (FCO). Grants +1 Atk +1 Spd -2 max Hp. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7644ca25255e:Items/Support/2 star/Spice.png",
+   "kind": "old repo",
+   "date": "2023-04-11T00:41:43+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-3cf479b8ace4.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Reusable (FCO). Grants +1 Atk +1 Spd -2 max Hp. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     2
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6140146fb01f:Items/Support/2 star/Spice.png",
+   "kind": "old repo",
+   "date": "2023-04-17T09:31:14+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "no",
+   "repo": "first",
+   "image": "O-93a2c71e0322.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: ∞\nCan only be used on friendly creatures.\nGrants +1 Atk +1 Spd -2 max HP. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/2 Stars/Spice.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-93a2c71e0322.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: ∞\nCan only be used on friendly creatures.\nGrants +1 Atk +1 Spd -2 max HP. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/2 Stars/Spice.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-93a2c71e0322.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: ∞\nCan only be used on friendly creatures.\nGrants +1 Atk +1 Spd -2 max HP. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f2a5c96615a0:Items/Support/2 Stars/Spice.png",
+   "kind": "old repo",
+   "date": "2023-10-19T19:53:24+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "removal magic",
+   "image": "O-0ab01099febf.webp",
+   "fields": {
+    "name": {
+     "value": "Spice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Uses: ∞\nCan only be used on friendly creatures (OPGT).\nGrants +1 Atk +1 Spd -2 max HP. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-04",
+  "sort": "2020-09-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

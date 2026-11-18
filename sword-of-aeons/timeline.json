@@ -1,0 +1,465 @@
+{
+ "card": "sword-of-aeons",
+ "key": "Sword of Aeons",
+ "name": "Sword of Aeons",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-fdb34d868a4f",
+   "kind": "discord",
+   "date": "2020-09-03T00:42:25+00:00",
+   "day": "2020-09-03",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-fdb34d868a4f.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK. (AAT) Once per new creature this is equipped onto, sacrifice one of your point-yielding creatures to convert all damage dealt from attacks into HP for this creature.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-2f3f574c6400",
+   "kind": "discord",
+   "date": "2020-09-03T00:57:42+00:00",
+   "day": "2020-09-03",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-2f3f574c6400.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK. (AAT) Once per new creature this is equipped onto, sacrifice one of your point-yielding creatures to convert all damage dealt from attacks into HP for this creature.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-a9a418363920",
+   "kind": "discord",
+   "date": "2020-09-12T04:08:48+00:00",
+   "day": "2020-09-12",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-a9a418363920.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK. (AAT) Once per new creature this is equipped onto, sacrifice one of your point-yielding creatures to grant the creature this is equipped onto Lifesteal.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "F-fe295c0dd5c",
+   "kind": "text",
+   "date": "2020-09-12T04:08:52+00:00",
+   "day": "2020-09-12",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f240e31b72d",
+   "kind": "text",
+   "date": "2021-12-08T10:02:08+00:00",
+   "day": "2021-12-08",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-2627e8dd1497",
+   "kind": "discord",
+   "date": "2021-12-12T11:58:17+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-2627e8dd1497.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of aeons",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK. If the creature this is equipped onto kills a friendly point-yielding creature, then this item permanently gains and grants Lifesteal.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/4 Stars/Sword_of_aeons.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-eb790db699a2.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of aeons",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK. If the creature this is equipped onto kills a friendly point-yielding creature, then this item permanently gains and grants Lifesteal.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a2cb3f83e84e:Items/Equip/4 Stars/Sword_of_aeons.png",
+   "kind": "old repo",
+   "date": "2023-04-01T11:17:56+00:00",
+   "day": "2023-04-01",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Remade sword of aeons",
+   "repo": "first",
+   "image": "O-1cedc836d9aa.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK.\nIf the equipped creature kills a point-yielding creature, then this item permanently gains and grants Lifesteal.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-1b20156b61ee:Items/Equip/4 Stars/Sword_of_aeons.png",
+   "kind": "old repo",
+   "date": "2023-04-06T08:27:58+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated sword of aeons",
+   "repo": "first",
+   "image": "O-1aaba8944f1b.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK.\nIf the equipped creature kills a point-yielding creature, then this item permanently gains and grants +50% Lifesteal while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d76f91806fee:Items/Equip/4 Stars/Sword_of_Aeons.png",
+   "kind": "old repo",
+   "date": "2023-04-07T09:08:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Sword of aeons rename fix",
+   "repo": "first",
+   "image": "O-1aaba8944f1b.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK.\nIf the equipped creature kills a point-yielding creature, then this item permanently gains and grants +50% Lifesteal while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-77c4df2baf7e:Items/Equip/4 Stars/Sword_of_Aeons.png",
+   "kind": "old repo",
+   "date": "2023-04-08T09:23:18+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-408d0ebf9d4d.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK.\nIf the equipped creature kills a point-yielding creature, then this item permanently gains and grants +50% Lifesteal while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/4 Stars/Sword_of_Aeons.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-408d0ebf9d4d.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK.\nIf the equipped creature kills a point-yielding creature, then this item permanently gains and grants +50% Lifesteal while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-3ce2e0821e9b:Items/Equip/4 Stars/Sword_of_Aeons.png",
+   "kind": "old repo",
+   "date": "2023-10-23T10:51:24+00:00",
+   "day": "2023-10-23",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "aeons",
+   "image": "O-f578c85a953e.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK.\nOnce the equipped creature kills a point-yielding creature, from then on this item permanently gains and grants +50% Lifesteal while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-65c70ef6db2d:Items/Equip/4 Stars/Sword_of_Aeons.png",
+   "kind": "old repo",
+   "date": "2023-10-23T16:34:40+00:00",
+   "day": "2023-10-23",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "aeons buff and psds",
+   "image": "O-409502ef1abb.webp",
+   "fields": {
+    "name": {
+     "value": "Sword of Aeons",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK.\nOnce the equipped creature lands a  killing blow on a point-yielding creature, this item permanently gains and grants +50% Lifesteal while equipped. Lifesteal applies to the attack that activates this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-03",
+  "sort": "2020-09-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,1073 @@
+{
+ "card": "blockade",
+ "key": "Blockade",
+ "name": "The Wall By Ech",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f8e559ded0f",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-038c386f8945",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:17+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-038c386f8945.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn; Blockade acts as a minion that protects that creature until the end of the turn. Blockade has 7 bars of health, and 4 DEF, and is immune to conditions.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 396,
+   "h": 610
+  },
+  {
+   "id": "D-P-672a37571c48",
+   "kind": "discord",
+   "date": "2020-07-22T06:28:54+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-672a37571c48.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn; Blockade acts as a minion with 7/4/0/X that protects the target creature until the end of the turn. The protected creature may attack and has its speed used for turn order calculation",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 612
+  },
+  {
+   "id": "F-f90359c1e9f",
+   "kind": "text",
+   "date": "2020-07-25T09:18:39+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fccb3ffb4e2",
+   "kind": "text",
+   "date": "2020-07-25T09:18:39+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "hp",
+    "from": 7,
+    "to": 6,
+    "unit": "points"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-1100f49cac3e"
+  },
+  {
+   "id": "D-P-1100f49cac3e",
+   "kind": "discord",
+   "date": "2020-07-25T09:38:52+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-1100f49cac3e.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Blockade acts as a minion (speed of the protected creature) that protects the creature until the end of the turn. The protected creature may attack. Any damage one blockade has carries over to the next.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 4
+     },
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     }
+    ],
+    "buffs": [],
+    "nerfs": [
+     "HP 7 -> 6"
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-fe02b2fb4255",
+   "kind": "discord",
+   "date": "2020-08-08T11:09:05+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-fe02b2fb4255.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. Blockade mimics the speed of the protected creature, and protects that creature until the end of the turn. The protected creature may attack. Any damage one blockade has carries over to the next.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f17641c31e5",
+   "kind": "text",
+   "date": "2020-08-14T10:24:11+00:00",
+   "day": "2020-08-14",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-c8a81028d589",
+   "kind": "discord",
+   "date": "2020-08-14T21:39:39+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-c8a81028d589.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. Can only be used (BOT), goes facedown after turn end. Mimics the speed of the protectee, and protects until end of turn. The protectee may attack. Any damage one blockade has carries over to the next.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-7d4a0bf09afe",
+   "kind": "discord",
+   "date": "2021-08-11T21:09:04+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-7d4a0bf09afe.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn; Blockade has 10 HP and 4 DEF, and protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or the full turn ends, damage to the Blockade carries over to the next usage",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4
+     },
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 0,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 4
+     }
+    ],
+    "buffs": [],
+    "nerfs": [
+     "HP 6 -> 5"
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A-item",
+   "w": 397,
+   "h": 610
+  },
+  {
+   "id": "F-f6015ab3009",
+   "kind": "text",
+   "date": "2021-08-11T21:10:11+00:00",
+   "day": "2021-08-11",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "hp",
+    "by": -2,
+    "unit": "bars"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-a1031b9de552.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn; Blockade has 10 HP and 4 DEF, and protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or the full turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "O-c00edd12e999:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-07T06:38:56+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "blockade",
+   "repo": "first",
+   "image": "O-15d685e5ad4a.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 1,
+      "spd": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn. protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or Global Turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-76449aa85bf7:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-07T06:41:55+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "remove 1 attack and given speed",
+   "repo": "first",
+   "image": "O-af3ff9406f02.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 0,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn. protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or Global Turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 1,
+      "spd": 0
+     },
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 0,
+      "spd": 10
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 0 -> 10"
+    ],
+    "nerfs": [
+     "ATK 1 -> 0"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Active/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-af3ff9406f02.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 0,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn. protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or Global Turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-37f4b5694101:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:37:43+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized items",
+   "repo": "first",
+   "image": "O-af3ff9406f02.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 0,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn. protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or Global Turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d895453fb633:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:39:26+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Living bread toy bonnie unbread twins puppet blockade burly bombs",
+   "repo": "first",
+   "image": "O-2425d2ef7bb7.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 0,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn. protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or Global Turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 0,
+      "spd": 10
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 0,
+      "spd": 10
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 10 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-82086774a636:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-11T15:16:31+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "remove speed from actives",
+   "repo": "first",
+   "image": "O-a7eca87b505f.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn. protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or Global Turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 0,
+      "spd": 10
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 0,
+      "spd": 0
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "SPD 10 -> 0"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-af409cb5284f:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-67ee8f656041.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at the beginning of the turn. protects one slot of the primary field for the full turn, intercepting all attacks towards that slot until it is destroyed or Global Turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 0,
+      "spd": 0
+     },
+     {
+      "hp": 5,
+      "def": 4
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-5acb34ed9835:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-16T06:03:51+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "blockade",
+   "repo": "first",
+   "image": "O-669cff69ac5d.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used at (BOGT), protects one slot of the primary field for the global turn, intercepting all attacks towards that slot until it is destroyed or until the global turn ends, damage to the Blockade carries over to the next usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c33874bba1db:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-19T12:45:11+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Mr Krabs and Blockade",
+   "repo": "first",
+   "image": "O-da6fb4a38f36.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (BOGT), protects a slot.\nAfter this takes damage, deal the DMG this took to the targeted creature (non-piercing).\nPersists on the field until it is killed.\nCreatures in this slot may still act from behind this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4
+     },
+     {
+      "hp": 6,
+      "def": 6
+     }
+    ],
+    "buffs": [
+     "HP 5 -> 6",
+     "DEF 4 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-da6fb4a38f36.webp",
+   "fields": {
+    "name": {
+     "value": "Blockade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (BOGT), protects a slot.\nAfter this takes damage, deal the DMG this took to the targeted creature (non-piercing).\nPersists on the field until it is killed.\nCreatures in this slot may still act from behind this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-967f436cee94:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-05-09T22:37:38+00:00",
+   "day": "2023-05-09",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Echeldorfed, Mc panda clause remove, the wall by ech",
+   "image": "O-f7daa0eb592d.webp",
+   "fields": {
+    "name": {
+     "value": "The Wall By Ech",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (BOGT), protects a slot.\nAfter this takes damage, deal the DMG this took to the targeted creature (non-piercing).\nPersists on the field until it is killed.\nCreatures in this slot may still act from behind this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Blockade",
+     "The Wall By Ech"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8733064b6273:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-7435b342f8a5.webp",
+   "fields": {
+    "name": {
+     "value": "The Wall By Ech",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (BOGT), protects a slot.\nAfter this takes damage, deal the DMG this took to the targeted creature (non-piercing).\nCreatures in this slot may still act from behind this.\n(BOGT) Must pay it's SP cost to stay on the field. Can repick the lane it protects.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c19d8b91a709:Items/Active/4 Stars/Blockade.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-59ed1dc9555b.webp",
+   "fields": {
+    "name": {
+     "value": "The Wall By Ech",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (BOGT), protects a slot.\nAfter this takes damage, deal the DMG this took to the targeted creature (non-piercing).\nCreatures in this slot may still act from behind this.\n(BOGT) Must pay it's SP cost to stay on the field. Can repick the lane it protects.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "card": "rammus",
+ "key": "Rammus",
+ "name": "Rammus",
+ "morgue": "candidate",
+ "first": {
+  "date": "2022-06-10T08:04:31.469000+00:00",
+  "day": "2022-06-10",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-3c48e46bcf72",
+   "kind": "discord",
+   "date": "2022-06-10T08:04:31.469000+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "image": "P-3c48e46bcf72.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 532,
+   "h": 810
+  },
+  {
+   "id": "P-db672e5dfd86",
+   "kind": "discord",
+   "date": "2022-06-10T08:10:43.184000+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "image": "P-db672e5dfd86.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 534,
+   "h": 812
+  },
+  {
+   "id": "P-37c9fbc5e639",
+   "kind": "discord",
+   "date": "2022-06-10T08:13:24.217000+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "image": "P-37c9fbc5e639.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 533,
+   "h": 810
+  },
+  {
+   "id": "P-3e2bc7dd288e",
+   "kind": "discord",
+   "date": "2022-06-10T08:16:05.763000+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "image": "P-3e2bc7dd288e.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 532,
+   "h": 812
+  },
+  {
+   "id": "P-3eb9afa039dd",
+   "kind": "discord",
+   "date": "2022-06-10T08:21:38.389000+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "image": "P-3eb9afa039dd.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 532,
+   "h": 809
+  }
+ ],
+ "kind_of": "joke"
+}

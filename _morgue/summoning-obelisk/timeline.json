@@ -1,0 +1,29 @@
+{
+ "card": "summoning-obelisk",
+ "key": "Summoning Obelisk",
+ "name": "Summoning Obelisk",
+ "morgue": "candidate",
+ "first": {
+  "date": "2025-02-13T08:28:39.629000+00:00",
+  "day": "2025-02-13",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-1561c66724a4",
+   "kind": "discord",
+   "date": "2025-02-13T08:28:39.629000+00:00",
+   "day": "2025-02-13",
+   "badge": "Discord",
+   "image": "P-1561c66724a4.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "kind_of": "joke"
+}

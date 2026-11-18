@@ -1,0 +1,315 @@
+{
+ "card": "pie",
+ "key": "Pie",
+ "name": "Pie",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-0c99b8dc9618",
+   "kind": "discord",
+   "date": "2020-08-08T11:31:42+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-0c99b8dc9618.webp",
+   "fields": {
+    "name": {
+     "value": "Pie",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heals 5 HP and inflicts blindness or deal 5 damage and inflict blindness.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "F-fc327efe11f",
+   "kind": "text",
+   "date": "2020-09-04T23:36:46+00:00",
+   "day": "2020-09-04",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-618a603296a5",
+   "kind": "discord",
+   "date": "2020-09-04T23:45:51+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-618a603296a5.webp",
+   "fields": {
+    "name": {
+     "value": "Pie",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heals 5 HP and inflicts\nblindness or deal 4\ndamage and inflict\nblindness.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/2 Stars/Pie.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-2b33cebb19ba.webp",
+   "fields": {
+    "name": {
+     "value": "Pie",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heals 5 HP and inflicts\nblindness or deal 4\ndamage and inflict\nblindness.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-722dcad588eb:Items/Attack/2 Stars/Pie.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:12:12+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items",
+   "repo": "first",
+   "image": "O-38c36e2a9b12.webp",
+   "fields": {
+    "name": {
+     "value": "Pie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heals 5 HP and inflicts\nblindness or deal 4\ndamage and inflict\nblindness.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-09f761e9a8e3:Items/Attack/2 Stars/Pie.png",
+   "kind": "old repo",
+   "date": "2023-04-11T14:06:16+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Lots more buff/debuff updates",
+   "repo": "first",
+   "image": "O-be8811bdb47f.webp",
+   "fields": {
+    "name": {
+     "value": "Pie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heals 5 HP and inflicts\n1 turn of blindness or deals 4 damage and inflicts 1 turn of blindness",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-da00f02f4b5f:Items/Attack/2 Stars/Pie.png",
+   "kind": "old repo",
+   "date": "2023-04-11T15:41:08+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some fixes",
+   "repo": "first",
+   "image": "O-d12fdb6a9c02.webp",
+   "fields": {
+    "name": {
+     "value": "Pie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heals 5 HP and inflicts\n1 turn of blindness or deals 4 damage and inflicts 1 turn of blindness",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/2 Stars/Pie.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-d12fdb6a9c02.webp",
+   "fields": {
+    "name": {
+     "value": "Pie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heals 5 HP and inflicts\n1 turn of blindness or deals 4 damage and inflicts 1 turn of blindness",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/2 Stars/Pie.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-8da5969498de.webp",
+   "fields": {
+    "name": {
+     "value": "Pie",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heals 5 HP and inflicts\n1 turn of Blindness\nor:\nDeals 4 damage and inflicts 1 turn of Blindness.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-08-08",
+  "sort": "2020-08-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "card": "astr-meiana",
+ "key": "Astr Meiana",
+ "name": "Astr Meiana",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-06-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-e6ae3e87e78f",
+   "kind": "discord",
+   "date": "2025-05-05T09:17:50+00:00",
+   "day": "2025-05-05",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e6ae3e87e78f.webp",
+   "fields": {
+    "name": {
+     "value": "Astr Meiana",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+5 ATK against creatures with buffs. Attacks remove all buffs on creatures. After attacking, inflict the target with 2 Empowered for 2 turns. May spend an action to summon an Astr Mionion.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "bars-other",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-06-03T03:10:20+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-05-05",
+  "sort": "2025-05-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "card": "swords-of-rage",
+ "key": "Swords of Rage",
+ "name": "Swords of Rage",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-13T09:34:17.276000+00:00",
+  "day": "2020-07-13",
+  "channel": "cursed",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-7056ca2a2e4b-c2",
+   "kind": "discord",
+   "date": "2020-07-13T09:34:17.276000+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "image": "P-7056ca2a2e4b-c2.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "cursed",
+   "w": 393,
+   "h": 612
+  }
+ ],
+ "kind_of": "joke"
+}

@@ -1,0 +1,67 @@
+{
+ "card": "regeneration-potion2",
+ "key": "Regeneration Potion2",
+ "name": "Grape Juice",
+ "kind": "item",
+ "stop": {
+  "day": "2023-11-23",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-773b7ec26e6c",
+   "kind": "discord",
+   "date": "2023-11-23T05:03:59+00:00",
+   "day": "2023-11-23",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-773b7ec26e6c.webp",
+   "fields": {
+    "name": {
+     "value": "Regeneration Potion",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and give it of 3 Regen for 3 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-01-31T00:34:27+00:00",
+  "changes": {
+   "name": [
+    "Regeneration Potion",
+    "Grape Juice"
+   ],
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "owner"
+ }
+}

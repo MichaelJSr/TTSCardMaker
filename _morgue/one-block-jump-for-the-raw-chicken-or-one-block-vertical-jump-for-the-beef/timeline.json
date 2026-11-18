@@ -1,0 +1,29 @@
+{
+ "card": "one-block-jump-for-the-raw-chicken-or-one-block-vertical-jump-for-the-beef",
+ "key": "One Block Jump for the Raw Chicken or One Block Vertical Jump for the Beef",
+ "name": "One Block Jump for the Raw Chicken or One Block Vertical Jump for the Beef",
+ "morgue": "candidate",
+ "first": {
+  "date": "2026-11-07T06:57:32.787000+00:00",
+  "day": "2026-11-07",
+  "channel": "joke-ideas",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-dee22c2530fc",
+   "kind": "discord",
+   "date": "2026-11-07T06:57:32.787000+00:00",
+   "day": "2026-11-07",
+   "badge": "Discord",
+   "image": "P-dee22c2530fc.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "joke-ideas",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "kind_of": "joke"
+}

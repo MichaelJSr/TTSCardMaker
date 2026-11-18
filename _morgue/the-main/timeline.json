@@ -1,0 +1,60 @@
+{
+ "card": "the-main",
+ "key": "The Main",
+ "name": "The Main",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-22T09:31:29.139000+00:00",
+  "day": "2020-07-22",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-90c218d575d5",
+   "kind": "discord",
+   "date": "2020-07-22T09:31:29.139000+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "image": "P-90c218d575d5.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 394,
+   "h": 790
+  },
+  {
+   "id": "P-14c5ec3d4113",
+   "kind": "discord",
+   "date": "2021-04-24T09:59:15.534000+00:00",
+   "day": "2021-04-24",
+   "badge": "Discord",
+   "image": "P-14c5ec3d4113.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 331,
+   "h": 663
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/3 Stars/The_Main.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-9be4bbc8e0e8.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 331,
+   "h": 663
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

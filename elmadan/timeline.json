@@ -1,0 +1,168 @@
+{
+ "card": "elmadan",
+ "key": "Elmadan",
+ "name": "Elmadan",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-10-29",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d8c787684884",
+   "kind": "discord",
+   "date": "2023-10-29T17:03:14+00:00",
+   "day": "2023-10-29",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d8c787684884.webp",
+   "fields": {
+    "name": {
+     "value": "Eldman",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with a regenerative shield minion.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b00120bddb76:Creatures/Other/3 Stars/Eldman.png",
+   "kind": "old repo",
+   "date": "2023-10-29T17:04:44+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Eldman",
+   "file": "Eldman",
+   "image": "O-b43cae154b18.webp",
+   "fields": {
+    "name": {
+     "value": "Eldman",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with a Regenerative Shield minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23e7f4a10214:Creatures/Other/3 Stars/Elmadan.png",
+   "kind": "old repo",
+   "date": "2023-10-30T02:54:47+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-d3c5d86035cf.webp",
+   "fields": {
+    "name": {
+     "value": "Elmadan",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with a Regenerative Shield.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Eldman",
+     "Elmadan"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-29",
+  "sort": "2023-10-29",
+  "source": "discord",
+  "status": "same"
+ }
+}

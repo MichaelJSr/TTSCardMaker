@@ -1,0 +1,63 @@
+{
+ "card": "you-are-going-down-you-sputnik",
+ "key": "You are going DOWN you Sputnik!",
+ "name": "You are going DOWN you Sputnik!",
+ "kind": "item",
+ "stop": {
+  "day": "2025-05-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-782a22606dcd",
+   "kind": "discord",
+   "date": "2025-05-12T05:35:48+00:00",
+   "day": "2025-05-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-782a22606dcd.webp",
+   "fields": {
+    "name": {
+     "value": "You are going DOWN you Sputnik!",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a friendly creature is attacked by a prime creature, you can activate this to forcibly swap out the attacker. Then at (BOGT) the attacker is forcibly swapped back into the same slot and takes 12 CD.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-09T17:54:56+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-05-12",
+  "sort": "2025-05-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

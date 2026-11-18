@@ -1,0 +1,341 @@
+{
+ "card": "nebulous-precipice",
+ "key": "Nebulous Precipice",
+ "name": "Nebulous Precipice",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-a92cc1ee5537",
+   "kind": "discord",
+   "date": "2021-12-17T10:58:32+00:00",
+   "day": "2021-12-17",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-a92cc1ee5537.webp",
+   "fields": {
+    "name": {
+     "value": "Nebulous Precipice",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Inflict 3 creatures with a debuff, reward: -6 cost. [darkmatter] : (OPT) Steal 2 HP from any creature on the PF. [light] : -2 DEF. Demon: +1 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 931
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/3 Stars/Nebulous_Precipice.PNG",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-ecdae97f7ed7.webp",
+   "fields": {
+    "name": {
+     "value": "Nebulous Precipice",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Inflict 3 creatures with a debuff, reward: -6 cost. [darkmatter]: (OPT) Steal 2 HP from any creature on the PF. [light]: -2 DEF. Demon: +1 ATK.",
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 931
+  },
+  {
+   "id": "O-8e96b86eab5d:Field/3 Stars/Nebulous_Precipice.PNG",
+   "kind": "old repo",
+   "date": "2023-04-20T23:45:40+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "All field items done",
+   "repo": "first",
+   "image": "O-51c1acee501b.webp",
+   "fields": {
+    "name": {
+     "value": "Nebulous Precipice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[darkmatter]: (OPT) Steal 2 HP from any creature on the primary field.\n[light]: -2 DEF.\nDemon: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/3 Stars/Nebulous_Precipice.PNG",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-51c1acee501b.webp",
+   "fields": {
+    "name": {
+     "value": "Nebulous Precipice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[darkmatter]: (OPT) Steal 2 HP from any creature on the primary field.\n[light]: -2 DEF.\nDemon: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-3f71eddb4e55:Field/3 Stars/Nebulous_Precipice.PNG",
+   "kind": "old repo",
+   "date": "2023-04-23T18:53:57+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Field Item rebalances",
+   "image": "O-c326a6b80c54.webp",
+   "fields": {
+    "name": {
+     "value": "Nebulous Precipice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less for each [darkmatter] on your side of the field\n[darkmatter]:(OPT) Steal 2 HP from any creature on the primary field.\n[light]:-2 DEF.\nDemon: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/3 Stars/Nebulous_Precipice.PNG",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-12ad715439fe.webp",
+   "fields": {
+    "name": {
+     "value": "Nebulous Precipice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less for each [darkmatter] on your side of the field\n[darkmatter]:(OPT) Steal 2 HP from any creature on the primary field.\n[light]:-2 DEF.\nDemon: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/3 Stars/Nebulous_Precipice.PNG",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-3705806a428d.webp",
+   "fields": {
+    "name": {
+     "value": "Nebulous Precipice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less for each [darkmatter] on your side of the field.\n[darkmatter]: (OPT) Steal 2 HP from any creature on the primary field.\n[light]: -2 DEF\nDemon: +1 ATK",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8733064b6273:Field/3 Stars/Nebulous_Precipice.PNG",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-c0f2ae6e418e.webp",
+   "fields": {
+    "name": {
+     "value": "Nebulous Precipice",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less for each [darkmatter] on your side of the field.\n[darkmatter]: (OPT) Steal 2 HP from any creature on the primary field.\nEnemy [light]: -2 DEF\nDemon: +1 ATK",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2021-12-17",
+  "sort": "2021-12-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

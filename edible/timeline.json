@@ -1,0 +1,58 @@
+{
+ "card": "edible",
+ "key": "Edible",
+ "name": "Edible",
+ "kind": "debuff",
+ "stop": {
+  "day": "2023-11-01",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-f85ff581cce8:Auxillary/Status Effects/Debuffs/2 Stars/Edible.png",
+   "kind": "old repo",
+   "date": "2023-11-01T00:19:13+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "leshy",
+   "image": "O-0db5a82677fa.webp",
+   "fields": {
+    "name": {
+     "value": "Edible",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Creatures that attack this deal 100% lifesteal damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2023-11-01",
+  "sort": "2023-11-01",
+  "source": "old repo",
+  "status": "owner"
+ }
+}

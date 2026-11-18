@@ -1,0 +1,80 @@
+{
+ "card": "the-kestrel",
+ "key": "The Kestrel",
+ "name": "The Kestrel",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-457f5192479c",
+   "kind": "discord",
+   "date": "2025-02-28T13:41:59+00:00",
+   "day": "2025-02-28",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-457f5192479c.webp",
+   "fields": {
+    "name": {
+     "value": "The Kestrel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Starts with a Heavy Ion, Burst Laser II, Artemis, and Pike Beam. May not go in defense mode. When this takes damage, the opponent may choose to either reduce this creature's defense by the amount of damage dealt or deal that amount of damage as piercing to one of the weapon minions. (OPT) May choose to repair, either restoring a weapon minion to full HP or replenishing 3 bars of DEF (up to 6) and may pay 2 points to repair a second time this turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-18T07:34:40+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-02-28",
+  "sort": "2025-02-28",
+  "source": "discord",
+  "status": "same"
+ }
+}

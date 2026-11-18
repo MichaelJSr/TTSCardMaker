@@ -1,0 +1,69 @@
+{
+ "card": "trick-room",
+ "key": "Trick Room",
+ "name": "Trick Room",
+ "kind": "field",
+ "stop": {
+  "day": "2025-04-19",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-e43db0d37f37",
+   "kind": "discord",
+   "date": "2025-04-19T12:09:05+00:00",
+   "day": "2025-04-19",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e43db0d37f37.webp",
+   "fields": {
+    "name": {
+     "value": "Trick Room",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Turn order is reversed such that the slowest lanes go first and the slowest creature within each lane goes first.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-04-19T12:09:31+00:00",
+  "changes": {
+   "ability_change": "same",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-04-19",
+  "sort": "2025-04-19",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "card": "pananda",
+ "key": "Pananda",
+ "name": "Pananda",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-08-13T06:18:55.495000+00:00",
+  "day": "2020-08-13",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-980c6af2d446",
+   "kind": "discord",
+   "date": "2020-08-13T06:18:55.495000+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "image": "P-980c6af2d446.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-8547a354ef32",
+   "kind": "discord",
+   "date": "2020-08-13T07:35:32.228000+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "image": "P-8547a354ef32.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-02-port",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-30cefa8014fb",
+   "kind": "discord",
+   "date": "2020-08-31T02:25:34.092000+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "image": "P-30cefa8014fb.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-03-port",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-25a7d5892a86",
+   "kind": "discord",
+   "date": "2021-08-21T03:59:15.572000+00:00",
+   "day": "2021-08-21",
+   "badge": "Discord",
+   "image": "P-25a7d5892a86.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-04-port",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/2 Stars/Pananda.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-5195faea9015.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 350,
+   "h": 518
+  }
+ ],
+ "kind_of": "played",
+ "git_file": "first repo"
+}

@@ -1,0 +1,66 @@
+{
+ "card": "salt",
+ "key": "Salt",
+ "name": "Salt",
+ "kind": "aux item",
+ "stop": {
+  "day": "2025-10-30",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-65eb1281286f",
+   "kind": "discord",
+   "date": "2025-10-30T08:02:34+00:00",
+   "day": "2025-10-30",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-65eb1281286f.webp",
+   "fields": {
+    "name": {
+     "value": "Salt",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can be used as either a healing item or infliction item. As a healing item: Heal 2 HP. Costs 0 SP if used with another healing item. As an infliction item: Inflict Marked For Death for 1 turn on a creature.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-10-30T08:16:59+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-10-30",
+  "sort": "2025-10-30",
+  "source": "discord",
+  "status": "same"
+ }
+}

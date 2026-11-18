@@ -1,0 +1,77 @@
+{
+ "card": "the-beast",
+ "key": "The Beast",
+ "name": "The Beast",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-05-04",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-7e1d3a9c34f0",
+   "kind": "discord",
+   "date": "2025-05-04T18:16:10+00:00",
+   "day": "2025-05-04",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-7e1d3a9c34f0.webp",
+   "fields": {
+    "name": {
+     "value": "The Beast",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Summon God Tamer. If this creature is attacked while the tamer is alive, the attacker takes 4 counter damage. This creature's attacks deal +1.5 damage to creatures with less speed than it.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-05-04T18:17:22+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-05-04",
+  "sort": "2025-05-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

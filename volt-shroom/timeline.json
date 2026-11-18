@@ -1,0 +1,416 @@
+{
+ "card": "volt-shroom",
+ "key": "Volt Shroom",
+ "name": "Volt Shroom",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e7092f527ec2-c1",
+   "kind": "discord",
+   "date": "2019-04-17T02:13:08+00:00",
+   "day": "2019-04-17",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-e7092f527ec2-c1.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature Gives paralysis to any creature that attacks it for the next two turns. Must be equipped on your turn",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 283,
+   "h": 420
+  },
+  {
+   "id": "D-P-626f327259f5",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:56+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-626f327259f5.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature, the next creature that attacks that creature is given paralysis for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 611
+  },
+  {
+   "id": "F-f97ea0ebfbf",
+   "kind": "text",
+   "date": "2020-08-14T00:44:48+00:00",
+   "day": "2020-08-14",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-edf53d9bc759",
+   "kind": "discord",
+   "date": "2020-08-14T00:44:57+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-edf53d9bc759.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature, for 2 full turns, the next 2 creatures that attack that creature are paralyzed",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 390,
+   "h": 612
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/2 Stars/Volt_Shroom.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-c18cdb9f7d61.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature for 2 full turns, the next 2 creatures that attack that creature are paralyzed",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 612
+  },
+  {
+   "id": "O-c0e0d26efd97:Items/Equip/2 Stars/Volt_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-04T22:35:27+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "volt and soften",
+   "repo": "first",
+   "image": "O-15ffc5e2a945.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature for 2 full turns, the next 2 creatures that attack that creature are paralyzed",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/2 star/Volt_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-15ffc5e2a945.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature for 2 full turns, the next 2 creatures that attack that creature are paralyzed",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-cce9285993f7:Items/Support/2 star/Volt_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-11T13:15:29+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Updating a bunch of outdated item text",
+   "repo": "first",
+   "image": "O-a179c6d3dd54.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature; for 2 full turns, the next 2 creatures that attack that creature are paralyzed",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/2 Stars/Volt_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-a179c6d3dd54.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature; for 2 full turns, the next 2 creatures that attack that creature are paralyzed",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/2 Stars/Volt_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-a179c6d3dd54.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature; for 2 full turns, the next 2 creatures that attack that creature are paralyzed",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-093f4e653649:Items/Support/2 Stars/Volt_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-04-23T09:35:40+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Volt Shroom",
+   "image": "O-76b3a5b0a63c.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. Target a creature; for 2 Global turns, the next 2 creatures that attack that creature are paralyzed for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-512be6cd13fd:Items/Support/2 Stars/Volt_Shroom.png",
+   "kind": "old repo",
+   "date": "2023-10-17T14:11:38+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates and upscaled buffs",
+   "image": "O-26ed11c1c2fe.webp",
+   "fields": {
+    "name": {
+     "value": "Volt Shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. For 2 Global turns, the next 2 creatures that attack the targeted creature are paralyzed for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-04-17",
+  "sort": "2019-04-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,282 @@
+{
+ "card": "bomb",
+ "key": "Bomb",
+ "name": "Bomb",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fd548aec449",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-0bfdc2de4889",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:11+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-0bfdc2de4889.webp",
+   "fields": {
+    "name": {
+     "value": "Bomb",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6.5 damage to a creature on the Primary field",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 610
+  },
+  {
+   "id": "D-P-bf79494382ee",
+   "kind": "discord",
+   "date": "2020-08-13T11:23:29+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-bf79494382ee.webp",
+   "fields": {
+    "name": {
+     "value": "Bomb",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 7 damage to a creature on the Primary field",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 389,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Items/2 Stars/Bomb.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-cae1c45a9b9b.webp",
+   "fields": {
+    "name": {
+     "value": "Bomb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 7 damage to a creature on the primary field.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/2 Stars/Bomb.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-cae1c45a9b9b.webp",
+   "fields": {
+    "name": {
+     "value": "Bomb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 7 damage to a creature on the primary field.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 389,
+   "h": 611
+  },
+  {
+   "id": "O-450e89506676:Items/Attack/2 Stars/Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-05T01:28:44+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items",
+   "repo": "first",
+   "image": "O-9899f21e63cf.webp",
+   "fields": {
+    "name": {
+     "value": "Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 7 damage to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b4b74b720691:Auxillary/Items/2 Stars/Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-05T23:37:47+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Aux bomb",
+   "repo": "first",
+   "image": "O-9899f21e63cf.webp",
+   "fields": {
+    "name": {
+     "value": "Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 7 damage to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/2 Stars/Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-9899f21e63cf.webp",
+   "fields": {
+    "name": {
+     "value": "Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 7 damage to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-05-14",
+  "sort": "2019-05-14",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,335 @@
+{
+ "card": "fragile-strength",
+ "key": "Fragile Strength",
+ "name": "Fragile Strength",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-834e6e38e8ba-c1",
+   "kind": "discord",
+   "date": "2020-07-29T06:17:53+00:00",
+   "day": "2020-07-29",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-834e6e38e8ba-c1.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile Strength",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of Equipped Creature by 33%. You can pay 4 points to convert this card into a non- temporary item",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 390,
+   "h": 609
+  },
+  {
+   "id": "D-P-a70e911a9663",
+   "kind": "discord",
+   "date": "2020-08-03T08:20:42+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-a70e911a9663.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile Strength",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of Equipped Creature by 33%. You can pay 4 points to convert this card into a non- temporary item",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C-item",
+   "w": 390,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/3 Stars/Fragile_Strength.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-39ff02744c14.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile Strength",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of Equipped Creature by 33%. You can pay 4 points to convert this card into a non- temporary item",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 611
+  },
+  {
+   "id": "O-51c240a78396:Items/Equip/3 Stars/Fragile_Strength.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:00:17+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Charms",
+   "repo": "first",
+   "image": "O-d9f5560f8854.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile strength",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of equipped creature by 33%. You can pay 4 points to convert this card into a non-temporary item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ea24de2fb131:Items/Equip/3 Stars/Fragile_Strength.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:56:10+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "charm fix",
+   "repo": "first",
+   "image": "O-68232abb36a0.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile strength",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of equipped creature by 33%. You can pay 4 points to convert this card into a non-temporary item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6ea1f0139f1:Items/Equip/3 Stars/Fragile_Strength.png",
+   "kind": "old repo",
+   "date": "2023-04-05T17:05:31+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items and strength fixes",
+   "repo": "first",
+   "image": "O-630e4fd14fc0.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile strength",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of equipped creature by 33%.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6f75ca603df9:Items/Equip/3 Stars/Fragile_Strength.png",
+   "kind": "old repo",
+   "date": "2023-04-11T22:07:06+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "repo": "first",
+   "image": "O-b20b1013e6fe.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile strength",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of equipped creature by 33%. You can pay 4 points to convert this card into a non-temporary item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Fragile_Strength.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-b20b1013e6fe.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile strength",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of equipped creature by 33%. You can pay 4 points to convert this card into a non-temporary item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-07f89e3ee65c:Items/Equip/3 Stars/Fragile_Strength.png",
+   "kind": "old repo",
+   "date": "2023-10-28T18:22:57+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-6e05dc7053c3.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile strength",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Increases ATK of equipped creature by 33%. (OYT) You can pay 4 points to convert this card into a non-temporary item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-29",
+  "sort": "2020-07-29",
+  "source": "discord",
+  "status": "owner"
+ }
+}

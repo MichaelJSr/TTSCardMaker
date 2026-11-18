@@ -1,0 +1,845 @@
+{
+ "card": "pandamonium",
+ "key": "Pandamonium",
+ "name": "Pandamonium",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-a365d605c98d",
+   "kind": "discord",
+   "date": "2020-07-23T04:24:01+00:00",
+   "day": "2020-07-23",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-a365d605c98d.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item; 5/4/0/5. Increases all Panda type creatures' stats by one. (OPT) Increase 1 random stat of 1 random creature on your team.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "D-P-60001d33e977",
+   "kind": "discord",
+   "date": "2020-07-23T04:40:19+00:00",
+   "day": "2020-07-23",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-60001d33e977.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item; 5/5/0/5. Can't go into defense. Increases Panda creatures' stats by one. (AAT) (OPT) Increase any stat of 1 random creature on your team.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4
+     },
+     {
+      "hp": 5,
+      "def": 5
+     }
+    ],
+    "buffs": [
+     "DEF 4 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "D-P-c049ae0dd0b3",
+   "kind": "discord",
+   "date": "2020-07-24T19:03:40+00:00",
+   "day": "2020-07-24",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c049ae0dd0b3.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. Can't go into defense. While on the field, increases all Panda creatures' stats by one bar. (AAT) (OPT) Increase any stat of 1 random creature on your team.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 5
+     },
+     {
+      "hp": 5,
+      "def": 5,
+      "atk": 0,
+      "spd": 5
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "D-P-95ea51e1c583",
+   "kind": "discord",
+   "date": "2020-07-27T21:26:39+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-95ea51e1c583.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. While on the field, increases all Panda creatures' stats (except HP) by one bar. (AAT) (OPT) Increase any stat of a creature on your team by 1 bar.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-67599bc73d07",
+   "kind": "discord",
+   "date": "2020-09-07T20:42:48+00:00",
+   "day": "2020-09-07",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-67599bc73d07.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item (AAT) (OPT) Increase any stat of a creature on your team by 1 bar. (AAT) (3 points) Increase any stat of a creature on your team by 1 bar.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 5,
+      "atk": 0,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 6,
+      "atk": 0,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f72c9ac9f40",
+   "kind": "text",
+   "date": "2020-09-10T08:50:55+00:00",
+   "day": "2020-09-10",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-635d4fb84bb8",
+   "kind": "discord",
+   "date": "2020-09-10T21:08:39+00:00",
+   "day": "2020-09-10",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-635d4fb84bb8.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item (AAT) (OPT) Increase any stat of a friendly creature by 1 bar. (AAT) (OPT) (3 points) Increase any stat of a friendly creature by 1 bar.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f5e56a1e394",
+   "kind": "text",
+   "date": "2021-11-18T08:34:05+00:00",
+   "day": "2021-11-18",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fae48f6215f",
+   "kind": "text",
+   "date": "2021-11-18T08:34:05+00:00",
+   "day": "2021-11-18",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "field": "def",
+    "by": -4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-3d9807bf6d49"
+  },
+  {
+   "id": "D-P-3d9807bf6d49",
+   "kind": "discord",
+   "date": "2021-11-20T20:27:13+00:00",
+   "day": "2021-11-20",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-3d9807bf6d49.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. (AAT) (OPT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 6,
+      "atk": 0,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 6 -> 2"
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/4 Stars/Pandamonium.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-78bf7e2afa2d.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Active item. (AAT) (OPT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-ea2104a66ea2:Items/Active/4 Stars/Pandamonium.png",
+   "kind": "old repo",
+   "date": "2023-04-07T05:36:26+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Pandamonium",
+   "repo": "first",
+   "image": "O-dbe6b193c431.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)(OPGT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "panda"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Active/Pandamonium.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-dbe6b193c431.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)(OPGT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-37f4b5694101:Items/Active/4 Stars/Pandamonium.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:37:43+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized items",
+   "repo": "first",
+   "image": "O-dbe6b193c431.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)(OPGT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-82086774a636:Items/Active/4 Stars/Pandamonium.png",
+   "kind": "old repo",
+   "date": "2023-04-11T15:16:31+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "remove speed from actives",
+   "repo": "first",
+   "image": "O-6069b835953c.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 0
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "SPD 5 -> 0"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-af409cb5284f:Items/Active/4 Stars/Pandamonium.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-58627066bfff.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 0,
+      "spd": 0
+     },
+     {
+      "hp": 5,
+      "def": 2
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Active/4 Stars/Pandamonium.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-58627066bfff.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c19d8b91a709:Items/Active/4 Stars/Pandamonium.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-07a1ad018225.webp",
+   "fields": {
+    "name": {
+     "value": "Pandamonium",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Increase any stat of a friendly creature by 1 bar.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-23",
+  "sort": "2020-07-23",
+  "source": "discord",
+  "status": "same"
+ }
+}

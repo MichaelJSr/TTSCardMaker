@@ -1,0 +1,341 @@
+{
+ "card": "the-farlands",
+ "key": "The Farlands",
+ "name": "The Farlands",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9aafbf1ff593",
+   "kind": "discord",
+   "date": "2022-01-25T03:51:50+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9aafbf1ff593.webp",
+   "fields": {
+    "name": {
+     "value": "The Farlands",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Have a [unknown] on your field, reward: costs 0. [unknown]: Abilities become optional. Monster: +1 ATK +1 DEF. Reconnaissance: +1 SPD +2 DEF.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 945
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/2 Stars/The_Farlands.PNG",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-0c83e99012d8.webp",
+   "fields": {
+    "name": {
+     "value": "The Farlands",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Have a [unknown] on your field, reward: costs 0. [unknown]: Abilities become optional. Monster: +1 ATK +1 DEF. Reconnaissance: +1 SPD +2 DEF.",
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 945
+  },
+  {
+   "id": "O-1325e698f979:Field/2 Stars/The_Farlands.PNG",
+   "kind": "old repo",
+   "date": "2023-04-19T23:15:12+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Ported all 2 star field items",
+   "repo": "first",
+   "image": "O-48b22aef6b22.webp",
+   "fields": {
+    "name": {
+     "value": "The Farlands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[unknown]: Abilities become optional.\nMonster: +1 ATK +1 DEF.\nReconnaissance: +1 SPD +2 DEF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/2 Stars/The_Farlands.PNG",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-48b22aef6b22.webp",
+   "fields": {
+    "name": {
+     "value": "The Farlands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[unknown]: Abilities become optional.\nMonster: +1 ATK +1 DEF.\nReconnaissance: +1 SPD +2 DEF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/2 Stars/The_Farlands.PNG",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-0598c685efe1.webp",
+   "fields": {
+    "name": {
+     "value": "The Farlands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[unknown]: Abilities become optional.\nMonster: +1 ATK +1 DEF.\nReconnaissance: +1 SPD +2 DEF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/2 Stars/The_Farlands.PNG",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-cb03acb4dddf.webp",
+   "fields": {
+    "name": {
+     "value": "The Farlands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[unknown]: Abilities become optional.\nMonster: +1 ATK +1 DEF\nReconnaissance: +1 SPD +2 DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-3518261d375b:Field/2 Stars/The_Farlands.PNG",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-77e2d0f88907.webp",
+   "fields": {
+    "name": {
+     "value": "The Farlands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[unknown]: Abilities become optional.\nMonster: +1 ATK +1 DEF\nExplorer: +1 SPD +2 DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-821fa8453c74:Field/2 Stars/The_Farlands.PNG",
+   "kind": "old repo",
+   "date": "2023-10-26T11:46:07+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item changes",
+   "image": "O-bc2a7c19904d.webp",
+   "fields": {
+    "name": {
+     "value": "The Farlands",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[unknown]: Abilities become optional.\nCreator: Gain\nExplorer: +1 SPD +2 DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-01-25",
+  "sort": "2022-01-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

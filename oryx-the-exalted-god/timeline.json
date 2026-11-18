@@ -1,0 +1,539 @@
+{
+ "card": "oryx-the-exalted-god",
+ "key": "Oryx the Exalted God",
+ "name": "Oryx The Exalted God",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-09-10",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-09327157910d",
+   "kind": "discord",
+   "date": "2023-09-10T11:31:03+00:00",
+   "day": "2023-09-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-09327157910d.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Gain 1 Enraged for 3 turns.\n(EOT)(AAT) If this takes 1/3 of its HP in DMG (regardless of healing), it is inflicted with 1 Restrained and its DEF drops to 0 until the end of the global turn.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7e16be1b9b67:Creatures/Other/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-09-10T11:38:34+00:00",
+   "day": "2023-09-10",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Oryx 3",
+   "image": "O-bc3f16b4643f.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Gain 1 Enraged for 3 turns.\n(EOT)(AAT) If this takes 1/3 of its HP in DMG (regardless of healing), it is inflicted with 1 Restrained and its DEF drops to 0 until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d2a15ba7ea0e:Creatures/Other/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-09-10T11:47:18+00:00",
+   "day": "2023-09-10",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Oryx 3 Edit",
+   "image": "O-162bb99343ba.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Gain 1 Enraged for 3 turns.\n(EOGT) If this takes 1/3 of its HP in DMG (regardless of healing), it is inflicted with 1 Restrained and its DEF drops to 0 until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-06781b88af22:Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-09-11T00:25:01+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Oryx, Azamoth, and True Negation Immunity",
+   "image": "O-d0449a822be8.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Gain 1 Enraged for 3 turns.\n(EOGT) If this takes 1/3 of its HP in DMG (regardless of healing), it is inflicted with 1 Restrained and its DEF drops to 0 until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 5
+     },
+     {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "SPD 5 -> 4"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-0b22960d88ed.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Gain 1 Enraged for 3 turns.\n(EOGT) If this takes 1/3 of its HP in DMG (regardless of healing), it is inflicted with 1 Restrained and its DEF drops to 0 until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8481cd059c2:Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-10-12T06:27:15+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending updates",
+   "image": "O-458f90978447.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Gain 1 Enraged for 3 turns.\n(EOGT) If this takes 1/3 of its Max HP in DMG (regardless of healing), it is inflicted with 1 Restrained and its DEF drops to 0 until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-14e9918f6ede:Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-10-16T05:19:48+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute coloring",
+   "image": "O-3fad76aba24c.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) Gain 1 Enraged for 3 turns.\n(EOGT) If this takes 1/3 of its Max HP in DMG (regardless of healing), it is inflicted with 1 Restrained and its DEF drops to 0 until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6d31ade354ad:Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-10-18T14:35:39+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "nerfed Oryx",
+   "image": "O-d66d14bc5a68.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) If this takes 1/3 of its Max HP in DMG this global turn (regardless of healing), it is inflicted with Frozen and its DEF drops to 0 until either the end of the global turn or the end of its next turn (whichever happens last).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-5e62629ab104.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) If this takes 1/3 of its Max HP in DMG this global turn (regardless of healing), it is inflicted with Frozen and its DEF drops to 0 until either the end of the global turn or the end of its next turn (whichever happens last).",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b1216e836a66:Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.png",
+   "kind": "old repo",
+   "date": "2023-11-01T08:14:32+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Orx",
+   "image": "O-15e343d22f06.webp",
+   "fields": {
+    "name": {
+     "value": "Oryx The Exalted God",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 8,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOGT) If this takes 1/3 of its Max HP in DMG this global turn (regardless of healing), it is inflicted with Frozen and its DEF drops to 0 until either the end of the global turn or the end of its next turn (whichever happens last).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-09-10",
+  "sort": "2023-09-10",
+  "source": "discord",
+  "status": "same"
+ }
+}

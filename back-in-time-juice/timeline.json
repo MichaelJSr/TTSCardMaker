@@ -1,0 +1,103 @@
+{
+ "card": "back-in-time-juice",
+ "key": "Back In Time Juice",
+ "name": "Back In Time Juice",
+ "kind": "item",
+ "stop": {
+  "day": "2026-02-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-530ce71aa059",
+   "kind": "discord",
+   "date": "2026-02-03T00:16:01+00:00",
+   "day": "2026-02-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-530ce71aa059.webp",
+   "fields": {
+    "name": {
+     "value": "Back In Time Juice",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While you are in the middle of resolving a chosen action/item/ability, before it has fully resolved, you may change your mind and undo your choice and its effects.\nIf used as part of a reaction chain, return all resources/items to their previous state as if they were never used.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-9559fcfb09d2",
+   "kind": "discord",
+   "date": "2026-02-03T00:29:08+00:00",
+   "day": "2026-02-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9559fcfb09d2.webp",
+   "fields": {
+    "name": {
+     "value": "Back In Time Juice",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While you are in the middle of resolving a chosen action/item/ability, before it has fully resolved, you may change your mind and undo your choice and its effects.\nIf used as part of a reaction chain, return all resources/items except this to their previous state as if they were never used.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-09T18:54:10+00:00",
+  "changes": {
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2026-02-03",
+  "sort": "2026-02-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

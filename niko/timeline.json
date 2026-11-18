@@ -1,0 +1,428 @@
+{
+ "card": "niko",
+ "key": "Niko",
+ "name": "Niko",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-14820d1ea99c",
+   "kind": "discord",
+   "date": "2023-07-11T09:32:31+00:00",
+   "day": "2023-07-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-14820d1ea99c.webp",
+   "fields": {
+    "name": {
+     "value": "Niko",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any offensive item used by you during this creature's turn deals +2 damage and inflicts smoldering.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fa4fb2bf1401:Creatures/Other/3 Stars/Niko.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:39:33+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "some stuff",
+   "image": "O-99c64597eb19.webp",
+   "fields": {
+    "name": {
+     "value": "Niko",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any offensive item used by you during this creature's turn deals +2 damage and inflicts smoldering.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2ea5d585e17d:Creatures/Other/3 Stars/Niko.png",
+   "kind": "old repo",
+   "date": "2023-09-12T06:00:32+00:00",
+   "day": "2023-09-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "niko stars",
+   "image": "O-613102cba0ed.webp",
+   "fields": {
+    "name": {
+     "value": "Niko",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any offensive item used by you during this creature's turn deals +2 damage and inflicts smoldering.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Other/3 Stars/Niko.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-4e35b65c787d.webp",
+   "fields": {
+    "name": {
+     "value": "Niko",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any offensive item used by you during this creature's turn deals +2 damage and inflicts smoldering.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2af66f5c66bb:Creatures/Other/3 Stars/Niko.png",
+   "kind": "old repo",
+   "date": "2023-10-10T01:08:35+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-f29ca59a4c64.webp",
+   "fields": {
+    "name": {
+     "value": "Niko",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any offensive item used by you during this creature's turn deals +2 damage and inflicts 2 turns smoldering.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3518261d375b:Creatures/Other/3 Stars/Niko.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-778de546758c.webp",
+   "fields": {
+    "name": {
+     "value": "Niko",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any offensive item used by you during this creature's turn deals +2 damage and inflicts 2 turns smoldering.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/3 Stars/Niko.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-55757a783d0f.webp",
+   "fields": {
+    "name": {
+     "value": "Niko",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any offensive item used by you during this creature's turn deals +2 damage and inflicts 2 turns smoldering.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-da9fc176c31c:Creatures/Other/3 Stars/Niko.png",
+   "kind": "old repo",
+   "date": "2023-11-03T13:30:13+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "5",
+   "image": "O-52d94f7d0ef0.webp",
+   "fields": {
+    "name": {
+     "value": "Niko",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attack items used by you during this creature's turn deals +2 damage and inflict 2 turns of smoldering.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-07-11",
+  "sort": "2023-07-11",
+  "source": "discord",
+  "status": "same"
+ }
+}

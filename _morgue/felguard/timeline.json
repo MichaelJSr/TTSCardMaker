@@ -1,0 +1,60 @@
+{
+ "card": "felguard",
+ "key": "Felguard",
+ "name": "Felguard",
+ "morgue": "candidate",
+ "first": {
+  "date": "2021-09-09T09:29:49.512000+00:00",
+  "day": "2021-09-09",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-d8338584543f",
+   "kind": "discord",
+   "date": "2021-09-09T09:29:49.512000+00:00",
+   "day": "2021-09-09",
+   "badge": "Discord",
+   "image": "P-d8338584543f.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-53954a016945",
+   "kind": "discord",
+   "date": "2021-09-09T09:39:56.725000+00:00",
+   "day": "2021-09-09",
+   "badge": "Discord",
+   "image": "P-53954a016945.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-04-port",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/4 Stars/Felguard.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-32773d5009b6.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 350,
+   "h": 518
+  }
+ ],
+ "kind_of": "played",
+ "git_file": "first repo"
+}

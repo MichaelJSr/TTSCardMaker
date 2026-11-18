@@ -1,0 +1,410 @@
+{
+ "card": "cloud-soiree",
+ "key": "Cloud Soiree",
+ "name": "Cloud Soiree",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-514a5ba031c0",
+   "kind": "discord",
+   "date": "2021-12-16T12:27:03+00:00",
+   "day": "2021-12-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-514a5ba031c0.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Have less than 10 stars worth of creatures on your field, reward: -5 cost. [electric]: +1 ATK. [wind]: +1 SPD. Nature: +2 SPD. Industrial: -2 DEF.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 925
+  },
+  {
+   "id": "D-P-5ebe5b28b109",
+   "kind": "discord",
+   "date": "2021-12-16T14:58:10+00:00",
+   "day": "2021-12-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-5ebe5b28b109.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Have less than 10 stars worth of creatures on your field, reward: -5 cost. [electric]: +1 ATK. [wind]: +1 SPD. Nature: +1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 921
+  },
+  {
+   "id": "F-f5ffd5f8f51",
+   "kind": "text",
+   "date": "2022-01-25T05:07:33+00:00",
+   "day": "2022-01-25",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-8d71a35af462",
+   "kind": "discord",
+   "date": "2022-01-25T05:07:38+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-8d71a35af462.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Have less than 11 stars worth of creatures on your field, reward: -6 cost. [electric]: +1 ATK. [wind]: +1 SPD. Nature: +1 SPD.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 920
+  },
+  {
+   "id": "F-f9e6c50a290",
+   "kind": "text",
+   "date": "2022-01-29T11:51:31+00:00",
+   "day": "2022-01-29",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/3 Stars/Cloud_Soiree.PNG",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-a3bf4ddcfab7.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Have less than 11 stars worth of creatures on your field, reward: -6 cost. [electric]: +1 ATK. [wind]: +1 SPD. Nature: +1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 920
+  },
+  {
+   "id": "O-257dc970a875:Field/3 Stars/Cloud_Soiree.PNG",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-f0baf087a7bd.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Have less than 10 stars worth of creatures on your field, reward: -6 cost. [electric]: +1 ATK. [wind]: +1 SPD. Nature: +1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 911
+  },
+  {
+   "id": "O-8e96b86eab5d:Field/1 Stars/Cloud_Soiree.png",
+   "kind": "old repo",
+   "date": "2023-04-20T23:45:40+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "All field items done",
+   "repo": "first",
+   "image": "O-e2e05b84b628.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[electric]: +1 ATK.\n[wind]: +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     1
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/1 Stars/Cloud_Soiree.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-e2e05b84b628.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[electric]: +1 ATK.\n[wind]: +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/1 Stars/Cloud_Soiree.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-7afd836eaf74.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[electric]: +1 ATK.\n[wind]: +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/1 Stars/Cloud_Soiree.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-2f44f31eb4bc.webp",
+   "fields": {
+    "name": {
+     "value": "Cloud Soiree",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[electric]: +1 ATK\n[wind]: +1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2021-12-16",
+  "sort": "2021-12-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

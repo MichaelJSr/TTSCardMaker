@@ -1,0 +1,69 @@
+{
+ "card": "whacka-bump",
+ "key": "Whacka Bump",
+ "name": "Whacka Bump",
+ "kind": "nme",
+ "stop": {
+  "day": "2024-07-23",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-8b3162d02a30",
+   "kind": "discord",
+   "date": "2024-07-23T15:26:57+00:00",
+   "day": "2024-07-23",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8b3162d02a30.webp",
+   "fields": {
+    "name": {
+     "value": "Whacka Bump",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cost: 2x the global turn points. Heals 7 HP. After this item enters your hand, your bad karma allows the opponent to decide all dice rolls/coin flips for the rest of the game. If both teams have obtained this item, or if you have the ability to decide dice/coins from another effect, dice/coins instead become random.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-02-07T12:28:35+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2024-07-23",
+  "sort": "2024-07-23",
+  "source": "discord",
+  "status": "same"
+ }
+}

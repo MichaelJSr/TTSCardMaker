@@ -1,0 +1,340 @@
+{
+ "card": "azamoth-the-possessed-vessel",
+ "key": "Azamoth the Possessed Vessel",
+ "name": "Azamoth The Possessed Vessel",
+ "kind": "creatures",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-06781b88af22:Auxillary/Minions/5 Stars/Azamoth_the_Possessed_King.png",
+   "kind": "old repo",
+   "date": "2023-09-11T00:25:01+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Oryx, Azamoth, and True Negation Immunity",
+   "file": "Azamoth the Possessed King",
+   "image": "O-198d8f67f6c0.webp",
+   "fields": {
+    "name": {
+     "value": "Azamoth The Possessed Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 0,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This has true negation immunity.\nUpon summon, spend counters to increase this creatures’ stats, 1 counter = 1 bar.\nStats may be allocated above 10, and start at 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8a1a518be3d0:Auxillary/Minions/5 Stars/Azamoth_the_Possessed_King.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:38:03+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "file": "Azamoth the Possessed King",
+   "image": "O-3c489fb929b3.webp",
+   "fields": {
+    "name": {
+     "value": "Azamoth The Possessed Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 0,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This has true negation immunity.\nUpon summon, spend counters to increase this creatures’ stats, 1 counter = 1 bar.\nStats may be allocated above 10, and start at 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f2a5c96615a0:Auxillary/Minions/5 Stars/Azamoth_the_Possessed_King.png",
+   "kind": "old repo",
+   "date": "2023-10-19T19:53:24+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "removal magic",
+   "file": "Azamoth the Possessed King",
+   "image": "O-42b2c52c193f.webp",
+   "fields": {
+    "name": {
+     "value": "Azamoth The Possessed Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 0,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This has true negation immunity.\nUpon summon, spend counters to increase this creatures’ stats, 1 counter = 1 bar.\nStats may be allocated above 10, and start at 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Azamoth_the_Possessed_King.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "file": "Azamoth the Possessed King",
+   "image": "O-42b2c52c193f.webp",
+   "fields": {
+    "name": {
+     "value": "Azamoth The Possessed Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 0,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This has true negation immunity.\nUpon summon, spend counters to increase this creatures’ stats, 1 counter = 1 bar.\nStats may be allocated above 10, and start at 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6e252c1d27ef:Auxillary/Minions/Azamoth_the_Possessed_King.png",
+   "kind": "old repo",
+   "date": "2023-10-21T03:31:42+00:00",
+   "day": "2023-10-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Azamoth change",
+   "file": "Azamoth the Possessed King",
+   "image": "O-06049392d22e.webp",
+   "fields": {
+    "name": {
+     "value": "Azamoth The Possessed Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 0,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This has true negation immunity.\nUpon summon, spend counters to increase this creatures’ stats, 1 counter = 1 bar.\nStats may be allocated above 10, and start at 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "darkmatter"
+     ],
+     "drop": [
+      "dark"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Azamoth_the_Possessed_King.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "file": "Azamoth the Possessed King",
+   "image": "O-73ffc194807c.webp",
+   "fields": {
+    "name": {
+     "value": "Azamoth The Possessed Vessel",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 0,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This has true negation immunity.\nUpon summon, spend counters to increase this creatures’ stats, 1 counter = 1 bar.\nStats may be allocated above 10, and start at 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-09-11",
+  "sort": "2023-09-11",
+  "source": "old repo",
+  "status": "owner"
+ }
+}

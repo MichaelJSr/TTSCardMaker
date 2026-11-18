@@ -1,0 +1,77 @@
+{
+ "card": "delta",
+ "key": "Delta",
+ "name": "Delta",
+ "kind": "minion",
+ "stop": {
+  "day": "2025-05-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-c4dff3deb34a",
+   "kind": "discord",
+   "date": "2025-05-03T07:23:12+00:00",
+   "day": "2025-05-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c4dff3deb34a.webp",
+   "fields": {
+    "name": {
+     "value": "Delta",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Attacks are piercing. May reduce attack by 50% for this attack to hit all creatures on the PF.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 3,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-06T12:41:09+00:00",
+  "changes": {
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-05-03",
+  "sort": "2025-05-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

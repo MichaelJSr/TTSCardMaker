@@ -1,0 +1,71 @@
+{
+ "card": "hero-cap",
+ "key": "Hero Cap",
+ "name": "Hero Cap",
+ "kind": "aux item",
+ "stop": {
+  "day": "2025-12-08",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-9ed0e5fe44a3",
+   "kind": "discord",
+   "date": "2025-12-08T12:51:47+00:00",
+   "day": "2025-12-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9ed0e5fe44a3.webp",
+   "fields": {
+    "name": {
+     "value": "Hero Cap",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot be unequipped. Equipped creature is immune to tier 3 and below debuffs.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-12-08T13:00:57+00:00",
+  "changes": {
+   "stars": [
+    3,
+    1
+   ],
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-12-08",
+  "sort": "2025-12-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

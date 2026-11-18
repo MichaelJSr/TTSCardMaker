@@ -1,0 +1,63 @@
+{
+ "card": "dreamshield",
+ "key": "Dreamshield",
+ "name": "Dreamshield",
+ "kind": "aux item",
+ "stop": {
+  "day": "2024-02-10",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-4ca5ef2fe506",
+   "kind": "discord",
+   "date": "2024-02-04T02:59:31+00:00",
+   "day": "2024-02-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-4ca5ef2fe506.webp",
+   "fields": {
+    "name": {
+     "value": "Dreamshield",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 DEF\n(ENDT) Deal 1 piercing damage to a random enemy target.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-18T07:34:40+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2024-02-04",
+  "sort": "2024-02-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,913 @@
+{
+ "card": "doopliss",
+ "key": "DooPliss",
+ "name": "Doopliss",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-364a0669c993-c1",
+   "kind": "discord",
+   "date": "2020-08-26T06:08:41+00:00",
+   "day": "2020-08-26",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-364a0669c993-c1.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an opponent's creature you can activate this ability before the attack or after the attack; this card gains the ability of the attacked creature, and that creature is negated for one turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 389,
+   "h": 787
+  },
+  {
+   "id": "D-P-3ca2bd0ac5ae",
+   "kind": "discord",
+   "date": "2020-09-04T22:34:08+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-3ca2bd0ac5ae.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an oPPonent's creature you can activate this ability before the attack or after the attack; this card gains the ability of the attacked creature for one full turn turn, and that creature is negated for one full turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "F-fe53f455116",
+   "kind": "text",
+   "date": "2021-08-07T08:15:52+00:00",
+   "day": "2021-08-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "def",
+    "by": -1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-992af3490587"
+  },
+  {
+   "id": "D-P-992af3490587",
+   "kind": "discord",
+   "date": "2021-08-11T13:41:53+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-992af3490587.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an oPPonent's creature you can activate this ability before the attack or after the attack; this card gains the ability of the attacked creature for one full turn turn, and that creature is negated for one full turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "HP 5 -> 6"
+    ],
+    "nerfs": [
+     "DEF 4 -> 3"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "D-P-3b5cd5a8cd6f",
+   "kind": "discord",
+   "date": "2021-12-15T09:52:43+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-3b5cd5a8cd6f.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an oPPonent's creature you can activate this ability before the attack or after the attack; this card gains the ability of the attacked creature for one full turn turn, and that creature is negated for one full turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-1fa985d3fe31.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an oPPonent's creature you can activate this ability before the attack or after the attack; this card gains the ability of the attacked creature for one full turn turn, and that creature is negated for one full turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "O-7e4c94bc7d97:Cards/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-04-14T23:53:33+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Dooplis, fawful, knight lost a lot",
+   "repo": "first",
+   "image": "O-ebdc42be0080.webp",
+   "fields": {
+    "name": {
+     "value": "DooPlis",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an\nopponent's creature you can activate this ability before the attack or after the attack;\n this card gains the ability of the attacked creature for one global turn, and that creature is\nnegated for one global turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "DooPliss",
+     "DooPlis"
+    ],
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 6 -> 5",
+     "ATK 6 -> 5",
+     "SPD 6 -> 5"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-af409cb5284f:Cards/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-011f618f3938.webp",
+   "fields": {
+    "name": {
+     "value": "DooPlis",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this card attacks an\nopponent's creature you can activate this ability before the attack or after the attack;\n this card gains the ability of the attacked creature for one global turn, and that creature is\nnegated for one global turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 5 -> 6",
+     "ATK 5 -> 6",
+     "SPD 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e7268dab49d4:Cards/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-04-19T07:18:11+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "More changes to creatures",
+   "repo": "first",
+   "image": "O-feb7a1a37caf.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an opponent's creature you can activate this ability before or after the attack;\n this card gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "DooPlis",
+     "DooPliss"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-feb7a1a37caf.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an opponent's creature you can activate this ability before or after the attack;\n this card gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-feb7a1a37caf.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an opponent's creature you can activate this ability before or after the attack;\n this card gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6169747d2477:Creatures/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-09-11T21:15:32+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "doopliss thin man",
+   "image": "O-03b10255759f.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an oPPonent's creature you can activate this ability before or after the attack;\n this card gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-e4a00b006e9f.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an oPPonent's creature you can activate this ability before or after the attack;\n this creature gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-ef8525895243.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an oPPonent's creature you can activate this ability before or after the attack;\n this creature gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f2a5c96615a0:Creatures/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-10-19T19:53:24+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "removal magic",
+   "image": "O-853886c52efe.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an oPPonent's creature you can activate this ability before or after the attack;\n this creature gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-73b335ca5bee.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an oPPonent's creature you can activate this ability before or after the attack;\n This creature gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/4 Stars/DooPliss.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-a1394eab1616.webp",
+   "fields": {
+    "name": {
+     "value": "DooPliss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks an oPPonent's creature you can activate this ability before or after the attack;\n This creature gains the ability of the attacked creature for one global turn, and that creature is negated for one global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-08-26",
+  "sort": "2020-08-26",
+  "source": "discord",
+  "status": "same"
+ }
+}

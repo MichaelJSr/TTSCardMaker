@@ -1,0 +1,74 @@
+{
+ "card": "mantis",
+ "key": "Mantis",
+ "name": "Mantis",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-efd113242cb8",
+   "kind": "discord",
+   "date": "2023-11-12T03:49:55+00:00",
+   "day": "2023-11-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-efd113242cb8.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+4 ATK against creatures in same lane.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 0,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-16T14:50:28+00:00",
+  "changes": {
+   "ability_change": "same"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-12",
+  "sort": "2023-11-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

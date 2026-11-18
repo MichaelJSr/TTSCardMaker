@@ -1,0 +1,659 @@
+{
+ "card": "pod11zomg",
+ "key": "PoD11ZOMG",
+ "name": "Z.O.M.G.",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-6f8710c9a2bb",
+   "kind": "discord",
+   "date": "2020-08-13T05:46:33+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-6f8710c9a2bb.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. Persists after the death of its summoner. (OPT) (AAT) May intercept an attack to the protectee. (EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-de2d8383db3e",
+   "kind": "discord",
+   "date": "2020-08-15T00:36:38+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-de2d8383db3e.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. (OPT) (AAT) May intercept an attack to the protectee. (EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/5 Stars/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-13263eabe747.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. (OPT) (AAT) May intercept an attack to the protectee. (EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-5e6b7c86df33:Auxillary/Minions/5 Stars/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-03-19T22:30:57+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated all bloon changes",
+   "repo": "first",
+   "image": "O-d3bd0805b3ba.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. (OPT) (AAT) May intercept an attack to the protectee. (EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 5 -> 4",
+     "SPD 4 -> 3"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-fce881480cba:Auxillary/Minions/5 Stars/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-03-30T05:29:02+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Remade DDT, BFB, ZOMG, and BAD, and made summong (BOT)",
+   "repo": "first",
+   "image": "O-3a7c52791a0d.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion.\nDoesn't grant souls.\n(OPT) (AAT) May intercept an attack to the protectee.\n(EOT) (BOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-37451eba2f36:Auxillary/Minions/5 Stars/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-04-03T10:39:58+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed all psd minions to use the new types for protective/not",
+   "repo": "first",
+   "image": "O-35d0e884fb25.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Doesn't grant souls.\n(OPT) (AAT) May intercept an attack to the protectee.\n(EOT) (BOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8f60c13069e1:Auxillary/Minions/5 Stars/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-04-13T04:31:21+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "does not say not gain souls",
+   "repo": "first",
+   "image": "O-341a6b7a258d.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) May intercept an attack to the protectee.\n(EOT) (BOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-de92dbe542e1:Auxillary/Minions/5 Stars/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-04-20T10:14:05+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "POD change",
+   "repo": "first",
+   "image": "O-39a3ddc27907.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) May intercept an attack to the protectee.\n(EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d24c6d10c672:Auxillary/Minions/5 Stars/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:26:54+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the auxillary",
+   "image": "O-39a3ddc27907.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) May intercept an attack to the protectee.\n(EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-af2d608f17ab:Auxillary/Minions/5 Stars/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-10-08T21:52:34+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "bloon text formatting",
+   "image": "O-ae68dab73e00.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) May intercept an attack to the equipped creature.\n(EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-ae68dab73e00.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) May intercept an attack to the equipped creature.\n(EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/PoD11ZOMG.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-c51b30e9de2f.webp",
+   "fields": {
+    "name": {
+     "value": "Z.O.M.G",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) May intercept an attack to the equipped creature.\n(EOT) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-08-13",
+  "sort": "2020-08-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

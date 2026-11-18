@@ -1,0 +1,347 @@
+{
+ "card": "chicken",
+ "key": "Chicken",
+ "name": "Chicken",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1316dc4821ae",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:55+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-1316dc4821ae.webp",
+   "fields": {
+    "name": {
+     "value": "The Chicken",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 3HP and give it well-fed.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 617
+  },
+  {
+   "id": "D-P-276606923d8e",
+   "kind": "discord",
+   "date": "2020-10-04T00:45:32+00:00",
+   "day": "2020-10-04",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-276606923d8e.webp",
+   "fields": {
+    "name": {
+     "value": "The Chicken",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 3HP and give it one stack of regen",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/The_Chicken.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "The Chicken",
+   "repo": "first",
+   "image": "O-1f6019d2e9cd.webp",
+   "fields": {
+    "name": {
+     "value": "The Chicken",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 3HP and give it one stack of regen",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "O-4ae8bc79caad:Items/Heal/2 Stars/The_Chicken.png",
+   "kind": "old repo",
+   "date": "2023-04-04T21:41:17+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "psds for grapes, the chicken, watermelon, and pep drink",
+   "file": "The Chicken",
+   "repo": "first",
+   "image": "O-4dc5f4b903ad.webp",
+   "fields": {
+    "name": {
+     "value": "The Chicken",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 3 HP and\ninflict it with 1 stack of Regen.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-327b8aec0af2:Items/Heal/2 Stars/The_Chicken.png",
+   "kind": "old repo",
+   "date": "2023-04-07T19:02:27+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "chogath fix, grapes, pizza, regen, shortcake, chicken, watermelon, dumpings",
+   "file": "The Chicken",
+   "repo": "first",
+   "image": "O-d46197523e92.webp",
+   "fields": {
+    "name": {
+     "value": "Chicken",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 3 HP and\ninflict it with 1 stack of Regen.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "The Chicken",
+     "Chicken"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-97bab8f1ceec:Items/Heal/2 Stars/The_Chicken.png",
+   "kind": "old repo",
+   "date": "2023-04-11T13:35:04+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "More updates for new buff wording",
+   "file": "The Chicken",
+   "repo": "first",
+   "image": "O-455d5bd22172.webp",
+   "fields": {
+    "name": {
+     "value": "Chicken",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 3 HP and\ngive it 1 stack of 3 turns of Regen.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/2 Stars/The_Chicken.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "file": "The Chicken",
+   "image": "O-6f3e3d940adf.webp",
+   "fields": {
+    "name": {
+     "value": "Chicken",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 3 HP and\ngive it 1 stack of 3 turns of Regen.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Heal/2 Stars/The_Chicken.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "file": "The Chicken",
+   "image": "O-2d7b62fe59b1.webp",
+   "fields": {
+    "name": {
+     "value": "Chicken",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 3 HP and\ngive it 1 stack of 3 turns of Regen.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/2 Stars/The_Chicken.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "file": "The Chicken",
+   "image": "O-79dc013a446f.webp",
+   "fields": {
+    "name": {
+     "value": "Chicken",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 3 HP and\ngive it 1 stack of 3 turns of Regen.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

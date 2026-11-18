@@ -1,0 +1,263 @@
+{
+ "card": "empty",
+ "key": "Empty",
+ "name": "Empty",
+ "kind": "debuff",
+ "stop": {
+  "day": "2023-04-05",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-916fc354bdfe",
+   "kind": "discord",
+   "date": "2023-04-05T01:19:31+00:00",
+   "day": "2023-04-05",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-916fc354bdfe.webp",
+   "fields": {
+    "name": {
+     "value": "Empty",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-25% MAX HP",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-b316785629cd:Auxillary/Status Effects/Debuffs/1 Stars/Empty.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:15:05+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First round of redoing buffs and debuffs",
+   "repo": "first",
+   "image": "O-7ab432e5ce5d.webp",
+   "fields": {
+    "name": {
+     "value": "Empty",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-25% MAX HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-df4782564913:Auxillary/Status Effects/Debuffs/1 Stars/Empty.png",
+   "kind": "old repo",
+   "date": "2023-04-05T05:14:58+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "added arrows to the t1 debuffs",
+   "repo": "first",
+   "image": "O-764d20588fcd.webp",
+   "fields": {
+    "name": {
+     "value": "Empty",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-25% MAX HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "debuffstack"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-bd49fce9de01:Auxillary/Status Effects/Unused/Empty.png",
+   "kind": "old repo",
+   "date": "2023-04-28T22:58:04+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Exported the unused buffs/debuffs just in case raid bosses use them (still a separate pile)",
+   "image": "O-245bf43b6cd8.webp",
+   "fields": {
+    "name": {
+     "value": "Empty",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-25% MAX HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-342a3042b4c4:Auxillary/Status Effects/Debuffs/1 Stars/Empty.png",
+   "kind": "old repo",
+   "date": "2023-10-14T05:46:22+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Moving buffs/debuffs and removing Unused",
+   "image": "O-245bf43b6cd8.webp",
+   "fields": {
+    "name": {
+     "value": "Empty",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-25% MAX HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/1 Stars/Empty.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "image": "O-55043a543aeb.webp",
+   "fields": {
+    "name": {
+     "value": "Empty",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-25% MAX HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2023-04-05",
+  "sort": "2023-04-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

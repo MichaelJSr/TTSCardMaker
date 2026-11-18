@@ -1,0 +1,173 @@
+{
+ "card": "dirty-bed",
+ "key": "Dirty Bed",
+ "name": "Dirty Bed",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-14",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-560b9052437a",
+   "kind": "discord",
+   "date": "2023-10-14T07:55:13+00:00",
+   "day": "2023-10-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-560b9052437a.webp",
+   "fields": {
+    "name": {
+     "value": "Dirty Bed",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 1,
+      "atk": "none",
+      "spd": "none"
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Deal 1 damage to a friendly creature to heal a different creature for 2 HP.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-0d145c6e2e6f:Items/Active/1 Stars/Dirty_Bed.png",
+   "kind": "old repo",
+   "date": "2023-10-14T08:19:48+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "item ideas",
+   "image": "O-689deb46bb5d.webp",
+   "fields": {
+    "name": {
+     "value": "Dirty Bed",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 1
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Deal 1 damage to a friendly creature to heal a different creature for 2 HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 1,
+      "atk": "none",
+      "spd": "none"
+     },
+     {
+      "hp": 3,
+      "def": 1
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-fbbf72d77f6d:Items/Active/1 Stars/Dirty_Bed.png",
+   "kind": "old repo",
+   "date": "2023-11-03T14:01:04+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "7",
+   "image": "O-56908ad452b7.webp",
+   "fields": {
+    "name": {
+     "value": "Dirty Bed",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 0
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Deal 1 damage to a friendly creature to heal a different creature for 2 HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 1
+     },
+     {
+      "hp": 3,
+      "def": 0
+     }
+    ],
+    "buffs": [],
+    "nerfs": [
+     "DEF 1 -> 0"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-14",
+  "sort": "2023-10-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

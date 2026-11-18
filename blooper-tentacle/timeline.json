@@ -1,0 +1,544 @@
+{
+ "card": "blooper-tentacle",
+ "key": "Blooper Tentacle",
+ "name": "Blooper Tentacle",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-119497098dcb",
+   "kind": "discord",
+   "date": "2020-07-18T10:31:57+00:00",
+   "day": "2020-07-18",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-119497098dcb.webp",
+   "fields": {
+    "name": {
+     "value": "Tentacle",
+     "method": "eye (repost P-da02bfedcf03)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects the summoner. If more than one of this card is protecting a creature, then overkill damage from one tentacle is dealt to the next tentacle.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-b63c70176d70",
+   "kind": "discord",
+   "date": "2020-08-23T09:38:21+00:00",
+   "day": "2020-08-23",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-b63c70176d70.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects the summoner. If more than one of this card is protecting a creature, then overkill damage from one tentacle is dealt to the next tentacle.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Tentacle",
+     "Blooper Tentacle"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/2 Stars/Blooper_Tentacle.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-3f82065f19c1.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects the summoner. If more than one of this card is protecting a creature, then overkill damage from one tentacle is dealt to the next tentacle.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-257dc970a875:Auxillary/Minions/2 Stars/Blooper_Tentacle.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-6a59937a51d0.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects the summoner. If more\nthan one of this card is protecting\na creature, then overkill damage\nfrom one tentacle is dealt to the\nnext tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b16c6736c20c:Auxillary/Minions/2 Stars/Blooper_Tentacle.png",
+   "kind": "old repo",
+   "date": "2023-04-02T00:20:11+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Touched a bunch of auxillary cards to standardize their size and delete some unused assets",
+   "repo": "first",
+   "image": "O-d9ccd2dbb24d.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Protects the summoner. If more\nthan one of this card is protecting\na creature, then overkill damage\nfrom one tentacle is dealt to the\nnext tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-37451eba2f36:Auxillary/Minions/2 Stars/Blooper_Tentacle.png",
+   "kind": "old repo",
+   "date": "2023-04-03T10:39:58+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed all psd minions to use the new types for protective/not",
+   "repo": "first",
+   "image": "O-18a22c0695fe.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "water"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If more than one of this card is protecting a creature, then overkill damage from one tentacle is dealt to the next tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "defensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a18b9e4c8c48:Auxillary/Minions/2 Stars/Blooper_Tentacle.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:59:18+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Auxillary minions",
+   "image": "O-9ceee9dce7d5.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "water"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If more than one of this card is protecting a creature, then overkill damage from one tentacle is dealt to the next tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8a1a518be3d0:Auxillary/Minions/2 Stars/Blooper_Tentacle.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:38:03+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-db558902806f.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "water"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If more than one of this card is protecting a creature, then overkill damage from one tentacle is dealt to the next tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Blooper_Tentacle.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-52ab8382d7d6.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "water"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If more than one of this card is protecting a creature, then overkill damage from one tentacle is dealt to the next tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-aaf53a4ce0b3:Auxillary/Minions/Blooper_Tentacle.png",
+   "kind": "old repo",
+   "date": "2023-10-29T17:28:44+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "image": "O-1054248b0ea5.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper Tentacle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "water"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If more than one of this card is protecting a creature, then overkill damage from one tentacle is dealt to the next tentacle.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-18",
+  "sort": "2020-07-18",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,681 @@
+{
+ "card": "grey-prince-zote",
+ "key": "Grey Prince Zote",
+ "name": "Grey Prince Zote",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d4515a861021-c3",
+   "kind": "discord",
+   "date": "2019-06-13T08:17:41+00:00",
+   "day": "2019-06-13",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-d4515a861021-c3.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time that Zote takes damage he gains 2 ATK",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 315,
+   "h": 634
+  },
+  {
+   "id": "D-P-050ae26a1a4a",
+   "kind": "discord",
+   "date": "2020-07-22T02:56:17+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-050ae26a1a4a.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time that Zote takes damage he gains 2 ATK",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-8ee3688c88f7",
+   "kind": "discord",
+   "date": "2020-08-09T07:38:45+00:00",
+   "day": "2020-08-09",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-8ee3688c88f7.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time that Zote takes damage he gains 2 ATK",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 3,
+      "atk": 4,
+      "spd": 6
+     },
+     {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 3 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 396,
+   "h": 789
+  },
+  {
+   "id": "D-P-e9156452c5bc",
+   "kind": "discord",
+   "date": "2021-12-15T11:22:29+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-e9156452c5bc.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time that Zote takes damage he gains 2 ATK",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "dark"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 394,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-08285fad2109.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time that Zote takes damage he gains 2 ATK",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 394,
+   "h": 788
+  },
+  {
+   "id": "O-257dc970a875:Cards/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-01d8a20d40ae.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time this creature takes damage it gains 2 ATK",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-51ed23dca26a.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time this creature takes damage it gains 2 ATK",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-51ed23dca26a.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time this creature takes damage it gains 2 ATK",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-51ed23dca26a.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time this creature takes damage it gains 2 ATK",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-085097e5916b:Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2023-04-30T13:04:01+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuffs",
+   "image": "O-26fcd064df92.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time this creature takes damage it gains 2 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e63eaf98bf16:Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2023-06-17T09:36:05+00:00",
+   "day": "2023-06-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "better hp bars for old cards",
+   "image": "O-91f675ff9705.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time this creature takes damage it gains +2 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-1f991e767851.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time this creature takes damage it gains +2 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-6fa0bab0dfbb.webp",
+   "fields": {
+    "name": {
+     "value": "Grey Prince Zote",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Each time this creature takes damage it gains +2 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-06-13",
+  "sort": "2019-06-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

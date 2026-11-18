@@ -1,0 +1,7442 @@
+{
+ "version": 1,
+ "generated": "2026-11-17T21:03:02+00:00",
+ "about": "Card timelines before the card repo (preview): per card its versions from Discord (date and channel), the old pre-wipe repo and the first repo (date, mapped author, commit subject) and changelog facts (data only). Only sure fields; no message text, posters or links.",
+ "cards": {
+  "a-snack": {
+   "key": "A Snack",
+   "name": "A Snack",
+   "dir": "a-snack",
+   "versions": 2,
+   "texts": 0
+  },
+  "a-snack2": {
+   "key": "A Snack2",
+   "name": "Breakfast",
+   "dir": "a-snack2",
+   "versions": 2,
+   "texts": 0
+  },
+  "a-snack3": {
+   "key": "A Snack3",
+   "name": "Supper",
+   "dir": "a-snack3",
+   "versions": 2,
+   "texts": 0
+  },
+  "abbi": {
+   "key": "ABBI",
+   "name": "ABBI",
+   "dir": "abbi",
+   "versions": 11,
+   "texts": 0
+  },
+  "abigail": {
+   "key": "Abigail",
+   "name": "Abigail",
+   "dir": "abigail",
+   "versions": 15,
+   "texts": 0
+  },
+  "abyss-watcher": {
+   "key": "Abyss Watcher",
+   "name": "Abyss Watcher",
+   "dir": "abyss-watcher",
+   "versions": 15,
+   "texts": 0
+  },
+  "acro": {
+   "key": "Acro",
+   "name": "Acro",
+   "dir": "acro",
+   "versions": 11,
+   "texts": 5
+  },
+  "acrophobia": {
+   "key": "Acrophobia",
+   "name": "Acrophobia",
+   "dir": "acrophobia",
+   "versions": 12,
+   "texts": 0
+  },
+  "adrenaline": {
+   "key": "Adrenaline",
+   "name": "Adrenaline",
+   "dir": "adrenaline",
+   "versions": 3,
+   "texts": 0
+  },
+  "afraid": {
+   "key": "Afraid",
+   "name": "Afraid",
+   "dir": "afraid",
+   "versions": 10,
+   "texts": 0
+  },
+  "air-totem": {
+   "key": "Air Totem",
+   "name": "Air Totem",
+   "dir": "air-totem",
+   "versions": 9,
+   "texts": 0
+  },
+  "alex-yiik": {
+   "key": "Alex YIIK",
+   "name": "Alex YIIK",
+   "dir": "alex-yiik",
+   "versions": 12,
+   "texts": 0
+  },
+  "all-purpose-medical-kit": {
+   "key": "All-Purpose Medical Kit",
+   "name": "All-Purpose Medical Kit",
+   "dir": "all-purpose-medical-kit",
+   "versions": 7,
+   "texts": 0
+  },
+  "all-purpose-medical-kit2": {
+   "key": "All-Purpose Medical Kit2",
+   "name": "All-Purpose Medical Kit",
+   "dir": "all-purpose-medical-kit2",
+   "versions": 6,
+   "texts": 0
+  },
+  "amazing-mirror": {
+   "key": "Amazing Mirror",
+   "name": "Amazing Mirror",
+   "dir": "amazing-mirror",
+   "versions": 11,
+   "texts": 5
+  },
+  "ancient-altar": {
+   "key": "Ancient Altar",
+   "name": "Ancient Altar",
+   "dir": "ancient-altar",
+   "versions": 13,
+   "texts": 2
+  },
+  "ancient-fuelweaver": {
+   "key": "Ancient Fuelweaver",
+   "name": "Ancient Fuelweaver",
+   "dir": "ancient-fuelweaver",
+   "versions": 17,
+   "texts": 1
+  },
+  "ancient-stopwatch": {
+   "key": "Ancient Stopwatch",
+   "name": "Ancient Stopwatch",
+   "dir": "ancient-stopwatch",
+   "versions": 13,
+   "texts": 1
+  },
+  "anubisath-guardian": {
+   "key": "Anubisath Guardian",
+   "name": "Anubisath Guardian",
+   "dir": "anubisath-guardian",
+   "versions": 1,
+   "texts": 0
+  },
+  "apex-predator": {
+   "key": "Apex Predator",
+   "name": "Apex Predator",
+   "dir": "apex-predator",
+   "versions": 3,
+   "texts": 0
+  },
+  "arachnophobia": {
+   "key": "Arachnophobia",
+   "name": "Arachnophobia",
+   "dir": "arachnophobia",
+   "versions": 12,
+   "texts": 0
+  },
+  "armored-squit": {
+   "key": "Armored Squit",
+   "name": "Armored Squit",
+   "dir": "armored-squit",
+   "versions": 9,
+   "texts": 0
+  },
+  "artemis-missiles": {
+   "key": "Artemis Missiles",
+   "name": "Artemis Missiles",
+   "dir": "artemis-missiles",
+   "versions": 1,
+   "texts": 0
+  },
+  "assault-panda": {
+   "key": "Assault Panda",
+   "name": "Assault Panda",
+   "dir": "assault-panda",
+   "versions": 14,
+   "texts": 1
+  },
+  "asteroid-field": {
+   "key": "Asteroid Field",
+   "name": "Asteroid Field",
+   "dir": "asteroid-field",
+   "versions": 1,
+   "texts": 0
+  },
+  "astr-meiana": {
+   "key": "Astr Meiana",
+   "name": "Astr Meiana",
+   "dir": "astr-meiana",
+   "versions": 1,
+   "texts": 0
+  },
+  "astr-mionion": {
+   "key": "Astr Mionion",
+   "name": "Astr Mionion",
+   "dir": "astr-mionion",
+   "versions": 1,
+   "texts": 0
+  },
+  "auto-croissant": {
+   "key": "Auto Croissant",
+   "name": "Auto Croissant",
+   "dir": "auto-croissant",
+   "versions": 2,
+   "texts": 0
+  },
+  "autopsy-report": {
+   "key": "Autopsy Report",
+   "name": "Autopsy Report",
+   "dir": "autopsy-report",
+   "versions": 1,
+   "texts": 0
+  },
+  "avatar-of-wrath": {
+   "key": "Avatar of Wrath",
+   "name": "Avatar of Wrath",
+   "dir": "avatar-of-wrath",
+   "versions": 18,
+   "texts": 4
+  },
+  "azamoth-the-forgotten-king": {
+   "key": "Azamoth the Forgotten King",
+   "name": "Azamoth The Forgotten King",
+   "dir": "azamoth-the-forgotten-king",
+   "versions": 9,
+   "texts": 0
+  },
+  "azamoth-the-possessed-vessel": {
+   "key": "Azamoth the Possessed Vessel",
+   "name": "Azamoth The Possessed Vessel",
+   "dir": "azamoth-the-possessed-vessel",
+   "versions": 6,
+   "texts": 0
+  },
+  "baba": {
+   "key": "Baba",
+   "name": "Baba",
+   "dir": "baba",
+   "versions": 11,
+   "texts": 0
+  },
+  "back-in-time-juice": {
+   "key": "Back In Time Juice",
+   "name": "Back In Time Juice",
+   "dir": "back-in-time-juice",
+   "versions": 2,
+   "texts": 0
+  },
+  "bag-of-evil": {
+   "key": "Bag of Evil",
+   "name": "Bag of Evil",
+   "dir": "bag-of-evil",
+   "versions": 6,
+   "texts": 1
+  },
+  "bag-of-good": {
+   "key": "Bag of Good",
+   "name": "Bag of Good",
+   "dir": "bag-of-good",
+   "versions": 10,
+   "texts": 0
+  },
+  "balloon-boy": {
+   "key": "Balloon Boy",
+   "name": "Balloon Boy",
+   "dir": "balloon-boy",
+   "versions": 21,
+   "texts": 3
+  },
+  "barry-the-barrel": {
+   "key": "Barry The Barrel",
+   "name": "Barry The Barrel",
+   "dir": "barry-the-barrel",
+   "versions": 18,
+   "texts": 2
+  },
+  "basic-shield": {
+   "key": "Basic Shield",
+   "name": "Basic Shield",
+   "dir": "basic-shield",
+   "versions": 11,
+   "texts": 0
+  },
+  "battle-helmet": {
+   "key": "Battle Helmet",
+   "name": "Battle Helmet",
+   "dir": "battle-helmet",
+   "versions": 6,
+   "texts": 0
+  },
+  "battle-spear": {
+   "key": "Battle Spear",
+   "name": "Battle Spear",
+   "dir": "battle-spear",
+   "versions": 7,
+   "texts": 0
+  },
+  "become-back-money": {
+   "key": "Become Back Money",
+   "name": "Become Back Money",
+   "dir": "become-back-money",
+   "versions": 1,
+   "texts": 0
+  },
+  "beldam": {
+   "key": "Beldam",
+   "name": "Beldam",
+   "dir": "beldam",
+   "versions": 20,
+   "texts": 0
+  },
+  "bench": {
+   "key": "Bench",
+   "name": "Bench",
+   "dir": "bench",
+   "versions": 3,
+   "texts": 0
+  },
+  "bergentruck": {
+   "key": "BergenTRUCK",
+   "name": "BergenTRUCK",
+   "dir": "bergentruck",
+   "versions": 2,
+   "texts": 0
+  },
+  "berserk": {
+   "key": "Berserk!",
+   "name": "Berserk!",
+   "dir": "berserk",
+   "versions": 5,
+   "texts": 0
+  },
+  "big-bomb": {
+   "key": "Big Bomb",
+   "name": "Big Bomb",
+   "dir": "big-bomb",
+   "versions": 7,
+   "texts": 1
+  },
+  "binge-eater": {
+   "key": "Binge Eater",
+   "name": "Binge Eater",
+   "dir": "binge-eater",
+   "versions": 3,
+   "texts": 0
+  },
+  "black-hole": {
+   "key": "Black Hole",
+   "name": "Black Hole",
+   "dir": "black-hole",
+   "versions": 1,
+   "texts": 0
+  },
+  "black-light-bulb": {
+   "key": "Black Light Bulb",
+   "name": "Black Light Bulb",
+   "dir": "black-light-bulb",
+   "versions": 13,
+   "texts": 0
+  },
+  "blank-card": {
+   "key": "Blank Card",
+   "name": "Blank Card",
+   "dir": "blank-card",
+   "versions": 8,
+   "texts": 0
+  },
+  "blasphemous-blade": {
+   "key": "Blasphemous Blade",
+   "name": "Blasphemous Blade",
+   "dir": "blasphemous-blade",
+   "versions": 6,
+   "texts": 0
+  },
+  "blazing": {
+   "key": "Blazing",
+   "name": "Blazing",
+   "dir": "blazing",
+   "versions": 9,
+   "texts": 0
+  },
+  "bleach": {
+   "key": "Bleach",
+   "name": "Bleach",
+   "dir": "bleach",
+   "versions": 5,
+   "texts": 0
+  },
+  "blindness": {
+   "key": "Blindness",
+   "name": "Blindness",
+   "dir": "blindness",
+   "versions": 7,
+   "texts": 0
+  },
+  "block-hopper": {
+   "key": "Block Hopper",
+   "name": "Block Hopper",
+   "dir": "block-hopper",
+   "versions": 6,
+   "texts": 0
+  },
+  "blockade": {
+   "key": "Blockade",
+   "name": "The Wall By Ech",
+   "dir": "blockade",
+   "versions": 20,
+   "texts": 5
+  },
+  "blood-bomb": {
+   "key": "Blood Bomb",
+   "name": "Blood Bomb",
+   "dir": "blood-bomb",
+   "versions": 3,
+   "texts": 0
+  },
+  "blood-ritual": {
+   "key": "Blood Ritual",
+   "name": "Blood Ritual",
+   "dir": "blood-ritual",
+   "versions": 9,
+   "texts": 3
+  },
+  "blooper-tentacle": {
+   "key": "Blooper Tentacle",
+   "name": "Blooper Tentacle",
+   "dir": "blooper-tentacle",
+   "versions": 10,
+   "texts": 0
+  },
+  "blue-marker": {
+   "key": "Blue Marker",
+   "name": "Blue Marker",
+   "dir": "blue-marker",
+   "versions": 2,
+   "texts": 0
+  },
+  "bob-ulk": {
+   "key": "Bob-Ulk",
+   "name": "Bob-Ulk",
+   "dir": "bob-ulk",
+   "versions": 20,
+   "texts": 6
+  },
+  "bobberlington": {
+   "key": "Bobberlington",
+   "name": "Bobberlington",
+   "dir": "bobberlington",
+   "versions": 2,
+   "texts": 0
+  },
+  "bobbery": {
+   "key": "Bobbery",
+   "name": "Bobbery",
+   "dir": "bobbery",
+   "versions": 3,
+   "texts": 0
+  },
+  "boggly-woods": {
+   "key": "Boggly Woods",
+   "name": "Boggly Woods",
+   "dir": "boggly-woods",
+   "versions": 9,
+   "texts": 0
+  },
+  "boko-club": {
+   "key": "Boko Club",
+   "name": "Boko Club",
+   "dir": "boko-club",
+   "versions": 6,
+   "texts": 0
+  },
+  "bolts-and-screws": {
+   "key": "Bolts and Screws",
+   "name": "Bolts and Screws",
+   "dir": "bolts-and-screws",
+   "versions": 10,
+   "texts": 0
+  },
+  "bomb": {
+   "key": "Bomb",
+   "name": "Bomb",
+   "dir": "bomb",
+   "versions": 7,
+   "texts": 1
+  },
+  "bone-s-loans": {
+   "key": "Bone's Loans",
+   "name": "Bone's Loans",
+   "dir": "bone-s-loans",
+   "versions": 4,
+   "texts": 0
+  },
+  "brad-armstrong": {
+   "key": "Brad Armstrong",
+   "name": "Brad Armstrong",
+   "dir": "brad-armstrong",
+   "versions": 9,
+   "texts": 0
+  },
+  "bubble": {
+   "key": "Bubble",
+   "name": "Bubble",
+   "dir": "bubble",
+   "versions": 13,
+   "texts": 0
+  },
+  "bucket-of-lard": {
+   "key": "Bucket of Lard",
+   "name": "Bucket of Lard",
+   "dir": "bucket-of-lard",
+   "versions": 2,
+   "texts": 0
+  },
+  "bugzzy": {
+   "key": "Bugzzy",
+   "name": "Bugzzy",
+   "dir": "bugzzy",
+   "versions": 11,
+   "texts": 0
+  },
+  "bulborb-larva": {
+   "key": "Bulborb Larva",
+   "name": "Bulborb Larva",
+   "dir": "bulborb-larva",
+   "versions": 1,
+   "texts": 0
+  },
+  "burdened": {
+   "key": "Burdened",
+   "name": "Burdened",
+   "dir": "burdened",
+   "versions": 7,
+   "texts": 1
+  },
+  "burly-bomb": {
+   "key": "Burly Bomb",
+   "name": "Burly Bomb",
+   "dir": "burly-bomb",
+   "versions": 10,
+   "texts": 1
+  },
+  "burning": {
+   "key": "Burning",
+   "name": "Burning",
+   "dir": "burning",
+   "versions": 13,
+   "texts": 1
+  },
+  "burst-laser-ii": {
+   "key": "Burst Laser II",
+   "name": "Burst Laser II",
+   "dir": "burst-laser-ii",
+   "versions": 1,
+   "texts": 0
+  },
+  "butterfly": {
+   "key": "Butterfly",
+   "name": "Butterfly",
+   "dir": "butterfly",
+   "versions": 2,
+   "texts": 0
+  },
+  "buzzo": {
+   "key": "Buzzo",
+   "name": "Buzzo",
+   "dir": "buzzo",
+   "versions": 5,
+   "texts": 0
+  },
+  "cabbage": {
+   "key": "Cabbage",
+   "name": "Cabbage",
+   "dir": "cabbage",
+   "versions": 1,
+   "texts": 0
+  },
+  "cake-mix": {
+   "key": "Cake Mix",
+   "name": "Cake Mix",
+   "dir": "cake-mix",
+   "versions": 15,
+   "texts": 0
+  },
+  "cancer": {
+   "key": "Cancer",
+   "name": "Cancer",
+   "dir": "cancer",
+   "versions": 3,
+   "texts": 0
+  },
+  "candy-corn": {
+   "key": "Candy Corn",
+   "name": "Candy Corn",
+   "dir": "candy-corn",
+   "versions": 9,
+   "texts": 0
+  },
+  "captain-spaceboy": {
+   "key": "Captain Spaceboy",
+   "name": "Captain Spaceboy",
+   "dir": "captain-spaceboy",
+   "versions": 15,
+   "texts": 0
+  },
+  "cat": {
+   "key": "Cat",
+   "name": "Cat",
+   "dir": "cat",
+   "versions": 11,
+   "texts": 0
+  },
+  "cave-of-the-past": {
+   "key": "Cave of the Past",
+   "name": "Cave of The Past",
+   "dir": "cave-of-the-past",
+   "versions": 6,
+   "texts": 0
+  },
+  "chained": {
+   "key": "Chained",
+   "name": "Chained",
+   "dir": "chained",
+   "versions": 6,
+   "texts": 0
+  },
+  "charge": {
+   "key": "Charge",
+   "name": "Charge",
+   "dir": "charge",
+   "versions": 10,
+   "texts": 2
+  },
+  "charm-of-the-vampire": {
+   "key": "Charm of the Vampire",
+   "name": "Charm of the Vampire",
+   "dir": "charm-of-the-vampire",
+   "versions": 1,
+   "texts": 0
+  },
+  "cheap": {
+   "key": "Cheap",
+   "name": "Cheap",
+   "dir": "cheap",
+   "versions": 1,
+   "texts": 0
+  },
+  "chef-saltbaker": {
+   "key": "Chef Saltbaker",
+   "name": "Chef Saltbaker",
+   "dir": "chef-saltbaker",
+   "versions": 2,
+   "texts": 0
+  },
+  "chicken": {
+   "key": "Chicken",
+   "name": "Chicken",
+   "dir": "chicken",
+   "versions": 9,
+   "texts": 0
+  },
+  "chilled": {
+   "key": "Chilled",
+   "name": "Chilled",
+   "dir": "chilled",
+   "versions": 7,
+   "texts": 0
+  },
+  "chomp": {
+   "key": "Chomp",
+   "name": "Chomp",
+   "dir": "chomp",
+   "versions": 7,
+   "texts": 4
+  },
+  "chris-jordi": {
+   "key": "Chris & Jordi",
+   "name": "Chris & Jordi",
+   "dir": "chris-jordi",
+   "versions": 11,
+   "texts": 2
+  },
+  "chuckya": {
+   "key": "Chuckya",
+   "name": "Chuckya",
+   "dir": "chuckya",
+   "versions": 4,
+   "texts": 0
+  },
+  "claw": {
+   "key": "Claw",
+   "name": "Smorg Claw",
+   "dir": "claw",
+   "versions": 6,
+   "texts": 0
+  },
+  "clock": {
+   "key": "Clock",
+   "name": "Clock",
+   "dir": "clock",
+   "versions": 8,
+   "texts": 0
+  },
+  "clot-black": {
+   "key": "Clot Black",
+   "name": "Black Clot",
+   "dir": "clot-black",
+   "versions": 2,
+   "texts": 0
+  },
+  "clot-blood": {
+   "key": "Clot Blood",
+   "name": "Blood Clot",
+   "dir": "clot-blood",
+   "versions": 1,
+   "texts": 0
+  },
+  "clot-bone": {
+   "key": "Clot Bone",
+   "name": "Bone Clot",
+   "dir": "clot-bone",
+   "versions": 1,
+   "texts": 0
+  },
+  "clot-gold": {
+   "key": "Clot Gold",
+   "name": "Gold Clot",
+   "dir": "clot-gold",
+   "versions": 1,
+   "texts": 0
+  },
+  "clot-white": {
+   "key": "Clot White",
+   "name": "White Clot",
+   "dir": "clot-white",
+   "versions": 2,
+   "texts": 0
+  },
+  "cloud-soiree": {
+   "key": "Cloud Soiree",
+   "name": "Cloud Soiree",
+   "dir": "cloud-soiree",
+   "versions": 9,
+   "texts": 2
+  },
+  "colosseum-of-fools": {
+   "key": "Colosseum of Fools",
+   "name": "Colosseum of Fools",
+   "dir": "colosseum-of-fools",
+   "versions": 4,
+   "texts": 0
+  },
+  "computer-virus": {
+   "key": "Computer Virus",
+   "name": "Computer Virus",
+   "dir": "computer-virus",
+   "versions": 16,
+   "texts": 1
+  },
+  "condemned": {
+   "key": "Condemned",
+   "name": "Condemned",
+   "dir": "condemned",
+   "versions": 5,
+   "texts": 0
+  },
+  "confusion": {
+   "key": "Confusion",
+   "name": "Confusion",
+   "dir": "confusion",
+   "versions": 8,
+   "texts": 0
+  },
+  "consolation-prize": {
+   "key": "Consolation Prize",
+   "name": "Consolation Prize",
+   "dir": "consolation-prize",
+   "versions": 3,
+   "texts": 0
+  },
+  "contracted": {
+   "key": "Contracted",
+   "name": "Contracted",
+   "dir": "contracted",
+   "versions": 5,
+   "texts": 0
+  },
+  "copper-sword": {
+   "key": "Copper Sword",
+   "name": "Copper Sword",
+   "dir": "copper-sword",
+   "versions": 5,
+   "texts": 0
+  },
+  "corrupted-blood": {
+   "key": "Corrupted Blood",
+   "name": "Corrupted Blood",
+   "dir": "corrupted-blood",
+   "versions": 1,
+   "texts": 0
+  },
+  "corruption": {
+   "key": "Corruption",
+   "name": "Corruption",
+   "dir": "corruption",
+   "versions": 7,
+   "texts": 1
+  },
+  "corruptor": {
+   "key": "Corruptor",
+   "name": "Corruptor",
+   "dir": "corruptor",
+   "versions": 6,
+   "texts": 4
+  },
+  "cortez": {
+   "key": "Cortez",
+   "name": "Cortez",
+   "dir": "cortez",
+   "versions": 16,
+   "texts": 2
+  },
+  "credit-card": {
+   "key": "Credit Card",
+   "name": "Credit Card",
+   "dir": "credit-card",
+   "versions": 3,
+   "texts": 0
+  },
+  "crimson-flag": {
+   "key": "Crimson Flag",
+   "name": "Crimson Flag",
+   "dir": "crimson-flag",
+   "versions": 16,
+   "texts": 5
+  },
+  "crock-pot": {
+   "key": "Crock Pot",
+   "name": "Crock Pot",
+   "dir": "crock-pot",
+   "versions": 2,
+   "texts": 0
+  },
+  "croissant": {
+   "key": "Croissant",
+   "name": "Croissant",
+   "dir": "croissant",
+   "versions": 7,
+   "texts": 0
+  },
+  "crowned-magolor": {
+   "key": "Crowned Magolor",
+   "name": "Crowned Magolor",
+   "dir": "crowned-magolor",
+   "versions": 15,
+   "texts": 0
+  },
+  "crystal-bits": {
+   "key": "Crystal Bits",
+   "name": "Crystal Bits",
+   "dir": "crystal-bits",
+   "versions": 8,
+   "texts": 2
+  },
+  "crystal-guardian": {
+   "key": "Crystal Guardian",
+   "name": "Crystal Guardian",
+   "dir": "crystal-guardian",
+   "versions": 4,
+   "texts": 0
+  },
+  "crystal-king": {
+   "key": "Crystal King",
+   "name": "Crystal King",
+   "dir": "crystal-king",
+   "versions": 21,
+   "texts": 1
+  },
+  "crystal-peak": {
+   "key": "Crystal Peak",
+   "name": "Crystal Peak",
+   "dir": "crystal-peak",
+   "versions": 2,
+   "texts": 0
+  },
+  "crystal-spikes": {
+   "key": "Crystal Spikes",
+   "name": "Crystal Spikes",
+   "dir": "crystal-spikes",
+   "versions": 7,
+   "texts": 0
+  },
+  "curse": {
+   "key": "Curse",
+   "name": "Curse",
+   "dir": "curse",
+   "versions": 5,
+   "texts": 0
+  },
+  "cursed-inferno": {
+   "key": "Cursed Inferno",
+   "name": "Cursed Inferno",
+   "dir": "cursed-inferno",
+   "versions": 7,
+   "texts": 0
+  },
+  "dad-s-ring": {
+   "key": "Dad's Ring",
+   "name": "Dad's Ring",
+   "dir": "dad-s-ring",
+   "versions": 5,
+   "texts": 0
+  },
+  "danger-badges": {
+   "key": "Danger Badges",
+   "name": "Danger Badges",
+   "dir": "danger-badges",
+   "versions": 8,
+   "texts": 2
+  },
+  "dark-bramble": {
+   "key": "Dark Bramble",
+   "name": "Dark Bramble",
+   "dir": "dark-bramble",
+   "versions": 4,
+   "texts": 0
+  },
+  "dark-daroach": {
+   "key": "Dark Daroach",
+   "name": "Dark Daroach",
+   "dir": "dark-daroach",
+   "versions": 19,
+   "texts": 0
+  },
+  "dark-esau": {
+   "key": "Dark Esau",
+   "name": "Dark Esau",
+   "dir": "dark-esau",
+   "versions": 2,
+   "texts": 0
+  },
+  "dark-matter-swordsman": {
+   "key": "Dark Matter Swordsman",
+   "name": "Dark Matter Swordsman",
+   "dir": "dark-matter-swordsman",
+   "versions": 14,
+   "texts": 3
+  },
+  "dark-matter": {
+   "key": "Dark Matter",
+   "name": "Dark Matter",
+   "dir": "dark-matter",
+   "versions": 15,
+   "texts": 0
+  },
+  "dark-mind-eye": {
+   "key": "Dark Mind Eye",
+   "name": "Dark Mind Eye",
+   "dir": "dark-mind-eye",
+   "versions": 19,
+   "texts": 2
+  },
+  "dark-mind": {
+   "key": "Dark Mind",
+   "name": "Dark Mind",
+   "dir": "dark-mind",
+   "versions": 15,
+   "texts": 1
+  },
+  "dark-nebula": {
+   "key": "Dark Nebula",
+   "name": "Dark Nebula",
+   "dir": "dark-nebula",
+   "versions": 14,
+   "texts": 3
+  },
+  "dark-ritual": {
+   "key": "Dark Ritual",
+   "name": "Dark Ritual",
+   "dir": "dark-ritual",
+   "versions": 10,
+   "texts": 2
+  },
+  "dark-sword": {
+   "key": "Dark Sword",
+   "name": "Dark Sword",
+   "dir": "dark-sword",
+   "versions": 6,
+   "texts": 3
+  },
+  "dark-tentacle": {
+   "key": "Dark Tentacle",
+   "name": "Dark Tentacle",
+   "dir": "dark-tentacle",
+   "versions": 11,
+   "texts": 0
+  },
+  "daroach": {
+   "key": "Daroach",
+   "name": "Daroach",
+   "dir": "daroach",
+   "versions": 13,
+   "texts": 3
+  },
+  "dashmaster": {
+   "key": "Dashmaster",
+   "name": "Dashmaster",
+   "dir": "dashmaster",
+   "versions": 6,
+   "texts": 1
+  },
+  "dead-orchid-children": {
+   "key": "Dead Orchid Children",
+   "name": "Dead Orchid Children",
+   "dir": "dead-orchid-children",
+   "versions": 1,
+   "texts": 0
+  },
+  "deep-focus": {
+   "key": "Deep Focus",
+   "name": "Deep Focus",
+   "dir": "deep-focus",
+   "versions": 3,
+   "texts": 0
+  },
+  "deepnest": {
+   "key": "Deepnest",
+   "name": "Deepnest",
+   "dir": "deepnest",
+   "versions": 5,
+   "texts": 0
+  },
+  "defcon-panda": {
+   "key": "Defcon Panda",
+   "name": "Defcon Panda",
+   "dir": "defcon-panda",
+   "versions": 15,
+   "texts": 0
+  },
+  "delicate-flower": {
+   "key": "Delicate Flower",
+   "name": "Delicate Flower",
+   "dir": "delicate-flower",
+   "versions": 8,
+   "texts": 0
+  },
+  "delta": {
+   "key": "Delta",
+   "name": "Delta",
+   "dir": "delta",
+   "versions": 1,
+   "texts": 0
+  },
+  "despair": {
+   "key": "Despair",
+   "name": "Despair",
+   "dir": "despair",
+   "versions": 6,
+   "texts": 0
+  },
+  "diligent-watch": {
+   "key": "Diligent Watch",
+   "name": "Diligent Watch",
+   "dir": "diligent-watch",
+   "versions": 6,
+   "texts": 0
+  },
+  "dimension-d": {
+   "key": "Dimension D",
+   "name": "Dimension D",
+   "dir": "dimension-d",
+   "versions": 10,
+   "texts": 0
+  },
+  "dirty-bed": {
+   "key": "Dirty Bed",
+   "name": "Dirty Bed",
+   "dir": "dirty-bed",
+   "versions": 3,
+   "texts": 0
+  },
+  "disarmed": {
+   "key": "Disarmed",
+   "name": "Disarmed",
+   "dir": "disarmed",
+   "versions": 1,
+   "texts": 0
+  },
+  "disgusted": {
+   "key": "Disgusted",
+   "name": "Disgusted",
+   "dir": "disgusted",
+   "versions": 7,
+   "texts": 0
+  },
+  "doc": {
+   "key": "Doc",
+   "name": "Doc",
+   "dir": "doc",
+   "versions": 14,
+   "texts": 1
+  },
+  "doctor-zomboss": {
+   "key": "Doctor Zomboss",
+   "name": "Doctor Zomboss",
+   "dir": "doctor-zomboss",
+   "versions": 15,
+   "texts": 0
+  },
+  "dogma": {
+   "key": "Dogma",
+   "name": "Dogma",
+   "dir": "dogma",
+   "versions": 15,
+   "texts": 0
+  },
+  "doopliss": {
+   "key": "DooPliss",
+   "name": "Doopliss",
+   "dir": "doopliss",
+   "versions": 16,
+   "texts": 1
+  },
+  "door-shield": {
+   "key": "Door Shield",
+   "name": "Door Shield",
+   "dir": "door-shield",
+   "versions": 6,
+   "texts": 0
+  },
+  "double-pain": {
+   "key": "Double Pain",
+   "name": "Double Pain",
+   "dir": "double-pain",
+   "versions": 11,
+   "texts": 2
+  },
+  "dr-robotnik-s-roboticizer": {
+   "key": "Dr Robotnik's Roboticizer",
+   "name": "Dr. Robotnik's Roboticizer",
+   "dir": "dr-robotnik-s-roboticizer",
+   "versions": 2,
+   "texts": 0
+  },
+  "dragon-mount": {
+   "key": "Dragon Mount",
+   "name": "Dragon Mount",
+   "dir": "dragon-mount",
+   "versions": 9,
+   "texts": 0
+  },
+  "drawcia-soul": {
+   "key": "Drawcia Soul",
+   "name": "Drawcia Soul",
+   "dir": "drawcia-soul",
+   "versions": 19,
+   "texts": 2
+  },
+  "drawcia": {
+   "key": "Drawcia",
+   "name": "Drawcia",
+   "dir": "drawcia",
+   "versions": 12,
+   "texts": 3
+  },
+  "dreamshield": {
+   "key": "Dreamshield",
+   "name": "Dreamshield",
+   "dir": "dreamshield",
+   "versions": 1,
+   "texts": 0
+  },
+  "drone": {
+   "key": "Drone",
+   "name": "Drone",
+   "dir": "drone",
+   "versions": 4,
+   "texts": 0
+  },
+  "dryya": {
+   "key": "Dryya",
+   "name": "Dryya",
+   "dir": "dryya",
+   "versions": 5,
+   "texts": 0
+  },
+  "duel-flag": {
+   "key": "Duel Flag",
+   "name": "Duel Flag",
+   "dir": "duel-flag",
+   "versions": 1,
+   "texts": 0
+  },
+  "dull-knife": {
+   "key": "Dull Knife",
+   "name": "Dull Knife",
+   "dir": "dull-knife",
+   "versions": 1,
+   "texts": 0
+  },
+  "dumplings": {
+   "key": "Dumplings",
+   "name": "Dumplings",
+   "dir": "dumplings",
+   "versions": 10,
+   "texts": 0
+  },
+  "dung-defender": {
+   "key": "Dung Defender",
+   "name": "Dung Defender",
+   "dir": "dung-defender",
+   "versions": 19,
+   "texts": 0
+  },
+  "dyna-blade": {
+   "key": "Dyna Blade",
+   "name": "Dyna Blade",
+   "dir": "dyna-blade",
+   "versions": 13,
+   "texts": 1
+  },
+  "dynamite": {
+   "key": "Dynamite",
+   "name": "Dynamite",
+   "dir": "dynamite",
+   "versions": 5,
+   "texts": 1
+  },
+  "e-gadd-s-garage": {
+   "key": "E Gadd's Garage",
+   "name": "E. Gadd's Garage",
+   "dir": "e-gadd-s-garage",
+   "versions": 1,
+   "texts": 0
+  },
+  "earth-totem": {
+   "key": "Earth Totem",
+   "name": "Earth Totem",
+   "dir": "earth-totem",
+   "versions": 10,
+   "texts": 0
+  },
+  "eden-s-soul": {
+   "key": "Eden's Soul",
+   "name": "Eden's Soul",
+   "dir": "eden-s-soul",
+   "versions": 13,
+   "texts": 0
+  },
+  "edible": {
+   "key": "Edible",
+   "name": "Edible",
+   "dir": "edible",
+   "versions": 1,
+   "texts": 0
+  },
+  "electric-dart": {
+   "key": "Electric Dart",
+   "name": "Electric Dart",
+   "dir": "electric-dart",
+   "versions": 1,
+   "texts": 0
+  },
+  "electro-probe": {
+   "key": "Electro Probe",
+   "name": "Electro Probe",
+   "dir": "electro-probe",
+   "versions": 11,
+   "texts": 0
+  },
+  "elemental-world": {
+   "key": "Elemental World",
+   "name": "Elemental World",
+   "dir": "elemental-world",
+   "versions": 4,
+   "texts": 0
+  },
+  "elmadan": {
+   "key": "Elmadan",
+   "name": "Elmadan",
+   "dir": "elmadan",
+   "versions": 3,
+   "texts": 0
+  },
+  "empowered": {
+   "key": "Empowered",
+   "name": "Empowered",
+   "dir": "empowered",
+   "versions": 9,
+   "texts": 0
+  },
+  "empress-bulblax": {
+   "key": "Empress Bulblax",
+   "name": "Empress Bulblax",
+   "dir": "empress-bulblax",
+   "versions": 1,
+   "texts": 0
+  },
+  "empty": {
+   "key": "Empty",
+   "name": "Empty",
+   "dir": "empty",
+   "versions": 6,
+   "texts": 0
+  },
+  "energy-ritual": {
+   "key": "Energy Ritual",
+   "name": "Energy Ritual",
+   "dir": "energy-ritual",
+   "versions": 11,
+   "texts": 0
+  },
+  "enfeebled": {
+   "key": "Enfeebled",
+   "name": "Enfeebled",
+   "dir": "enfeebled",
+   "versions": 6,
+   "texts": 0
+  },
+  "engorged": {
+   "key": "Engorged",
+   "name": "Engorged",
+   "dir": "engorged",
+   "versions": 1,
+   "texts": 0
+  },
+  "enraged": {
+   "key": "Enraged",
+   "name": "Enraged",
+   "dir": "enraged",
+   "versions": 7,
+   "texts": 0
+  },
+  "erasure": {
+   "key": "Erasure",
+   "name": "Erasure",
+   "dir": "erasure",
+   "versions": 10,
+   "texts": 3
+  },
+  "error-room": {
+   "key": "Error Room",
+   "name": "Error Room",
+   "dir": "error-room",
+   "versions": 4,
+   "texts": 0
+  },
+  "evil-cookie": {
+   "key": "Evil Cookie",
+   "name": "Evil Cookie",
+   "dir": "evil-cookie",
+   "versions": 9,
+   "texts": 0
+  },
+  "excess-express": {
+   "key": "Excess Express",
+   "name": "Excess Express",
+   "dir": "excess-express",
+   "versions": 2,
+   "texts": 0
+  },
+  "exposed": {
+   "key": "Exposed",
+   "name": "Exposed",
+   "dir": "exposed",
+   "versions": 4,
+   "texts": 0
+  },
+  "false-knight": {
+   "key": "False Knight",
+   "name": "False Knight",
+   "dir": "false-knight",
+   "versions": 23,
+   "texts": 1
+  },
+  "fatty-whale": {
+   "key": "Fatty Whale",
+   "name": "Fatty Whale",
+   "dir": "fatty-whale",
+   "versions": 14,
+   "texts": 3
+  },
+  "fawful": {
+   "key": "Fawful",
+   "name": "Fawful",
+   "dir": "fawful",
+   "versions": 16,
+   "texts": 4
+  },
+  "feast": {
+   "key": "Feast",
+   "name": "Feast",
+   "dir": "feast",
+   "versions": 14,
+   "texts": 0
+  },
+  "felhunter": {
+   "key": "Felhunter",
+   "name": "Felhunter",
+   "dir": "felhunter",
+   "versions": 10,
+   "texts": 0
+  },
+  "final-dark-mind-eye": {
+   "key": "Final Dark Mind Eye",
+   "name": "Final Dark Mind Eye",
+   "dir": "final-dark-mind-eye",
+   "versions": 14,
+   "texts": 3
+  },
+  "fire-staff": {
+   "key": "Fire Staff",
+   "name": "Fire Staff",
+   "dir": "fire-staff",
+   "versions": 9,
+   "texts": 0
+  },
+  "fire-totem": {
+   "key": "Fire Totem",
+   "name": "Fire Totem",
+   "dir": "fire-totem",
+   "versions": 8,
+   "texts": 0
+  },
+  "fireball": {
+   "key": "Fireball",
+   "name": "Fireball",
+   "dir": "fireball",
+   "versions": 6,
+   "texts": 0
+  },
+  "firebomb": {
+   "key": "Firebomb",
+   "name": "Firebomb",
+   "dir": "firebomb",
+   "versions": 12,
+   "texts": 0
+  },
+  "flame-bomb": {
+   "key": "Flame Bomb",
+   "name": "Flame Bomb",
+   "dir": "flame-bomb",
+   "versions": 11,
+   "texts": 0
+  },
+  "flameblade": {
+   "key": "Flameblade",
+   "name": "Flameblade",
+   "dir": "flameblade",
+   "versions": 8,
+   "texts": 0
+  },
+  "flip": {
+   "key": "Flip",
+   "name": "Flip",
+   "dir": "flip",
+   "versions": 5,
+   "texts": 0
+  },
+  "flower-of-decay": {
+   "key": "Flower of Decay",
+   "name": "Flower of Decay",
+   "dir": "flower-of-decay",
+   "versions": 12,
+   "texts": 0
+  },
+  "flurrie": {
+   "key": "Flurrie",
+   "name": "Flurrie",
+   "dir": "flurrie",
+   "versions": 11,
+   "texts": 0
+  },
+  "fog-canyon": {
+   "key": "Fog Canyon",
+   "name": "Fog Canyon",
+   "dir": "fog-canyon",
+   "versions": 3,
+   "texts": 0
+  },
+  "fool-eater": {
+   "key": "Fool Eater",
+   "name": "Fool Eater",
+   "dir": "fool-eater",
+   "versions": 1,
+   "texts": 0
+  },
+  "forget-me-now": {
+   "key": "Forget Me Now",
+   "name": "Forget Me Now",
+   "dir": "forget-me-now",
+   "versions": 5,
+   "texts": 0
+  },
+  "forgotten-crossroads": {
+   "key": "Forgotten Crossroads",
+   "name": "Forgotten Crossroads",
+   "dir": "forgotten-crossroads",
+   "versions": 3,
+   "texts": 0
+  },
+  "forsaken-city": {
+   "key": "Forsaken City",
+   "name": "Forsaken City",
+   "dir": "forsaken-city",
+   "versions": 3,
+   "texts": 0
+  },
+  "fragile-heart": {
+   "key": "Fragile Heart",
+   "name": "Fragile Heart",
+   "dir": "fragile-heart",
+   "versions": 10,
+   "texts": 2
+  },
+  "fragile-strength": {
+   "key": "Fragile Strength",
+   "name": "Fragile Strength",
+   "dir": "fragile-strength",
+   "versions": 9,
+   "texts": 0
+  },
+  "freeze-spell": {
+   "key": "Freeze Spell",
+   "name": "Freeze Spell",
+   "dir": "freeze-spell",
+   "versions": 10,
+   "texts": 1
+  },
+  "frog": {
+   "key": "Frog",
+   "name": "Frog",
+   "dir": "frog",
+   "versions": 13,
+   "texts": 2
+  },
+  "frostbite": {
+   "key": "Frostbite",
+   "name": "Frostbite",
+   "dir": "frostbite",
+   "versions": 9,
+   "texts": 0
+  },
+  "frostmourne": {
+   "key": "Frostmourne",
+   "name": "Frostmourne",
+   "dir": "frostmourne",
+   "versions": 1,
+   "texts": 0
+  },
+  "frozen-in-time": {
+   "key": "Frozen In Time",
+   "name": "Frozen In Time",
+   "dir": "frozen-in-time",
+   "versions": 5,
+   "texts": 2
+  },
+  "frozen": {
+   "key": "Frozen",
+   "name": "Frozen",
+   "dir": "frozen",
+   "versions": 7,
+   "texts": 0
+  },
+  "funky-d-luffy": {
+   "key": "Funky D Luffy",
+   "name": "Funky D. Luffy",
+   "dir": "funky-d-luffy",
+   "versions": 1,
+   "texts": 0
+  },
+  "future-niiue": {
+   "key": "Future Niiue",
+   "name": "Future Niiue",
+   "dir": "future-niiue",
+   "versions": 1,
+   "texts": 0
+  },
+  "fuzzy-horde": {
+   "key": "Fuzzy Horde",
+   "name": "Fuzzy Horde",
+   "dir": "fuzzy-horde",
+   "versions": 15,
+   "texts": 1
+  },
+  "galacta-knight": {
+   "key": "Galacta Knight",
+   "name": "Galacta Knight",
+   "dir": "galacta-knight",
+   "versions": 21,
+   "texts": 1
+  },
+  "galacta-warrior": {
+   "key": "Galacta Warrior",
+   "name": "Galacta Warrior",
+   "dir": "galacta-warrior",
+   "versions": 10,
+   "texts": 4
+  },
+  "gandhi": {
+   "key": "Gandhi",
+   "name": "Gandhi",
+   "dir": "gandhi",
+   "versions": 9,
+   "texts": 0
+  },
+  "gasoline": {
+   "key": "Gasoline",
+   "name": "Gasoline",
+   "dir": "gasoline",
+   "versions": 11,
+   "texts": 1
+  },
+  "glaive-main-cannon": {
+   "key": "Glaive Main Cannon",
+   "name": "Glaive Main Cannon",
+   "dir": "glaive-main-cannon",
+   "versions": 9,
+   "texts": 2
+  },
+  "glitz-pit": {
+   "key": "Glitz Pit",
+   "name": "Glitz Pit",
+   "dir": "glitz-pit",
+   "versions": 3,
+   "texts": 0
+  },
+  "glowing-womb": {
+   "key": "Glowing Womb",
+   "name": "Glowing Womb",
+   "dir": "glowing-womb",
+   "versions": 9,
+   "texts": 2
+  },
+  "glued": {
+   "key": "Glued",
+   "name": "Glued",
+   "dir": "glued",
+   "versions": 1,
+   "texts": 0
+  },
+  "god-tamer": {
+   "key": "God Tamer",
+   "name": "God Tamer",
+   "dir": "god-tamer",
+   "versions": 16,
+   "texts": 0
+  },
+  "godhead": {
+   "key": "Godhead",
+   "name": "Godhead",
+   "dir": "godhead",
+   "versions": 2,
+   "texts": 0
+  },
+  "godskin-apostle": {
+   "key": "Godskin Apostle",
+   "name": "Godskin Apostle",
+   "dir": "godskin-apostle",
+   "versions": 4,
+   "texts": 0
+  },
+  "godskin-noble": {
+   "key": "Godskin Noble",
+   "name": "Godskin Noble",
+   "dir": "godskin-noble",
+   "versions": 3,
+   "texts": 0
+  },
+  "gold-fuzzy": {
+   "key": "Gold Fuzzy",
+   "name": "Gold Fuzzy",
+   "dir": "gold-fuzzy",
+   "versions": 18,
+   "texts": 3
+  },
+  "golden-bomb": {
+   "key": "Golden Bomb",
+   "name": "Golden Bomb",
+   "dir": "golden-bomb",
+   "versions": 6,
+   "texts": 1
+  },
+  "golden-freddy": {
+   "key": "Golden Freddy",
+   "name": "Golden Freddy",
+   "dir": "golden-freddy",
+   "versions": 20,
+   "texts": 6
+  },
+  "golden-metronome": {
+   "key": "Golden Metronome",
+   "name": "Golden Metronome",
+   "dir": "golden-metronome",
+   "versions": 10,
+   "texts": 3
+  },
+  "goombella": {
+   "key": "Goombella",
+   "name": "Goombella",
+   "dir": "goombella",
+   "versions": 8,
+   "texts": 0
+  },
+  "gooper-blooper": {
+   "key": "Gooper Blooper",
+   "name": "Gooper Blooper",
+   "dir": "gooper-blooper",
+   "versions": 17,
+   "texts": 1
+  },
+  "grand-doomer": {
+   "key": "Grand Doomer",
+   "name": "Grand Doomer",
+   "dir": "grand-doomer",
+   "versions": 13,
+   "texts": 1
+  },
+  "grapes": {
+   "key": "Grapes",
+   "name": "Grapes",
+   "dir": "grapes",
+   "versions": 9,
+   "texts": 1
+  },
+  "green-mage": {
+   "key": "Green Mage",
+   "name": "Green Mage",
+   "dir": "green-mage",
+   "versions": 13,
+   "texts": 3
+  },
+  "greenpath": {
+   "key": "Greenpath",
+   "name": "Greenpath",
+   "dir": "greenpath",
+   "versions": 4,
+   "texts": 0
+  },
+  "grey-prince-zote": {
+   "key": "Grey Prince Zote",
+   "name": "Grey Prince Zote",
+   "dir": "grey-prince-zote",
+   "versions": 13,
+   "texts": 0
+  },
+  "grief": {
+   "key": "Grief",
+   "name": "Grief",
+   "dir": "grief",
+   "versions": 2,
+   "texts": 0
+  },
+  "grimmchild": {
+   "key": "Grimmchild",
+   "name": "Grimmchild",
+   "dir": "grimmchild",
+   "versions": 12,
+   "texts": 0
+  },
+  "grimora": {
+   "key": "Grimora",
+   "name": "Grimora",
+   "dir": "grimora",
+   "versions": 4,
+   "texts": 0
+  },
+  "groda": {
+   "key": "Groda",
+   "name": "Groda",
+   "dir": "groda",
+   "versions": 17,
+   "texts": 0
+  },
+  "grodus-x": {
+   "key": "Grodus X",
+   "name": "Grodus X",
+   "dir": "grodus-x",
+   "versions": 14,
+   "texts": 0
+  },
+  "grodus": {
+   "key": "Grodus",
+   "name": "Grodus",
+   "dir": "grodus",
+   "versions": 19,
+   "texts": 2
+  },
+  "grubsong": {
+   "key": "Grubsong",
+   "name": "Grubsong",
+   "dir": "grubsong",
+   "versions": 2,
+   "texts": 0
+  },
+  "gulka": {
+   "key": "Gulka",
+   "name": "Gulka",
+   "dir": "gulka",
+   "versions": 1,
+   "texts": 0
+  },
+  "gust-of-trees": {
+   "key": "Gust of Trees",
+   "name": "Gust of Trees",
+   "dir": "gust-of-trees",
+   "versions": 3,
+   "texts": 0
+  },
+  "gust-of-wind": {
+   "key": "Gust of Wind",
+   "name": "Gust of Wind",
+   "dir": "gust-of-wind",
+   "versions": 18,
+   "texts": 0
+  },
+  "hadal-stew": {
+   "key": "Hadal Stew",
+   "name": "Hadal Stew",
+   "dir": "hadal-stew",
+   "versions": 1,
+   "texts": 0
+  },
+  "halberd-main-cannon": {
+   "key": "Halberd Main Cannon",
+   "name": "Halberd Main Cannon",
+   "dir": "halberd-main-cannon",
+   "versions": 12,
+   "texts": 0
+  },
+  "halberd-reactor": {
+   "key": "Halberd Reactor",
+   "name": "Halberd Reactor",
+   "dir": "halberd-reactor",
+   "versions": 11,
+   "texts": 3
+  },
+  "halo": {
+   "key": "Halo",
+   "name": "Halo",
+   "dir": "halo",
+   "versions": 4,
+   "texts": 0
+  },
+  "hardened": {
+   "key": "Hardened",
+   "name": "Hardened",
+   "dir": "hardened",
+   "versions": 7,
+   "texts": 0
+  },
+  "hawk": {
+   "key": "Hawk",
+   "name": "Hawk",
+   "dir": "hawk",
+   "versions": 11,
+   "texts": 0
+  },
+  "healing-ritual": {
+   "key": "Healing Ritual",
+   "name": "Healing Ritual",
+   "dir": "healing-ritual",
+   "versions": 9,
+   "texts": 0
+  },
+  "heavy-blow": {
+   "key": "Heavy Blow",
+   "name": "Heavy Blow",
+   "dir": "heavy-blow",
+   "versions": 1,
+   "texts": 0
+  },
+  "heavy-ion": {
+   "key": "Heavy Ion",
+   "name": "Heavy Ion",
+   "dir": "heavy-ion",
+   "versions": 1,
+   "texts": 0
+  },
+  "heavy-lobster": {
+   "key": "Heavy Lobster",
+   "name": "Heavy Lobster",
+   "dir": "heavy-lobster",
+   "versions": 17,
+   "texts": 1
+  },
+  "heavy-mole": {
+   "key": "Heavy Mole",
+   "name": "Heavy Mole",
+   "dir": "heavy-mole",
+   "versions": 15,
+   "texts": 2
+  },
+  "hegemol": {
+   "key": "Hegemol",
+   "name": "Hegemol",
+   "dir": "hegemol",
+   "versions": 7,
+   "texts": 0
+  },
+  "helpful-mannequin": {
+   "key": "Helpful Mannequin",
+   "name": "Helpful Mannequin",
+   "dir": "helpful-mannequin",
+   "versions": 1,
+   "texts": 0
+  },
+  "hemorrhaging": {
+   "key": "Hemorrhaging",
+   "name": "Hemorrhaging",
+   "dir": "hemorrhaging",
+   "versions": 7,
+   "texts": 0
+  },
+  "hero-cap": {
+   "key": "Hero Cap",
+   "name": "Hero Cap",
+   "dir": "hero-cap",
+   "versions": 1,
+   "texts": 0
+  },
+  "hexed": {
+   "key": "Hexed",
+   "name": "Hexed",
+   "dir": "hexed",
+   "versions": 11,
+   "texts": 1
+  },
+  "hive-knight": {
+   "key": "Hive Knight",
+   "name": "Hive Knight",
+   "dir": "hive-knight",
+   "versions": 20,
+   "texts": 1
+  },
+  "hiveblood": {
+   "key": "Hiveblood",
+   "name": "Hiveblood",
+   "dir": "hiveblood",
+   "versions": 5,
+   "texts": 0
+  },
+  "holo-defense-api": {
+   "key": "Holo Defense API",
+   "name": "Holo Defense API",
+   "dir": "holo-defense-api",
+   "versions": 8,
+   "texts": 0
+  },
+  "holy-blade": {
+   "key": "Holy Blade",
+   "name": "Holy Blade",
+   "dir": "holy-blade",
+   "versions": 10,
+   "texts": 0
+  },
+  "holy-card": {
+   "key": "Holy Card",
+   "name": "Holy Card",
+   "dir": "holy-card",
+   "versions": 5,
+   "texts": 0
+  },
+  "holy-mantle": {
+   "key": "Holy Mantle",
+   "name": "Holy Mantle",
+   "dir": "holy-mantle",
+   "versions": 3,
+   "texts": 0
+  },
+  "hook": {
+   "key": "Hook",
+   "name": "Hook",
+   "dir": "hook",
+   "versions": 10,
+   "texts": 1
+  },
+  "hooktail-castle": {
+   "key": "Hooktail Castle",
+   "name": "Hooktail Castle",
+   "dir": "hooktail-castle",
+   "versions": 8,
+   "texts": 0
+  },
+  "hooktail": {
+   "key": "Hooktail",
+   "name": "Hooktail",
+   "dir": "hooktail",
+   "versions": 12,
+   "texts": 1
+  },
+  "hornet": {
+   "key": "Hornet",
+   "name": "Hornet",
+   "dir": "hornet",
+   "versions": 18,
+   "texts": 2
+  },
+  "hot-spring": {
+   "key": "Hot Spring",
+   "name": "Hot Spring",
+   "dir": "hot-spring",
+   "versions": 3,
+   "texts": 0
+  },
+  "how-to-jump": {
+   "key": "How to Jump",
+   "name": "How to Jump",
+   "dir": "how-to-jump",
+   "versions": 2,
+   "texts": 0
+  },
+  "hr-d3": {
+   "key": "HR-D3",
+   "name": "HR-D3",
+   "dir": "hr-d3",
+   "versions": 16,
+   "texts": 3
+  },
+  "hr-h": {
+   "key": "HR-H",
+   "name": "HR-H",
+   "dir": "hr-h",
+   "versions": 15,
+   "texts": 1
+  },
+  "humphrey-s-belly": {
+   "key": "Humphrey's Belly",
+   "name": "Humphrey's Belly",
+   "dir": "humphrey-s-belly",
+   "versions": 18,
+   "texts": 0
+  },
+  "humphrey": {
+   "key": "Humphrey",
+   "name": "Humphrey",
+   "dir": "humphrey",
+   "versions": 12,
+   "texts": 0
+  },
+  "hyper": {
+   "key": "Hyper",
+   "name": "Hyper",
+   "dir": "hyper",
+   "versions": 9,
+   "texts": 0
+  },
+  "ice-bomb": {
+   "key": "Ice Bomb",
+   "name": "Ice Bomb",
+   "dir": "ice-bomb",
+   "versions": 6,
+   "texts": 0
+  },
+  "ice-dragon": {
+   "key": "Ice Dragon",
+   "name": "Ice Dragon",
+   "dir": "ice-dragon",
+   "versions": 14,
+   "texts": 2
+  },
+  "ice-staff": {
+   "key": "Ice Staff",
+   "name": "Ice Staff",
+   "dir": "ice-staff",
+   "versions": 9,
+   "texts": 0
+  },
+  "ice-storm": {
+   "key": "Ice Storm",
+   "name": "Ice Storm",
+   "dir": "ice-storm",
+   "versions": 5,
+   "texts": 0
+  },
+  "igor-roballtowski": {
+   "key": "Igor Roballtowski",
+   "name": "Igor Roballtowski",
+   "dir": "igor-roballtowski",
+   "versions": 1,
+   "texts": 0
+  },
+  "igor-robotowski": {
+   "key": "Igor Robotowski",
+   "name": "Igor Robotowski",
+   "dir": "igor-robotowski",
+   "versions": 1,
+   "texts": 0
+  },
+  "imp": {
+   "key": "Imp",
+   "name": "Imp",
+   "dir": "imp",
+   "versions": 12,
+   "texts": 0
+  },
+  "impassable-obstruction": {
+   "key": "Impassable Obstruction",
+   "name": "Impassable Obstruction",
+   "dir": "impassable-obstruction",
+   "versions": 7,
+   "texts": 0
+  },
+  "imprisoned": {
+   "key": "Imprisoned",
+   "name": "Imprisoned",
+   "dir": "imprisoned",
+   "versions": 8,
+   "texts": 1
+  },
+  "inconspicuous-cake": {
+   "key": "Inconspicuous Cake",
+   "name": "Inconspicuous Cake",
+   "dir": "inconspicuous-cake",
+   "versions": 7,
+   "texts": 0
+  },
+  "indoctrination": {
+   "key": "Indoctrination",
+   "name": "Indoctrination",
+   "dir": "indoctrination",
+   "versions": 9,
+   "texts": 0
+  },
+  "infected-crossroads": {
+   "key": "Infected Crossroads",
+   "name": "Infected Crossroads",
+   "dir": "infected-crossroads",
+   "versions": 5,
+   "texts": 0
+  },
+  "infected": {
+   "key": "Infected",
+   "name": "Infected",
+   "dir": "infected",
+   "versions": 5,
+   "texts": 0
+  },
+  "ingredient-desert-limes": {
+   "key": "Ingredient Desert Limes",
+   "name": "Desert Limes",
+   "dir": "ingredient-desert-limes",
+   "versions": 1,
+   "texts": 0
+  },
+  "ingredient-distillery-dough": {
+   "key": "Ingredient Distillery Dough",
+   "name": "Distillery Dough",
+   "dir": "ingredient-distillery-dough",
+   "versions": 1,
+   "texts": 0
+  },
+  "ingredient-gnome-berries": {
+   "key": "Ingredient Gnome Berries",
+   "name": "Gnome Berries",
+   "dir": "ingredient-gnome-berries",
+   "versions": 1,
+   "texts": 0
+  },
+  "ingredient-icy-sugar-cubes": {
+   "key": "Ingredient Icy Sugar Cubes",
+   "name": "Icy Sugar Cubes",
+   "dir": "ingredient-icy-sugar-cubes",
+   "versions": 1,
+   "texts": 0
+  },
+  "ingredient-pineapple-mint": {
+   "key": "Ingredient Pineapple Mint",
+   "name": "Pineapple Mint",
+   "dir": "ingredient-pineapple-mint",
+   "versions": 1,
+   "texts": 0
+  },
+  "ingredient-wondertart": {
+   "key": "Ingredient Wondertart",
+   "name": "Wondertart",
+   "dir": "ingredient-wondertart",
+   "versions": 2,
+   "texts": 0
+  },
+  "inkhole": {
+   "key": "Inkhole",
+   "name": "Inkhole",
+   "dir": "inkhole",
+   "versions": 1,
+   "texts": 0
+  },
+  "inner-eye": {
+   "key": "Inner Eye",
+   "name": "Inner Eye",
+   "dir": "inner-eye",
+   "versions": 2,
+   "texts": 0
+  },
+  "insane": {
+   "key": "Insane",
+   "name": "Insane",
+   "dir": "insane",
+   "versions": 2,
+   "texts": 0
+  },
+  "inspired": {
+   "key": "Inspired",
+   "name": "Inspired",
+   "dir": "inspired",
+   "versions": 8,
+   "texts": 1
+  },
+  "ipsilon": {
+   "key": "Ipsilon",
+   "name": "Ipsilon",
+   "dir": "ipsilon",
+   "versions": 1,
+   "texts": 0
+  },
+  "irithyll": {
+   "key": "Irithyll",
+   "name": "Irithyll",
+   "dir": "irithyll",
+   "versions": 7,
+   "texts": 0
+  },
+  "iron-spikes": {
+   "key": "Iron Spikes",
+   "name": "Iron Spikes",
+   "dir": "iron-spikes",
+   "versions": 11,
+   "texts": 0
+  },
+  "iron-sword": {
+   "key": "Iron Sword",
+   "name": "Iron Sword",
+   "dir": "iron-sword",
+   "versions": 6,
+   "texts": 0
+  },
+  "isma": {
+   "key": "Isma",
+   "name": "Isma",
+   "dir": "isma",
+   "versions": 1,
+   "texts": 0
+  },
+  "jack-in-the-box-zombie": {
+   "key": "Jack-in-the-Box Zombie",
+   "name": "Jack-in-the-Box Zombie",
+   "dir": "jack-in-the-box-zombie",
+   "versions": 8,
+   "texts": 0
+  },
+  "jera": {
+   "key": "Jera",
+   "name": "Jera",
+   "dir": "jera",
+   "versions": 3,
+   "texts": 0
+  },
+  "jetpack": {
+   "key": "Jetpack",
+   "name": "Jetpack",
+   "dir": "jetpack",
+   "versions": 11,
+   "texts": 4
+  },
+  "jevil": {
+   "key": "Jevil",
+   "name": "Jevil",
+   "dir": "jevil",
+   "versions": 3,
+   "texts": 0
+  },
+  "joel-miller": {
+   "key": "Joel Miller",
+   "name": "Joel Miller",
+   "dir": "joel-miller",
+   "versions": 8,
+   "texts": 0
+  },
+  "john-ward": {
+   "key": "John Ward",
+   "name": "John Ward",
+   "dir": "john-ward",
+   "versions": 1,
+   "texts": 0
+  },
+  "joy": {
+   "key": "Joy",
+   "name": "Joy",
+   "dir": "joy",
+   "versions": 7,
+   "texts": 0
+  },
+  "kabula": {
+   "key": "Kabula",
+   "name": "Kabula",
+   "dir": "kabula",
+   "versions": 12,
+   "texts": 2
+  },
+  "kalecgos": {
+   "key": "Kalecgos",
+   "name": "Kalecgos",
+   "dir": "kalecgos",
+   "versions": 16,
+   "texts": 2
+  },
+  "katarina": {
+   "key": "Katarina",
+   "name": "Katarina",
+   "dir": "katarina",
+   "versions": 12,
+   "texts": 4
+  },
+  "keelhaul-key": {
+   "key": "Keelhaul Key",
+   "name": "Keelhaul Key",
+   "dir": "keelhaul-key",
+   "versions": 2,
+   "texts": 0
+  },
+  "kel": {
+   "key": "Kel",
+   "name": "Kel",
+   "dir": "kel",
+   "versions": 13,
+   "texts": 0
+  },
+  "king-bob-omb": {
+   "key": "King Bob-omb",
+   "name": "King Bob-omb",
+   "dir": "king-bob-omb",
+   "versions": 1,
+   "texts": 0
+  },
+  "king-dedede": {
+   "key": "King Dedede",
+   "name": "King Dedede",
+   "dir": "king-dedede",
+   "versions": 15,
+   "texts": 0
+  },
+  "king-harkinian": {
+   "key": "King Harkinian",
+   "name": "King Harkinian",
+   "dir": "king-harkinian",
+   "versions": 5,
+   "texts": 0
+  },
+  "kingsoul": {
+   "key": "Kingsoul",
+   "name": "Kingsoul",
+   "dir": "kingsoul",
+   "versions": 7,
+   "texts": 0
+  },
+  "knight-lost-a-lot": {
+   "key": "Knight Lost A Lot",
+   "name": "Knight Lost A Lot",
+   "dir": "knight-lost-a-lot",
+   "versions": 10,
+   "texts": 0
+  },
+  "koops": {
+   "key": "Koops",
+   "name": "Koops",
+   "dir": "koops",
+   "versions": 5,
+   "texts": 0
+  },
+  "koro-sensei": {
+   "key": "Koro-Sensei",
+   "name": "Koro-Sensei",
+   "dir": "koro-sensei",
+   "versions": 11,
+   "texts": 0
+  },
+  "krabby-patty": {
+   "key": "Krabby Patty",
+   "name": "Krabby Patty",
+   "dir": "krabby-patty",
+   "versions": 2,
+   "texts": 0
+  },
+  "kracko": {
+   "key": "Kracko",
+   "name": "Kracko",
+   "dir": "kracko",
+   "versions": 14,
+   "texts": 0
+  },
+  "kyle": {
+   "key": "Kyle",
+   "name": "hdckighfkvhvgmk",
+   "dir": "kyle",
+   "versions": 8,
+   "texts": 0
+  },
+  "landia": {
+   "key": "Landia",
+   "name": "Landia",
+   "dir": "landia",
+   "versions": 15,
+   "texts": 1
+  },
+  "lazy-worm": {
+   "key": "Lazy Worm",
+   "name": "Lazy Worm",
+   "dir": "lazy-worm",
+   "versions": 1,
+   "texts": 0
+  },
+  "leaf-shield": {
+   "key": "Leaf Shield",
+   "name": "Leaf Shield",
+   "dir": "leaf-shield",
+   "versions": 6,
+   "texts": 0
+  },
+  "leeroy-jenkins": {
+   "key": "Leeroy Jenkins",
+   "name": "LEEROOOOOOOOY JENKINS",
+   "dir": "leeroy-jenkins",
+   "versions": 24,
+   "texts": 2
+  },
+  "leshy": {
+   "key": "Leshy",
+   "name": "Leshy",
+   "dir": "leshy",
+   "versions": 7,
+   "texts": 0
+  },
+  "life-link": {
+   "key": "Life Link",
+   "name": "Life Link",
+   "dir": "life-link",
+   "versions": 10,
+   "texts": 2
+  },
+  "life-shroom": {
+   "key": "Life Shroom",
+   "name": "Life Shroom",
+   "dir": "life-shroom",
+   "versions": 8,
+   "texts": 0
+  },
+  "lightning-bolt": {
+   "key": "Lightning Bolt",
+   "name": "Lightning Bolt",
+   "dir": "lightning-bolt",
+   "versions": 6,
+   "texts": 1
+  },
+  "lil-spood": {
+   "key": "Lil Spood",
+   "name": "Lil Spood",
+   "dir": "lil-spood",
+   "versions": 1,
+   "texts": 0
+  },
+  "lit-bob-omb": {
+   "key": "Lit Bob-omb",
+   "name": "Lit Bob-omb",
+   "dir": "lit-bob-omb",
+   "versions": 1,
+   "texts": 0
+  },
+  "little-guy": {
+   "key": "Little Guy",
+   "name": "Little Guy",
+   "dir": "little-guy",
+   "versions": 4,
+   "texts": 0
+  },
+  "living-bread": {
+   "key": "Living Bread",
+   "name": "Living Bread",
+   "dir": "living-bread",
+   "versions": 10,
+   "texts": 0
+  },
+  "loony": {
+   "key": "Loony",
+   "name": "Loony",
+   "dir": "loony",
+   "versions": 6,
+   "texts": 0
+  },
+  "lor-starcutter": {
+   "key": "Lor Starcutter",
+   "name": "Lor Starcutter",
+   "dir": "lor-starcutter",
+   "versions": 14,
+   "texts": 3
+  },
+  "lord-crump": {
+   "key": "Lord Crump",
+   "name": "Lord Crump",
+   "dir": "lord-crump",
+   "versions": 23,
+   "texts": 4
+  },
+  "lorian": {
+   "key": "Lorian",
+   "name": "Lorian",
+   "dir": "lorian",
+   "versions": 22,
+   "texts": 0
+  },
+  "lost-kin": {
+   "key": "Lost Kin",
+   "name": "Lost Kin",
+   "dir": "lost-kin",
+   "versions": 1,
+   "texts": 0
+  },
+  "lothric": {
+   "key": "Lothric",
+   "name": "Lothric",
+   "dir": "lothric",
+   "versions": 21,
+   "texts": 1
+  },
+  "love": {
+   "key": "Love",
+   "name": "Love",
+   "dir": "love",
+   "versions": 7,
+   "texts": 0
+  },
+  "machine-gun": {
+   "key": "Machine Gun",
+   "name": "Machine Gun",
+   "dir": "machine-gun",
+   "versions": 1,
+   "texts": 0
+  },
+  "macho-grubba": {
+   "key": "Macho Grubba",
+   "name": "Macho Grubba",
+   "dir": "macho-grubba",
+   "versions": 15,
+   "texts": 4
+  },
+  "maggy-s-bow": {
+   "key": "Maggy's Bow",
+   "name": "Maggy's Bow",
+   "dir": "maggy-s-bow",
+   "versions": 4,
+   "texts": 0
+  },
+  "magic-hammer": {
+   "key": "Magic Hammer",
+   "name": "Magic Hammer",
+   "dir": "magic-hammer",
+   "versions": 10,
+   "texts": 2
+  },
+  "magic-shield": {
+   "key": "Magic Shield",
+   "name": "Magic Shield",
+   "dir": "magic-shield",
+   "versions": 9,
+   "texts": 1
+  },
+  "magnet-shroom": {
+   "key": "Magnet-shroom",
+   "name": "Magnet-shroom",
+   "dir": "magnet-shroom",
+   "versions": 4,
+   "texts": 0
+  },
+  "magnum-opus": {
+   "key": "Magnum Opus",
+   "name": "Magnum Opus",
+   "dir": "magnum-opus",
+   "versions": 4,
+   "texts": 0
+  },
+  "magnus-von-grapple": {
+   "key": "Magnus von Grapple",
+   "name": "Magnus von Grapple",
+   "dir": "magnus-von-grapple",
+   "versions": 13,
+   "texts": 0
+  },
+  "magolor": {
+   "key": "Magolor",
+   "name": "Magolor",
+   "dir": "magolor",
+   "versions": 13,
+   "texts": 3
+  },
+  "man-serpent-s-shield": {
+   "key": "Man-Serpent's Shield",
+   "name": "Man-Serpent's Shield",
+   "dir": "man-serpent-s-shield",
+   "versions": 3,
+   "texts": 0
+  },
+  "mangle": {
+   "key": "Mangle",
+   "name": "Mangle",
+   "dir": "mangle",
+   "versions": 18,
+   "texts": 0
+  },
+  "mantis-lords": {
+   "key": "Mantis Lords",
+   "name": "Mantis Lords",
+   "dir": "mantis-lords",
+   "versions": 17,
+   "texts": 5
+  },
+  "mantis": {
+   "key": "Mantis",
+   "name": "Mantis",
+   "dir": "mantis",
+   "versions": 1,
+   "texts": 0
+  },
+  "mari": {
+   "key": "Mari",
+   "name": "Mari",
+   "dir": "mari",
+   "versions": 14,
+   "texts": 2
+  },
+  "marilyn": {
+   "key": "Marilyn",
+   "name": "Marilyn",
+   "dir": "marilyn",
+   "versions": 19,
+   "texts": 0
+  },
+  "marked-for-death": {
+   "key": "Marked For Death",
+   "name": "Marked For Death",
+   "dir": "marked-for-death",
+   "versions": 4,
+   "texts": 0
+  },
+  "marked-for-life": {
+   "key": "Marked For Life",
+   "name": "Marked For Life",
+   "dir": "marked-for-life",
+   "versions": 4,
+   "texts": 0
+  },
+  "markoth": {
+   "key": "Markoth",
+   "name": "Markoth",
+   "dir": "markoth",
+   "versions": 1,
+   "texts": 0
+  },
+  "martlet": {
+   "key": "Martlet",
+   "name": "Martlet",
+   "dir": "martlet",
+   "versions": 2,
+   "texts": 0
+  },
+  "marx": {
+   "key": "Marx",
+   "name": "Marx",
+   "dir": "marx",
+   "versions": 16,
+   "texts": 6
+  },
+  "masher": {
+   "key": "Masher",
+   "name": "Masher",
+   "dir": "masher",
+   "versions": 13,
+   "texts": 4
+  },
+  "masked-dedede": {
+   "key": "Masked Dedede",
+   "name": "Masked Dedede",
+   "dir": "masked-dedede",
+   "versions": 13,
+   "texts": 1
+  },
+  "massive-moss-charger": {
+   "key": "Massive Moss Charger",
+   "name": "Massive Moss Charger",
+   "dir": "massive-moss-charger",
+   "versions": 3,
+   "texts": 0
+  },
+  "master-hand": {
+   "key": "Master Hand",
+   "name": "Master Hand",
+   "dir": "master-hand",
+   "versions": 18,
+   "texts": 2
+  },
+  "matterling": {
+   "key": "Matterling",
+   "name": "Matterling",
+   "dir": "matterling",
+   "versions": 8,
+   "texts": 4
+  },
+  "maxim-tomato": {
+   "key": "Maxim Tomato",
+   "name": "Maxim Tomato",
+   "dir": "maxim-tomato",
+   "versions": 6,
+   "texts": 0
+  },
+  "mechanical-shield": {
+   "key": "Mechanical Shield",
+   "name": "Mechanical Shield",
+   "dir": "mechanical-shield",
+   "versions": 7,
+   "texts": 1
+  },
+  "mega-titan": {
+   "key": "Mega Titan",
+   "name": "Mega Titan",
+   "dir": "mega-titan",
+   "versions": 15,
+   "texts": 3
+  },
+  "meta-knight": {
+   "key": "Meta Knight",
+   "name": "Meta Knight",
+   "dir": "meta-knight",
+   "versions": 15,
+   "texts": 3
+  },
+  "metal-general": {
+   "key": "Metal General",
+   "name": "Metal General",
+   "dir": "metal-general",
+   "versions": 14,
+   "texts": 3
+  },
+  "metal-shield": {
+   "key": "Metal Shield",
+   "name": "Metal Shield",
+   "dir": "metal-shield",
+   "versions": 6,
+   "texts": 0
+  },
+  "metronome-lite": {
+   "key": "Metronome Lite",
+   "name": "Metronome Lite",
+   "dir": "metronome-lite",
+   "versions": 8,
+   "texts": 0
+  },
+  "metronome": {
+   "key": "Metronome",
+   "name": "Metronome",
+   "dir": "metronome",
+   "versions": 9,
+   "texts": 0
+  },
+  "mettaton-neo": {
+   "key": "Mettaton NEO",
+   "name": "Mettaton NEO",
+   "dir": "mettaton-neo",
+   "versions": 0,
+   "texts": 4
+  },
+  "mettaton": {
+   "key": "Mettaton",
+   "name": "Mettaton",
+   "dir": "mettaton",
+   "versions": 26,
+   "texts": 1
+  },
+  "miasma": {
+   "key": "Miasma",
+   "name": "Smorg Miasma",
+   "dir": "miasma",
+   "versions": 9,
+   "texts": 0
+  },
+  "michael-s-blessing": {
+   "key": "Michael's Blessing",
+   "name": "Michael's Blessing",
+   "dir": "michael-s-blessing",
+   "versions": 1,
+   "texts": 0
+  },
+  "michael": {
+   "key": "Michael",
+   "name": "Michael",
+   "dir": "michael",
+   "versions": 8,
+   "texts": 0
+  },
+  "mighty-pebble": {
+   "key": "Mighty Pebble",
+   "name": "Mighty Pebble",
+   "dir": "mighty-pebble",
+   "versions": 6,
+   "texts": 0
+  },
+  "miles-edgeworth": {
+   "key": "Miles Edgeworth",
+   "name": "Miles Edgeworth",
+   "dir": "miles-edgeworth",
+   "versions": 2,
+   "texts": 0
+  },
+  "militron-no-armor": {
+   "key": "Militron (No Armor)",
+   "name": "Militron (No Armor)",
+   "dir": "militron-no-armor",
+   "versions": 2,
+   "texts": 0
+  },
+  "militron": {
+   "key": "Militron",
+   "name": "Militron",
+   "dir": "militron",
+   "versions": 2,
+   "texts": 0
+  },
+  "mimic": {
+   "key": "Mimic",
+   "name": "Mimic",
+   "dir": "mimic",
+   "versions": 12,
+   "texts": 0
+  },
+  "minecraft-panda": {
+   "key": "Minecraft Panda",
+   "name": "Minecraft Panda",
+   "dir": "minecraft-panda",
+   "versions": 12,
+   "texts": 0
+  },
+  "mini-bee": {
+   "key": "Mini Bee",
+   "name": "Mini Bee",
+   "dir": "mini-bee",
+   "versions": 10,
+   "texts": 4
+  },
+  "mini-doomer": {
+   "key": "Mini Doomer",
+   "name": "Mini Doomer",
+   "dir": "mini-doomer",
+   "versions": 8,
+   "texts": 0
+  },
+  "mini-drill": {
+   "key": "Mini Drill",
+   "name": "Mini Drill",
+   "dir": "mini-drill",
+   "versions": 10,
+   "texts": 3
+  },
+  "minion-dematerializer": {
+   "key": "Minion Dematerializer",
+   "name": "Minion Dematerializer",
+   "dir": "minion-dematerializer",
+   "versions": 7,
+   "texts": 0
+  },
+  "miracle-matter": {
+   "key": "Miracle Matter",
+   "name": "Miracle Matter",
+   "dir": "miracle-matter",
+   "versions": 13,
+   "texts": 1
+  },
+  "mol-d-truffy": {
+   "key": "Mol D Truffy",
+   "name": "Mol D. Truffy",
+   "dir": "mol-d-truffy",
+   "versions": 2,
+   "texts": 0
+  },
+  "mom-s-knife": {
+   "key": "Mom's Knife",
+   "name": "Mom's Knife",
+   "dir": "mom-s-knife",
+   "versions": 4,
+   "texts": 0
+  },
+  "monkey-d-letion": {
+   "key": "Monkey D Letion",
+   "name": "Monkey D. Letion",
+   "dir": "monkey-d-letion",
+   "versions": 1,
+   "texts": 0
+  },
+  "monkey-d-pression": {
+   "key": "Monkey D Pression",
+   "name": "Monkey D. Pression",
+   "dir": "monkey-d-pression",
+   "versions": 1,
+   "texts": 0
+  },
+  "monkey-d-vour": {
+   "key": "Monkey D Vour",
+   "name": "Monkey D. Vour",
+   "dir": "monkey-d-vour",
+   "versions": 1,
+   "texts": 0
+  },
+  "monster-meat": {
+   "key": "Monster Meat",
+   "name": "Monster Meat",
+   "dir": "monster-meat",
+   "versions": 4,
+   "texts": 0
+  },
+  "moose-goose": {
+   "key": "Moose Goose",
+   "name": "Moose Goose",
+   "dir": "moose-goose",
+   "versions": 5,
+   "texts": 0
+  },
+  "morpho-knight": {
+   "key": "Morpho Knight",
+   "name": "Morpho Knight",
+   "dir": "morpho-knight",
+   "versions": 1,
+   "texts": 0
+  },
+  "morshu": {
+   "key": "Morshu",
+   "name": "Morshu",
+   "dir": "morshu",
+   "versions": 13,
+   "texts": 1
+  },
+  "mosling": {
+   "key": "Mosling",
+   "name": "Mosling",
+   "dir": "mosling",
+   "versions": 7,
+   "texts": 0
+  },
+  "moss-charger": {
+   "key": "Moss Charger",
+   "name": "Moss Charger",
+   "dir": "moss-charger",
+   "versions": 3,
+   "texts": 0
+  },
+  "motivation": {
+   "key": "Motivation",
+   "name": "Motivation",
+   "dir": "motivation",
+   "versions": 7,
+   "texts": 0
+  },
+  "mr-jawsum": {
+   "key": "Mr Jawsum",
+   "name": "Mr. Jawsum",
+   "dir": "mr-jawsum",
+   "versions": 17,
+   "texts": 0
+  },
+  "mr-krabs": {
+   "key": "Mr Krabs",
+   "name": "Mr. Krabs",
+   "dir": "mr-krabs",
+   "versions": 12,
+   "texts": 0
+  },
+  "mr-softener": {
+   "key": "Mr Softener",
+   "name": "Mr. Softener",
+   "dir": "mr-softener",
+   "versions": 9,
+   "texts": 0
+  },
+  "ms-mowz": {
+   "key": "Ms Mowz",
+   "name": "Ms. Mowz",
+   "dir": "ms-mowz",
+   "versions": 3,
+   "texts": 0
+  },
+  "mushroom": {
+   "key": "Mushroom",
+   "name": "Mushroom",
+   "dir": "mushroom",
+   "versions": 8,
+   "texts": 0
+  },
+  "mystery-gift": {
+   "key": "Mystery Gift",
+   "name": "Mystery Gift",
+   "dir": "mystery-gift",
+   "versions": 2,
+   "texts": 0
+  },
+  "nailsage-sly": {
+   "key": "Nailsage Sly",
+   "name": "Nailsage Sly",
+   "dir": "nailsage-sly",
+   "versions": 19,
+   "texts": 3
+  },
+  "nasty-patty": {
+   "key": "Nasty Patty",
+   "name": "Nasty Patty",
+   "dir": "nasty-patty",
+   "versions": 2,
+   "texts": 0
+  },
+  "nasus": {
+   "key": "Nasus",
+   "name": "Nasus",
+   "dir": "nasus",
+   "versions": 16,
+   "texts": 2
+  },
+  "nebulous-precipice": {
+   "key": "Nebulous Precipice",
+   "name": "Nebulous Precipice",
+   "dir": "nebulous-precipice",
+   "versions": 8,
+   "texts": 0
+  },
+  "necrodeus": {
+   "key": "Necrodeus",
+   "name": "Necrodeus",
+   "dir": "necrodeus",
+   "versions": 19,
+   "texts": 3
+  },
+  "nefarious-chip": {
+   "key": "Nefarious Chip",
+   "name": "Nefarious Chip",
+   "dir": "nefarious-chip",
+   "versions": 11,
+   "texts": 0
+  },
+  "newspaper": {
+   "key": "Newspaper",
+   "name": "Newspaper",
+   "dir": "newspaper",
+   "versions": 8,
+   "texts": 0
+  },
+  "nightmare-king-grimm": {
+   "key": "Nightmare King Grimm",
+   "name": "Nightmare King Grimm",
+   "dir": "nightmare-king-grimm",
+   "versions": 22,
+   "texts": 0
+  },
+  "nightmare": {
+   "key": "Nightmare",
+   "name": "Nightmare",
+   "dir": "nightmare",
+   "versions": 16,
+   "texts": 1
+  },
+  "niiue": {
+   "key": "Niiue",
+   "name": "Niiue",
+   "dir": "niiue",
+   "versions": 13,
+   "texts": 0
+  },
+  "niko": {
+   "key": "Niko",
+   "name": "Niko",
+   "dir": "niko",
+   "versions": 8,
+   "texts": 0
+  },
+  "nme-salesman": {
+   "key": "NME Salesman",
+   "name": "NME Salesman",
+   "dir": "nme-salesman",
+   "versions": 16,
+   "texts": 9
+  },
+  "nme-stock": {
+   "key": "NME Stock",
+   "name": "NME Stock™",
+   "dir": "nme-stock",
+   "versions": 4,
+   "texts": 0
+  },
+  "nme-stock2": {
+   "key": "NME Stock2",
+   "name": "NME Stock™",
+   "dir": "nme-stock2",
+   "versions": 3,
+   "texts": 0
+  },
+  "nosk": {
+   "key": "Nosk",
+   "name": "Nosk",
+   "dir": "nosk",
+   "versions": 21,
+   "texts": 0
+  },
+  "nuclear-proliferation": {
+   "key": "Nuclear Proliferation",
+   "name": "Nuclear Proliferation",
+   "dir": "nuclear-proliferation",
+   "versions": 4,
+   "texts": 0
+  },
+  "old-bonnie": {
+   "key": "Old Bonnie",
+   "name": "Old Bonnie",
+   "dir": "old-bonnie",
+   "versions": 19,
+   "texts": 1
+  },
+  "old-chica": {
+   "key": "Old Chica",
+   "name": "Old Chica",
+   "dir": "old-chica",
+   "versions": 18,
+   "texts": 1
+  },
+  "old-foxy": {
+   "key": "Old Foxy",
+   "name": "Old Foxy",
+   "dir": "old-foxy",
+   "versions": 23,
+   "texts": 1
+  },
+  "old-freddy": {
+   "key": "Old Freddy",
+   "name": "Old Freddy",
+   "dir": "old-freddy",
+   "versions": 14,
+   "texts": 3
+  },
+  "ominous-red-circle": {
+   "key": "Ominous Red Circle",
+   "name": "Ominous Red Circle",
+   "dir": "ominous-red-circle",
+   "versions": 1,
+   "texts": 0
+  },
+  "omori": {
+   "key": "Omori",
+   "name": "OMORI",
+   "dir": "omori",
+   "versions": 11,
+   "texts": 0
+  },
+  "oryx-the-exalted-god": {
+   "key": "Oryx the Exalted God",
+   "name": "Oryx The Exalted God",
+   "dir": "oryx-the-exalted-god",
+   "versions": 10,
+   "texts": 0
+  },
+  "overseer": {
+   "key": "Overseer",
+   "name": "Overseer",
+   "dir": "overseer",
+   "versions": 4,
+   "texts": 0
+  },
+  "paint-bomb": {
+   "key": "Paint Bomb",
+   "name": "Paint Bomb",
+   "dir": "paint-bomb",
+   "versions": 6,
+   "texts": 0
+  },
+  "paint-warrior": {
+   "key": "Paint Warrior",
+   "name": "Paint Warrior",
+   "dir": "paint-warrior",
+   "versions": 10,
+   "texts": 0
+  },
+  "paintbrush": {
+   "key": "Paintbrush",
+   "name": "Paintbrush",
+   "dir": "paintbrush",
+   "versions": 3,
+   "texts": 0
+  },
+  "palace-of-shadow": {
+   "key": "Palace of Shadow",
+   "name": "Palace of Shadow",
+   "dir": "palace-of-shadow",
+   "versions": 1,
+   "texts": 0
+  },
+  "pan-d-luffy": {
+   "key": "Pan D Luffy",
+   "name": "Pan D. Luffy",
+   "dir": "pan-d-luffy",
+   "versions": 2,
+   "texts": 0
+  },
+  "pananda-peel": {
+   "key": "Pananda Peel",
+   "name": "Pananda Peel",
+   "dir": "pananda-peel",
+   "versions": 1,
+   "texts": 0
+  },
+  "panda-mk-a": {
+   "key": "PANDA Mk A",
+   "name": "P.A.N.D.A. Mk A",
+   "dir": "panda-mk-a",
+   "versions": 14,
+   "texts": 2
+  },
+  "panda-mk-f": {
+   "key": "PANDA Mk F",
+   "name": "P.A.N.D.A. Mk F",
+   "dir": "panda-mk-f",
+   "versions": 12,
+   "texts": 2
+  },
+  "panda-mk-t": {
+   "key": "PANDA Mk T",
+   "name": "P.A.N.D.A. Mk T",
+   "dir": "panda-mk-t",
+   "versions": 18,
+   "texts": 3
+  },
+  "panda": {
+   "key": "Panda",
+   "name": "Panda",
+   "dir": "panda",
+   "versions": 14,
+   "texts": 1
+  },
+  "pandabal": {
+   "key": "Pandabal",
+   "name": "Pandabal",
+   "dir": "pandabal",
+   "versions": 14,
+   "texts": 1
+  },
+  "pandamonium": {
+   "key": "Pandamonium",
+   "name": "Pandamonium",
+   "dir": "pandamonium",
+   "versions": 15,
+   "texts": 3
+  },
+  "pandanoko": {
+   "key": "Pandanoko",
+   "name": "Pandanoko",
+   "dir": "pandanoko",
+   "versions": 1,
+   "texts": 0
+  },
+  "pandevourer": {
+   "key": "Pandevourer",
+   "name": "Pandevourer",
+   "dir": "pandevourer",
+   "versions": 5,
+   "texts": 0
+  },
+  "pandora-s-box": {
+   "key": "Pandora's Box",
+   "name": "Pandora's Box",
+   "dir": "pandora-s-box",
+   "versions": 8,
+   "texts": 1
+  },
+  "pandora-s-gym": {
+   "key": "Pandora's Gym",
+   "name": "Pandora's Gym",
+   "dir": "pandora-s-gym",
+   "versions": 1,
+   "texts": 0
+  },
+  "pandora": {
+   "key": "Pandora",
+   "name": "Pandora",
+   "dir": "pandora",
+   "versions": 24,
+   "texts": 10
+  },
+  "panseida": {
+   "key": "Panseida",
+   "name": "Panseida",
+   "dir": "panseida",
+   "versions": 12,
+   "texts": 1
+  },
+  "papa-chip": {
+   "key": "Papa Chip",
+   "name": "Papa Chip",
+   "dir": "papa-chip",
+   "versions": 10,
+   "texts": 1
+  },
+  "papa-s-cookie": {
+   "key": "Papa's Cookie",
+   "name": "Papa's Cookie",
+   "dir": "papa-s-cookie",
+   "versions": 7,
+   "texts": 0
+  },
+  "paralyzed": {
+   "key": "Paralyzed",
+   "name": "Paralyzed",
+   "dir": "paralyzed",
+   "versions": 5,
+   "texts": 0
+  },
+  "party": {
+   "key": "Party!",
+   "name": "Party!",
+   "dir": "party",
+   "versions": 1,
+   "texts": 0
+  },
+  "pep-drink": {
+   "key": "Pep Drink",
+   "name": "Pep Drink",
+   "dir": "pep-drink",
+   "versions": 11,
+   "texts": 0
+  },
+  "pepperoni-pizza": {
+   "key": "Pepperoni Pizza",
+   "name": "Pepperoni Pizza",
+   "dir": "pepperoni-pizza",
+   "versions": 11,
+   "texts": 0
+  },
+  "peppy": {
+   "key": "Peppy",
+   "name": "Peppy",
+   "dir": "peppy",
+   "versions": 7,
+   "texts": 1
+  },
+  "pessimism": {
+   "key": "Pessimism",
+   "name": "Pessimism",
+   "dir": "pessimism",
+   "versions": 1,
+   "texts": 0
+  },
+  "peter-panda": {
+   "key": "Peter Panda",
+   "name": "Peter Panda",
+   "dir": "peter-panda",
+   "versions": 15,
+   "texts": 2
+  },
+  "pie": {
+   "key": "Pie",
+   "name": "Pie",
+   "dir": "pie",
+   "versions": 8,
+   "texts": 1
+  },
+  "pike-beam": {
+   "key": "Pike Beam",
+   "name": "Pike Beam",
+   "dir": "pike-beam",
+   "versions": 1,
+   "texts": 0
+  },
+  "piko-piko-hammer": {
+   "key": "Piko Piko Hammer",
+   "name": "Piko Piko Hammer",
+   "dir": "piko-piko-hammer",
+   "versions": 1,
+   "texts": 0
+  },
+  "pile-of-swords": {
+   "key": "Pile Of Swords",
+   "name": "Pile Of Swords",
+   "dir": "pile-of-swords",
+   "versions": 1,
+   "texts": 0
+  },
+  "pillow": {
+   "key": "Pillow",
+   "name": "Pillow",
+   "dir": "pillow",
+   "versions": 6,
+   "texts": 0
+  },
+  "pix": {
+   "key": "Pix",
+   "name": "Pix",
+   "dir": "pix",
+   "versions": 18,
+   "texts": 4
+  },
+  "pizza": {
+   "key": "Pizza",
+   "name": "Pizza",
+   "dir": "pizza",
+   "versions": 8,
+   "texts": 0
+  },
+  "plague": {
+   "key": "Plague",
+   "name": "Plague",
+   "dir": "plague",
+   "versions": 6,
+   "texts": 0
+  },
+  "po": {
+   "key": "Po",
+   "name": "Po",
+   "dir": "po",
+   "versions": 21,
+   "texts": 2
+  },
+  "pod01red-bloon": {
+   "key": "PoD01Red Bloon",
+   "name": "Red Bloon",
+   "dir": "pod01red-bloon",
+   "versions": 15,
+   "texts": 0
+  },
+  "pod02black-bloon": {
+   "key": "PoD02Black Bloon",
+   "name": "Black Bloon",
+   "dir": "pod02black-bloon",
+   "versions": 15,
+   "texts": 0
+  },
+  "pod03white-bloon": {
+   "key": "PoD03White Bloon",
+   "name": "White Bloon",
+   "dir": "pod03white-bloon",
+   "versions": 17,
+   "texts": 0
+  },
+  "pod04zebra-bloon": {
+   "key": "PoD04Zebra Bloon",
+   "name": "Zebra Bloon",
+   "dir": "pod04zebra-bloon",
+   "versions": 15,
+   "texts": 0
+  },
+  "pod05lead-bloon": {
+   "key": "PoD05Lead Bloon",
+   "name": "Lead Bloon",
+   "dir": "pod05lead-bloon",
+   "versions": 15,
+   "texts": 0
+  },
+  "pod06rainbow-bloon": {
+   "key": "PoD06Rainbow Bloon",
+   "name": "Rainbow Bloon",
+   "dir": "pod06rainbow-bloon",
+   "versions": 13,
+   "texts": 0
+  },
+  "pod07ceramic-bloon": {
+   "key": "PoD07Ceramic Bloon",
+   "name": "Ceramic Bloon",
+   "dir": "pod07ceramic-bloon",
+   "versions": 15,
+   "texts": 0
+  },
+  "pod08moab": {
+   "key": "PoD08MOAB",
+   "name": "M.O.A.B.",
+   "dir": "pod08moab",
+   "versions": 15,
+   "texts": 1
+  },
+  "pod09ddt": {
+   "key": "PoD09DDT",
+   "name": "D.D.T.",
+   "dir": "pod09ddt",
+   "versions": 14,
+   "texts": 0
+  },
+  "pod10bfb": {
+   "key": "PoD10BFB",
+   "name": "B.F.B.",
+   "dir": "pod10bfb",
+   "versions": 15,
+   "texts": 1
+  },
+  "pod11zomg": {
+   "key": "PoD11ZOMG",
+   "name": "Z.O.M.G.",
+   "dir": "pod11zomg",
+   "versions": 12,
+   "texts": 0
+  },
+  "pod12bad": {
+   "key": "PoD12BAD",
+   "name": "B.A.D.",
+   "dir": "pod12bad",
+   "versions": 12,
+   "texts": 0
+  },
+  "poison-circle": {
+   "key": "Poison Circle",
+   "name": "Poison Circle",
+   "dir": "poison-circle",
+   "versions": 10,
+   "texts": 0
+  },
+  "poison-shiv": {
+   "key": "Poison Shiv",
+   "name": "Poison Shiv",
+   "dir": "poison-shiv",
+   "versions": 6,
+   "texts": 0
+  },
+  "poison-trap": {
+   "key": "Poison Trap",
+   "name": "Poison Trap",
+   "dir": "poison-trap",
+   "versions": 9,
+   "texts": 0
+  },
+  "poison": {
+   "key": "Poison",
+   "name": "Poison",
+   "dir": "poison",
+   "versions": 9,
+   "texts": 0
+  },
+  "polar-star": {
+   "key": "Polar Star",
+   "name": "Polar Star",
+   "dir": "polar-star",
+   "versions": 1,
+   "texts": 0
+  },
+  "polevaulter-zombie": {
+   "key": "Polevaulter Zombie",
+   "name": "Polevaulter Zombie",
+   "dir": "polevaulter-zombie",
+   "versions": 8,
+   "texts": 0
+  },
+  "pontiff-sulyvahn": {
+   "key": "Pontiff Sulyvahn",
+   "name": "Pontiff Sulyvahn",
+   "dir": "pontiff-sulyvahn",
+   "versions": 5,
+   "texts": 0
+  },
+  "poorly-drawn-cabbage": {
+   "key": "Poorly Drawn Cabbage",
+   "name": "Poorly Drawn Cabbage",
+   "dir": "poorly-drawn-cabbage",
+   "versions": 1,
+   "texts": 0
+  },
+  "portal": {
+   "key": "Portal",
+   "name": "Portal",
+   "dir": "portal",
+   "versions": 8,
+   "texts": 3
+  },
+  "pot-full-of-spiders": {
+   "key": "Pot Full of Spiders!",
+   "name": "Pot Full of Spiders!",
+   "dir": "pot-full-of-spiders",
+   "versions": 1,
+   "texts": 0
+  },
+  "potato": {
+   "key": "Potato",
+   "name": "Potato",
+   "dir": "potato",
+   "versions": 2,
+   "texts": 0
+  },
+  "pow-block": {
+   "key": "POW Block",
+   "name": "POW Block",
+   "dir": "pow-block",
+   "versions": 7,
+   "texts": 1
+  },
+  "primal-aspid": {
+   "key": "Primal Aspid",
+   "name": "Primal Aspid",
+   "dir": "primal-aspid",
+   "versions": 8,
+   "texts": 0
+  },
+  "prince-of-darkness": {
+   "key": "Prince of Darkness",
+   "name": "Prince of Darkness",
+   "dir": "prince-of-darkness",
+   "versions": 27,
+   "texts": 5
+  },
+  "project-panda": {
+   "key": "Project PANDA",
+   "name": "Project P.A.N.D.A.",
+   "dir": "project-panda",
+   "versions": 18,
+   "texts": 2
+  },
+  "pure-vessel": {
+   "key": "Pure Vessel",
+   "name": "Pure Vessel",
+   "dir": "pure-vessel",
+   "versions": 17,
+   "texts": 0
+  },
+  "puzzled-cat": {
+   "key": "Puzzled Cat",
+   "name": "Puzzled Cat",
+   "dir": "puzzled-cat",
+   "versions": 3,
+   "texts": 0
+  },
+  "qiraji-soldier": {
+   "key": "Qiraji Soldier",
+   "name": "Qiraji Soldier",
+   "dir": "qiraji-soldier",
+   "versions": 1,
+   "texts": 0
+  },
+  "quick-slash": {
+   "key": "Quick Slash",
+   "name": "Quick Slash",
+   "dir": "quick-slash",
+   "versions": 11,
+   "texts": 3
+  },
+  "quote": {
+   "key": "Quote",
+   "name": "Quote",
+   "dir": "quote",
+   "versions": 1,
+   "texts": 0
+  },
+  "rapier": {
+   "key": "Rapier",
+   "name": "Rapier",
+   "dir": "rapier",
+   "versions": 7,
+   "texts": 0
+  },
+  "rasta-beast": {
+   "key": "Rasta Beast",
+   "name": "Pasta Beast",
+   "dir": "rasta-beast",
+   "versions": 12,
+   "texts": 1
+  },
+  "raw-cock": {
+   "key": "Raw Cock",
+   "name": "Raw Kawk",
+   "dir": "raw-cock",
+   "versions": 16,
+   "texts": 0
+  },
+  "recursion": {
+   "key": "Recursion",
+   "name": "Recursion",
+   "dir": "recursion",
+   "versions": 4,
+   "texts": 0
+  },
+  "red-knife": {
+   "key": "Red Knife",
+   "name": "Red Knife",
+   "dir": "red-knife",
+   "versions": 1,
+   "texts": 0
+  },
+  "reflection": {
+   "key": "Reflection",
+   "name": "Reflection",
+   "dir": "reflection",
+   "versions": 9,
+   "texts": 1
+  },
+  "regen": {
+   "key": "Regen",
+   "name": "Regen",
+   "dir": "regen",
+   "versions": 10,
+   "texts": 0
+  },
+  "regeneration-potion": {
+   "key": "Regeneration Potion",
+   "name": "Regeneration Potion",
+   "dir": "regeneration-potion",
+   "versions": 10,
+   "texts": 1
+  },
+  "regeneration-potion2": {
+   "key": "Regeneration Potion2",
+   "name": "Grape Juice",
+   "dir": "regeneration-potion2",
+   "versions": 1,
+   "texts": 0
+  },
+  "regenerative-shield": {
+   "key": "Regenerative Shield",
+   "name": "Regenerative Shield",
+   "dir": "regenerative-shield",
+   "versions": 4,
+   "texts": 0
+  },
+  "regret": {
+   "key": "Regret",
+   "name": "Regret",
+   "dir": "regret",
+   "versions": 7,
+   "texts": 0
+  },
+  "reinforced": {
+   "key": "Reinforced",
+   "name": "Reinforced",
+   "dir": "reinforced",
+   "versions": 6,
+   "texts": 0
+  },
+  "remote-detonator": {
+   "key": "Remote Detonator",
+   "name": "Remote Detonator",
+   "dir": "remote-detonator",
+   "versions": 2,
+   "texts": 0
+  },
+  "resentful-glare": {
+   "key": "Resentful Glare",
+   "name": "Resentful Glare",
+   "dir": "resentful-glare",
+   "versions": 6,
+   "texts": 0
+  },
+  "resting-grounds": {
+   "key": "Resting Grounds",
+   "name": "Resting Grounds",
+   "dir": "resting-grounds",
+   "versions": 3,
+   "texts": 0
+  },
+  "restrained": {
+   "key": "Restrained",
+   "name": "Restrained",
+   "dir": "restrained",
+   "versions": 5,
+   "texts": 0
+  },
+  "retro-kirby": {
+   "key": "Retro Kirby",
+   "name": "Retro Kirby",
+   "dir": "retro-kirby",
+   "versions": 17,
+   "texts": 1
+  },
+  "return-to-sender": {
+   "key": "Return to Sender",
+   "name": "RETURN TO SENDER",
+   "dir": "return-to-sender",
+   "versions": 10,
+   "texts": 3
+  },
+  "reverse-mushroom": {
+   "key": "Reverse Mushroom",
+   "name": "Reverse Mushroom",
+   "dir": "reverse-mushroom",
+   "versions": 11,
+   "texts": 0
+  },
+  "rock-bottom": {
+   "key": "Rock Bottom",
+   "name": "Rock Bottom",
+   "dir": "rock-bottom",
+   "versions": 3,
+   "texts": 0
+  },
+  "rogueport": {
+   "key": "Rogueport",
+   "name": "Rogueport",
+   "dir": "rogueport",
+   "versions": 10,
+   "texts": 0
+  },
+  "rope": {
+   "key": "Rope",
+   "name": "Rope",
+   "dir": "rope",
+   "versions": 8,
+   "texts": 2
+  },
+  "royal-eradicator-main-cannon": {
+   "key": "Royal Eradicator Main Cannon",
+   "name": "Royal Eradicator Main Cannon",
+   "dir": "royal-eradicator-main-cannon",
+   "versions": 3,
+   "texts": 0
+  },
+  "rusty-knife": {
+   "key": "Rusty Knife",
+   "name": "Rusty Knife",
+   "dir": "rusty-knife",
+   "versions": 1,
+   "texts": 0
+  },
+  "sabre": {
+   "key": "Sabre",
+   "name": "Sabre",
+   "dir": "sabre",
+   "versions": 9,
+   "texts": 0
+  },
+  "sacred-heart": {
+   "key": "Sacred Heart",
+   "name": "Sacred Heart",
+   "dir": "sacred-heart",
+   "versions": 2,
+   "texts": 0
+  },
+  "salt": {
+   "key": "Salt",
+   "name": "Salt",
+   "dir": "salt",
+   "versions": 1,
+   "texts": 0
+  },
+  "sandwich-of-rejects": {
+   "key": "Sandwich of Rejects",
+   "name": "Sandwich of Rejects",
+   "dir": "sandwich-of-rejects",
+   "versions": 1,
+   "texts": 0
+  },
+  "sans": {
+   "key": "Sans",
+   "name": "snas.",
+   "dir": "sans",
+   "versions": 14,
+   "texts": 0
+  },
+  "scapular": {
+   "key": "Scapular",
+   "name": "Scapular",
+   "dir": "scapular",
+   "versions": 6,
+   "texts": 0
+  },
+  "second-wind": {
+   "key": "Second Wind",
+   "name": "Second Wind",
+   "dir": "second-wind",
+   "versions": 15,
+   "texts": 3
+  },
+  "shadow-chopper": {
+   "key": "Shadow Chopper",
+   "name": "Shadow Chopper",
+   "dir": "shadow-chopper",
+   "versions": 9,
+   "texts": 1
+  },
+  "shadow-duelist": {
+   "key": "Shadow Duelist",
+   "name": "Shadow Duelist",
+   "dir": "shadow-duelist",
+   "versions": 8,
+   "texts": 0
+  },
+  "shadow-miner": {
+   "key": "Shadow Miner",
+   "name": "Shadow Miner",
+   "dir": "shadow-miner",
+   "versions": 7,
+   "texts": 0
+  },
+  "shadow-queen": {
+   "key": "Shadow Queen",
+   "name": "Shadow Queen",
+   "dir": "shadow-queen",
+   "versions": 1,
+   "texts": 0
+  },
+  "shakra": {
+   "key": "Shakra",
+   "name": "Shakra",
+   "dir": "shakra",
+   "versions": 1,
+   "texts": 0
+  },
+  "sharp-baldur": {
+   "key": "Sharp Baldur",
+   "name": "Sharp Baldur",
+   "dir": "sharp-baldur",
+   "versions": 10,
+   "texts": 0
+  },
+  "shattered-omori": {
+   "key": "Shattered Omori",
+   "name": "Shattered OMORI",
+   "dir": "shattered-omori",
+   "versions": 1,
+   "texts": 0
+  },
+  "shell-shield": {
+   "key": "Shell Shield",
+   "name": "Shell Shield",
+   "dir": "shell-shield",
+   "versions": 3,
+   "texts": 0
+  },
+  "shell-shock": {
+   "key": "Shell Shock",
+   "name": "Shell Shock",
+   "dir": "shell-shock",
+   "versions": 7,
+   "texts": 0
+  },
+  "shellphone": {
+   "key": "Shellphone",
+   "name": "Shellphone",
+   "dir": "shellphone",
+   "versions": 4,
+   "texts": 0
+  },
+  "shia-surprise": {
+   "key": "Shia Surprise!",
+   "name": "Shia Surprise!",
+   "dir": "shia-surprise",
+   "versions": 3,
+   "texts": 0
+  },
+  "shield-master-pi": {
+   "key": "Shield Master Pi",
+   "name": "Shield Master Pi",
+   "dir": "shield-master-pi",
+   "versions": 14,
+   "texts": 0
+  },
+  "shield-of-ogmur": {
+   "key": "Shield of Ogmur",
+   "name": "Shield of Ogmur",
+   "dir": "shield-of-ogmur",
+   "versions": 5,
+   "texts": 0
+  },
+  "shield-of-the-guilty": {
+   "key": "Shield of the Guilty",
+   "name": "Shield of the Guilty",
+   "dir": "shield-of-the-guilty",
+   "versions": 4,
+   "texts": 0
+  },
+  "shiny-knife": {
+   "key": "Shiny Knife",
+   "name": "Shiny Knife",
+   "dir": "shiny-knife",
+   "versions": 1,
+   "texts": 0
+  },
+  "shooting-star": {
+   "key": "Shooting Star",
+   "name": "Shooting Star",
+   "dir": "shooting-star",
+   "versions": 8,
+   "texts": 0
+  },
+  "sickness": {
+   "key": "Sickness",
+   "name": "Sickness",
+   "dir": "sickness",
+   "versions": 8,
+   "texts": 0
+  },
+  "sigil-of-divinity": {
+   "key": "Sigil of Divinity",
+   "name": "Sigil of Divinity",
+   "dir": "sigil-of-divinity",
+   "versions": 2,
+   "texts": 0
+  },
+  "sigma": {
+   "key": "Sigma",
+   "name": "Sigma",
+   "dir": "sigma",
+   "versions": 1,
+   "texts": 0
+  },
+  "silithid": {
+   "key": "Silithid",
+   "name": "Silithid",
+   "dir": "silithid",
+   "versions": 1,
+   "texts": 0
+  },
+  "skeleton-mate": {
+   "key": "Skeleton Mate",
+   "name": "Skeleton Mate",
+   "dir": "skeleton-mate",
+   "versions": 4,
+   "texts": 0
+  },
+  "skullord": {
+   "key": "Skullord",
+   "name": "Skullord",
+   "dir": "skullord",
+   "versions": 14,
+   "texts": 0
+  },
+  "slugcat": {
+   "key": "Slugcat",
+   "name": "Slugcat",
+   "dir": "slugcat",
+   "versions": 1,
+   "texts": 0
+  },
+  "smeckeldorfed": {
+   "key": "Smeckeldorfed",
+   "name": "Smeckeldorfed",
+   "dir": "smeckeldorfed",
+   "versions": 6,
+   "texts": 0
+  },
+  "smoke-bomb": {
+   "key": "Smoke Bomb",
+   "name": "Smoke Bomb",
+   "dir": "smoke-bomb",
+   "versions": 6,
+   "texts": 0
+  },
+  "smoldering": {
+   "key": "Smoldering",
+   "name": "Smoldering",
+   "dir": "smoldering",
+   "versions": 12,
+   "texts": 0
+  },
+  "smorg": {
+   "key": "Smorg",
+   "name": "Smorg",
+   "dir": "smorg",
+   "versions": 16,
+   "texts": 1
+  },
+  "snake": {
+   "key": "Snake",
+   "name": "Snake",
+   "dir": "snake",
+   "versions": 1,
+   "texts": 0
+  },
+  "sniffle-thwomp": {
+   "key": "Sniffle Thwomp",
+   "name": "Sniffle Thwomp",
+   "dir": "sniffle-thwomp",
+   "versions": 3,
+   "texts": 0
+  },
+  "snow-angel": {
+   "key": "Snow Angel",
+   "name": "Snow Angel",
+   "dir": "snow-angel",
+   "versions": 11,
+   "texts": 0
+  },
+  "snow-bunny": {
+   "key": "Snow Bunny",
+   "name": "Snow Bunny",
+   "dir": "snow-bunny",
+   "versions": 11,
+   "texts": 0
+  },
+  "softened": {
+   "key": "Softened",
+   "name": "Softened",
+   "dir": "softened",
+   "versions": 7,
+   "texts": 0
+  },
+  "something": {
+   "key": "SOMETHING",
+   "name": "SOMETHING",
+   "dir": "something",
+   "versions": 17,
+   "texts": 0
+  },
+  "sonic": {
+   "key": "Sonic",
+   "name": "Sonic",
+   "dir": "sonic",
+   "versions": 3,
+   "texts": 0
+  },
+  "soul-master": {
+   "key": "Soul Master",
+   "name": "Soul Master",
+   "dir": "soul-master",
+   "versions": 19,
+   "texts": 1
+  },
+  "soul-sanctum": {
+   "key": "Soul Sanctum",
+   "name": "Soul Sanctum",
+   "dir": "soul-sanctum",
+   "versions": 2,
+   "texts": 0
+  },
+  "spaghetti": {
+   "key": "Spaghetti",
+   "name": "Spaghetti",
+   "dir": "spaghetti",
+   "versions": 7,
+   "texts": 0
+  },
+  "spamton-neo": {
+   "key": "Spamton Neo",
+   "name": "Spamton NEO",
+   "dir": "spamton-neo",
+   "versions": 8,
+   "texts": 0
+  },
+  "spawn-of-the-forbidden-one": {
+   "key": "Spawn of the Forbidden One",
+   "name": "Spawn of The Forbidden One",
+   "dir": "spawn-of-the-forbidden-one",
+   "versions": 3,
+   "texts": 0
+  },
+  "spice": {
+   "key": "Spice",
+   "name": "Spice",
+   "dir": "spice",
+   "versions": 12,
+   "texts": 0
+  },
+  "spicy-spray": {
+   "key": "Spicy Spray",
+   "name": "Spicy Spray",
+   "dir": "spicy-spray",
+   "versions": 2,
+   "texts": 0
+  },
+  "spinni": {
+   "key": "Spinni",
+   "name": "Spinni",
+   "dir": "spinni",
+   "versions": 14,
+   "texts": 2
+  },
+  "spiralhorn-shield": {
+   "key": "Spiralhorn Shield",
+   "name": "Spiralhorn Shield",
+   "dir": "spiralhorn-shield",
+   "versions": 4,
+   "texts": 0
+  },
+  "spirit-flame": {
+   "key": "Spirit Flame",
+   "name": "Spirit Flame",
+   "dir": "spirit-flame",
+   "versions": 8,
+   "texts": 0
+  },
+  "springtrap": {
+   "key": "Springtrap",
+   "name": "Springtrap",
+   "dir": "springtrap",
+   "versions": 2,
+   "texts": 0
+  },
+  "spuder": {
+   "key": "Spuder",
+   "name": "Spuder",
+   "dir": "spuder",
+   "versions": 4,
+   "texts": 0
+  },
+  "spur": {
+   "key": "Spur",
+   "name": "Spur",
+   "dir": "spur",
+   "versions": 1,
+   "texts": 0
+  },
+  "squash-candy": {
+   "key": "Squash Candy",
+   "name": "Squash Candy",
+   "dir": "squash-candy",
+   "versions": 11,
+   "texts": 0
+  },
+  "staff-of-purity": {
+   "key": "Staff of Purity",
+   "name": "Staff of Purity",
+   "dir": "staff-of-purity",
+   "versions": 8,
+   "texts": 0
+  },
+  "stalwart-shell": {
+   "key": "Stalwart Shell",
+   "name": "Stalwart Shell",
+   "dir": "stalwart-shell",
+   "versions": 11,
+   "texts": 1
+  },
+  "standstill": {
+   "key": "Standstill",
+   "name": "Standstill",
+   "dir": "standstill",
+   "versions": 13,
+   "texts": 5
+  },
+  "star-cannon": {
+   "key": "Star Cannon",
+   "name": "Star Cannon",
+   "dir": "star-cannon",
+   "versions": 1,
+   "texts": 0
+  },
+  "star-dream": {
+   "key": "Star Dream",
+   "name": "Star Dream",
+   "dir": "star-dream",
+   "versions": 10,
+   "texts": 0
+  },
+  "star-jar": {
+   "key": "Star Jar",
+   "name": "Star Jar",
+   "dir": "star-jar",
+   "versions": 3,
+   "texts": 0
+  },
+  "star-scraper": {
+   "key": "Star Scraper",
+   "name": "Star Scraper",
+   "dir": "star-scraper",
+   "versions": 2,
+   "texts": 0
+  },
+  "stay": {
+   "key": "Stay",
+   "name": "Stay",
+   "dir": "stay",
+   "versions": 13,
+   "texts": 0
+  },
+  "steady-body": {
+   "key": "Steady Body",
+   "name": "Steady Body",
+   "dir": "steady-body",
+   "versions": 3,
+   "texts": 0
+  },
+  "steam-sale": {
+   "key": "Steam Sale",
+   "name": "Steam Sale",
+   "dir": "steam-sale",
+   "versions": 9,
+   "texts": 0
+  },
+  "sting-shard": {
+   "key": "Sting Shard",
+   "name": "Sting Shard",
+   "dir": "sting-shard",
+   "versions": 11,
+   "texts": 0
+  },
+  "stingy-s-floor-and-ceiling": {
+   "key": "Stingy's Floor and Ceiling",
+   "name": "Stingy's Floor and Ceiling",
+   "dir": "stingy-s-floor-and-ceiling",
+   "versions": 2,
+   "texts": 0
+  },
+  "stone-spikes": {
+   "key": "Stone Spikes",
+   "name": "Stone Spikes",
+   "dir": "stone-spikes",
+   "versions": 12,
+   "texts": 0
+  },
+  "stopwatch": {
+   "key": "Stopwatch",
+   "name": "Stopwatch",
+   "dir": "stopwatch",
+   "versions": 10,
+   "texts": 0
+  },
+  "storo": {
+   "key": "Storo",
+   "name": "Storo",
+   "dir": "storo",
+   "versions": 15,
+   "texts": 0
+  },
+  "stotch": {
+   "key": "Stotch",
+   "name": "Stotch",
+   "dir": "stotch",
+   "versions": 12,
+   "texts": 0
+  },
+  "stranger": {
+   "key": "Stranger",
+   "name": "Stranger",
+   "dir": "stranger",
+   "versions": 15,
+   "texts": 0
+  },
+  "strawberry-shortcake": {
+   "key": "Strawberry Shortcake",
+   "name": "Strawberry Shortcake",
+   "dir": "strawberry-shortcake",
+   "versions": 8,
+   "texts": 1
+  },
+  "stubborn-king": {
+   "key": "Stubborn King",
+   "name": "Stubborn King",
+   "dir": "stubborn-king",
+   "versions": 3,
+   "texts": 0
+  },
+  "stubborn-queen": {
+   "key": "Stubborn Queen",
+   "name": "Stubborn Queen",
+   "dir": "stubborn-queen",
+   "versions": 1,
+   "texts": 0
+  },
+  "stuffed": {
+   "key": "Stuffed",
+   "name": "Stuffed",
+   "dir": "stuffed",
+   "versions": 1,
+   "texts": 0
+  },
+  "suffocation": {
+   "key": "Suffocation",
+   "name": "Suffocation",
+   "dir": "suffocation",
+   "versions": 8,
+   "texts": 0
+  },
+  "sumo-panda": {
+   "key": "Sumo Panda",
+   "name": "Sumo Panda",
+   "dir": "sumo-panda",
+   "versions": 13,
+   "texts": 0
+  },
+  "super-shroom": {
+   "key": "Super Shroom",
+   "name": "Super Shroom",
+   "dir": "super-shroom",
+   "versions": 6,
+   "texts": 0
+  },
+  "supreme-jeh-oul": {
+   "key": "Supreme Jeh'Oul",
+   "name": "Supreme Jeh'Oul",
+   "dir": "supreme-jeh-oul",
+   "versions": 11,
+   "texts": 0
+  },
+  "sweetheart": {
+   "key": "Sweetheart",
+   "name": "Sweetheart",
+   "dir": "sweetheart",
+   "versions": 8,
+   "texts": 0
+  },
+  "sword-knight": {
+   "key": "Sword Knight",
+   "name": "Sword Knight",
+   "dir": "sword-knight",
+   "versions": 7,
+   "texts": 0
+  },
+  "sword-of-aeons": {
+   "key": "Sword of Aeons",
+   "name": "Sword of Aeons",
+   "dir": "sword-of-aeons",
+   "versions": 12,
+   "texts": 2
+  },
+  "sword": {
+   "key": "Sword",
+   "name": "Sword",
+   "dir": "sword",
+   "versions": 8,
+   "texts": 0
+  },
+  "tai-lung": {
+   "key": "Tai Lung",
+   "name": "Tai Lung",
+   "dir": "tai-lung",
+   "versions": 6,
+   "texts": 0
+  },
+  "tainted-bethany": {
+   "key": "Tainted Bethany",
+   "name": "Tainted Bethany",
+   "dir": "tainted-bethany",
+   "versions": 10,
+   "texts": 0
+  },
+  "tainted-cain": {
+   "key": "Tainted Cain",
+   "name": "Tainted Cain",
+   "dir": "tainted-cain",
+   "versions": 1,
+   "texts": 0
+  },
+  "tainted-eden": {
+   "key": "Tainted Eden",
+   "name": "Tainted Eden",
+   "dir": "tainted-eden",
+   "versions": 1,
+   "texts": 0
+  },
+  "tainted-eve": {
+   "key": "Tainted Eve",
+   "name": "Tainted Eve",
+   "dir": "tainted-eve",
+   "versions": 2,
+   "texts": 0
+  },
+  "tainted-forgotten": {
+   "key": "Tainted Forgotten",
+   "name": "Tainted Forgotten",
+   "dir": "tainted-forgotten",
+   "versions": 1,
+   "texts": 0
+  },
+  "tainted-isaac": {
+   "key": "Tainted Isaac",
+   "name": "Tainted Isaac",
+   "dir": "tainted-isaac",
+   "versions": 1,
+   "texts": 0
+  },
+  "tainted-jacob": {
+   "key": "Tainted Jacob",
+   "name": "Tainted Jacob",
+   "dir": "tainted-jacob",
+   "versions": 4,
+   "texts": 0
+  },
+  "tainted-keeper": {
+   "key": "Tainted Keeper",
+   "name": "Tainted Keeper",
+   "dir": "tainted-keeper",
+   "versions": 11,
+   "texts": 0
+  },
+  "tainted-lazarus": {
+   "key": "Tainted Lazarus",
+   "name": "Tainted Lazarus",
+   "dir": "tainted-lazarus",
+   "versions": 4,
+   "texts": 0
+  },
+  "tainted-lilith": {
+   "key": "Tainted Lilith",
+   "name": "Tainted Lilith",
+   "dir": "tainted-lilith",
+   "versions": 1,
+   "texts": 0
+  },
+  "tainted-lost": {
+   "key": "Tainted Lost",
+   "name": "Tainted Lost",
+   "dir": "tainted-lost",
+   "versions": 12,
+   "texts": 0
+  },
+  "tainted-magdalene": {
+   "key": "Tainted Magdalene",
+   "name": "Tainted Magdalene",
+   "dir": "tainted-magdalene",
+   "versions": 3,
+   "texts": 0
+  },
+  "tainted-soul": {
+   "key": "Tainted Soul",
+   "name": "Tainted Soul",
+   "dir": "tainted-soul",
+   "versions": 1,
+   "texts": 0
+  },
+  "tanjerin": {
+   "key": "Tanjerin",
+   "name": "Tanjerin",
+   "dir": "tanjerin",
+   "versions": 18,
+   "texts": 1
+  },
+  "taranza": {
+   "key": "Taranza",
+   "name": "Taranza",
+   "dir": "taranza",
+   "versions": 9,
+   "texts": 0
+  },
+  "tentacle": {
+   "key": "Tentacle",
+   "name": "Tentacle",
+   "dir": "tentacle",
+   "versions": 7,
+   "texts": 0
+  },
+  "termination-shock": {
+   "key": "Termination Shock",
+   "name": "Termination Shock",
+   "dir": "termination-shock",
+   "versions": 1,
+   "texts": 0
+  },
+  "terry-hintz": {
+   "key": "Terry Hintz",
+   "name": "Terry Hintz",
+   "dir": "terry-hintz",
+   "versions": 5,
+   "texts": 0
+  },
+  "thalassophobia": {
+   "key": "Thalassophobia",
+   "name": "Thalassophobia",
+   "dir": "thalassophobia",
+   "versions": 13,
+   "texts": 0
+  },
+  "the-abyss-watchers": {
+   "key": "The Abyss Watchers",
+   "name": "The Abyss Watchers",
+   "dir": "the-abyss-watchers",
+   "versions": 17,
+   "texts": 0
+  },
+  "the-bagel": {
+   "key": "The Bagel",
+   "name": "The Bagel",
+   "dir": "the-bagel",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-bank": {
+   "key": "The Bank",
+   "name": "The Bank",
+   "dir": "the-bank",
+   "versions": 3,
+   "texts": 0
+  },
+  "the-beast": {
+   "key": "The Beast",
+   "name": "The Beast",
+   "dir": "the-beast",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-big-yellow-cat": {
+   "key": "The Big Yellow Cat",
+   "name": "The Big Yellow Cat",
+   "dir": "the-big-yellow-cat",
+   "versions": 13,
+   "texts": 0
+  },
+  "the-bull": {
+   "key": "The Bull",
+   "name": "The Bull",
+   "dir": "the-bull",
+   "versions": 2,
+   "texts": 0
+  },
+  "the-claw": {
+   "key": "The Claw",
+   "name": "The Claw",
+   "dir": "the-claw",
+   "versions": 8,
+   "texts": 0
+  },
+  "the-collector": {
+   "key": "The Collector",
+   "name": "The Collector",
+   "dir": "the-collector",
+   "versions": 8,
+   "texts": 0
+  },
+  "the-core": {
+   "key": "The Core",
+   "name": "The Core",
+   "dir": "the-core",
+   "versions": 2,
+   "texts": 0
+  },
+  "the-evil-fricked-up-cursed-idol": {
+   "key": "The Evil, Fricked Up Cursed Idol",
+   "name": "The Evil, Fricked Up Cursed Idol",
+   "dir": "the-evil-fricked-up-cursed-idol",
+   "versions": 3,
+   "texts": 0
+  },
+  "the-farlands": {
+   "key": "The Farlands",
+   "name": "The Farlands",
+   "dir": "the-farlands",
+   "versions": 8,
+   "texts": 0
+  },
+  "the-flash": {
+   "key": "The Flash",
+   "name": "The Flash",
+   "dir": "the-flash",
+   "versions": 8,
+   "texts": 0
+  },
+  "the-forbidden-one": {
+   "key": "The Forbidden One",
+   "name": "The Forbidden One",
+   "dir": "the-forbidden-one",
+   "versions": 6,
+   "texts": 0
+  },
+  "the-freezer": {
+   "key": "The Freezer",
+   "name": "The Freezer",
+   "dir": "the-freezer",
+   "versions": 3,
+   "texts": 0
+  },
+  "the-gates-of-ahn-qiraj": {
+   "key": "The Gates of Ahn'Qiraj",
+   "name": "The Gates of Ahn'Qiraj",
+   "dir": "the-gates-of-ahn-qiraj",
+   "versions": 2,
+   "texts": 0
+  },
+  "the-great-papyrus": {
+   "key": "The Great Papyrus",
+   "name": "The Great Papyrus",
+   "dir": "the-great-papyrus",
+   "versions": 17,
+   "texts": 1
+  },
+  "the-hive": {
+   "key": "The Hive",
+   "name": "The Hive",
+   "dir": "the-hive",
+   "versions": 4,
+   "texts": 0
+  },
+  "the-hydrant": {
+   "key": "The Hydrant",
+   "name": "The Hydrant",
+   "dir": "the-hydrant",
+   "versions": 11,
+   "texts": 0
+  },
+  "the-kestrel": {
+   "key": "The Kestrel",
+   "name": "The Kestrel",
+   "dir": "the-kestrel",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-kingchin": {
+   "key": "The Kingchin",
+   "name": "The Kingchin",
+   "dir": "the-kingchin",
+   "versions": 11,
+   "texts": 0
+  },
+  "the-krusty-krab": {
+   "key": "The Krusty Krab",
+   "name": "The Krusty Krab",
+   "dir": "the-krusty-krab",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-last-cabbage-merchant": {
+   "key": "The Last Cabbage Merchant",
+   "name": "The Last Cabbage Merchant",
+   "dir": "the-last-cabbage-merchant",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-lich-king": {
+   "key": "The Lich King",
+   "name": "The Lich King",
+   "dir": "the-lich-king",
+   "versions": 2,
+   "texts": 0
+  },
+  "the-maelstrom": {
+   "key": "The Maelstrom",
+   "name": "The Maelstrom",
+   "dir": "the-maelstrom",
+   "versions": 3,
+   "texts": 0
+  },
+  "the-man-behind-the-slaughter": {
+   "key": "The Man Behind The Slaughter",
+   "name": "The Man Behind The Slaughter",
+   "dir": "the-man-behind-the-slaughter",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-master": {
+   "key": "The Master",
+   "name": "The Master",
+   "dir": "the-master",
+   "versions": 16,
+   "texts": 1
+  },
+  "the-maverick": {
+   "key": "The Maverick",
+   "name": "The Maverick",
+   "dir": "the-maverick",
+   "versions": 13,
+   "texts": 0
+  },
+  "the-orb-of-confusion": {
+   "key": "The Orb of Confusion",
+   "name": "The Orb of Confusion",
+   "dir": "the-orb-of-confusion",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-panda-future": {
+   "key": "The Panda Future",
+   "name": "The Panda Future",
+   "dir": "the-panda-future",
+   "versions": 11,
+   "texts": 0
+  },
+  "the-patients": {
+   "key": "The Patients",
+   "name": "The Patients",
+   "dir": "the-patients",
+   "versions": 16,
+   "texts": 0
+  },
+  "the-plaguelands": {
+   "key": "The Plaguelands",
+   "name": "The Plaguelands",
+   "dir": "the-plaguelands",
+   "versions": 12,
+   "texts": 0
+  },
+  "the-puppet": {
+   "key": "The Puppet",
+   "name": "The Puppet",
+   "dir": "the-puppet",
+   "versions": 22,
+   "texts": 2
+  },
+  "the-queen": {
+   "key": "The Queen",
+   "name": "The Queen",
+   "dir": "the-queen",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-radiance": {
+   "key": "The Radiance",
+   "name": "The Radiance",
+   "dir": "the-radiance",
+   "versions": 16,
+   "texts": 2
+  },
+  "the-ringed-city": {
+   "key": "The Ringed City",
+   "name": "The Ringed City",
+   "dir": "the-ringed-city",
+   "versions": 9,
+   "texts": 0
+  },
+  "the-shade": {
+   "key": "The Shade",
+   "name": "The Shade",
+   "dir": "the-shade",
+   "versions": 1,
+   "texts": 0
+  },
+  "the-spire": {
+   "key": "The Spire",
+   "name": "The Spire",
+   "dir": "the-spire",
+   "versions": 10,
+   "texts": 0
+  },
+  "the-structure": {
+   "key": "The Structure",
+   "name": "The Structure",
+   "dir": "the-structure",
+   "versions": 12,
+   "texts": 0
+  },
+  "the-temple-of-ahn-qiraj": {
+   "key": "The Temple of Ahn'Qiraj",
+   "name": "The Temple of Ahn'Qiraj",
+   "dir": "the-temple-of-ahn-qiraj",
+   "versions": 2,
+   "texts": 0
+  },
+  "the-thin-man": {
+   "key": "The Thin Man",
+   "name": "The Thin Man",
+   "dir": "the-thin-man",
+   "versions": 15,
+   "texts": 0
+  },
+  "the-watcher": {
+   "key": "The Watcher",
+   "name": "The Watcher",
+   "dir": "the-watcher",
+   "versions": 3,
+   "texts": 0
+  },
+  "thickened": {
+   "key": "Thickened",
+   "name": "Thickened",
+   "dir": "thickened",
+   "versions": 6,
+   "texts": 0
+  },
+  "thinned": {
+   "key": "Thinned",
+   "name": "Thinned",
+   "dir": "thinned",
+   "versions": 6,
+   "texts": 0
+  },
+  "thorns-of-agony": {
+   "key": "Thorns of Agony",
+   "name": "Thorns of Agony",
+   "dir": "thorns-of-agony",
+   "versions": 4,
+   "texts": 0
+  },
+  "thunder-thighs": {
+   "key": "Thunder Thighs",
+   "name": "Thunder Thighs",
+   "dir": "thunder-thighs",
+   "versions": 3,
+   "texts": 0
+  },
+  "thunderfury-blessed-blade-of-the-windseeker": {
+   "key": "Thunderfury Blessed Blade of the Windseeker",
+   "name": "[Thunderfury: Blessed Blade of the Windseeker]",
+   "dir": "thunderfury-blessed-blade-of-the-windseeker",
+   "versions": 2,
+   "texts": 0
+  },
+  "time-riddle": {
+   "key": "Time Riddle",
+   "name": "Time Riddle",
+   "dir": "time-riddle",
+   "versions": 6,
+   "texts": 0
+  },
+  "titanium-sword": {
+   "key": "Titanium Sword",
+   "name": "Titanium Sword",
+   "dir": "titanium-sword",
+   "versions": 6,
+   "texts": 0
+  },
+  "tomato": {
+   "key": "Tomato",
+   "name": "Tomato",
+   "dir": "tomato",
+   "versions": 7,
+   "texts": 0
+  },
+  "tomorrow-i-ll": {
+   "key": "Tomorrow I'll",
+   "name": "Tomorrow I'll",
+   "dir": "tomorrow-i-ll",
+   "versions": 10,
+   "texts": 1
+  },
+  "toriel": {
+   "key": "Toriel",
+   "name": "Toriel",
+   "dir": "toriel",
+   "versions": 17,
+   "texts": 2
+  },
+  "toy-bonnie": {
+   "key": "Toy Bonnie",
+   "name": "Toy Bonnie",
+   "dir": "toy-bonnie",
+   "versions": 23,
+   "texts": 1
+  },
+  "toy-chica": {
+   "key": "Toy Chica",
+   "name": "Toy Chica",
+   "dir": "toy-chica",
+   "versions": 20,
+   "texts": 2
+  },
+  "toy-freddy": {
+   "key": "Toy Freddy",
+   "name": "Toy Freddy",
+   "dir": "toy-freddy",
+   "versions": 22,
+   "texts": 2
+  },
+  "traitor-lord": {
+   "key": "Traitor Lord",
+   "name": "Traitor Lord",
+   "dir": "traitor-lord",
+   "versions": 17,
+   "texts": 2
+  },
+  "trick-room": {
+   "key": "Trick Room",
+   "name": "Trick Room",
+   "dir": "trick-room",
+   "versions": 1,
+   "texts": 0
+  },
+  "turtle": {
+   "key": "Turtle",
+   "name": "Turtle",
+   "dir": "turtle",
+   "versions": 11,
+   "texts": 0
+  },
+  "tutankoopa": {
+   "key": "Tutankoopa",
+   "name": "Tutankoopa",
+   "dir": "tutankoopa",
+   "versions": 18,
+   "texts": 1
+  },
+  "twilit-woods": {
+   "key": "Twilit Woods",
+   "name": "Twilit Woods",
+   "dir": "twilit-woods",
+   "versions": 8,
+   "texts": 0
+  },
+  "twin-emperors": {
+   "key": "Twin Emperors",
+   "name": "Twin Emperors",
+   "dir": "twin-emperors",
+   "versions": 20,
+   "texts": 0
+  },
+  "tyler": {
+   "key": "Tyler",
+   "name": "Tyler",
+   "dir": "tyler",
+   "versions": 5,
+   "texts": 0
+  },
+  "unbread-twins": {
+   "key": "Unbread Twins",
+   "name": "Unbread Twins",
+   "dir": "unbread-twins",
+   "versions": 14,
+   "texts": 0
+  },
+  "unbreakable-heart": {
+   "key": "Unbreakable Heart",
+   "name": "Unbreakable Heart",
+   "dir": "unbreakable-heart",
+   "versions": 5,
+   "texts": 0
+  },
+  "unbreakable-strength": {
+   "key": "Unbreakable Strength",
+   "name": "Unbreakable Strength",
+   "dir": "unbreakable-strength",
+   "versions": 6,
+   "texts": 0
+  },
+  "undyne": {
+   "key": "Undyne",
+   "name": "Undyne",
+   "dir": "undyne",
+   "versions": 19,
+   "texts": 0
+  },
+  "utica-stock-exchange": {
+   "key": "Utica Stock Exchange",
+   "name": "Utica Stock Exchange",
+   "dir": "utica-stock-exchange",
+   "versions": 4,
+   "texts": 0
+  },
+  "uumuu": {
+   "key": "Uumuu",
+   "name": "Uumuu",
+   "dir": "uumuu",
+   "versions": 21,
+   "texts": 1
+  },
+  "vigor": {
+   "key": "Vigor",
+   "name": "Vigor",
+   "dir": "vigor",
+   "versions": 6,
+   "texts": 0
+  },
+  "vivian": {
+   "key": "Vivian",
+   "name": "Vivian",
+   "dir": "vivian",
+   "versions": 4,
+   "texts": 0
+  },
+  "voidwalker": {
+   "key": "Voidwalker",
+   "name": "Voidwalker",
+   "dir": "voidwalker",
+   "versions": 12,
+   "texts": 0
+  },
+  "volt-shroom": {
+   "key": "Volt Shroom",
+   "name": "Volt Shroom",
+   "dir": "volt-shroom",
+   "versions": 11,
+   "texts": 1
+  },
+  "waddle-dee": {
+   "key": "Waddle Dee",
+   "name": "Waddle Dee",
+   "dir": "waddle-dee",
+   "versions": 17,
+   "texts": 3
+  },
+  "wand-of-obesity": {
+   "key": "Wand of Obesity",
+   "name": "Wand of Obesity",
+   "dir": "wand-of-obesity",
+   "versions": 10,
+   "texts": 3
+  },
+  "warcraftian-druid": {
+   "key": "Warcraftian Druid",
+   "name": "Warcraftian Druid",
+   "dir": "warcraftian-druid",
+   "versions": 17,
+   "texts": 1
+  },
+  "warcraftian-hunter": {
+   "key": "Warcraftian Hunter",
+   "name": "Warcraftian Hunter",
+   "dir": "warcraftian-hunter",
+   "versions": 14,
+   "texts": 1
+  },
+  "warcraftian-mage": {
+   "key": "Warcraftian Mage",
+   "name": "Warcraftian Mage",
+   "dir": "warcraftian-mage",
+   "versions": 17,
+   "texts": 4
+  },
+  "warcraftian-paladin": {
+   "key": "Warcraftian Paladin",
+   "name": "Warcraftian Paladin",
+   "dir": "warcraftian-paladin",
+   "versions": 18,
+   "texts": 2
+  },
+  "warcraftian-priest": {
+   "key": "Warcraftian Priest",
+   "name": "Warcraftian Priest",
+   "dir": "warcraftian-priest",
+   "versions": 15,
+   "texts": 1
+  },
+  "warcraftian-rogue": {
+   "key": "Warcraftian Rogue",
+   "name": "Warcraftian Rogue",
+   "dir": "warcraftian-rogue",
+   "versions": 17,
+   "texts": 3
+  },
+  "warcraftian-shaman": {
+   "key": "Warcraftian Shaman",
+   "name": "Warcraftian Shaman",
+   "dir": "warcraftian-shaman",
+   "versions": 15,
+   "texts": 1
+  },
+  "warcraftian-warlock": {
+   "key": "Warcraftian Warlock",
+   "name": "Warcraftian Warlock",
+   "dir": "warcraftian-warlock",
+   "versions": 11,
+   "texts": 1
+  },
+  "warcraftian-warrior": {
+   "key": "Warcraftian Warrior",
+   "name": "Warcraftian Warrior",
+   "dir": "warcraftian-warrior",
+   "versions": 13,
+   "texts": 1
+  },
+  "warrior-dee": {
+   "key": "Warrior Dee",
+   "name": "Warrior Dee",
+   "dir": "warrior-dee",
+   "versions": 14,
+   "texts": 0
+  },
+  "water-totem": {
+   "key": "Water Totem",
+   "name": "Water Totem",
+   "dir": "water-totem",
+   "versions": 9,
+   "texts": 0
+  },
+  "watermelon": {
+   "key": "Watermelon",
+   "name": "Watermelon",
+   "dir": "watermelon",
+   "versions": 7,
+   "texts": 1
+  },
+  "waxwell": {
+   "key": "Waxwell",
+   "name": "Waxwell",
+   "dir": "waxwell",
+   "versions": 22,
+   "texts": 5
+  },
+  "wendy": {
+   "key": "Wendy",
+   "name": "Wendy",
+   "dir": "wendy",
+   "versions": 18,
+   "texts": 1
+  },
+  "whacka-bump": {
+   "key": "Whacka Bump",
+   "name": "Whacka Bump",
+   "dir": "whacka-bump",
+   "versions": 1,
+   "texts": 0
+  },
+  "wham-bam-bone": {
+   "key": "Wham Bam Bone",
+   "name": "Wham Bam Bone",
+   "dir": "wham-bam-bone",
+   "versions": 12,
+   "texts": 1
+  },
+  "wham-bam-jewel": {
+   "key": "Wham Bam Jewel",
+   "name": "Wham Bam Jewel",
+   "dir": "wham-bam-jewel",
+   "versions": 11,
+   "texts": 0
+  },
+  "wham-bam-rock": {
+   "key": "Wham Bam Rock",
+   "name": "Wham Bam Rock",
+   "dir": "wham-bam-rock",
+   "versions": 13,
+   "texts": 2
+  },
+  "whelp": {
+   "key": "Whelp",
+   "name": "Whelp",
+   "dir": "whelp",
+   "versions": 9,
+   "texts": 4
+  },
+  "whippy-d-cream": {
+   "key": "Whippy D Cream",
+   "name": "Whippy D. Cream",
+   "dir": "whippy-d-cream",
+   "versions": 1,
+   "texts": 0
+  },
+  "whispy-woods": {
+   "key": "Whispy Woods",
+   "name": "Whispy Woods",
+   "dir": "whispy-woods",
+   "versions": 13,
+   "texts": 1
+  },
+  "white-defender": {
+   "key": "White Defender",
+   "name": "White Defender",
+   "dir": "white-defender",
+   "versions": 1,
+   "texts": 0
+  },
+  "white-space": {
+   "key": "White Space",
+   "name": "White Space",
+   "dir": "white-space",
+   "versions": 11,
+   "texts": 1
+  },
+  "wickerbottom": {
+   "key": "Wickerbottom",
+   "name": "Wickerbottom",
+   "dir": "wickerbottom",
+   "versions": 13,
+   "texts": 0
+  },
+  "wigfrid": {
+   "key": "Wigfrid",
+   "name": "Wigfrid",
+   "dir": "wigfrid",
+   "versions": 17,
+   "texts": 2
+  },
+  "wilson": {
+   "key": "Wilson",
+   "name": "Wilson",
+   "dir": "wilson",
+   "versions": 10,
+   "texts": 0
+  },
+  "withering": {
+   "key": "Withering",
+   "name": "Withering",
+   "dir": "withering",
+   "versions": 7,
+   "texts": 1
+  },
+  "wokey-d-pronouns": {
+   "key": "Wokey D Pronouns",
+   "name": "Wokey D. Pronouns",
+   "dir": "wokey-d-pronouns",
+   "versions": 1,
+   "texts": 0
+  },
+  "wolf": {
+   "key": "Wolf",
+   "name": "Wolf",
+   "dir": "wolf",
+   "versions": 12,
+   "texts": 0
+  },
+  "wolfgang": {
+   "key": "Wolfgang",
+   "name": "Wolfgang",
+   "dir": "wolfgang",
+   "versions": 14,
+   "texts": 3
+  },
+  "wooden-spikes": {
+   "key": "Wooden Spikes",
+   "name": "Wooden Spikes",
+   "dir": "wooden-spikes",
+   "versions": 10,
+   "texts": 0
+  },
+  "wx-78": {
+   "key": "WX-78",
+   "name": "WX-78",
+   "dir": "wx-78",
+   "versions": 11,
+   "texts": 0
+  },
+  "x-fist": {
+   "key": "X-Fist",
+   "name": "X-Fist",
+   "dir": "x-fist",
+   "versions": 11,
+   "texts": 0
+  },
+  "yiik-panda": {
+   "key": "YIIK Panda",
+   "name": "YIIK Panda",
+   "dir": "yiik-panda",
+   "versions": 12,
+   "texts": 0
+  },
+  "yin-yarn": {
+   "key": "Yin Yarn",
+   "name": "Yin Yarn",
+   "dir": "yin-yarn",
+   "versions": 17,
+   "texts": 4
+  },
+  "yoshi-kid": {
+   "key": "Yoshi Kid",
+   "name": "Yoshi Kid",
+   "dir": "yoshi-kid",
+   "versions": 5,
+   "texts": 0
+  },
+  "you-are-going-down-you-sputnik": {
+   "key": "You are going DOWN you Sputnik!",
+   "name": "You are going DOWN you Sputnik!",
+   "dir": "you-are-going-down-you-sputnik",
+   "versions": 1,
+   "texts": 0
+  },
+  "z": {
+   "key": "Z!!!!!",
+   "name": "Z!!!!!",
+   "dir": "z",
+   "versions": 1,
+   "texts": 0
+  },
+  "ze-mer": {
+   "key": "Ze'mer",
+   "name": "Ze'mer",
+   "dir": "ze-mer",
+   "versions": 13,
+   "texts": 0
+  },
+  "zenith-martlet": {
+   "key": "Zenith Martlet",
+   "name": "Martlet Zenith of Monsterkind",
+   "dir": "zenith-martlet",
+   "versions": 3,
+   "texts": 0
+  },
+  "zero-override": {
+   "key": "Zero Override",
+   "name": "Zero Override",
+   "dir": "zero-override",
+   "versions": 19,
+   "texts": 5
+  },
+  "zero-two": {
+   "key": "Zero Two",
+   "name": "Zero Two",
+   "dir": "zero-two",
+   "versions": 17,
+   "texts": 4
+  },
+  "zero": {
+   "key": "Zero",
+   "name": "Zero",
+   "dir": "zero",
+   "versions": 16,
+   "texts": 3
+  },
+  "zess-deluxe": {
+   "key": "Zess Deluxe",
+   "name": "Zess Deluxe",
+   "dir": "zess-deluxe",
+   "versions": 13,
+   "texts": 1
+  },
+  "zess-dynamite": {
+   "key": "Zess Dynamite",
+   "name": "Zess Dynamite",
+   "dir": "zess-dynamite",
+   "versions": 9,
+   "texts": 0
+  },
+  "zigg": {
+   "key": "Zigg",
+   "name": "Zigg",
+   "dir": "zigg",
+   "versions": 12,
+   "texts": 0
+  },
+  "zoltan": {
+   "key": "Zoltan",
+   "name": "Zoltan",
+   "dir": "zoltan",
+   "versions": 6,
+   "texts": 0
+  },
+  "zompanda": {
+   "key": "Zompanda",
+   "name": "Zompanda",
+   "dir": "zompanda",
+   "versions": 15,
+   "texts": 1
+  }
+ },
+ "morgue": [
+  {
+   "dir": "_morgue/m-uru",
+   "name": "M'uru",
+   "first": {
+    "date": null,
+    "day": "Before 2020",
+    "channel": null,
+    "source": "physical card photo"
+   },
+   "versions": 20,
+   "kind": "played",
+   "id": "LC-1c11be0504"
+  },
+  {
+   "dir": "_morgue/beefalol",
+   "name": "BeefaLOL",
+   "first": {
+    "date": "2019-05-03T00:42:13.711000+00:00",
+    "day": "2019-05-03",
+    "channel": "general-discussion",
+    "source": "discord"
+   },
+   "versions": 5,
+   "kind": "joke",
+   "id": "LC-3740905112"
+  },
+  {
+   "dir": "_morgue/mr-grabby",
+   "name": "Mr. Grabby",
+   "first": {
+    "date": "2019-05-06T04:38:36.215000+00:00",
+    "day": "2019-05-06",
+    "channel": "general-discussion",
+    "source": "discord"
+   },
+   "versions": 6,
+   "kind": "joke",
+   "id": "LC-0ce0969636"
+  },
+  {
+   "dir": "_morgue/codex-umbra",
+   "name": "Codex Umbra",
+   "first": {
+    "date": "2019-05-15T08:28:18.371000+00:00",
+    "day": "2019-05-15",
+    "channel": "general-discussion",
+    "source": "discord"
+   },
+   "versions": 7,
+   "kind": "played",
+   "id": "LC-61e5af0252"
+  },
+  {
+   "dir": "_morgue/stoogopoly",
+   "name": "Stoogopoly",
+   "first": {
+    "date": "2020-03-03T06:47:49.610000+00:00",
+    "day": "2020-03-03",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-1f6a26869f"
+  },
+  {
+   "dir": "_morgue/road-roller",
+   "name": "Road Roller",
+   "first": {
+    "date": "2020-07-11T12:12:38.679000+00:00",
+    "day": "2020-07-11",
+    "channel": "random-images",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-509b7d92be"
+  },
+  {
+   "dir": "_morgue/the-meta",
+   "name": "The META",
+   "first": {
+    "date": "2020-07-11T12:15:29.948000+00:00",
+    "day": "2020-07-11",
+    "channel": "random-images",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-72d1616b01"
+  },
+  {
+   "dir": "_morgue/sleep-tent",
+   "name": "Sleep Tent",
+   "first": {
+    "date": "2020-07-13T07:23:47.365000+00:00",
+    "day": "2020-07-13",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 5,
+   "kind": "played",
+   "id": "LC-6f45ac3035"
+  },
+  {
+   "dir": "_morgue/shrink-ring",
+   "name": "Shrink Ring",
+   "first": {
+    "date": "2020-07-13T09:33:56.285000+00:00",
+    "day": "2020-07-13",
+    "channel": "cursed",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-b95e6cc92f-c2"
+  },
+  {
+   "dir": "_morgue/swords-of-rage",
+   "name": "Swords of Rage",
+   "first": {
+    "date": "2020-07-13T09:34:17.276000+00:00",
+    "day": "2020-07-13",
+    "channel": "cursed",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-7056ca2a2e-c2"
+  },
+  {
+   "dir": "_morgue/computer-virus-2-0",
+   "name": "Computer Virus 2.0",
+   "first": {
+    "date": "2020-07-22T02:54:56.908000+00:00",
+    "day": "2020-07-22",
+    "channel": "port",
+    "source": "discord"
+   },
+   "versions": 2,
+   "texts": 2,
+   "kind": "joke",
+   "id": "LC-b4f2fb0e50"
+  },
+  {
+   "dir": "_morgue/the-main",
+   "name": "The Main",
+   "first": {
+    "date": "2020-07-22T09:31:29.139000+00:00",
+    "day": "2020-07-22",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-90c218d575"
+  },
+  {
+   "dir": "_morgue/homosexual-infant-jail",
+   "name": "Homosexual Infant Jail",
+   "first": {
+    "date": "2020-07-22T09:52:28.711000+00:00",
+    "day": "2020-07-22",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-5b4a55ca90"
+  },
+  {
+   "dir": "_morgue/ultimate-spikes",
+   "name": "Ultimate Spikes",
+   "first": {
+    "date": "2020-07-22T11:31:46.443000+00:00",
+    "day": "2020-07-22",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-654f2761d2"
+  },
+  {
+   "dir": "_morgue/michael-s-scale",
+   "name": "Michael's Scale",
+   "first": {
+    "date": "2020-07-25T02:15:20.216000+00:00",
+    "day": "2020-07-25",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-86b3ca6afe"
+  },
+  {
+   "dir": "_morgue/madatlines",
+   "name": "Madatlines",
+   "first": {
+    "date": "2020-07-25T10:14:23.328000+00:00",
+    "day": "2020-07-25",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-634066e71c"
+  },
+  {
+   "dir": "_morgue/void-sentinel",
+   "name": "Void Sentinel",
+   "first": {
+    "date": "2020-07-27T07:49:37+00:00",
+    "day": "2020-07-27",
+    "channel": "update-01-port",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "played",
+   "id": "LC-71381b9442"
+  },
+  {
+   "dir": "_morgue/void-duo",
+   "name": "Void Duo",
+   "first": {
+    "date": "2020-07-27T07:55:15.988000+00:00",
+    "day": "2020-07-27",
+    "channel": "update-01-port",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "played",
+   "id": "LC-d0d370ce13"
+  },
+  {
+   "dir": "_morgue/fully-rested",
+   "name": "Fully Rested",
+   "first": {
+    "date": "2020-08-01T11:21:20.610000+00:00",
+    "day": "2020-08-01",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-47e77b5fa6"
+  },
+  {
+   "dir": "_morgue/ain-t-got-rhythm",
+   "name": "Ain't Got Rhythm",
+   "first": {
+    "date": "2020-08-03T09:59:10.064000+00:00",
+    "day": "2020-08-03",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-57207fd923"
+  },
+  {
+   "dir": "_morgue/the-rat",
+   "name": "The Rat",
+   "first": {
+    "date": "2020-08-07T10:45:37.015000+00:00",
+    "day": "2020-08-07",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "played",
+   "id": "LC-c175a6bb49"
+  },
+  {
+   "dir": "_morgue/zero-two-morgue",
+   "name": "Zero Two",
+   "first": {
+    "date": "2020-08-08T08:47:34.953000+00:00",
+    "day": "2020-08-08",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 4,
+   "kind": "joke",
+   "id": "LC-3640ad1976"
+  },
+  {
+   "dir": "_morgue/pananda",
+   "name": "Pananda",
+   "first": {
+    "date": "2020-08-13T06:18:55.495000+00:00",
+    "day": "2020-08-13",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 5,
+   "kind": "played",
+   "id": "LC-980c6af2d4"
+  },
+  {
+   "dir": "_morgue/zhonya-s-glass",
+   "name": "Zhonya's Glass",
+   "first": {
+    "date": "2020-08-14T05:51:45.444000+00:00",
+    "day": "2020-08-14",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "played",
+   "id": "LC-42b552389d"
+  },
+  {
+   "dir": "_morgue/the-end-is-nigh",
+   "name": "The End is Nigh",
+   "first": {
+    "date": "2020-08-14T06:52:24.080000+00:00",
+    "day": "2020-08-14",
+    "channel": "update-02-port",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "played",
+   "id": "LC-4cf53e10d3"
+  },
+  {
+   "dir": "_morgue/sleepytime-stories",
+   "name": "Sleepytime Stories",
+   "first": {
+    "date": "2020-08-14T06:52:25.168000+00:00",
+    "day": "2020-08-14",
+    "channel": "update-02-port",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "played",
+   "id": "LC-1713eea3eb"
+  },
+  {
+   "dir": "_morgue/on-tentacles",
+   "name": "On Tentacles",
+   "first": {
+    "date": "2020-08-14T06:52:26.870000+00:00",
+    "day": "2020-08-14",
+    "channel": "update-02-port",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "played",
+   "id": "LC-6370033365"
+  },
+  {
+   "dir": "_morgue/birds-of-the-world",
+   "name": "Birds of the World",
+   "first": {
+    "date": "2020-08-14T06:52:27.058000+00:00",
+    "day": "2020-08-14",
+    "channel": "update-02-port",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "played",
+   "id": "LC-8e9bcee056"
+  },
+  {
+   "dir": "_morgue/applied-horticulture",
+   "name": "Applied Horticulture",
+   "first": {
+    "date": "2020-08-14T06:52:27.707000+00:00",
+    "day": "2020-08-14",
+    "channel": "update-02-port",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "played",
+   "id": "LC-858750a1ff"
+  },
+  {
+   "dir": "_morgue/the-puppet-dancing-doll",
+   "name": "The Puppet (Dancing Doll)",
+   "first": {
+    "date": "2020-08-24T05:46:34.194000+00:00",
+    "day": "2020-08-24",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-a385f53db0"
+  },
+  {
+   "dir": "_morgue/big-mistake",
+   "name": "Big Mistake",
+   "first": {
+    "date": "2020-09-04T20:26:29.702000+00:00",
+    "day": "2020-09-04",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-9500bc326c"
+  },
+  {
+   "dir": "_morgue/panice",
+   "name": "Panice",
+   "first": {
+    "date": "2020-09-05T08:36:50.953000+00:00",
+    "day": "2020-09-05",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-a5a0cbd680"
+  },
+  {
+   "dir": "_morgue/pain",
+   "name": "Pain",
+   "first": {
+    "date": "2020-09-13T04:21:24.025000+00:00",
+    "day": "2020-09-13",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-0dbd652a56"
+  },
+  {
+   "dir": "_morgue/chestnut-the-forbidden-one",
+   "name": "Chestnut The Forbidden One",
+   "first": {
+    "date": "2020-10-14T08:32:23.018000+00:00",
+    "day": "2020-10-14",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-91a025f6e6"
+  },
+  {
+   "dir": "_morgue/chin-of-the-forbidden-one",
+   "name": "Chin of the Forbidden One",
+   "first": {
+    "date": "2020-10-14T08:32:36.264000+00:00",
+    "day": "2020-10-14",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-75d0f891dd"
+  },
+  {
+   "dir": "_morgue/song-of-the-forbidden-one",
+   "name": "Song of the Forbidden One",
+   "first": {
+    "date": "2020-10-14T08:32:37.172000+00:00",
+    "day": "2020-10-14",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-b432f85737"
+  },
+  {
+   "dir": "_morgue/forehead-of-the-forbidden-one",
+   "name": "Forehead of the Forbidden One",
+   "first": {
+    "date": "2020-10-14T08:33:23.476000+00:00",
+    "day": "2020-10-14",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-4db29134f3"
+  },
+  {
+   "dir": "_morgue/dinner-blade",
+   "name": "Dinner Blade",
+   "first": {
+    "date": "2020-10-15T08:07:36.679000+00:00",
+    "day": "2020-10-15",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-0f2dcbd902"
+  },
+  {
+   "dir": "_morgue/the-mass",
+   "name": "The Mass",
+   "first": {
+    "date": "2020-10-28T06:22:52.273000+00:00",
+    "day": "2020-10-28",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-df1dc3f8f2"
+  },
+  {
+   "dir": "_morgue/chestnut-dies",
+   "name": "Chestnut Dies",
+   "first": {
+    "date": "2020-11-04T05:57:52.733000+00:00",
+    "day": "2020-11-04",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-ee09eb9b36"
+  },
+  {
+   "dir": "_morgue/mini-bees",
+   "name": "Mini Bees",
+   "first": {
+    "date": "2021-04-24T09:58:34.648000+00:00",
+    "day": "2021-04-24",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-4e6be321e9"
+  },
+  {
+   "dir": "_morgue/slamda",
+   "name": "Slamda",
+   "first": {
+    "date": "2021-04-24T10:00:31.397000+00:00",
+    "day": "2021-04-24",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 4,
+   "kind": "joke",
+   "id": "LC-f672338a36"
+  },
+  {
+   "dir": "_morgue/poacher",
+   "name": "Poacher",
+   "first": {
+    "date": "2021-04-24T10:33:18.501000+00:00",
+    "day": "2021-04-24",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-60df426b5f"
+  },
+  {
+   "dir": "_morgue/michael-rosen",
+   "name": "Michael Rosen",
+   "first": {
+    "date": "2021-04-25T05:04:03.150000+00:00",
+    "day": "2021-04-25",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-d59ed10930"
+  },
+  {
+   "dir": "_morgue/dogma-ter",
+   "name": "doGma Ter",
+   "first": {
+    "date": "2021-04-29T08:45:21.267000+00:00",
+    "day": "2021-04-29",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-674934b65b"
+  },
+  {
+   "dir": "_morgue/world-eater",
+   "name": "World Eater",
+   "first": {
+    "date": "2021-08-04T08:33:34.076000+00:00",
+    "day": "2021-08-04",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 7,
+   "kind": "joke",
+   "id": "LC-0e29a2ace0"
+  },
+  {
+   "dir": "_morgue/big-strong-tree",
+   "name": "Big Strong Tree",
+   "first": {
+    "date": "2021-08-04T10:49:23.949000+00:00",
+    "day": "2021-08-04",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-41917ce12c"
+  },
+  {
+   "dir": "_morgue/felguard",
+   "name": "Felguard",
+   "first": {
+    "date": "2021-09-09T09:29:49.512000+00:00",
+    "day": "2021-09-09",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "played",
+   "id": "LC-d833858454"
+  },
+  {
+   "dir": "_morgue/doused",
+   "name": "Doused",
+   "first": {
+    "date": "2022-01-16T07:09:36.899000+00:00",
+    "day": "2022-01-16",
+    "channel": "update-05-port",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "played",
+   "id": "LC-581617aefe"
+  },
+  {
+   "dir": "_morgue/why-space",
+   "name": "WHY SPACE",
+   "first": {
+    "date": "2022-01-17T04:09:07.157000+00:00",
+    "day": "2022-01-17",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-8c3be298dd"
+  },
+  {
+   "dir": "_morgue/warcraftian-kel",
+   "name": "Warcraftian Kel",
+   "first": {
+    "date": "2022-02-04T00:07:19.341000+00:00",
+    "day": "2022-02-04",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 4,
+   "kind": "joke",
+   "id": "LC-cbc16dd56c"
+  },
+  {
+   "dir": "_morgue/imposter",
+   "name": "Imposter",
+   "first": {
+    "date": "2022-04-01T14:05:24.356000+00:00",
+    "day": "2022-04-01",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-36151ad033"
+  },
+  {
+   "dir": "_morgue/pants-guy",
+   "name": "Pants Guy",
+   "first": {
+    "date": "2022-06-09T23:58:05.581000+00:00",
+    "day": "2022-06-09",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-55a3159554"
+  },
+  {
+   "dir": "_morgue/ahegao",
+   "name": "Ahegao",
+   "first": {
+    "date": "2022-06-10T00:11:03.611000+00:00",
+    "day": "2022-06-10",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 3,
+   "kind": "joke",
+   "id": "LC-8c29958433"
+  },
+  {
+   "dir": "_morgue/rammus",
+   "name": "Rammus",
+   "first": {
+    "date": "2022-06-10T08:04:31.469000+00:00",
+    "day": "2022-06-10",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 5,
+   "kind": "joke",
+   "id": "LC-3c48e46bcf"
+  },
+  {
+   "dir": "_morgue/balloon-boy-many-balloon-boys",
+   "name": "Balloon Boy (many Balloon Boys)",
+   "first": {
+    "date": "2022-06-10T19:44:57.674000+00:00",
+    "day": "2022-06-10",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-29916cbd6b"
+  },
+  {
+   "dir": "_morgue/waffle-dee",
+   "name": "Waffle Dee",
+   "first": {
+    "date": "2022-10-21T16:24:58.229000+00:00",
+    "day": "2022-10-21",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-3ff331ea91"
+  },
+  {
+   "dir": "_morgue/mrs-softener",
+   "name": "Mrs. Softener",
+   "first": {
+    "date": "2022-11-20T09:28:08.681000+00:00",
+    "day": "2022-11-20",
+    "channel": "general-discussion",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-55f940975e"
+  },
+  {
+   "dir": "_morgue/tyler-kool",
+   "name": "Tyler Kool",
+   "first": {
+    "date": "2023-04-07T04:15:54.931000+00:00",
+    "day": "2023-04-07",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-19e6f09e63"
+  },
+  {
+   "dir": "_morgue/tmtrainer",
+   "name": "TMTRAINER",
+   "first": {
+    "date": "2023-04-20T10:34:10.238000+00:00",
+    "day": "2023-04-20",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-3cafc4a14b"
+  },
+  {
+   "dir": "_morgue/washha",
+   "name": "Washha",
+   "first": {
+    "date": "2023-05-05T23:12:16.949000+00:00",
+    "day": "2023-05-05",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-44df5f84e7"
+  },
+  {
+   "dir": "_morgue/beholster-shrine",
+   "name": "Beholster Shrine",
+   "first": {
+    "date": "2023-05-12T00:59:08.976000+00:00",
+    "day": "2023-05-12",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "joke",
+   "id": "LC-bcbe906b12"
+  },
+  {
+   "dir": "_morgue/the-battery",
+   "name": "The Battery",
+   "first": {
+    "date": "2023-09-11T23:23:56.776000+00:00",
+    "day": "2023-09-11",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 13,
+   "kind": "played",
+   "id": "OL-856dab8c9c"
+  },
+  {
+   "dir": "_morgue/teleport",
+   "name": "Teleport",
+   "first": {
+    "date": "2023-10-05T15:40:02+00:00",
+    "day": "2023-10-05",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "kind": "played",
+   "id": "LC-fea1e3aba4"
+  },
+  {
+   "dir": "_morgue/monke-circle",
+   "name": "Monke Circle",
+   "first": {
+    "date": "2023-10-17T22:44:54.856000+00:00",
+    "day": "2023-10-17",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-b129679539"
+  },
+  {
+   "dir": "_morgue/morrrr",
+   "name": "MORRRR",
+   "first": {
+    "date": "2024-08-30T20:15:10.142000+00:00",
+    "day": "2024-08-30",
+    "channel": "cursed",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-63e32c2da1"
+  },
+  {
+   "dir": "_morgue/that-feeling-when-knee-surgery-is-tomorrow",
+   "name": "That Feeling When Knee Surgery Is Tomorrow",
+   "first": {
+    "date": "2025-02-04T04:00:07.463000+00:00",
+    "day": "2025-02-04",
+    "channel": "joke-ideas",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-b74c16bc6a"
+  },
+  {
+   "dir": "_morgue/toy-bonnie-vvvvvvv",
+   "name": "Toy Bonnie (vvvvvvv)",
+   "first": {
+    "date": "2025-02-07T09:34:04.418000+00:00",
+    "day": "2025-02-07",
+    "channel": "joke-ideas",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-1eb214392d"
+  },
+  {
+   "dir": "_morgue/prince-stingy",
+   "name": "Prince Stingy",
+   "first": {
+    "date": "2025-02-11T08:08:00.620000+00:00",
+    "day": "2025-02-11",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-7577c9124e"
+  },
+  {
+   "dir": "_morgue/summoning-obelisk",
+   "name": "Summoning Obelisk",
+   "first": {
+    "date": "2025-02-13T08:28:39.629000+00:00",
+    "day": "2025-02-13",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-1561c66724"
+  },
+  {
+   "dir": "_morgue/gonedhi",
+   "name": "Gonedhi",
+   "first": {
+    "date": "2025-04-25T05:52:24.066000+00:00",
+    "day": "2025-04-25",
+    "channel": "joke-ideas",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-8c5772838f"
+  },
+  {
+   "dir": "_morgue/dee-kingkingking",
+   "name": "Dee KingKingKing",
+   "first": {
+    "date": "2026-01-21T23:36:28.607000+00:00",
+    "day": "2026-01-21",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-3ac1bd1ff5"
+  },
+  {
+   "dir": "_morgue/killer-bees",
+   "name": "Killer Bees",
+   "first": {
+    "date": "2026-01-23T06:21:34.615000+00:00",
+    "day": "2026-01-23",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-891070d8b7"
+  },
+  {
+   "dir": "_morgue/delirium",
+   "name": "Delirium",
+   "first": {
+    "date": "2026-11-06T06:50:05.997000+00:00",
+    "day": "2026-11-06",
+    "channel": "joke-ideas",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-ad16a986fd"
+  },
+  {
+   "dir": "_morgue/one-block-jump-for-the-raw-chicken-or-one-block-vertical-jump-for-the-beef",
+   "name": "One Block Jump for the Raw Chicken or One Block Vertical Jump for the Beef",
+   "first": {
+    "date": "2026-11-07T06:57:32.787000+00:00",
+    "day": "2026-11-07",
+    "channel": "joke-ideas",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-dee22c2530"
+  }
+ ],
+ "mdw": [
+  {
+   "dir": "_morgue/LC-fb5b7c9f18",
+   "name": "Cho'Gath",
+   "first": {
+    "date": "2020-08-14T05:06:31.478000+00:00",
+    "day": "2020-08-14",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 14,
+   "card": "Cho'Gath"
+  },
+  {
+   "dir": "_morgue/LC-aa66b222ee",
+   "name": "Fire Guardian's Stronghold",
+   "first": {
+    "date": "2021-12-21T04:49:06.624000+00:00",
+    "day": "2021-12-21",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 9,
+   "card": "Fire Guardian's Stronghold"
+  },
+  {
+   "dir": "_morgue/LC-86d6aa5aa4",
+   "name": "The Missile",
+   "first": {
+    "date": "2022-02-10T02:07:04.736000+00:00",
+    "day": "2022-02-10",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 12,
+   "card": "The Missile"
+  },
+  {
+   "dir": "_morgue/LC-ce5c162956",
+   "name": "Pandeity Old",
+   "first": {
+    "date": "2022-11-03T04:59:44.417000+00:00",
+    "day": "2022-11-03",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 6,
+   "card": "Pandeity Old"
+  },
+  {
+   "dir": "_morgue/LC-b989fd185d",
+   "name": "Grandfather Clock",
+   "first": {
+    "date": "2023-06-03T22:24:46.311000+00:00",
+    "day": "2023-06-03",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 7,
+   "card": "Grandfather Clock"
+  },
+  {
+   "dir": "_morgue/LC-cee2f4be78",
+   "name": "Satou Matsuzaka",
+   "first": {
+    "date": "2023-09-07T13:21:06.228000+00:00",
+    "day": "2023-09-07",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 17,
+   "card": "Satou"
+  },
+  {
+   "dir": "_morgue/LC-0feb712061",
+   "name": "Satou Matsustaka",
+   "first": {
+    "date": "2023-09-08T01:12:14.524000+00:00",
+    "day": "2023-09-08",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 11,
+   "card": "Satou Matsustaka"
+  },
+  {
+   "dir": "_morgue/LC-594ef936eb",
+   "name": "Poison Incantation",
+   "first": {
+    "date": "2023-10-14T07:33:37.763000+00:00",
+    "day": "2023-10-14",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "card": "Poison Incantation"
+  },
+  {
+   "dir": "_morgue/LC-697901d443",
+   "name": "White Palace",
+   "first": {
+    "date": "2023-10-24T18:34:59.256000+00:00",
+    "day": "2023-10-24",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 4,
+   "card": "White Palace"
+  },
+  {
+   "dir": "_morgue/LC-3b27f8d934",
+   "name": "Ech",
+   "first": {
+    "date": "2024-10-04T04:01:59.427000+00:00",
+    "day": "2024-10-04",
+    "channel": "ideas-discussion",
+    "source": "discord"
+   },
+   "versions": 1,
+   "card": "Ech"
+  },
+  {
+   "dir": "_morgue/LC-9f3fb321e7",
+   "name": "Warcraftian Rouge",
+   "first": {
+    "date": "2025-02-23T01:11:41.365000+00:00",
+    "day": "2025-02-23",
+    "channel": "joke-ideas",
+    "source": "discord"
+   },
+   "versions": 2,
+   "card": "Warcraftian Rouge"
+  },
+  {
+   "dir": "_morgue/LC-dd919fd1b6",
+   "name": "The Developper",
+   "first": {
+    "date": "2025-03-02T01:57:32.028000+00:00",
+    "day": "2025-03-02",
+    "channel": "new-cards",
+    "source": "discord"
+   },
+   "versions": 2,
+   "card": "Developper"
+  }
+ ],
+ "created": {
+  "Acro": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Amazing Mirror": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Armored Squit": {
+   "date": "2023-04-29",
+   "sort": "2023-04-29",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-04-30"
+  },
+  "Azamoth the Forgotten King": {
+   "date": "2023-09-11",
+   "sort": "2023-09-11",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Azamoth the Possessed Vessel": {
+   "date": "2023-09-11",
+   "sort": "2023-09-11",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-11-05"
+  },
+  "Bag of Evil": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Big Bomb": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Blockade": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Blood Ritual": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Blooper Tentacle": {
+   "date": "2020-07-18",
+   "sort": "2020-07-18",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-08-23"
+  },
+  "Bolts and Screws": {
+   "date": "2020-09-03",
+   "sort": "2020-09-03",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Bomb": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Burdened": {
+   "date": "2020-08-14",
+   "sort": "2020-08-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2022-01-16"
+  },
+  "Chris & Jordi": {
+   "date": "2021-08-15",
+   "sort": "2021-08-15",
+   "source": "discord",
+   "status": "owner",
+   "was": "2021-08-23"
+  },
+  "Colosseum of Fools": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-10-25",
+   "psd": true
+  },
+  "Computer Virus": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Contracted": {
+   "date": "2021-12-04",
+   "sort": "2021-12-04",
+   "source": "discord",
+   "status": "owner",
+   "was": "2022-01-16"
+  },
+  "Corruption": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2022-01-16"
+  },
+  "Corruptor": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-26"
+  },
+  "Crowned Magolor": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Crystal Bits": {
+   "date": "2020-07-26",
+   "sort": "2020-07-26",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-04-13"
+  },
+  "Crystal Peak": {
+   "date": "2023-10-23",
+   "sort": "2023-10-23",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-10-25",
+   "psd": true
+  },
+  "Dark Matter Swordsman": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Dark Nebula": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Dark Ritual": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Dark Sword": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Daroach": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Doc": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Dragon Mount": {
+   "date": "2020-07-22",
+   "sort": "2020-07-22",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-26"
+  },
+  "Drawcia": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-18"
+  },
+  "Dryya": {
+   "date": "2023-05-01",
+   "sort": "2023-05-01",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Dyna Blade": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Dynamite": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Edible": {
+   "date": "2023-11-01",
+   "sort": "2023-11-01",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Electro Probe": {
+   "date": "2020-07-18",
+   "sort": "2020-07-18",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-04-13"
+  },
+  "Erasure": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-09-08"
+  },
+  "Error Room": {
+   "date": "2023-10-28",
+   "sort": "2023-10-28",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-10-31",
+   "psd": true
+  },
+  "Exposed": {
+   "date": "2023-04-05",
+   "sort": "2023-04-05",
+   "source": "first repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "False Knight": {
+   "date": "2019-02-16",
+   "sort": "2019-02-16",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Fatty Whale": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Fawful": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-18"
+  },
+  "Final Dark Mind Eye": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-18"
+  },
+  "Flame Bomb": {
+   "date": "2020-07-22",
+   "sort": "2020-07-22",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-04-13"
+  },
+  "Flower of Decay": {
+   "date": "2020-07-18",
+   "sort": "2020-07-18",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-08-04"
+  },
+  "Fragile Strength": {
+   "date": "2020-07-29",
+   "sort": "2020-07-29",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-08-03"
+  },
+  "Freeze Spell": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Galacta Warrior": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-27"
+  },
+  "Gasoline": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "God Tamer": {
+   "date": "2019-05-26",
+   "sort": "2019-05-26",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Godskin Apostle": {
+   "date": "2023-04-24",
+   "sort": "2023-04-24",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-10-20"
+  },
+  "Godskin Noble": {
+   "date": "2023-04-24",
+   "sort": "2023-04-24",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-10-20"
+  },
+  "Golden Bomb": {
+   "date": "2019-04-28",
+   "sort": "2019-04-28",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Golden Metronome": {
+   "date": "2019-04-28",
+   "sort": "2019-04-28",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Gooper Blooper": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Grand Doomer": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Grapes": {
+   "date": "2020-07-20",
+   "sort": "2020-07-20",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Gust of Trees": {
+   "date": "2020-08-24",
+   "sort": "2020-08-24",
+   "source": "discord",
+   "status": "earlier",
+   "was": "2023-10-19"
+  },
+  "Halberd Reactor": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Heavy Mole": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Hegemol": {
+   "date": "2023-05-26",
+   "sort": "2023-05-26",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-06-13"
+  },
+  "Hexed": {
+   "date": "2020-08-14",
+   "sort": "2020-08-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2022-01-16"
+  },
+  "Holy Blade": {
+   "date": "2019-04-28",
+   "sort": "2019-04-28",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Holy Card": {
+   "date": "2023-05-11",
+   "sort": "2023-05-11",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-10-18"
+  },
+  "Hornet": {
+   "date": "2019-02-16",
+   "sort": "2019-02-16",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Imprisoned": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2022-01-16"
+  },
+  "Indoctrination": {
+   "date": "2023-03-20",
+   "sort": "2023-03-20",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-04-02"
+  },
+  "Infected": {
+   "date": "2023-04-08",
+   "sort": "2023-04-08",
+   "source": "first repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Insane": {
+   "date": "2023-04-22",
+   "sort": "2023-04-22",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Inspired": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2022-01-22"
+  },
+  "Jetpack": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-26"
+  },
+  "Kabula": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Knight Lost A Lot": {
+   "date": "2021-08-15",
+   "sort": "2021-08-15",
+   "source": "discord",
+   "status": "owner",
+   "was": "2021-08-21"
+  },
+  "Landia": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Lightning Bolt": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Lor Starcutter": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Lord Crump": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Lorian": {
+   "date": "2022-09-22",
+   "sort": "2022-09-22",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-11-05",
+   "as": "Twin Princes"
+  },
+  "Lothric": {
+   "date": "2022-09-22",
+   "sort": "2022-09-22",
+   "source": "discord",
+   "status": "owner",
+   "was": "2022-09-27",
+   "as": "Twin Princes"
+  },
+  "Macho Grubba": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Magic Shield": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Magolor": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Marked For Death": {
+   "date": "2023-04-05",
+   "sort": "2023-04-05",
+   "source": "first repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Marked For Life": {
+   "date": "2023-04-05",
+   "sort": "2023-04-05",
+   "source": "first repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Marx": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Mechanical Shield": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Mega Titan": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Metal General": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Mettaton": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Mettaton NEO": {
+   "date": "2020-07-28",
+   "sort": "2020-07-28",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2025-03-03"
+  },
+  "NME Salesman": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Nailsage Sly": {
+   "date": "2019-06-13",
+   "sort": "2019-06-13",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Necrodeus": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Nosk": {
+   "date": "2019-03-11",
+   "sort": "2019-03-11",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Old Foxy": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Old Freddy": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Panda": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-24"
+  },
+  "Pandora's Box": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Pep Drink": {
+   "date": "Before 2020",
+   "sort": "0000-00-00",
+   "source": "physical card photo",
+   "status": "earlier",
+   "was": "2020-07-22"
+  },
+  "Pepperoni Pizza": {
+   "date": "2020-07-22",
+   "sort": "2020-07-22",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Peppy": {
+   "date": "2020-08-14",
+   "sort": "2020-08-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2022-01-22"
+  },
+  "Pix": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Portal": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Primal Aspid": {
+   "date": "2023-04-29",
+   "sort": "2023-04-29",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-10-20"
+  },
+  "Quick Slash": {
+   "date": "2020-07-29",
+   "sort": "2020-07-29",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-08-03"
+  },
+  "Regeneration Potion": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-10-04"
+  },
+  "Return to Sender": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Sharp Baldur": {
+   "date": "2023-04-29",
+   "sort": "2023-04-29",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-04-30"
+  },
+  "Smeckeldorfed": {
+   "date": "2023-04-05",
+   "sort": "2023-04-05",
+   "source": "first repo",
+   "status": "owner",
+   "was": "2023-05-10"
+  },
+  "Spinni": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Standstill": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-08-02"
+  },
+  "Star Dream": {
+   "date": "2023-09-11",
+   "sort": "2023-09-11",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-09-12",
+   "psd": true
+  },
+  "Steam Sale": {
+   "date": "2023-04-15",
+   "sort": "2023-04-15",
+   "source": "first repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Sting Shard": {
+   "date": "2020-07-22",
+   "sort": "2020-07-22",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-26"
+  },
+  "Strawberry Shortcake": {
+   "date": "2019-03-31",
+   "sort": "2019-03-31",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Tainted Cain": {
+   "date": "2026-11-06",
+   "sort": "2026-11-06",
+   "source": "discord",
+   "status": "owner",
+   "was": null
+  },
+  "Tainted Forgotten": {
+   "date": "2026-11-06",
+   "sort": "2026-11-06",
+   "source": "discord",
+   "status": "owner",
+   "was": null
+  },
+  "Tainted Lazarus": {
+   "date": "2023-09-10",
+   "sort": "2023-09-10",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-10-09",
+   "psd": true
+  },
+  "Tainted Lilith": {
+   "date": "2026-11-06",
+   "sort": "2026-11-06",
+   "source": "discord",
+   "status": "owner",
+   "was": null
+  },
+  "Tainted Soul": {
+   "date": "2026-11-06",
+   "sort": "2026-11-06",
+   "source": "discord",
+   "status": "owner",
+   "was": null
+  },
+  "The Collector": {
+   "date": "2023-04-29",
+   "sort": "2023-04-29",
+   "source": "old repo",
+   "status": "owner",
+   "was": "2023-11-06",
+   "psd": true
+  },
+  "The Great Papyrus": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Tomorrow I'll": {
+   "date": "2020-07-22",
+   "sort": "2020-07-22",
+   "source": "discord",
+   "status": "owner",
+   "was": "2023-04-11"
+  },
+  "Toriel": {
+   "date": "2019-05-14",
+   "sort": "2019-05-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Undyne": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-18"
+  },
+  "Vigor": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "first repo",
+   "status": "owner",
+   "was": "2023-11-06"
+  },
+  "Watermelon": {
+   "date": "2019-03-22",
+   "sort": "2019-03-22",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Wham Bam Bone": {
+   "date": "Before 2020",
+   "sort": "0000-00-00",
+   "source": "physical card photo",
+   "status": "earlier",
+   "was": "2020-07-22"
+  },
+  "Withering": {
+   "date": "2020-08-14",
+   "sort": "2020-08-14",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2022-01-16"
+  },
+  "Ze'mer": {
+   "date": "2023-03-25",
+   "sort": "2023-03-25",
+   "source": "first repo",
+   "status": "owner",
+   "was": "2023-04-18",
+   "psd": true
+  },
+  "Zero": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "changelog",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Zero Override": {
+   "date": "2019-02-25",
+   "sort": "2019-02-25",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-07-22"
+  },
+  "Zess Deluxe": {
+   "date": "2020-07-28",
+   "sort": "2020-07-28",
+   "source": "discord",
+   "status": "owner",
+   "was": "2020-08-08"
+  }
+ }
+}

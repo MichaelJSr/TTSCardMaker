@@ -1,0 +1,70 @@
+{
+ "card": "palace-of-shadow",
+ "key": "Palace of Shadow",
+ "name": "Palace of Shadow",
+ "kind": "field",
+ "stop": {
+  "day": "2025-03-08",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-5bc452dcf1e5",
+   "kind": "discord",
+   "date": "2025-03-08T11:51:39+00:00",
+   "day": "2025-03-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-5bc452dcf1e5.webp",
+   "fields": {
+    "name": {
+     "value": "Palace of Shadow",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[dark]: +2 DEF\nOn the fourth turn of this field being active, you may sacrifice a light type creature with over 50% of its HP to summon the Shadow Queen in its place.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-22T10:49:25+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-08",
+  "sort": "2025-03-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,134 @@
+{
+ "card": "bobberlington",
+ "key": "Bobberlington",
+ "name": "Bobberlington",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-10-30",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-23e7f4a10214:Creatures/Other/5 Stars/Bobberlington.psd",
+   "kind": "old repo",
+   "date": "2023-10-30T02:54:47+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-c04369432662.webp",
+   "fields": {
+    "name": {
+     "value": "Bobberlington",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Allocate 4 Smeckeldorfed for 2 turns as you wish among any creatures on the field.\nWhile this is on the field, double the amount of stacks of any stackable status effect inflicted, or double the duration of the inflicted status effect if it is not stackable.\nIf a debuff would deal damage to this creature, heal for the amount of damage dealt instead.\n(OD) Draw a Gasoline, Rope, and Bomb.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 480
+  },
+  {
+   "id": "O-bf982386f6c5:Creatures/Other/5 Stars/Bobberlington.png",
+   "kind": "old repo",
+   "date": "2023-10-30T16:32:52+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Bobberlington",
+   "image": "O-e47396870f7d.webp",
+   "fields": {
+    "name": {
+     "value": "Bobberlington",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Allocate 4 Smeckeldorfed for 2 turns as you wish among any creatures on the field.\nWhile this is on the field, double the amount of stacks of any stackable status effect inflicted, or double the duration of the inflicted status effect if it is not stackable.\nIf a debuff would deal damage to this creature, heal for the amount of damage dealt instead.\n(OD) Draw a Gasoline, Rope, and Bomb.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 6 -> 5",
+     "SPD 7 -> 5"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-30",
+  "sort": "2023-10-30",
+  "source": "old repo (PSD)",
+  "status": "same"
+ }
+}

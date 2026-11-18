@@ -1,0 +1,350 @@
+{
+ "card": "twilit-woods",
+ "key": "Twilit Woods",
+ "name": "Twilit Woods",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-bfc5fc127c55",
+   "kind": "discord",
+   "date": "2021-12-26T20:16:09+00:00",
+   "day": "2021-12-26",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-bfc5fc127c55.webp",
+   "fields": {
+    "name": {
+     "value": "Twilit Woods",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Negate an ability. Reward - 4 cost Tricksters: Take their turns first, separate from normal turn order [dark]: Can't be targeted by items Nature: ATK +1",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "F",
+   "w": 396,
+   "h": 614
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/2 Stars/Twilit_Woods.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-56e937a4cb40.webp",
+   "fields": {
+    "name": {
+     "value": "Twilit Woods",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Negate an ability. Reward - 4 cost Tricksters: Take their turns first, separate from normal turn order [dark]: Can't be targeted by items Nature: ATK +1",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 396,
+   "h": 614
+  },
+  {
+   "id": "O-1325e698f979:Field/2 Stars/Twilit_Woods.png",
+   "kind": "old repo",
+   "date": "2023-04-19T23:15:12+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Ported all 2 star field items",
+   "repo": "first",
+   "image": "O-ff8d80a8030f.webp",
+   "fields": {
+    "name": {
+     "value": "Twilit Woods",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less per [dark] on your field.\nTricksters: Go first regardless of SPD in their respective lanes.\n[dark]: Cant be targeted by items.\nNature: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/2 Stars/Twilit_Woods.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-ff8d80a8030f.webp",
+   "fields": {
+    "name": {
+     "value": "Twilit Woods",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less per [dark] on your field.\nTricksters: Go first regardless of SPD in their respective lanes.\n[dark]: Cant be targeted by items.\nNature: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-3f71eddb4e55:Field/3 Stars/Twilit_Woods.png",
+   "kind": "old repo",
+   "date": "2023-04-23T18:53:57+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Field Item rebalances",
+   "image": "O-ddef088a5b6f.webp",
+   "fields": {
+    "name": {
+     "value": "Twilit Woods",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less per [dark] on your field.\nTricksters: Go first regardless of SPD in their respective lanes.\n[dark]: Cant be targeted by items.\nNature: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     3
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/3 Stars/Twilit_Woods.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-dc412ce38473.webp",
+   "fields": {
+    "name": {
+     "value": "Twilit Woods",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less per [dark] on your field.\nTricksters: Go first regardless of SPD in their respective lanes.\n[dark]: Can not be targeted by enemy items.\nNature: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b08ebd67d500:Field/4 Stars/Twilit_Woods.png",
+   "kind": "old repo",
+   "date": "2023-10-05T06:33:54+00:00",
+   "day": "2023-10-05",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "twilit woods 4 starification",
+   "image": "O-535f32b7e002.webp",
+   "fields": {
+    "name": {
+     "value": "Twilit Woods",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less per [dark] on your field.\nTricksters: Go first regardless of SPD in their respective lanes.\n[dark]: Can not be targeted by enemy items.\nNature: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/4 Stars/Twilit_Woods.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-c9cbb5b6bb91.webp",
+   "fields": {
+    "name": {
+     "value": "Twilit Woods",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less per [dark] on your field.\n[dark]: Can not be targeted by enemy items.\nTricksters: Go first regardless of SPD in their respective lanes.\nNature: +1 ATK",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2021-12-26",
+  "sort": "2021-12-26",
+  "source": "discord",
+  "status": "same"
+ }
+}

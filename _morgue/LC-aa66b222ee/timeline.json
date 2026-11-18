@@ -1,0 +1,258 @@
+{
+ "card": "LC-aa66b222ee",
+ "key": "Fire Guardian's Stronghold",
+ "name": "Fire Guardian's Stronghold",
+ "morgue": "mdw",
+ "first": {
+  "date": "2021-12-21T04:49:06.624000+00:00",
+  "day": "2021-12-21",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-3bb91b9910d0",
+   "kind": "discord",
+   "date": "2021-12-21T04:49:06.624000+00:00",
+   "day": "2021-12-21",
+   "badge": "Discord",
+   "image": "P-3bb91b9910d0.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 958
+  },
+  {
+   "id": "P-9913be189622",
+   "kind": "discord",
+   "date": "2021-12-27T01:55:44.361000+00:00",
+   "day": "2021-12-27",
+   "badge": "Discord",
+   "image": "P-9913be189622.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-05-port",
+   "w": 720,
+   "h": 955
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/2 Stars/Fire_Guardian's_Stronghold.PNG",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-5b541bd3fe97.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 720,
+   "h": 955
+  },
+  {
+   "id": "O-00ddc0074246:Field/2 Stars/Fire_Guardian's_Stronghold.PNG",
+   "kind": "old repo",
+   "date": "2023-04-19T22:16:18+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Stronghold and Rogueport",
+   "image": "O-cf7cf03f0811.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Guardian’s Stronghold",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-486eeee4a836:Field/2 Stars/Fire_Guardian's_Stronghold.PNG",
+   "kind": "old repo",
+   "date": "2023-04-19T22:24:09+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Stronghold and Rogueport updates",
+   "image": "O-6d2e144d0d5e.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Guardian’s Stronghold",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/2 Stars/Fire_Guardian's_Stronghold.PNG",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-6d2e144d0d5e.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Guardian’s Stronghold",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/2 Stars/Fire_Guardian's_Stronghold.PNG",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-c850e78f0374.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Guardian’s Stronghold",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/2 Stars/Fire_Guardian's_Stronghold.PNG",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-95e7120b1b5e.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Guardian’s Stronghold",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-0ef655f40224:Field/2 Stars/Fire_Guardian's_Stronghold.PNG",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-7c03e827f490.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Guardian’s Stronghold",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ]
+}

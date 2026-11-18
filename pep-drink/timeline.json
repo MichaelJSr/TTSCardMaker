@@ -1,0 +1,399 @@
+{
+ "card": "pep-drink",
+ "key": "Pep Drink",
+ "name": "Pep Drink",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-7f565a7a3be3",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:47+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-7f565a7a3be3.webp",
+   "fields": {
+    "name": {
+     "value": "Pep Drink",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 3 health. When used on a machine it heals 5 health",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-5e91c06726db.webp",
+   "fields": {
+    "name": {
+     "value": "Pep Drink",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 3 health. When used on a machine it heals 5 health",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "O-4ae8bc79caad:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-04-04T21:41:17+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "psds for grapes, the chicken, watermelon, and pep drink",
+   "repo": "first",
+   "image": "O-77dcad8b8320.webp",
+   "fields": {
+    "name": {
+     "value": "Pep Drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 3 HP.\nWhen used on a [machine] type creature, it heals 5 HP instead.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6ea1f0139f1:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-04-05T17:05:31+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items and strength fixes",
+   "repo": "first",
+   "image": "O-03913ce3d370.webp",
+   "fields": {
+    "name": {
+     "value": "Pep drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 3 HP.\nWhen used on a [machine] type creature, it heals 5 HP instead.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-cce9285993f7:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-04-11T13:15:29+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Updating a bunch of outdated item text",
+   "repo": "first",
+   "image": "O-abcfe352ceb6.webp",
+   "fields": {
+    "name": {
+     "value": "Pep drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal a creature by 2 HP and give it 3 turns of 1 peppy, or heal a machine by 4 HP [machine]",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-af409cb5284f:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-30d2b1144b52.webp",
+   "fields": {
+    "name": {
+     "value": "Pep drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal a creature by 2 HP and give it 3 turns of 1 peppy, or heal a machine by 4 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-06ead21c412c:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-04-18T05:34:34+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "drink has been pepped",
+   "repo": "first",
+   "image": "O-4d6004e66922.webp",
+   "fields": {
+    "name": {
+     "value": "Pep drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal a creature by 2 HP and give it 3 turns of 1 peppy, or heal [machine] a by 4 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-4d6004e66922.webp",
+   "fields": {
+    "name": {
+     "value": "Pep drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal a creature by 2 HP and give it 3 turns of 1 peppy, or heal [machine] a by 4 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8b3d33d713b7:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-04-22T13:43:01+00:00",
+   "day": "2023-04-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "heal buffs",
+   "image": "O-d0fa654ece66.webp",
+   "fields": {
+    "name": {
+     "value": "Pep drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal a creature by 2.5 HP and give it 3 turns of 1 peppy, or heal [machine] a by 4 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-3c0a91bde503.webp",
+   "fields": {
+    "name": {
+     "value": "Pep drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal a creature by 2.5 HP and give it 3 turns of 1 Peppy, or heal [machine] a by 4 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/2 Stars/Pep_Drink.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-fec1dc5289c3.webp",
+   "fields": {
+    "name": {
+     "value": "Pep drink",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal a creature by 2.5 HP and give it 3 turns of 1 Peppy, or heal [machine] a by 4 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "Before 2020",
+  "sort": "0000-00-00",
+  "source": "physical card photo",
+  "status": "earlier"
+ }
+}

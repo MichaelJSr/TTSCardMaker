@@ -1,0 +1,627 @@
+{
+ "card": "zigg",
+ "key": "Zigg",
+ "name": "Zigg",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-27693e0710a9",
+   "kind": "discord",
+   "date": "2021-05-19T13:13:27+00:00",
+   "day": "2021-05-19",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-27693e0710a9.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye (repost P-2fdc1831a15d)",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) This card may activate its ‘Red Death Marathon Technique’ which increases its ATK by 3 and decreases its DEF by 4 for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture (repost P-bd3d1fc47a9c)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 5,
+   "era": "C",
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "D-P-4b450ecb6428",
+   "kind": "discord",
+   "date": "2021-05-20T03:15:00+00:00",
+   "day": "2021-05-20",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-4b450ecb6428.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPG)This card may activate its ‘Red Death Marathon Technique’ which increases its ATK by 3 and decreases its DEF by 4 for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "D-P-be7ba5c645d9",
+   "kind": "discord",
+   "date": "2021-12-15T11:53:57+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-be7ba5c645d9.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) (OPG)This card may activate its Red Death Marathon Technique' which increases its ATK by 3 and decreases its DEF by 4 for 2 turns.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 786
+  },
+  {
+   "id": "D-P-997245c7b17a",
+   "kind": "discord",
+   "date": "2022-01-31T08:01:29+00:00",
+   "day": "2022-01-31",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-997245c7b17a.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) (OPG)This card may change into its red death marathon form for 2 turns, Having -4 DEF and +3 ATK.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 787
+  },
+  {
+   "id": "D-P-d2d8346e5c65",
+   "kind": "discord",
+   "date": "2022-01-31T08:04:26+00:00",
+   "day": "2022-01-31",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-d2d8346e5c65.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) (OPG)This card may change into its red death marathon form for 2 turns, having -4 DEF and +3 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Everhood/3 Stars/Zigg.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-aff9295d7cd2.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPG)This card may change into its red death marathon form for 2 turns, having -4 DEF and +3 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "O-00b22c91e29e:Cards/Everhood/3 Stars/Zigg.png",
+   "kind": "old repo",
+   "date": "2023-04-18T04:44:59+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "zigg",
+   "repo": "first",
+   "image": "O-f44eb7233083.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPG)This card may change into its red death marathon form for 2 turns,having \n-4 DEF & +3 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Everhood/3 Stars/Zigg.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-f44eb7233083.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPG)This card may change into its red death marathon form for 2 turns,having \n-4 DEF & +3 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Everhood/3 Stars/Zigg.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-f44eb7233083.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPG)This card may change into its red death marathon form for 2 turns,having \n-4 DEF & +3 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f9ba00fc319d:Creatures/Everhood/3 Stars/Zigg.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-caa8b36f5a55.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPG)This card may change into its red death marathon form for 2 turns,having \n-4 DEF & +3 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Everhood/3 Stars/Zigg.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-cef651fc0e98.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPG)This card may change into its red death marathon form for 2 turns,having \n-4 DEF & +3 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Everhood/3 Stars/Zigg.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-598f1b092293.webp",
+   "fields": {
+    "name": {
+     "value": "Zigg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 6,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPG)This card may change into its red death marathon form for 2 turns,having \n-4 DEF & +3 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-05-19",
+  "sort": "2021-05-19",
+  "source": "discord",
+  "status": "same"
+ }
+}

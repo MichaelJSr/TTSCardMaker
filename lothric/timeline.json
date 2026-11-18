@@ -1,0 +1,1223 @@
+{
+ "card": "lothric",
+ "key": "Lothric",
+ "name": "Lothric",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-10-16",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d93f29663695",
+   "kind": "discord",
+   "date": "2022-09-22T17:59:51+00:00",
+   "day": "2022-09-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "as": "Twin Princes",
+   "image": "P-d93f29663695.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric : attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows (owner Q3)"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-75b3b17ded68",
+   "kind": "discord",
+   "date": "2022-09-22T19:19:41+00:00",
+   "day": "2022-09-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "as": "Twin Princes",
+   "image": "P-75b3b17ded68.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric : attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows (owner Q3)"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 4 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-f3fe5efb4847",
+   "kind": "discord",
+   "date": "2022-09-22T21:08:23+00:00",
+   "day": "2022-09-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "as": "Twin Princes",
+   "image": "P-f3fe5efb4847.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric : attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows (owner Q3)"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-2164e6ee0e33",
+   "kind": "discord",
+   "date": "2022-09-22T21:09:43+00:00",
+   "day": "2022-09-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "as": "Twin Princes",
+   "image": "P-2164e6ee0e33.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric : attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows (owner Q3)"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-c485b5b8e131",
+   "kind": "discord",
+   "date": "2022-09-23T12:34:48+00:00",
+   "day": "2022-09-23",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "as": "Twin Princes",
+   "image": "P-c485b5b8e131.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric: attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows (owner Q3)"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-b21831fe0af7",
+   "kind": "discord",
+   "date": "2022-09-27T12:50:08+00:00",
+   "day": "2022-09-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "as": "Twin Princes",
+   "image": "P-b21831fe0af7.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric : attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows (owner Q3)"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-c8bb63e9f3ab",
+   "kind": "discord",
+   "date": "2022-10-27T20:16:23+00:00",
+   "day": "2022-10-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "as": "Twin Princes",
+   "image": "P-c8bb63e9f3ab.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric: attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows (owner Q3)"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-257dc970a875:Cards/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "file": "Twin Princes",
+   "repo": "first",
+   "as": "Twin Princes",
+   "image": "O-5dbe205eb941.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric : attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3cc6d4e5f368:Cards/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-03-26T00:49:55+00:00",
+   "day": "2023-03-26",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fire type twin princes",
+   "file": "Twin Princes",
+   "repo": "first",
+   "as": "Twin Princes",
+   "image": "O-70feee039c66.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric: attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "fire"
+     ],
+     "drop": []
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6f6adec2caee:Cards/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-03-30T13:26:14+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "rogue and princes update",
+   "file": "Twin Princes",
+   "repo": "first",
+   "as": "Twin Princes",
+   "image": "O-f9e5859f215f.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: protects Lothric. Attacks inflict burning. Lothric: attacks are piercing. Can consume an action to resummon Lorian if he has been killed. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "light"
+     ],
+     "drop": []
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-6b822c7eee82",
+   "kind": "discord",
+   "date": "2023-04-08T05:24:07+00:00",
+   "day": "2023-04-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "as": "Twin Princes",
+   "image": "P-6b822c7eee82.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: Protects Lothric. Attacks inflict Burning. Lothric: Can take actions while not on the PF. Attacks are piercing. Can consume an action to resummon Lorian with 6 hp if he has been killed. Cannot be damaged until Lorian Has died at least once. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows (owner Q3)"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 5 -> 4"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4f7942c97177:Cards/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-04-08T05:25:25+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "twin princes",
+   "file": "Twin Princes",
+   "repo": "first",
+   "as": "Twin Princes",
+   "image": "O-5d605c19bce5.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: Protects Lothric. Attacks inflict Burning. Lothric: Can take actions while not on the PF. Attacks are piercing. Can consume an action to resummon Lorian with 6 hp if he has been killed. Cannot be damaged until Lorian Has died at least once. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "F-f4978253695",
+   "kind": "text",
+   "date": "2023-04-08T07:21:12+00:00",
+   "day": "2023-04-08",
+   "badge": "changelog",
+   "channel": "finished-updates",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-af409cb5284f:Cards/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "file": "Twin Princes",
+   "repo": "first",
+   "as": "Twin Princes",
+   "image": "O-86ea40fa3eb2.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Lorian: Protects Lothric. Attacks inflict Burning. Lothric: Can take actions while not on the PF. Attacks are piercing. Can consume an action to resummon Lorian with 6 hp if he has been killed. Cannot be damaged until Lorian Has died at least once. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "fire"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-25f9138c0490:Cards/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-04-19T11:13:39+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Finished rest of debuff fixes",
+   "file": "Twin Princes",
+   "repo": "first",
+   "as": "Twin Princes",
+   "image": "O-d398e1be63db.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows"
+    },
+    "ability": {
+     "value": "Lorian: Protects Lothric. Attacks inflict Burning for 2 turns. Lothric: Can take actions while not on the PF. Attacks are piercing. Can consume an action to resummon Lorian with 6 hp if he has been killed. Cannot be damaged until Lorian Has died at least once. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "file": "Twin Princes",
+   "repo": "first",
+   "as": "Twin Princes",
+   "image": "O-d398e1be63db.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows"
+    },
+    "ability": {
+     "value": "Lorian: Protects Lothric. Attacks inflict Burning for 2 turns. Lothric: Can take actions while not on the PF. Attacks are piercing. Can consume an action to resummon Lorian with 6 hp if he has been killed. Cannot be damaged until Lorian Has died at least once. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "file": "Twin Princes",
+   "as": "Twin Princes",
+   "image": "O-d398e1be63db.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows"
+    },
+    "ability": {
+     "value": "Lorian: Protects Lothric. Attacks inflict Burning for 2 turns. Lothric: Can take actions while not on the PF. Attacks are piercing. Can consume an action to resummon Lorian with 6 hp if he has been killed. Cannot be damaged until Lorian Has died at least once. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8a9dc1ffc48d:Creatures/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-04-23T10:45:00+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Mangle, Twin Princes, Gust of Wind",
+   "file": "Twin Princes",
+   "as": "Twin Princes",
+   "image": "O-018c0d60756e.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows"
+    },
+    "ability": {
+     "value": "Lorian: Protects Lothric. Attacks inflict Burning for 2 turns. Lothric: Can take actions while not on the PF. Attacks are piercing. Can consume an action to resummon Lorian with 6 hp if he has been killed. Cannot be damaged until Lorian Has died at least once. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "fire"
+     ],
+     "drop": []
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-14e9918f6ede:Creatures/Souls/5 Stars/Twin_Princes.png",
+   "kind": "old repo",
+   "date": "2023-10-16T05:19:48+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute coloring",
+   "file": "Twin Princes",
+   "as": "Twin Princes",
+   "image": "O-2600ca7ed45b.webp",
+   "fields": {
+    "name": {
+     "value": "Twin Princes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure",
+     "half": "bottom half of Twin Princes's rows"
+    },
+    "ability": {
+     "value": "Lorian: Protects Lothric. Attacks inflict Burning for 2 turns. Lothric: Can take actions while not on the PF. Attacks are piercing. Can consume an action to resummon Lorian with 6 hp if he has been killed. Cannot be damaged until Lorian Has died at least once. Once Lothric dies, Lorian also dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c2b1b3fecc90:Creatures/Souls/5 Stars/Lothric.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-84e882727796.webp",
+   "fields": {
+    "name": {
+     "value": "Lothric",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On First summon, summon Lorian\nThis creature can take actions while not on the PF. \nAttacks are piercing. \nCan consume an action to resummon Lorian with 6 HP if he has been killed. \nCannot be damaged until Lorian Has died at least once.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Twin Princes",
+     "Lothric"
+    ],
+    "types": {
+     "add": [],
+     "drop": [
+      "fire"
+     ]
+    },
+    "stats": [
+     {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 4 -> 5",
+     "DEF 2 -> 4",
+     "ATK 4 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1ce084ae08be:Creatures/Souls/5 Stars/Lothric.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:36:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-a94376d40592.webp",
+   "fields": {
+    "name": {
+     "value": "Lothric",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On First summon, summon Lorian\nThis creature can take actions while not on the PF. \nAttacks are piercing. \nCan consume an action to resummon Lorian with 6 HP if he has been killed. \nCannot be damaged until Lorian Has died at least once.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 4 -> 2",
+     "ATK 6 -> 4"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Souls/5 Stars/Lothric.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-eb208e343642.webp",
+   "fields": {
+    "name": {
+     "value": "Lothric",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On First summon, summon Lorian\nThis creature can take actions while not on the PF. \nAttacks are piercing. \nCan consume an action to resummon Lorian with 6 HP if he has been killed. \nCannot be damaged until Lorian Has died at least once.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2022-09-22",
+  "sort": "2022-09-22",
+  "source": "discord",
+  "status": "owner"
+ }
+}

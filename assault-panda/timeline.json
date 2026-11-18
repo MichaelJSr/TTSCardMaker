@@ -1,0 +1,806 @@
+{
+ "card": "assault-panda",
+ "key": "Assault Panda",
+ "name": "Assault Panda",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-4338a62853ea",
+   "kind": "discord",
+   "date": "2020-08-13T09:14:24+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-4338a62853ea.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (1 point) Instead of attacking, fire four missiles with ATK -2 at creatures on the primary field. Attackers take CD equal to their ATK -3.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-ddd8f874e9f4",
+   "kind": "discord",
+   "date": "2020-08-13T12:02:44+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-ddd8f874e9f4.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (1 point) Instead of attacking, fire three missiles with ATK -2 at creatures on the primary field. Attackers take CD equal to their ATK -3.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f487d5bf9c7",
+   "kind": "text",
+   "date": "2020-08-25T10:28:56+00:00",
+   "day": "2020-08-25",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-18119e83a0d5",
+   "kind": "discord",
+   "date": "2020-08-31T02:18:30+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-18119e83a0d5.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Attack three times with ATK -2. Attackers take CD = to their ATK -3.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-d6b691f07822",
+   "kind": "discord",
+   "date": "2020-09-28T01:14:26+00:00",
+   "day": "2020-09-28",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-d6b691f07822.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Attack three times with ATK -2 per action. Attackers take CD = to their ATK -3.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-1bd3b88adbb4",
+   "kind": "discord",
+   "date": "2021-08-21T04:32:27+00:00",
+   "day": "2021-08-21",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-1bd3b88adbb4.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda",
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "panda"
+     ],
+     "drop": []
+    },
+    "stats": [
+     {
+      "hp": 5,
+      "def": 5,
+      "atk": 5,
+      "spd": 3
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 5 -> 4"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-188a7a613db2",
+   "kind": "discord",
+   "date": "2021-12-12T10:08:03+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-188a7a613db2.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "rock"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Pandas/2 Stars/Assault_Panda.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-c059a956aa0c.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-7522a5685624:Cards/Pandas/2 Stars/Assault_Panda.png",
+   "kind": "old repo",
+   "date": "2023-03-25T10:47:51+00:00",
+   "day": "2023-03-25",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized psd files and ported more cards",
+   "repo": "first",
+   "image": "O-dc5e79e75ca0.webp",
+   "fields": {
+    "name": {
+     "value": "Assult Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Assault Panda",
+     "Assult Panda"
+    ],
+    "types": {
+     "add": [],
+     "drop": [
+      "machine"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ac432e6aa08c:Cards/Pandas/2 Stars/Assault_Panda.png",
+   "kind": "old repo",
+   "date": "2023-03-31T06:50:35+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Assault panda is now a machine and gold fuzzy is no longer a machine",
+   "repo": "first",
+   "image": "O-e69b2a114db1.webp",
+   "fields": {
+    "name": {
+     "value": "Assult Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "machine"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6f27bc72e81d:Cards/Pandas/2 Stars/Assault_Panda.png",
+   "kind": "old repo",
+   "date": "2023-04-06T07:36:06+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "card fixes",
+   "repo": "first",
+   "image": "O-c38b8cca63c3.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Assult Panda",
+     "Assault Panda"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/Pandas/2 Stars/Assault_Panda.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-c38b8cca63c3.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/Pandas/2 Stars/Assault_Panda.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-c38b8cca63c3.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-14e9918f6ede:Creatures/Pandas/2 Stars/Assault_Panda.png",
+   "kind": "old repo",
+   "date": "2023-10-16T05:19:48+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute coloring",
+   "image": "O-f0c2fdc13bb5.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Pandas/2 Stars/Assault_Panda.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-de8accd3c323.webp",
+   "fields": {
+    "name": {
+     "value": "Assault Panda",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) (2 points) Gain 2 additional actions that must be used for attacking.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-08-13",
+  "sort": "2020-08-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,260 @@
+{
+ "card": "all-purpose-medical-kit",
+ "key": "All-Purpose Medical Kit",
+ "name": "All-Purpose Medical Kit",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-3145ffa9ea13",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:44+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-3145ffa9ea13.webp",
+   "fields": {
+    "name": {
+     "value": "All-Purpose Medical Kit",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can either heal a creature by 3 HP, or cure any tier 2\nor lower debuff.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 390,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/All_Purpose_Medical_Kit.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-90ed04dece66.webp",
+   "fields": {
+    "name": {
+     "value": "All-Purpose Medical Kit",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can either heal a creature by 3 HP, or cure any tier 2\nor lower debuff.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 390,
+   "h": 611
+  },
+  {
+   "id": "O-e879c62b9f7a:Items/Heal/2 Stars/All_Purpose_Medical_Kit.png",
+   "kind": "old repo",
+   "date": "2023-04-04T22:24:57+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "all purpose medical kit now cures \"all\" t2 or lower debuffs",
+   "repo": "first",
+   "image": "O-9550dff8c484.webp",
+   "fields": {
+    "name": {
+     "value": "All-Purpose Medical Kit",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can either heal a creature by 3 HP, or cure all tier 2\nor lower debuffs on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-1805f79440a2:Items/Heal/2 Stars/All_Purpose_Medical_Kit.png",
+   "kind": "old repo",
+   "date": "2023-04-05T14:27:53+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some healing items",
+   "repo": "first",
+   "image": "O-0eaf52e3d534.webp",
+   "fields": {
+    "name": {
+     "value": "All-Purpose Medical Kit",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can either heal a creature by 3 HP, or cure all tier 2\nor lower debuffs on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/2 Stars/All_Purpose_Medical_Kit.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-0eaf52e3d534.webp",
+   "fields": {
+    "name": {
+     "value": "All-Purpose Medical Kit",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can either heal a creature by 3 HP, or cure all tier 2\nor lower debuffs on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8b3d33d713b7:Items/Heal/2 Stars/All_Purpose_Medical_Kit.png",
+   "kind": "old repo",
+   "date": "2023-04-22T13:43:01+00:00",
+   "day": "2023-04-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "heal buffs",
+   "image": "O-c6f722d3448c.webp",
+   "fields": {
+    "name": {
+     "value": "All-Purpose Medical Kit",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can either heal a creature by 3.5 HP, or cure all tier 2\nor lower debuffs on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/2 Stars/All_Purpose_Medical_Kit.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-6dd268b74c48.webp",
+   "fields": {
+    "name": {
+     "value": "All-Purpose Medical Kit",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can either heal a creature by 3.5 HP, or cure all tier 2\nor lower debuffs on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

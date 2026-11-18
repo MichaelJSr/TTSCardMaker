@@ -1,0 +1,672 @@
+{
+ "card": "drawcia",
+ "key": "Drawcia",
+ "name": "Drawcia",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f29cd6bfcca",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-6b01269177a2",
+   "kind": "discord",
+   "date": "2020-07-18T11:58:23+00:00",
+   "day": "2020-07-18",
+   "badge": "Discord",
+   "channel": "update-01",
+   "image": "P-6b01269177a2.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On Drawcia's first turn and every second turn after that, (OYT) you can summon a paintling (3/4/6/5) in front of any creature, or gain 2 paint bomb items (2 stars deals 5 piercing damage)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 392,
+   "h": 791
+  },
+  {
+   "id": "D-P-66fcc461834f",
+   "kind": "discord",
+   "date": "2020-07-22T02:52:46+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-66fcc461834f.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On Drawcia's first turn and every second turn after that, you can summon a paintling (3/4/6/5), to protect any of your teammates' creatures, or gain 2 paint bomb items (2 stars deals 5 piercing damage)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 391,
+   "h": 786
+  },
+  {
+   "id": "D-P-b1c644e47e88",
+   "kind": "discord",
+   "date": "2020-07-25T11:20:16+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-b1c644e47e88.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On Drawcia's first turn and (EOT) after that, (OYT) you can either: summon a Paint Warrior in front of any creature, or acquire 2 Paint Bomb items",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 392,
+   "h": 790
+  },
+  {
+   "id": "F-ff9cc5d04c0",
+   "kind": "text",
+   "date": "2020-07-25T11:20:33+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f210627b7cc",
+   "kind": "text",
+   "date": "2021-08-07T08:06:57+00:00",
+   "day": "2021-08-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-f29ee5d85ef6",
+   "kind": "discord",
+   "date": "2021-12-15T09:41:40+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-f29ee5d85ef6.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On Drawcia's first turn and (EOT) after that, (OYT) you can either: summon a Paint Warrior in front of any creature, or acquire 2 Paint Bomb items",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water",
+      "light"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 391,
+   "h": 790
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/3 Stars/Drawcia.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-e784b4e5e2a8.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On Drawcia's first turn and (EOT) after that, (OYT) you can either: summon a Paint Warrior in front of any creature, or acquire 2 Paint Bomb items",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water",
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 790
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/3 Stars/Drawcia.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-899a9bd5bd7f.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On this creature's first turn and (EOT) after that, (OYT) you can either: summon a Paint Warrior in front of any creature, or acquire 2 Paint Bomb items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-524745346a04:Cards/Kirby/3 Stars/Drawcia.png",
+   "kind": "old repo",
+   "date": "2023-04-13T08:46:10+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-d457c89f871b.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On this creature's first turn and (EOT) after that, (OYT) you can either: summon a Paint Warrior in front of any creature, or acquire 2 Paint Bomb items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/3 Stars/Drawcia.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-d457c89f871b.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On this creature's first turn and (EOT) after that, (OYT) you can either: summon a Paint Warrior in front of any creature, or acquire 2 Paint Bomb items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/3 Stars/Drawcia.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-d457c89f871b.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On this creature's first turn and (EOT) after that, (OYT) you can either: summon a Paint Warrior in front of any creature, or acquire 2 Paint Bomb items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ece0f955f388:Creatures/Kirby/3 Stars/Drawcia.png",
+   "kind": "old repo",
+   "date": "2023-04-23T17:53:55+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Attribute fixes",
+   "image": "O-24a512d880b5.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On this creature's first turn and (EOT) after that, (OYT) you can either: summon a Paint Warrior in front of any creature, or acquire 2 Paint Bomb items",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-cc2f46f1221c:Creatures/Kirby/3 Stars/Drawcia.png",
+   "kind": "old repo",
+   "date": "2023-04-30T11:18:10+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "small touch ups",
+   "image": "O-c52ae5b43a88.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On this creature's first turn and (EOT) after that, you can either: summon a Paint Warrior in front of any creature,\nor acquire 2 Paint Bomb items.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/3 Stars/Drawcia.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-6cf26f340fc9.webp",
+   "fields": {
+    "name": {
+     "value": "Drawcia",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On this creature's first turn and (EOT) after that, you can either: summon a Paint Warrior in front of any creature,\nor acquire 2 Paint Bomb items.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

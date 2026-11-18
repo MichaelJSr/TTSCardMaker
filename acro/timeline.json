@@ -1,0 +1,679 @@
+{
+ "card": "acro",
+ "key": "Acro",
+ "name": "Acro",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f0cd2f47352",
+   "kind": "text",
+   "date": "2019-05-14T01:49:17+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f35a00d8b03",
+   "kind": "text",
+   "date": "2019-05-14T01:49:17+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "field": "spd",
+    "by": -1,
+    "unit": "bars"
+   }
+  },
+  {
+   "id": "F-fbb6d57d913",
+   "kind": "text",
+   "date": "2019-05-14T01:49:17+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "field": "stars",
+    "to": 2
+   }
+  },
+  {
+   "id": "F-f865032e1fb",
+   "kind": "text",
+   "date": "2020-07-20T10:19:12+00:00",
+   "day": "2020-07-20",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "hp",
+    "by": -2,
+    "unit": "points"
+   }
+  },
+  {
+   "id": "D-P-6b5380d0456a",
+   "kind": "discord",
+   "date": "2020-07-22T02:52:15+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-6b5380d0456a.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Acro attacks the other team, they lose 2 stars of item usage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 785
+  },
+  {
+   "id": "D-P-254cbb2a2117",
+   "kind": "discord",
+   "date": "2020-07-22T11:30:09+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-254cbb2a2117.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Acro attacks the other team, they lose 2 stars of item usage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 6 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 390,
+   "h": 791
+  },
+  {
+   "id": "F-fd69018bfa6",
+   "kind": "text",
+   "date": "2021-08-04T12:31:34+00:00",
+   "day": "2021-08-04",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "spd",
+    "by": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-042136fb8fac"
+  },
+  {
+   "id": "D-P-042136fb8fac",
+   "kind": "discord",
+   "date": "2021-08-11T19:03:43+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-042136fb8fac.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Acro attacks the other team, they lose 2 stars of item usage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "D-P-debd97e508b4",
+   "kind": "discord",
+   "date": "2021-12-15T11:00:55+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-debd97e508b4.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks the other team, they lose 2 stars of item usage.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/2 Stars/Acro.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-7f014cf094b3.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks the other team, they lose 2 stars of item usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "O-2c9302624ce8:Cards/Kirby/2 Stars/Acro.png",
+   "kind": "old repo",
+   "date": "2023-03-26T00:46:34+00:00",
+   "day": "2023-03-26",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Whispy woods + Acro port",
+   "repo": "first",
+   "image": "O-ad2fa0f69d24.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks the other team, they lose 2 stars of item usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-5d96854a9080:Cards/Kirby/2 Stars/Acro.png",
+   "kind": "old repo",
+   "date": "2023-04-17T01:44:06+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "more touch ups",
+   "repo": "first",
+   "image": "O-588dd32bfceb.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks the other team, they lose 2 stars of item usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/2 Stars/Acro.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-588dd32bfceb.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks the other team, they lose 2 stars of item usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/2 Stars/Acro.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-588dd32bfceb.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks the other team, they lose 2 stars of item usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Kirby/2 Stars/Acro.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-4c0841394e6b.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks the other team, they lose 2 stars of item usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/2 Stars/Acro.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-51dbdadb7f6a.webp",
+   "fields": {
+    "name": {
+     "value": "Acro",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks the other team, they lose 2 stars of item usage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-05-14",
+  "sort": "2019-05-14",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

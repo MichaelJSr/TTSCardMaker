@@ -1,0 +1,29 @@
+{
+ "card": "prince-stingy",
+ "key": "Prince Stingy",
+ "name": "Prince Stingy",
+ "morgue": "candidate",
+ "first": {
+  "date": "2025-02-11T08:08:00.620000+00:00",
+  "day": "2025-02-11",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-7577c9124e5a",
+   "kind": "discord",
+   "date": "2025-02-11T08:08:00.620000+00:00",
+   "day": "2025-02-11",
+   "badge": "Discord",
+   "image": "P-7577c9124e5a.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

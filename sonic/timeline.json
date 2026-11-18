@@ -1,0 +1,237 @@
+{
+ "card": "sonic",
+ "key": "Sonic",
+ "name": "Sonic",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-02-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-a1d68ed53132",
+   "kind": "discord",
+   "date": "2025-02-10T07:24:56+00:00",
+   "day": "2025-02-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-a1d68ed53132.webp",
+   "fields": {
+    "name": {
+     "value": "Sonic",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "STARTS WITH AMY'S HAMMER. OVERWRITES COMBO DAMAGE: DEAL X2.5 DAMAGE IF THIS CREATURES SPEED IS X4 THE TARGETS. DEAL X3 DAMAGE IF THIS CREATURES SPEED IS X4 THE TARGETS.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-efe32137c2d0",
+   "kind": "discord",
+   "date": "2025-02-10T07:28:43+00:00",
+   "day": "2025-02-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-efe32137c2d0.webp",
+   "fields": {
+    "name": {
+     "value": "Sonic",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "STARTS WITH AMY'S HAMMER. OVERWRITES COMBO DAMAGE: DEAL X2.5 DAMAGE IF THIS CREATURES SPEED IS X4 THE TARGETS. DEAL X3 DAMAGE IF THIS CREATURES SPEED IS X4 THE TARGETS.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 5,
+      "spd": 10
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 10
+     },
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 5,
+      "spd": 10
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 4 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-3056ca0c09c6",
+   "kind": "discord",
+   "date": "2025-02-10T07:30:45+00:00",
+   "day": "2025-02-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-3056ca0c09c6.webp",
+   "fields": {
+    "name": {
+     "value": "Sonic",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "STARTS WITH AMY'S HAMMER. OVERWRITES COMBO DAMAGE: DEAL X2.5 DAMAGE IF THIS CREATURES SPEED IS X4 THE TARGETS. DEAL X3 DAMAGE IF THIS CREATURES SPEED IS X4 THE TARGETS.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 3,
+      "spd": 10
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 5,
+      "spd": 10
+     },
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 3,
+      "spd": 10
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 5 -> 3"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-02-12T06:19:49+00:00",
+  "changes": {
+   "stats": [
+    {
+     "hp": 7,
+     "def": 2,
+     "atk": 3,
+     "spd": 10
+    },
+    {
+     "hp": 7,
+     "def": 2,
+     "atk": 3,
+     "spd": 20
+    }
+   ],
+   "bal": "buff",
+   "buffs": [
+    "SPD 10 -> 20"
+   ],
+   "nerfs": [],
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-02-10",
+  "sort": "2025-02-10",
+  "source": "discord",
+  "status": "same"
+ }
+}

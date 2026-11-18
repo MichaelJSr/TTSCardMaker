@@ -1,0 +1,144 @@
+{
+ "card": "hot-spring",
+ "key": "Hot Spring",
+ "name": "Hot Spring",
+ "kind": "field",
+ "stop": {
+  "day": "2023-10-24",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-3e31af6799d5",
+   "kind": "discord",
+   "date": "2023-10-24T19:31:29+00:00",
+   "day": "2023-10-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-3e31af6799d5.webp",
+   "fields": {
+    "name": {
+     "value": "Hot Spring",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Explorer: May use an action to heal to max HP.\nSpiritual: +2 ATK",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-60c362fee78c:MDW/Croissant's Special Folder/Hot_Spring.png",
+   "kind": "old repo",
+   "date": "2023-10-24T21:43:59+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field items",
+   "image": "O-367e27499c1e.webp",
+   "fields": {
+    "name": {
+     "value": "Hot Spring",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Explorer: May use an action to heal to max HP.\nSpiritual: +2 ATK",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-bbd217da4e5c:Field/4 Stars/Hot_Spring.png",
+   "kind": "old repo",
+   "date": "2023-10-25T17:11:26+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field",
+   "image": "O-4b3e9f82b087.webp",
+   "fields": {
+    "name": {
+     "value": "Hot Spring",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 Cost per Explorer\nFriendly creatures may use an action to refresh ability as if another turn has passed.\nSpiritual: +2 ATK\nExplorer: (BOT) +4 Max HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-24",
+  "sort": "2023-10-24",
+  "source": "discord",
+  "status": "same"
+ }
+}

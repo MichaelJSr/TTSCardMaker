@@ -1,0 +1,889 @@
+{
+ "card": "gooper-blooper",
+ "key": "Gooper Blooper",
+ "name": "Gooper Blooper",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-bac02ecf8330",
+   "kind": "discord",
+   "date": "2019-02-25T05:25:32+00:00",
+   "day": "2019-02-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-bac02ecf8330.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Blooper starts with 2 tentacles(HP:2 DEF:2 ATK:4 SPD:5) that protect him, and overkill damage from one goes to the next. Blooper's attacks give blindness",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 592,
+   "h": 1200
+  },
+  {
+   "id": "D-P-8161847e806a",
+   "kind": "discord",
+   "date": "2020-07-22T02:52:29+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-8161847e806a.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Blooper starts with 2 tentacles (HP:1(bar) DEF:2 ATK:4 SPD:5) that protect him, and overkill damage from one goes to the next. Blooper's attacks give blindness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 787
+  },
+  {
+   "id": "D-P-795d279f8946",
+   "kind": "discord",
+   "date": "2020-07-26T00:59:50+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-795d279f8946.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Blooper starts with 2 tentacles. Blooper's attacks give blindness",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 388,
+   "h": 788
+  },
+  {
+   "id": "D-P-b7ab95fbdeed",
+   "kind": "discord",
+   "date": "2020-08-14T01:18:41+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-b7ab95fbdeed.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card starts with 2 tentacles, and its attacks give blindness. If This card takes damage while the tentacles are in the secondary field, he and the tentacles swap fields",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 384,
+   "h": 788
+  },
+  {
+   "id": "F-f720f32daba",
+   "kind": "text",
+   "date": "2021-04-24T10:08:17+00:00",
+   "day": "2021-04-24",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e893e82fa6bc",
+   "kind": "discord",
+   "date": "2021-08-11T14:11:31+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-e893e82fa6bc.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card starts with 2 Blooper tentacles, and its attacks give blindness. If This card takes damage while the tentacles are in the secondary field, he and the tentacles swap fields.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 388,
+   "h": 788
+  },
+  {
+   "id": "D-P-e2018a24fdea",
+   "kind": "discord",
+   "date": "2021-12-15T10:03:23+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-e2018a24fdea.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card starts with 2 Blooper tentacles, and its attacks give blindness. If This card takes damage while the tentacles are in the secondary field, he and the tentacles swap fields.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 386,
+   "h": 789
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/2 Stars/Blooper.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Blooper",
+   "repo": "first",
+   "image": "O-b24618cdbe5a.webp",
+   "fields": {
+    "name": {
+     "value": "Blooper",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card starts with 2 Blooper tentacles, and its attacks give blindness. If This card takes damage while the tentacles are in the secondary field, he and the tentacles swap fields.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 386,
+   "h": 789
+  },
+  {
+   "id": "O-257dc970a875:Cards/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-1c9d4674aea3.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card starts with 2 Blooper tentacles, and its attacks give blindness. If This card takes damage while the tentacles are in the secondary field, he and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Blooper",
+     "Gooper Blooper"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8c12e021fb3a:Cards/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-3b7940ef7ca7.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card starts with 2 Blooper tentacles, and its attacks give blindness. If This card takes damage while the tentacles are in the secondary field, he and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b584a785d959:Cards/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-04-07T02:34:05+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "can i push this while theyre all open?",
+   "repo": "first",
+   "image": "O-6e10ed8d9dba.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 Blooper tentacles, and its attacks give blindness. If This creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fbf9b2007d81:Cards/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-04-14T19:11:31+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some mario touch ups",
+   "repo": "first",
+   "image": "O-386384413e4a.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 Blooper tentacles, and its attacks give blindness for 2 turns.\n If This creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-386384413e4a.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 Blooper tentacles, and its attacks give blindness for 2 turns.\n If This creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-386384413e4a.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 Blooper tentacles, and its attacks give blindness for 2 turns.\n If This creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-045e9d98cf3b.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 Blooper tentacles, and its attacks give blindness for 2 turns.\n If this creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-27b2fa9721c5.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 Blooper tentacles, and its attacks inflict Blindness for 2 turns.\n If this creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-64512c63ab65.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 Blooper tentacles, and its attacks inflict Blindness for 2 turns.\n If this creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4d61e9e7c35f:Creatures/Mario/2 Stars/Gooper_Blooper.png",
+   "kind": "old repo",
+   "date": "2023-10-31T18:27:09+00:00",
+   "day": "2023-10-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-2bacf7b8100f.webp",
+   "fields": {
+    "name": {
+     "value": "Gooper Blooper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature starts with 2 Blooper Tentacles, and its attacks inflict Blindness for 2 turns.\n If this creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-25",
+  "sort": "2019-02-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

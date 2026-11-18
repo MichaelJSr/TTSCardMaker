@@ -1,0 +1,133 @@
+{
+ "card": "butterfly",
+ "key": "Butterfly",
+ "name": "Butterfly",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-05-11",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1cce98640ac1",
+   "kind": "discord",
+   "date": "2025-05-11T00:40:48+00:00",
+   "day": "2025-05-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1cce98640ac1.webp",
+   "fields": {
+    "name": {
+     "value": "Butterfly",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has true negation immunity and cannot take damage. (OFS) Draw a random 5-star creature from the deck and immediately summon it in this slot. The summoned creature counts as your creature, but may only use (OFS) and non-revive (OD) abilities. After summoning the creature, both this creature and the summoned creature die. The summoned creature yields points and is sent to the graveyard normally. (OD) Revive as Morpho Knight.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-28b3b6574e04",
+   "kind": "discord",
+   "date": "2025-05-11T02:01:04+00:00",
+   "day": "2025-05-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-28b3b6574e04.webp",
+   "fields": {
+    "name": {
+     "value": "Butterfly",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has true negation immunity and cannot take damage. (OFS) Draw a random 5-star creature from the deck and immediately summon it in this slot. The summoned creature counts as your creature, but may only use (OFS) and non-revive (OD) abilities. After summoning the creature, both this creature and the summoned creature die. The summoned creature yields points and is sent to the graveyard normally. (OD) Revive as Morpho Knight.",
+     "method": "eye (repost P-d9234513c86f)",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 2,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-08-29T20:42:28+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-05-11",
+  "sort": "2025-05-11",
+  "source": "discord",
+  "status": "same"
+ }
+}

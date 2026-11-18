@@ -1,0 +1,823 @@
+{
+ "card": "smorg",
+ "key": "Smorg",
+ "name": "Smorg",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-23aa0fe5ad9e",
+   "kind": "discord",
+   "date": "2020-09-02T19:17:09+00:00",
+   "day": "2020-09-02",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-23aa0fe5ad9e.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can summon one Smorg Miasma. You may Summon additional Miasmas (OYT) until there are 2. If this card is at or below 50% it can no longer summon Miasmas but can summon Smorg Claws (OPT) (OYT)",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 398,
+   "h": 788
+  },
+  {
+   "id": "F-fe4f95670e8",
+   "kind": "text",
+   "date": "2021-08-07T07:50:18+00:00",
+   "day": "2021-08-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-b76700177660",
+   "kind": "discord",
+   "date": "2021-08-11T13:39:13+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-b76700177660.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn. If this card is at or below 50% HP (OPT)(OYT)it can summon a Smorg Claw(cannot have more than one Claw, and cannot summon miasmas while the claw is alive",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 788
+  },
+  {
+   "id": "D-P-323d68a563cd",
+   "kind": "discord",
+   "date": "2021-12-15T09:53:49+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-323d68a563cd.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn. If this card is at or below 50% HP (OPT)(OYT)it can summon a Smorg Claw(cannot have more than one Claw, and cannot summon miasmas while the claw is alive)",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 399,
+   "h": 789
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-35e155b9649c.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn. If this card is at or below 50% HP (OPT) (OYT)it can summon a Smorg Claw(cannot have more than one Claw, and cannot summon miasmas while the claw is alive",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 789
+  },
+  {
+   "id": "O-294aeaca81b3:Cards/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-04-14T20:03:04+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "smorg",
+   "repo": "first",
+   "image": "O-bd943a8fdcd0.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw (cannot have more than one Claw, and cannot summon miasmas while the claw is alive)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7e4c94bc7d97:Cards/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-04-14T23:53:33+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Dooplis, fawful, knight lost a lot",
+   "repo": "first",
+   "image": "O-140d35212f70.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw.\nCannot have more than one Claw, and cannot summon miasmas while the claw is alive.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-140d35212f70.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw.\nCannot have more than one Claw, and cannot summon miasmas while the claw is alive.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-140d35212f70.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw.\nCannot have more than one Claw, and cannot summon miasmas while the claw is alive.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-e8de7f4f732a.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw.\nCannot have more than one Claw, and cannot summon miasmas while the claw is alive.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3518261d375b:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-5bd34ed5219b.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1ce084ae08be:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:36:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-f9cd2b365ae7.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) You can summon one Smorg Miasma, or two of them if this card had none at the beginning of its turn.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "dark"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8733064b6273:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-9940cfe13924.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, Summon a Smog Miasma\n(OPT) Summon a Smorg Miasma.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-25458c2fdf85.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, Summon a Smog Miasma\n(OPT) Summon a Smorg Miasma.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-a51a3d98910c.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, Summon a Smog Miasma\n(OPT) Summon a Smorg Miasma.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-6d4156ac3bd3.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Summon a Smorg Miasma\n(OPT) Summon a Smorg Miasma.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d495ef2b8a9f:Creatures/Mario/4 Stars/Smorg.png",
+   "kind": "old repo",
+   "date": "2023-11-02T23:11:17+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "smoghivemind",
+   "image": "O-ff17e0cbff36.webp",
+   "fields": {
+    "name": {
+     "value": "Smorg",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Summon a Smorg Miasma\n(OPT) Summon a Smorg Miasma.\n(OPT) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-09-02",
+  "sort": "2020-09-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

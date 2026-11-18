@@ -1,0 +1,66 @@
+{
+ "card": "glued",
+ "key": "Glued",
+ "name": "Glued",
+ "kind": "debuff",
+ "stop": {
+  "day": "2025-02-13",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-34401f47a8c1",
+   "kind": "discord",
+   "date": "2025-02-13T07:44:18+00:00",
+   "day": "2025-02-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-34401f47a8c1.webp",
+   "fields": {
+    "name": {
+     "value": "Glued",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can't swap.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "S",
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "git_first": {
+  "date": "2026-01-30T23:54:46+00:00",
+  "changes": {
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-02-13",
+  "sort": "2025-02-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

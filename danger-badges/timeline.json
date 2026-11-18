@@ -1,0 +1,329 @@
+{
+ "card": "danger-badges",
+ "key": "Danger Badges",
+ "name": "Danger Badges",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e7092f527ec2-c4",
+   "kind": "discord",
+   "date": "2019-04-17T02:13:08+00:00",
+   "day": "2019-04-17",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-e7092f527ec2-c4.webp",
+   "fields": {
+    "name": {
+     "value": "Danger Badges",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Below 25% HP, the equipped creature gains 3 ATK",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 276,
+   "h": 420
+  },
+  {
+   "id": "D-P-128cfc7987a1",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:37+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-128cfc7987a1.webp",
+   "fields": {
+    "name": {
+     "value": "Danger Badges",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can only be equipped to a creature below 25% HP; + 3 ATK",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 618
+  },
+  {
+   "id": "F-f455ab46ffe",
+   "kind": "text",
+   "date": "2020-08-19T10:41:41+00:00",
+   "day": "2020-08-19",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-970fc88e762b",
+   "kind": "discord",
+   "date": "2020-08-30T09:12:30+00:00",
+   "day": "2020-08-30",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-970fc88e762b.webp",
+   "fields": {
+    "name": {
+     "value": "Danger Badges",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can only be equipped to a creature at or below 25% HP; + 3 ATK",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 400,
+   "h": 617
+  },
+  {
+   "id": "F-fc272385984",
+   "kind": "text",
+   "date": "2020-08-31T02:19:28+00:00",
+   "day": "2020-08-31",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-6d55557e39db",
+   "kind": "discord",
+   "date": "2020-09-08T10:04:17+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-6d55557e39db.webp",
+   "fields": {
+    "name": {
+     "value": "Danger Badges",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gives +3 ATK to creatures at or below 25% HP",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/2 Stars/Danger_Badges.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-5a6c9f897ede.webp",
+   "fields": {
+    "name": {
+     "value": "Danger Badges",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gives +3 ATK to creatures at or below 25% HP",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-6a29e6879520:Items/Equip/2 Stars/Danger_Badges.png",
+   "kind": "old repo",
+   "date": "2023-04-08T10:32:59+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Danger badges Gasoline The Hydrant",
+   "repo": "first",
+   "image": "O-f03a46cdf462.webp",
+   "fields": {
+    "name": {
+     "value": "Danger Badges",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 ATK when creature is at or below 33% MAX HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c9f2ee957c56:Items/Equip/2 Stars/Danger_Badges.png",
+   "kind": "old repo",
+   "date": "2023-04-08T20:53:44+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "item standardization",
+   "repo": "first",
+   "image": "O-5fee7be09561.webp",
+   "fields": {
+    "name": {
+     "value": "Danger Badges",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 ATK when creature is at or below 33% MAX HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/2 Stars/Danger_Badges.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-5fee7be09561.webp",
+   "fields": {
+    "name": {
+     "value": "Danger Badges",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 ATK when creature is at or below 33% MAX HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-04-17",
+  "sort": "2019-04-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

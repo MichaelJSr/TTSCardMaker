@@ -1,0 +1,88 @@
+{
+ "card": "beefalol",
+ "key": "BeefaLOL",
+ "name": "BeefaLOL",
+ "morgue": "candidate",
+ "first": {
+  "date": "2019-05-03T00:42:13.711000+00:00",
+  "day": "2019-05-03",
+  "channel": "general-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-8033c32bc3f7",
+   "kind": "discord",
+   "date": "2019-05-03T00:42:13.711000+00:00",
+   "day": "2019-05-03",
+   "badge": "Discord",
+   "image": "P-8033c32bc3f7.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 121,
+   "h": 256
+  },
+  {
+   "id": "P-37409051122b",
+   "kind": "discord",
+   "date": "2019-05-03T00:43:06.074000+00:00",
+   "day": "2019-05-03",
+   "badge": "Discord",
+   "image": "P-37409051122b.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 309,
+   "h": 651
+  },
+  {
+   "id": "P-2ff2cb44793c",
+   "kind": "discord",
+   "date": "2019-05-03T00:50:27.998000+00:00",
+   "day": "2019-05-03",
+   "badge": "Discord",
+   "image": "P-2ff2cb44793c.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 310,
+   "h": 651
+  },
+  {
+   "id": "P-478623ab670b",
+   "kind": "discord",
+   "date": "2021-04-24T09:59:19.777000+00:00",
+   "day": "2021-04-24",
+   "badge": "Discord",
+   "image": "P-478623ab670b.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 310,
+   "h": 634
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/4 Stars/BeefaLOL.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-c2a09d2ced30.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 310,
+   "h": 634
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

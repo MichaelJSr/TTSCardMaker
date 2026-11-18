@@ -1,0 +1,303 @@
+{
+ "card": "the-claw",
+ "key": "The Claw",
+ "name": "The Claw",
+ "kind": "nme",
+ "stop": {
+  "day": "2023-05-26",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d9c44a3808e9",
+   "kind": "discord",
+   "date": "2023-05-10T15:46:04+00:00",
+   "day": "2023-05-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d9c44a3808e9.webp",
+   "fields": {
+    "name": {
+     "value": "The Claw",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Steal an enemy minion and equip it to any of your own creatures.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-0e1f656771bc:Items/Offense/3 Stars/The Claw.png",
+   "kind": "old repo",
+   "date": "2023-05-26T06:46:50+00:00",
+   "day": "2023-05-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "port",
+   "image": "O-cb121590b023.webp",
+   "fields": {
+    "name": {
+     "value": "The Claw",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Steal an enemy minion and equip it to any of your own creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8bee0a031028:Items/Offense/3 Stars/The Claw.png",
+   "kind": "old repo",
+   "date": "2023-05-26T14:05:57+00:00",
+   "day": "2023-05-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-7440107ee5de.webp",
+   "fields": {
+    "name": {
+     "value": "The Claw",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Steal an enemy minion and equip it to any of your own creatures.\nEqiupped items will return to the original owners hand.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-a834628aed45:Items/Offense/3 Stars/The Claw.png",
+   "kind": "old repo",
+   "date": "2023-06-23T05:50:56+00:00",
+   "day": "2023-06-23",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "claw and chuckya updates",
+   "image": "O-bf7d35376a5b.webp",
+   "fields": {
+    "name": {
+     "value": "The Claw",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (OYT)\nMay do one of the following:\n-Steal an enemy minion and equip it to any of your    own creatures. Equips on the stolen creature will return to the original owners hand.\n-Steal a 2 or a 1 star item from the shop.\n-Steal a 1 star item from the enemy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7e54a075b6fc:Items/Offense/3 Stars/The Claw.png",
+   "kind": "old repo",
+   "date": "2023-10-13T02:28:44+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "claw t beth tutankoopa fix",
+   "image": "O-cc1327f4d7bf.webp",
+   "fields": {
+    "name": {
+     "value": "The Claw",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (OYT)\nMay do one of the following:\n-Steal an enemy minion and equip it to any of your   own creatures. \nEquips on the stolen minion will return to the original owners hand.\nMinions on the stolen minion will be equipped to the parent creature.\n-Steal a 2 or a 1 star item from the shop.\n-Steal a 1 star item from the enemy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Offense/3 Stars/The Claw.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-768be8a3f935.webp",
+   "fields": {
+    "name": {
+     "value": "The Claw",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (OYT)\nMay do one of the following:\n-Steal an enemy minion and equip it to any of your own creatures. (Equips and minions on the stolen minion will be equipped to the parent creature.) (Cannot Steal minions created by 4 star items.)\n-Steal a 2 or a 1 star item from the shop.\n-Steal a 1 star item from the enemy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-64bfa8bf4c63:Items/Active/3 Stars/The_Claw.png",
+   "kind": "old repo",
+   "date": "2023-10-20T21:27:01+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "claw rework",
+   "image": "O-872ab9e16b28.webp",
+   "fields": {
+    "name": {
+     "value": "The Claw",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(OYT)\nSteal an enemy non 5 star minion and equip it to any of your own creatures. Return it to it origin (ENDGT), or when this is destoryed. \nOr \nSteal a 1 star item from the shop.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c19d8b91a709:Items/Active/3 Stars/The_Claw.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-ce62fbfd5b21.webp",
+   "fields": {
+    "name": {
+     "value": "The Claw",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(OYT)\nSteal an enemy 3 star or below minion and equip it to any of your own creatures. Return it to it origin (ENDGT), or when this is destoryed. \nOr \nSteal a 1 star item from the shop.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-05-10",
+  "sort": "2023-05-10",
+  "source": "discord",
+  "status": "same"
+ }
+}

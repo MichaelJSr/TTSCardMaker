@@ -1,0 +1,1132 @@
+{
+ "card": "nightmare-king-grimm",
+ "key": "Nightmare King Grimm",
+ "name": "Nightmare King Grimm",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c0fe0670dfc7-c3",
+   "kind": "discord",
+   "date": "2020-07-13T11:10:03+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c0fe0670dfc7-c3.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when he dies (AAT) When Grimm has 3 ritual counters, he may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in his place, which rewards his points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 392,
+   "h": 791
+  },
+  {
+   "id": "D-P-e68cc6528379",
+   "kind": "discord",
+   "date": "2020-07-22T03:11:12+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-e68cc6528379.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when he dies (AAT) When Grimm has 3 ritual counters, he may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in his place, which rewards his points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 393,
+   "h": 785
+  },
+  {
+   "id": "D-P-2c6cf1c93b11",
+   "kind": "discord",
+   "date": "2021-12-15T11:47:30+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-2c6cf1c93b11.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when he dies (AAT) When Grimm has 3 ritual counters, he may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in his place, which rewards his points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 395,
+   "h": 789
+  },
+  {
+   "id": "D-P-0a6134340be7",
+   "kind": "discord",
+   "date": "2022-01-31T09:23:10+00:00",
+   "day": "2022-01-31",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-0a6134340be7.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when he dies (AAT) When Grimm has 3 ritual counters, he may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in his place, which rewards his points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 396,
+   "h": 789
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-515e86c486dc.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when he dies (AAT) When Grimm has 3 ritual counters, he may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in his place, which rewards his points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 396,
+   "h": 789
+  },
+  {
+   "id": "O-257dc970a875:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-6923e08a21a0.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when he dies (AAT) When Grimm has 3 ritual counters, he may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in his place, which rewards his points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-c939f69f8ce0.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when he dies (AAT) When Grimm has 3 ritual counters, he may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in his place, which rewards his points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b584a785d959:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-07T02:34:05+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "can i push this while theyre all open?",
+   "repo": "first",
+   "image": "O-cfbeabda54a2.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when it dies (AAT) When Grimm has 3 ritual counters, it may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in their place, which rewards their points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6587b57efd2c:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-07T04:46:04+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "update",
+   "repo": "first",
+   "image": "O-92fb9398cda3.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Grimm Attacks you can pay 2 points to create a ritual counter. Grimm deals 2 piercing damage per counter to all enemy creatures when it dies (AAT) When Grimm has 3 ritual counters, it may destroy himself, yield 6 points, and summon 1 Grimmchild (5/4/7/7) in their place, which rewards their points if killed. The Grimmchild can pay 2 points to make its next attack give Blazing",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-88bb264e8fd9:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-12T23:47:40+00:00",
+   "day": "2023-04-12",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Reworded NKG and some visual touch ups",
+   "repo": "first",
+   "image": "O-58278d897af3.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, it may pay 2 points to generate 1 Ritual Counter.\n(OD) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field.\n(AAT) When this has 3+ Ritual Counters, it may destroy itself (without yielding points) to grant its team 2 points per Ritual Counter and summon a Grimmchild in its place.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f241a8fb23cb:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-13T00:39:09+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "minions",
+   "repo": "first",
+   "image": "O-f40fcb5094d7.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, it may pay 2 points to generate 1 Ritual Counter.\n(OD) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field.\n(AAT) When this has 3+ Ritual Counters, it may destroy itself (without yielding points) to grant its team 2 points per Ritual Counter and summon a Grimmchild in its place.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f7fa08f558ce:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-13T02:40:45+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "nkg stars real",
+   "repo": "first",
+   "image": "O-06748bbdab24.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, it may pay 2 points to generate 1 Ritual Counter.\n(OD) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field.\n(AAT) When this has 3+ Ritual Counters, it may destroy itself (without yielding points) to grant its team 2 points per Ritual Counter and summon a Grimmchild in its place.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8ebbd6be396f:Cards/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-20T22:28:24+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugged through all pending updates",
+   "repo": "first",
+   "image": "O-23476ac447dc.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OD) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field.\n(AAT) When this has 3+ Ritual Counters, it may destroy itself (without yielding points) to grant its team 1 point per Ritual Counter and summon a Grimmchild in its place.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-23476ac447dc.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OD) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field.\n(AAT) When this has 3+ Ritual Counters, it may destroy itself (without yielding points) to grant its team 1 point per Ritual Counter and summon a Grimmchild in its place.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-23476ac447dc.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OD) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field.\n(AAT) When this has 3+ Ritual Counters, it may destroy itself (without yielding points) to grant its team 1 point per Ritual Counter and summon a Grimmchild in its place.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-551d803fa4e4:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-04-30T10:56:16+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Collector Nerf And a ton of Touch Ups",
+   "image": "O-5712089048bc.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OD) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field.\n(AAT) When this has 3+ Ritual Counters, it may destroy itself (without yielding points) to grant its team 1 point per Ritual Counter and summon a Grimmchild in its place.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-5cd7064c5187.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OD) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field.\n(AAT) May destroy itself (without yielding points) to grant its team 1 point per Ritual Counter and summon a Grimmchild onto a creature of choice.\nGrimmchild gains +1 ATK for each ritual counter.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0cb24da0efa6:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-10-08T22:32:34+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "NKG Change (just revert commit if its not accepted)",
+   "image": "O-b3bf9e99ca68.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OYT) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field and then die.\n(OD) Gain 1 point per Ritual Counter, and summon a Grimmchild as a minion in this slot, Ritual Counters go to this minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d42a25bc7bce:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-10-15T13:23:59+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Hollow Knight Attribute Colroing",
+   "image": "O-442d58fec8ac.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OYT) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field and then die.\n(OD) Gain 1 point per Ritual Counter, and summon a Grimmchild as a minion in this slot, Ritual Counters go to this minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-ba2879a30902.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OYT) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field and then die.\n(OD) Gain 1 point per Ritual Counter, and summon a Grimmchild as a minion in this slot, Ritual Counters go to this minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1ce084ae08be:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:36:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-637f7f853b69.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OYT) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field and then die.\n(OD) Gain 1 point per Ritual Counter, and summon a Grimmchild as a minion in this slot, Ritual Counters go to this minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-c9f94dce5c35.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare King Grimm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 8,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this attacks, generate 1 Ritual Counter.\n(OYT) Deal 2 Piercing CD per Ritual Counter to all enemy creatures on the field and then die.\n(OD) Gain 1 point per Ritual Counter, and summon a Grimmchild as a minion in this slot, Ritual Counters go to this minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-13",
+  "sort": "2020-07-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

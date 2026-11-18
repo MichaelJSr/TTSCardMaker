@@ -1,0 +1,292 @@
+{
+ "card": "delicate-flower",
+ "key": "Delicate Flower",
+ "name": "Delicate Flower",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-04-18",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "O-d4119d480473:Auxillary/Items/Delicate_Flower.psd",
+   "kind": "old repo",
+   "date": "2023-04-18T05:35:10+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pushing",
+   "repo": "first",
+   "image": "O-bf5ed4f947f1.webp",
+   "fields": {
+    "name": {
+     "value": "Delicate Flower",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Looks cool",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 320,
+   "h": 480
+  },
+  {
+   "id": "O-ae4367e86392:Auxillary/Items/2 Stars/Delicate_Flower.png",
+   "kind": "old repo",
+   "date": "2023-04-18T22:32:26+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "zemer",
+   "repo": "first",
+   "image": "O-e86a6b0df8cc.webp",
+   "fields": {
+    "name": {
+     "value": "Delicate Flower",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Breaks when hit.\nIf not broken after 3 lanes have gone, equipped creature gains +3 Max HP bars, then breaks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     1,
+     2
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-a45fe346adf7:Auxillary/Items/2 Stars/Delicate_Flower.png",
+   "kind": "old repo",
+   "date": "2023-04-18T22:47:16+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "flower",
+   "repo": "first",
+   "image": "O-cd2397fa8208.webp",
+   "fields": {
+    "name": {
+     "value": "Delicate Flower",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Breaks when hit.\nIf not broken after 3 lanes have gone, equipped creature gains +6 Max HP, then breaks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d498d46fc770:Auxillary/Items/2 Stars/Delicate_Flower.png",
+   "kind": "old repo",
+   "date": "2023-04-18T23:01:11+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "flower 5 stars",
+   "repo": "first",
+   "image": "O-b700026dc742.webp",
+   "fields": {
+    "name": {
+     "value": "Delicate Flower",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Breaks when hit.\nIf not broken after 3 lanes have gone, equipped creature gains +6 Max HP, then breaks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8524ca67314e:Auxillary/Items/5 Stars/Delicate_Flower.png",
+   "kind": "old repo",
+   "date": "2023-04-18T23:02:23+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "folder move",
+   "repo": "first",
+   "image": "O-b700026dc742.webp",
+   "fields": {
+    "name": {
+     "value": "Delicate Flower",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Breaks when hit.\nIf not broken after 3 lanes have gone, equipped creature gains +6 Max HP, then breaks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Items/5 Stars/Delicate_Flower.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-b700026dc742.webp",
+   "fields": {
+    "name": {
+     "value": "Delicate Flower",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Breaks when hit.\nIf not broken after 3 lanes have gone, equipped creature gains +6 Max HP, then breaks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8c1efc5e23ba:Auxillary/Items/5 Stars/Delicate_Flower.png",
+   "kind": "old repo",
+   "date": "2023-10-12T04:41:49+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some updates",
+   "image": "O-5af5f9f774c5.webp",
+   "fields": {
+    "name": {
+     "value": "Delicate Flower",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Desroyed when equipped creature takes damage.\nIf not destroyed after 3 lanes have ended, equipped creature gains +6 Max HP, then breaks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Items/Delicate_Flower.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-5af5f9f774c5.webp",
+   "fields": {
+    "name": {
+     "value": "Delicate Flower",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Desroyed when equipped creature takes damage.\nIf not destroyed after 3 lanes have ended, equipped creature gains +6 Max HP, then breaks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-04-18",
+  "sort": "2023-04-18",
+  "source": "first repo",
+  "status": "same"
+ }
+}

@@ -1,0 +1,99 @@
+{
+ "card": "stingy-s-floor-and-ceiling",
+ "key": "Stingy's Floor and Ceiling",
+ "name": "Stingy's Floor and Ceiling",
+ "kind": "field",
+ "stop": {
+  "day": "2023-11-05",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-121aee3351ac",
+   "kind": "discord",
+   "date": "2023-11-04T02:59:37+00:00",
+   "day": "2023-11-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-121aee3351ac.webp",
+   "fields": {
+    "name": {
+     "value": "Stingy's Floor and Ceiling",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon being healed/taking damage, your creature's HP will round up to the next integer, while your enemy's creature will round down to the next integer.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f496bf7e6935:Field/1 Stars/Stingys_Floor_And_Ceiling.png",
+   "kind": "old repo",
+   "date": "2023-11-05T06:31:35+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "new cards",
+   "image": "O-0a12a8a70977.webp",
+   "fields": {
+    "name": {
+     "value": "Stingys Floor And Ceiling",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon being healed/taking damage, your creature's HP will round up to the next integer, while your enemy's creature will round down to the next integer.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-11-04",
+  "sort": "2023-11-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

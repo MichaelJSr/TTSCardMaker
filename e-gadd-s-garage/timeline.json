@@ -1,0 +1,67 @@
+{
+ "card": "e-gadd-s-garage",
+ "key": "E Gadd's Garage",
+ "name": "E. Gadd's Garage",
+ "kind": "field",
+ "stop": {
+  "day": "2023-11-13",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-58bee3e656de",
+   "kind": "discord",
+   "date": "2023-11-13T23:47:14+00:00",
+   "day": "2023-11-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-58bee3e656de.webp",
+   "fields": {
+    "name": {
+     "value": "E Gadd's Garage",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Reduce the ATK of a friendly creature to 0 but give it another action until (ENDGT).",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-09T17:54:56+00:00",
+  "changes": {
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-13",
+  "sort": "2023-11-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,67 @@
+{
+ "card": "hadal-stew",
+ "key": "Hadal Stew",
+ "name": "Hadal Stew",
+ "kind": "item",
+ "stop": {
+  "day": "2025-04-09",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-9cf099e6832e",
+   "kind": "discord",
+   "date": "2025-04-09T13:21:17+00:00",
+   "day": "2025-04-09",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9cf099e6832e.webp",
+   "fields": {
+    "name": {
+     "value": "Hadal Stew",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 9 HP, give 2 points for point cost abilities and inflict disgusted indefinitely. Cannot be used on creatures that have had other healing items used on them. Resolves before other healing items",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-04-09T13:22:29+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-04-09",
+  "sort": "2025-04-09",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,60 @@
+{
+ "card": "big-mistake",
+ "key": "Big Mistake",
+ "name": "Big Mistake",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-09-04T20:26:29.702000+00:00",
+  "day": "2020-09-04",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-9500bc326c2f",
+   "kind": "discord",
+   "date": "2020-09-04T20:26:29.702000+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "image": "P-9500bc326c2f.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "P-9e9d4dd4645f",
+   "kind": "discord",
+   "date": "2020-09-04T20:31:06.488000+00:00",
+   "day": "2020-09-04",
+   "badge": "Discord",
+   "image": "P-9e9d4dd4645f.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Meme/1 Stars/Big_Mistake.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-281411c0d452.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 240,
+   "h": 351
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

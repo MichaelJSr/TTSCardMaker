@@ -1,0 +1,66 @@
+{
+ "card": "pandora-s-gym",
+ "key": "Pandora's Gym",
+ "name": "Pandora's Gym",
+ "kind": "field",
+ "stop": {
+  "day": "2023-11-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-aa25d9e861e3",
+   "kind": "discord",
+   "date": "2023-11-12T03:16:11+00:00",
+   "day": "2023-11-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-aa25d9e861e3.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora's Gym",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFP)/BOGT) Permanently buffs the lowest stat on the field by 1 bar regardless of side. Everything included in a tie is buffed.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-10-22T14:28:18+00:00",
+  "changes": {
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-12",
+  "sort": "2023-11-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

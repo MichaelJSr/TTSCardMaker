@@ -1,0 +1,29 @@
+{
+ "card": "dee-kingkingking",
+ "key": "Dee KingKingKing",
+ "name": "Dee KingKingKing",
+ "morgue": "candidate",
+ "first": {
+  "date": "2026-01-21T23:36:28.607000+00:00",
+  "day": "2026-01-21",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-3ac1bd1ff5b1",
+   "kind": "discord",
+   "date": "2026-01-21T23:36:28.607000+00:00",
+   "day": "2026-01-21",
+   "badge": "Discord",
+   "image": "P-3ac1bd1ff5b1.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

@@ -1,0 +1,162 @@
+{
+ "card": "LC-ce5c162956",
+ "key": "Pandeity Old",
+ "name": "Pandeity Old",
+ "morgue": "mdw",
+ "first": {
+  "date": "2022-11-03T04:59:44.417000+00:00",
+  "day": "2022-11-03",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "O-a094b5bc5ed2:Cards/Pandas/6 Stars/Pandeity.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-c13a8b87dc3f.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-7522a5685624:Cards/Pandas/6 Stars/Pandeity.png",
+   "kind": "old repo",
+   "date": "2023-03-25T10:47:51+00:00",
+   "day": "2023-03-25",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized psd files and ported more cards",
+   "image": "O-0336290968f0.webp",
+   "fields": {
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 6,
+      "atk": 9,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/Pandas/6 Stars/Pandeity.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "image": "O-0336290968f0.webp",
+   "fields": {
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 6,
+      "atk": 9,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": true,
+   "repo": "first",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/Pandas/6 Stars/Pandeity.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-0336290968f0.webp",
+   "fields": {
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 6,
+      "atk": 9,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-842baae99c65:Creatures/Pandas/6 Stars/Pandeity_Old.png",
+   "kind": "old repo",
+   "date": "2023-04-26T14:33:38+00:00",
+   "day": "2023-04-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Raid boss template fix and Pandiety",
+   "image": "O-0336290968f0.webp",
+   "fields": {
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 6,
+      "atk": 9,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Pandas/6 Stars/Pandeity_Old.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-ad8500b1112a.webp",
+   "fields": {
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 6,
+      "atk": 9,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ]
+}

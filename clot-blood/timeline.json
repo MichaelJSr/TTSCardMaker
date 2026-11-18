@@ -1,0 +1,79 @@
+{
+ "card": "clot-blood",
+ "key": "Clot Blood",
+ "name": "Blood Clot",
+ "kind": "minion",
+ "stop": {
+  "day": "2023-11-15",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1ec2ed0afdd2",
+   "kind": "discord",
+   "date": "2023-11-15T09:01:08+00:00",
+   "day": "2023-11-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1ec2ed0afdd2.webp",
+   "fields": {
+    "name": {
+     "value": "Blood Clot",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Overkill damage carries over to the next minion or equipped creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 0,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-17T10:08:55+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-15",
+  "sort": "2023-11-15",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,256 @@
+{
+ "card": "tyler",
+ "key": "Tyler",
+ "name": "Tyler",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-10-30",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-24017e453479",
+   "kind": "discord",
+   "date": "2019-05-03T05:56:13+00:00",
+   "day": "2019-05-03",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-24017e453479.webp",
+   "fields": {
+    "name": {
+     "value": "Tyler",
+     "method": "ocr+name",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 588,
+   "h": 1172
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/4 Stars/Tyler.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-b2be56956707.webp",
+   "fields": {
+    "name": {
+     "value": "Tyler",
+     "method": "file name",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "meme_copy": true,
+   "w": 588,
+   "h": 1172
+  },
+  {
+   "id": "D-P-171f08aae125",
+   "kind": "discord",
+   "date": "2023-10-30T04:01:56+00:00",
+   "day": "2023-10-30",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-171f08aae125.webp",
+   "fields": {
+    "name": {
+     "value": "Tyler",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(UFS/BOGT) Draw 3 stars worth of items (may draw from the 1, 2, 3 star item decks as you wish). (OPGT) Anytime a creature swapout happens while this is on the field, gain +1 bars to all stats. (AAT) If an attack is directed towards a friendly creature that would kill it, but it lives (after reactive plays), both this and that creature gain +2 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 7,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "stars",
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-3b3a3a3e9ada",
+   "kind": "discord",
+   "date": "2023-10-30T04:17:17+00:00",
+   "day": "2023-10-30",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-3b3a3a3e9ada.webp",
+   "fields": {
+    "name": {
+     "value": "Tyler",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(UFS/BOGT) Draw 3 stars worth of items (may draw from the 1, 2, 3 star item decks as you wish). (OPGT) Anytime a creature swapout happens while this is on the field, gain +1 ATK and SPD. (AAT) If an attack is directed towards any friendly creature that would kill it, but it lives (after reactive plays), both this and that creature gain +2 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 7,
+      "atk": 4,
+      "spd": 7
+     },
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 7
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 7 -> 4"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c0395cf71422:Creatures/Other/5 Stars/Tyler.png",
+   "kind": "old repo",
+   "date": "2023-10-30T04:41:23+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Tyler and Utica",
+   "image": "O-6fda9eb53429.webp",
+   "fields": {
+    "name": {
+     "value": "Tyler",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS/BOGT) Draw 3 stars worth of items (may draw from the 1, 2, 3 star item decks as you wish).\n(OPGT) Anytime a creature swapout happens while this is on the field, gain +1 ATK and SPD.\nIf an attack is directed towards any friendly creature that would kill it, but it lives (after reactive plays), both this and that creature gain +2 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 7
+     },
+     {
+      "hp": 7,
+      "def": 6,
+      "atk": 4,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 4 -> 6"
+    ],
+    "nerfs": [
+     "SPD 7 -> 6"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-05-03",
+  "sort": "2019-05-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

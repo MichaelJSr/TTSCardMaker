@@ -1,0 +1,86 @@
+{
+ "card": "grubsong",
+ "key": "Grubsong",
+ "name": "Grubsong",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-14",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-a110cae80cdd",
+   "kind": "discord",
+   "date": "2023-10-14T05:52:06+00:00",
+   "day": "2023-10-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-a110cae80cdd.webp",
+   "fields": {
+    "name": {
+     "value": "Grubsong",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be equipped (OYT).\nWhen equipped creature takes damage gain 1 point.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-145d4e3b6cad:Items/Equip/1 Stars/GrubSong.png",
+   "kind": "old repo",
+   "date": "2023-10-14T07:34:47+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "charms",
+   "image": "O-9b5b2445c90b.webp",
+   "fields": {
+    "name": {
+     "value": "Grubsong",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be equipped (OYT).\nWhen equipped creature takes damage gain 1 point.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-05-11",
+  "sort": "2023-05-11",
+  "source": "discord",
+  "status": "owner"
+ }
+}

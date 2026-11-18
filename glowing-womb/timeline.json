@@ -1,0 +1,359 @@
+{
+ "card": "glowing-womb",
+ "key": "Glowing Womb",
+ "name": "Glowing Womb",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-89b0ee0c6389-c2",
+   "kind": "discord",
+   "date": "2020-07-30T04:37:34+00:00",
+   "day": "2020-07-30",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-89b0ee0c6389-c2.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing Womb",
+     "method": "ocr+name (repost P-e7c3dbb0fbb5)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye (repost P-e7c3dbb0fbb5)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) and (OPT)(OYT) (2 time total per turn) You can pay 1 point to deal 4 damage to one target on the field",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C-item",
+   "w": 391,
+   "h": 609
+  },
+  {
+   "id": "F-f57e429ce93",
+   "kind": "text",
+   "date": "2020-08-10T09:46:48+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fc5ed3ee4f0",
+   "kind": "text",
+   "date": "2020-08-10T10:45:22+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-509990d8c996",
+   "kind": "discord",
+   "date": "2020-08-13T08:41:43+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-509990d8c996.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing Womb",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) you can pay 1 point to deal 4 damage to a creature on the primary field. This ability costs 1 extra point for every time it is used in one turn",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C-item",
+   "w": 398,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/2 Stars/Glowing_Womb.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-d8801545aebf.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing Womb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) you can pay 1 point to deal 4 damage to a creature on the primary field. This ability costs 1 extra point for every time it is used in one turn",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 398,
+   "h": 611
+  },
+  {
+   "id": "O-9a41f25faaf9:Items/Equip/2 Stars/Glowing_Womb.png",
+   "kind": "old repo",
+   "date": "2023-04-03T20:47:22+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "womb",
+   "repo": "first",
+   "image": "O-3fa878e8941b.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing womb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) you can pay 1 point to deal 4 damage to a creature on the primary field. This ability costs 1 extra point for every time it is used in one turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-12843b865429:Items/Equip/2 Stars/Glowing_Womb.png",
+   "kind": "old repo",
+   "date": "2023-04-03T20:53:40+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Update Glowing_Womb.png",
+   "repo": "first",
+   "image": "O-c7f5db3fd25c.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing womb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) you can pay 1 point to deal 4 damage to a creature on the primary field. This ability costs 1 extra point for every time it is used in one turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-74de81a5f81b:Items/Equip/2 Stars/Glowing_womb.png",
+   "kind": "old repo",
+   "date": "2023-04-03T20:56:03+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Create Glowing_womb.png",
+   "repo": "first",
+   "image": "O-c7f5db3fd25c.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing womb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) you can pay 1 point to deal 4 damage to a creature on the primary field. This ability costs 1 extra point for every time it is used in one turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-0496d9fed31b:Items/Equip/2 Stars/Glowing_Womb.png",
+   "kind": "old repo",
+   "date": "2023-04-07T08:04:54+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized items",
+   "repo": "first",
+   "image": "O-c7f5db3fd25c.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing womb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) you can pay 1 point to deal 4 damage to a creature on the primary field. This ability costs 1 extra point for every time it is used in one turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-21636310bce5:Items/Equip/2 Stars/Glowing_Womb.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:29:19+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-0d5de8eb7c91.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing womb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) You can pay 1 point to deal 4 damage to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/2 Stars/Glowing_Womb.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-0d5de8eb7c91.webp",
+   "fields": {
+    "name": {
+     "value": "Glowing womb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) You can pay 1 point to deal 4 damage to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-30",
+  "sort": "2020-07-30",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,374 @@
+{
+ "card": "wooden-spikes",
+ "key": "Wooden Spikes",
+ "name": "Wooden Spikes",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-6e6c89fb2bc6",
+   "kind": "discord",
+   "date": "2020-07-22T03:00:47+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-6e6c89fb2bc6.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures you can activate this card to deal 4 counter damage to it. This item has infinite uses",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 617
+  },
+  {
+   "id": "D-P-3afd22f77e70",
+   "kind": "discord",
+   "date": "2020-07-22T11:17:35+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-3afd22f77e70.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden spikes",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures you can activate this card to deal 4 counter damage to it. 3 uses",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 383,
+   "h": 611
+  },
+  {
+   "id": "D-P-55662fbfb302",
+   "kind": "discord",
+   "date": "2020-08-03T00:24:07+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-55662fbfb302.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures you can activate this card to deal 4 counter damage to it. 3 uses",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/1 Stars/Wooden_Spikes.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-48e2a5389e50.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures you can activate this card to deal 4 counter damage to it. 3 uses",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "O-ea1e45b6e27b:Items/Active/1 Stars/Wooden_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-04-04T19:52:06+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "added Wooden Spikes psd, changed uses from 3 -> 2",
+   "repo": "first",
+   "image": "O-eecc825b2df2.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures, you can activate this card to deal 4 counter damage to it.\n\n2 uses.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Offense/1 Stars/Wooden_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-eecc825b2df2.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures, you can activate this card to deal 4 counter damage to it.\n\n2 uses.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-5b235df8f4fc:Items/Offense/1 Stars/Wooden_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-04-08T23:41:19+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items",
+   "repo": "first",
+   "image": "O-97a9168f0fb3.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a friendly creature is attacked, you can activate this item to deal 4 counter damage to the attacker.\n2 uses.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Offense/1 Stars/Wooden_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-97a9168f0fb3.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a friendly creature is attacked, you can activate this item to deal 4 counter damage to the attacker.\n2 uses.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-23d744ff955f:Items/Offense/1 Stars/Wooden_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-05-11T17:48:47+00:00",
+   "day": "2023-05-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spike touch ups",
+   "image": "O-2b3dec6afea8.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 Uses:\nWhen a friendly creature is attacked, you can activate this item to deal 4 counter damage to the attacker.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4d61e9e7c35f:Items/Offense/1 Stars/Wooden_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-10-31T18:27:09+00:00",
+   "day": "2023-10-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-38f227a178f2.webp",
+   "fields": {
+    "name": {
+     "value": "Wooden Spikes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "3 Uses:\nWhen a friendly creature is attacked, you can activate this item to deal 4 counter damage to the attacker.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

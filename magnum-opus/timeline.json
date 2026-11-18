@@ -1,0 +1,212 @@
+{
+ "card": "magnum-opus",
+ "key": "Magnum Opus",
+ "name": "Magnum Opus",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-05-26",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c73b9972e5c7",
+   "kind": "discord",
+   "date": "2023-05-26T07:32:45+00:00",
+   "day": "2023-05-26",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c73b9972e5c7.webp",
+   "fields": {
+    "name": {
+     "value": "Magnum Opus",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) this card can transform into either a field item, or active item. If you choose field item, you may choose 3 types/attributes and assign a +1 stat bonus of your choosing to each.\nIf you choose active item you may choose 2 +1 stat bonuses that apply to your team while it is alive",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-960b8026b42e:Auxillary/Items/5 Stars/Magnum Opus.png",
+   "kind": "old repo",
+   "date": "2023-05-26T07:35:57+00:00",
+   "day": "2023-05-26",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Croissant/Magnum Opus",
+   "image": "O-0365fabf1e37.webp",
+   "fields": {
+    "name": {
+     "value": "Magnum Opus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) this card can transform into either a field item, or active item. If you choose field item, you may choose 3 types/attributes and assign a +1 stat bonus of your choosing to each.\nIf you choose active item you may choose 2 +1 stat bonuses that apply to your team while it is alive",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ae703f27f1df:Auxillary/Items/5 Stars/Magnum Opus.png",
+   "kind": "old repo",
+   "date": "2023-05-26T08:33:29+00:00",
+   "day": "2023-05-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Croi Touch ups",
+   "image": "O-6d30807e54f4.webp",
+   "fields": {
+    "name": {
+     "value": "Magnum Opus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) This card can transform into either a field item, or active item.\nIf  you choose field item, you may choose 3 types/attributes and assign a +1 stat bonus of your choosing to each.\nIf  you choose active item you may choose 2 +1 stat bonuses that apply to your team while it is alive.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Items/Magnum Opus.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-6d30807e54f4.webp",
+   "fields": {
+    "name": {
+     "value": "Magnum Opus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) This card can transform into either a field item, or active item.\nIf  you choose field item, you may choose 3 types/attributes and assign a +1 stat bonus of your choosing to each.\nIf  you choose active item you may choose 2 +1 stat bonuses that apply to your team while it is alive.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-05-26",
+  "sort": "2023-05-26",
+  "source": "discord",
+  "status": "same"
+ }
+}

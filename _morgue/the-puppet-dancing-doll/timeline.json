@@ -1,0 +1,29 @@
+{
+ "card": "the-puppet-dancing-doll",
+ "key": "The Puppet (Dancing Doll)",
+ "name": "The Puppet (Dancing Doll)",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-08-24T05:46:34.194000+00:00",
+  "day": "2020-08-24",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-a385f53db068",
+   "kind": "discord",
+   "date": "2020-08-24T05:46:34.194000+00:00",
+   "day": "2020-08-24",
+   "badge": "Discord",
+   "image": "P-a385f53db068.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 350,
+   "h": 537
+  }
+ ],
+ "kind_of": "joke"
+}

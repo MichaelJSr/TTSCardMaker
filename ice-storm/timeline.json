@@ -1,0 +1,207 @@
+{
+ "card": "ice-storm",
+ "key": "Ice Storm",
+ "name": "Ice Storm",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-f631f31f2257",
+   "kind": "discord",
+   "date": "2020-09-05T00:28:16+00:00",
+   "day": "2020-09-05",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-f631f31f2257.webp",
+   "fields": {
+    "name": {
+     "value": "Ice Storm",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frostbite onto the entire enemy field (even behind minions).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "ice"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/3 Stars/Ice_Storm.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-4501f3a42c33.webp",
+   "fields": {
+    "name": {
+     "value": "Ice Storm",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frostbite onto the entire enemy field (even behind minions).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "ice"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-bbdeafdcefbd:Items/Attack/3 Stars/Ice_Storm.png",
+   "kind": "old repo",
+   "date": "2023-04-09T18:17:13+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some stuff",
+   "repo": "first",
+   "image": "O-69969a34dd74.webp",
+   "fields": {
+    "name": {
+     "value": "Ice storm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frostbite onto the entire enemy field for 2 turns (Even behind minions).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "ice"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/3 Stars/Ice_Storm.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-69969a34dd74.webp",
+   "fields": {
+    "name": {
+     "value": "Ice storm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frostbite onto the entire enemy field for 2 turns (Even behind minions).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/3 Stars/Ice_Storm.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-e52fb42bbbb8.webp",
+   "fields": {
+    "name": {
+     "value": "Ice storm",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frostbite onto the entire enemy field for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-05",
+  "sort": "2020-09-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,480 @@
+{
+ "card": "bubble",
+ "key": "Bubble",
+ "name": "Bubble",
+ "kind": "nme",
+ "stop": {
+  "day": "2023-03-19",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-647df112f0c8",
+   "kind": "discord",
+   "date": "2022-06-16T22:41:30+00:00",
+   "day": "2022-06-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-647df112f0c8.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target any creature on the field. When the targeted creature next attacks, let X be the final damage value that the attack did. The creature’s subsequent attack after this will do X amount of piercing damage.",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-dba28370c268",
+   "kind": "discord",
+   "date": "2022-06-16T22:43:19+00:00",
+   "day": "2022-06-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-dba28370c268.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target any creature on the field. When the targeted creature next attacks, let X be the final damage value that the attack did. The creature's subsequent attack after this will do X amount of piercing damage.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     2
+    ],
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-02a5945d63e4",
+   "kind": "discord",
+   "date": "2022-10-27T22:27:14+00:00",
+   "day": "2022-10-27",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-02a5945d63e4.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target any creature on the field. When the targeted creature next attacks, let X be the final damage value that the attack did. The creature’s subsequent attack after this will do X amount of piercing damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 720,
+   "h": 1053
+  },
+  {
+   "id": "O-257dc970a875:Items/Active/2 Stars/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-7ba02b3d3dbe.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target any creature on the field. When the targeted creature next attacks, let X be the final damage value that the attack did. The creature’s subsequent attack after this will do X amount of piercing damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1053
+  },
+  {
+   "id": "O-ee0df0483864:Items/Active/1 Stars/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-03-31T07:35:18+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made a lot of pending changes and made bubble 1 star instead of 2 stars",
+   "repo": "first",
+   "image": "O-225536d3ccd5.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target any creature on the field. When that creature next attacks, let X be the final amount of damage the attack did. The creature’s next attack will do X amount of piercing damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "unknown",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-cd825524aa9e:Items/Active/1 Stars/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-03-31T09:23:33+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fix bubble resolution",
+   "repo": "first",
+   "image": "O-b88c97daba14.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target any creature on the field. When the targeted creature next attacks, let X be the final damage value that the attack did. The creature’s subsequent attack after this will do X amount of piercing damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-dc00bd0676d0:Items/Active/1 Stars/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-03-31T09:28:54+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "bubble moved maddy back down",
+   "repo": "first",
+   "image": "O-47188092ee91.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target any creature on the field. When the targeted creature next attacks, let X be the final damage value that the attack did. The creature’s subsequent attack after this will do X amount of piercing damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/1 star/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-47188092ee91.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target any creature on the field. When the targeted creature next attacks, let X be the final damage value that the attack did. The creature’s subsequent attack after this will do X amount of piercing damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7359f97479eb:Items/Support/1 star/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-04-10T03:32:03+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-c4856e93f4dc.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target a creature on the primary field.  The final damage value of the targeted creatures next attack will be their following attack’s damage value in piercing damage",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-a75fd40bb3af:Items/Support/1 star/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-04-17T10:10:15+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "whoops",
+   "repo": "first",
+   "image": "O-bbf54c98af4c.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target a creature on the primary field.  The final damage value of the targeted creatures next attack will be their subsequent’s attack’s damage value in piercing damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/1 Stars/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-bbf54c98af4c.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target a creature on the primary field.  The final damage value of the targeted creatures next attack will be their subsequent’s attack’s damage value in piercing damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/1 Stars/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-bbf54c98af4c.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target a creature on the primary field.  The final damage value of the targeted creatures next attack will be their subsequent’s attack’s damage value in piercing damage.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-766377cd2f51:Items/Support/1 Stars/Bubble.png",
+   "kind": "old repo",
+   "date": "2023-04-24T22:17:22+00:00",
+   "day": "2023-04-24",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Godskin Duo and Bubble reword",
+   "image": "O-b680dca17966.webp",
+   "fields": {
+    "name": {
+     "value": "Bubble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target a creature.\nThe damage done by its next attack is X.\nSubsequent attack does X piercing DMG.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-06-16",
+  "sort": "2022-06-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

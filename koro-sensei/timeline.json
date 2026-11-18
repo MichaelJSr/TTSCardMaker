@@ -1,0 +1,612 @@
+{
+ "card": "koro-sensei",
+ "key": "Koro-Sensei",
+ "name": "Koro-Sensei",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-09-09",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-36dfb9c66274",
+   "kind": "discord",
+   "date": "2023-09-09T03:06:07+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-36dfb9c66274.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged. If creature is not attacked during a global turn, gain +3 HP.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 0,
+      "atk": 3,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-497c6f5d465d",
+   "kind": "discord",
+   "date": "2023-09-09T03:49:34+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-497c6f5d465d.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged. If creature is not attacked during a global turn, gain +3 HP.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 0,
+      "atk": 3,
+      "spd": 10
+     },
+     {
+      "hp": 6,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 5 -> 6",
+     "DEF 0 -> 5",
+     "ATK 3 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-474768d75dc7",
+   "kind": "discord",
+   "date": "2023-09-09T03:55:05+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-474768d75dc7.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.\nIf creature is not attacked during a global turn, gain +3 HP.\n(OPT) Inflict inspired to a friendly creature.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ea72edee0c70:Creatures/Other/5 Stars/Koro-Sensei.png",
+   "kind": "old repo",
+   "date": "2023-09-09T12:25:38+00:00",
+   "day": "2023-09-09",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Unkillable teacher",
+   "image": "O-9a846be398e2.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.\nIf creature is not attacked during a global turn, gain +3 HP.\n(OPT) Inflict inspired to a friendly creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d1b6dc46e318:Creatures/Other/5 Stars/Koro-Sensei.png",
+   "kind": "old repo",
+   "date": "2023-09-10T21:20:01+00:00",
+   "day": "2023-09-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "minor spelling mistake",
+   "image": "O-969d9c5904c9.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.\nIf creature is not attacked during a global turn, gain +3 HP.\n(OPT) Inflict inspired to a friendly creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-970c442f4add:Creatures/Other/5 Stars/Koro-Sensei.png",
+   "kind": "old repo",
+   "date": "2023-09-10T21:48:32+00:00",
+   "day": "2023-09-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "HP buff and sacrifice",
+   "image": "O-7f6a9ff4fe09.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.\nIf creature is not attacked during a global turn, gain +3 HP.\n(OPT) Inflict inspired to a friendly creature.\n(OPGT) Sacrifice up to 5 hp to heal another creature by the same amount.\nGrodus — Today at 5:29 PM",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Other/5 Stars/Koro-Sensei.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-acfc0517d63f.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Inflict Inspired to a friendly creature.\n(OPGT) Sacrifice up to 5 hp to heal another creature by the same amount.\nIf creature is not attacked during a global turn, gain +3 HP.\n(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2af66f5c66bb:Creatures/Other/5 Stars/Koro-Sensei.png",
+   "kind": "old repo",
+   "date": "2023-10-10T01:08:35+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-48183a89fb20.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Inflict 1 turn of 1 Inspired to a friendly creature.\n(OPGT) Sacrifice up to 5 hp to heal another creature by the same amount.\nIf creature is not attacked during a global turn, gain +3 HP.\n(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Other/5 Stars/Koro-Sensei.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-7cd2a36ca19b.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Inflict 1 turn of 1 Inspired to a friendly creature.\n(OPGT) Sacrifice up to 5 hp to heal another creature by the same amount.\nIf this creature is not attacked during a global turn, gain +3 HP.\n(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Other/5 Stars/Koro-Sensei.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-e80ee5be8380.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Inflict 1 turn of 1 Inspired to a friendly creature.\n(OPGT) Sacrifice up to 5 hp to heal another creature by the same amount.\nIf this creature is not attacked during a global turn, gain +3 HP.\n(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/5 Stars/Koro-Sensei.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-738d58a1d098.webp",
+   "fields": {
+    "name": {
+     "value": "Koro-Sensei",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 4,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Inflict 1 turn of 1 Inspired to a friendly creature.\n(OPGT) Sacrifice up to 5 hp to heal another creature by the same amount.\nIf this creature is not attacked during a global turn, gain +3 HP.\n(OPG) Enter absolute defense form for 1 global turn. While in absolute defense form cannot use actions, and cannot be damaged.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-09-09",
+  "sort": "2023-09-09",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,70 @@
+{
+ "card": "the-bagel",
+ "key": "The Bagel",
+ "name": "The Bagel",
+ "kind": "nme",
+ "stop": {
+  "day": "2024-07-23",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-dc471526dc6e",
+   "kind": "discord",
+   "date": "2024-07-23T14:51:39+00:00",
+   "day": "2024-07-23",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-dc471526dc6e.webp",
+   "fields": {
+    "name": {
+     "value": "The Bagel",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cost: 0 points Heal 1 HP.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-01-15T06:17:52+00:00",
+  "changes": {
+   "name": [
+    "The Bagel",
+    "The Bagel Or... is it"
+   ],
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2024-07-23",
+  "sort": "2024-07-23",
+  "source": "discord",
+  "status": "same"
+ }
+}

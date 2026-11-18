@@ -1,0 +1,782 @@
+{
+ "card": "mari",
+ "key": "Mari",
+ "name": "Mari",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-7a9a0b82ab19",
+   "kind": "discord",
+   "date": "2021-07-31T11:14:25+00:00",
+   "day": "2021-07-31",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-7a9a0b82ab19.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) Heal an ally creature by 8 HP. If this creature is killed by another creature's attack, or CD from that creature, the attacker gains -3 DEF, -3 ATK, and -3 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "F-f0c4c1b7213",
+   "kind": "text",
+   "date": "2021-11-18T08:33:03+00:00",
+   "day": "2021-11-18",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "field": "def",
+    "from": 2,
+    "to": 4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-89368f7bd239"
+  },
+  {
+   "id": "F-f831d64569e",
+   "kind": "text",
+   "date": "2021-11-22T09:20:49+00:00",
+   "day": "2021-11-22",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-89368f7bd239",
+   "kind": "discord",
+   "date": "2021-11-24T10:32:46+00:00",
+   "day": "2021-11-24",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-89368f7bd239.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) (OYT) Heal an ally creature\nby 4 HP.\n\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains -3 DEF,\n-3 ATK, and -3 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 6
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 2 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-f569766c6556",
+   "kind": "discord",
+   "date": "2021-12-19T03:01:31+00:00",
+   "day": "2021-12-19",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-f569766c6556.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) (OYT) Heal an ally creature\nby 4 HP.\n\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains -3 DEF,\n-3 ATK, and -3 SPD.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-be299fd6a66f.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) (OYT) Heal an ally creature\nby 4 HP.\n\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains -3 DEF,\n-3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-8c12e021fb3a:Cards/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-10bcee73cd81.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) (OYT) Heal an ally creature\nby 4 HP.\n\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains -3 DEF,\n-3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-619e4a47d0ae:Cards/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-04-11T06:07:15+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-fc8e9b52ff0e.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     5
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-61f8fd9f9ecf:Cards/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-04-11T21:07:26+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "mari",
+   "repo": "first",
+   "image": "O-97d0e6355f59.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     5,
+     4
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6f75ca603df9:Cards/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-04-11T22:07:06+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "repo": "first",
+   "image": "O-33a027d39cc7.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-33a027d39cc7.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-33a027d39cc7.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-34374bd4b425.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-93952092c1f7.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8733064b6273:Creatures/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-84473f4f1f0c.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPGT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Omori/4 Stars/Mari.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-3d8be6a6cdee.webp",
+   "fields": {
+    "name": {
+     "value": "Mari",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPGT) Heal an ally creature by 4 HP.\nIf this creature is killed by another\ncreature’s attack, or CD from that\ncreature, the attacker gains:\n-3 DEF, -3 ATK, and -3 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-07-31",
+  "sort": "2021-07-31",
+  "source": "discord",
+  "status": "same"
+ }
+}

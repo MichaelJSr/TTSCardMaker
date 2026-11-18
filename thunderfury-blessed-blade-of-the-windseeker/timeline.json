@@ -1,0 +1,100 @@
+{
+ "card": "thunderfury-blessed-blade-of-the-windseeker",
+ "key": "Thunderfury Blessed Blade of the Windseeker",
+ "name": "[Thunderfury: Blessed Blade of the Windseeker]",
+ "kind": "item",
+ "stop": {
+  "day": "2024-07-25",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-245ab16bd386",
+   "kind": "discord",
+   "date": "2024-07-25T05:53:56+00:00",
+   "day": "2024-07-25",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-245ab16bd386.webp",
+   "fields": {
+    "name": {
+     "value": "Thunderfury Blessed Blade of the Windseeker",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 ATK. Cannot be unequipped. The first creature attacked by the equipped creature this global turn is forced to spend their next action to attack the equipped creature and inflicts 1 Enfeebled for 1 turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-5d508d1ea939",
+   "kind": "discord",
+   "date": "2024-07-25T05:56:09+00:00",
+   "day": "2024-07-25",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-5d508d1ea939.webp",
+   "fields": {
+    "name": {
+     "value": "Thunderfury Blessed Blade of the Windseeker",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 ATK. Cannot be unequipped. The first creature attacked by the equipped creature this global turn is forced to spend their next action to attack the equipped creature. Attacks inflict 1 Enfeebled for 1 turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-01T10:46:23+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2024-07-25",
+  "sort": "2024-07-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

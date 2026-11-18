@@ -1,0 +1,232 @@
+{
+ "card": "pillow",
+ "key": "Pillow",
+ "name": "Pillow",
+ "kind": "item",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-5c1fe9c05936",
+   "kind": "discord",
+   "date": "2023-06-03T22:28:18+00:00",
+   "day": "2023-06-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-5c1fe9c05936.webp",
+   "fields": {
+    "name": {
+     "value": "Pillow",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict 1 suffocation while equipped.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-43acfedd0fc4:Items/Equip/2 Stars/Pillow.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:19:27+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-967bb47f9ec2.webp",
+   "fields": {
+    "name": {
+     "value": "Pillow",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict 1 suffocation while equipped.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4e4d58f627c3:Items/Equip/2 Stars/Pillow.png",
+   "kind": "old repo",
+   "date": "2023-09-21T09:54:28+00:00",
+   "day": "2023-09-21",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "psds",
+   "image": "O-5013456e3ece.webp",
+   "fields": {
+    "name": {
+     "value": "Pillow",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict 1 suffocation while equipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4a8c4891806:Items/Equip/2 Stars/Pillow.png",
+   "kind": "old repo",
+   "date": "2023-10-01T15:54:05+00:00",
+   "day": "2023-10-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-676ac9e95d11.webp",
+   "fields": {
+    "name": {
+     "value": "Pillow",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While equipped, attacks inflict 1 suffocation that lasts until this in uniquipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Equip/2 Stars/Pillow.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-7334d69c23df.webp",
+   "fields": {
+    "name": {
+     "value": "Pillow",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While equipped, attacks inflict 1 suffocation that lasts until this in uniquipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8733064b6273:Items/Equip/1 Stars/Pillow.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-aa5ce875c63b.webp",
+   "fields": {
+    "name": {
+     "value": "Pillow",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While equipped, attacks inflict 1 suffocation that lasts until this in uniquipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-06-03",
+  "sort": "2023-06-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

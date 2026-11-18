@@ -1,0 +1,84 @@
+{
+ "card": "gulka",
+ "key": "Gulka",
+ "name": "Gulka",
+ "kind": "minion",
+ "stop": {
+  "day": "2024-01-14",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-68664bbd290b",
+   "kind": "discord",
+   "date": "2024-01-14T20:15:27+00:00",
+   "day": "2024-01-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-68664bbd290b.webp",
+   "fields": {
+    "name": {
+     "value": "Gulka",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Overkill damage goes to the next minion then equipped creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 0,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-17T10:08:55+00:00",
+  "changes": {
+   "stars": [
+    4,
+    1
+   ],
+   "ability_change": "same",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2024-01-14",
+  "sort": "2024-01-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,123 @@
+{
+ "card": "consolation-prize",
+ "key": "Consolation Prize",
+ "name": "Consolation Prize",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-30",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-47ca240a25dc",
+   "kind": "discord",
+   "date": "2023-10-29T20:25:39+00:00",
+   "day": "2023-10-29",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-47ca240a25dc.webp",
+   "fields": {
+    "name": {
+     "value": "Consolation Prize",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "INCREASE THE LOWEST STAT OF A CREATURE BY 1 BAR",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-23e7f4a10214:Items/Support/1 Stars/Consolation_Prize.png",
+   "kind": "old repo",
+   "date": "2023-10-30T02:54:47+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-2a8215d47834.webp",
+   "fields": {
+    "name": {
+     "value": "consolation prize",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "increase the lowest stat of a creature by 1 bar",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ee998b745199:Items/Support/1 Stars/Consolation_Prize.png",
+   "kind": "old repo",
+   "date": "2023-11-01T10:09:57+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "prize",
+   "image": "O-c19a0f10ff7b.webp",
+   "fields": {
+    "name": {
+     "value": "consolation prize",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "increase the lowest current stat of a creature by 1 bar permanently.\nIf tied, choose.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-29",
+  "sort": "2023-10-29",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,356 @@
+{
+ "card": "zess-dynamite",
+ "key": "Zess Dynamite",
+ "name": "Zess Dynamite",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-473dce7311a8",
+   "kind": "discord",
+   "date": "2020-07-28T00:50:21+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-473dce7311a8.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals 7 damage to ALL creatures (including your own).",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "D-P-f9d9053d0a61",
+   "kind": "discord",
+   "date": "2020-07-28T00:52:55+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-f9d9053d0a61.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deals 7 damage to ALL creatures on the primary field (including your own).",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "D-P-0804e9f69fb7",
+   "kind": "discord",
+   "date": "2021-08-23T06:09:28+00:00",
+   "day": "2021-08-23",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-0804e9f69fb7.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 10 damage to an enemy on the PF, and 5 damage to a friendly creature on the PF.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-98f49a8e2199",
+   "kind": "discord",
+   "date": "2021-08-23T06:12:19+00:00",
+   "day": "2021-08-23",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-98f49a8e2199.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a lane. Deal 10 damage to an enemy on the PF in that lane, and 5 damage to a friendly creature on the PF in that lane.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/2 Stars/Zess_Dynamite.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-76e79adf4778.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a lane. Deal 10\ndamage to an enemy on the PF in that lane, and 5 damage to a friendly creature on the PF in that lane.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-722dcad588eb:Items/Attack/2 Stars/Zess_Dynamite.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:12:12+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items",
+   "repo": "first",
+   "image": "O-ac631f9fff99.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a lane. Deal 10\ndamage to an enemy on the PF in that lane, and 5 damage to a friendly\ncreature on the PF in that lane.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-da00f02f4b5f:Items/Attack/2 Stars/Zess_Dynamite.png",
+   "kind": "old repo",
+   "date": "2023-04-11T15:41:08+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some fixes",
+   "repo": "first",
+   "image": "O-349dbfb9a9b6.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a lane. Deal 10\ndamage to an enemy on the PF in that lane, and 5 damage to a friendly\ncreature on the PF in that lane.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     1,
+     2
+    ],
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/2 Stars/Zess_Dynamite.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-349dbfb9a9b6.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a lane. Deal 10\ndamage to an enemy on the PF in that lane, and 5 damage to a friendly\ncreature on the PF in that lane.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/2 Stars/Zess_Dynamite.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-22492f850196.webp",
+   "fields": {
+    "name": {
+     "value": "Zess Dynamite",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a lane. Deal 10\ndamage to an enemy on the PF in that lane, and 5 damage to a friendly creature on the PF in that lane.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-28",
+  "sort": "2020-07-28",
+  "source": "discord",
+  "status": "same"
+ }
+}

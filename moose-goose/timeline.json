@@ -1,0 +1,272 @@
+{
+ "card": "moose-goose",
+ "key": "Moose Goose",
+ "name": "Moose Goose",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-10-15",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-3250130633bf",
+   "kind": "discord",
+   "date": "2023-10-15T07:00:06+00:00",
+   "day": "2023-10-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-3250130633bf.webp",
+   "fields": {
+    "name": {
+     "value": "Moose Goose",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon lay an egg.\n(OPT) lay an egg.\n(EOT) Can sacrafice -2 atk for 1 turn for attacks to inflict 2 stacks of Enfeebled for 1 turn.\n(OD) or on its 3rd+ turn, all eggs hatch into moslings",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b0fd4e2056e3:Creatures/DST/3 Stars/Moose_Goose.png",
+   "kind": "old repo",
+   "date": "2023-10-15T07:43:13+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new cards",
+   "image": "O-328625cdb482.webp",
+   "fields": {
+    "name": {
+     "value": "Moose Goose",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon lay an egg.\n(OPT) lay an egg.\n(EOT) Can sacrafice -2 atk for 1 turn for attacks to inflict 2 stacks of Enfeebled for 1 turn.\n(OD) or on its 3rd+ turn, all eggs hatch into moslings",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c2b1b3fecc90:Creatures/DST/3 Stars/Moose_Goose.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-113577c006d3.webp",
+   "fields": {
+    "name": {
+     "value": "Moose Goose",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon lay an egg.\n(OPT) lay an egg.\n(EOT) Can sacrafice -2 atk for 1 turn for attacks to inflict 2 stacks of Enfeebled for 1 turn.\n(OD) or on its 3rd+ turn, all eggs hatch into moslings",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "wind"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/DST/3 Stars/Moose_Goose.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-1190a7308730.webp",
+   "fields": {
+    "name": {
+     "value": "Moose Goose",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon lay an egg.\n(OPT) lay an egg.\n(EOT) Can sacrafice -2 atk for 1 turn for attacks to inflict 2 stacks of Enfeebled for 1 turn.\n(OD) or on its 3rd+ turn, all eggs hatch into moslings",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/DST/3 Stars/Moose_Goose.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-08f4cf2f903d.webp",
+   "fields": {
+    "name": {
+     "value": "Moose Goose",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon lay an egg.\n(OPT) lay an egg.\n(EOT) Can sacrafice -2 atk for 1 turn for attacks to inflict 2 stacks of Enfeebled for 1 turn.\n(OD) or on its 3rd+ turn, all eggs hatch into moslings",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-15",
+  "sort": "2023-10-15",
+  "source": "discord",
+  "status": "same"
+ }
+}

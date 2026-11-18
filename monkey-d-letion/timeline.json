@@ -1,0 +1,75 @@
+{
+ "card": "monkey-d-letion",
+ "key": "Monkey D Letion",
+ "name": "Monkey D. Letion",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-04-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-12ad1a425dec",
+   "kind": "discord",
+   "date": "2025-04-03T05:38:21+00:00",
+   "day": "2025-04-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-12ad1a425dec.webp",
+   "fields": {
+    "name": {
+     "value": "Monkey D Letion",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon killing an enemy creature, points cannot be gained from that kill and the creature does not go to the graveyard (also not counting as being \"dead\").\nAll items that would otherwise be discarded while this is on the field are instead deleted and do not go to the discard pile.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 1,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-02-08T04:06:22+00:00",
+  "changes": {
+   "ability_change": "same"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-04-03",
+  "sort": "2025-04-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

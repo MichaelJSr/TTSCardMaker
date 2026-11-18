@@ -1,0 +1,152 @@
+{
+ "card": "shield-of-the-guilty",
+ "key": "Shield of the Guilty",
+ "name": "Shield of the Guilty",
+ "kind": "item",
+ "stop": {
+  "day": "2023-04-23",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e86168a2ceba",
+   "kind": "discord",
+   "date": "2023-04-23T12:11:43+00:00",
+   "day": "2023-04-23",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e86168a2ceba.webp",
+   "fields": {
+    "name": {
+     "value": "Shield of the Guilty",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF +1ATK\nEquipped creature receives 1 piercing counter damage each time it attacks.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ebb4bd41738f:Items/Equip/3 Stars/Shield_of_the_Guilty.png",
+   "kind": "old repo",
+   "date": "2023-04-23T12:15:50+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Shield of the Guilty Added",
+   "image": "O-6926895bf09e.webp",
+   "fields": {
+    "name": {
+     "value": "Shield of the Guilty",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF +1ATK\nEquipped creature receives 1 piercing counter damage each time it attacks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a140ee435b1:Items/Equip/3 Stars/Shield_of_the_Guilty.png",
+   "kind": "old repo",
+   "date": "2023-09-26T13:18:11+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-0a07a80457c7.webp",
+   "fields": {
+    "name": {
+     "value": "Shield of the Guilty",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF +1ATK\nEquipped creature receives 1 piercing counter damage each time it attacks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-91189038796f:Items/Equip/3 Stars/Shield_of_the_Guilty.png",
+   "kind": "old repo",
+   "date": "2023-10-10T06:24:39+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "proposed changes",
+   "image": "O-a09f74a926bb.webp",
+   "fields": {
+    "name": {
+     "value": "Shield of the Guilty",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF +1.5 ATK\nEquipped creature receives 1 piercing counter damage each time it attacks.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-04-23",
+  "sort": "2023-04-23",
+  "source": "discord",
+  "status": "same"
+ }
+}

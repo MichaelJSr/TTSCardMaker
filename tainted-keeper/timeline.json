@@ -1,0 +1,592 @@
+{
+ "card": "tainted-keeper",
+ "key": "Tainted Keeper",
+ "name": "Tainted Keeper",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-09-10",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e1b4d17714ff",
+   "kind": "discord",
+   "date": "2023-09-10T03:04:47+00:00",
+   "day": "2023-09-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e1b4d17714ff.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Healing Item`s or abilities do not work on this creature.\n(AAT) Spend 1 point to heal creature by 2 HP.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 points.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-eb6b3f7a9739:MDW/Croissant's Special Folder/t teek.png",
+   "kind": "old repo",
+   "date": "2023-09-10T03:15:41+00:00",
+   "day": "2023-09-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "t",
+   "file": "t teek",
+   "image": "O-e4cdb9205d9a.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Healing Item`s or abilities do not work on this creature.\n(AAT) Spend 1 point to heal creature by 2 HP.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 points.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-c6fb08a67238",
+   "kind": "discord",
+   "date": "2023-09-10T05:32:16+00:00",
+   "day": "2023-09-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c6fb08a67238.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Healing Item's or other abilities do not work on this creature. (AAT) Spend 1 point to heal this creature by 2 HP. Attacks hit 2 creatues at once. When this creature hits an enemy, gain 1 points. If this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0d98d7e3d61d:Creatures/Isaac/T`ainted_Keeper.png",
+   "kind": "old repo",
+   "date": "2023-09-10T06:32:06+00:00",
+   "day": "2023-09-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "keeper and beth",
+   "image": "O-09405e74d922.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Spend 1 point to heal this creature by 2 HP.\nThis creature can only be healed from it`s own ability.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 points.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 4 -> 5",
+     "DEF 3 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a89612705389:Creatures/Other/3 Stars/Tainted_Keeper.png",
+   "kind": "old repo",
+   "date": "2023-09-10T19:56:37+00:00",
+   "day": "2023-09-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "grammar",
+   "image": "O-b059711a79f6.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Spend 1 point to heal this creature by 2 HP.\nThis creature can only be healed from it`s own ability.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 point.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2c7744d4e2e6:Creatures/Isaac/4 Stars/T`ainted_Keeper.png",
+   "kind": "old repo",
+   "date": "2023-09-11T05:48:08+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "isaac folder",
+   "image": "O-09405e74d922.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Spend 1 point to heal this creature by 2 HP.\nThis creature can only be healed from it`s own ability.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 points.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0badb3f53378:Creatures/Isaac/4 Stars/Tainted_Keeper.png",
+   "kind": "old repo",
+   "date": "2023-09-11T07:06:15+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Tained Keepers name was mispelled",
+   "image": "O-b059711a79f6.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Spend 1 point to heal this creature by 2 HP.\nThis creature can only be healed from it`s own ability.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 point.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2a140ee435b1:Creatures/Isaac/4 Stars/Tainted_Keeper.png",
+   "kind": "old repo",
+   "date": "2023-09-26T13:18:11+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-8f2fbfdcf8d7.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Spend 1 point to heal this creature by 2 HP.\nThis creature can only be healed from it`s own ability.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 point.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2af66f5c66bb:Creatures/Isaac/4 Stars/Tainted_Keeper.png",
+   "kind": "old repo",
+   "date": "2023-10-10T01:08:35+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-e49fb809901d.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Spend 1 point to heal this creature by 1 HP.\nThis creature can only be healed from it`s own ability.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 point.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yeild.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c2b1b3fecc90:Creatures/Isaac/4 Stars/Tainted_Keeper.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-3b5c671f42c7.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Spend 1 point to heal this creature by 1 HP.\nThis creature can only be healed from it`s own ability.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 point.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yield.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Isaac/4 Stars/Tainted_Keeper.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-ea8c1ac4bf69.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Keeper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Spend 1 point to heal this creature by 1 HP.\nThis creature can only be healed from it`s own ability.\nAttacks hit 2 creatues at once.\nWhen this creature hits an enemy, gain 1 point.\nIf this creature kills a point yeilding creature, gain double the points that it would normally yield.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-09-10",
+  "sort": "2023-09-10",
+  "source": "discord",
+  "status": "same"
+ }
+}

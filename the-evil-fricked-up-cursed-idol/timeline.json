@@ -1,0 +1,143 @@
+{
+ "card": "the-evil-fricked-up-cursed-idol",
+ "key": "The Evil, Fricked Up Cursed Idol",
+ "name": "The Evil, Fricked Up Cursed Idol",
+ "kind": "nme",
+ "stop": {
+  "day": "2025-02-09",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-0da5ef0cafbb",
+   "kind": "discord",
+   "date": "2025-02-09T11:40:16+00:00",
+   "day": "2025-02-09",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-0da5ef0cafbb.webp",
+   "fields": {
+    "name": {
+     "value": "The Evil, Fricked Up Cursed Idol",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs two star points. Choose a friendly creature. They lose 3 DEF and 2 SPD. After this item is used, once every lane has finished its turn, the afflicted creature gains back its original stats and +5 ATK.\nThis can not lower SPD below one.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-eb28344bc39e",
+   "kind": "discord",
+   "date": "2025-02-09T12:07:15+00:00",
+   "day": "2025-02-09",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-eb28344bc39e.webp",
+   "fields": {
+    "name": {
+     "value": "The Evil, Fricked Up Cursed Idol",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Purchase Cost: 2 Points\n(BOGT) Choose a friendly creature. It loses 3 DEF and 2 SPD.\n(ENDGT) The selected creature gains 3 DEF, 2 SPD, and 3 ATK.\nThis can not lower SPD below 1. Swapping out the creature removes the effect.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-cd39327d9934",
+   "kind": "discord",
+   "date": "2025-02-09T12:12:28+00:00",
+   "day": "2025-02-09",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-cd39327d9934.webp",
+   "fields": {
+    "name": {
+     "value": "The Evil, Fricked Up Cursed Idol",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Purchase Cost: 2 Points\n(BOGT) Choose a friendly creature. It loses 3 DEF and 2 SPD.\n(ENDGT) The selected creature gains 3 DEF, 2 SPD, and 3 ATK.\nIf this creature is swapped out before the end of a global turn, it gains back its lost stats, and this item does not resolve.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-18T07:34:40+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "stars",
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-02-09",
+  "sort": "2025-02-09",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,611 @@
+{
+ "card": "omori",
+ "key": "Omori",
+ "name": "OMORI",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-46dcc88b4f6e",
+   "kind": "discord",
+   "date": "2022-02-23T08:07:50+00:00",
+   "day": "2022-02-23",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-46dcc88b4f6e.webp",
+   "fields": {
+    "name": {
+     "value": "Omori",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter, heal to 6 HP, and gain +3 ATK for the next attack after this creature's health reaches 0. 1+ counter: decreases DEF of attacked creatures by 1. 2+ counters: +2 DEF. 3+ counters: +1 SPD, first turn and (EOT) attacks inflict afraid. 4+ counters: destroy this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "O-e5d555e5123e:Cards/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2022-08-24T19:02:04+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moved BTD6 to Other and merged updates",
+   "repo": "first",
+   "image": "O-5efa36dd66bf.webp",
+   "fields": {
+    "name": {
+     "value": "Omori",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter, heal to 6 HP, and gain +3 ATK for the next attack after this creature's health reaches 0. 1+ counter: decreases DEF of attacked creatures by 1. 2+ counters: +2 DEF. 3+ counters: +1 SPD, first turn and (EOT) attacks inflict afraid. 4+ counters: destroy this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "O-7e5e0711b2f6:Cards/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-03-22T21:57:03+00:00",
+   "day": "2023-03-22",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Update Omori.png",
+   "repo": "first",
+   "image": "O-51347a0b0e80.webp",
+   "fields": {
+    "name": {
+     "value": "Omori",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter and heal to 6 HP after this creature's health reaches 0. 1+ counter: decreases DEF of attacked creatures by 2. 2+ counters: +1 SPD, first turn and (EOT) attacks inflict afraid. 3+ counters: destroy this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 8,
+      "spd": 6
+     },
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 8 -> 9"
+    ],
+    "nerfs": [],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 403,
+   "h": 819
+  },
+  {
+   "id": "O-ad9e2bc99746:Cards/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-03-29T03:26:11+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "omori",
+   "repo": "first",
+   "image": "O-1f10b2f02121.webp",
+   "fields": {
+    "name": {
+     "value": "OMORI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter, heal to 6 HP, and gain +3 ATK for the next attack after this creature's health reaches 0. \n1+ counter: decreases DEF of attacked creatures by 1\n2+ counters: +2 DEF.\n 3+ counters: +1 SPD, first turn and (EOT) attacks inflict afraid.\n4+ counters: destroy this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 8,
+      "spd": 6
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 9 -> 8"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-283975170f07:Cards/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-03-29T05:03:18+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "jawsum and omori",
+   "repo": "first",
+   "image": "O-5a3eab72b649.webp",
+   "fields": {
+    "name": {
+     "value": "OMORI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter, heal to 6 HP after this creature's health reaches 0. \n1+ counter: decreases DEF of attacked creatures by 2.\n 2+ counters: +1 SPD, first turn and (EOT) attacks inflict afraid.\n3+ counters: destroy this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 8,
+      "spd": 6
+     },
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 8 -> 9"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8ebbd6be396f:Cards/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-04-20T22:28:24+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugged through all pending updates",
+   "repo": "first",
+   "image": "O-523868bda541.webp",
+   "fields": {
+    "name": {
+     "value": "OMORI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter, heal to 6 HP after this creature's health reaches 0. \n1+ counter: decreases DEF of attacked creatures by 2.\n 2+ counters: +1 SPD, first turn and (EOT) attacks inflict 2 turns of Afraid.\n3+ counters: destroy this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-523868bda541.webp",
+   "fields": {
+    "name": {
+     "value": "OMORI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter, heal to 6 HP after this creature's health reaches 0. \n1+ counter: decreases DEF of attacked creatures by 2.\n 2+ counters: +1 SPD, first turn and (EOT) attacks inflict 2 turns of Afraid.\n3+ counters: destroy this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-523868bda541.webp",
+   "fields": {
+    "name": {
+     "value": "OMORI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter, heal to 6 HP after this creature's health reaches 0. \n1+ counter: decreases DEF of attacked creatures by 2.\n 2+ counters: +1 SPD, first turn and (EOT) attacks inflict 2 turns of Afraid.\n3+ counters: destroy this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-d53b3c466f82.webp",
+   "fields": {
+    "name": {
+     "value": "OMORI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gain a counter, heal to 6 HP after this creature's health reaches 0. \n1+ counter: decreases DEF of attacked creatures by 2.\n 2+ counters: +1 SPD, first turn and (EOT) attacks inflict 2 turns of Afraid.\n3+ counters: destroy this creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8733064b6273:Creatures/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-9b12c9fea73d.webp",
+   "fields": {
+    "name": {
+     "value": "OMORI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature's health reaches 0. Gain a counter, heal to 6 HP.\n1+ counter: decreases DEF of attacked creatures by 2.\n 2+ counters: +1 SPD, first turn and (EOT) attacks inflict 2 turns of Afraid.\n3+ counters: destroy this creature.\n(OYT) “Stab” yourself and bring HP to 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Omori/5 Stars/Omori.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-963749139301.webp",
+   "fields": {
+    "name": {
+     "value": "OMORI",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 9,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature's health reaches 0. Gain a counter, heal to 6 HP.\n1+ counter: decreases DEF of attacked creatures by 2.\n 2+ counters: +1 SPD, first turn and (EOT) attacks inflict 2 turns of Afraid.\n3+ counters: destroy this creature.\n(OYT) “Stab” yourself and bring HP to 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2022-02-23",
+  "sort": "2022-02-23",
+  "source": "discord",
+  "status": "same"
+ }
+}

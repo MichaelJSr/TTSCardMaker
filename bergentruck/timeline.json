@@ -1,0 +1,127 @@
+{
+ "card": "bergentruck",
+ "key": "BergenTRUCK",
+ "name": "BergenTRUCK",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-07-26",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-bb8ec57a0864",
+   "kind": "discord",
+   "date": "2025-07-26T18:34:05+00:00",
+   "day": "2025-07-26",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-bb8ec57a0864.webp",
+   "fields": {
+    "name": {
+     "value": "BergenTRUCK",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May only use actions to attack enemy creatures, and may only attack each enemy creature one time. If this runs out of enemies to attack, destroy this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 9
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-36f6b49cf79e",
+   "kind": "discord",
+   "date": "2025-07-26T19:42:51+00:00",
+   "day": "2025-07-26",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-36f6b49cf79e.webp",
+   "fields": {
+    "name": {
+     "value": "BergenTRUCK",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May only use actions to attack enemy creatures, and may only attack each enemy creature one time. if this creature is unable to attack any enemy creatures during its action, destroy this creature",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 8,
+      "spd": 9
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-09T14:10:27+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-07-26",
+  "sort": "2025-07-26",
+  "source": "discord",
+  "status": "same"
+ }
+}

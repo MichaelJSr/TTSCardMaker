@@ -1,0 +1,46 @@
+{
+ "card": "the-meta",
+ "key": "The META",
+ "name": "The META",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-11T12:15:29.948000+00:00",
+  "day": "2020-07-11",
+  "channel": "random-images",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-72d1616b018e",
+   "kind": "discord",
+   "date": "2020-07-11T12:15:29.948000+00:00",
+   "day": "2020-07-11",
+   "badge": "Discord",
+   "image": "P-72d1616b018e.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "random-images",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Meme/5 Stars/The_META.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-66c214ee7cca.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 240,
+   "h": 342
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

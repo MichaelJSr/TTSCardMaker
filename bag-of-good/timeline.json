@@ -1,0 +1,370 @@
+{
+ "card": "bag-of-good",
+ "key": "Bag of Good",
+ "name": "Bag of Good",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-00fedb3fe670",
+   "kind": "discord",
+   "date": "2020-09-05T05:19:50+00:00",
+   "day": "2020-09-05",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-00fedb3fe670.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of Good",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following: Hyper. Regen. Hardened. Enraged.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-17bb60cf6aa3",
+   "kind": "discord",
+   "date": "2020-09-05T08:26:23+00:00",
+   "day": "2020-09-05",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-17bb60cf6aa3.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of Good",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following: Hyper. Regen. Hardened. Enraged.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-1d883288d313",
+   "kind": "discord",
+   "date": "2021-08-23T05:58:01+00:00",
+   "day": "2021-08-23",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-1d883288d313.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of Good",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following: +2 Max HP. Hyper. Hardened. Enraged.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/Bag_of_Good.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-1757228d5f1b.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of Good",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following: +2 Max HP. Hyper. Hardened. Enraged.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-1805f79440a2:Items/Heal/2 Stars/Bag_of_Good.png",
+   "kind": "old repo",
+   "date": "2023-04-05T14:27:53+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some healing items",
+   "repo": "first",
+   "image": "O-052048864a0b.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of good",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following:\n- +2 Max HP\n- Hyper\n- Hardened\n- Enraged",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/2 star/Bag_of_Good.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-052048864a0b.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of good",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following:\n- +2 Max HP\n- Hyper\n- Hardened\n- Enraged",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-cce9285993f7:Items/Support/2 star/Bag_of_Good.png",
+   "kind": "old repo",
+   "date": "2023-04-11T13:15:29+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Updating a bunch of outdated item text",
+   "repo": "first",
+   "image": "O-b8ae2926d84a.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of good",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following:\n- +3 Max HP\n- Hyper for 3 turns\n- 2 Hardened for 2 turns\n- 3 Enraged for 1 turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/2 Stars/Bag_of_Good.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-b8ae2926d84a.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of good",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following:\n- +3 Max HP\n- Hyper for 3 turns\n- 2 Hardened for 2 turns\n- 3 Enraged for 1 turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/2 Stars/Bag_of_Good.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-b8ae2926d84a.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of good",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following:\n- +3 Max HP\n- Hyper for 3 turns\n- 2 Hardened for 2 turns\n- 3 Enraged for 1 turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d46716f929:Items/Support/2 Stars/Bag_of_Good.png",
+   "kind": "old repo",
+   "date": "2023-04-22T12:37:02+00:00",
+   "day": "2023-04-22",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Thin man fix and bag of good nerf",
+   "image": "O-7f2dc8a421da.webp",
+   "fields": {
+    "name": {
+     "value": "Bag of good",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature and inflict 1 of the following:\n- Hyper for 3 turns\n- 2 Hardened for 2 turns\n- 3 Enraged for 1 turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-05",
+  "sort": "2020-09-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

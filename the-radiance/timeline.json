@@ -1,0 +1,849 @@
+{
+ "card": "the-radiance",
+ "key": "The Radiance",
+ "name": "The Radiance",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c0fe0670dfc7-c2",
+   "kind": "discord",
+   "date": "2020-07-13T11:10:03+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c0fe0670dfc7-c2.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All Teammates become infected, increasing their stat that is lowest compared to the average by 2, but disabling their abilities. The Radiance gains all abilities negated by infection.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 393,
+   "h": 791
+  },
+  {
+   "id": "D-P-78ce48f9d917",
+   "kind": "discord",
+   "date": "2020-07-22T03:10:32+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-78ce48f9d917.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All Teammates become infected, increasing their stat that is lowest compared to the average by 2, but disabling their abilities. The Radiance gains all abilities negated by infection.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 387,
+   "h": 785
+  },
+  {
+   "id": "F-f333dc884ae",
+   "kind": "text",
+   "date": "2020-08-09T08:52:20+00:00",
+   "day": "2020-08-09",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-833e41e4d096",
+   "kind": "discord",
+   "date": "2020-08-09T23:11:16+00:00",
+   "day": "2020-08-09",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-833e41e4d096.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While the Radiance is on the field all of your other creatures become infected, giving -2 DEF and +2 ATK, but disabling their abilities. The Radiance can use the abilities of creatures that are currently negated by infection. This ability cannot be copied",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 3,
+   "era": "C",
+   "w": 387,
+   "h": 789
+  },
+  {
+   "id": "F-f8650c48ba0",
+   "kind": "text",
+   "date": "2020-08-10T06:30:40+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e5dcbc5f3bde",
+   "kind": "discord",
+   "date": "2021-12-15T11:46:48+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-e5dcbc5f3bde.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While the Radiance is on the field all of your other creatures on the field become infected, giving -2 DEF and +2 ATK, but disabling their abilities. The Radiance can use the abilities of creatures that are currently negated by infection. This ability cannot be copied",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 388,
+   "h": 790
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-ff7ca8ae1caf.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While the Radiance is on the field all of your other creatures on the field become infected, giving -2 DEF and +2 ATK, but disabling their abilities. The Radiance can use the abilities of creatures that are currently negated by infection. This ability cannot be copied",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 388,
+   "h": 790
+  },
+  {
+   "id": "O-257dc970a875:Cards/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-5b136f848445.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field all of\nyour other creatures on the field, become infected, giving -2 DEF and +2 ATK, but disabling their abilities. They can use the abilities of creatures that are currently negated by infection. This ability cannot be copied\nSpiritual/Higher Being",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-5818bfa95983.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field all of\nyour other creatures on the field, become infected, giving -2 DEF and +2 ATK, but disabling their abilities. They can use the abilities of creatures that are currently negated by infection. This ability cannot be copied\nSpiritual/Higher Being",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1f36d08ac576:Cards/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:02:03+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-8fa27a27794e.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict infected until the end of the global turn. \nGains the abilities of creatures negated by infection.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-8fa27a27794e.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict infected until the end of the global turn. \nGains the abilities of creatures negated by infection.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-8fa27a27794e.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict infected until the end of the global turn. \nGains the abilities of creatures negated by infection.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-48eb0bc97c36:Creatures/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-04-28T18:47:52+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "finished updates",
+   "image": "O-3f7411cb2d56.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict infected until the end of the global turn. \nGains the abilities of creatures negated by infection.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-09fc49f91de6.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict Infected until the end of the global turn. \nGains the abilities of creatures negated by infection.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d42a25bc7bce:Creatures/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-10-15T13:23:59+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Hollow Knight Attribute Colroing",
+   "image": "O-2bb1669a1729.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict Infected until the end of the global turn. \nGains the abilities of creatures negated by infection.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-60c362fee78c:Creatures/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-10-24T21:43:59+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field items",
+   "image": "O-725857266fe8.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict Infected until the end of the global turn. \nGains the abilities of creatures negated by Infected.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-ff4976992483.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict Infected until the end of the global turn. \nGains the abilities of creatures negated by Infected.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a80caf229327:Creatures/Hollow Knight/5 Stars/The_Radiance.png",
+   "kind": "old repo",
+   "date": "2023-11-02T23:10:12+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "hivemind",
+   "image": "O-8d28cc6bcc21.webp",
+   "fields": {
+    "name": {
+     "value": "The Radiance",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 3,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Must use on summon or (BOGT), choose a creature to inflict Infected until the end of the global turn. \nGains the abilities of creatures negated by Infected.\n This ability cannot be copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-13",
+  "sort": "2020-07-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

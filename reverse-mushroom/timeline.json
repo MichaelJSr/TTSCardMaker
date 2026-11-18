@@ -1,0 +1,415 @@
+{
+ "card": "reverse-mushroom",
+ "key": "Reverse Mushroom",
+ "name": "Reverse Mushroom",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-b1ccb4e5d866",
+   "kind": "discord",
+   "date": "2021-11-30T09:07:53+00:00",
+   "day": "2021-11-30",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b1ccb4e5d866.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature's next attack heals instead of dealing damage (defense still applies).",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 313,
+   "h": 488
+  },
+  {
+   "id": "D-P-5de8fb8f63a5",
+   "kind": "discord",
+   "date": "2021-12-11T09:48:41+00:00",
+   "day": "2021-12-11",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-5de8fb8f63a5.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature's next attack heals instead of dealing damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 313,
+   "h": 489
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-fc73906793c8.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature's next attack heals instead of dealing damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 313,
+   "h": 489
+  },
+  {
+   "id": "O-257dc970a875:Items/Heal/2 Stars/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-fb75ab3ca87a.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature’s next attack heals instead of dealing damage. (Affected by defense)",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 313,
+   "h": 488
+  },
+  {
+   "id": "O-d75f93c1a2f2:Items/Heal/2 Stars/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2023-03-30T14:37:02+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Reverse Mushroom in photoshop",
+   "repo": "first",
+   "image": "O-8306ab0a970e.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature’s next attack heals instead of dealing damage. (Affected by defense)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8c12e021fb3a:Items/Heal/2 Stars/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-2a9a9e7f18dc.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature’s next attack heals instead of dealing damage. (Affected by defense)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6ea1f0139f1:Items/Heal/2 Stars/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2023-04-05T17:05:31+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some items and strength fixes",
+   "repo": "first",
+   "image": "O-4e5a6baee926.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature’s next attack heals instead of dealing damage. (Affected by defense)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/2 star/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-4e5a6baee926.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature’s next attack heals instead of dealing damage. (Affected by defense)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/2 Stars/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-4e5a6baee926.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature’s next attack heals instead of dealing damage. (Affected by defense)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/2 Stars/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-4e5a6baee926.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature’s next attack heals instead of dealing damage. (Affected by defense)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-cf4ff141e84a:Items/Support/2 Stars/Reverse_Mushroom.png",
+   "kind": "old repo",
+   "date": "2023-04-23T10:33:30+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Reverse Mushroom",
+   "image": "O-5e2828f074b6.webp",
+   "fields": {
+    "name": {
+     "value": "Reverse Mushroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used on your turn. The target creature’s next attack heals instead of dealing damage. (Affected by defense)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2021-11-30",
+  "sort": "2021-11-30",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,129 @@
+{
+ "card": "crock-pot",
+ "key": "Crock Pot",
+ "name": "Crock Pot",
+ "kind": "nme",
+ "stop": {
+  "day": "2025-03-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-756e426950ac",
+   "kind": "discord",
+   "date": "2025-03-02T05:33:17+00:00",
+   "day": "2025-03-02",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-756e426950ac.webp",
+   "fields": {
+    "name": {
+     "value": "Crock Pot",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 points,\n(opt) can cook a healing item to increase its healing value by 1, or put two healing items in to combine them into one item with all of their effects combined, with a star level equal to that of the highest involved item, You can then add one of the following additional effects to that new item\n2 Regen for 3 turns\n2 Empowered for 2 turns\nFor 2 turns, Attacks inflict smouldering for 2 turns",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-21ecdef9ea8a",
+   "kind": "discord",
+   "date": "2025-03-02T05:48:03+00:00",
+   "day": "2025-03-02",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-21ecdef9ea8a.webp",
+   "fields": {
+    "name": {
+     "value": "Crock Pot",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 points.\n(OPT) Can cook a healing item to increase its healing value by 1, or put two healing items in to combine them into one item with all of their effects combined, with a star level equal to that of the highest involved item. You can then add one of the following additional effects to that new item:\n2 Regen for 3 turns\n2 Empowered for 2 turns\nFor 2 turns, attacks inflict Smouldering for 2 turns",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-03T00:51:39+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "stars",
+    "types",
+    "stats"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-02",
+  "sort": "2025-03-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

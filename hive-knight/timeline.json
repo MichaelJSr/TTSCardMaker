@@ -1,0 +1,1071 @@
+{
+ "card": "hive-knight",
+ "key": "Hive Knight",
+ "name": "Hive Knight",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9a1725ab45bf-c1",
+   "kind": "discord",
+   "date": "2019-05-26T00:04:22+00:00",
+   "day": "2019-05-26",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-9a1725ab45bf-c1.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "infected",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) (AAT) When a creature on your team takes damage you can pay 1 point to summon a non-protecting Mini Bee (1/2/3/6)",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 314,
+   "h": 633
+  },
+  {
+   "id": "D-P-a12196a4ce96",
+   "kind": "discord",
+   "date": "2020-07-22T02:54:02+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-a12196a4ce96.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "infected",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a non-protecting Mini Bee (1/2/3/6) for every two mini bees the cost of summoning them increases by 0.5 points",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 787
+  },
+  {
+   "id": "D-P-7b08593d4e52",
+   "kind": "discord",
+   "date": "2020-07-25T12:23:12+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-7b08593d4e52.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "infected",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee. For every two mini bees the cost of summoning them increases by 0.5 points",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "F-f19e4bca440",
+   "kind": "text",
+   "date": "2021-08-04T13:35:18+00:00",
+   "day": "2021-08-04",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "def",
+    "by": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-8cf5a13afbac"
+  },
+  {
+   "id": "D-P-8cf5a13afbac",
+   "kind": "discord",
+   "date": "2021-08-11T19:46:41+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-8cf5a13afbac.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "infected",
+      "wind"
+     ],
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee. For every two mini bees the cost of summoning them increases by 0.5 points",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 4 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "D-P-9ca998be8c15",
+   "kind": "discord",
+   "date": "2021-12-15T11:04:06+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-9ca998be8c15.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee. For every two mini bees the cost of summoning them increases by 0.5 points",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "infected"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-256754ca31d1.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "O-257dc970a875:Cards/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-abc9da9df2a1.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee. For\nevery two mini bees the cost of summoning them increases by 0.5\npoints",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-af666095792f.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee. For\nevery two mini bees the cost of summoning them increases by 0.5\npoints",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-af666095792f.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee. For\nevery two mini bees the cost of summoning them increases by 0.5\npoints",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-af666095792f.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee. For\nevery two mini bees the cost of summoning them increases by 0.5\npoints",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-551d803fa4e4:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-04-30T10:56:16+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Collector Nerf And a ton of Touch Ups",
+   "image": "O-d7511624144d.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4b03ceb980a4:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-06-16T09:04:38+00:00",
+   "day": "2023-06-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some tempetization",
+   "image": "O-755ad2368fd7.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e63eaf98bf16:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-06-17T09:36:05+00:00",
+   "day": "2023-06-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "better hp bars for old cards",
+   "image": "O-65250fb42175.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6a7219842a2b:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-09-12T23:12:38+00:00",
+   "day": "2023-09-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "hk",
+   "image": "O-32ab6c5d41ff.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d42a25bc7bce:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-10-15T13:23:59+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Hollow Knight Attribute Colroing",
+   "image": "O-8ffc6ca261c7.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-8e3daeefa954.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-60c362fee78c:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-10-24T21:43:59+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field items",
+   "image": "O-c54bf629993f.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-fed6f9b7e492.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-bf8f36db17d4.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a80caf229327:Creatures/Hollow Knight/3 Stars/Hive_Knight.png",
+   "kind": "old repo",
+   "date": "2023-11-02T23:10:12+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "hivemind",
+   "image": "O-e47f3f0970ef.webp",
+   "fields": {
+    "name": {
+     "value": "Hive Knight",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 5,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) When a creature on your team takes damage you can pay 0.5 points to summon a Mini Bee.\n For every two mini bees the cost of summoning them increases by 0.5\npoints.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-05-26",
+  "sort": "2019-05-26",
+  "source": "discord",
+  "status": "same"
+ }
+}

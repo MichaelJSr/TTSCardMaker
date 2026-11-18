@@ -1,0 +1,79 @@
+{
+ "card": "future-niiue",
+ "key": "Future Niiue",
+ "name": "Future Niiue",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-12-08",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-87a0a790258c",
+   "kind": "discord",
+   "date": "2025-12-08T12:51:39+00:00",
+   "day": "2025-12-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-87a0a790258c.webp",
+   "fields": {
+    "name": {
+     "value": "Future Niiue",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Equip Hero Cap. (ENDT) Lose -1 ATK. (E3T) This creature may increase its ATK by 10 and die after it attacks.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-12-08T13:02:21+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "stars",
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-12-08",
+  "sort": "2025-12-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

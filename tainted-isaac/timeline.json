@@ -1,0 +1,78 @@
+{
+ "card": "tainted-isaac",
+ "key": "Tainted Isaac",
+ "name": "Tainted Isaac",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-15",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-fc38972b0648",
+   "kind": "discord",
+   "date": "2023-11-14T18:39:02+00:00",
+   "day": "2023-11-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-fc38972b0648.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Isaac",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Draw two tier 3 or lower items. May sacrafice items equal to the star cost of one of the drawn items to take it, and put the other item back in the deck.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-17T10:08:55+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-14",
+  "sort": "2023-11-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

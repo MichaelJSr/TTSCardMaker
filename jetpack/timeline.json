@@ -1,0 +1,649 @@
+{
+ "card": "jetpack",
+ "key": "Jetpack",
+ "name": "Jetpack",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f327c2cf0b8",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "hp",
+    "to": 4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-5ea578dfa817"
+  },
+  {
+   "id": "F-f3d344465a6",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "spd",
+    "to": 5,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-5ea578dfa817"
+  },
+  {
+   "id": "F-f6c3f08c404",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "def",
+    "to": 0,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-5ea578dfa817"
+  },
+  {
+   "id": "F-fd8e27c73c0",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "atk",
+    "to": 0,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-5ea578dfa817"
+  },
+  {
+   "id": "D-P-5ea578dfa817",
+   "kind": "discord",
+   "date": "2020-07-26T02:59:37+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-5ea578dfa817.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. (OPT) (AAT) This creature may either negate the damage of an attack or negate an ability until the end of the turn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-d200b8f67d46",
+   "kind": "discord",
+   "date": "2020-07-27T03:36:52+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-d200b8f67d46.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. (OPT) (AAT) This creature may either negate the damage of an attack or negate an ability until the end of the turn.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-cbba7ba33cd8",
+   "kind": "discord",
+   "date": "2020-08-08T11:02:30+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-cbba7ba33cd8.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. (OPT) (AAT) This creature may either negate the damage of an attack (not towards itself) or negate an ability until the end of the turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/4 Stars/Jetpack.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-f4e8f8da3455.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion.\n(OPT) (AAT) This creature may either negate the damage of an attack (not towards itself) or negate an ability until the end of the turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-aa006ca3d73e:Auxillary/Minions/4 Stars/Jetpack.png",
+   "kind": "old repo",
+   "date": "2023-04-13T00:03:52+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "minions",
+   "repo": "first",
+   "image": "O-67fd9fd83d15.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) This creature may either negate the damage of an attack (not towards itself) or negate an ability until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e12f3bae271:Auxillary/Minions/4 Stars/Jetpack.png",
+   "kind": "old repo",
+   "date": "2023-04-16T23:31:53+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-155b280d94fe.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may either negate the damage of an attack (not towards itself) or negate an ability until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1f36d08ac576:Auxillary/Minions/4 Stars/Jetpack.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:02:03+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-b0719cb4d6b0.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may either negate the damage of an attack (not towards itself) or (OYT) negate an ability until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a18b9e4c8c48:Auxillary/Minions/4 Stars/Jetpack.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:59:18+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Auxillary minions",
+   "image": "O-b0719cb4d6b0.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may either negate the damage of an attack (not towards itself) or (OYT) negate an ability until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Jetpack.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-b0719cb4d6b0.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may either negate the damage of an attack (not towards itself) or (OYT) negate an ability until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Jetpack.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-090a386aa0b2.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "offensive_minion"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may either negate the damage of an attack (not towards itself) or (OYT) negate an ability until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-aaf53a4ce0b3:Auxillary/Minions/Jetpack.png",
+   "kind": "old repo",
+   "date": "2023-10-29T17:28:44+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "image": "O-801576fc47b2.webp",
+   "fields": {
+    "name": {
+     "value": "Jetpack",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This creature may either negate the damage of an attack (not towards itself) or (OYT) negate an ability until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-25",
+  "sort": "2020-07-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

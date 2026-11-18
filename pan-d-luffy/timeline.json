@@ -1,0 +1,128 @@
+{
+ "card": "pan-d-luffy",
+ "key": "Pan D Luffy",
+ "name": "Pan D. Luffy",
+ "kind": "creature",
+ "stop": {
+  "day": "2026-01-24",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-e726636e7d70",
+   "kind": "discord",
+   "date": "2026-01-22T07:41:45+00:00",
+   "day": "2026-01-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e726636e7d70.webp",
+   "fields": {
+    "name": {
+     "value": "Pan D Luffy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This may heal above its MAX HP. For each 3 HP this heals, it loses 1 SPD and gains 1 ATK. (WOF) Whenever an item would heal HP, it heals 2 less (Min 1) and this heals by 2 HP. (WOF) Whenever an item would deal DMG, it deals 4 less (Min 1) and this takes 4 DMG.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 2,
+      "atk": 2,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-b20d4414efaf",
+   "kind": "discord",
+   "date": "2026-01-22T09:33:32+00:00",
+   "day": "2026-01-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b20d4414efaf.webp",
+   "fields": {
+    "name": {
+     "value": "Pan D Luffy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This may heal above its MAX HP. For each 3 HP this heals, it loses 1 SPD and gains 1 ATK. (WOF) When an item would heal HP, it heals 2 less (Min 1) and this heals 2 HP. (WOF) When an enemy item would deal DMG, it deals 4 less (Min 1) and this takes 4 DMG.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 2,
+      "atk": 2,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-16T14:50:28+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2026-01-22",
+  "sort": "2026-01-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

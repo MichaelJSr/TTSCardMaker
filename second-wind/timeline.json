@@ -1,0 +1,615 @@
+{
+ "card": "second-wind",
+ "key": "Second Wind",
+ "name": "Second Wind",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-4f4a5671ffd8",
+   "kind": "discord",
+   "date": "2019-05-10T05:30:35+00:00",
+   "day": "2019-05-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-4f4a5671ffd8.webp",
+   "fields": {
+    "name": {
+     "value": "Wind's Blessing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants an extra turn for the creature it is used on.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 462,
+   "h": 640
+  },
+  {
+   "id": "D-P-87c2299d77b8",
+   "kind": "discord",
+   "date": "2019-05-29T03:27:33+00:00",
+   "day": "2019-05-29",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-87c2299d77b8.webp",
+   "fields": {
+    "name": {
+     "value": "Wind's Blessing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants an extra turn for the creature this is used on.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 304,
+   "h": 412
+  },
+  {
+   "id": "D-P-5d12a30d529c",
+   "kind": "discord",
+   "date": "2020-03-02T05:14:49+00:00",
+   "day": "2020-03-02",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-5d12a30d529c.webp",
+   "fields": {
+    "name": {
+     "value": "Wind's Blessing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants an extra turn for the creature this is used on.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 235,
+   "h": 310
+  },
+  {
+   "id": "D-P-eef8c550ecc0",
+   "kind": "discord",
+   "date": "2020-07-12T10:33:42+00:00",
+   "day": "2020-07-12",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-eef8c550ecc0.webp",
+   "fields": {
+    "name": {
+     "value": "Wind's Blessing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Star point cost scales (2 plus the star level). Grants an extra turn for the creature this is used on.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "F-f7acd3e9bf4",
+   "kind": "text",
+   "date": "2020-07-20T11:58:13+00:00",
+   "day": "2020-07-20",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-37267b7c9469",
+   "kind": "discord",
+   "date": "2020-07-22T11:30:16+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-37267b7c9469.webp",
+   "fields": {
+    "name": {
+     "value": "Wind's Blessing",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Star point cost scales with the cost of the creature this is used on. Grants an extra turn for the creature (effectively next turn).",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "F-fd2776d99e4",
+   "kind": "text",
+   "date": "2020-07-29T11:09:51+00:00",
+   "day": "2020-07-29",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-cb576982b77d",
+   "kind": "discord",
+   "date": "2020-08-03T06:23:09+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-cb576982b77d.webp",
+   "fields": {
+    "name": {
+     "value": "Second Wind",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "SP cost scales with the SP of the creature this is used on. It must be that creature's turn. Grants that creature another turn immediately.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Wind's Blessing",
+     "Second Wind"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 342
+  },
+  {
+   "id": "F-ff3dbd6732f",
+   "kind": "text",
+   "date": "2020-08-13T00:07:44+00:00",
+   "day": "2020-08-13",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-6a0819b30483",
+   "kind": "discord",
+   "date": "2020-08-13T08:04:33+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-6a0819b30483.webp",
+   "fields": {
+    "name": {
+     "value": "Second Wind",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "SP cost scales with the SP of the creature this is used on. It must be that creature's turn. Grants that creature's slot another turn immediately that classifies as the next turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-83779bcc9230",
+   "kind": "discord",
+   "date": "2020-08-31T09:18:13+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-83779bcc9230.webp",
+   "fields": {
+    "name": {
+     "value": "Second Wind",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "SP cost is SP -1 of the creature this is used on. It must be that creature's turn. Grants that creature's slot another turn immediately that classifies as the next turn.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-aef7f705b187",
+   "kind": "discord",
+   "date": "2022-01-29T07:36:08+00:00",
+   "day": "2022-01-29",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-aef7f705b187.webp",
+   "fields": {
+    "name": {
+     "value": "Second Wind",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs SP -1 of the creature this is used on. Inflicts Inspired.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/3 Stars/Second_Wind.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-7cc04f123c4a.webp",
+   "fields": {
+    "name": {
+     "value": "Second Wind",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs SP -1 of the creature this is used on.\nInflicts Inspired.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/3 star/Second_Wind.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-7cc04f123c4a.webp",
+   "fields": {
+    "name": {
+     "value": "Second Wind",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs SP -1 of the creature this is used on.\nInflicts Inspired.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-6cfb610a3e83:Items/Support/3 star/Second_Wind.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:01:31+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-6dba7f7d5652.webp",
+   "fields": {
+    "name": {
+     "value": "Second wind",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs SP -1 of the creature this is used on.\nInflicts Inspired.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/3 Stars/Second_Wind.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "repo": "first",
+   "image": "O-6dba7f7d5652.webp",
+   "fields": {
+    "name": {
+     "value": "Second wind",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs SP -1 of the creature this is used on.\nInflicts Inspired.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/3 Stars/Second_Wind.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-6dba7f7d5652.webp",
+   "fields": {
+    "name": {
+     "value": "Second wind",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs SP -1 of the creature this is used on.\nInflicts Inspired.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ac40c2c5760a:Items/Support/3 Stars/Second_Wind.png",
+   "kind": "old repo",
+   "date": "2023-10-12T05:33:37+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "forgot",
+   "image": "O-c6bf66ed6bfe.webp",
+   "fields": {
+    "name": {
+     "value": "Second wind",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs SP -1 of the creature this is used on.\nInflicts Inspired.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-08-03",
+  "sort": "2020-08-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

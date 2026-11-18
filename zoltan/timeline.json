@@ -1,0 +1,309 @@
+{
+ "card": "zoltan",
+ "key": "Zoltan",
+ "name": "Zoltan",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-10-19",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1b7e6ce0a101",
+   "kind": "discord",
+   "date": "2023-10-19T09:30:20+00:00",
+   "day": "2023-10-19",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1b7e6ce0a101.webp",
+   "fields": {
+    "name": {
+     "value": "Zoltan",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 point to item usage while on field. (OD)Deals 2 piercing to all enemy creatures on field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-c7537ff267f2",
+   "kind": "discord",
+   "date": "2023-10-19T09:35:54+00:00",
+   "day": "2023-10-19",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c7537ff267f2.webp",
+   "fields": {
+    "name": {
+     "value": "Zoltan",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 max star point while on the field.\n(OD)Deals 2 piercing to all enemy creatures on field.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e7a0d3da6b5a:Creatures/Other/2 Stars/Zoltan.png",
+   "kind": "old repo",
+   "date": "2023-10-19T09:41:26+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-6f928ff9de5d.webp",
+   "fields": {
+    "name": {
+     "value": "Zoltan",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 max star point while on the field.\n(OD)Deals 2 piercing to all enemy creatures on field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3518261d375b:Creatures/Other/2 Stars/Zoltan.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-92a3d0044779.webp",
+   "fields": {
+    "name": {
+     "value": "Zoltan",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 max star point while on the field.\n(OD)Deals 2 piercing to all enemy creatures on field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/2 Stars/Zoltan.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-b839cc129c31.webp",
+   "fields": {
+    "name": {
+     "value": "Zoltan",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 max star point while on the field.\n(OD)Deals 2 piercing to all enemy creatures on field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c7a531af6e09:Creatures/Other/2 Stars/Zoltan.png",
+   "kind": "old repo",
+   "date": "2023-11-05T00:53:40+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "space saving",
+   "image": "O-3d98405b4241.webp",
+   "fields": {
+    "name": {
+     "value": "Zoltan",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 max star point while on the field.\n(OD)Deals 2 piercing to all enemy creatures on field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-19",
+  "sort": "2023-10-19",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,1185 @@
+{
+ "card": "golden-freddy",
+ "key": "Golden Freddy",
+ "name": "Golden Freddy",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e1f3a35d642c",
+   "kind": "discord",
+   "date": "2020-07-13T11:44:52+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-e1f3a35d642c.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon attacking, Golden Freddy must posses the attacked creature. This ability persists between possession.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 0,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "D-P-b6514d13f0d5",
+   "kind": "discord",
+   "date": "2020-07-22T09:07:52+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-b6514d13f0d5.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must possess the attacked creature (Even if negated). His current HP and the ability to possess persist between forms. He only consumes his and the creature he attacks turn (Not the currently possessed creature's turn).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 0,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "F-f6771b96ec5",
+   "kind": "text",
+   "date": "2020-08-05T09:15:21+00:00",
+   "day": "2020-08-05",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-975c720948b4",
+   "kind": "discord",
+   "date": "2020-08-08T09:25:10+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-975c720948b4.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) Choose a creature to life-link with (same as the item). Whenever a non-minion creature on your team dies, this creature gains +2 ATK and +2 SPD.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 4,
+      "atk": 0,
+      "spd": 6
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 4 -> 5",
+     "ATK 0 -> 7"
+    ],
+    "nerfs": [
+     "HP 8 -> 7",
+     "SPD 6 -> 5"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f4795a6667b",
+   "kind": "text",
+   "date": "2020-08-19T09:16:29+00:00",
+   "day": "2020-08-19",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-8a1200022d24",
+   "kind": "discord",
+   "date": "2020-08-19T10:30:18+00:00",
+   "day": "2020-08-19",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-8a1200022d24.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) Choose a creature to life-link with until start of this creature's next turn. Whenever a point-yielding creature on your team dies, this creature gains +2 ATK and +2 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f4d7ed2bdfe",
+   "kind": "text",
+   "date": "2021-08-07T08:22:50+00:00",
+   "day": "2021-08-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-851f6930047b",
+   "kind": "discord",
+   "date": "2021-08-21T07:16:25+00:00",
+   "day": "2021-08-21",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-851f6930047b.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) Choose a creature to life-link with until the start of this creatures next turn. Whenever a friendly point-yielding creature dies, this creature gains +2 ATK and +1 SPD.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f1622c71b86",
+   "kind": "text",
+   "date": "2021-12-12T07:29:28+00:00",
+   "day": "2021-12-12",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "field": "atk",
+    "by": -1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-6fd6b7de9d8e"
+  },
+  {
+   "id": "F-f80fe0f48d7",
+   "kind": "text",
+   "date": "2021-12-12T07:29:28+00:00",
+   "day": "2021-12-12",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "field": "spd",
+    "by": -1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-6fd6b7de9d8e"
+  },
+  {
+   "id": "F-fb3ac9270e4",
+   "kind": "text",
+   "date": "2021-12-12T07:29:28+00:00",
+   "day": "2021-12-12",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "field": "def",
+    "by": -1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-6fd6b7de9d8e"
+  },
+  {
+   "id": "D-P-6fd6b7de9d8e",
+   "kind": "discord",
+   "date": "2021-12-12T07:33:51+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-6fd6b7de9d8e.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) Choose a creature to life-link with until the start of this creatures next turn. Whenever a friendly point-yielding creature dies, this gains +2 ATK and +1 SPD.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 5 -> 4",
+     "ATK 7 -> 6",
+     "SPD 5 -> 4"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-64d9a226ccf6",
+   "kind": "discord",
+   "date": "2022-06-09T23:35:56+00:00",
+   "day": "2022-06-09",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-64d9a226ccf6.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) Choose a creature to life-link\nwith until the start of this creatures\nnext turn. Whenever a friendly \npoint-yielding creature dies, this gains \n+2 ATK and +1 SPD.",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "dark"
+     ]
+    },
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 3,
+   "git_look": true,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-c75035775903.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) Choose a creature to life-link\nwith until the start of this creatures\nnext turn. Whenever a friendly \npoint-yielding creature dies, this gains \n+2 ATK and +1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-257dc970a875:Cards/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-679875f95246.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) Choose a creature to life-link\nwith until the start of this creatures\nnext turn. Whenever a friendly \npoint-yielding creature dies, this gains \n+2 ATK and +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a5049ea986a8:Cards/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-04-18T03:40:01+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "gf",
+   "repo": "first",
+   "image": "O-b930f1ca6bb9.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Choose a creature to life-link with until the start of this creatures next turn.\n Whenever a friendly point-yielding creature dies, this gains  +2 ATK & +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-b930f1ca6bb9.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Choose a creature to life-link with until the start of this creatures next turn.\n Whenever a friendly point-yielding creature dies, this gains  +2 ATK & +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-b930f1ca6bb9.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Choose a creature to life-link with until the start of this creatures next turn.\n Whenever a friendly point-yielding creature dies, this gains  +2 ATK & +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d20e1354f993:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-04-22T13:35:55+00:00",
+   "day": "2023-04-22",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Golden Freddy Remake",
+   "image": "O-5eb8cf2bb5e4.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict Insane for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 4 -> 6",
+     "ATK 6 -> 8",
+     "SPD 4 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-095e59dc0b36:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-04-25T02:06:33+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fanf file size reduction/touch ups",
+   "image": "O-0b081d4d8e94.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict Insane for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-20176a116ca7.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict Insane for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-07d37017212a.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict Insane for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-dddd86544929:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-23T18:22:22+00:00",
+   "day": "2023-10-23",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-01454da1f151.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict Insane for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-d1d4cecfe29d.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict Insane for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-81c204adbfd9.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict Insane for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fc867e901ef9:Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+   "kind": "old repo",
+   "date": "2023-11-05T06:25:45+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "grimora and pending updates",
+   "image": "O-43373953c716.webp",
+   "fields": {
+    "name": {
+     "value": "Golden Freddy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) Attacks inflict Insane for 1 turn and 1 Empowered for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-13",
+  "sort": "2020-07-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

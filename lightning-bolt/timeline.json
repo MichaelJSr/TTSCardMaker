@@ -1,0 +1,242 @@
+{
+ "card": "lightning-bolt",
+ "key": "Lightning Bolt",
+ "name": "Lightning Bolt",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f456ba978dc",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-b57bcbfd578d",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:32+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-b57bcbfd578d.webp",
+   "fields": {
+    "name": {
+     "value": "Lightning Bolt",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 7 piercing damage to any creature on the field.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 618
+  },
+  {
+   "id": "D-P-abdeb6aeaa0f",
+   "kind": "discord",
+   "date": "2020-07-22T11:38:44+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-abdeb6aeaa0f.webp",
+   "fields": {
+    "name": {
+     "value": "Lightning Bolt",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6 piercing damage to any creature on the field.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/3 Stars/Lightning_Bolt.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-7d5dec5d9a1e.webp",
+   "fields": {
+    "name": {
+     "value": "Lightning Bolt",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6 piercing damage to any creature on the field.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-845d0e54be06:Items/Attack/3 Stars/Lightning_Bolt.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:54:37+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fire and lightning",
+   "repo": "first",
+   "image": "O-873162453c13.webp",
+   "fields": {
+    "name": {
+     "value": "Lightning bolt",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6 piercing damage to any creature on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/3 Stars/Lightning_Bolt.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-873162453c13.webp",
+   "fields": {
+    "name": {
+     "value": "Lightning bolt",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6 piercing damage to any creature on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6ab60b5679ae:Items/Attack/3 Stars/Lightning_Bolt.png",
+   "kind": "old repo",
+   "date": "2023-10-12T05:14:39+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "somestuf",
+   "image": "O-8af975f4c5a4.webp",
+   "fields": {
+    "name": {
+     "value": "Lightning bolt",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6 piercing damage to any creature on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,112 @@
+{
+ "card": "the-temple-of-ahn-qiraj",
+ "key": "The Temple of Ahn'Qiraj",
+ "name": "The Temple of Ahn'Qiraj",
+ "kind": "aux item",
+ "stop": {
+  "day": "2026-06-18",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-44644e1970f5",
+   "kind": "discord",
+   "date": "2026-05-28T11:49:11+00:00",
+   "day": "2026-05-28",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-44644e1970f5.webp",
+   "fields": {
+    "name": {
+     "value": "The Temple of Ahn'Qiraj",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After the first turn this is on the field: (OPT) Summon a Qiraji Soldier on any slot.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-cc8144ed9270",
+   "kind": "discord",
+   "date": "2026-05-28T22:12:22+00:00",
+   "day": "2026-05-28",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-cc8144ed9270.webp",
+   "fields": {
+    "name": {
+     "value": "The Temple of Ahn'Qiraj",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After the first turn this is on the field: (1PT) Summon a Qiraji Soldier on any slot.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-05-28T22:56:20+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2026-05-28",
+  "sort": "2026-05-28",
+  "source": "discord",
+  "status": "same"
+ }
+}

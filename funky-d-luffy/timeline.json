@@ -1,0 +1,78 @@
+{
+ "card": "funky-d-luffy",
+ "key": "Funky D Luffy",
+ "name": "Funky D. Luffy",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-04-19",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-56c470cb32f1",
+   "kind": "discord",
+   "date": "2025-04-19T13:21:46+00:00",
+   "day": "2025-04-19",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-56c470cb32f1.webp",
+   "fields": {
+    "name": {
+     "value": "Funky D Luffy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) acquire and play the \"Party\" field card and give it 2 types to affect and 2 stat bars to boost for all the types. (OPT) Give the \"Party\" field card either another type to affect, or another stat bar to boost. If the \"Party\" field card is destroyed, this gains +3 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 1,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-04-20T09:55:38+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-04-19",
+  "sort": "2025-04-19",
+  "source": "discord",
+  "status": "same"
+ }
+}

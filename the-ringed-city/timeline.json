@@ -1,0 +1,391 @@
+{
+ "card": "the-ringed-city",
+ "key": "The Ringed City",
+ "name": "The Ringed City",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-71fc50c343c8",
+   "kind": "discord",
+   "date": "2022-01-25T06:30:25+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-71fc50c343c8.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[rock]: +1 DEF per turn. Engineer: +2 ATK.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 963
+  },
+  {
+   "id": "D-P-0c5a3d3212c6",
+   "kind": "discord",
+   "date": "2022-01-25T06:42:12+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-0c5a3d3212c6.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Defeat a Demon, reward: -5 cost. [rock]: +1 DEF per turn. [undead]: +1 Max HP per turn. Mythical: +1 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     3
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 961
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/3 Stars/The_Ringed_City.PNG",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-05c27e5b8676.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Defeat a Demon, reward: -5 cost. [rock]: +1 DEF per turn. [undead]: +1 Max HP per turn. Mythical: +1 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 961
+  },
+  {
+   "id": "O-257dc970a875:Field/3 Stars/The_Ringed_City.PNG",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-a27a29088ac7.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Quest: Defeat a Demon or [darkmatter], reward: -5 cost. [rock]: +1 DEF per turn. [undead]: +1 Max HP per turn. Mythical: +1 ATK.",
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 963
+  },
+  {
+   "id": "O-8e96b86eab5d:Field/1 Stars/The_Ringed_City.png",
+   "kind": "old repo",
+   "date": "2023-04-20T23:45:40+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "All field items done",
+   "repo": "first",
+   "image": "O-15f3d75b5a4f.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[rock]: (BOT) +1 DEF.\nMythical: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     1
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/1 Stars/The_Ringed_City.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-15f3d75b5a4f.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[rock]: (BOT) +1 DEF.\nMythical: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/1 Stars/The_Ringed_City.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-32a4ad07a991.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[rock]: (BOT) +1 DEF.\nMythical: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/1 Stars/The_Ringed_City.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-4e5a7122e837.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[rock]: (BOT) +1 DEF.\nMythical: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c7a531af6e09:Field/1 Stars/The_Ringed_City.png",
+   "kind": "old repo",
+   "date": "2023-11-05T00:53:40+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "space saving",
+   "image": "O-f84399691eeb.webp",
+   "fields": {
+    "name": {
+     "value": "The Ringed City",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[rock]: (BOT) +1 DEF.\nMythical: +1 ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-01-25",
+  "sort": "2022-01-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

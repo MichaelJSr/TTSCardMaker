@@ -1,0 +1,170 @@
+{
+ "card": "jevil",
+ "key": "Jevil",
+ "name": "Jevil",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-05",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-b98b786d18f0",
+   "kind": "discord",
+   "date": "2023-11-04T02:44:57+00:00",
+   "day": "2023-11-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b98b786d18f0.webp",
+   "fields": {
+    "name": {
+     "value": "jevil",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(3PGT) Do one:\n-1 ATK for +1 DEF\n-1 DEF for +1 SPD\n-1 SPD for +1 ATK",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f496bf7e6935:Creatures/Undertale/3 Stars/jevil.png",
+   "kind": "old repo",
+   "date": "2023-11-05T06:31:35+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "new cards",
+   "image": "O-7c162823a4cd.webp",
+   "fields": {
+    "name": {
+     "value": "jevil",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(3PGT) Do one:\n-1 ATK for +1 DEF\n-1 DEF for +1 SPD\n-1 SPD for +1 ATK",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-972660a075ea:Creatures/Undertale/3 Stars/Jevil.png",
+   "kind": "old repo",
+   "date": "2023-11-05T06:32:14+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Jevil",
+   "image": "O-7c162823a4cd.webp",
+   "fields": {
+    "name": {
+     "value": "Jevil",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(3PGT) Do one:\n-1 ATK for +1 DEF\n-1 DEF for +1 SPD\n-1 SPD for +1 ATK",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-11-04",
+  "sort": "2023-11-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

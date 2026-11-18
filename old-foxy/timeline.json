@@ -1,0 +1,1203 @@
+{
+ "card": "old-foxy",
+ "key": "Old Foxy",
+ "name": "Old Foxy",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fb8338b096d",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-f34c4950899e",
+   "kind": "discord",
+   "date": "2020-07-22T02:56:03+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-f34c4950899e.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks foxy they must pay 1.5 points. If Old Foxy attacks it's attack is doubled and the opponent may pay up to 3 points to reduce his attack by 3 per point. Foxy cannot be summoned on the first turn of the battle.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 388,
+   "h": 787
+  },
+  {
+   "id": "D-P-e5fe6f123ab7",
+   "kind": "discord",
+   "date": "2021-12-15T09:30:30+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-e5fe6f123ab7.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks foxy they must pay 1.5 points. If Old Foxy attacks it's attack is doubled and the opponent may pay up to 3 points to reduce his attack by 3 per point. Foxy cannot be summoned on the first turn of the battle.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "dark"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 791
+  },
+  {
+   "id": "D-P-94aff586e3f1",
+   "kind": "discord",
+   "date": "2021-12-16T12:26:00+00:00",
+   "day": "2021-12-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-94aff586e3f1.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks foxy they must pay 1.5 points. If Old Foxy attacks, it's attack is doubled, and the opponent may pay up to 3 points to reduce his attack by 3 per point. Foxy cannot be summoned on the first turn of the battle.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "D-P-ae1a3bb0acbb",
+   "kind": "discord",
+   "date": "2022-06-10T21:03:55+00:00",
+   "day": "2022-06-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-ae1a3bb0acbb.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1.5 points. If this creature attacks, it’s attack is doubled, and the opponent may pay up to 3 points to reduce his attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "git_look": true,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-7c284a6a801d",
+   "kind": "discord",
+   "date": "2022-06-11T03:32:27+00:00",
+   "day": "2022-06-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7c284a6a801d.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1.5 points. If this creature attacks, it's attack is doubled, and the opponent may pay up to 3 points to reduce his attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D1",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-e934b8a7441e.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1.5 points. If this creature attacks, it’s attack is doubled, and the opponent may pay up to 3 points to reduce his attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-257dc970a875:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-7caea5f92f43.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1.5 points. If this creature attacks, it’s attack is doubled, and the opponent may pay up to 3 points to reduce his attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-82cbee5165db.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1.5 points. If this creature attacks, it’s attack is doubled, and the opponent may pay up to 3 points to reduce his attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b584a785d959:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-07T02:34:05+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "can i push this while theyre all open?",
+   "repo": "first",
+   "image": "O-b97e8a4f5987.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1.5 points. If this creature attacks, it’s attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-22d301f1defd:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-07T05:49:04+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Old foxy .5 less point required to attack",
+   "repo": "first",
+   "image": "O-3c2fba7e0a7e.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1 point. If this creature attacks, it’s attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-45f5808e2a89:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-07T06:20:12+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "old foxy",
+   "repo": "first",
+   "image": "O-dab7732bb86d.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1 point. If this creature attacks, it’s attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-af409cb5284f:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-87891c0c092c.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever a creature declares an attack agaisnt this creature they must pay 1 point. If this creature attacks, it’s attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f50936799d74:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-16T04:48:31+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "fixed text being cut off for old bon and old fox",
+   "repo": "first",
+   "image": "O-7a257f5b7c09.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Every time a player attacks this creature they must pay 1 point. If this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e23cfe25385e:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-16T04:53:08+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "fixed old foxy for real (oops merge conflict)",
+   "repo": "first",
+   "image": "O-9eedfa3ac8af.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever a creature declares an attack against this creature they must pay 1 point. If this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-5255d3c2e32c:Cards/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-16T05:51:56+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "foxy",
+   "repo": "first",
+   "image": "O-95f43bd18f7f.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature they must pay 1 point. If this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-95f43bd18f7f.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature they must pay 1 point. If this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-95f43bd18f7f.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature they must pay 1 point. If this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned on the first turn of the game.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4b03ceb980a4:Creatures/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-06-16T09:04:38+00:00",
+   "day": "2023-06-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some tempetization",
+   "image": "O-aa03a666882b.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature they must pay 1 point. \nIf this creature attacks, its attack are doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. This creature cannot be summoned during the first global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c2b1b3fecc90:Creatures/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-8fc9a04785f1.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature the attacker must pay 1 point. \nIf this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. \nThis creature cannot be summoned during the first global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-00dbb65090a6.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature the attacker must pay 1 point. \nIf this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. \nThis creature cannot be summoned during the first global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-9f0db366398d.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature the attacker must pay 1 point. \nIf this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. \nThis creature cannot be summoned during the first global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-cc0b06b074c9.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature the attacker must pay 1 point. \nIf this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. \nThis creature cannot be summoned during the first global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Fnaf/4 Stars/Old_Foxy.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-7dfae19a1643.webp",
+   "fields": {
+    "name": {
+     "value": "Old Foxy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever an attack is declared against this creature the attacker must pay 1 point. \nIf this creature attacks, its attack is doubled, and the opponent may pay up to 3 points to reduce their attack by 3 per point. \nThis creature cannot be summoned during the first global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

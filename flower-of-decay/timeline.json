@@ -1,0 +1,453 @@
+{
+ "card": "flower-of-decay",
+ "key": "Flower of Decay",
+ "name": "Flower of Decay",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-87c902b26be7",
+   "kind": "discord",
+   "date": "2020-07-18T11:26:33+00:00",
+   "day": "2020-07-18",
+   "badge": "Discord",
+   "channel": "update-01",
+   "image": "P-87c902b26be7.webp",
+   "fields": {
+    "name": {
+     "value": "Zero's Flower",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The targeted creature cannot be damaged. Summon all dark matter cards to the field, and the targeted card dies in turns equal to one plus the number of creatures summoned. If the creature is a 5 star it takes 1 extra turn to die.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 617
+  },
+  {
+   "id": "D-P-0ed2c2b3e806",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:17+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-0ed2c2b3e806.webp",
+   "fields": {
+    "name": {
+     "value": "Zero's Flower",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The targeted creature cannot be damaged. Summon all dark matter cards to the field, and the targeted card dies in turns equal to one plus the number of creatures summoned",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 617
+  },
+  {
+   "id": "D-P-d52a6dc1704b",
+   "kind": "discord",
+   "date": "2020-07-24T07:21:23+00:00",
+   "day": "2020-07-24",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-d52a6dc1704b.webp",
+   "fields": {
+    "name": {
+     "value": "Zero's Flower",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The targeted creature cannot be damaged. Summon all dark matter cards to the field, and the targeted creature is condemned for a number of turns equal to one plus the number of creatures summoned. If the creature is a 5 star or higher condemn lasts for 1 extra turn",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 619
+  },
+  {
+   "id": "D-P-778d054f3cee",
+   "kind": "discord",
+   "date": "2020-08-04T03:18:55+00:00",
+   "day": "2020-08-04",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-778d054f3cee.webp",
+   "fields": {
+    "name": {
+     "value": "Flower Of Decay",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target Creature is afflicted with Withering, causing it to lose 2 hp, and 1 of ATK, DEF, and SPD, at the end of it's turns, until it dies.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Zero's Flower",
+     "Flower Of Decay"
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 616
+  },
+  {
+   "id": "D-P-cec4736077aa",
+   "kind": "discord",
+   "date": "2020-08-04T17:50:48+00:00",
+   "day": "2020-08-04",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-cec4736077aa.webp",
+   "fields": {
+    "name": {
+     "value": "Flower of Decay",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target Creature is afflicted with Withering, causing it to lose 2 hp, 1 ATK, 1 DEF, and 1 SPD at the end of it's turns, until it dies.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/3 Stars/Flower_Of_Decay.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-c5dfde557815.webp",
+   "fields": {
+    "name": {
+     "value": "Flower Of Decay",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target Creature is afflicted with Withering, causing it to lose 2 hp, 1 ATK, 1 DEF, and 1 SPD at the end of it's turns, until it dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 393,
+   "h": 608
+  },
+  {
+   "id": "O-257dc970a875:Items/Attack/3 Stars/Flower_Of_Decay.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-b186bc04940b.webp",
+   "fields": {
+    "name": {
+     "value": "Flower Of Decay",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts withering to any creature on the field",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 398,
+   "h": 615
+  },
+  {
+   "id": "O-64f0f144aba8:Items/Attack/3 Stars/Flower_Of_Decay.png",
+   "kind": "old repo",
+   "date": "2023-04-07T08:52:51+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Flower Of Decay, Mighty Pebble, Deleted Aux Bomb and Gas",
+   "repo": "first",
+   "image": "O-90f0496aa7a4.webp",
+   "fields": {
+    "name": {
+     "value": "Flower of decay",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts withering to any creature on the field",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-32479ad32efa:Items/Attack/3 Stars/Flower_Of_Decay.png",
+   "kind": "old repo",
+   "date": "2023-04-13T07:33:44+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-7b0cbf885c52.webp",
+   "fields": {
+    "name": {
+     "value": "Flower of decay",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts withering to any creature on the field",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b54076b3055b:Items/Attack/3 Stars/Flower_Of_Decay.png",
+   "kind": "old repo",
+   "date": "2023-04-19T10:32:37+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First set of debuff fixes on items",
+   "repo": "first",
+   "image": "O-b085cd00d264.webp",
+   "fields": {
+    "name": {
+     "value": "Flower of decay",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Withering indefinitely to any creature on the (PF)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/3 Stars/Flower_Of_Decay.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-b085cd00d264.webp",
+   "fields": {
+    "name": {
+     "value": "Flower of decay",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Withering indefinitely to any creature on the (PF)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/3 Stars/Flower_Of_Decay.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-88b7b7bbaefc.webp",
+   "fields": {
+    "name": {
+     "value": "Flower of decay",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Withering indefinitely to any creature on the (PF)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-18",
+  "sort": "2020-07-18",
+  "source": "discord",
+  "status": "owner"
+ }
+}

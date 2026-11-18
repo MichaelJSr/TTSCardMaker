@@ -1,0 +1,1050 @@
+{
+ "card": "beldam",
+ "key": "Beldam",
+ "name": "Beldam",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-08fbb6905fea",
+   "kind": "discord",
+   "date": "2020-12-18T11:10:04+00:00",
+   "day": "2020-12-18",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-08fbb6905fea.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) You can do one of the following: Empower a teammate, fortify a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this card can attack 2 creature's and inflict Frostbite",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 401,
+   "h": 786
+  },
+  {
+   "id": "D-P-0f0d64d19cb3",
+   "kind": "discord",
+   "date": "2021-05-19T12:21:54+00:00",
+   "day": "2021-05-19",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-0f0d64d19cb3.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) You can do one of the following: Empower a teammate, Harden a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this card can attack 2 creature's and inflict Frostbite",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 401,
+   "h": 786
+  },
+  {
+   "id": "D-P-5e6e97a5b345",
+   "kind": "discord",
+   "date": "2021-12-15T09:36:21+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-5e6e97a5b345.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can do one of the following: Empower a teammate, Harden a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this card can attack 2 creature's and inflict Frostbite",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 400,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-d022c6ae3fdd.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can do one of the following: Empower a teammate, Harden a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this card can attack 2 creature's and inflict Frostbite",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 788
+  },
+  {
+   "id": "O-257dc970a875:Cards/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-ce106f18025c.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "ice",
+      "dark"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can do one of the following: Empower a teammate, Harden a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this card can attack 2 creature's and inflict Frostbite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-08374e6003fb:Cards/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-03-29T02:09:57+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "res increase, hrh ability description change",
+   "repo": "first",
+   "image": "O-0b34828ba8a1.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "ice",
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can do one of the following: Empower a teammate, Harden a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this card can attack 2 creature's and inflict Frostbite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8c12e021fb3a:Cards/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-a4323318ebe6.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "ice",
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can do one of the following: Empower a teammate, Harden a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this card can attack 2 creature's and inflict Frostbite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b584a785d959:Cards/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-04-07T02:34:05+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "can i push this while theyre all open?",
+   "repo": "first",
+   "image": "O-b152fefc225a.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "ice",
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(OYT) You can do one of the following: Empower a teammate, Harden a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this creature can attack 2 creature's and inflict Frostbite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e78c25b45bc3:Cards/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-04-07T04:59:14+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "OPT/OYT Reduction",
+   "repo": "first",
+   "image": "O-4a4e9cdfdd44.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This creature can do one of the following: Empower a teammate, Harden a teammate, inflict 2 stacks of burdened onto an enemy, or Enfeeble an enemy. (EOT) this creature can attack 2 creature's and inflict Frostbite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2096fe459bca:Cards/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-04-13T08:11:48+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "maga",
+   "repo": "first",
+   "image": "O-1fd8111936a3.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Harden for 2 turns,\n 2 burdened for 2 turns,\n 2 enfeeble for 2 turns, \nfrostbite for 2 turns.\n (EOT) this creature can attack 2 creature's and inflict Frostbite 2 turns",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-1fd8111936a3.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Harden for 2 turns,\n 2 burdened for 2 turns,\n 2 enfeeble for 2 turns, \nfrostbite for 2 turns.\n (EOT) this creature can attack 2 creature's and inflict Frostbite 2 turns",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-1fd8111936a3.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Harden for 2 turns,\n 2 burdened for 2 turns,\n 2 enfeeble for 2 turns, \nfrostbite for 2 turns.\n (EOT) this creature can attack 2 creature's and inflict Frostbite 2 turns",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-48eb0bc97c36:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-04-28T18:47:52+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "finished updates",
+   "image": "O-d3f2d4a949aa.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Hardened for 2 turns,\n 2 Burdened for 2 turns,\n 2 Enfeebled for 2 turns, \nFrostbite for 2 turns.\n (EOT) This creature can attack 2 creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-bb245f6017eb.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Hardened for 3 turns,\n 2 Burdened for 2 turns,\n 2 Enfeebled for 2 turns, \n (EOT) This creature can attack 2 creatures and inflict Frostbite for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-0104dba1738b.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Hardened for 3 turns,\n 2 Burdened for 2 turns,\n 2 Enfeebled for 2 turns, \n (EOT) This creature can attack 2 creatures and inflict Frostbite for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-6e3053125a90.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Hardened for 3 turns,\n 2 Burdened for 2 turns,\n 2 Enfeebled for 2 turns, \n (EOT) This creature can attack 2 creatures and inflict Frostbite for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-6211bd50aaea.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Hardened for 3 turns,\n 2 Burdened for 2 turns,\n 2 Enfeebled for 2 turns, \n (EOT) This creature can attack 2 creatures and inflict Frostbite for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-e84e9fd6df65.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Hardened for 3 turns,\n 2 Burdened for 2 turns,\n 2 Enfeebled for 2 turns, \n (EOT) This creature can attack 2 creatures and inflict Frostbite for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-106f5b2e5bb3.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Hardened for 3 turns,\n 2 Burdened for 2 turns,\n 2 Enfeebled for 2 turns, \n (EOT) This creature can attack 2 creatures and inflict Frostbite for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1097c67e252:Creatures/Mario/3 Stars/Beldam.png",
+   "kind": "old repo",
+   "date": "2023-11-02T22:28:51+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "templaticidasd",
+   "image": "O-5017bcdc2020.webp",
+   "fields": {
+    "name": {
+     "value": "Beldam",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) This creature can inflict one of the following to any creature: \n 2 Enraged for 2 turns, \n2 Hardened for 3 turns,\n 2 Burdened for 2 turns,\n 2 Enfeebled for 2 turns, \n (EOT) This creature can attack 2 creatures and inflict Frostbite for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-12-18",
+  "sort": "2020-12-18",
+  "source": "discord",
+  "status": "same"
+ }
+}

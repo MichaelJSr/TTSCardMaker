@@ -1,0 +1,456 @@
+{
+ "card": "quick-slash",
+ "key": "Quick Slash",
+ "name": "Quick Slash",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-235ab0dbf359-c1",
+   "kind": "discord",
+   "date": "2020-07-29T06:18:15+00:00",
+   "day": "2020-07-29",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-235ab0dbf359-c1.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) The equipped creature can attack one extra time",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 390,
+   "h": 612
+  },
+  {
+   "id": "D-P-aac47c934f25",
+   "kind": "discord",
+   "date": "2020-08-03T08:20:41+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-aac47c934f25.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) The equipped creature can attack one extra time",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 386,
+   "h": 613
+  },
+  {
+   "id": "F-fbd4096a2a1",
+   "kind": "text",
+   "date": "2020-08-18T09:24:50+00:00",
+   "day": "2020-08-18",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-6c3c3365d3a9",
+   "kind": "discord",
+   "date": "2020-08-18T11:33:04+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-6c3c3365d3a9.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) The equipped creature is granted one extra action",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "F-f53c68f71cb",
+   "kind": "text",
+   "date": "2020-08-25T11:37:46+00:00",
+   "day": "2020-08-25",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "field": "stars",
+    "to": 4
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-d08c480dc6de"
+  },
+  {
+   "id": "D-P-d08c480dc6de",
+   "kind": "discord",
+   "date": "2020-09-08T07:15:39+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-d08c480dc6de.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) The equipped creature is granted one extra action",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 389,
+   "h": 615
+  },
+  {
+   "id": "F-fb40d81d670",
+   "kind": "text",
+   "date": "2020-09-12T05:52:16+00:00",
+   "day": "2020-09-12",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-5d1cc46f044c",
+   "kind": "discord",
+   "date": "2020-09-27T22:12:01+00:00",
+   "day": "2020-09-27",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-5d1cc46f044c.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 SPD (EOT) The equipped creature is granted one extra action",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C-item",
+   "w": 389,
+   "h": 615
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/4 Stars/Quick_Slash.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-548e7ce55ecc.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 SPD (EOT) The equipped creature is granted one extra action",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 615
+  },
+  {
+   "id": "O-51c240a78396:Items/Equip/4 Stars/Quick_Slash.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:00:17+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Charms",
+   "repo": "first",
+   "image": "O-232eaf70024a.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 SPD\n(EOT) The quipped creature is granted one extra action",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ea24de2fb131:Items/Equip/3 Stars/Quick_Slash.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:56:10+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "charm fix",
+   "repo": "first",
+   "image": "O-309954b198aa.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) The quipped creature is granted one extra action",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     3
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6ce6fec2c076:Items/Equip/3 Stars/Quick_Slash.png",
+   "kind": "old repo",
+   "date": "2023-04-03T22:12:47+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "qs fix and galacta knight",
+   "repo": "first",
+   "image": "O-fe7f7326be68.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) The equipped creature is granted one extra action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Quick_Slash.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-fe7f7326be68.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) The equipped creature is granted one extra action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-74eb1fdc82e0:Items/Equip/3 Stars/Quick_Slash.png",
+   "kind": "old repo",
+   "date": "2023-10-14T03:47:06+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "styff",
+   "image": "O-cee4236e5d2c.webp",
+   "fields": {
+    "name": {
+     "value": "Quick Slash",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) The equipped creature is granted one extra action.\n+.5 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-29",
+  "sort": "2020-07-29",
+  "source": "discord",
+  "status": "owner"
+ }
+}

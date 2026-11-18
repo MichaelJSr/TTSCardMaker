@@ -1,0 +1,133 @@
+{
+ "card": "nme-stock2",
+ "key": "NME Stock2",
+ "name": "NME Stock™",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-15",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-688ec0c6c352",
+   "kind": "discord",
+   "date": "2023-10-15T00:45:13+00:00",
+   "day": "2023-10-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-688ec0c6c352.webp",
+   "fields": {
+    "name": {
+     "value": "NME Stock™",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Sells for 2x the global turn count.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b0fd4e2056e3:Items/Support/1 Stars/NME_Stock2.png",
+   "kind": "old repo",
+   "date": "2023-10-15T07:43:13+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new cards",
+   "image": "O-6d633fe3c067.webp",
+   "fields": {
+    "name": {
+     "value": "NME Stock™",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Sells for 2x the global turn count.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-8733064b6273:Items/Support/1 Stars/NME_Stock2.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-a44cbb0c64e1.webp",
+   "fields": {
+    "name": {
+     "value": "NME Stock™",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Sells for 1.5x the global turn count.\nBuy Value is equal to sell value.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-15",
+  "sort": "2023-10-15",
+  "source": "discord",
+  "status": "same"
+ }
+}

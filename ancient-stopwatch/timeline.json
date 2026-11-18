@@ -1,0 +1,509 @@
+{
+ "card": "ancient-stopwatch",
+ "key": "Ancient Stopwatch",
+ "name": "Ancient Stopwatch",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-bbdbcaa59222",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:08+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-bbdbcaa59222.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When used on an item roll a dice. If you roll 6, gain possession of the item. If you roll a 5, destroy the item. If you roll 2, 3 or 4, negate it for one turn. If you roll 1, this item does nothing.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 612
+  },
+  {
+   "id": "D-P-672a25f518a4",
+   "kind": "discord",
+   "date": "2020-07-24T08:30:12+00:00",
+   "day": "2020-07-24",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-672a25f518a4.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When used on an item roll a dice. If you roll 1 or 2, negate the item for 1 turn, if you roll 3 or 4, negate it for 2 turns, if you roll a 5 or 6, destroy the item",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 611
+  },
+  {
+   "id": "D-P-f6613ee8ef41",
+   "kind": "discord",
+   "date": "2020-08-03T00:14:39+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-f6613ee8ef41.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When used on an item roll a dice. If you roll 1 or 2, negate the item for 1 turn, if you roll 3 or 4, negate it for 2 turns, if you roll a 5 or 6, destroy the item",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 612
+  },
+  {
+   "id": "D-P-623845cc617d",
+   "kind": "discord",
+   "date": "2022-01-31T09:06:43+00:00",
+   "day": "2022-01-31",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-623845cc617d.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 turns",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 396,
+   "h": 610
+  },
+  {
+   "id": "F-fbb6f120e58",
+   "kind": "text",
+   "date": "2022-01-31T09:06:59+00:00",
+   "day": "2022-01-31",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/3 Stars/Ancient_Stopwatch.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-4c81431c997f.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 turns",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 396,
+   "h": 610
+  },
+  {
+   "id": "O-257dc970a875:Items/Active/3 Stars/unknown.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "file": "unknown",
+   "repo": "first",
+   "image": "O-4c81431c997f.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 turns",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 396,
+   "h": 610
+  },
+  {
+   "id": "O-f6a6946f1577:Items/Active/3 Stars/Ancient_Stopwatch.png",
+   "kind": "old repo",
+   "date": "2023-03-22T05:00:13+00:00",
+   "day": "2023-03-22",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "removed sleep tent and duplicates",
+   "repo": "first",
+   "image": "O-4c81431c997f.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 turns",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 396,
+   "h": 610
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Offense/3 Stars/Ancient_Stopwatch.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-4c81431c997f.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 turns",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 396,
+   "h": 610
+  },
+  {
+   "id": "O-ce0145080ca0:Items/Offense/3 Stars/Ancient_Stopwatch.png",
+   "kind": "old repo",
+   "date": "2023-04-09T04:01:05+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-7af6d5cb9115.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 turns",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Offense/3 Stars/Ancient_Stopwatch.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-7af6d5cb9115.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 turns",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-af33a661175f:Items/Support/3 Stars/Ancient_Stopwatch.png",
+   "kind": "old repo",
+   "date": "2023-10-13T03:36:21+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "support update",
+   "image": "O-e80da8672cae.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-512be6cd13fd:Items/Support/3 Stars/Ancient_Stopwatch.png",
+   "kind": "old repo",
+   "date": "2023-10-17T14:11:38+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates and upscaled buffs",
+   "image": "O-2bc2ad7c93b8.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for global 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6b2e08adc9f:Items/Support/3 Stars/Ancient_Stopwatch.png",
+   "kind": "old repo",
+   "date": "2023-11-05T04:32:50+00:00",
+   "day": "2023-11-05",
+   "badge": "old repo",
+   "author": "bobberlington",
+   "subject": "a ton of optimizations",
+   "image": "O-cb34e8b455ee.webp",
+   "fields": {
+    "name": {
+     "value": "Ancient Stopwatch",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate 1 item for 2 global  turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

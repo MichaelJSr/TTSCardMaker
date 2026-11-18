@@ -1,0 +1,197 @@
+{
+ "card": "berserk",
+ "key": "Berserk!",
+ "name": "Berserk!",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-13",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-6fb585a6487a",
+   "kind": "discord",
+   "date": "2023-10-13T07:12:26+00:00",
+   "day": "2023-10-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6fb585a6487a.webp",
+   "fields": {
+    "name": {
+     "value": "Berserk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate a friendly creature but give it +4 ATK for this turn only.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-5b8b55077c70",
+   "kind": "discord",
+   "date": "2023-10-13T07:33:03+00:00",
+   "day": "2023-10-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-5b8b55077c70.webp",
+   "fields": {
+    "name": {
+     "value": "Berserk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate equipped creature but give it +4 ATK. If equipped creature does not destroy an enemy creature, this item is destroyed.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-ed311229ce85",
+   "kind": "discord",
+   "date": "2023-10-13T09:09:14+00:00",
+   "day": "2023-10-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-ed311229ce85.webp",
+   "fields": {
+    "name": {
+     "value": "Berserk!",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate equipped creature but give it +4 ATK.\nCannot be equiped to negation immune creatures.\nIf equipped creature does not destroy an enemy creature by the end of it’s turn, this item is destroyed.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-3f3ad48d903c:Items/Equip/2 Stars/Berserk.png",
+   "kind": "old repo",
+   "date": "2023-10-13T09:26:45+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Kyle Isaac Items",
+   "image": "O-d95f2f47c864.webp",
+   "fields": {
+    "name": {
+     "value": "Berserk!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate equipped creature but give it +4 ATK.\nCannot be equiped to negation immune creatures.\nIf equipped creature does not destroy an enemy creature by the end of it’s turn, this item is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-61d6a7179737:Items/Equip/2 Stars/Berserk.png",
+   "kind": "old repo",
+   "date": "2023-10-13T21:29:44+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "balanse",
+   "image": "O-7708cedf6ec5.webp",
+   "fields": {
+    "name": {
+     "value": "Berserk!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate equipped creature but give it +4 ATK.\nCannot be equiped to negation immune creatures.\nIf equipped creature does not destroy an enemy creature by the end of each global turn, this item is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-13",
+  "sort": "2023-10-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

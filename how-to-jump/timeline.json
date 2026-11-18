@@ -1,0 +1,86 @@
+{
+ "card": "how-to-jump",
+ "key": "How to Jump",
+ "name": "How to Jump",
+ "kind": "nme",
+ "stop": {
+  "day": "2023-10-14",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-7408dd5b528c",
+   "kind": "discord",
+   "date": "2023-10-13T22:36:22+00:00",
+   "day": "2023-10-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7408dd5b528c.webp",
+   "fields": {
+    "name": {
+     "value": "How to jump",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (BOGT). \nSwap your point yielding creatures between two lanes.\nminions stay in the same lane but swap owners.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-74eb1fdc82e0:Items/Support/2 Stars/How_To_Jump.png",
+   "kind": "old repo",
+   "date": "2023-10-14T03:47:06+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "styff",
+   "image": "O-7e89314b3ed9.webp",
+   "fields": {
+    "name": {
+     "value": "How to jump",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Must be used (BOGT). \nSwap your point yielding creatures between two lanes.\nminions stay in the same lane but swap owners.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-13",
+  "sort": "2023-10-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

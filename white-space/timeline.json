@@ -1,0 +1,484 @@
+{
+ "card": "white-space",
+ "key": "White Space",
+ "name": "White Space",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-b0b9fbc524a3",
+   "kind": "discord",
+   "date": "2022-01-16T11:17:13+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b0b9fbc524a3.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 3 less per typeless creature on your side of the field. Removes all debuff immunities. [panda]: -3 max HP [dark]: Attacks and abilities deal 1 less damage [darkmatter]: corrupted while this is active [wind]: -1.5 SPD, cannot gain speed [fire]: chilled while this is active [ice]: Smoldering while this is active [light]: loses 0.5 ATK per star [machine]: -2DEF per machine on the field [magic]: -1 ATK and SPD for the turn after activating its ability. [rock]: -2 DEF every time it's attacked. [undead]: 1 poison per turn while this is active. [water]: receives 2 less healing from all sources. [electric]: can only attack the opposite space.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 497,
+   "h": 737
+  },
+  {
+   "id": "D-P-ad7690c48f7b",
+   "kind": "discord",
+   "date": "2022-01-17T04:08:49+00:00",
+   "day": "2022-01-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-ad7690c48f7b.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less per typeless creature on your side of the field. Removes all debuff immunities. Typeless: Immune to all tier 3 and below debuffs. Attributeless: +1 to all stats.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     2
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 495,
+   "h": 644
+  },
+  {
+   "id": "F-f42602f8046",
+   "kind": "text",
+   "date": "2022-02-15T04:31:09+00:00",
+   "day": "2022-02-15",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-a01d4fd90644",
+   "kind": "discord",
+   "date": "2022-02-15T04:35:58+00:00",
+   "day": "2022-02-15",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-a01d4fd90644.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures Typeless: Immune to all tier 3 and below debuffs. Attributeless: +1 to all stats.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 499,
+   "h": 655
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/2 Stars/White_Space.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-e162dec865af.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures\nTypeless: Immune to all tier 3 and below debuffs.\nAttributeless: +1 to all stats.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 499,
+   "h": 655
+  },
+  {
+   "id": "O-ce3611f8719f:Field/2 Stars/White_Space.png",
+   "kind": "old repo",
+   "date": "2023-04-08T11:19:23+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "a couple field items",
+   "repo": "first",
+   "image": "O-abdde3520ce9.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures\nTypeless: Immune to all tier 3 and below debuffs.\nAttributeless: +1 to all stats.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     3
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b11f65b92f22:Field/2 Stars/White_Space.png",
+   "kind": "old repo",
+   "date": "2023-04-08T21:01:53+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Whitespace color fix/tweak",
+   "repo": "first",
+   "image": "O-fe9fa8226a5e.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures\nTypeless: Immune to all tier 3 and below debuffs.\nAttributeless: +1 to all stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-1325e698f979:Field/3 Stars/White_Space.png",
+   "kind": "old repo",
+   "date": "2023-04-19T23:15:12+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Ported all 2 star field items",
+   "repo": "first",
+   "image": "O-45349f538870.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures.\nTypeless: Immune to all tier 3 and below debuffs.\nAttributeless: +1 to all stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/3 Stars/White_Space.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-45349f538870.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures.\nTypeless: Immune to all tier 3 and below debuffs.\nAttributeless: +1 to all stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/3 Stars/White_Space.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-150c99410a68.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures.\nTypeless: Immune to all tier 3 and below debuffs.\nAttributeless: +1 to all stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/3 Stars/White_Space.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-dc49d0f6b765.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures.\nTypeless: Immune to all tier 3 and below debuffs.\nAttributeless: +1 to all stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2e5ead43e905:Field/3 Stars/White_Space.png",
+   "kind": "old repo",
+   "date": "2023-10-26T20:21:08+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "immunities",
+   "image": "O-09e32803b9e4.webp",
+   "fields": {
+    "name": {
+     "value": "White Space",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Removes all type-based debuff immunities from enemy creatures.\nTypeless: Immune to all tier 2 and below debuffs.\nAttributeless: +1 to all stats.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-01-16",
+  "sort": "2022-01-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

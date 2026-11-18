@@ -1,0 +1,80 @@
+{
+ "card": "the-queen",
+ "key": "The Queen",
+ "name": "The Queen",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-05-03",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-f2dc681f99e8",
+   "kind": "discord",
+   "date": "2025-05-03T07:23:03+00:00",
+   "day": "2025-05-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-f2dc681f99e8.webp",
+   "fields": {
+    "name": {
+     "value": "The Queen",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Summon Delta in the left slot, Ipsilon in the middle slot, and Sigma on the right slot. (OPT) May increase the ATK of Delta by 1, the healing of Ipsilon by 1, or the duration of Sigma's buffs by 1.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-05-04T08:09:43+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-05-03",
+  "sort": "2025-05-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,277 @@
+{
+ "card": "crystal-spikes",
+ "key": "Crystal Spikes",
+ "name": "Crystal Spikes",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-5575f0ab7733",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:25+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-5575f0ab7733.webp",
+   "fields": {
+    "name": {
+     "value": "Crystal Spikes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures you can activate this card to deal 4 piercing counter damage to it. This item has infinite uses",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 388,
+   "h": 611
+  },
+  {
+   "id": "D-P-545c575074b8",
+   "kind": "discord",
+   "date": "2020-07-22T11:18:43+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-545c575074b8.webp",
+   "fields": {
+    "name": {
+     "value": "Crystal Spikes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "3 uses.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 384,
+   "h": 605
+  },
+  {
+   "id": "D-P-e9cb20ea513e",
+   "kind": "discord",
+   "date": "2020-08-03T00:23:40+00:00",
+   "day": "2020-08-03",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-e9cb20ea513e.webp",
+   "fields": {
+    "name": {
+     "value": "Crystal Spikes",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures you can activate this card to deal 4 piercing counter damage to it. 3 uses.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 391,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/3 Stars/Crystal_Spikes.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-721480390665.webp",
+   "fields": {
+    "name": {
+     "value": "Crystal Spikes",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures you can activate this card to deal 4 piercing counter damage to it. 3 uses.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 611
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Offense/3 Stars/Crystal_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-721480390665.webp",
+   "fields": {
+    "name": {
+     "value": "Crystal Spikes",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When a creature attacks one of your creatures you can activate this card to deal 4 piercing counter damage to it. 3 uses.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 391,
+   "h": 611
+  },
+  {
+   "id": "O-3bfdfb455014:Items/Offense/3 Stars/Crystal_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-04-09T02:06:35+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "spike update",
+   "repo": "first",
+   "image": "O-ae4ea297744f.webp",
+   "fields": {
+    "name": {
+     "value": "Crystal Spikes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "3 uses: \nWhen a creature attacks one of your creatures, you can activate this item to deal 4 piecing counter damage to it.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Offense/3 Stars/Crystal_Spikes.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-ae4ea297744f.webp",
+   "fields": {
+    "name": {
+     "value": "Crystal Spikes",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "3 uses: \nWhen a creature attacks one of your creatures, you can activate this item to deal 4 piecing counter damage to it.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

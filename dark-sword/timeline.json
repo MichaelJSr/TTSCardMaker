@@ -1,0 +1,273 @@
+{
+ "card": "dark-sword",
+ "key": "Dark Sword",
+ "name": "Dark Sword",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fac0ef5ca5b",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-faa90215211",
+   "kind": "text",
+   "date": "2020-07-21T09:40:38+00:00",
+   "day": "2020-07-21",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-2c1322f3284b",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:37+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-2c1322f3284b.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Sword",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 ATK Equipped creature takes 2 damage at the end of their turn",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 610
+  },
+  {
+   "id": "D-P-625cda3f8d8a",
+   "kind": "discord",
+   "date": "2020-07-22T11:52:38+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-625cda3f8d8a.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Sword",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 ATK Equipped creature takes 2 damage each time they attack",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 613
+  },
+  {
+   "id": "F-f984f9d4b50",
+   "kind": "text",
+   "date": "2021-05-01T10:13:06+00:00",
+   "day": "2021-05-01",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-8751d3592f15",
+   "kind": "discord",
+   "date": "2021-08-11T14:14:17+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-8751d3592f15.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Sword",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 ATK Equipped creature takes 2 piercing counter damage each time they attack",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 389,
+   "h": 610
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/3 Stars/Dark_Sword.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-3650a051706f.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Sword",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 ATK Equipped creature takes 2 piercing counter damage each time they attack",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 610
+  },
+  {
+   "id": "O-66aa463303d4:Items/Equip/3 Stars/Dark_Sword.png",
+   "kind": "old repo",
+   "date": "2023-04-07T21:36:08+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "dark sword",
+   "repo": "first",
+   "image": "O-97f9a2a6b87a.webp",
+   "fields": {
+    "name": {
+     "value": "Dark sword",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 attack\nEquipped creature takes 2 piercing CD each time they attack",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Dark_Sword.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-97f9a2a6b87a.webp",
+   "fields": {
+    "name": {
+     "value": "Dark sword",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 attack\nEquipped creature takes 2 piercing CD each time they attack",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-22",
+  "sort": "2019-03-22",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

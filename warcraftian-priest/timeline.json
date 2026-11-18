@@ -1,0 +1,790 @@
+{
+ "card": "warcraftian-priest",
+ "key": "Warcraftian Priest",
+ "name": "Warcraftian Priest",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1ea9727dea7c",
+   "kind": "discord",
+   "date": "2021-09-13T07:01:34+00:00",
+   "day": "2021-09-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-1ea9727dea7c.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOT), choose either lightform (+3 DEF, cannot use damaging abilities) or shadowform (+1 attack and attacks become piercing, cannot use healing abilities).",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 312,
+   "h": 628
+  },
+  {
+   "id": "D-P-86c67420efaa",
+   "kind": "discord",
+   "date": "2021-09-13T07:16:57+00:00",
+   "day": "2021-09-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-86c67420efaa.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOT), choose a form. lightform (+3 DEF): (OPT) (1 point) apply 3 regen to a target or (2 points) heal a target for 7 (can go up to 4 above max hp). shadowform (+1 attack and attacks become piercing): (OPT) (1 point) inflict confusion on an enemy creature or (2 points) negate an enemy creature for 1 turn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "D-P-2f6378d6f063",
+   "kind": "discord",
+   "date": "2021-09-13T07:35:34+00:00",
+   "day": "2021-09-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2f6378d6f063.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOT), choose a form. lightform (+3 DEF): (OPT) apply 3 regen to a target or (2 points) heal a target for 7 (can go up to 4 above max hp). shadowform (+1 attack and attacks become piercing): (OPT)(1 point) negate an enemy creature for 1 turn or (2 points) inflict confusion on an enemy creature.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 629
+  },
+  {
+   "id": "D-P-0cbc03539eb9",
+   "kind": "discord",
+   "date": "2021-11-11T05:05:18+00:00",
+   "day": "2021-11-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-0cbc03539eb9.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOT), choose a form. lightform (+3 DEF): (OPT) apply 3 regen to a target or (2 points) heal a target for 7 (can go up to 4 above max hp). shadowform (+1 attack and attacks become piercing): (OPT) (1 point) negate an enemy creature for 1 turn or (2 points) inflict confusion on an enemy creature.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 627
+  },
+  {
+   "id": "D-P-84546502d9ee",
+   "kind": "discord",
+   "date": "2021-12-11T09:11:09+00:00",
+   "day": "2021-12-11",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-84546502d9ee.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOT), choose a form. lightform (+3 DEF): (OPT) apply 3 regen to a target or (2 points) heal a target for 7 (can go up to 4 above max hp). shadowform (+1 attack and attacks become piercing): (OPT) (1 point) negate an enemy creature for 1 turn or (2 points) inflict confusion on an enemy creature.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 627
+  },
+  {
+   "id": "F-f3e2c74aad7",
+   "kind": "text",
+   "date": "2022-01-28T13:38:49+00:00",
+   "day": "2022-01-28",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-61f177a6bf49.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOT), choose a form.\n\nLightform (+4 DEF): (OPT) apply 3 regen to a target or (2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform (+3 ATK): (OPT) (1 point) negate a creature for 1 turn or (2 points) inflict confusion.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "O-257dc970a875:Cards/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-baa2573ebb50.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOT), choose a form.\n\nLightform: (+4 DEF): (OPT) (2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): (OPT) (1 point) negate a creature for 1 turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef8984818776:Cards/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-04-01T07:38:07+00:00",
+   "day": "2023-04-01",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated panda mkt, pi, and priest",
+   "repo": "first",
+   "image": "O-d07c3698af67.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOGT), choose a form.\n\nLightform: (+4 DEF): (OPT) (OYT)\n(2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): (OPT) (OYT)\n(1 point) negate a creature for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d3daaff5316c:Cards/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:59:11+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Slight Shaman Nerf and other updates",
+   "repo": "first",
+   "image": "O-ecdf8a4a65d9.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOGT), choose a form.\n\nLightform: (+4 DEF): (OPT)\n(2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): (OPT)\n(1 point) negate a creature for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-af409cb5284f:Cards/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-04-15T21:15:29+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-844f4e503a40.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOGT), choose a form.\nLightform: (+4 DEF):\n(OPT) (2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): \n(OPT) (1 point) negate a creature until next global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-844f4e503a40.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOGT), choose a form.\nLightform: (+4 DEF):\n(OPT) (2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): \n(OPT) (1 point) negate a creature until next global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-844f4e503a40.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOGT), choose a form.\nLightform: (+4 DEF):\n(OPT) (2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): \n(OPT) (1 point) negate a creature until next global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c4a8c4891806:Creatures/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-10-01T15:54:05+00:00",
+   "day": "2023-10-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-1d3a2ff9cb95.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOGT), choose a form.\nLightform: (+4 DEF):\n(OPT) (2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): \n(OPT) (1 point) negate a creature until next global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8ecdec8f177:Creatures/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-10-13T03:11:51+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "warcraftian attribute color coding",
+   "image": "O-41bd56402371.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOGT), choose a form.\nLightform: (+4 DEF):\n(OPT) (2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): \n(OPT) (1 point) negate a creature until next global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-a5730d4e82b8.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Priest",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When summoned and (BOGT), choose a form.\nLightform: (+4 DEF):\n(OPT) (2 points) heal a target for 7 (can go up to 4 above max hp).\n\nShadowform: (+3 ATK): \n(OPT) (1 point) negate a creature until next global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-09-13",
+  "sort": "2021-09-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

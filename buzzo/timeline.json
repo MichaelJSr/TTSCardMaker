@@ -1,0 +1,260 @@
+{
+ "card": "buzzo",
+ "key": "Buzzo",
+ "name": "Buzzo",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d8de775acd83",
+   "kind": "discord",
+   "date": "2023-09-02T10:23:50+00:00",
+   "day": "2023-09-02",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d8de775acd83.webp",
+   "fields": {
+    "name": {
+     "value": "Buzzo",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to add a “Joy” item to your hand.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fa4fb2bf1401:Creatures/Other/4 Stars/Buzzo.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:39:33+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "some stuff",
+   "image": "O-b6973cf0380b.webp",
+   "fields": {
+    "name": {
+     "value": "Buzzo",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to add a “Joy” item to your hand.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d23247c423cd:Creatures/Other/4 Stars/Buzzo.png",
+   "kind": "old repo",
+   "date": "2023-10-03T19:05:18+00:00",
+   "day": "2023-10-03",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuffs",
+   "image": "O-aaa2e07a6836.webp",
+   "fields": {
+    "name": {
+     "value": "Buzzo",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to add a “Joy” item to your hand.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-427f4812b8ac:Creatures/Lisa/4 Stars/Buzzo.png",
+   "kind": "old repo",
+   "date": "2023-10-16T03:25:10+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Moved stuff to correct folders",
+   "image": "O-aaa2e07a6836.webp",
+   "fields": {
+    "name": {
+     "value": "Buzzo",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to add a “Joy” item to your hand.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Lisa/4 Stars/Buzzo.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-1e55876c69a4.webp",
+   "fields": {
+    "name": {
+     "value": "Buzzo",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to add a “Joy” item to your hand.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-09-02",
+  "sort": "2023-09-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

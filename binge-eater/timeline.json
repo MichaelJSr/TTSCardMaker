@@ -1,0 +1,125 @@
+{
+ "card": "binge-eater",
+ "key": "Binge Eater",
+ "name": "Binge Eater",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-13",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-100e3b89c240",
+   "kind": "discord",
+   "date": "2023-10-13T03:58:37+00:00",
+   "day": "2023-10-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-100e3b89c240.webp",
+   "fields": {
+    "name": {
+     "value": "Binge Eater",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+4 max HP, -1 SPD\nUpon using an action, draw a random 2 star healing item.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-3f3ad48d903c:Items/Equip/4 Stars/Binge_Eater.png",
+   "kind": "old repo",
+   "date": "2023-10-13T09:26:45+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Kyle Isaac Items",
+   "image": "O-26d6f0ca83f9.webp",
+   "fields": {
+    "name": {
+     "value": "Binge Eater",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+4 max HP, -1 SPD\nUpon using an action, draw a random 2 star healing item.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-23e7f4a10214:Items/Equip/4 Stars/Binge_Eater.png",
+   "kind": "old repo",
+   "date": "2023-10-30T02:54:47+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-d4a3977fa85c.webp",
+   "fields": {
+    "name": {
+     "value": "Binge Eater",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+4 max HP, -1 SPD\n(OPT) Upon using an action, draw a random 2 star healing item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-13",
+  "sort": "2023-10-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

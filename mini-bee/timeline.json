@@ -1,0 +1,591 @@
+{
+ "card": "mini-bee",
+ "key": "Mini Bee",
+ "name": "Mini Bee",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f06ec982725",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "def",
+    "to": 2,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-9333a573bf6c"
+  },
+  {
+   "id": "F-f75c6393231",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "atk",
+    "to": 3,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-9333a573bf6c"
+  },
+  {
+   "id": "F-fe080196cc4",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "hp",
+    "to": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-9333a573bf6c"
+  },
+  {
+   "id": "F-fedfecd7db5",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "spd",
+    "to": 6,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-9333a573bf6c"
+  },
+  {
+   "id": "D-P-9333a573bf6c",
+   "kind": "discord",
+   "date": "2020-07-25T12:06:21+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-9333a573bf6c.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bees",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "infected",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-Protecting Minions summoned by the Hive Knight",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 787
+  },
+  {
+   "id": "D-P-823cb432a08d",
+   "kind": "discord",
+   "date": "2021-12-15T08:23:08+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-823cb432a08d.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bees",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-Protecting Minion",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "infected"
+     ]
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 389,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/3 Stars/Mini_Bees.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Mini Bees",
+   "repo": "first",
+   "image": "O-c2487db3f310.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bees",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-Protecting Minion",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/3 Stars/Mini_Bees.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Mini Bees",
+   "repo": "first",
+   "image": "O-c42d9060a0e5.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bees",
+     "method": "file name",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "meme_copy": true,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-aa006ca3d73e:Auxillary/Minions/3 Stars/Mini_Bees.png",
+   "kind": "old repo",
+   "date": "2023-04-13T00:03:52+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "minions",
+   "file": "Mini Bees",
+   "repo": "first",
+   "image": "O-7d14f2323e82.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Mini Bees",
+     "Mini Bee"
+    ],
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "removed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a18b9e4c8c48:Auxillary/Minions/3 Stars/Mini_Bees.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:59:18+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Auxillary minions",
+   "file": "Mini Bees",
+   "image": "O-7d14f2323e82.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Mini_Bees.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "file": "Mini Bees",
+   "image": "O-1182114bb7ef.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     1
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8733064b6273:Auxillary/Minions/Mini_Bees.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "file": "Mini Bees",
+   "image": "O-926d01ef00e1.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Auxillary/Minions/Mini_Bees.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "file": "Mini Bees",
+   "image": "O-2c09c811c2ff.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Mini_Bees.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "file": "Mini Bees",
+   "image": "O-60f4db59a849.webp",
+   "fields": {
+    "name": {
+     "value": "Mini Bee",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind",
+      "offensive_minion"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 1,
+      "def": 2,
+      "atk": 3,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-25",
+  "sort": "2020-07-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

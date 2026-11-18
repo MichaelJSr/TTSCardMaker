@@ -1,0 +1,651 @@
+{
+ "card": "crimson-flag",
+ "key": "Crimson Flag",
+ "name": "Crimson Flag",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-a958e854097c",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:28+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-a958e854097c.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "You can deal up to 8 damage to one of your creatures to deal X2 that amount to another creature. You may also destroy an item to deal 3X its star count in damage.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 615
+  },
+  {
+   "id": "D-P-38e8d1118e8d",
+   "kind": "discord",
+   "date": "2020-07-28T07:35:35+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-38e8d1118e8d.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "You can deal up to 8 piercing damage to one of your creatures to deal 1.5X that amount to another creature on the primary field. You may also destroy an item to deal 4X its star count in piercing damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 617
+  },
+  {
+   "id": "F-f919f58d837",
+   "kind": "text",
+   "date": "2020-08-12T09:09:12+00:00",
+   "day": "2020-08-12",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-673f7548299b",
+   "kind": "discord",
+   "date": "2020-08-13T10:14:35+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-673f7548299b.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "You can deal piercing damage to one of your creatures to deal non piercing damage equal to 1.5x that amount to another creature. You can also sacrifice an item (that hasn't been used yet) to deal 5X it's star cost as non-piercing damage",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 615
+  },
+  {
+   "id": "F-f55877954d7",
+   "kind": "text",
+   "date": "2020-08-26T09:26:47+00:00",
+   "day": "2020-08-26",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-38275abd5cf6",
+   "kind": "discord",
+   "date": "2020-09-08T07:44:01+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-38275abd5cf6.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "You can deal piercing damage to one of your non-minion creatures to deal non piercing damage equal to 1.5x that amount to another creature. You can also sacrifice an item (that hasn't been used yet) to deal 5X it's star cost as non- piercing damage",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "F-ff745ad2515",
+   "kind": "text",
+   "date": "2021-08-04T10:17:00+00:00",
+   "day": "2021-08-04",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-df6fbab63607",
+   "kind": "discord",
+   "date": "2021-08-11T18:14:40+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-df6fbab63607.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal piercing damage to one of your point yielding creatures to Inflict hemorrhaging that deals debuff damage equal to 0.5X that amount for 3 turns. You may also sacrifice an unused item to inflict hemorrhaging that deals debuff damage equal to 3X that Items star cost for 3 turns",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 615
+  },
+  {
+   "id": "D-P-2672759c006f",
+   "kind": "discord",
+   "date": "2021-08-11T18:29:35+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2672759c006f.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal piercing damage to one of your point yielding creatures to Inflict a number of stacks of hemorrhaging equal to 0.5X the damage dealt. You may also sacrifice an unused item to inflict Stacks of hemorrhaging equal to 3X that items star cost",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "D-P-5d81a5ea56ae",
+   "kind": "discord",
+   "date": "2021-08-11T18:31:38+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-5d81a5ea56ae.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of piercing damage to one of your point yielding creatures to Inflict a number of stacks of hemorrhaging equal to the damage dealt. You may also sacrifice an unused item to inflict Stacks of hemorrhaging equal to 6X that items star cost",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "F-f78356afb20",
+   "kind": "text",
+   "date": "2021-11-23T00:08:33+00:00",
+   "day": "2021-11-23",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-f2f784cb27fd",
+   "kind": "discord",
+   "date": "2021-11-28T00:03:08+00:00",
+   "day": "2021-11-28",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-f2f784cb27fd.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of True Damage to one of your point yielding creatures to Inflict a number of stacks of hemorrhaging equal to the damage dealt. You may also sacrifice an unused item to inflict Stacks of hemorrhaging equal to 6X that items star cost",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "F-f9e56e95bf3",
+   "kind": "text",
+   "date": "2022-01-28T12:11:47+00:00",
+   "day": "2022-01-28",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/4 Stars/Crimson_Flag.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-d7342b1081b5.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of True Damage to one of your point yielding creatures to Inflict a number of stacks of hemorrhaging equal to the damage dealt. You may also sacrifice an unused item to inflict Stacks of hemorrhaging equal to 6X that items star cost",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "O-257dc970a875:Items/Attack/4 Stars/Crimson_Flag.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-a5a22fe39719.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of  True Damage to one of your point yielding creatures to inflict a # of stacks of hemorrhaging equal to the damage dealt to another creature on the primary field. \nYou may also sacrifice an unused item to inflict Stacks of hemorrhaging equal to 6X that items\nstar cost.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 616
+  },
+  {
+   "id": "O-a74d93a98ea8:Items/Attack/4 Stars/Crimson_Flag.png",
+   "kind": "old repo",
+   "date": "2023-04-09T06:07:38+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-a5a96239fed9.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of  True Damage to one of your point yielding creatures to inflict a # of stacks of hemorrhaging equal to the damage dealt to another creature on the primary field. \nYou may also sacrifice an unused item to inflict Stacks of hemorrhaging equal to 6X that items\nstar cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-97ce246ce8d8:Items/Attack/4 Stars/Crimson_Flag.png",
+   "kind": "old repo",
+   "date": "2023-04-09T15:16:29+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-b1aa3ef8f12f.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of  True Damage to one of your point yielding creatures to inflict 2 stacks of hemorrhaging per damage dealt to another creature on the primary field. \nYou may also sacrifice an unused item to inflict 6X that items star cost Stacks of hemorrhaging  to a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b54076b3055b:Items/Attack/4 Stars/Crimson_Flag.png",
+   "kind": "old repo",
+   "date": "2023-04-19T10:32:37+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First set of debuff fixes on items",
+   "repo": "first",
+   "image": "O-ccabce6e7f54.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of  True Damage to one of your point yielding creatures to inflict 2 Hemorrhaging per damage dealt for 3 turns to another creature on the primary field.\nYou may also sacrifice an unused item to inflict 6X that items SP in stacks of Hemorrhaging for 3 turns to a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/4 Stars/Crimson_Flag.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-ccabce6e7f54.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of  True Damage to one of your point yielding creatures to inflict 2 Hemorrhaging per damage dealt for 3 turns to another creature on the primary field.\nYou may also sacrifice an unused item to inflict 6X that items SP in stacks of Hemorrhaging for 3 turns to a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/4 Stars/Crimson_Flag.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-081fa8f254b7.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of  True Damage to one of your point yielding creatures to inflict 2 Hemorrhaging per damage dealt for 3 turns to another creature on the primary field.\nYou may also sacrifice an unused item to inflict 6X that items SP in stacks of Hemorrhaging for 3 turns to a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-69e125660fe7:Items/Attack/4 Stars/Crimson_Flag.png",
+   "kind": "old repo",
+   "date": "2023-10-12T04:09:32+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color",
+   "image": "O-1f7f0048a1c0.webp",
+   "fields": {
+    "name": {
+     "value": "Crimson Flag",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal a whole number of  True Damage to one of your point yielding creatures to inflict 2 Hemorrhaging per damage dealt for 3 turns to another creature on the primary field.\nYou may also sacrifice an unused item to inflict 6X that items SP in stacks of Hemorrhaging for 3 turns to a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

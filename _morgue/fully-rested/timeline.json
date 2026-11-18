@@ -1,0 +1,46 @@
+{
+ "card": "fully-rested",
+ "key": "Fully Rested",
+ "name": "Fully Rested",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-08-01T11:21:20.610000+00:00",
+  "day": "2020-08-01",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-47e77b5fa620",
+   "kind": "discord",
+   "date": "2020-08-01T11:21:20.610000+00:00",
+   "day": "2020-08-01",
+   "badge": "Discord",
+   "image": "P-47e77b5fa620.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/4 Stars/Fully_Rested.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-4dbd749c2e8c.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 324,
+   "h": 648
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

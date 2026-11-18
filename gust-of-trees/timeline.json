@@ -1,0 +1,139 @@
+{
+ "card": "gust-of-trees",
+ "key": "Gust of Trees",
+ "name": "Gust of Trees",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-19",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e24f65b2967b",
+   "kind": "discord",
+   "date": "2020-08-24T05:02:18+00:00",
+   "day": "2020-08-24",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-e24f65b2967b.webp",
+   "fields": {
+    "name": {
+     "value": "Gust of Wind",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target creature is forced to switch out with a random other creature from the owner's hand, and they can't switch that creature back in this turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 608
+  },
+  {
+   "id": "D-P-6a6cc85841ee",
+   "kind": "discord",
+   "date": "2023-10-19T17:23:55+00:00",
+   "day": "2023-10-19",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6a6cc85841ee.webp",
+   "fields": {
+    "name": {
+     "value": "Gust of Trees",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target creature is forced to switch out with a card of the owners choice from their hand, and they can’t switch that creature back in this global turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Gust of Wind",
+     "Gust of Trees"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Offense/2 Stars/Gust_of_Trees.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-6002d6f0b294.webp",
+   "fields": {
+    "name": {
+     "value": "Gust of Trees",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target creature is forced to switch out with a card of the owners choice from their hand, and they can’t switch that creature back in this global turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-08-24",
+  "sort": "2020-08-24",
+  "source": "discord",
+  "status": "earlier"
+ }
+}

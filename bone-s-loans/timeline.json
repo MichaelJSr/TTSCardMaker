@@ -1,0 +1,160 @@
+{
+ "card": "bone-s-loans",
+ "key": "Bone's Loans",
+ "name": "Bone's Loans",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-27",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-81d1118e8968",
+   "kind": "discord",
+   "date": "2023-10-27T16:15:12+00:00",
+   "day": "2023-10-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-81d1118e8968.webp",
+   "fields": {
+    "name": {
+     "value": "Bone's Loans",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) Heal 4 HP (ENDT) The equipped creature takes 4 piercing damage. Cannot be unequipped.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-7d10dd0f6300",
+   "kind": "discord",
+   "date": "2023-10-27T16:34:31+00:00",
+   "day": "2023-10-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7d10dd0f6300.webp",
+   "fields": {
+    "name": {
+     "value": "Bone's Loans",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) Heal 4 HP (ENDT) The equipped creature takes 4 piercing damage. Cannot be unequipped.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-6291170bd04b",
+   "kind": "discord",
+   "date": "2023-10-27T20:24:05+00:00",
+   "day": "2023-10-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6291170bd04b.webp",
+   "fields": {
+    "name": {
+     "value": "Bone's loans",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Heal 6 HP (can go above max).\n(ENDGT) The equipped creature takes 6 piercing damage.\nCannot be unequipped.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6aa34293d3b0:Items/Equip/1 Stars/Bone's Loans.png",
+   "kind": "old repo",
+   "date": "2023-10-27T20:29:11+00:00",
+   "day": "2023-10-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new cards",
+   "image": "O-7d87f29e5719.webp",
+   "fields": {
+    "name": {
+     "value": "Bone's loans",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Heal 6 HP (can go above max).\n(ENDGT) The equipped creature takes 6 piercing damage.\nCannot be unequipped.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-27",
+  "sort": "2023-10-27",
+  "source": "discord",
+  "status": "same"
+ }
+}

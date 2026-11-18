@@ -1,0 +1,81 @@
+{
+ "card": "the-last-cabbage-merchant",
+ "key": "The Last Cabbage Merchant",
+ "name": "The Last Cabbage Merchant",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-02-07",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-914bae563b03",
+   "kind": "discord",
+   "date": "2025-02-04T03:39:20+00:00",
+   "day": "2025-02-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-914bae563b03.webp",
+   "fields": {
+    "name": {
+     "value": "The Last Cabbage Merchant",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "rock",
+      "water",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "BOT: IF THIS CREATURE HAS NOT TAKEN DAMAGE THIS GLOBAL TURN: AT FULL HEALTH: ADD TWO CABBAGES TO YOUR HAND. AT LESS THAN FULL HEALTH: ADD ONE CABBAGE TO YOUR HAND. AT FOUR OR LESS HEALTH: GAIN +5 ATK.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 3,
+      "spd": 2
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-02-07T15:26:52+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-02-04",
+  "sort": "2025-02-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

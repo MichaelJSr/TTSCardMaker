@@ -1,0 +1,511 @@
+{
+ "card": "smoldering",
+ "key": "Smoldering",
+ "name": "Smoldering",
+ "kind": "debuff",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d17002e1c241",
+   "kind": "discord",
+   "date": "2022-01-16T03:41:20+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d17002e1c241.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG 2 turns, can't affect fire types",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "D-P-80bf88c6f486",
+   "kind": "discord",
+   "date": "2022-01-16T04:26:11+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-80bf88c6f486.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG 2 turns, can't affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "D-P-e2bc1ef02356",
+   "kind": "discord",
+   "date": "2022-01-16T07:09:48+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-e2bc1ef02356.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG, 2 turns, can’t affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Smouldering",
+   "repo": "first",
+   "image": "O-69d7a08afcf8.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG, 2 turns, can’t affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-b316785629cd:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:15:05+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First round of redoing buffs and debuffs",
+   "file": "Smouldering",
+   "repo": "first",
+   "image": "O-3f9a01bb6d96.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG, can't affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-4b6da9c75aa4:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2023-04-05T06:07:10+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Fixed up all tier 2 debuffs",
+   "file": "Smouldering",
+   "repo": "first",
+   "image": "O-135f9aba9a2a.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG, can't affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-6153d199d664:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2023-04-05T08:56:55+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Fixed up all buffs again, tier 1 2 3 debuffs",
+   "file": "Smouldering",
+   "repo": "first",
+   "image": "O-9052a2cd4832.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) -2 HP can’t affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-be2af3485d1e:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2023-04-05T22:46:32+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Doing a thankless job.",
+   "file": "Smouldering",
+   "repo": "first",
+   "image": "O-29c479e9c279.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) 2 DMG can’t affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-74cc827a6646:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2023-04-07T00:35:34+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "removing unnecessary acronyms on debuffs",
+   "file": "Smouldering",
+   "repo": "first",
+   "image": "O-b862139a6662.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG, can't affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "file": "Smouldering",
+   "image": "O-b862139a6662.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG can't affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-9c91014b6330:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2023-10-15T12:54:31+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "undertale updates",
+   "file": "Smouldering",
+   "image": "O-454199428b6e.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG, can't affect [fire]",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "debuff"
+     ],
+     "drop": []
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/1 Stars/Smouldering.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "file": "Smouldering",
+   "image": "O-25555c442eb7.webp",
+   "fields": {
+    "name": {
+     "value": "Smouldering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffupgrade"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "2 DMG, can’t affect [fire]",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "debuffupgrade"
+     ],
+     "drop": [
+      "debuff"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2022-01-16",
+  "sort": "2022-01-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

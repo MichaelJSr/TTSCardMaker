@@ -1,0 +1,74 @@
+{
+ "card": "zero-two-morgue",
+ "key": "Zero Two",
+ "name": "Zero Two",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-08-08T08:47:34.953000+00:00",
+  "day": "2020-08-08",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-d8dd6c235511",
+   "kind": "discord",
+   "date": "2020-08-08T08:47:34.953000+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "image": "P-d8dd6c235511.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "P-10c8710e2628",
+   "kind": "discord",
+   "date": "2020-10-17T14:27:45.204000+00:00",
+   "day": "2020-10-17",
+   "badge": "Discord",
+   "image": "P-10c8710e2628.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-04-port",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "P-3640ad1976cc",
+   "kind": "discord",
+   "date": "2021-04-24T09:58:30.035000+00:00",
+   "day": "2021-04-24",
+   "badge": "Discord",
+   "image": "P-3640ad1976cc.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 304,
+   "h": 607
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/2 Stars/Zero_Two.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-75d58b1e3388.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 400,
+   "h": 800
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

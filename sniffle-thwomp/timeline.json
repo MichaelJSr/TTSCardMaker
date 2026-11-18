@@ -1,0 +1,169 @@
+{
+ "card": "sniffle-thwomp",
+ "key": "Sniffle Thwomp",
+ "name": "Sniffle Thwomp",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-04",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-06286a74372d",
+   "kind": "discord",
+   "date": "2023-11-04T20:44:26+00:00",
+   "day": "2023-11-04",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-06286a74372d.webp",
+   "fields": {
+    "name": {
+     "value": "Sniffle Thwomp",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) This creature is inflicted with Plague and 2 Smeckeldorfed for 1 turn. The duration for Plague and Smeckeldorfed do not go down on this creature. When attacking, this creature may sneeze, taking 4 CD and inflicting Sickness for 3 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 7,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-5587eab52e73:Creatures/Mario/3 Stars/Sniffle Thwomp.png",
+   "kind": "old repo",
+   "date": "2023-11-04T20:51:17+00:00",
+   "day": "2023-11-04",
+   "badge": "old repo",
+   "author": "bobberlington",
+   "subject": "sniffle thwomp",
+   "image": "O-49c34edd4c3f.webp",
+   "fields": {
+    "name": {
+     "value": "Sniffle Thwomp",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 7,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) This creature is inflicted with Plague and 2 Smeckeldorfed for 1 turn.\n\nThe duration for Plague and Smeckeldorfed do not go down on this creature.\n\nWhen attacking, this creature may sneeze, taking 4 CD and inflicting Sickness for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-34f658fe042e:Creatures/Mario/3 Stars/Sniffle Thwomp.png",
+   "kind": "old repo",
+   "date": "2023-11-04T21:14:37+00:00",
+   "day": "2023-11-04",
+   "badge": "old repo",
+   "author": "bobberlington",
+   "subject": "military",
+   "image": "O-f7d0875a817f.webp",
+   "fields": {
+    "name": {
+     "value": "Sniffle Thwomp",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 7,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) This creature is inflicted with Plague and 2 Smeckeldorfed for 1 turn.\n\nThe duration for Plague and Smeckeldorfed do not go down on this creature.\n\nWhen attacking, this creature may sneeze, taking 4 CD and inflicting Sickness for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-11-04",
+  "sort": "2023-11-04",
+  "source": "discord",
+  "status": "same"
+ }
+}

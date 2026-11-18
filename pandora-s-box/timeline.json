@@ -1,0 +1,319 @@
+{
+ "card": "pandora-s-box",
+ "key": "Pandora's Box",
+ "name": "Pandora's Box",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f198837812f",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-08ec52573ff3",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:32+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-08ec52573ff3.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora's Box",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Roll a dice, inflict the entire enemy team with the resulting de-buff: 1: Blindness 2: Frostbite 3: Corruption (1 turn) 4: Paralysis 5: Curse (2) 6: Cursed Inferno",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 615
+  },
+  {
+   "id": "D-P-c42c32fe31dd",
+   "kind": "discord",
+   "date": "2020-09-08T08:50:53+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c42c32fe31dd.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora's Box",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Roll a dice, inflict the entire enemy team with the resulting de-buff: 1: Enfeebled 2: Spirit Flame 3: Paralysis 4: Corruption (2 turns) 5: Curse (3) 6: Cursed Inferno",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 616
+  },
+  {
+   "id": "D-P-68e4a39ae00f",
+   "kind": "discord",
+   "date": "2020-09-19T05:13:06+00:00",
+   "day": "2020-09-19",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-68e4a39ae00f.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora's Box",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Roll a dice, inflict all enemies on the primary field with the resulting de-buff: 1: Enfeebled 2: Spirit Flame 3: Paralysis 4: Corruption (2 turns) 5: Curse (3) 6: Cursed Inferno",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 616
+  },
+  {
+   "id": "D-P-76724a519edc",
+   "kind": "discord",
+   "date": "2022-02-11T17:19:37+00:00",
+   "day": "2022-02-11",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-76724a519edc.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora's Box",
+     "method": "git look: today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Roll a dice, inflict all enemies on the primary field with the resulting de-buff: 1: Enfeebled 2: Spirit Flame 3: Paralysis 4: Corruption (2 turns) 5: Curse (3) 6: Cursed Inferno",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 398,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/4 Stars/Pandoras_Box.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-0db08a41e9ea.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora's Box",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Roll a dice, inflict all enemies on the primary field with the resulting de-buff: 1: Enfeebled 2: Spirit Flame 3: Paralysis 4: Corruption (2 turns) 5: Curse (3) 6: Cursed Inferno",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 398,
+   "h": 616
+  },
+  {
+   "id": "O-2d64d8ab29d2:Items/Attack/4 Stars/Pandoras_Box.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:41:31+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "leroy pandora, p box",
+   "repo": "first",
+   "image": "O-15151438b8b8.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora’s box",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Roll a dice 3 times, each result corresponds to a debuff:\nOne: 3 turns of Frostbite\nTwo: 3 turns of 2 stacks of enfeebled \nThree: 2 turns of corruption\nFour: Cursed Inferno\nFive: 2 turns of Plague\nSix: 3 turns of Spirit Flame\nInflict the 3 debuffs gained from the rolls to 3 separate creatures of your choice",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/4 Stars/Pandoras_Box.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-15151438b8b8.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora’s box",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Roll a dice 3 times, each result corresponds to a debuff:\nOne: 3 turns of Frostbite\nTwo: 3 turns of 2 stacks of enfeebled \nThree: 2 turns of corruption\nFour: Cursed Inferno\nFive: 2 turns of Plague\nSix: 3 turns of Spirit Flame\nInflict the 3 debuffs gained from the rolls to 3 separate creatures of your choice",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/4 Stars/Pandoras_Box.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-12cbd45f1170.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora’s box",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Roll a dice 3 times, each result corresponds to a debuff:\nOne: 3 turns of Frostbite\nTwo: 3 turns of 2 stacks of Enfeebled \nThree: 2 turns of Corruption\nFour: Cursed Inferno\nFive: 2 turns of Plague\nSix: 3 turns of Spirit Flame\nInflict the 3 debuffs gained from the rolls to 3 separate creatures of your choice",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-05-14",
+  "sort": "2019-05-14",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

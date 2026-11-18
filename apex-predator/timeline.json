@@ -1,0 +1,181 @@
+{
+ "card": "apex-predator",
+ "key": "Apex Predator",
+ "name": "Apex Predator",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-04-23",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-bcb56531e867",
+   "kind": "discord",
+   "date": "2025-04-22T10:54:21+00:00",
+   "day": "2025-04-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-bcb56531e867.webp",
+   "fields": {
+    "name": {
+     "value": "Apex Predator",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "CANNOT USE ACTIONS TO ATTACK. (OYT) MAY USE AN ACTION TO CHOOSE ANY ENEMY CREATURE TO STAND NEXT TO. IF THAT ENEMY CREATURE USES AN ABILITY, OR IF THIS CREATURE TAKES ANY DAMAGE, THIS CREATURE MAY IMMEDIATELY PERFORM THREE ATTACKS ON THAT ENEMY CREATURE. UPON PERFORMING THESE ATTACKS, OR AT (BOT), STOP STANDING NEXT TO THAT ENEMY CREATURE. WHEN STANDING NEXT TO AN ENEMY CREATURE, THIS CREATURE COUNTS AS BEING IN THE SAME LANE FOR THE PURPOSES OF LANE TARGETING.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-58751863a242",
+   "kind": "discord",
+   "date": "2025-04-23T00:57:07+00:00",
+   "day": "2025-04-23",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-58751863a242.webp",
+   "fields": {
+    "name": {
+     "value": "Apex Predator",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "CANNOT USE ACTIONS TO ATTACK. (OYT) MAY USE AN ACTION TO CHOOSE ANY ENEMY CREATURE TO STAND NEXT TO. IF THAT ENEMY CREATURE USES AN ABILITY, OR IF THIS CREATURE TAKES ANY DAMAGE, THIS CREATURE MAY IMMEDIATELY PERFORM THREE ATTACKS ON THAT ENEMY CREATURE. UPON PERFORMING THESE ATTACKS, OR AT (BOT), STOP STANDING NEXT TO THAT ENEMY CREATURE. WHEN STANDING NEXT TO AN ENEMY CREATURE, THIS CREATURE COUNTS AS BEING IN THE SAME SLOT FOR THE PURPOSES OF SLOT & LANE TARGETING.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-c9dda8d45bd4",
+   "kind": "discord",
+   "date": "2025-04-23T01:08:40+00:00",
+   "day": "2025-04-23",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c9dda8d45bd4.webp",
+   "fields": {
+    "name": {
+     "value": "Apex Predator",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "CANNOT USE ACTIONS TO ATTACK. (OYT) MAY USE AN ACTION TO CHOOSE ANY ENEMY CREATURE TO STAND NEXT TO. IF THAT ENEMY CREATURE USES AN ABILITY, OR IF THIS CREATURE TAKES ANY DAMAGE, THIS CREATURE MAY IMMEDIATELY PERFORM THREE ATTACKS ON THAT ENEMY CREATURE. UPON PERFORMING THESE ATTACKS, OR AT (BOT), STOP STANDING NEXT TO THAT ENEMY CREATURE. WHEN STANDING NEXT TO AN ENEMY CREATURE, THIS CREATURE COUNTS AS BEING IN THE SAME SLOT FOR THE PURPOSES OF SLOT & LANE TARGETING.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-04-23T01:30:44+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-04-22",
+  "sort": "2025-04-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,63 @@
+{
+ "card": "ingredient-desert-limes",
+ "key": "Ingredient Desert Limes",
+ "name": "Desert Limes",
+ "kind": "item",
+ "stop": {
+  "day": "2023-11-17",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-dc77d576a03f",
+   "kind": "discord",
+   "date": "2023-11-17T06:50:21+00:00",
+   "day": "2023-11-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-dc77d576a03f.webp",
+   "fields": {
+    "name": {
+     "value": "Desert Limes",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 3 HP and Inflict Disgusted for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2023-12-03T05:42:29+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-17",
+  "sort": "2023-11-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,179 @@
+{
+ "card": "LC-b989fd185d",
+ "key": "Grandfather Clock",
+ "name": "Grandfather Clock",
+ "morgue": "mdw",
+ "first": {
+  "date": "2023-06-03T22:24:46.311000+00:00",
+  "day": "2023-06-03",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-b989fd185db5",
+   "kind": "discord",
+   "date": "2023-06-03T22:24:46.311000+00:00",
+   "day": "2023-06-03",
+   "badge": "Discord",
+   "image": "P-b989fd185db5.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-43acfedd0fc4:Items/Active/4 Stars/Grandfather_Clock.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:19:27+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-e3a081720c0b.webp",
+   "fields": {
+    "ability": {
+     "value": "Your opponent cannot use or swap out any facedown items.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4e4d58f627c3:Items/Active/4 Stars/Grandfather_Clock.png",
+   "kind": "old repo",
+   "date": "2023-09-21T09:54:28+00:00",
+   "day": "2023-09-21",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "psds",
+   "image": "O-787aa1cadec8.webp",
+   "fields": {
+    "name": {
+     "value": "Grandfather Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4a8c4891806:Items/Active/4 Stars/Grandfather_Clock.png",
+   "kind": "old repo",
+   "date": "2023-10-01T15:54:05+00:00",
+   "day": "2023-10-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-0aaa4f320976.webp",
+   "fields": {
+    "name": {
+     "value": "Grandfather Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-75443b2188db:Items/Active/4 Stars/Grandfather_Clock.png",
+   "kind": "old repo",
+   "date": "2023-10-22T20:37:13+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "a",
+   "image": "O-bfc72cb25944.webp",
+   "fields": {
+    "name": {
+     "value": "Grandfather Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-0fe1e097e42a:Items/Active/4 Stars/Grandfather_Clock.png",
+   "kind": "old repo",
+   "date": "2023-10-28T08:01:22+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "insignificant change",
+   "image": "O-b53df5899cd3.webp",
+   "fields": {
+    "name": {
+     "value": "Grandfather Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c19d8b91a709:Items/Active/4 Stars/Grandfather_Clock.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-28f7d06b298c.webp",
+   "fields": {
+    "name": {
+     "value": "Grandfather Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {},
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ]
+}

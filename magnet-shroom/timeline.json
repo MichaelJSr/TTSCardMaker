@@ -1,0 +1,168 @@
+{
+ "card": "magnet-shroom",
+ "key": "Magnet-shroom",
+ "name": "Magnet-shroom",
+ "kind": "nme",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-53abce89a3f3",
+   "kind": "discord",
+   "date": "2023-06-03T22:25:37+00:00",
+   "day": "2023-06-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-53abce89a3f3.webp",
+   "fields": {
+    "name": {
+     "value": "Magnet-shroom",
+     "method": "git look: today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature cannot be swapped out. May be equipped onto enemy creatures.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-43acfedd0fc4:Items/Equip/1 Stars/Magnetshroom.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:19:27+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-b709ad842b7a.webp",
+   "fields": {
+    "name": {
+     "value": "Magnet-shroom",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature cannot be swapped out. May be equipped onto enemy creatures.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-673af998db63:Items/Equip/1 Stars/Magnetshroom.png",
+   "kind": "old repo",
+   "date": "2023-09-21T09:18:39+00:00",
+   "day": "2023-09-21",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "psds",
+   "image": "O-acf524bde9a2.webp",
+   "fields": {
+    "name": {
+     "value": "Magnet-shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature cannot be swapped out.\nMay be equipped onto enemy creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ca13a335110d:Items/Support/1 Stars/Magnetshroom.png",
+   "kind": "old repo",
+   "date": "2023-10-18T09:56:44+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some creatures",
+   "image": "O-89ecabb845eb.webp",
+   "fields": {
+    "name": {
+     "value": "Magnet-shroom",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can either:\nMake a targeted creature unable to be swapped out permanently.\nForcibly unequip an item from a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-06-03",
+  "sort": "2023-06-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

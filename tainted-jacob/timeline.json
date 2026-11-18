@@ -1,0 +1,244 @@
+{
+ "card": "tainted-jacob",
+ "key": "Tainted Jacob",
+ "name": "Tainted Jacob",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-7b0bc9ece39f",
+   "kind": "discord",
+   "date": "2025-03-12T19:45:51+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7b0bc9ece39f.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Jacob",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Summons TAINTED ESAU. Spend one point to skip TAINTED ESAU’s turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-6a0c09407249",
+   "kind": "discord",
+   "date": "2025-03-12T19:49:35+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6a0c09407249.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Jacob",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Summons TAINTED ESAU. (OPT) Spend one point to skip TAINTED ESAU’s turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-436ec0916fca",
+   "kind": "discord",
+   "date": "2025-03-12T19:50:59+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-436ec0916fca.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Jacob",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Summons TAINTED ESAU. (OPT) Spend two STAR POINTS to skip TAINTED ESAU’s turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-fe9fb791a6eb",
+   "kind": "discord",
+   "date": "2025-03-12T20:09:26+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-fe9fb791a6eb.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Jacob",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OFS) Summons TAINTED ESAU. (OPT) Spend two STAR POINTS to skip TAINTED ESAU’s turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 4
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 4
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 5 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-17T10:08:55+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-12",
+  "sort": "2025-03-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

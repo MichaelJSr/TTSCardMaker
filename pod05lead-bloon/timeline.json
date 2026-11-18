@@ -1,0 +1,842 @@
+{
+ "card": "pod05lead-bloon",
+ "key": "PoD05Lead Bloon",
+ "name": "Lead Bloon",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-41b869fd7420",
+   "kind": "discord",
+   "date": "2020-08-13T01:05:33+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-41b869fd7420.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. Overkill damage carries over to the next Bloon in the same field. (OPT) (AAT) May intercept an attack to the protectee.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 6,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-f2a5daa7bdbe",
+   "kind": "discord",
+   "date": "2020-08-15T00:36:02+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-f2a5daa7bdbe.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. Overkill damage carries over to the next Bloon in the same field. Grants the protectee +1 DEF until this dies. (OPT) (AAT) May intercept an attack to the protectee.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     5
+    ],
+    "stats": [
+     {
+      "hp": 4,
+      "def": 6,
+      "atk": 5,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 6,
+      "atk": 5,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 4 -> 3"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-f8109643469b",
+   "kind": "discord",
+   "date": "2021-08-12T10:27:54+00:00",
+   "day": "2021-08-12",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-f8109643469b.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "git look: today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. Overkill damage carries over to the next Bloon in the same field. Grants the protectee +1 DEF until this dies. (OPG) (AAT) May intercept an attack to the protectee.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-d2e1845f0036.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 5,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion. Doesn't grant souls. Overkill damage carries over to the next Bloon in the same field. Grants the protectee +1 DEF until this dies. (OPG) (AAT) May intercept an attack to the protectee.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-5e6b7c86df33:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-03-19T22:30:57+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated all bloon changes",
+   "repo": "first",
+   "image": "O-8e20d448199d.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion.\nDoesn't grant souls.\nGrants the protectee +1 DEF until this dies.\n(OPG) (AAT) May intercept an attack to the protectee.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 6,
+      "atk": 5,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "SPD 3 -> 4"
+    ],
+    "nerfs": [
+     "ATK 5 -> 4"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-3e35f8214685:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-03-29T13:25:35+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Redid zebra and white bloon",
+   "repo": "first",
+   "image": "O-7cdd882dad09.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion.\nDoesn't grant souls.\nGrants the protectee +1 DEF until this dies.\n(OPG) (AAT) May intercept an attack to the protectee.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e73a721698c:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-03-29T13:42:52+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Finished zebra bloon, lead bloon, rainbow bloon, and white bloon",
+   "repo": "first",
+   "image": "O-2a65d8c5f3cd.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Non-protective minion.\nDoesn't grant souls.\nGrants the protectee +1 DEF until this dies.\n(OPG) (AAT) May intercept an attack to the protectee.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-37451eba2f36:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-04-03T10:39:58+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed all psd minions to use the new types for protective/not",
+   "repo": "first",
+   "image": "O-0bbe17de146f.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Doesn't grant souls.\nGrants the protectee +1 DEF until this dies.\n(OPG) (AAT) May intercept an attack to the protectee.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23b47e36cf4f:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-04-13T01:47:14+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "bloon quality buff",
+   "repo": "first",
+   "image": "O-d2b2b7498ad7.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Doesn't grant souls.\nGrants the protectee +1 DEF until this dies.\n(OPGT) May intercept an attack to the protectee.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8f60c13069e1:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-04-13T04:31:21+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "does not say not gain souls",
+   "repo": "first",
+   "image": "O-5af8f51d0c8c.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants the protectee +1 DEF until this dies.\n(OPGT) May intercept an attack to the protectee.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8f60c13069e1:Cards/Hollow Knight/2 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-04-13T04:31:21+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "does not say not gain souls",
+   "repo": "first",
+   "image": "O-618b9139b329.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "today",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants the protectee +1 DEF until this dies.\n(OPGT) May intercept an attack to the protectee.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d24c6d10c672:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:26:54+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the auxillary",
+   "image": "O-5af8f51d0c8c.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants the protectee +1 DEF until this dies.\n(OPGT) May intercept an attack to the protectee.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-af2d608f17ab:Auxillary/Minions/5 Stars/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-10-08T21:52:34+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "bloon text formatting",
+   "image": "O-3871c08700a5.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants the equipped creature +1 DEF until this dies.\n(OPGT) May intercept an attack to the equipped creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-e5f11b0b0003.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants the equipped creature +1 DEF until this dies.\n(OPGT) May intercept an attack to the equipped creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     5,
+     2
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/PoD05Lead_Bloon.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-7a48a6d44feb.webp",
+   "fields": {
+    "name": {
+     "value": "Lead Bloon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 6,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Grants the equipped creature +1 DEF until this dies.\n(OPGT) May intercept an attack to the equipped creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-08-13",
+  "sort": "2020-08-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

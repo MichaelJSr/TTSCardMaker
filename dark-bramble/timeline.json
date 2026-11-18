@@ -1,0 +1,180 @@
+{
+ "card": "dark-bramble",
+ "key": "Dark Bramble",
+ "name": "Dark Bramble",
+ "kind": "field",
+ "stop": {
+  "day": "2023-11-03",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-ee3b0b457f69",
+   "kind": "discord",
+   "date": "2023-11-03T00:10:47+00:00",
+   "day": "2023-11-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-ee3b0b457f69.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Bramble",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Each [unknown] can redirect one attack towards your creatures. [light] :Gain Trickster Tricksters: Deal 5 CD to attacker when attacked enemy explorers have Blindness while this is on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-888361cbd1c8",
+   "kind": "discord",
+   "date": "2023-11-03T00:14:21+00:00",
+   "day": "2023-11-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-888361cbd1c8.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Bramble",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Each [unknown] can redirect one attack towards your creatures. [light] :Gain Trickster Tricksters: Deal 5 CD to attackers. enemy explorers have Blindness while this is on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2087bbad1e2b:Field/4 Stars/Dark_Bramble.png",
+   "kind": "old repo",
+   "date": "2023-11-03T00:20:15+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "drak brablme",
+   "image": "O-47c43face885.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Bramble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Each [light] can redirect one attack towards your creatures.:Gain Trickster\nTricksters: Deal 5 CD to attackers.\nenemy explorers have Blindness while this is on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9db02a5ebf18:Field/4 Stars/Dark_Bramble.png",
+   "kind": "old repo",
+   "date": "2023-11-03T02:10:18+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "dark brandon",
+   "image": "O-5b2d010738b7.webp",
+   "fields": {
+    "name": {
+     "value": "Dark Bramble",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) Each [light] can redirect an attack to a different target on your team when an attack is declared during your team:Gain Trickster\nTricksters: Deal 5 CD to attackers.\nenemy explorers have Blindness while this is on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-11-03",
+  "sort": "2023-11-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

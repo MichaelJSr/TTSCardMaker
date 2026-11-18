@@ -1,0 +1,637 @@
+{
+ "card": "black-light-bulb",
+ "key": "Black Light Bulb",
+ "name": "Black Light Bulb",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-af7af1901b21",
+   "kind": "discord",
+   "date": "2022-02-26T03:22:14+00:00",
+   "day": "2022-02-26",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-af7af1901b21.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "negate a creature until this is destroyed. Upon destruction, the creature that dealt the killing blow is afflicted with afraid.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-4ba3bef34ec1",
+   "kind": "discord",
+   "date": "2022-02-26T03:53:31+00:00",
+   "day": "2022-02-26",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-4ba3bef34ec1.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate a creature until this is destroyed Upon destruction, the creature that dealt the killing blow is inflicted with Afraid.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-7f9f79f9925d",
+   "kind": "discord",
+   "date": "2022-02-26T03:56:46+00:00",
+   "day": "2022-02-26",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7f9f79f9925d.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate a creature until this is destroyed. Upon destruction, the creature that dealt the killing blow is afflicted with Afraid.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-e5d555e5123e:Items/Active/4 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2022-08-24T19:02:04+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moved BTD6 to Other and merged updates",
+   "repo": "first",
+   "image": "O-e5b2865e25e3.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate a creature until this is destroyed. Upon destruction, the creature that dealt the killing blow is afflicted with Afraid.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-ca4a8aef83c0:Items/Active/3 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-03-22T05:09:55+00:00",
+   "day": "2023-03-22",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "moved to right folder",
+   "repo": "first",
+   "image": "O-e5b2865e25e3.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negate a creature until this is destroyed. Upon destruction, the creature that dealt the killing blow is afflicted with Afraid.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-b47442fe1863:Items/Active/3 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-04-04T13:59:55+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Black Light Bulb change",
+   "repo": "first",
+   "image": "O-45de3ad75bb6.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Played, choose a creature to negate until this is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Active/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-45de3ad75bb6.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Played, choose a creature to negate until this is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-37f4b5694101:Items/Active/3 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:37:43+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized items",
+   "repo": "first",
+   "image": "O-45de3ad75bb6.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Played, choose a creature to negate until this is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f757fb991cb7:Items/Active/3 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-04-08T11:58:39+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "bw",
+   "repo": "first",
+   "image": "O-a7ce9e0e1b5e.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Played, choose a creature to negate until this is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-82086774a636:Items/Active/3 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-04-11T15:16:31+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "remove speed from actives",
+   "repo": "first",
+   "image": "O-92af1b759676.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Played, choose a creature to negate until this is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 5
+     },
+     {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "SPD 5 -> 0"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-308c3a996187:Items/Active/3 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-04-12T02:43:26+00:00",
+   "day": "2023-04-12",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Black light bulb change",
+   "repo": "first",
+   "image": "O-b641a14832ac.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Played, choose a creature to negate until this is destroyed. Takes damage equal to the star level of the negated creature -1 at the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 0,
+      "atk": 0,
+      "spd": 0
+     },
+     {
+      "hp": 4,
+      "def": 0
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Active/3 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-b641a14832ac.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Played, choose a creature to negate until this is destroyed. Takes damage equal to the star level of the negated creature -1 at the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c19d8b91a709:Items/Active/3 Stars/Black_Light_Bulb.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-144759103ff8.webp",
+   "fields": {
+    "name": {
+     "value": "Black Light Bulb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Played, choose a creature to negate until this is destroyed. Takes damage equal to the star level of the negated creature -1 at the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-02-26",
+  "sort": "2022-02-26",
+  "source": "discord",
+  "status": "same"
+ }
+}

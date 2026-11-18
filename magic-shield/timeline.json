@@ -1,0 +1,358 @@
+{
+ "card": "magic-shield",
+ "key": "Magic Shield",
+ "name": "Magic Shield",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f99c8157c97",
+   "kind": "text",
+   "date": "2020-07-21T10:36:41+00:00",
+   "day": "2020-07-21",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-fddbbd07c724",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:40+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-fddbbd07c724.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Shield",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this item is equipped to cannot be affected by the abilities of other creatures",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 613
+  },
+  {
+   "id": "D-P-ff3866da7736",
+   "kind": "discord",
+   "date": "2020-07-22T12:04:49+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-ff3866da7736.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Shield",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any creature that attacks the equipped creature has their abilities negated (right before the attack) until the end of the turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 399,
+   "h": 618
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/3 Stars/Magic_Shield.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-06e54a06576f.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Shield",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any creature that attacks\nthe equipped creature has their abilities negated (right before the attack) until the end of the turn",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 618
+  },
+  {
+   "id": "O-fb9fa6eff044:Items/Equip/3 Stars/Magic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-08T11:15:25+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fdmepsd and magic shield",
+   "repo": "first",
+   "image": "O-015c5557515d.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Any creature that attacks\nthe equipped creature has their abilities negated (right before the attack) until the end of the turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Magic Shield",
+     "Magic Sheild"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-21636310bce5:Items/Equip/4 Stars/Magic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:29:19+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-e3dcf2efda57.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF\nAny creature that attacks\nthe equipped creature has their abilities negated (right before the attack) until the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-23f7651642e9:Items/Equip/4 Stars/Magic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-18T05:18:49+00:00",
+   "day": "2023-04-18",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-08fcf2028346.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Shield",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF\nAny creature that attacks\nthe equipped creature has their abilities negated (right before the attack) until the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Magic Sheild",
+     "Magic Shield"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/4 Stars/Magic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-08fcf2028346.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Shield",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF\nAny creature that attacks\nthe equipped creature has their abilities negated (right before the attack) until the end of the turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6d37ecf07ea1:Items/Equip/4 Stars/Magic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-23T11:11:40+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Sumo, Magic Shield, Golden Metronome, Dedede",
+   "image": "O-34389554259a.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Shield",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF\nAny creature that attacks\nthe equipped creature has their abilities negated (before the attack) until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-23e7f4a10214:Items/Equip/4 Stars/Magic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-10-30T02:54:47+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-c4d3a99bcb5a.webp",
+   "fields": {
+    "name": {
+     "value": "Magic Shield",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF\nAny creature that attacks the equipped creature has it’s abilities negated (before the attack) until the end of the global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-21",
+  "sort": "2020-07-21",
+  "source": "discord",
+  "status": "owner"
+ }
+}

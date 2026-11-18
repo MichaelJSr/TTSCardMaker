@@ -1,0 +1,66 @@
+{
+ "card": "pessimism",
+ "key": "Pessimism",
+ "name": "Pessimism",
+ "kind": "debuff",
+ "stop": {
+  "day": "2025-03-22",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-407a80b8e322",
+   "kind": "discord",
+   "date": "2025-03-22T10:21:10+00:00",
+   "day": "2025-03-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-407a80b8e322.webp",
+   "fields": {
+    "name": {
+     "value": "Pessimism",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 HP from healing.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-22T10:21:49+00:00",
+  "changes": {
+   "ability_change": "same"
+  }
+ },
+ "created": {
+  "date": "2025-03-22",
+  "sort": "2025-03-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

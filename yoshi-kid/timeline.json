@@ -1,0 +1,259 @@
+{
+ "card": "yoshi-kid",
+ "key": "Yoshi Kid",
+ "name": "Yoshi Kid",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-10-27",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1f1208b50f34",
+   "kind": "discord",
+   "date": "2023-10-27T20:04:30+00:00",
+   "day": "2023-10-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1f1208b50f34.webp",
+   "fields": {
+    "name": {
+     "value": "Yoshi Kid",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)Pay 2 points and an action to attack 3 times with -3 ATK, and inflict 2 turns of 1 Enfeebled with each attack. (EOT) can use an action to use the ATK stat of one enemy to attack a different enemy.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6aa34293d3b0:Creatures/Mario/2 Stars/Yoshi_Kid.png",
+   "kind": "old repo",
+   "date": "2023-10-27T20:29:11+00:00",
+   "day": "2023-10-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new cards",
+   "image": "O-ec9fac1cb09d.webp",
+   "fields": {
+    "name": {
+     "value": "Yoshi Kid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)Pay 2 points and an action to attack 3 times with -3 ATK, and inflict 2 turns of 1 Enfeebled with each attack.\n(EOT) can use an action to use the ATK stat of one enemy to attack a different enemy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-9d129eb340de:Creatures/Mario/2 Stars/Yoshi_Kid.png",
+   "kind": "old repo",
+   "date": "2023-10-28T07:43:42+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "eggby nerf",
+   "image": "O-82deff3db245.webp",
+   "fields": {
+    "name": {
+     "value": "Yoshi Kid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) Pay 2 points and an action to attack 3 times with -3 ATK, and inflict 2 turns of 1 Enfeebled with each attack.\n(EOT) can use an action to use the ATK stat of one enemy to attack a different enemy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/2 Stars/Yoshi_Kid.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-cb9ccee713e7.webp",
+   "fields": {
+    "name": {
+     "value": "Yoshi Kid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) Pay 2 points and an action to attack 3 times with -3 ATK, and inflict 2 turns of 1 Enfeebled with each attack.\n(EOT) can use an action to use the ATK stat of one enemy to attack a different enemy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4d61e9e7c35f:Creatures/Mario/2 Stars/Yoshi_Kid.png",
+   "kind": "old repo",
+   "date": "2023-10-31T18:27:09+00:00",
+   "day": "2023-10-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-5422efbd3577.webp",
+   "fields": {
+    "name": {
+     "value": "Yoshi Kid",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 2,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) Pay 2 points and an action to attack 3 times with -3 ATK, and inflict 2 turns of 1 Enfeebled with each attack.\n(EOT) can use an action to use the ATK stat of one enemy to attack a different enemy.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-27",
+  "sort": "2023-10-27",
+  "source": "discord",
+  "status": "same"
+ }
+}

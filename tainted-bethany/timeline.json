@@ -1,0 +1,528 @@
+{
+ "card": "tainted-bethany",
+ "key": "Tainted Bethany",
+ "name": "Tainted Bethany",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-09-09",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-3f98752262eb:MDW/Croissant's Special Folder/t beth.psd",
+   "kind": "old repo",
+   "date": "2023-09-09T12:29:20+00:00",
+   "day": "2023-09-09",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "folder",
+   "file": "t beth",
+   "image": "O-589fd8a6577f.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Draws and Composes",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 480
+  },
+  {
+   "id": "D-P-1df30c95c5b9",
+   "kind": "discord",
+   "date": "2023-09-09T12:55:56+00:00",
+   "day": "2023-09-09",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1df30c95c5b9.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from the deck until you get an equip item. Equip drawn item (no SP cost). Equips obtained this way act as minions with 1 HP. Any form of healing given to this creature turns into 1 point per .5 HP.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b45348f1b6fc:MDW/Croissant's Special Folder/Tainted_Beathany.png",
+   "kind": "old repo",
+   "date": "2023-09-09T13:02:41+00:00",
+   "day": "2023-09-09",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Tainted Bethany",
+   "file": "Tainted Beathany",
+   "image": "O-baa12a6597a9.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from a merge of all 4 star item decks until you get an equip item. \nEquip drawn item (no SP cost).\nEquips obtained this way act as minions with 1 HP and cannot be unequipped.\n(OD) Equips return to their origin.\nAny form of healing given to this creature turns into 1 point per.5 HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f673a72a4da4:MDW/Croissant's Special Folder/Tainted_Beathany.png",
+   "kind": "old repo",
+   "date": "2023-09-09T13:25:28+00:00",
+   "day": "2023-09-09",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "b",
+   "file": "Tainted Beathany",
+   "image": "O-fef27e9e0003.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from a merge of all the item decks until you get an equip item. \nEquip drawn item (no SP cost).\nEquips obtained this way act as minions with 1 HP and cannot be unequipped.\n(OD) Equips return to their origin.\nAny form of healing given to this creature turns into 1 point per.5 HP. instead of healing the creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0d98d7e3d61d:Creatures/Isaac/Tainted_Beathany.png",
+   "kind": "old repo",
+   "date": "2023-09-10T06:32:06+00:00",
+   "day": "2023-09-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "keeper and beth",
+   "file": "Tainted Beathany",
+   "image": "O-fef27e9e0003.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from a merge of all the item decks until you get an equip item. \nEquip drawn item (no SP cost).\nEquips obtained this way act as minions with 1 HP and cannot be unequipped.\n(OD) Equips return to their origin.\nAny form of healing given to this creature turns into 1 point per.5 HP. instead of healing the creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2c7744d4e2e6:Creatures/Isaac/3 Stars/Tainted_Beathany.png",
+   "kind": "old repo",
+   "date": "2023-09-11T05:48:08+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "isaac folder",
+   "file": "Tainted Beathany",
+   "image": "O-e0c4509d5c22.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from a merge of all the item decks until you get an equip item. \nEquip drawn item (no SP cost).\nEquips obtained this way act as minions with 1 HP and cannot be unequipped.\n(OD) Equips return to their origin.\nAny form of healing given to this creature turns into 1 point per.5 HP. instead of healing the creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2a140ee435b1:Creatures/Isaac/3 Stars/Tainted_Beathany.png",
+   "kind": "old repo",
+   "date": "2023-09-26T13:18:11+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "file": "Tainted Beathany",
+   "image": "O-c574d2958c27.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from a merge of all the item decks until you get an equip item. \nEquip drawn item (no SP cost).\nEquips obtained this way act as minions with 1 HP and cannot be unequipped.\n(OD) Equips return to their origin.\nAny form of healing given to this creature turns into 1 point per.5 HP. instead of healing the creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2af66f5c66bb:Creatures/Isaac/3 Stars/Tainted_Beathany.png",
+   "kind": "old repo",
+   "date": "2023-10-10T01:08:35+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "file": "Tainted Beathany",
+   "image": "O-7158bcde9662.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from a merge of all the item decks until you get an equip item. \nEquip drawn item (no SP cost).\nEquips obtained this way act as minions with 1 HP and cannot be unequipped.\n(OD) Equips return to their origin.\nAny form of healing given to this creature turns into 1 point per.1 HP. instead of healing the creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7e54a075b6fc:Creatures/Isaac/3 Stars/Tainted_Beathany.png",
+   "kind": "old repo",
+   "date": "2023-10-13T02:28:44+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "claw t beth tutankoopa fix",
+   "file": "Tainted Beathany",
+   "image": "O-0b032bf5a6bd.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from a merge of all the item decks until you get an equip item. \nEquip drawn item (no SP cost).\nEquips obtained this way become minions with 1 HP that have the effect of the equip.\n(OD) Equips return to their origin.\nAny form of healing given to this creature turns into 1 point per 1 HP instead of healing the creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Isaac/3 Stars/Tainted_Beathany.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "file": "Tainted Beathany",
+   "image": "O-49dac2fbd1c4.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Bethany",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) draw from a merge of all the item decks until you get an equip item. \nEquip drawn item (no SP cost).\nEquips obtained this way become minions with 1 HP that have the effect of the equip.\n(OD) Equips return to their origin.\nAny form of healing given to this creature turns into 1 point per 1 HP instead of healing the creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-09-09",
+  "sort": "2023-09-09",
+  "source": "old repo (PSD)",
+  "status": "same"
+ }
+}

@@ -1,0 +1,265 @@
+{
+ "card": "inconspicuous-cake",
+ "key": "Inconspicuous Cake",
+ "name": "Inconspicuous Cake",
+ "kind": "aux item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-34f051c4c69e",
+   "kind": "discord",
+   "date": "2021-11-20T20:32:06+00:00",
+   "day": "2021-11-20",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-34f051c4c69e.webp",
+   "fields": {
+    "name": {
+     "value": "Conspicuous Cake",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 0 SP to use. Inflict the fed creature with paralyze.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Items/0 Stars/Conspicuous_Cake.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Conspicuous Cake",
+   "repo": "first",
+   "image": "O-b14cb00c0712.webp",
+   "fields": {
+    "name": {
+     "value": "Conspicuous Cake",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 0,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 0 SP to use. Inflict the fed creature with paralyze.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars",
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-5bb566d5928b:Auxillary/Items/2 Stars/inconspicuous_Cake.png",
+   "kind": "old repo",
+   "date": "2023-04-13T19:46:20+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-ffab1de9964a.webp",
+   "fields": {
+    "name": {
+     "value": "Inconspicuous Cake",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 0,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 0 SP to use. Inflict a creature with Paralyzed for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Conspicuous Cake",
+     "Inconspicuous Cake"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Items/2 Stars/Inconspicuous_Cake.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-ffab1de9964a.webp",
+   "fields": {
+    "name": {
+     "value": "Inconspicuous Cake",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 0,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 0 SP to use. Inflict a creature with Paralyzed for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Auxillary/Items/2 Stars/Inconspicuous_Cake.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-0b7e9d642f0b.webp",
+   "fields": {
+    "name": {
+     "value": "Inconspicuous Cake",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 0 SP to use. \nInflict a creature with Paralyzed for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     0,
+     1
+    ],
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c2b1b3fecc90:Auxillary/Items/1 Stars/Inconspicuous_Cake.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-71f351abb391.webp",
+   "fields": {
+    "name": {
+     "value": "Inconspicuous Cake",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 0 SP to use. \nInflict a creature with Paralyzed for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Items/Inconspicuous_Cake.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-71f351abb391.webp",
+   "fields": {
+    "name": {
+     "value": "Inconspicuous Cake",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 0 SP to use. \nInflict a creature with Paralyzed for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2021-11-20",
+  "sort": "2021-11-20",
+  "source": "discord",
+  "status": "same"
+ }
+}

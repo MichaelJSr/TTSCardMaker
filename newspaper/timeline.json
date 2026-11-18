@@ -1,0 +1,299 @@
+{
+ "card": "newspaper",
+ "key": "Newspaper",
+ "name": "Newspaper",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c2c7f962cd27",
+   "kind": "discord",
+   "date": "2020-09-05T01:39:14+00:00",
+   "day": "2020-09-05",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c2c7f962cd27.webp",
+   "fields": {
+    "name": {
+     "value": "Newspaper",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+3 DEF. After being hit once, this item breaks, granting the equipped creature +1 ATK +1 SPD.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-f29d84a5ac11",
+   "kind": "discord",
+   "date": "2020-09-05T01:42:34+00:00",
+   "day": "2020-09-05",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-f29d84a5ac11.webp",
+   "fields": {
+    "name": {
+     "value": "Newspaper",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF. After being hit once, this item breaks, granting the equipped creature +1 ATK +1 SPD.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/3 Stars/Newspaper.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-28c5f27b1a7d.webp",
+   "fields": {
+    "name": {
+     "value": "Newspaper",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF. After being hit once, this item breaks, granting the equipped creature +1 ATK +1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-c835841d76b0:Items/Equip/3 Stars/Newspaper.png",
+   "kind": "old repo",
+   "date": "2023-04-07T22:11:04+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "newspaper",
+   "repo": "first",
+   "image": "O-04893b9a4d9e.webp",
+   "fields": {
+    "name": {
+     "value": "Newspaper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF. After being hit once, this item breaks, granting the quipped creature +1 ATK +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-668d9fcb334a:Items/Equip/3 Stars/Newspaper.png",
+   "kind": "old repo",
+   "date": "2023-04-08T08:07:30+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "news",
+   "repo": "first",
+   "image": "O-ae5a1b034938.webp",
+   "fields": {
+    "name": {
+     "value": "Newspaper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+5 DEF. After being hit once, this item breaks, granting the quipped creature +1 ATK +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41bc9e741d1a:Items/Equip/3 Stars/Newspaper.png",
+   "kind": "old repo",
+   "date": "2023-04-08T11:53:30+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "sheilds and",
+   "repo": "first",
+   "image": "O-1e12e0da72bf.webp",
+   "fields": {
+    "name": {
+     "value": "Newspaper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+5 DEF. After being hit once, this item breaks, granting the quipped creature +1 ATK +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Newspaper.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-1e12e0da72bf.webp",
+   "fields": {
+    "name": {
+     "value": "Newspaper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+5 DEF. After being hit once, this item breaks, granting the quipped creature +1 ATK +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Equip/3 Stars/Newspaper.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-36163b3ec1e6.webp",
+   "fields": {
+    "name": {
+     "value": "Newspaper",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+5 DEF. After being hit once, this item breaks, granting the equipped creature +1 ATK +1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-05",
+  "sort": "2020-09-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

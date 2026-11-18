@@ -1,0 +1,29 @@
+{
+ "card": "killer-bees",
+ "key": "Killer Bees",
+ "name": "Killer Bees",
+ "morgue": "candidate",
+ "first": {
+  "date": "2026-01-23T06:21:34.615000+00:00",
+  "day": "2026-01-23",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-891070d8b78b",
+   "kind": "discord",
+   "date": "2026-01-23T06:21:34.615000+00:00",
+   "day": "2026-01-23",
+   "badge": "Discord",
+   "image": "P-891070d8b78b.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 350,
+   "h": 518
+  }
+ ],
+ "kind_of": "joke"
+}

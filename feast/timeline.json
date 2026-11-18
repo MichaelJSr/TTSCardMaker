@@ -1,0 +1,515 @@
+{
+ "card": "feast",
+ "key": "Feast",
+ "name": "Feast",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-527437bae8ac",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:04+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-527437bae8ac.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 9 health, decrease its speed by 1, and give it well-fed. This item can only be used on your turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 610
+  },
+  {
+   "id": "D-P-a5bc1f775be9",
+   "kind": "discord",
+   "date": "2020-08-14T00:31:47+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-a5bc1f775be9.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 9 health, give it Burdened, and give it well-fed. This item can only be used on your turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 398,
+   "h": 612
+  },
+  {
+   "id": "D-P-69a302f56238",
+   "kind": "discord",
+   "date": "2020-10-04T00:42:41+00:00",
+   "day": "2020-10-04",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-69a302f56238.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 9 health, give it Burdened, and give it one stack of regen. This item can only be used on your turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-609679f958c9.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal one creature by 9 health, give it Burdened, and give it one stack of regen. This item can only be used on your turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 397,
+   "h": 611
+  },
+  {
+   "id": "O-ce79ec4ee52d:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-04-07T20:08:32+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "feast and delux",
+   "repo": "first",
+   "image": "O-a993151e53a4.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creaure by 9 HP, give it burdened, and ive it one stack of regen. (OYT)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     2
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c73b2bb8e35e:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-04-08T08:03:30+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "feast",
+   "repo": "first",
+   "image": "O-ab91f75ccf92.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 9 HP, give it burdened, and give it one stack of regen. (OYT)",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-85cc2d9e3b02:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-04-08T08:05:45+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "feast",
+   "repo": "first",
+   "image": "O-e7617379b29a.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Heal 1 creature by 9 HP, give it burdened, and give it one stack of regen.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     3
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-97bab8f1ceec:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-04-11T13:35:04+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "More updates for new buff wording",
+   "repo": "first",
+   "image": "O-2ee076127f9d.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Heal a creature by 9 HP, and give it 1 stack of burdened and regen for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-21636310bce5:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-04-17T07:29:19+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-7f6b461c068e.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Heal a creature by 9 HP, and give it 1 stack of burdened and regen for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c3606695f5de:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-04-19T07:40:46+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made pandas immune to burdened from food items",
+   "repo": "first",
+   "image": "O-4f78fe197998.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Heal a creature by 9 HP, and give it 1 Burdened ( [panda] immune) and 1 Regen for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-4f78fe197998.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Heal a creature by 9 HP, and give it 1 Burdened ( [panda] immune) and 1 Regen for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-551d803fa4e4:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-04-30T10:56:16+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Collector Nerf And a ton of Touch Ups",
+   "image": "O-907a4dee543c.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Heal a creature by 9 HP, and give it 1 Burdened ( [panda] immune) and 1 Regen for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c206b713bbf0:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-10-05T17:23:03+00:00",
+   "day": "2023-10-05",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "teleport and tainted lost",
+   "image": "O-2f49e101a68c.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Heal a creature by 9 HP, and give it 1 Burdened ( [panda] immune) and 1 Regen for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/3 Stars/Feast.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-43568b4bd459.webp",
+   "fields": {
+    "name": {
+     "value": "Feast",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Heal a creature by 9 HP, and give it 1 Burdened ( [panda] immune) and 1 Regen for 3 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

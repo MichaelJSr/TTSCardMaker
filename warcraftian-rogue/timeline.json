@@ -1,0 +1,939 @@
+{
+ "card": "warcraftian-rogue",
+ "key": "Warcraftian Rogue",
+ "name": "Warcraftian Rogue",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-5d03c00c3f0e",
+   "kind": "discord",
+   "date": "2021-09-08T09:13:13+00:00",
+   "day": "2021-09-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-5d03c00c3f0e.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can attack twice per action and gains a combo counter for each successful attack, max 5 counters. Can spend combo counters to (OPT)(OYT): Deal 2(x counters) damage to a creature on the PF. Reduce a creature's attack by 1(x counters) for 1 turn. Reduce a creature's DEF by 1(x counters) for 3 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 6,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 313,
+   "h": 629
+  },
+  {
+   "id": "D-P-4dd0d81ef538",
+   "kind": "discord",
+   "date": "2021-09-08T09:26:25+00:00",
+   "day": "2021-09-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-4dd0d81ef538.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon and (BOGT) This creature cannot be targeted until it acts .This creature can attack twice per action and gains a combo counter for each successful attack, max 5 counters. Can spend combo counters to (OPT)(OYT): Deal 2.5(x counters) damage to a creature on the PF. Reduce a creature's attack by 1(x counters) for 2 turns. Reduce a creature's DEF by 1(x counters) for 3 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 6,
+      "spd": 7
+     },
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 6 -> 5"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 629
+  },
+  {
+   "id": "D-P-d0c1d2d14b36",
+   "kind": "discord",
+   "date": "2021-09-08T09:44:43+00:00",
+   "day": "2021-09-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d0c1d2d14b36.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon and (BOGT)(EOT) this creature cannot be targeted until it acts .This creature can attack twice per action and gains a combo counter for each successful attack, max 5 counters. Can spend combo counters to (OPT)(OYT): Deal 2.5 (x counters) damage to a creature on the PF. Reduce a creature's attack by 1(x counters) for 2 turns. Reduce a creature's DEF by 1(x counters) for 3 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "D-P-cad8bba0ddde",
+   "kind": "discord",
+   "date": "2021-12-11T09:09:19+00:00",
+   "day": "2021-12-11",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-cad8bba0ddde.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon and (BOGT)(EOT) this creature cannot be targeted until it acts .This creature can attack twice per action and gains a combo counter for each successful attack, max 5 counters. Can spend combo counters to (OPT)(OYT): Deal 2.5 (x counters) damage to a creature on the PF. Reduce a creature's attack by 1(x counters) for 2 turns. Reduce a creature's DEF by 1(x counters) for 3 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "F-f41fee46620",
+   "kind": "text",
+   "date": "2022-01-28T13:38:49+00:00",
+   "day": "2022-01-28",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "field": "atk",
+    "by": 3,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-dc51ca15dfe6"
+  },
+  {
+   "id": "F-f623186e397",
+   "kind": "text",
+   "date": "2022-01-28T13:38:49+00:00",
+   "day": "2022-01-28",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-dc51ca15dfe6",
+   "kind": "discord",
+   "date": "2022-02-12T13:52:45+00:00",
+   "day": "2022-02-12",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-dc51ca15dfe6.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until it acts. This creature gains 2 combo counters for each successful attack (max 5). Can spend combo counters to (OPT) (OYT): Deal 2.5 (x counters) damage to a creature on the PF. Reduce a creature's attack by 1(x counters) for 2 turns. Reduce a creature's DEF by 1(x counters) for 3 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 5,
+      "spd": 7
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 5 -> 8"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 309,
+   "h": 628
+  },
+  {
+   "id": "F-f35a327a619",
+   "kind": "text",
+   "date": "2022-02-15T04:30:45+00:00",
+   "day": "2022-02-15",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-67ec8c5a6c2b.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. This creature gains 2 combo counters for each successful attack (max 6). Can spend combo counters to (OPT)(OYT):\nDeal 2(x counters) damage to a creature on the PF.\nReduce a creature’s attack by 1(x counters) for 1 turn.\nReduce a creature’s DEF by 1(x counters) for 2 turns.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "O-257dc970a875:Cards/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-9950c92d0987.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. This creature gains 2 combo counters for each successful attack (max 6). Can spend combo counters to (OPT)(OYT):\nDeal 2(x counters) damage to a creature on the PF.\nReduce a creature’s attack by 1(x counters) for 1 turn.\nReduce a creature’s DEF by 1(x counters) for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6f6adec2caee:Cards/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-03-30T13:26:14+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "rogue and princes update",
+   "repo": "first",
+   "image": "O-7ee582d770fe.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. This creature gains 2 combo counters for each successful attack (max 6). Can spend all combo counters to (OPT)(OYT):\nDeal 2(x counters) damage to a creature on the PF.\nReduce a creature’s attack by 1(x counters) for 1 turn.\nReduce a creature’s DEF by 1(x counters) for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d3daaff5316c:Cards/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:59:11+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Slight Shaman Nerf and other updates",
+   "repo": "first",
+   "image": "O-e103df060285.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. This creature gains 2 combo counters for each successful attack (max 6). Can spend all combo counters to (OPT):\nDeal 2(x counters) damage to a creature on the PF.\nReduce a creature’s attack by 1(x counters) for 1 turn.\nReduce a creature’s DEF by 1(x counters) for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7c159970914e:Cards/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-04-19T06:57:24+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugg chugg choo choo",
+   "repo": "first",
+   "image": "O-3893f97ae035.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. This creature gains 2 combo counters for each successful attack (max 6).\nCan spend all combo counters to (OPT):\nDeal 2(x counters) DMG to a creature on the PF.\nInflict 1(x counters) Enfeebled for 1 turn.\nInflict 1(x counters) Softened for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-3893f97ae035.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. This creature gains 2 combo counters for each successful attack (max 6).\nCan spend all combo counters to (OPT):\nDeal 2(x counters) DMG to a creature on the PF.\nInflict 1(x counters) Enfeebled for 1 turn.\nInflict 1(x counters) Softened for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-3893f97ae035.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. This creature gains 2 combo counters for each successful attack (max 6).\nCan spend all combo counters to (OPT):\nDeal 2(x counters) DMG to a creature on the PF.\nInflict 1(x counters) Enfeebled for 1 turn.\nInflict 1(x counters) Softened for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-89dfca0957f4.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. \nThis creature gains 2 combo counters for each successful attack (max 6).\nCan spend all combo counters to (OPT):\nDeal 2(x counters) DMG to a creature on the PF.\nInflict 1(x counters) Enfeebled for 1 turn.\nInflict 1(x counters) Softened for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-1ba038b2de6a.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. \nThis creature gains 2 combo counters for each successful attack (max 6).\nCan spend all combo counters to (OPT):\nDeal 2(x counters) DMG to a creature on the PF.\nInflict 1(x counters) Enfeebled for 1 turn.\nInflict 1(x counters) Softened for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8ecdec8f177:Creatures/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-10-13T03:11:51+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "warcraftian attribute color coding",
+   "image": "O-69a46811d3e8.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted until the end of it’s first turn. \nThis creature gains 2 combo counters for each successful attack (max 6).\nCan spend all combo counters to (OPT):\nDeal 2(x counters) DMG to a creature on the PF.\nInflict 1(x counters) Enfeebled for 1 turn.\nInflict 1(x counters) Softened for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c2b1b3fecc90:Creatures/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-10-16T13:10:19+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-5c5f9088ae8d.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted by the enemy until the end of it’s first turn. \nThis creature gains 2 combo counters for each successful attack (max 6).\nCan spend all combo counters to (OPT):\nDeal 2(x counters) DMG to a creature on the PF.\nInflict 1(x counters) Enfeebled for 1 turn.\nInflict 1(x counters) Softened for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/World Of Warcraft/4 Stars/Warcraftian_Rogue.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-ecf383097701.webp",
+   "fields": {
+    "name": {
+     "value": "Warcraftian Rogue",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On summon this creature cannot be targeted by the enemy until the end of it’s first turn. \nThis creature gains 2 combo counters for each successful attack (max 6).\nCan spend all combo counters to (OPT):\nDeal 2(x counters) DMG to a creature on the PF.\nInflict 1(x counters) Enfeebled for 1 turn.\nInflict 1(x counters) Softened for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-09-08",
+  "sort": "2021-09-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

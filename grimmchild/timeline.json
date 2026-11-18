@@ -1,0 +1,673 @@
+{
+ "card": "grimmchild",
+ "key": "Grimmchild",
+ "name": "Grimmchild",
+ "kind": "minion",
+ "stop": {
+  "day": "2023-04-12",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d98d51695bc8",
+   "kind": "discord",
+   "date": "2023-04-12T22:25:55+00:00",
+   "day": "2023-04-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d98d51695bc8.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "fire"
+     ],
+     "method": "git look: icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OD) Reward 5 points to enemy team.\n(OPT)(2 Points) This creature’s next attack inflicts Blazing for 2 turns.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fd89bae2e637:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-04-12T22:26:30+00:00",
+   "day": "2023-04-12",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made a Grimmchild auxillary minion",
+   "repo": "first",
+   "image": "O-593dd1a402be.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OD) Reward 5 points to enemy team.\n(OPT)(2 Points) This creature’s next attack inflicts Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f241a8fb23cb:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-04-13T00:39:09+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "minions",
+   "repo": "first",
+   "image": "O-c1fac04f6a8c.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OD) Reward 5 points to enemy team.\n(OPT)(2 Points) This creature’s next attack inflicts Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d24c6d10c672:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:26:54+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the auxillary",
+   "image": "O-c1fac04f6a8c.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OD) Reward 5 points to enemy team.\n(OPT)(2 Points) This creature’s next attack inflicts Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-643d618b567d:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-04-30T20:07:03+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "child",
+   "image": "O-821ad3a79f3d.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OD) Reward 5 points to enemy team.\n(OPT)(2 Points) This creature’s next attack inflicts Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-64efc975ebe6.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OD) Reward 5 points to enemy team.\n(OPT)(2 Points) This creature’s next attack inflicts Blazing for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "defensive_minion"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0cb24da0efa6:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-10-08T22:32:34+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "NKG Change (just revert commit if its not accepted)",
+   "image": "O-88b93648dd6a.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(1 Ritual Counter) This turn, attacks inflict Blazing for 2 turns.\n(OPT)(1 Ritual Counter) Gain +1 Bars in all stats.\n(OPT)(2 Ritual Counters) Gain +1 actions for this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 7,
+      "spd": 7
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 4 -> 2",
+     "ATK 7 -> 6",
+     "SPD 7 -> 6"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8481cd059c2:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-10-12T06:27:15+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending updates",
+   "image": "O-21c40a8207bc.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(1 Ritual Counter) This turn, attacks inflict Blazing for 2 turns.\n(OPT)(1 Ritual Counter) Gain +1 Bars in all stats.\n(OPT)(2 Ritual Counters) Gain +1 actions for this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "defensive_minion"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8a1a518be3d0:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:38:03+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-d9e1143b3a37.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "defensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(1 Ritual Counter) This turn, attacks inflict Blazing for 2 turns.\n(OPT)(1 Ritual Counter) Gain +1 Bars in all stats.\n(OPT)(2 Ritual Counters) Gain +1 actions for this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ceb4a40829a:Auxillary/Minions/5 Stars/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-10-18T12:04:15+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "image": "O-28c50d8e5106.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(1 Ritual Counter) This turn, attacks inflict Blazing for 2 turns.\n(OPT)(1 Ritual Counter) Gain +1 Bars in all stats.\n(OPT)(2 Ritual Counters) Gain +1 actions for this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "offensive_minion"
+     ],
+     "drop": [
+      "defensive_minion"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-fc334f262d52.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(1 Ritual Counter) This turn, attacks inflict Blazing for 2 turns.\n(OPT)(1 Ritual Counter) Gain +1 Bars in all stats.\n(OPT)(2 Ritual Counters) Gain +1 actions for this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Grimmchild.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-06051ab7d5c4.webp",
+   "fields": {
+    "name": {
+     "value": "Grimmchild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "fire"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(1 Ritual Counter) This turn, attacks inflict Blazing for 2 turns.\n(OPT)(1 Ritual Counter) Gain +1 Bars in all stats.\n(OPT)(2 Ritual Counters) Gain +1 actions for this turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-04-12",
+  "sort": "2023-04-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

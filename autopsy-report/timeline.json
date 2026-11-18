@@ -1,0 +1,63 @@
+{
+ "card": "autopsy-report",
+ "key": "Autopsy Report",
+ "name": "Autopsy Report",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-11-07",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-aec27472a44a",
+   "kind": "discord",
+   "date": "2023-11-07T04:42:30+00:00",
+   "day": "2023-11-07",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-aec27472a44a.webp",
+   "fields": {
+    "name": {
+     "value": "Autopsy Report",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 1 damage to a creature. You may use multiple of this item at once, which counts as one item use and does damage equal to the amount of Autopsy Reports used.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2023-11-08T04:49:11+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-10-15",
+  "sort": "2023-10-15",
+  "source": "discord",
+  "status": "owner"
+ }
+}

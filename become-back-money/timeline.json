@@ -1,0 +1,77 @@
+{
+ "card": "become-back-money",
+ "key": "Become Back Money",
+ "name": "Become Back Money",
+ "kind": "debuff",
+ "stop": {
+  "day": "2025-02-25",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-9e9e1a7e5389",
+   "kind": "discord",
+   "date": "2023-11-17T04:21:51+00:00",
+   "day": "2023-11-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9e9e1a7e5389.webp",
+   "fields": {
+    "name": {
+     "value": "Gilded",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers gain 1 point",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "S",
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "git_first": {
+  "date": "2025-02-25T04:28:38+00:00",
+  "changes": {
+   "name": [
+    "Gilded",
+    "Become Back Money"
+   ],
+   "types": {
+    "add": [
+     "debuffstack"
+    ],
+    "drop": [
+     "debuff"
+    ]
+   },
+   "ability_change": "same"
+  }
+ },
+ "created": {
+  "date": "2023-11-17",
+  "sort": "2023-11-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

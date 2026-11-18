@@ -1,0 +1,380 @@
+{
+ "card": "poison-circle",
+ "key": "Poison Circle",
+ "name": "Poison Circle",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-2a8f9a36a29a",
+   "kind": "discord",
+   "date": "2021-11-27T08:18:07+00:00",
+   "day": "2021-11-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2a8f9a36a29a.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "ALL enemy creatures in this lane are inflicted with 1 stack of Poison when their turn starts.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Items/3 Stars/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-25b5d33f0675.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "ALL enemy creatures in this lane are inflicted with 1 stack of Poison when their turn starts.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-c810b222b537:Auxillary/Items/3 Stars/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2023-04-01T10:10:54+00:00",
+   "day": "2023-04-01",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Remade Jeh'Oul and Poison Circle and edited font spacing on templates",
+   "repo": "first",
+   "image": "O-44834edfb069.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns.\nAll creatures on this side of the lane are inflicted with 1 stack of Poison at (BOT).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4ea95af482af:Auxillary/Items/3 Stars/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2023-04-03T22:11:16+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed Jeh'Oul and Poison circle to slot",
+   "repo": "first",
+   "image": "O-38815c63d7d0.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns.\nAll creatures in this slot are inflicted with 1 stack of Poison at (BOT).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2096fe459bca:Auxillary/Items/3 Stars/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2023-04-13T08:11:48+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "maga",
+   "repo": "first",
+   "image": "O-60274722bb4c.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns.\nAll creatures in this slot are inflicted with 1 Poison for 5 turns at (BOT).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-5635834fa5fb:Auxillary/Items/3 Stars/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2023-04-19T09:28:59+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Poison Circle",
+   "repo": "first",
+   "image": "O-dc143a468630.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns.\n(BOT) All creatures in this slot are inflicted with 1 Poison for 5 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Items/3 Stars/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-dc143a468630.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns.\n(BOT) All creatures in this slot are inflicted with 1 Poison for 5 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Auxillary/Items/3 Stars/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-77bc4a471dfb.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns.\n(BOT) All creatures in this slot are inflicted with 1 Poison for 5 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Items/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-77bc4a471dfb.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns.\n(BOT) All creatures in this slot are inflicted with 1 Poison for 5 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-69cd01cf9df6:Auxillary/Items/Poison_Circle.png",
+   "kind": "old repo",
+   "date": "2023-11-01T06:56:53+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending",
+   "image": "O-8403b8acd6b6.webp",
+   "fields": {
+    "name": {
+     "value": "Poison Circle",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Persists for 3 turns.\n(BOT) All creatures in this slot are inflicted with 1 Poison for 5 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2021-11-27",
+  "sort": "2021-11-27",
+  "source": "discord",
+  "status": "same"
+ }
+}

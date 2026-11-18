@@ -1,0 +1,63 @@
+{
+ "card": "frostmourne",
+ "key": "Frostmourne",
+ "name": "Frostmourne",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-11-06",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-96905ad8dd95",
+   "kind": "discord",
+   "date": "2023-11-05T23:39:46+00:00",
+   "day": "2023-11-05",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-96905ad8dd95.webp",
+   "fields": {
+    "name": {
+     "value": "Frostmourne",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1.5 ATK +1.5 ATK is applied to this item for every point-yielding creature killed with it.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2023-11-22T07:58:39+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-05",
+  "sort": "2023-11-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

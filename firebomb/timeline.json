@@ -1,0 +1,461 @@
+{
+ "card": "firebomb",
+ "key": "Firebomb",
+ "name": "Firebomb",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9db29e71e58c",
+   "kind": "discord",
+   "date": "2020-09-01T06:19:55+00:00",
+   "day": "2020-09-01",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-9db29e71e58c.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Bomb",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict Smoldering to a creature on the primary field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-6c28bd50b1a3",
+   "kind": "discord",
+   "date": "2022-06-17T04:39:15+00:00",
+   "day": "2022-06-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6c28bd50b1a3.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict smoldering to a creature on the primary field",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-S-799383d94aac",
+   "kind": "discord",
+   "date": "2022-06-17T04:41:51+00:00",
+   "day": "2022-06-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "S-799383d94aac.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict smoldering to a creature on the primary field",
+     "method": "psd (posted PSD)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars",
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-5a1071142af4.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Bomb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict smoldering to a creature on the primary field.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "stars",
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-e5d555e5123e:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2022-08-24T19:02:04+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moved BTD6 to Other and merged updates",
+   "repo": "first",
+   "image": "O-4d792110abeb.webp",
+   "fields": {
+    "name": {
+     "value": "Fire Bomb",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEAL 5 DAMAGE AND INFLICT SMOLDERING TO A CREATURE ON THE PRIMARY FIELD",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "fire"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-257dc970a875:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-6b40af853e26.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict smoldering to a creature on the primary field",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1053
+  },
+  {
+   "id": "O-9f1964fc9c44:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-03-30T11:50:09+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made fire bomb exactly 1:1.5",
+   "repo": "first",
+   "image": "O-2bd411570a8c.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict smoldering to a creature on the primary field",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4a840a5dc88f:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-03-30T16:25:47+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "firebomb",
+   "repo": "first",
+   "image": "O-e13a229ac9fb.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict smoldering to a creature on the primary field",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-50b06513c0eb:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-08T10:48:14+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-5fbb0da55c40.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict smoldering to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-09f761e9a8e3:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-11T14:06:16+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Lots more buff/debuff updates",
+   "repo": "first",
+   "image": "O-1d10881b5a13.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict 2 turns of smoldering to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-1d10881b5a13.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict 2 turns of smoldering to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/2 Stars/Fire_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-99c087b79d19.webp",
+   "fields": {
+    "name": {
+     "value": "Fire bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 5 damage and inflict 2 turns of Smoldering to a creature on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "owner"
+ }
+}

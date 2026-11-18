@@ -1,0 +1,425 @@
+{
+ "card": "basic-shield",
+ "key": "Basic Shield",
+ "name": "Basic Shield",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1b949623fe87",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:35+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-1b949623fe87.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Shield",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEF: +2",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 388,
+   "h": 611
+  },
+  {
+   "id": "D-P-a66fbe49ccef",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:36+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-a66fbe49ccef.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Shield",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEF: +2",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 388,
+   "h": 611
+  },
+  {
+   "id": "D-P-b465a805dd22",
+   "kind": "discord",
+   "date": "2020-08-07T10:21:29+00:00",
+   "day": "2020-08-07",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-b465a805dd22.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Shield",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEF: +2 SPD: -1",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 388,
+   "h": 611
+  },
+  {
+   "id": "D-P-9ff847d17f7f",
+   "kind": "discord",
+   "date": "2020-08-07T10:21:31+00:00",
+   "day": "2020-08-07",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-9ff847d17f7f.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Shield",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEF: +2 SPD: -1",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 388,
+   "h": 611
+  },
+  {
+   "id": "D-P-f9a825e61308",
+   "kind": "discord",
+   "date": "2020-09-07T00:29:55+00:00",
+   "day": "2020-09-07",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-f9a825e61308.webp",
+   "fields": {},
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "name",
+     "stars",
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "S",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/2 Stars/Basic_Shield.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-8f6b0b08059f.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Shield",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "DEF: +2 SPD: -1",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown",
+    "unknown": [
+     "name",
+     "stars",
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 386,
+   "h": 608
+  },
+  {
+   "id": "O-50b06513c0eb:Items/Equip/2 Stars/Basic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-08T10:48:14+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-497767f2ed35.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF, -1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Basic Shield",
+     "Basic Sheild"
+    ],
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c9f2ee957c56:Items/Equip/2 Stars/Basic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-08T20:53:44+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "item standardization",
+   "repo": "first",
+   "image": "O-3cf12262beb5.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF, -1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     1,
+     2
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/2 Stars/Basic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-3cf12262beb5.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF, -1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6f50de788b16:Items/Equip/2 Stars/Basic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-25T09:06:11+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "basic sheild",
+   "image": "O-a62faf874685.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF, -1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-91189038796f:Items/Equip/2 Stars/Basic_Shield.png",
+   "kind": "old repo",
+   "date": "2023-10-10T06:24:39+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "proposed changes",
+   "image": "O-98003495cdf9.webp",
+   "fields": {
+    "name": {
+     "value": "Basic Sheild",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 DEF, -.5 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

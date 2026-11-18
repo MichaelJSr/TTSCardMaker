@@ -1,0 +1,379 @@
+{
+ "card": "leshy",
+ "key": "Leshy",
+ "name": "Leshy",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-01",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-8916c9996e31",
+   "kind": "discord",
+   "date": "2023-10-31T21:43:49+00:00",
+   "day": "2023-10-31",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8916c9996e31.webp",
+   "fields": {
+    "name": {
+     "value": "Leshy",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) MAY DESTROY A FRIENDLY CREATURE TO ADD IT'S ABILITY TO ANOTHER CANNOT SACRIFICE A CREATURE OVER 50% HP CANNOT USE THIS ABILITY ON THE SAME CREATURE TWICE.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-4166621a479a",
+   "kind": "discord",
+   "date": "2023-10-31T22:55:41+00:00",
+   "day": "2023-10-31",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-4166621a479a.webp",
+   "fields": {
+    "name": {
+     "value": "Leshy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) MAY DESTROY A FRIENDLY CREATURE TO ADD IT'S ABILITY TO ANOTHER CANNOT SACRIFICE A CREATURE OVER 50% HP CANNOT USE THIS ABILITY ON THE SAME CREATURE TWICE.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-87da20aaa3e5",
+   "kind": "discord",
+   "date": "2023-10-31T23:43:29+00:00",
+   "day": "2023-10-31",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-87da20aaa3e5.webp",
+   "fields": {
+    "name": {
+     "value": "Leshy",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "WHEN ANY CREATURE DIES, (OPGT), ADD THEIR ABILITY TO ANOTHER CREATURE ON THE FEILD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-dcd92d133e94",
+   "kind": "discord",
+   "date": "2023-11-01T00:18:37+00:00",
+   "day": "2023-11-01",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-dcd92d133e94.webp",
+   "fields": {
+    "name": {
+     "value": "Leshy",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "when any creature dies, (OPGT), add their ability to a creature of choice on any feild.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f85ff581cce8:Creatures/Other/5 Stars/Leshy.png",
+   "kind": "old repo",
+   "date": "2023-11-01T00:19:13+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "leshy",
+   "image": "O-9955c53f29d2.webp",
+   "fields": {
+    "name": {
+     "value": "Leshy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "when any creature dies, (OPGT), add their ability to a creature of choice on any feild.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-9b8ece1384a5:Creatures/Other/5 Stars/Leshy.png",
+   "kind": "old repo",
+   "date": "2023-11-01T01:31:56+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "leshy buff",
+   "image": "O-bed5429e2fd2.webp",
+   "fields": {
+    "name": {
+     "value": "Leshy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "when any creature dies, (OPGT), add their ability to a creature of choice on any feild.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     {
+      "hp": 8,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 3 -> 4",
+     "ATK 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a80caf229327:Creatures/Other/5 Stars/Leshy.png",
+   "kind": "old repo",
+   "date": "2023-11-02T23:10:12+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "hivemind",
+   "image": "O-63fa04b054a7.webp",
+   "fields": {
+    "name": {
+     "value": "Leshy",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "when any creature dies, (OPGT), add their ability to a creature of choice on any feild.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-10-31",
+  "sort": "2023-10-31",
+  "source": "discord",
+  "status": "same"
+ }
+}

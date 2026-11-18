@@ -1,0 +1,347 @@
+{
+ "card": "suffocation",
+ "key": "Suffocation",
+ "name": "Suffocation",
+ "kind": "debuff",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-a3fde2693747",
+   "kind": "discord",
+   "date": "2022-01-16T04:13:34+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-a3fde2693747.webp",
+   "fields": {
+    "name": {
+     "value": "Suffocation",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG. Lasts until whatever caused \nthe debuff leaves the field.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Status Effects/Debuffs/3 Stars/Suffocation.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-8f9d295dc415.webp",
+   "fields": {
+    "name": {
+     "value": "Suffocation",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG. Lasts until whatever caused \nthe debuff leaves the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-6153d199d664:Auxillary/Status Effects/Debuffs/3 Stars/Suffocation.png",
+   "kind": "old repo",
+   "date": "2023-04-05T08:56:55+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Fixed up all buffs again, tier 1 2 3 debuffs",
+   "repo": "first",
+   "image": "O-b533f67ccf45.webp",
+   "fields": {
+    "name": {
+     "value": "Suffocation",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) -1 HP. Lasts until whatever\ninflicted the debuff exits field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "debuffstack"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-be2af3485d1e:Auxillary/Status Effects/Debuffs/3 Stars/Suffocation.png",
+   "kind": "old repo",
+   "date": "2023-04-05T22:46:32+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Doing a thankless job.",
+   "repo": "first",
+   "image": "O-5abee81b6026.webp",
+   "fields": {
+    "name": {
+     "value": "Suffocation",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) 1 DMG. Lasts until whatever\ninflicted the debuff exits field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-74cc827a6646:Auxillary/Status Effects/Debuffs/3 Stars/Suffocation.png",
+   "kind": "old repo",
+   "date": "2023-04-07T00:35:34+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "removing unnecessary acronyms on debuffs",
+   "repo": "first",
+   "image": "O-a313045c5911.webp",
+   "fields": {
+    "name": {
+     "value": "Suffocation",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG. Lasts until whatever\ninflicted the debuff exits field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-8192de270b3c:Auxillary/Status Effects/Debuffs/3 Stars/Suffocation.png",
+   "kind": "old repo",
+   "date": "2023-04-15T01:01:55+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "whelp hyper suffocation project panda rulebook",
+   "repo": "first",
+   "image": "O-81776e5368c7.webp",
+   "fields": {
+    "name": {
+     "value": "Suffocation",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Status Effects/Debuffs/3 Stars/Suffocation.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-81776e5368c7.webp",
+   "fields": {
+    "name": {
+     "value": "Suffocation",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-2e5ead43e905:Auxillary/Status Effects/Debuffs/3 Stars/Suffocation.png",
+   "kind": "old repo",
+   "date": "2023-10-26T20:21:08+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "immunities",
+   "image": "O-6b25e74c142b.webp",
+   "fields": {
+    "name": {
+     "value": "Suffocation",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG\nCan’t Effect [water]",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2022-01-16",
+  "sort": "2022-01-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

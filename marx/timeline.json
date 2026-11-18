@@ -1,0 +1,920 @@
+{
+ "card": "marx",
+ "key": "Marx",
+ "name": "Marx",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-faeba20c095",
+   "kind": "text",
+   "date": "2020-07-21T09:51:31+00:00",
+   "day": "2020-07-21",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f371cd8d165",
+   "kind": "text",
+   "date": "2020-07-22T05:50:17+00:00",
+   "day": "2020-07-22",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f843d662311",
+   "kind": "text",
+   "date": "2020-08-05T10:48:49+00:00",
+   "day": "2020-08-05",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-d28e8d58f855",
+   "kind": "discord",
+   "date": "2020-08-06T07:08:50+00:00",
+   "day": "2020-08-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-d28e8d58f855.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever Marx attacks, he negates all enemy cards (before the attack) until the end of the turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "D-P-3004f6b9e3db",
+   "kind": "discord",
+   "date": "2020-08-08T11:40:19+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-3004f6b9e3db.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks, he negates all enemy cards (before the attack) until the end of the turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "F-f726303d613",
+   "kind": "text",
+   "date": "2020-08-17T12:04:55+00:00",
+   "day": "2020-08-17",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "def",
+    "from": 3,
+    "to": 4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-80f1a1ef97bd"
+  },
+  {
+   "id": "D-P-80f1a1ef97bd",
+   "kind": "discord",
+   "date": "2020-08-18T11:31:37+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-80f1a1ef97bd.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks, he negates all enemy cards (before the attack) until the end of the turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 3 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 386,
+   "h": 789
+  },
+  {
+   "id": "D-P-3ee8e53754a9",
+   "kind": "discord",
+   "date": "2020-08-25T10:34:48+00:00",
+   "day": "2020-08-25",
+   "badge": "Discord",
+   "channel": "random-images",
+   "image": "P-3ee8e53754a9.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks, he negates all enemy cards (before the attack) until the end of the turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 243,
+   "h": 495
+  },
+  {
+   "id": "F-fdddcd6ba6a",
+   "kind": "text",
+   "date": "2020-08-25T10:35:03+00:00",
+   "day": "2020-08-25",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e42e964cb24c",
+   "kind": "discord",
+   "date": "2020-08-30T10:22:19+00:00",
+   "day": "2020-08-30",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-e42e964cb24c.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks, it negates all enemy creatures (even those in the hand) until the end of the turn",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 788
+  },
+  {
+   "id": "F-f00ea1c67a4",
+   "kind": "text",
+   "date": "2021-11-23T01:55:44+00:00",
+   "day": "2021-11-23",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-26b6b3794fec",
+   "kind": "discord",
+   "date": "2021-12-15T10:21:59+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-26b6b3794fec.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks, it negates all enemy creatures (even those in the hand) until the end of the turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-0b0e247667e3.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks, it negates all enemy creatures (even those in the hand) until the end of the turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 787
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-f29d866cb584.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this card attacks, it negates all enemy creatures (even those in the hand) until the end of the turn, or until Marx dies.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 789
+  },
+  {
+   "id": "O-6d198a1d7b68:Cards/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-04-13T22:23:16+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "marx and nebula name fix",
+   "repo": "first",
+   "image": "O-3c0365f4ebbd.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this creature attacks,\nit negates all enemy\ncreatures (even those in the hand) until the end of the\nturn, or until Marx dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a7656c37a157:Cards/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-04-15T00:07:41+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "marx stars",
+   "repo": "first",
+   "image": "O-7d59b3f18330.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this creature attacks,\nit negates all enemy\ncreatures (even those in the hand) until the end of the\nturn, or until Marx dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-df1d8d619f8e:Cards/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-04-17T01:12:15+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "touch ups",
+   "repo": "first",
+   "image": "O-95122f8c2564.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this creature attacks,\nit negates all enemy\ncreatures (even those in the hand) until the end of the global\nturn, or until Marx dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-95122f8c2564.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this creature attacks,\nit negates all enemy\ncreatures (even those in the hand) until the end of the global\nturn, or until Marx dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-95122f8c2564.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this creature attacks,\nit negates all enemy\ncreatures (even those in the hand) until the end of the global\nturn, or until Marx dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-c08c9c311251.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this creature attacks,\nit negates all enemy\ncreatures (even those in the hand) until the end of the global\nturn, or until Marx dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-e0497b0f598d.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this creature attacks,\nit negates all enemy\ncreatures (even those in the hand) until the end of the global\nturn, or until Marx dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/5 Stars/Marx.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-c43f9552770d.webp",
+   "fields": {
+    "name": {
+     "value": "Marx",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Whenever this creature attacks,\nit negates all enemy\ncreatures (even those in the hand) until the end of the global\nturn, or until Marx dies.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-21",
+  "sort": "2020-07-21",
+  "source": "discord",
+  "status": "owner"
+ }
+}

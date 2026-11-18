@@ -1,0 +1,1286 @@
+{
+ "card": "pix",
+ "key": "Pix",
+ "name": "Pix",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c39bfe18b9ae",
+   "kind": "discord",
+   "date": "2019-02-25T05:25:35+00:00",
+   "day": "2019-02-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-c39bfe18b9ae.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "During the summoning of Pix, or the beginning of a turn you mu hoose one color of pix and only that one may be attacked duri he rest of the turn. When a Pix attacks you can equip a green, blu or red bit to it before the attack. Green: if an item is used duri he attack of the equipped pix you can negate it and attack ifferent target. Blue: equipped pix is immune to counter damag Red: If the attacked creature switches out during this turn or t ext it will receive 4 piercing damage",
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 592,
+   "h": 1200
+  },
+  {
+   "id": "F-fd5fa0527fb",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f4f0f2fb038",
+   "kind": "text",
+   "date": "2020-07-21T10:56:00+00:00",
+   "day": "2020-07-21",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-c723828fc519",
+   "kind": "discord",
+   "date": "2020-07-22T02:53:10+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-c723828fc519.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All three share health. During the summoning of Pix, or the beginning of a turn you must choose one color of pix and only that one may attack or be attacked during the rest of the turn. Each color has its own ability. Green: Pix is immune to counter damage Blue: If the attacked creature switches out during this turn or the next it will receive 4 piercing damage Red: Attacks cannot be Stopped by items.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 785
+  },
+  {
+   "id": "D-P-f4d45b763ee1",
+   "kind": "discord",
+   "date": "2020-07-22T07:31:07+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-f4d45b763ee1.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "All three share health. During the summoning of Pix, or the beginning of a turn you must choose one color of pix and only that one may attack or be attacked during the rest of the turn. Each color has its own ability. Green: Pix is immune to counter damage Blue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage. Red: Attacks cannot be Stopped by items.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 787
+  },
+  {
+   "id": "F-f1cc97314e6",
+   "kind": "text",
+   "date": "2020-08-04T20:23:57+00:00",
+   "day": "2020-08-04",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-2804a4c36dc2",
+   "kind": "discord",
+   "date": "2020-08-04T20:26:58+00:00",
+   "day": "2020-08-04",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-2804a4c36dc2.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When This card is summoned, or at the beginning of each turn, it must choose a color form to transform into, with stats indicated by the different colors above. Green: Immune to counter damage Blue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage. Red: Attacks cannot be Stopped by items.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "darkmatter"
+     ],
+     "drop": [
+      "dark"
+     ]
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "F-f5a4f197c3d",
+   "kind": "text",
+   "date": "2020-08-14T09:54:21+00:00",
+   "day": "2020-08-14",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e09aacaf721f",
+   "kind": "discord",
+   "date": "2020-08-15T01:28:37+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-e09aacaf721f.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card is composed of 3 separate creatures that all share HP. When summoned and at (BOT) You must choose one color of Pix to be place on the field. Green: Immune to counter damage Blue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage. Red: Attacks cannot be Stopped by items.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 789
+  },
+  {
+   "id": "D-P-7b223644a7c1",
+   "kind": "discord",
+   "date": "2020-08-15T01:39:34+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-7b223644a7c1.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card is composed of 3 separate creatures that all share HP. When summoned and at (BOT) You must choose one color of Pix to exist on the field (This does not count as an ability) Green: Attacks can't be stopped by items. Blue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage. Red: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 789
+  },
+  {
+   "id": "D-P-4a6d71672e03",
+   "kind": "discord",
+   "date": "2020-08-18T10:50:39+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-4a6d71672e03.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "darkmatter",
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card is composed of 3 separate creatures that all share HP. When summoned and at (BOT) You must choose one color of Pix to exist on the field (This does not count as an ability) Green: Attacks from green cannot be negated or intercepted. Blue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage. Red: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 790
+  },
+  {
+   "id": "D-P-6eebdf29db64",
+   "kind": "discord",
+   "date": "2021-12-15T10:15:07+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-6eebdf29db64.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card is composed of 3 separate creatures that all share HP. When summoned and at (BOT) You must choose one color of Pix to exist on the field (This does not count as an ability) Green: Attacks from green cannot be negated or intercepted. Blue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage. Red: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 391,
+   "h": 791
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-47b5c9ba29d5.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card is composed of 3 separate creatures that all share HP. When summoned and at (BOT) You must choose one color of Pix to exist on the field (This does not count as an ability) Green: Attacks from green cannot be negated or intercepted. Blue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage. Red: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 791
+  },
+  {
+   "id": "O-ca47f09cf7b8:Cards/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-03-29T01:38:05+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "master hand and pix",
+   "repo": "first",
+   "image": "O-0351b9f802e4.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-9c990dade828.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (AAT) (OPT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-9aac737c3c00:Cards/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-04-07T05:37:34+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pix opt to opgt",
+   "repo": "first",
+   "image": "O-2daf1020d907.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (AAT)(OPGT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-32479ad32efa:Cards/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-04-13T07:33:44+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-69fbea7c9a57.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOGT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (OPGT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-5d96854a9080:Cards/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-04-17T01:44:06+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "more touch ups",
+   "repo": "first",
+   "image": "O-9008c6ca1369.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOGT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (OPGT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-9008c6ca1369.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOGT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (OPGT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-9008c6ca1369.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOGT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (OPGT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-523e214b2910.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOGT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (OPGT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/3 Stars/Pix.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-a052fb96bfc4.webp",
+   "fields": {
+    "name": {
+     "value": "Pix",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "darkmatter"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 6,
+        "def": 4,
+        "atk": 6,
+        "spd": 8
+       },
+       {
+        "hp": 6,
+        "def": 8,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 6,
+        "def": 2,
+        "atk": 8,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "These 3 creatures share HP. When summoned and at (BOGT) you must choose one color to exist on the field (This does not count as an ability)\nGreen: Attacks from green cannot be negated or intercepted.\nBlue: (OPGT) You can convert one instance of piercing damage to non-piercing damage.\nRed: Immune to counter damage.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-25",
+  "sort": "2019-02-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

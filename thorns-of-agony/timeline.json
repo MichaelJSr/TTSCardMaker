@@ -1,0 +1,165 @@
+{
+ "card": "thorns-of-agony",
+ "key": "Thorns of Agony",
+ "name": "Thorns of Agony",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-14",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-37b28ae2aa67",
+   "kind": "discord",
+   "date": "2023-10-14T07:11:22+00:00",
+   "day": "2023-10-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-37b28ae2aa67.webp",
+   "fields": {
+    "name": {
+     "value": "Thorns Of Agony",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature deals 3 peircing counter damage when attacked.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-9e967b441314",
+   "kind": "discord",
+   "date": "2023-10-14T07:18:05+00:00",
+   "day": "2023-10-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-9e967b441314.webp",
+   "fields": {
+    "name": {
+     "value": "Thorns Of Agony",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature deals 3 peircing counter damage when attacked",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-552ece446984",
+   "kind": "discord",
+   "date": "2023-10-14T07:19:50+00:00",
+   "day": "2023-10-14",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-552ece446984.webp",
+   "fields": {
+    "name": {
+     "value": "Thorns Of agony",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature deals 3 piercing counter damage when attacked.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-145d4e3b6cad:Items/Equip/2 Stars/Thorns_Of_Agony.png",
+   "kind": "old repo",
+   "date": "2023-10-14T07:34:47+00:00",
+   "day": "2023-10-14",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "charms",
+   "image": "O-ed4ed9eeb13a.webp",
+   "fields": {
+    "name": {
+     "value": "Thorns Of agony",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equipped creature deals 3 piercing counter damage when attacked.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-14",
+  "sort": "2023-10-14",
+  "source": "discord",
+  "status": "same"
+ }
+}

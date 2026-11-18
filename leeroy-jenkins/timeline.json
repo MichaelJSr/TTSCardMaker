@@ -1,0 +1,1291 @@
+{
+ "card": "leeroy-jenkins",
+ "key": "Leeroy Jenkins",
+ "name": "LEEROOOOOOOOY JENKINS",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d16bec6a6dd9",
+   "kind": "discord",
+   "date": "2019-05-08T22:30:15+00:00",
+   "day": "2019-05-08",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-d16bec6a6dd9.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand and you control at least one creature, then at any time (including your opponent's turn), you may swap this card with one of your creatures that is currently on the field with no point cost, and Leeroy is able to immediately attack with maximum priority. This action summons 2 1/2/4/5 whelps for your opponent (they cannot act until your opponent's next turn).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 319,
+   "h": 632
+  },
+  {
+   "id": "D-P-ca33d4628ad5",
+   "kind": "discord",
+   "date": "2019-05-10T04:58:31+00:00",
+   "day": "2019-05-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-ca33d4628ad5.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand and you control at least one creature, then at any time (including your opponent's turn), you may swap this card with one of your creatures that is currently on the field with no point cost, and Leeroy is able to immediately attack with maximum priority. This action summons 2 1/2/4/5 whelps for your opponent (they cannot act until your opponent's next turn).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 2,
+      "atk": 8,
+      "spd": 7
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 7
+     },
+     {
+      "hp": 2,
+      "def": 2,
+      "atk": 8,
+      "spd": 7
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 3 -> 2",
+     "DEF 3 -> 2"
+    ],
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 592,
+   "h": 1200
+  },
+  {
+   "id": "D-P-9409dc923f98-c3",
+   "kind": "discord",
+   "date": "2019-05-11T23:23:01+00:00",
+   "day": "2019-05-11",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-9409dc923f98-c3.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand and you control at least one creature, then at any time (including your opponent's turn), you may swap this card with one of your creatures that is currently on the field with no point cost, and Leeroy is able to immediately attack with maximum priority. This action summons 2 1/2/4/5 whelps for your opponent (they cannot act until your opponent's next turn).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 2,
+      "def": 2,
+      "atk": 8,
+      "spd": 7
+     },
+     {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 2 -> 3",
+     "DEF 2 -> 3",
+     "ATK 8 -> 10",
+     "SPD 7 -> 8"
+    ],
+    "nerfs": [],
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 315,
+   "h": 635
+  },
+  {
+   "id": "D-P-a84ef166144a-c3",
+   "kind": "discord",
+   "date": "2019-06-10T04:24:17+00:00",
+   "day": "2019-06-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-a84ef166144a-c3.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand and you control at least one creature, then at any time (including your opponent's turn), you may swap this card with one of your creatures that is currently on the field with no point cost, and Leeroy is able to immediately attack with maximum priority. This action summons two 1/2/4/5 whelps for your opponent across from Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 313,
+   "h": 625
+  },
+  {
+   "id": "D-P-35dc824c99d3",
+   "kind": "discord",
+   "date": "2020-07-18T12:18:01+00:00",
+   "day": "2020-07-18",
+   "badge": "Discord",
+   "channel": "update-01",
+   "image": "P-35dc824c99d3.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand then (AAT) you may swap this card with one of your creatures on the Primary field with no point cost, immediately initiating Leeroy's turn, and summoning two 1/2/4/5 whelps for your opponent across from Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 397,
+   "h": 789
+  },
+  {
+   "id": "D-P-19ccc7b8ffb4",
+   "kind": "discord",
+   "date": "2020-07-22T02:54:41+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-19ccc7b8ffb4.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand and you control at least one creature, then (AAT) you may swap this card with one of your creatures on the Primary field with no point cost, and Leeroy is able to attack immediately, initiating your turn, summoning two 1/2/4/5 whelps for your opponent across from Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 393,
+   "h": 783
+  },
+  {
+   "id": "D-P-390a6d9cd05d",
+   "kind": "discord",
+   "date": "2020-07-26T00:48:30+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-390a6d9cd05d.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand then (AAT) you may swap this card with one of your creatures on the Primary field with no point cost, summoning 2 Whelps for your opponent across from Jenkins and initiating Leeroy's turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 397,
+   "h": 789
+  },
+  {
+   "id": "D-P-5ed74bdeed60",
+   "kind": "discord",
+   "date": "2020-08-15T01:48:32+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-5ed74bdeed60.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand then (OPG) (AAT) you may swap this card with one of your creatures on the Primary field with no point cost, summoning 2 Whelps for your opponent across from Jenkins, and initiating Leeroy's turn.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 396,
+   "h": 787
+  },
+  {
+   "id": "F-f3c94ded532",
+   "kind": "text",
+   "date": "2020-08-28T11:26:10+00:00",
+   "day": "2020-08-28",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-36642221b421",
+   "kind": "discord",
+   "date": "2020-09-08T09:20:48+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-36642221b421.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand then (OPG) (AAT) you may swap this card with one of your creatures on the Primary field with no point cost, summoning 3 Whelps for your opponent across from Jenkins, and initiating Leeroy's turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 397,
+   "h": 788
+  },
+  {
+   "id": "D-P-7fa06480c211",
+   "kind": "discord",
+   "date": "2021-11-22T09:46:06+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-7fa06480c211.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand, then (OPG)(AAT) you may swap with one of your creatures on the PF with no point cost, summoning 2 whelps for your opponent across from Leeroy, and initiating his turn. After Leeroy's turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 314,
+   "h": 628
+  },
+  {
+   "id": "F-f2ad7129519",
+   "kind": "text",
+   "date": "2021-11-23T00:11:25+00:00",
+   "day": "2021-11-23",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-8918bce55ec4",
+   "kind": "discord",
+   "date": "2021-12-11T09:02:44+00:00",
+   "day": "2021-12-11",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-8918bce55ec4.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand, then (OPG)(AAT) you may swap with one of your creatures on the PF with no point cost, summoning 2 whelps for your opponent across from Leeroy, and initiating his turn. After Leeroy's turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 313,
+   "h": 627
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-002e7c86c935.webp",
+   "fields": {
+    "name": {
+     "value": "Leeroy Jenkins",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this card is in your hand, then (OPG)(AAT) you may swap with one of your creatures on the PF with no point cost, summoning 2 whelps for your opponent across from Leeroy, and initiating his turn. After Leeroy's turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 313,
+   "h": 627
+  },
+  {
+   "id": "O-257dc970a875:Cards/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-3982722ee7a2.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creaturee is in your hand, then (OPG)(AAT) you may swap with one of your creatures on the PF with no point cost, summoning 2 whelps for your opponent across from them, and initiating his turn. After their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Leeroy Jenkins",
+     "LEEEEEEEEEROY JENKINS"
+    ],
+    "stats": [
+     {
+      "hp": 3,
+      "def": 3,
+      "atk": 10,
+      "spd": 8
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [
+     "HP 3 -> 7",
+     "DEF 3 -> 5"
+    ],
+    "nerfs": [
+     "ATK 10 -> 6",
+     "SPD 8 -> 4"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b068175e98e1:Cards/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-04-07T04:31:42+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pronouns",
+   "repo": "first",
+   "image": "O-0b25688752d6.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creaturee is in your hand, then (OPG)(AAT) you may swap with one of your creatures on the PF with no point cost, summoning 2 whelps for your opponent across from them, and initiating their turn. After their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2d64d8ab29d2:Cards/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:41:31+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "leroy pandora, p box",
+   "repo": "first",
+   "image": "O-c71ad469e81b.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this creaturee is in your hand, then (OPG)(AAT) you may swap with one of your creatures on the PF with no point cost, summoning 2 whelps for your opponent across from them, and initiating their turn. After their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 6 -> 8",
+     "SPD 4 -> 10"
+    ],
+    "nerfs": [
+     "HP 7 -> 3",
+     "DEF 5 -> 3"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-97ce246ce8d8:Cards/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-04-09T15:16:29+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "repo": "first",
+   "image": "O-219e5dbc3074.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, summoning 2 whelps for the opponent across from this creature, and initiating a special turn for this creature.\nAfter their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-219e5dbc3074.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, summoning 2 whelps for the opponent across from this creature, and initiating a special turn for this creature.\nAfter their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-219e5dbc3074.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, summoning 2 whelps for the opponent across from this creature, and initiating a special turn for this creature.\nAfter their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "image": "O-7527623d49bb.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, summoning 2 whelps for the opponent across from this creature, and initiating a special turn for this creature.\nAfter their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8ecdec8f177:Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-10-13T03:11:51+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "warcraftian attribute color coding",
+   "image": "O-b842a98b4102.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, summoning 2 whelps for the opponent across from this creature, and initiating a special turn for this creature.\nAfter their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-8fc2ec6ba250.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, summoning 2 whelps for the opponent across from this creature, and initiating a special turn for this creature.\nAfter their turn ends, the creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8733064b6273:Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-10-22T22:46:22+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-ea85a8277e3e.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, and initiating a special turn for this creature, where it cannot be targeted by items (Unless this is being used reactively to an item.)\nAfter their turn ends, 2 whelps are summoned for the opponent across from this creature, and creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-07f89e3ee65c:Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-10-28T18:22:57+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-1feff8a23f5a.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, and initiating a special turn for this creature, where it cannot be targeted by items (Unless this is being used reactively to an item.)\nAfter their turn ends, 2 whelps are summoned for the opponent across from this creature, and creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-2348b49bd763.webp",
+   "fields": {
+    "name": {
+     "value": "LEEEEEEEEEROY JENKINS",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, and initiating a special turn for this creature, where it cannot be targeted by items (Unless this is being used reactively to an item.)\nAfter their turn ends, 2 whelps are summoned for the opponent across from this creature, and creature that was previously taking its turn resumes its turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-05-08",
+  "sort": "2019-05-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

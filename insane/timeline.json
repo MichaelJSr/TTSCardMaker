@@ -1,0 +1,98 @@
+{
+ "card": "insane",
+ "key": "Insane",
+ "name": "Insane",
+ "kind": "debuff",
+ "stop": {
+  "day": "2023-04-22",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-d20e1354f993:Auxillary/Status Effects/Debuffs/3 Stars/Insane.png",
+   "kind": "old repo",
+   "date": "2023-04-22T13:35:55+00:00",
+   "day": "2023-04-22",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Golden Freddy Remake",
+   "image": "O-981824c2b5b4.webp",
+   "fields": {
+    "name": {
+     "value": "Insane",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Forced to use all actions to attack a random friendly creature.\nCannot switch out.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/3 Stars/Insane.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "image": "O-f6f06a5ada36.webp",
+   "fields": {
+    "name": {
+     "value": "Insane",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot switch out.\nForced to use all actions to attack a random friendly creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2023-04-22",
+  "sort": "2023-04-22",
+  "source": "old repo",
+  "status": "owner"
+ }
+}

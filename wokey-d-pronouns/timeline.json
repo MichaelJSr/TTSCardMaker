@@ -1,0 +1,75 @@
+{
+ "card": "wokey-d-pronouns",
+ "key": "Wokey D Pronouns",
+ "name": "Wokey D. Pronouns",
+ "kind": "creature",
+ "stop": {
+  "day": "2024-08-06",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-34b2c7642f8a",
+   "kind": "discord",
+   "date": "2024-08-06T11:03:02+00:00",
+   "day": "2024-08-06",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-34b2c7642f8a.webp",
+   "fields": {
+    "name": {
+     "value": "Wokey D Pronouns",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Change an attribute of a creature into another attribute or a type into another type",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 1,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-16T13:17:44+00:00",
+  "changes": {
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2024-08-06",
+  "sort": "2024-08-06",
+  "source": "discord",
+  "status": "same"
+ }
+}

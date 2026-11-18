@@ -1,0 +1,152 @@
+{
+ "card": "grief",
+ "key": "Grief",
+ "name": "Grief",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-19",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-89f41ba4f3f6",
+   "kind": "discord",
+   "date": "2025-03-19T01:03:56+00:00",
+   "day": "2025-03-19",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-89f41ba4f3f6.webp",
+   "fields": {
+    "name": {
+     "value": "Grief",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict 2 Burdened for 2 turns. When combo attacking, deals twice as much bonus damage. Whenever a point yielding creature dies, all creatures on the PF of that team are inflicted with Chilled for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-247f51ac9c12",
+   "kind": "discord",
+   "date": "2025-03-19T01:09:09+00:00",
+   "day": "2025-03-19",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-247f51ac9c12.webp",
+   "fields": {
+    "name": {
+     "value": "Grief",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "ice"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict 2 Burdened for 2 turns. When combo attacking, deals twice as much bonus damage. Whenever a point yielding creature dies, all creatures on the PF of that team are inflicted with Chilled for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 3,
+      "atk": 8,
+      "spd": 4
+     },
+     {
+      "hp": 8,
+      "def": 3,
+      "atk": 7,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 8 -> 7"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-19T06:05:40+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-19",
+  "sort": "2025-03-19",
+  "source": "discord",
+  "status": "same"
+ }
+}

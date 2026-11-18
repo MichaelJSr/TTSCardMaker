@@ -1,0 +1,99 @@
+{
+ "card": "ingredient-wondertart",
+ "key": "Ingredient Wondertart",
+ "name": "Wondertart",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-11-17",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1da46d3b8370",
+   "kind": "discord",
+   "date": "2023-11-17T06:50:44+00:00",
+   "day": "2023-11-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1da46d3b8370.webp",
+   "fields": {
+    "name": {
+     "value": "Wondertart",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Destory one creature and revive another with the current HP of the destroyed creature.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-f4c3f8d145e5",
+   "kind": "discord",
+   "date": "2023-11-17T06:53:21+00:00",
+   "day": "2023-11-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-f4c3f8d145e5.webp",
+   "fields": {
+    "name": {
+     "value": "Wondertart",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Destory one friendly creature and revive another friendly with the current HP of the destroyed creature.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2024-12-18T05:45:27+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-17",
+  "sort": "2023-11-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

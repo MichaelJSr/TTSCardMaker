@@ -1,0 +1,414 @@
+{
+ "card": "wand-of-obesity",
+ "key": "Wand of Obesity",
+ "name": "Wand of Obesity",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-92bbd7f61e27",
+   "kind": "discord",
+   "date": "2020-07-22T03:03:09+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-92bbd7f61e27.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obesity",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its current and max HP by 4 and Decrease its speed by 2. This card may be used an infinite amount of times.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 610
+  },
+  {
+   "id": "F-f6496cf8611",
+   "kind": "text",
+   "date": "2020-08-13T08:13:45+00:00",
+   "day": "2020-08-13",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-3c75beeed60a",
+   "kind": "discord",
+   "date": "2020-08-13T12:46:13+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-3c75beeed60a.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obesity",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4 and Decrease its speed by 2. If used on a panda, the speed penalty is not applied Infinite Uses",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 391,
+   "h": 611
+  },
+  {
+   "id": "F-f0e0709f353",
+   "kind": "text",
+   "date": "2021-12-12T11:43:21+00:00",
+   "day": "2021-12-12",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f59fd729c8a",
+   "kind": "text",
+   "date": "2022-01-25T09:00:05+00:00",
+   "day": "2022-01-25",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e97b7d0b7864",
+   "kind": "discord",
+   "date": "2022-01-31T09:53:45+00:00",
+   "day": "2022-01-31",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-e97b7d0b7864.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obesity",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4, and Inflict 2 stacks of burdened Infinite Uses",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 388,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/3 Stars/Wand_of_Obesity.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-eef720a73457.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obesity",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4, and Inflict 2 stacks of burdened Infinite Uses",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 388,
+   "h": 611
+  },
+  {
+   "id": "O-a2d88d341804:Items/Heal/3 Stars/Wand_of_Obesity.png",
+   "kind": "old repo",
+   "date": "2023-04-10T00:14:54+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "wand of obesity",
+   "repo": "first",
+   "image": "O-e87c527f84ad.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obisity",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4, and inflict 2 stacks of burdend for 2 turns. Infinite uses.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Wand of Obesity",
+     "Wand of Obisity"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-34b06e42b98c:Items/Heal/3 Stars/Wand_of_Obesity.png",
+   "kind": "old repo",
+   "date": "2023-04-10T04:02:14+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "wand",
+   "repo": "first",
+   "image": "O-ed42c2b6378b.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obisity",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4, and inflict 2 stacks of burdened for 2 turns. Panda type’s do not recieve burdened.\nUses: Infinite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6f75ca603df9:Items/Heal/3 Stars/Wand_of_Obesity.png",
+   "kind": "old repo",
+   "date": "2023-04-11T22:07:06+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "repo": "first",
+   "image": "O-62917989bf4b.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obesity",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4, and inflict 2 stacks of burdened for 2 turns. Panda type’s do not recieve burdened.\nUses: Infinite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Wand of Obisity",
+     "Wand of Obesity"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c3606695f5de:Items/Heal/3 Stars/Wand_of_Obesity.png",
+   "kind": "old repo",
+   "date": "2023-04-19T07:40:46+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made pandas immune to burdened from food items",
+   "repo": "first",
+   "image": "O-f71f457158b4.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obesity",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4, and inflict 2 Burdened for 2 turns ( [panda] immune).\nUses: Infinite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/3 Stars/Wand_of_Obesity.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-f71f457158b4.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obesity",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4, and inflict 2 Burdened for 2 turns ( [panda] immune).\nUses: Infinite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Heal/3 Stars/Wand_of_Obesity.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-534f387d0139.webp",
+   "fields": {
+    "name": {
+     "value": "Wand of Obesity",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Target one creature; increase its max HP by 4, and inflict 2 Burdened for 2 turns ( [panda] immune).\nUses: Infinite",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,377 @@
+{
+ "card": "regen",
+ "key": "Regen",
+ "name": "Regen",
+ "kind": "buff",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9f0b907bb1d0",
+   "kind": "discord",
+   "date": "2022-01-22T04:19:11+00:00",
+   "day": "2022-01-22",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-9f0b907bb1d0.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "git look: icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 HP, 3 turns, can be stacked",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-aa1053084a43.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 HP, 3 turns, can be stacked",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-4ba8c01c6e19:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2023-04-04T22:13:30+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Made all buffs more stackable, and made linear or percent buffs for missing stats",
+   "repo": "first",
+   "image": "O-bd237dcb36c6.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Heal 1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-b316785629cd:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:15:05+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First round of redoing buffs and debuffs",
+   "repo": "first",
+   "image": "O-7f86121f5b96.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Heal 1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-cad29ec520b2:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2023-04-05T05:46:16+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "All buffs have the type in the correct location",
+   "repo": "first",
+   "image": "O-f8bee855078b.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Heal 1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-6153d199d664:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2023-04-05T08:56:55+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Fixed up all buffs again, tier 1 2 3 debuffs",
+   "repo": "first",
+   "image": "O-d6e5daeda97a.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) +1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-be2af3485d1e:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2023-04-05T22:46:32+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Doing a thankless job.",
+   "repo": "first",
+   "image": "O-f8bee855078b.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) Heal 1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-74cc827a6646:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2023-04-07T00:35:34+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "removing unnecessary acronyms on debuffs",
+   "repo": "first",
+   "image": "O-0ee81a3f8306.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-0ee81a3f8306.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-512be6cd13fd:Auxillary/Status Effects/Buffs/Regen.png",
+   "kind": "old repo",
+   "date": "2023-10-17T14:11:38+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates and upscaled buffs",
+   "image": "O-5bd031422927.webp",
+   "fields": {
+    "name": {
+     "value": "Regen",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "buffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2022-01-22",
+  "sort": "2022-01-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

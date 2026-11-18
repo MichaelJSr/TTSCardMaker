@@ -1,0 +1,422 @@
+{
+ "card": "clock",
+ "key": "Clock",
+ "name": "Clock",
+ "kind": "item",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-8d7f09eee560",
+   "kind": "discord",
+   "date": "2023-06-03T22:22:43+00:00",
+   "day": "2023-06-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8d7f09eee560.webp",
+   "fields": {
+    "name": {
+     "value": "Clock",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 5,
+      "atk": "none",
+      "spd": "none"
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a facedown to negate for 1 turn. While negated, the facedown cannot be swapped out.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-43acfedd0fc4:Items/Active/2 Stars/Clock.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:19:27+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-a6bf4cdf3e0b.webp",
+   "fields": {
+    "name": {
+     "value": "Clock",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a facedown to negate for 1 turn. While negated, the facedown cannot be swapped out.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 5,
+      "atk": "none",
+      "spd": "none"
+     },
+     {
+      "hp": 3,
+      "def": 5
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-673af998db63:Items/Active/2 Stars/Clock.png",
+   "kind": "old repo",
+   "date": "2023-09-21T09:18:39+00:00",
+   "day": "2023-09-21",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "psds",
+   "image": "O-b024811cd43b.webp",
+   "fields": {
+    "name": {
+     "value": "Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a facedown to negate for 1 turn. While negated, the facedown cannot be swapped out.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 5
+     },
+     {
+      "hp": 2,
+      "def": 6
+     }
+    ],
+    "buffs": [
+     "DEF 5 -> 6"
+    ],
+    "nerfs": [
+     "HP 3 -> 2"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4e4d58f627c3:Items/Active/2 Stars/Clock.png",
+   "kind": "old repo",
+   "date": "2023-09-21T09:54:28+00:00",
+   "day": "2023-09-21",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "psds",
+   "image": "O-f8f8b514a6a0.webp",
+   "fields": {
+    "name": {
+     "value": "Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a facedown to negate for 1 turn. While negated, the facedown cannot be swapped out.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 2,
+      "def": 6
+     },
+     {
+      "hp": 3,
+      "def": 5
+     }
+    ],
+    "buffs": [
+     "HP 2 -> 3"
+    ],
+    "nerfs": [
+     "DEF 6 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4a8c4891806:Items/Active/2 Stars/Clock.png",
+   "kind": "old repo",
+   "date": "2023-10-01T15:54:05+00:00",
+   "day": "2023-10-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "pending updates",
+   "image": "O-ffeeaa61e13f.webp",
+   "fields": {
+    "name": {
+     "value": "Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Choose a facedown to negate for 1 turn. While negated, the facedown cannot be swapped out.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 5
+     },
+     {
+      "hp": 4,
+      "def": 0
+     }
+    ],
+    "buffs": [
+     "HP 3 -> 4"
+    ],
+    "nerfs": [
+     "DEF 5 -> 0"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-a965a75e90a4:Items/Active/2 Stars/Clock.png",
+   "kind": "old repo",
+   "date": "2023-10-18T15:22:12+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new stuff",
+   "image": "O-44816390637c.webp",
+   "fields": {
+    "name": {
+     "value": "Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Choose a facedown to negate for 1 turn. While negated, the facedown cannot be swapped out.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c19d8b91a709:Items/Active/2 Stars/Clock.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-5e104cf31292.webp",
+   "fields": {
+    "name": {
+     "value": "Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Choose a facedown to negate for 1 turn. While negated, the facedown cannot be swapped out.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-a43fa5827a23:Items/Active/2 Stars/Clock.png",
+   "kind": "old repo",
+   "date": "2023-11-03T09:40:20+00:00",
+   "day": "2023-11-03",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "updates",
+   "image": "O-c44906f95889.webp",
+   "fields": {
+    "name": {
+     "value": "Clock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 0
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(OYT) Choose a facedown to negate until (ENDGT). While negated, the facedown cannot be swapped out.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-06-03",
+  "sort": "2023-06-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

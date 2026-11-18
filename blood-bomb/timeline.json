@@ -1,0 +1,123 @@
+{
+ "card": "blood-bomb",
+ "key": "Blood Bomb",
+ "name": "Blood Bomb",
+ "kind": "item",
+ "stop": {
+  "day": "2023-10-13",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-b2f6470965b5",
+   "kind": "discord",
+   "date": "2023-10-13T09:36:57+00:00",
+   "day": "2023-10-13",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b2f6470965b5.webp",
+   "fields": {
+    "name": {
+     "value": "Blood Bomb",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6 damage to a creature and heal a creature by 3 HP",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4e58958dc705:Items/Attack/3 Stars/Blood_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-10-13T09:47:03+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "items",
+   "image": "O-29a39677a522.webp",
+   "fields": {
+    "name": {
+     "value": "Blood Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6 damage to a creature and heal a creature by 3 HP.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4e94cb91b893:Items/Attack/3 Stars/Blood_Bomb.png",
+   "kind": "old repo",
+   "date": "2023-10-19T13:42:26+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "bobberlington",
+   "subject": "tutankoopa stats, blood bomb machine, structure piercing",
+   "image": "O-b2f7736aeb75.webp",
+   "fields": {
+    "name": {
+     "value": "Blood Bomb",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Deal 6 damage to a creature and heal a creature by 3 HP.\n[machine] Cannot heal.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-13",
+  "sort": "2023-10-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

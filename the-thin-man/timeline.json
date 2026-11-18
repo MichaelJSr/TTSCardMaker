@@ -1,0 +1,776 @@
+{
+ "card": "the-thin-man",
+ "key": "The Thin Man",
+ "name": "The Thin Man",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-03-20",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-35964c7f269f",
+   "kind": "discord",
+   "date": "2022-02-05T17:21:19+00:00",
+   "day": "2022-02-05",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-35964c7f269f.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%. If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack. If this creature kills a creature or minion, it creates a non- protective minion with that target's abilities, and stat reductions of -50%HP -1 DEF, -1 ATK - 1 SPD",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 401,
+   "h": 789
+  },
+  {
+   "id": "D-P-c4bec0e7d500",
+   "kind": "discord",
+   "date": "2022-02-06T13:52:30+00:00",
+   "day": "2022-02-06",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c4bec0e7d500.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%. If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack. If this creature kills a creature or minion, it creates a non- protective minion with the stats of that killed creature but with -1 ATK -1 SPD",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 401,
+   "h": 789
+  },
+  {
+   "id": "D-P-e9b9c7675e53",
+   "kind": "discord",
+   "date": "2023-03-20T02:58:38+00:00",
+   "day": "2023-03-20",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-e9b9c7675e53.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%. If a creature attacks, or is attacked by this creature,\nits speed is decreased by a further 25% during that attack. If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 400,
+   "h": 789
+  },
+  {
+   "id": "O-fff599319d26:Cards/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-03-20T04:38:41+00:00",
+   "day": "2023-03-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Port 6",
+   "repo": "first",
+   "image": "O-851f2dfc313f.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%. If a creature attacks, or is attacked by this creature,\nits speed is decreased by a further 25% during that attack. If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 789
+  },
+  {
+   "id": "O-9ecc7abcec56:Cards/Other/5 Stars/The Thin Man.png",
+   "kind": "old repo",
+   "date": "2023-04-19T10:59:11+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "thin man",
+   "repo": "first",
+   "image": "O-8d8ad11ec7aa.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Other/5 Stars/The Thin Man.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-8d8ad11ec7aa.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-851f2dfc313f.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 789
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Other/5 Stars/The Thin Man.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-8d8ad11ec7aa.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-851f2dfc313f.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 789
+  },
+  {
+   "id": "O-c6d46716f929:Creatures/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-04-22T12:37:02+00:00",
+   "day": "2023-04-22",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Thin man fix and bag of good nerf",
+   "image": "O-8d8ad11ec7aa.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6169747d2477:Creatures/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-09-11T21:15:32+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "doopliss thin man",
+   "image": "O-09481c09cbad.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with \n-1 ATK -1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2af66f5c66bb:Creatures/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-10-10T01:08:35+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-ed137c97088d.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with \n-1 ATK -1 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-91189038796f:Creatures/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-10-10T06:24:39+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "proposed changes",
+   "image": "O-adff20b2f0d2.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with \n-1 ATK -1 SPD.\nMinions cannot act the turn they are created.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-bdf64e49d352.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with \n-1 ATK -1 SPD.\nMinions cannot act the turn they are created.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Other/5 Stars/The_Thin_Man.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-fd05c587768e.webp",
+   "fields": {
+    "name": {
+     "value": "The Thin Man",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "While this creature is on the field, all enemy creatures have their speed reduced by 25%.\n If a creature attacks, or is attacked by this creature, its speed is decreased by a further 25% during that attack.\n If this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with \n-1 ATK -1 SPD.\nMinions cannot act the turn they are created.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2022-02-05",
+  "sort": "2022-02-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

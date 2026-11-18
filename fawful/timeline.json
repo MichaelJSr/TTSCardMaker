@@ -1,0 +1,886 @@
+{
+ "card": "fawful",
+ "key": "Fawful",
+ "name": "Fawful",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-c26c4559e093",
+   "kind": "discord",
+   "date": "2019-02-25T05:25:35+00:00",
+   "day": "2019-02-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-c26c4559e093.webp",
+   "fields": {
+    "name": {
+     "value": "Fawful",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Fawful has a jet pack(HP:4DEF:4ATK:0SPD:7) that does not protect him. Once per turn if the jetpack is alive It can either allow Fawful to dodge 1 attack or heal him by 6 health (AAT). If any creature attacks the jetpack their ability is negated(after the attack) for 2 turns or until the jetpack is killed. During odd turns Fawful's attacks give paralysis, during even numbered turns Fawful has +5 DEF and -1SPD until he attacks and this attack is piercing damage",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 592,
+   "h": 1200
+  },
+  {
+   "id": "F-fece3925c6b",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fa12badaa99",
+   "kind": "text",
+   "date": "2019-05-14T01:49:36+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-2eb3f8668068",
+   "kind": "discord",
+   "date": "2020-07-18T12:45:02+00:00",
+   "day": "2020-07-18",
+   "badge": "Discord",
+   "channel": "update-01",
+   "image": "P-2eb3f8668068.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After Fawful is attacked he gains 4 DEF until the end of the turn. Fawful has a jet pack minion (4/0/0/5) that does not protect him. Once per turn (AAT) if the jetpack is alive It can either allow a creature on your team to take 0 damage from an attack, or negate the ability of an opponent for 1 turn. Pay 3 points (OYT) to revive the jetpack if it is killed",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 4,
+      "atk": 4,
+      "spd": 6
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 4 -> 5",
+     "ATK 4 -> 5",
+     "SPD 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 395,
+   "h": 787
+  },
+  {
+   "id": "D-P-6842f435710e",
+   "kind": "discord",
+   "date": "2020-07-22T02:55:09+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-6842f435710e.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After Fawful is attacked he gains 4 DEF until the end of the turn. Fawful has a jet pack minion (3/4/0/5) that does not protect him. Once per turn (AAT) if the jetpack is alive It can either allow a creature on your team/to take 0 damage from an attack, or negate the ability of an opponent for 1 turn. Pay 3 points (OYT) to revive the jetpack if it is killed",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 394,
+   "h": 784
+  },
+  {
+   "id": "D-P-85fae44e272d",
+   "kind": "discord",
+   "date": "2020-07-27T07:35:21+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-85fae44e272d.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After the first time Fawful is attacked he gains 4 DEF until the end of the turn. Fawful has a Jet Pack minion. Pay 3 point (OYT) to revive the jetpack if it is killed",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 396,
+   "h": 787
+  },
+  {
+   "id": "D-P-fefeb775451a",
+   "kind": "discord",
+   "date": "2020-08-15T02:05:02+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-fefeb775451a.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After the first time Fawful is attacked during a turn he gains 4 DEF until the end of the turn. Fawful has a Jet Pack minion. Pay 3 point (OYT) to revive the jetpack if it is killed",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 394,
+   "h": 787
+  },
+  {
+   "id": "F-fab7c5e1df2",
+   "kind": "text",
+   "date": "2020-08-15T02:05:47+00:00",
+   "day": "2020-08-15",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f88b3032b25",
+   "kind": "text",
+   "date": "2021-05-26T08:05:51+00:00",
+   "day": "2021-05-26",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-021567fc64e1",
+   "kind": "discord",
+   "date": "2021-08-11T14:37:21+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-021567fc64e1.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After the first time Fawful is attacked during a turn he gains 4 DEF until the end of the full turn. Fawful has a Jet Pack minion. Pay 3 point (OYT) to revive the jetpack if it is killed.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 396,
+   "h": 788
+  },
+  {
+   "id": "D-P-0e9fbd4f95a4",
+   "kind": "discord",
+   "date": "2021-08-31T20:58:38+00:00",
+   "day": "2021-08-31",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-0e9fbd4f95a4-k70fcf0.webp",
+   "fields": {
+    "name": {
+     "value": "Fawful",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "owner",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After the first time Fawful is attacked during a turn he gains 4 DEF until the end of the turn. Fawful has a Jet Pack minion. Pay 3 point (OYT) to revive the jetpack if it is killed",
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 330,
+   "h": 660
+  },
+  {
+   "id": "D-P-ff40170daf2c",
+   "kind": "discord",
+   "date": "2021-12-15T10:16:50+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-ff40170daf2c.webp",
+   "fields": {
+    "name": {
+     "value": "Fawful",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After the first time Fawful is attacked during a turn he gains 4 DEF until the end of the full turn. Fawful has a Jet Pack minion. Pay 3 point (OYT) to revive the jetpack if it is killed.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 396,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/4 Stars/Fawful.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-44d69da64805.webp",
+   "fields": {
+    "name": {
+     "value": "Fawful",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After the first time Fawful is attacked during a turn he gains 4 DEF until the end of the full turn. Fawful has a Jet Pack minion. Pay 3 point (OYT) to revive the jetpack if it is killed.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 396,
+   "h": 787
+  },
+  {
+   "id": "O-7e4c94bc7d97:Cards/Mario/4 Stars/Fawful.png",
+   "kind": "old repo",
+   "date": "2023-04-14T23:53:33+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Dooplis, fawful, knight lost a lot",
+   "repo": "first",
+   "image": "O-3883ddee28df.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) When attacked, this creature gains4 DEF until the end of the global turn. \n(ENF) Summon a Jet Pack minion. \n(OYT) Pay 3 points to\nrevive the jetpack if it is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e12f3bae271:Cards/Mario/4 Stars/Fawful.png",
+   "kind": "old repo",
+   "date": "2023-04-16T23:31:53+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-8009051a78ce.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first Summon, Summon a Jet Pack minion. \n(OPGT) When attacked, this creature gains 4 DEF until the end of the global turn. \n(OYT) Pay 3 points to\nrevive the jetpack if it is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e7268dab49d4:Cards/Mario/4 Stars/Fawful.png",
+   "kind": "old repo",
+   "date": "2023-04-19T07:18:11+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "More changes to creatures",
+   "repo": "first",
+   "image": "O-c35f799267fd.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first Summon, summon a Jetpack. \n(OPGT) When attacked, this gains +4 DEF until the end of the global turn.\n(OYT) Pay 3 points to revive the jetpack if it is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/4 Stars/Fawful.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-c35f799267fd.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first Summon, summon a Jetpack. \n(OPGT) When attacked, this gains +4 DEF until the end of the global turn.\n(OYT) Pay 3 points to revive the jetpack if it is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/4 Stars/Fawful.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-c35f799267fd.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first Summon, summon a Jetpack. \n(OPGT) When attacked, this gains +4 DEF until the end of the global turn.\n(OYT) Pay 3 points to revive the jetpack if it is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/4 Stars/Fawful.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-22f69a65ba92.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first Summon, summon a Jetpack. \n(OPGT) When attacked, this gains +4 DEF until the end of the global turn.\n(OYT) Pay 3 points to revive the jetpack if it is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/4 Stars/Fawful.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-33fc16f38980.webp",
+   "fields": {
+    "name": {
+     "value": "FAWFUL",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first Summon, summon a Jetpack. \n(OPGT) When attacked, this gains +4 DEF until the end of the global turn.\n(OYT) Pay 3 points to revive the jetpack if it is destroyed.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-25",
+  "sort": "2019-02-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "card": "LC-3b27f8d934",
+ "key": "Ech",
+ "name": "Ech",
+ "morgue": "mdw",
+ "first": {
+  "date": "2024-10-04T04:01:59.427000+00:00",
+  "day": "2024-10-04",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-028d5c8f9bac",
+   "kind": "discord",
+   "date": "2024-10-04T04:01:59.427000+00:00",
+   "day": "2024-10-04",
+   "badge": "Discord",
+   "image": "P-028d5c8f9bac.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 720,
+   "h": 1440
+  }
+ ]
+}

@@ -1,0 +1,115 @@
+{
+ "card": "star-scraper",
+ "key": "Star Scraper",
+ "name": "Star Scraper",
+ "kind": "nme",
+ "stop": {
+  "day": "2023-12-04",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-aa5984e2cadb",
+   "kind": "discord",
+   "date": "2023-12-03T23:27:28+00:00",
+   "day": "2023-12-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-aa5984e2cadb.webp",
+   "fields": {
+    "name": {
+     "value": "Star Scraper",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Purchase cost: 4 Points\nAdd or remove 1 star to a creature or item.\nMay not be used on 5 star creatures.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-e19a556da40f",
+   "kind": "discord",
+   "date": "2023-12-03T23:52:48+00:00",
+   "day": "2023-12-03",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e19a556da40f.webp",
+   "fields": {
+    "name": {
+     "value": "Star Scraper",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Purchase cost: 4 Points\nAdd or remove 1 star to a creature or item.\nMay not be used on 5 star creatures.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "nme"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-01-15T06:17:52+00:00",
+  "changes": {
+   "stars": [
+    2,
+    1
+   ],
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-12-03",
+  "sort": "2023-12-03",
+  "source": "discord",
+  "status": "same"
+ }
+}

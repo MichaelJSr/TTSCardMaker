@@ -1,0 +1,1136 @@
+{
+ "card": "computer-virus",
+ "key": "Computer Virus",
+ "name": "Computer Virus",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fff3960b08c",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-bcab9ec5a1e6",
+   "kind": "discord",
+   "date": "2020-07-22T02:52:38+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-bcab9ec5a1e6.webp",
+   "fields": {
+    "name": {
+     "value": "Computer virus",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has three forms listed by different colored squares. 1st: slime Attacks give poison and slime takes 2 DMG. 2nd: Puppet: Once per turn (OYT) Roll a dice, if 5 or 6 is rolled, or if you pay 3 points, deal 6 piercing damage to the puppet and to another creature on the field. 3rd: witch: Attacks give either frostbite, burning, or heal any creature by 4 HP.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 4,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 388,
+   "h": 785
+  },
+  {
+   "id": "D-P-454239a0184d",
+   "kind": "discord",
+   "date": "2020-08-13T11:49:19+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-454239a0184d.webp",
+   "fields": {
+    "name": {
+     "value": "Computer virus",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has three forms represented by different colored squares. 1st: slime Can attack twice, and attacks give poison and deal 2 DMG to Slime. 2nd: Puppet: Can consume an action to pay 3 points to deal 8 piercing damage to itself and another creature on the field. 3rd: witch: Attacks give either frostbite, burning, or heal any creature by 4 HP.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 4,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 391,
+   "h": 791
+  },
+  {
+   "id": "D-P-baec559219df",
+   "kind": "discord",
+   "date": "2020-09-27T23:17:00+00:00",
+   "day": "2020-09-27",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-baec559219df.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has three forms represented by different colored squares. 1st: slime Can attack twice per action, and attacks give poison and deal 2 (CD) to Slime. 2nd: Puppet: Can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF). 3rd: witch: Attacks give either frostbite, burning, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 4,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "owner",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "D-P-4c7439dd11f2",
+   "kind": "discord",
+   "date": "2021-08-11T19:19:43+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-4c7439dd11f2.webp",
+   "fields": {
+    "name": {
+     "value": "Computer virus",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has three forms represented by different colored squares. 1st: slime Can attack twice per action, and attacks give poison and deal 2 (CD) to Slime. 2nd: Puppet: Can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF). 3rd: witch: Attacks give either frostbite, burning, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 4,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     }
+    ],
+    "buffs": [],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 392,
+   "h": 790
+  },
+  {
+   "id": "D-P-b03f86ae1cb4",
+   "kind": "discord",
+   "date": "2021-12-15T10:54:58+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-b03f86ae1cb4.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has three forms represented by different colored squares. 1st: slime Can attack twice per action, and attacks give poison and deal 2 (CD) to Slime. 2nd: Puppet: Can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF). 3rd: witch: Attacks give either frostbite, burning, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 392,
+   "h": 791
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-f3fe948724de.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has three forms represented by different colored squares. 1st: slime Can attack twice per action, and attacks give poison and deal 2 (CD) to Slime. 2nd: Puppet: Can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF). 3rd: witch: Attacks give either frostbite, burning, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 392,
+   "h": 791
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-dbc497ee916f.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creaure has three forms      \n1st:  Slime can attack twice per action, and attacks give poison and deal 2 (CD) to Slime.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks give either frostbite, burning, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Computer Virus",
+     "Computer Virus apppears!"
+    ],
+    "ability_change": "unknown",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-acc25d07ce1b.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creaure has three forms      \n1st:  Slime can attack twice per action, and attacks give poison and deal 2 (CD) to Slime.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks give either frostbite, burning, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-524745346a04:Cards/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-04-13T08:46:10+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-18e3457ccc02.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creaure has three forms      \n1st:  Slime can attack twice per action, and attacks give poison for 5 turns and deal 2 piercing (CD) to itself.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks give either frostbite for 2 turns, burning for 2 turns, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-18e3457ccc02.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creaure has three forms      \n1st:  Slime can attack twice per action, and attacks give poison for 5 turns and deal 2 piercing (CD) to itself.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks give either frostbite for 2 turns, burning for 2 turns, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-18e3457ccc02.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creaure has three forms      \n1st:  Slime can attack twice per action, and attacks give poison for 5 turns and deal 2 piercing (CD) to itself.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks give either frostbite for 2 turns, burning for 2 turns, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-5d6459593c38:Creatures/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-05-11T03:59:39+00:00",
+   "day": "2023-05-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Computer Virus Quality increase",
+   "image": "O-270e85cf091b.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creaure has three forms      \n1st:  Slime can attack twice per action, and attacks give poison for 5 turns and deal 2 piercing (CD) to itself.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks give either frostbite for 2 turns, burning for 2 turns, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0b1490b9404f:Creatures/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-09-11T21:33:24+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "image": "O-04f67fb5cb54.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has three forms:     \n1st:  Slime can attack twice per action, and attacks give poison for 5 turns and deal 2 piercing (CD) to itself.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks give either frostbite for 2 turns, burning for 2 turns, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-ccb047921703.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has three forms:     \n1st:  Slime can attack twice per action, and attacks give poison for 5 turns and deal 2 piercing (CD) to itself.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks give either frostbite for 2 turns, burning for 2 turns, or heal any creature by 4HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c4d403d82af7:Creatures/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-437ecb6f5ec3.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has three forms:     \n1st:  Slime can attack twice per action, and attacks inflict Poison for 5 turns and deal 2 piercing (CD) to itself.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks inflict either Frostbite for 2 turns, Burning for 2 turns, or heal any creature by +4 HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-626eaae25c89:Creatures/Kirby/3 Stars/Computer_Virus.png",
+   "kind": "old repo",
+   "date": "2023-10-22T18:00:01+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-b9077d5ffba2.webp",
+   "fields": {
+    "name": {
+     "value": "Computer Virus apppears!",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "creatures": [
+       {
+        "hp": 2,
+        "def": 2,
+        "atk": 3,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 2,
+        "atk": 5,
+        "spd": 5
+       },
+       {
+        "hp": 3,
+        "def": 4,
+        "atk": 6,
+        "spd": 5
+       }
+      ]
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has three forms:     \n1st:  Slime can attack twice per action, and attacks inflict Poison for 5 turns and deal 2 piercing (CD) to itself.\n2nd:  Puppet can consume an action to pay 3 points to deal 7 piercing damage to itself and another creature on the (PF).\n3rd:  Magician attacks inflict either Frostbite for 2 turns, Burning for 2 turns, or heal any creature by +4 HP.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "unknown"
+     ],
+     "drop": [
+      "machine"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-03-22",
+  "sort": "2019-03-22",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

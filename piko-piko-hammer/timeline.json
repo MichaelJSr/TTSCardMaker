@@ -1,0 +1,70 @@
+{
+ "card": "piko-piko-hammer",
+ "key": "Piko Piko Hammer",
+ "name": "Piko Piko Hammer",
+ "kind": "item",
+ "stop": {
+  "day": "2025-08-29",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-5b87585feec6",
+   "kind": "discord",
+   "date": "2025-02-10T08:02:06+00:00",
+   "day": "2025-02-10",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-5b87585feec6.webp",
+   "fields": {
+    "name": {
+     "value": "Amy Rose's Hammer",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 Softened for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-08-29T21:12:15+00:00",
+  "changes": {
+   "name": [
+    "Amy Rose's Hammer",
+    "Piko Piko Hammer"
+   ],
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-02-10",
+  "sort": "2025-02-10",
+  "source": "discord",
+  "status": "same"
+ }
+}

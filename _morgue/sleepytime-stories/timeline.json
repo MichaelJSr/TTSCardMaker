@@ -1,0 +1,46 @@
+{
+ "card": "sleepytime-stories",
+ "key": "Sleepytime Stories",
+ "name": "Sleepytime Stories",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-08-14T06:52:25.168000+00:00",
+  "day": "2020-08-14",
+  "channel": "update-02-port",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-1713eea3ebbf",
+   "kind": "discord",
+   "date": "2020-08-14T06:52:25.168000+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "image": "P-1713eea3ebbf.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-02-port",
+   "w": 600,
+   "h": 720
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Items/2 Stars/Book4.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-38078b29cc90.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 600,
+   "h": 720
+  }
+ ],
+ "kind_of": "played",
+ "git_file": "first repo"
+}

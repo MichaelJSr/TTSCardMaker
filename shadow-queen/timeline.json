@@ -1,0 +1,97 @@
+{
+ "card": "shadow-queen",
+ "key": "Shadow Queen",
+ "name": "Shadow Queen",
+ "kind": "creatures",
+ "stop": {
+  "day": "2025-03-08",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-889e18827968",
+   "kind": "discord",
+   "date": "2025-03-08T11:57:24+00:00",
+   "day": "2025-03-08",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-889e18827968.webp",
+   "fields": {
+    "name": {
+     "value": "Shadow Queen",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks have lifesteal. May consume an action to make its next attack hit the entire field Can also use an action to inflict 3 turns of confusion, 5 turns of 5 poison, or 3 turns of 3 enfeebled.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-08T11:49:38+00:00",
+  "changes": {
+   "stats": [
+    {
+     "hp": 8,
+     "def": 4,
+     "atk": 8,
+     "spd": 4
+    },
+    {
+     "hp": 7,
+     "def": 4,
+     "atk": 8,
+     "spd": 4
+    }
+   ],
+   "bal": "nerf",
+   "buffs": [],
+   "nerfs": [
+    "HP 8 -> 7"
+   ],
+   "ability_change": "unknown",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-03-08",
+  "sort": "2025-03-08",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,837 @@
+{
+ "card": "nightmare",
+ "key": "Nightmare",
+ "name": "Nightmare",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f5f3e742cc7",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-932b7808fe83",
+   "kind": "discord",
+   "date": "2020-07-22T02:57:48+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-932b7808fe83.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Twice per turn (OYT) either Pay 1 point to Deal 2.5 piercing damage to any Creature on the field (even those behind Minions), Blind one creature, or pay points equal to the level of an opponent item - 1 to negate it for 1 turn. Counter damage dealt to nightmare is increased by 1.5",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 389,
+   "h": 787
+  },
+  {
+   "id": "D-P-c8645d863437",
+   "kind": "discord",
+   "date": "2020-08-08T08:59:10+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c8645d863437.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT)(OYT) either Pay 1 point to Deal 2.5 piercing damage to any Creature on the field (even those behind Minions), Blind one creature, or pay points equal to the level of an opponent item -1 to negate it for 1 turn. Counter damage dealt to nightmare is increased by 1.5",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 789
+  },
+  {
+   "id": "D-P-205bbd6327a8",
+   "kind": "discord",
+   "date": "2020-08-08T11:32:13+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-205bbd6327a8.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) (OYT) either pay 1 point to deal 2.5 piercing damage to any creature on the field, Blind one creature, or pay points equal to the level of an opponent item -1 to negate it for 1 turn. Counter damage dealt to this card is increased by 1.5.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "D-P-043d2cfb6508",
+   "kind": "discord",
+   "date": "2021-12-15T08:30:56+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-043d2cfb6508.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) (OYT) either pay 1 point to deal 2.5 piercing damage to any creature on the field, Blind one creature, or pay points equal to the level of an opponent item -1 to negate it for 1 turn. Counter damage dealt to this card is increased by 1.5.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-af6968b51142.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) (OYT) either pay 1 point to deal 2.5 piercing damage to any creature on the field, Blind one creature, or pay points equal to the level of an opponent item -1 to negate it for 1 turn. Counter damage dealt to this card is increased by 1.5.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 391,
+   "h": 788
+  },
+  {
+   "id": "O-65dbc6ea48e9:Cards/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-04-12T19:23:24+00:00",
+   "day": "2023-04-12",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "KIRBY CARDS",
+   "repo": "first",
+   "image": "O-323475c6f29a.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Either pay 1 point to deal 2.5 piercing damage to any creature on the field, Blind one creature, or pay points equal to the level of an opponent item -1 to negate it for 1 turn. \nCounter damage dealt to this card is increased by 1.5.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-323475c6f29a.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Either pay 1 point to deal 2.5 piercing damage to any creature on the field, Blind one creature, or pay points equal to the level of an opponent item -1 to negate it for 1 turn. \nCounter damage dealt to this card is increased by 1.5.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-323475c6f29a.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Either pay 1 point to deal 2.5 piercing damage to any creature on the field, Blind one creature, or pay points equal to the level of an opponent item -1 to negate it for 1 turn. \nCounter damage dealt to this card is increased by 1.5.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-62c79d600e73.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT) Either Pay 1 point to \ndeal 2.5 piercing damage to any creature on the field,\n Blind one creature,\n or pay points equal to the level of an opponent item -1 to negate it for 1 global turn. \nCounter damage dealt to this card is increased by 1.5.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-269b7cceb938:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:52:08+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-59f247f1f159.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Counter damage dealt to this card is increased by 1.5. \n(TPT) Either Pay 1 point to do one:\n-Deal 2.5 piercing damage to any creature on the field\n -Inflict Blindness for 2 turns to a creature\n -Pay points equal to the level of an opponent item -1 to negate it for 1 global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-4560bb397cc7.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Counter damage dealt to this card is increased by 1.5. \n(TPT) Either Pay 1 point to do one:\n-Deal 2.5 piercing damage to any creature on the field\n -Inflict Blindness for 2 turns to a creature\n -Pay points equal to the level of an opponent item -1 to negate it for 1 global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ca13a335110d:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-10-18T09:56:44+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some creatures",
+   "image": "O-120d1338c9d7.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Counter damage dealt to this card is increased by 1.5. \n(TPT) do one:\n-Pay 1 point to inflict 2.5 piercing damage to any creature on the field\n -Inflict Blindness for 2 turns to a creature\n -Pay points equal to the level of an opponent item -1 to negate it for 1 global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-41578087f264:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-10-22T16:11:23+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-e41b2649803d.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Counter damage dealt to this card is increased by 1.5. \n(TPT) do one:\n-Pay 1 point to inflict 2.5 piercing damage to any creature on the field\n -Inflict Blindness for 2 turns to a creature\n -Pay points equal to the level of an opponent item -1 to negate it for 1 global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-626eaae25c89:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-10-22T18:00:01+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-317c28f9daeb.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Counter damage dealt to this card is increased by 1.5. \n(TPT) do one:\n-Pay 1 point to inflict 2.5 piercing damage to any creature on the field\n -Inflict Blindness for 2 turns to a creature\n -Pay points equal to the level of an opponent item -1 to negate it for 1 global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b9542b717b64:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-10-25T11:45:00+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ghostly",
+   "image": "O-be3a015cfe9f.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Counter damage dealt to this card is increased by 1.5. \n(TPT) do one:\n-Pay 1 point to inflict 2.5 piercing damage to any creature on the field\n -Inflict Blindness for 2 turns to a creature\n -Pay points equal to the level of an opponent item -1 to negate it for 1 global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/5 Stars/Nightmare.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-4092d47651b7.webp",
+   "fields": {
+    "name": {
+     "value": "Nightmare",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 8,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Counter damage dealt to this card is increased by 1.5. \n(TPT) do one:\n-Pay 1 point to inflict 2.5 piercing damage to any creature on the field\n -Inflict Blindness for 2 turns to a creature\n -Pay points equal to the level of an opponent item -1 to negate it for 1 global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-13",
+  "sort": "2019-02-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

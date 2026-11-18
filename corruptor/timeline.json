@@ -1,0 +1,390 @@
+{
+ "card": "corruptor",
+ "key": "Corruptor",
+ "name": "Corruptor",
+ "kind": "minion",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f17913ddc7e",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "hp",
+    "to": 5,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-7a1f6d6d6a15"
+  },
+  {
+   "id": "F-f351385a1d3",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "spd",
+    "to": 4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-7a1f6d6d6a15"
+  },
+  {
+   "id": "F-f410b459386",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "atk",
+    "to": 4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-7a1f6d6d6a15"
+  },
+  {
+   "id": "F-ffb7ff4dd6f",
+   "kind": "text",
+   "date": "2020-07-25T11:12:24+00:00",
+   "day": "2020-07-25",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "def",
+    "to": 4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-7a1f6d6d6a15"
+  },
+  {
+   "id": "D-P-7a1f6d6d6a15",
+   "kind": "discord",
+   "date": "2020-07-26T01:12:25+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-7a1f6d6d6a15.webp",
+   "fields": {
+    "name": {
+     "value": "Corruptor",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict sickness.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-e862f8029e43",
+   "kind": "discord",
+   "date": "2020-07-26T01:18:48+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-e862f8029e43.webp",
+   "fields": {
+    "name": {
+     "value": "Corruptor",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict sickness. If the Corruptor is killed, then all creatures are ejected from the mind realm.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-6e97dcfaa52d",
+   "kind": "discord",
+   "date": "2020-07-26T01:21:15+00:00",
+   "day": "2020-07-26",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-6e97dcfaa52d.webp",
+   "fields": {
+    "name": {
+     "value": "Corruptor",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict sickness. If the Corruptor is killed, then its opposing creature is ejected from the mind realm.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Minions/4 Stars/Corruptor.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-c7cc8b4e2853.webp",
+   "fields": {
+    "name": {
+     "value": "Corruptor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict sickness. If the Corruptor is killed, then its opposing creature is ejected from the mind realm.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a8d96a785a32:Auxillary/Minions/4 Stars/Corruptor.png",
+   "kind": "old repo",
+   "date": "2023-04-13T21:02:20+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuffs",
+   "repo": "first",
+   "image": "O-c00554098065.webp",
+   "fields": {
+    "name": {
+     "value": "Corruptor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict Sickness for 3 turns. If this creature is killed, the opposing creature is ejected from the Mind Realm.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a18b9e4c8c48:Auxillary/Minions/4 Stars/Corruptor.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:59:18+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added Auxillary minions",
+   "image": "O-c00554098065.webp",
+   "fields": {
+    "name": {
+     "value": "Corruptor",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks inflict Sickness for 3 turns. If this creature is killed, the opposing creature is ejected from the Mind Realm.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-25",
+  "sort": "2020-07-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,74 @@
+{
+ "card": "termination-shock",
+ "key": "Termination Shock",
+ "name": "Termination Shock",
+ "kind": "nme",
+ "stop": {
+  "day": "2025-03-22",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-2f7571804854",
+   "kind": "discord",
+   "date": "2025-03-21T04:36:24+00:00",
+   "day": "2025-03-21",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2f7571804854.webp",
+   "fields": {
+    "name": {
+     "value": "Termination Shock",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cost: 2 Bricks, 4 points\nWhen an enemy field item is negated, the enemy team feels the inverse of its stat boosts for that turn, and they cannot remove the field item from the field next turn. Additionally, you may now negate enemy field items with points equal to the field item's level, and may do so on back-to-back turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 0
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-23T05:18:45+00:00",
+  "changes": {
+   "ability_change": "same",
+   "unknown": [
+    "types",
+    "stats"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-21",
+  "sort": "2025-03-21",
+  "source": "discord",
+  "status": "same"
+ }
+}

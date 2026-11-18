@@ -1,0 +1,178 @@
+{
+ "card": "error-room",
+ "key": "Error Room",
+ "name": "Error Room",
+ "kind": "field",
+ "stop": {
+  "day": "2023-10-28",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-615263aa76ab:Field/4 Stars/Error_Room.psd",
+   "kind": "old repo",
+   "date": "2023-10-28T23:56:11+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-98842b35b0c2.webp",
+   "fields": {
+    "name": {
+     "value": "Error room",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Unkown type",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 320,
+   "h": 480
+  },
+  {
+   "id": "O-d030a1a35f96:Field/4 Stars/Error_Room.png",
+   "kind": "old repo",
+   "date": "2023-10-31T01:40:31+00:00",
+   "day": "2023-10-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "newcaeds",
+   "image": "O-ac95dd72882d.webp",
+   "fields": {
+    "name": {
+     "value": "Error room",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-1 cost per: (AAT) Can choose to have the effect of any type.\n(OPGT)(OYT) May remove or add a star from any known item or creature.\nStar level Cannot go below 1 star.\nCannot change star level of infinite use items.\nnon-fragile equips can only be changed once.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-54ae10f282ff:Field/4 Stars/Error_Room.png",
+   "kind": "old repo",
+   "date": "2023-11-01T09:17:05+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "error room -2 cost",
+   "image": "O-33df9e0f3212.webp",
+   "fields": {
+    "name": {
+     "value": "Error room",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 cost per: (AAT) Can choose to have the effect of any type.\n(OPGT)(OYT) May remove or add a star from any known item or creature.\nStar level Cannot go below 1 star.\nCannot change star level of infinite use items.\nnon-fragile equips can only be changed once.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c68cfd0d8555:Field/4 Stars/Error_Room.png",
+   "kind": "old repo",
+   "date": "2023-11-01T10:08:58+00:00",
+   "day": "2023-11-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "koops and error room",
+   "image": "O-cf19c4cc3bc1.webp",
+   "fields": {
+    "name": {
+     "value": "Error room",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 cost per: (AAT) Can choose to have the effect of any type.\n(OPGT)(OYT) May remove or add a star from any known item or creature.\nStar level Cannot go below 1 star.\nReusable items can only have their star level changed once.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-28",
+  "sort": "2023-10-28",
+  "source": "old repo (PSD)",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,907 @@
+{
+ "card": "hr-d3",
+ "key": "HR-D3",
+ "name": "HR-D3",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e0f8b66f01c7",
+   "kind": "discord",
+   "date": "2020-07-22T02:57:30+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-e0f8b66f01c7.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "For every 5 health below max health HR-D3 loses 1 defense and gains 1 attack. For every 7 health below max health HR-D3 gains 1 speed. You can pay 3 points and HR-D3 cannot attack this turn, however hi attack is doubled next turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 6,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 388,
+   "h": 790
+  },
+  {
+   "id": "D-P-802800d8e687",
+   "kind": "discord",
+   "date": "2020-07-25T07:58:51+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-802800d8e687.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "HR-D3 can opt to not ATK or DEF to increase his ATK by 10 next turn. For every 5 HP below max health HR-D3 loses 1 DEF and gains 1 SPD.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     1,
+     5
+    ],
+    "stats": [
+     {
+      "hp": 9,
+      "def": 6,
+      "atk": 7,
+      "spd": 4
+     },
+     {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 7 -> 8"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "D-P-6b6740576f18",
+   "kind": "discord",
+   "date": "2020-08-09T07:48:28+00:00",
+   "day": "2020-08-09",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-6b6740576f18.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "HR-D3 can consume his ability to attack, defend, or switch out to increase his ATK by 10 until the end of his next turn. For every 5 HP below max health HR-D3 loses 1 DEF and gains 1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 388,
+   "h": 789
+  },
+  {
+   "id": "F-f084c59829e",
+   "kind": "text",
+   "date": "2020-08-15T10:55:48+00:00",
+   "day": "2020-08-15",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-a5c813e233c2",
+   "kind": "discord",
+   "date": "2020-08-18T09:33:01+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-a5c813e233c2.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make its next attack deal 10 extra damage. If this attack's damage were to be reduced to 0 or negated, it deals 10 piercing damage instead. For every 5 HP below max health HR-D3 loses 1 DEF and gains 1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "F-f20e03dc769",
+   "kind": "text",
+   "date": "2021-07-31T09:52:34+00:00",
+   "day": "2021-07-31",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "def",
+    "by": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-cd912578f5f1"
+  },
+  {
+   "id": "D-P-cd912578f5f1",
+   "kind": "discord",
+   "date": "2021-08-11T15:02:12+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-cd912578f5f1.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make its next attack deal 10 extra damage. If this attack's damage were to be reduced to 0 or negated, it deals 10 piercing damage instead. For every 5 HP below max health, HR-D3 loses 1 DEF and gains 1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 9,
+      "def": 6,
+      "atk": 8,
+      "spd": 4
+     },
+     {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 391,
+   "h": 787
+  },
+  {
+   "id": "D-P-0e399800ed8a",
+   "kind": "discord",
+   "date": "2021-12-15T10:27:23+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-0e399800ed8a.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make its next attack deal 10 extra damage. If this attack's damage were to be reduced to 0 or negated, it deals 10 piercing damage instead. For every 5 HP below max health, HR-D3 loses 1 DEF and gains 1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 392,
+   "h": 788
+  },
+  {
+   "id": "D-P-c7b930da1390",
+   "kind": "discord",
+   "date": "2021-12-26T17:34:30+00:00",
+   "day": "2021-12-26",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-c7b930da1390.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make its next attack deal 10 extra damage. Until that attack happens, no status effect, ability, or item may prevent that attack from occurring, and that attack cannot be negated or redirected. For every 5 HP below max health, HR-D3 loses 1 DEF and gains 0.5 SPD.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 786
+  },
+  {
+   "id": "F-f043116b92d",
+   "kind": "text",
+   "date": "2021-12-26T17:34:55+00:00",
+   "day": "2021-12-26",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-2867245ce97e.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make its next attack deal 10 extra damage. \nUntil that attack happens, no status effect, ability, or item may prevent that attack from occurring, and that attack cannot be negated or redirected.\n For every 5 HP below max health, HR-D3 loses 1 DEF and gains 0.5 SPD.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 390,
+   "h": 786
+  },
+  {
+   "id": "O-cece3b1905a7:Cards/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2023-04-13T05:30:39+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some stuff",
+   "repo": "first",
+   "image": "O-db69a7c1cc12.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make its next attack deal 10 extra damage. \nUntil that attack happens, no status effect, ability, or item may prevent that attack from occurring, and that attack cannot be negated or redirected.\n For every 5 HP below max health, HR-D3 loses 1 DEF and gains 0.5 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-db69a7c1cc12.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make its next attack deal 10 extra damage. \nUntil that attack happens, no status effect, ability, or item may prevent that attack from occurring, and that attack cannot be negated or redirected.\n For every 5 HP below max health, HR-D3 loses 1 DEF and gains 0.5 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-db69a7c1cc12.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make its next attack deal 10 extra damage. \nUntil that attack happens, no status effect, ability, or item may prevent that attack from occurring, and that attack cannot be negated or redirected.\n For every 5 HP below max health, HR-D3 loses 1 DEF and gains 0.5 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-42dfc8b77db9:Creatures/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2023-05-12T00:34:07+00:00",
+   "day": "2023-05-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some changes",
+   "image": "O-941926be53d7.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card can consume an action to make it’s next attack deal 10 extra damage. \nUntil that attack hits, no status effect, ability, or item may prevent that attack from occurring, and that attack cannot be negated or redirected.\n For every 5 HP below max health, this creature loses 1 DEF and gains 0.5 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4baeaa3668e1:Creatures/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2023-05-12T05:08:08+00:00",
+   "day": "2023-05-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "hrd3",
+   "image": "O-0c78687d35dc.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can consume an action make it’s next attack deal 10 extra damage and 6 shockwave damage.\nWhile charging this attack, until the attack has finished, it cannot be targeted by enemy items or abilities.\nThis attack cannot be intercepted or redirected.\n For every 5 HP below max health, this creature loses 1 DEF and gains 0.5 SPD.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0e1f656771bc:Creatures/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2023-05-26T06:46:50+00:00",
+   "day": "2023-05-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "port",
+   "image": "O-1e73d0216086.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can consume an action make it’s next attack deal 10 extra damage and 6 shockwave damage.\nWhile charging this attack, until the attack has finished, it cannot be targeted by enemy items.\nDuring this attack, abilities may not target this creature.\n For every 5 HP below max health, this creature loses 1 DEF and gains 0.5 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-67a8d2f8dd0d.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can consume an action make it’s next attack deal 10 extra damage and 6 shockwave damage.\nWhile charging this attack, until the attack has finished, it cannot be targeted by enemy items.\nDuring this attack, abilities may not target this creature.\n For every 5 HP below max health, this creature loses 1 DEF and gains 0.5 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/5 Stars/HR-D3.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-e88c9696ef2c.webp",
+   "fields": {
+    "name": {
+     "value": "HR-D3",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 7,
+      "atk": 8,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature can consume an action make it’s next attack deal 10 extra damage and 6 shockwave damage.\nWhile charging this attack, until the attack has finished, it cannot be targeted by enemy items.\nDuring this attack, abilities may not target this creature.\n For every 5 HP below max health, this creature loses 1 DEF and gains 0.5 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

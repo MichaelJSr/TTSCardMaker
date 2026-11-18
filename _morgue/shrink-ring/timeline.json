@@ -1,0 +1,29 @@
+{
+ "card": "shrink-ring",
+ "key": "Shrink Ring",
+ "name": "Shrink Ring",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-13T09:33:56.285000+00:00",
+  "day": "2020-07-13",
+  "channel": "cursed",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-b95e6cc92f64-c2",
+   "kind": "discord",
+   "date": "2020-07-13T09:33:56.285000+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "image": "P-b95e6cc92f64-c2.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "cursed",
+   "w": 391,
+   "h": 610
+  }
+ ],
+ "kind_of": "joke"
+}

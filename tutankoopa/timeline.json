@@ -1,0 +1,1002 @@
+{
+ "card": "tutankoopa",
+ "key": "Tutankoopa",
+ "name": "Tutankoopa",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-48e51d9ece77",
+   "kind": "discord",
+   "date": "2020-07-22T02:53:17+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-48e51d9ece77.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Tutankoopa is summoned, and at the beginning of every turn he gains 1 shell counter. For every shell counter he has he may attack 1 time and destroy the counter, he may not attack more than 3 times per turn, and he may not have more than 4 shells. Every 2 turns (OYT) Tutankoopa may pay 2 points to summon a chomp (HP: 3 DEF: 6 ATK: 6 SPD: 5). He may not have more than 1 chomp. Tutankoopa still gains shells and may attack while the chomp is on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 394,
+   "h": 791
+  },
+  {
+   "id": "D-P-211bf910c988",
+   "kind": "discord",
+   "date": "2020-07-25T12:37:50+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-211bf910c988.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When Tutankoopa is summoned, and at the beginning of every turn he gains 1 shell counter. For every shell counter he has, he may attack 1 time and destroy the counter. Every 2 turns (OYT) Tutankoopa may pay 2 points to summon a Chomp. He may not have more than 1 chomp and may attack while the chomp is on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 398,
+   "h": 790
+  },
+  {
+   "id": "F-f2b8143aa5e",
+   "kind": "text",
+   "date": "2020-07-28T09:24:09+00:00",
+   "day": "2020-07-28",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-52beef97efa5",
+   "kind": "discord",
+   "date": "2020-09-27T23:50:45+00:00",
+   "day": "2020-09-27",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-52beef97efa5.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has no actions by default and gains an action by consuming a shell counter. When this card is summoned, and at the beginning of every turn it gains a shell counter. (EOT) (OYT) you can pay 2 points to summon a Chomp. You can only have one Chomp and this card may still attack while the Chomp is protecting it.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 398,
+   "h": 789
+  },
+  {
+   "id": "D-P-c0fa37b89d9e",
+   "kind": "discord",
+   "date": "2021-12-15T09:26:28+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-c0fa37b89d9e.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has no actions by default and gains an action by consuming a shell counter. When this card is summoned, and at the beginning of every turn it gains a shell counter. (EOT)(OYT) you can pay 2 points to summon a Chomp. You can only have one Chomp and this card may still attack while the Chomp is protecting it.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "A",
+   "w": 398,
+   "h": 789
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-72bdfacfe55a.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has no actions by default and gains an action by consuming a shell counter. When this card is summoned, and at the beginning of every turn it gains a shell counter. (EOT)(OYT) you can pay 2 points to summon a Chomp. You can only have one Chomp and this card may still attack while the Chomp is protecting it.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 398,
+   "h": 789
+  },
+  {
+   "id": "O-257dc970a875:Cards/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-1642423f5233.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has no actions by default and gains an action by consuming a shell counter. When this card is summoned, and at the beginning of every turn it gains a shell counter. (EOT)(OYT) you can pay 2 points to summon a Chomp. You can only have one Chomp and this card may still attack while the Chomp is protecting it.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8c12e021fb3a:Cards/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-9f70cb8a3adb.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has no actions by default and gains an action by consuming a shell counter. When this card is summoned, and at the beginning of every turn it gains a shell counter. (EOT)(OYT) you can pay 2 points to summon a Chomp. You can only have one Chomp and this card may still attack while the Chomp is protecting it.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-956d950a7f6c:Cards/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-04-06T08:00:05+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "tutankoopa and spaceboy",
+   "repo": "first",
+   "image": "O-a0103ec6cc24.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. Actions may be accumulated and saved between turns. (EOT)(OYT) Pay 2 points to summon a Chomp if none are alive. This creature may attack while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-5bb566d5928b:Cards/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-04-13T19:46:20+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "repo": "first",
+   "image": "O-bc60303fd079.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. Actions may be accumulated and saved between turns. (EOT)(OYT) Pay 2 points to summon a Chomp if none are alive. This creature may attack while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fbf9b2007d81:Cards/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-04-14T19:11:31+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some mario touch ups",
+   "repo": "first",
+   "image": "O-ac1b4360a913.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may attack while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-ac1b4360a913.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may attack while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-ac1b4360a913.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may attack while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ac66982ab4e5:Creatures/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-04-30T19:27:45+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "TutanKoopa And Dynamyte",
+   "image": "O-e2a6aa637d31.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may attack while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7e54a075b6fc:Creatures/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-10-13T02:28:44+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "claw t beth tutankoopa fix",
+   "image": "O-f85e7c3a2f75.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may use actions while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-b8fcc8bdde96.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "magic"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may use actions while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 5 -> 6",
+     "ATK 5 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4e94cb91b893:Creatures/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-10-19T13:42:26+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "bobberlington",
+   "subject": "tutankoopa stats, blood bomb machine, structure piercing",
+   "image": "O-6cb61a2af82e.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may use actions while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 7,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 6 -> 5",
+     "ATK 7 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-136cfb432811.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may use actions while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1097c67e252:Creatures/Mario/3 Stars/Tutankoopa.png",
+   "kind": "old repo",
+   "date": "2023-11-02T22:28:51+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "templaticidasd",
+   "image": "O-c1aea7c1d43c.webp",
+   "fields": {
+    "name": {
+     "value": "Tutankoopa",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon first summon, gain +1 Action. \nActions may be accumulated and saved between turns.\n(EOT)Pay 2 points to summon a Chomp if none are alive.\n This creature may use actions while not on the primary field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

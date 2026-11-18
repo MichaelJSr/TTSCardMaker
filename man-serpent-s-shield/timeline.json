@@ -1,0 +1,121 @@
+{
+ "card": "man-serpent-s-shield",
+ "key": "Man-Serpent's Shield",
+ "name": "Man-Serpent's Shield",
+ "kind": "item",
+ "stop": {
+  "day": "2023-04-23",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e0e30c912c30",
+   "kind": "discord",
+   "date": "2023-04-23T12:28:11+00:00",
+   "day": "2023-04-23",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e0e30c912c30.webp",
+   "fields": {
+    "name": {
+     "value": "Man Serpent Shield",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 DEF -1 SPD\n+3 MAX HP on kills",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7a31314e47ef:Items/Equip/3 Stars/Man_Serpent_Shield.png",
+   "kind": "old repo",
+   "date": "2023-04-23T13:27:43+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Man Serpent Shield",
+   "file": "Man Serpent Shield",
+   "image": "O-734b7040fb13.webp",
+   "fields": {
+    "name": {
+     "value": "Man Serpent Shield",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 DEF -1 SPD\n+3 MAX HP on kills",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a140ee435b1:Items/Equip/3 Stars/Man_Serpent_Shield.png",
+   "kind": "old repo",
+   "date": "2023-09-26T13:18:11+00:00",
+   "day": "2023-09-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "file": "Man Serpent Shield",
+   "image": "O-d0d8e5d3d907.webp",
+   "fields": {
+    "name": {
+     "value": "Man Serpent Shield",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 DEF -1 SPD\n+3 MAX HP on kills.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-04-23",
+  "sort": "2023-04-23",
+  "source": "discord",
+  "status": "same"
+ }
+}

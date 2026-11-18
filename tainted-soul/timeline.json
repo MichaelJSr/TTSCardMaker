@@ -1,0 +1,76 @@
+{
+ "card": "tainted-soul",
+ "key": "Tainted Soul",
+ "name": "Tainted Soul",
+ "kind": "minion",
+ "stop": {
+  "day": "2026-11-06",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-519e12366971",
+   "kind": "discord",
+   "date": "2026-11-06T03:35:26+00:00",
+   "day": "2026-11-06",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-519e12366971.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Soul",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion",
+      "undead"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can't use actions to attack. Action Pick a slot. The parent creature counts as being in the chosen slot for the purposes of slot & lane targeting.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 0,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-06T04:23:12+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  }
+ },
+ "created": {
+  "date": "2026-11-06",
+  "sort": "2026-11-06",
+  "source": "discord",
+  "status": "owner"
+ }
+}

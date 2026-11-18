@@ -1,0 +1,266 @@
+{
+ "card": "smeckeldorfed",
+ "key": "Smeckeldorfed",
+ "name": "Smeckeldorfed",
+ "kind": "debuff",
+ "stop": {
+  "day": "2023-04-05",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "O-b316785629cd:Auxillary/Status Effects/Debuffs/1 Stars/Smeckeldorfed.png",
+   "kind": "old repo",
+   "date": "2023-04-05T03:15:05+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First round of redoing buffs and debuffs",
+   "repo": "first",
+   "image": "O-3a4da7ba6c7f.webp",
+   "fields": {
+    "name": {
+     "value": "Smeckeldorfed",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) -1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-df4782564913:Auxillary/Status Effects/Debuffs/1 Stars/Smeckeldorfed.png",
+   "kind": "old repo",
+   "date": "2023-04-05T05:14:58+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "added arrows to the t1 debuffs",
+   "repo": "first",
+   "image": "O-b5e21fa2c509.webp",
+   "fields": {
+    "name": {
+     "value": "Smeckeldorfed",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) -1 HP",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "debuffstack"
+     ],
+     "drop": []
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-be2af3485d1e:Auxillary/Status Effects/Debuffs/1 Stars/Smeckeldorfed.png",
+   "kind": "old repo",
+   "date": "2023-04-05T22:46:32+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Doing a thankless job.",
+   "repo": "first",
+   "image": "O-715a32f66212.webp",
+   "fields": {
+    "name": {
+     "value": "Smeckeldorfed",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) 1 DMG",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-74cc827a6646:Auxillary/Status Effects/Debuffs/1 Stars/Smeckeldorfed.png",
+   "kind": "old repo",
+   "date": "2023-04-07T00:35:34+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "removing unnecessary acronyms on debuffs",
+   "repo": "first",
+   "image": "O-cc9f44592452.webp",
+   "fields": {
+    "name": {
+     "value": "Smeckeldorfed",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Status Effects/Debuffs/1 Stars/Smeckeldorfed.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-cc9f44592452.webp",
+   "fields": {
+    "name": {
+     "value": "Smeckeldorfed",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/1 Stars/Smeckeldorfed.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "image": "O-d14f90abf5e2.webp",
+   "fields": {
+    "name": {
+     "value": "Smeckeldorfed",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuffstack"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "1 DMG",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2023-04-05",
+  "sort": "2023-04-05",
+  "source": "first repo",
+  "status": "owner"
+ }
+}

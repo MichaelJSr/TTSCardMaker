@@ -1,0 +1,74 @@
+{
+ "card": "tainted-cain",
+ "key": "Tainted Cain",
+ "name": "Tainted Cain",
+ "kind": "creature",
+ "stop": {
+  "day": "2026-11-06",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-30b03b845b2d",
+   "kind": "discord",
+   "date": "2026-11-06T05:56:51+00:00",
+   "day": "2026-11-06",
+   "badge": "Discord",
+   "channel": "ideas-storage-no-chitchat",
+   "image": "P-30b03b845b2d.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Cain",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature's player cannot use items on it except from this ability. (OYT) Can spend any amount of resources to earn crafting counters: 2 SP = 1 crafting counter 1 brick = 1 crafting counter 1 point = 2 crafting counters X star item = Star level x 2 crafting counters (1CD) Spend crafting counters equal to 3 times an item's star level to draw from a copy of that star level item deck. You may generate that item, or spend 1 crafting counter to put it back and draw from that deck again. You may keep spending 1 crafting counter to redraw from that specific item deck until you generate an item. The generated item may be used immediately on this creature for no SP cost, otherwise it goes to your hand.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 3,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-06T07:17:02+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2026-11-06",
+  "sort": "2026-11-06",
+  "source": "discord",
+  "status": "owner"
+ }
+}

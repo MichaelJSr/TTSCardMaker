@@ -1,0 +1,440 @@
+{
+ "card": "the-collector",
+ "key": "The Collector",
+ "name": "The Collector",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-04-29",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-42ace6a12458:Creatures/Hollow Knight/3 Stars/the_collector.png",
+   "kind": "old repo",
+   "date": "2023-04-29T08:53:21+00:00",
+   "day": "2023-04-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "(oops forgot the cllector png",
+   "image": "O-8bd0b37b4c5a.webp",
+   "fields": {
+    "name": {
+     "value": "The Collector",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Summon one:\nSharp Baldur\nPrimal Aspid\nArmored Squit\n(OPT) Pay 3 Points to summon a minion.\nMay Not have more than 5 minions.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-5963b00f5b37:Creatures/Hollow Knight/3 Stars/The_Collector.png",
+   "kind": "old repo",
+   "date": "2023-04-29T09:17:33+00:00",
+   "day": "2023-04-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "uppercase",
+   "image": "O-8bd0b37b4c5a.webp",
+   "fields": {
+    "name": {
+     "value": "The Collector",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Summon one:\nSharp Baldur\nPrimal Aspid\nArmored Squit\n(OPT) Pay 3 Points to summon a minion.\nMay Not have more than 5 minions.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-551d803fa4e4:Creatures/Hollow Knight/3 Stars/The_Collector.png",
+   "kind": "old repo",
+   "date": "2023-04-30T10:56:16+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Collector Nerf And a ton of Touch Ups",
+   "image": "O-6b446a45d7d9.webp",
+   "fields": {
+    "name": {
+     "value": "The Collector",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Summon one:\nSharp Baldur\nPrimal Aspid\nArmored Squit\n(EOT) Pay 3 Points to summon a minion.\nMay Not have more than 5 minions.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 6,
+      "def": 3,
+      "atk": 4,
+      "spd": 4
+     },
+     {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [
+     "SPD 4 -> 5"
+    ],
+    "nerfs": [
+     "HP 6 -> 5",
+     "DEF 3 -> 2"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Hollow Knight/3 Stars/The_Collector.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-66e8ba8eb7d0.webp",
+   "fields": {
+    "name": {
+     "value": "The Collector",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Summon one:\nSharp Baldur\nPrimal Aspid\nArmored Squit\n(EOT) Pay 3 Points to summon a minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d42a25bc7bce:Creatures/Hollow Knight/3 Stars/The_Collector.png",
+   "kind": "old repo",
+   "date": "2023-10-15T13:23:59+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Hollow Knight Attribute Colroing",
+   "image": "O-d84fedfd289f.webp",
+   "fields": {
+    "name": {
+     "value": "The Collector",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Summon one:\nSharp Baldur\nPrimal Aspid\nArmored Squit\n(EOT) Pay 3 Points to summon a minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-626eaae25c89:Creatures/Hollow Knight/3 Stars/The_Collector.png",
+   "kind": "old repo",
+   "date": "2023-10-22T18:00:01+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "spooky",
+   "image": "O-3e058f56dc05.webp",
+   "fields": {
+    "name": {
+     "value": "The Collector",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Summon one:\nSharp Baldur\nPrimal Aspid\nArmored Squit\n(EOT) Pay 3 Points to summon a minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a40cf4e9d8c5:Creatures/Hollow Knight/3 Stars/The_Collector.png",
+   "kind": "old repo",
+   "date": "2023-10-27T14:47:18+00:00",
+   "day": "2023-10-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Elemental Wrold",
+   "image": "O-c105604e2b54.webp",
+   "fields": {
+    "name": {
+     "value": "The Collector",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Summon one:\nSharp Baldur\nPrimal Aspid\nArmored Squit\n(EOT) Pay 3 Points to summon a minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Hollow Knight/3 Stars/The_Collector.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-495b9f387a2b.webp",
+   "fields": {
+    "name": {
+     "value": "The Collector",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 2,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Summon one:\nSharp Baldur\nPrimal Aspid\nArmored Squit\n(EOT) Pay 3 Points to summon a minion.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-04-29",
+  "sort": "2023-04-29",
+  "source": "old repo (PSD)",
+  "status": "owner"
+ }
+}

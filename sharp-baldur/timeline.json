@@ -1,0 +1,541 @@
+{
+ "card": "sharp-baldur",
+ "key": "Sharp Baldur",
+ "name": "Sharp Baldur",
+ "kind": "minion",
+ "stop": {
+  "day": "2023-04-29",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "O-04b8d7a4bef6:Auxillary/Minions/3 Stars/sharp_baldur.png",
+   "kind": "old repo",
+   "date": "2023-04-29T08:52:34+00:00",
+   "day": "2023-04-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "collector",
+   "image": "O-f1a3b0affd5a.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 3,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-73b8402c06dc:Auxillary/Minions/3 Stars/Sharp_Baldur.png",
+   "kind": "old repo",
+   "date": "2023-04-29T09:26:32+00:00",
+   "day": "2023-04-29",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Made the name uppercase",
+   "image": "O-8c3f8454a301.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 3,
+      "atk": 3,
+      "spd": 3
+     },
+     {
+      "hp": 4,
+      "def": 4,
+      "atk": 3,
+      "spd": 3
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 3 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-551d803fa4e4:Auxillary/Minions/3 Stars/sharp_baldur.png",
+   "kind": "old repo",
+   "date": "2023-04-30T10:56:16+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Collector Nerf And a ton of Touch Ups",
+   "image": "O-9062a885973c.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 4,
+      "atk": 3,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 4 -> 3",
+     "DEF 4 -> 2"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c1c81a4c2c1d:Auxillary/Minions/3 Stars/sharp_baldur.png",
+   "kind": "old repo",
+   "date": "2023-04-30T11:07:55+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "nerfs (real)",
+   "image": "O-c5f0e2bff29e.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-88a0b90c15cb:Auxillary/Minions/3 Stars/sharp_baldur.png",
+   "kind": "old repo",
+   "date": "2023-04-30T12:49:15+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stars",
+   "image": "O-ac5fb28ccf7e.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c7696f8bf36e:Auxillary/Minions/3 Stars/Sharp_Baldur.png",
+   "kind": "old repo",
+   "date": "2023-05-01T10:42:34+00:00",
+   "day": "2023-05-01",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "ugh",
+   "image": "O-ac5fb28ccf7e.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8a1a518be3d0:Auxillary/Minions/3 Stars/Sharp_Baldur.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:38:03+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-79b8a9d6fd39.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Minions/Sharp_Baldur.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "image": "O-49725bfd70bc.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     1
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Auxillary/Minions/Sharp_Baldur.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-a3d4ea26aa13.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Auxillary/Minions/Sharp_Baldur.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-bc41c39a5d76.webp",
+   "fields": {
+    "name": {
+     "value": "Sharp Baldur",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Begin rolling, gaining\n +1 ATK, +2 DEF  permanently.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-04-29",
+  "sort": "2023-04-29",
+  "source": "old repo",
+  "status": "owner"
+ }
+}

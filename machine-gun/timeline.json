@@ -1,0 +1,68 @@
+{
+ "card": "machine-gun",
+ "key": "Machine Gun",
+ "name": "Machine Gun",
+ "kind": "aux item",
+ "stop": {
+  "day": "2025-03-02",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-251bd4863a45",
+   "kind": "discord",
+   "date": "2025-03-02T07:17:29+00:00",
+   "day": "2025-03-02",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-251bd4863a45.webp",
+   "fields": {
+    "name": {
+     "value": "Machine Gun",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 ATK. Gain +1 ATK and +0.5 SPD for every Dorito Counter on the equipped creature.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-22T05:23:47+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-02",
+  "sort": "2025-03-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

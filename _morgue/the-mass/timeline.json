@@ -1,0 +1,60 @@
+{
+ "card": "the-mass",
+ "key": "The Mass",
+ "name": "The Mass",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-10-28T06:22:52.273000+00:00",
+  "day": "2020-10-28",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-df1dc3f8f29c",
+   "kind": "discord",
+   "date": "2020-10-28T06:22:52.273000+00:00",
+   "day": "2020-10-28",
+   "badge": "Discord",
+   "image": "P-df1dc3f8f29c.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 392,
+   "h": 790
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Meme/5 Stars/The_Mass.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-7c887182996f.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 392,
+   "h": 790
+  },
+  {
+   "id": "P-5847c8e027e1",
+   "kind": "discord",
+   "date": "2023-04-07T04:10:36.573000+00:00",
+   "day": "2023-04-07",
+   "badge": "Discord",
+   "image": "P-5847c8e027e1.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 392,
+   "h": 790
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo"
+}

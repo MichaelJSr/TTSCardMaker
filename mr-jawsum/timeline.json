@@ -1,0 +1,906 @@
+{
+ "card": "mr-jawsum",
+ "key": "Mr Jawsum",
+ "name": "Mr. Jawsum",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e387fe6d21ff",
+   "kind": "discord",
+   "date": "2021-11-21T08:05:37+00:00",
+   "day": "2021-11-21",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-e387fe6d21ff.webp",
+   "fields": {
+    "name": {
+     "value": "Mr Jawsum",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with Contracted.\nIf a Contracted creature is on the field, all damage this creature takes is redirected to a random Contracted creature.\n(OYT) Increase all Contracted creatures' ATK by 2, but decrease their DEF by 2. This cannot stack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-3fb0d8317cef",
+   "kind": "discord",
+   "date": "2021-11-22T10:00:20+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-3fb0d8317cef.webp",
+   "fields": {
+    "name": {
+     "value": "Mr Jawsum",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with Contracted. If a Contracted creature is on the field, all damage this creature takes is redirected to a random Contracted creature. (OYT) (OPT) All Contracted creatures gain +2 ATK and -1 DEF. Additional stacks of this buff give +1 ATK and -1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-0e8d82c6158c",
+   "kind": "discord",
+   "date": "2021-11-22T10:26:09+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-0e8d82c6158c.webp",
+   "fields": {
+    "name": {
+     "value": "Mr Jawsum",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with Contracted. All damage this creature takes is redirected to a random Contracted creature. (OYT) (OPT) All Contracted creatures gain +2 ATK and -1 DEF. Additional stacks of this buff instead give +1 ATK and -1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-b66c5237ef1d",
+   "kind": "discord",
+   "date": "2021-11-22T11:38:04+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b66c5237ef1d.webp",
+   "fields": {
+    "name": {
+     "value": "Mr Jawsum",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with Contracted.\nAll damage this creature takes is redirected to a random Contracted creature.\n(OYT) (OPT) Increase all contracted creature's ATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give +1 ATK and -1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-545a4a92f896",
+   "kind": "discord",
+   "date": "2021-11-22T11:46:19+00:00",
+   "day": "2021-11-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-545a4a92f896.webp",
+   "fields": {
+    "name": {
+     "value": "Mr Jawsum",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with Contracted.\nAll damage this creature takes is redirected to a random Contracted creature.\n(OYT) (OPT) Increase all contracted creature's ATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give +1 ATK and -1 SPD.\nThis creature is immune to Life Link.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-114a81f755ba",
+   "kind": "discord",
+   "date": "2021-12-19T03:01:42+00:00",
+   "day": "2021-12-19",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-114a81f755ba.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with Contracted.\nAll damage this creature takes is redirected to a random Contracted creature.\n(OYT) (OPT) Increase all Contracted creature's ATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give +1 ATK and -1 SPD.\nThis creature is immune to Life Link.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "D-P-14104e9b2184",
+   "kind": "discord",
+   "date": "2022-01-26T00:39:56+00:00",
+   "day": "2022-01-26",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-14104e9b2184.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "git look: icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with \nContracted.\nAll damage this creature takes is redirected \nto a random Contracted creature, if one exists.\n(OYT) (OPT) Increase all Contracted creature’s\nATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give \n+1 ATK and -1 SPD.\nThis creature is immune to Life Link.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-8e12f6f52132.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with \nContracted.\nAll damage this creature takes is redirected \nto a random Contracted creature, if one exists.\n(OYT) (OPT) Increase all Contracted creature’s\nATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give \n+1 ATK and -1 SPD.\nThis creature is immune to Life Link.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "O-283975170f07:Cards/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-03-29T05:03:18+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "jawsum and omori",
+   "repo": "first",
+   "image": "O-a98de0fb6417.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with \nContracted.\nAll damage this creature takes is redirected \nto a random Contracted creature, if one exists.\n(OYT) (OPT) Increase all Contracted creature’s\nATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give \n+1 ATK and -1 SPD.\nThis creature is immune to Life Link.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-eb65abb69dea:Cards/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-03-29T05:16:22+00:00",
+   "day": "2023-03-29",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "jawsum final",
+   "repo": "first",
+   "image": "O-50c21e99ebc0.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with \nContracted.\nAll damage this creature takes is redirected \nto a random Contracted creature, if one exists.\n(OYT) (OPT) Increase all Contracted creature’s\nATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give \n+1 ATK and -1 SPD.\nThis creature is immune to Life Link.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8c12e021fb3a:Cards/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-04-02T07:47:14+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unused assets for the rest of the cards",
+   "repo": "first",
+   "image": "O-33e2a3213e89.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all allied creatures with \nContracted.\nAll damage this creature takes is redirected \nto a random Contracted creature, if one exists.\n(OYT) (OPT) Increase all Contracted creature’s\nATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give \n+1 ATK and -1 SPD.\nThis creature is immune to Life Link.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-524745346a04:Cards/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-04-13T08:46:10+00:00",
+   "day": "2023-04-13",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "repo": "first",
+   "image": "O-0cb4e89d536b.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, inflict all friendly creatures (not itself) with  Contracted.\nAll damage this creature takes is redirected \nto a random Contracted creature, if one exists.\n(OPT) Increase all Contracted creature’s\nATK by 2, but lower their DEF by 1.\nAdditional stacks of this buff instead give \n+1 ATK and -1 SPD.\nThis creature is immune to Life Link.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ac4ebcf1b2b4:Cards/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-04-14T05:32:11+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "Jawsum Rework",
+   "repo": "first",
+   "image": "O-563fe97e924a.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) While this creature is on the field, you may use items without having the prerequisite SP, allowing your SP to go negative, subtracting from the SP gained next turn.\n(AAT) Pay 2 points to set your SP to 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 2,
+      "def": 10,
+      "atk": 4,
+      "spd": 5
+     },
+     {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "HP 2 -> 6",
+     "ATK 4 -> 5"
+    ],
+    "nerfs": [
+     "DEF 10 -> 6",
+     "SPD 5 -> 4"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-563fe97e924a.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) While this creature is on the field, you may use items without having the prerequisite SP, allowing your SP to go negative, subtracting from the SP gained next turn.\n(AAT) Pay 2 points to set your SP to 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-563fe97e924a.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) While this creature is on the field, you may use items without having the prerequisite SP, allowing your SP to go negative, subtracting from the SP gained next turn.\n(AAT) Pay 2 points to set your SP to 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7538d4bd2f5e:Creatures/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-04-25T04:49:19+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "touch ups",
+   "image": "O-d996630858fc.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) While this creature is on the field, you may use items without having the prerequisite SP, allowing your SP to go negative, subtracting from the SP gained next turn.\n(AAT) Pay 2 points to set your SP to 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Omori/3 Stars/Mr_Jawsum.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-95d51c24b3be.webp",
+   "fields": {
+    "name": {
+     "value": "Mr. Jawsum",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "water"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 6,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) While this creature is on the field, you may use items without having the prerequisite SP, allowing your SP to go negative, subtracting from the SP gained next turn.\n(AAT) Pay 2 points to set your SP to 0.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-11-21",
+  "sort": "2021-11-21",
+  "source": "discord",
+  "status": "same"
+ }
+}

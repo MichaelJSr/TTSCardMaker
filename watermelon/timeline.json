@@ -1,0 +1,288 @@
+{
+ "card": "watermelon",
+ "key": "Watermelon",
+ "name": "Watermelon",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-fcc2b0e586d",
+   "kind": "text",
+   "date": "2019-03-22T06:33:53+00:00",
+   "day": "2019-03-22",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-15605ec2800a",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:57+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-15605ec2800a.webp",
+   "fields": {
+    "name": {
+     "value": "Watermelon",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 2.5 health and cure it of tier 1 de-buffs.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 399,
+   "h": 617
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/Watermelon.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-1af75a07b9f8.webp",
+   "fields": {
+    "name": {
+     "value": "Watermelon",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 2.5 health and cure it of tier 1 de-buffs.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 617
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/2 Stars/Watermelon2.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Watermelon2",
+   "repo": "first",
+   "image": "O-1af75a07b9f8.webp",
+   "fields": {
+    "name": {
+     "value": "Watermelon",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 2.5 health and cure it of tier 1 de-buffs.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 399,
+   "h": 617
+  },
+  {
+   "id": "O-4ae8bc79caad:Items/Heal/2 Stars/Watermelon.png",
+   "kind": "old repo",
+   "date": "2023-04-04T21:41:17+00:00",
+   "day": "2023-04-04",
+   "badge": "first repo",
+   "author": "bobberlington",
+   "subject": "psds for grapes, the chicken, watermelon, and pep drink",
+   "repo": "first",
+   "image": "O-a770a6244d6c.webp",
+   "fields": {
+    "name": {
+     "value": "Watermelon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 2.5 HP and cure it of tier 1 debuffs.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-327b8aec0af2:Items/Heal/2 Stars/Watermelon.png",
+   "kind": "old repo",
+   "date": "2023-04-07T19:02:27+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "chogath fix, grapes, pizza, regen, shortcake, chicken, watermelon, dumpings",
+   "repo": "first",
+   "image": "O-0c6459c7a4bc.webp",
+   "fields": {
+    "name": {
+     "value": "Watermelon",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 2.5 HP and cure it of tier 1 debuffs.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/2 Stars/Watermelon.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-35660762ed19.webp",
+   "fields": {
+    "name": {
+     "value": "Watermelon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 2.5 HP and cure it of tier 1 debuffs.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/2 Stars/Watermelon.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-0905656f101f.webp",
+   "fields": {
+    "name": {
+     "value": "Watermelon",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 1 creature by 2.5 HP and cure it of tier 1 debuffs.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-22",
+  "sort": "2019-03-22",
+  "source": "changelog",
+  "status": "owner"
+ }
+}

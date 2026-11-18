@@ -1,0 +1,73 @@
+{
+ "card": "empress-bulblax",
+ "key": "Empress Bulblax",
+ "name": "Empress Bulblax",
+ "kind": "creature",
+ "stop": {
+  "day": "2026-02-01",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1670f31842da",
+   "kind": "discord",
+   "date": "2026-01-22T10:42:03+00:00",
+   "day": "2026-01-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1670f31842da.webp",
+   "fields": {
+    "name": {
+     "value": "Empress Bulblax",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Has no innate actions. Whenever any slot ends its turn, summon a Bulborb Larva. (E3T) Attack all other creatures on the PF.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-02-01T00:35:02+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  }
+ },
+ "created": {
+  "date": "2026-01-22",
+  "sort": "2026-01-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

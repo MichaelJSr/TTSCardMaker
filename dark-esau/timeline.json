@@ -1,0 +1,169 @@
+{
+ "card": "dark-esau",
+ "key": "Dark Esau",
+ "name": "Dark Esau",
+ "kind": "minion",
+ "stop": {
+  "day": "2025-04-29",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-1351e319a15e",
+   "kind": "discord",
+   "date": "2025-03-12T19:45:55+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1351e319a15e.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Esau",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks are PIERCING. Always attacks every turn. Attacks hit both the creature that summoned it and the target creature.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 10,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-b1f05b6bf137",
+   "kind": "discord",
+   "date": "2025-03-12T20:09:26+00:00",
+   "day": "2025-03-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b1f05b6bf137.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Esau",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "offensive_minion"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attacks are PIERCING. Always attacks every turn. Attacks hit both the creature that summoned it and the target creature.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 10,
+      "spd": 4
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 10 -> 6"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-01-15T06:17:52+00:00",
+  "changes": {
+   "name": [
+    "Tainted Esau",
+    "Dark ESAU"
+   ],
+   "stats": [
+    {
+     "hp": 5,
+     "def": 4,
+     "atk": 6,
+     "spd": 4
+    },
+    {
+     "hp": 5,
+     "def": 4,
+     "atk": 7,
+     "spd": 4
+    }
+   ],
+   "bal": "buff",
+   "buffs": [
+    "ATK 6 -> 7"
+   ],
+   "nerfs": [],
+   "ability_change": "formatting"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-03-12",
+  "sort": "2025-03-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

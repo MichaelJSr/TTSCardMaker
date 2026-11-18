@@ -1,0 +1,564 @@
+{
+ "card": "standstill",
+ "key": "Standstill",
+ "name": "Standstill",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f1a72a2e232",
+   "kind": "text",
+   "date": "2019-03-31T01:47:37+00:00",
+   "day": "2019-03-31",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-ae2e36ae54ca",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:27+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-ae2e36ae54ca.webp",
+   "fields": {
+    "name": {
+     "value": "Frozen In Time",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The target creature cannot do anything until the end of its turn. 4 or 5 star creatures do not have their abilities negated by this effect",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 614
+  },
+  {
+   "id": "F-f19ed35b345",
+   "kind": "text",
+   "date": "2020-08-01T09:50:40+00:00",
+   "day": "2020-08-01",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fcd66817161",
+   "kind": "text",
+   "date": "2020-08-01T09:50:40+00:00",
+   "day": "2020-08-01",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "stars",
+    "to": 4
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-c61a3f1bc3f1"
+  },
+  {
+   "id": "D-P-c61a3f1bc3f1",
+   "kind": "discord",
+   "date": "2020-08-02T01:49:19+00:00",
+   "day": "2020-08-02",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-c61a3f1bc3f1.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frozen in Time: The affected Creature's next turn is skipped, and they can't equip any items or use their abilities until the full turn after their turn was skipped begins",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Frozen In Time",
+     "Standstill"
+    ],
+    "stars": [
+     3,
+     4
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "D-P-057ee22936df",
+   "kind": "discord",
+   "date": "2020-08-02T03:06:59+00:00",
+   "day": "2020-08-02",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-057ee22936df.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frozen in Time: The affected Creature cannot attack, defend, switch out, use it's ability, equip items, or have healing items used on it, until either it's next turn ends, or the full turn ends, whichever comes last",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "D-P-f8f8197cb4d0",
+   "kind": "discord",
+   "date": "2020-08-09T07:41:27+00:00",
+   "day": "2020-08-09",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-f8f8197cb4d0.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frozen in Time: The affected Creature cannot do anything or be interacted with in any way except for taking damage, until either it's next turn ends, or the full turn ends, whichever comes last",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "D-P-3f7094c60052",
+   "kind": "discord",
+   "date": "2020-08-18T11:04:47+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-3f7094c60052.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts Frozen in Time: The affected Creature cannot use an action, switch out, use its ability, equip items, or be healed until either it's next turn ends, or the full turn ends, whichever comes last",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "F-f3c39f56a81",
+   "kind": "text",
+   "date": "2020-09-12T05:23:49+00:00",
+   "day": "2020-09-12",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-8cec6cfeabf9",
+   "kind": "discord",
+   "date": "2020-09-19T04:41:34+00:00",
+   "day": "2020-09-19",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-8cec6cfeabf9.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts a modified version of Frozen in Time that can negate the abilities of 5 star creatures",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 390,
+   "h": 616
+  },
+  {
+   "id": "F-f83b08d4db6",
+   "kind": "text",
+   "date": "2021-08-04T12:12:52+00:00",
+   "day": "2021-08-04",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-59298ee4c19c",
+   "kind": "discord",
+   "date": "2021-08-11T19:00:08+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-59298ee4c19c.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 turns of Frozen in Time to a creature on the primary field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Attack/4 Stars/Standstill.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-6009efde34fb.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 turns of Frozen in Time to a creature on the primary field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 616
+  },
+  {
+   "id": "O-257dc970a875:Items/Attack/4 Stars/Standstill.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-7e3e3e552116.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 turns of Frozen in Time to a creature on the primary field. Only inflicts 1 turn of Frozen in Time to 5 star creatures.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 388,
+   "h": 615
+  },
+  {
+   "id": "O-e3fbc62dbf17:Items/Attack/4 Stars/Standstill.png",
+   "kind": "old repo",
+   "date": "2023-04-09T06:28:57+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "standstill",
+   "repo": "first",
+   "image": "O-c2b2b1114be7.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 turns of Frozen in Time to a creature on the primary field. Only inflicts 1 turn of Frozen in Time to 5 star creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Attack/4 Stars/Standstill.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-c2b2b1114be7.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 turns of Frozen in Time to a creature on the primary field. Only inflicts 1 turn of Frozen in Time to 5 star creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-dac7a83df18f:Items/Attack/4 Stars/Standstill.png",
+   "kind": "old repo",
+   "date": "2023-10-07T07:08:57+00:00",
+   "day": "2023-10-07",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "baba",
+   "image": "O-cc7ae2774a1c.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 turns of Frozen in Time to a creature on the primary field. Only inflicts 1 turn of Frozen in Time to 5+ star creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Attack/4 Stars/Standstill.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-8b67be725d25.webp",
+   "fields": {
+    "name": {
+     "value": "Standstill",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 2 turns of Frozen In Time to a creature on the primary field. \nOnly inflicts 1 turn of Frozen In Time to 5+ star creatures.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2019-03-31",
+  "sort": "2019-03-31",
+  "source": "discord",
+  "status": "owner"
+ }
+}

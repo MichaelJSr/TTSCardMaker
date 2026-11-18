@@ -1,0 +1,80 @@
+{
+ "card": "the-shade",
+ "key": "The Shade",
+ "name": "The Shade",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-12",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-d76a3abe8dd6",
+   "kind": "discord",
+   "date": "2023-11-12T01:32:00+00:00",
+   "day": "2023-11-12",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d76a3abe8dd6.webp",
+   "fields": {
+    "name": {
+     "value": "The Shade",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "dark"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) One attack applies an inkhole onto attacked slot. Each time this creature is attacked it gains 3 DEF until the end of its next turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-01-31T00:05:18+00:00",
+  "changes": {
+   "stars": [
+    4,
+    3
+   ],
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-12",
+  "sort": "2023-11-12",
+  "source": "discord",
+  "status": "same"
+ }
+}

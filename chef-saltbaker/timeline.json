@@ -1,0 +1,154 @@
+{
+ "card": "chef-saltbaker",
+ "key": "Chef Saltbaker",
+ "name": "Chef Saltbaker",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-17",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-3a26f79ed5eb",
+   "kind": "discord",
+   "date": "2023-11-17T06:49:41+00:00",
+   "day": "2023-11-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-3a26f79ed5eb.webp",
+   "fields": {
+    "name": {
+     "value": "Chef Saltbaker",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "wind"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May make any healing from your team do piercing damage instead of healing. (TPT) Summon one ingredient: GNOME BERRIES DESERT LIMES (1 point) IcY SUGAR CUBES (2 points) PINAPPLE MINT (3 points) DISTILLERY DOUGH (OPG) If every Ingredient has been summoned atleast once, summon a WONDERTART",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-b75cc374031c",
+   "kind": "discord",
+   "date": "2023-11-17T07:52:32+00:00",
+   "day": "2023-11-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b75cc374031c.webp",
+   "fields": {
+    "name": {
+     "value": "Chef Saltbaker",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock",
+      "wind"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May make any healing from your team do piercing damage instead of healing. (OPG)(OYT) If every Ingredient has been drawn atleast once, summon a WONDERTART (TPT) Draw one ingredient: GNOME BERRIES DESERT LIMES (1 point) Icy SUGAR CUBES (2 points) PINAPPLE MINT (4 points) DISTILLERY DOUGH",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-08-30T03:36:54+00:00",
+  "changes": {
+   "stats": [
+    {
+     "hp": 7,
+     "def": 4,
+     "atk": 5,
+     "spd": 5
+    },
+    {
+     "hp": 8,
+     "def": 4,
+     "atk": 6,
+     "spd": 6
+    }
+   ],
+   "bal": "buff",
+   "buffs": [
+    "HP 7 -> 8",
+    "ATK 5 -> 6",
+    "SPD 5 -> 6"
+   ],
+   "nerfs": [],
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-17",
+  "sort": "2023-11-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

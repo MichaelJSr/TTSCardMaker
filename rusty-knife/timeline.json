@@ -1,0 +1,63 @@
+{
+ "card": "rusty-knife",
+ "key": "Rusty Knife",
+ "name": "Rusty Knife",
+ "kind": "aux item",
+ "stop": {
+  "day": "2024-07-21",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-56ac7c2f1ce4",
+   "kind": "discord",
+   "date": "2024-07-21T17:48:33+00:00",
+   "day": "2024-07-21",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-56ac7c2f1ce4.webp",
+   "fields": {
+    "name": {
+     "value": "Rusty Knife",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK +1 DEF +1 SPD If the equipped creature kills a point-yielding creature, this becomes \"Red Knife\".",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-18T07:34:40+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2024-07-21",
+  "sort": "2024-07-21",
+  "source": "discord",
+  "status": "same"
+ }
+}

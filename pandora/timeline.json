@@ -1,0 +1,1505 @@
+{
+ "card": "pandora",
+ "key": "Pandora",
+ "name": "Pandora",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-2b9909c13cb5",
+   "kind": "discord",
+   "date": "2019-05-10T04:51:15+00:00",
+   "day": "2019-05-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-2b9909c13cb5.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gains abilities the more enemies it kills: Upon Killing 1) +2 to every stat 2) Heal 6 health upon dealing damage 3) (OPT) Intersect and imprison an attacker 4 and beyond) Become immune to counter-damage, and +2 to every stat",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 2,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "bars-other",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "D-P-dcb15cb966ac",
+   "kind": "discord",
+   "date": "2019-05-10T04:55:13+00:00",
+   "day": "2019-05-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-dcb15cb966ac.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon killing a creature (friend or foe), gain its ability permanently. No limit on how many abilities this card can have at once.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 2,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "D-P-8fa24f53fd1c",
+   "kind": "discord",
+   "date": "2019-05-10T05:01:48+00:00",
+   "day": "2019-05-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-8fa24f53fd1c.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Upon being fed an item, gain double that item's traits. Costs star points equal to the item's level to feed it, and can be fed infinitesimally.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 2,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "D-P-595ab923dd03",
+   "kind": "discord",
+   "date": "2019-05-10T05:59:22+00:00",
+   "day": "2019-05-10",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-595ab923dd03.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gains abilities the more enemies it kills: Upon Killing 1) +2 to every stat 2) Heal 6 health upon dealing damage 3) (OPT) Intersect and imprison an attacker 4 and beyond) Become immune to counter-damage, and +2 to every stat",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 2,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "bars-other",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "D-P-0497301e7432",
+   "kind": "discord",
+   "date": "2020-03-02T05:06:08+00:00",
+   "day": "2020-03-02",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-0497301e7432.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gains abilities the more enemies it kills: 1) +2 to every stat 2) Heal 6 health upon dealing damage 3) (OPT) Intersect & imprison an attacker 4 and beyond) Become immune to counter-damage, and +2 to every stat",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 2,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 352,
+   "h": 534
+  },
+  {
+   "id": "D-P-e7419a9f5f7a",
+   "kind": "discord",
+   "date": "2020-07-23T01:38:44+00:00",
+   "day": "2020-07-23",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-e7419a9f5f7a.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Gains abilities for non-minion kills: 1) +2 to every stat 2) Heal 6 health upon dealing damage 3) (AAT) (OPT) Intersect an attack 4) (OPT) Imprison a creature that attacked you, and immunity to CD",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     5
+    ],
+    "stats": [
+     {
+      "hp": 8,
+      "def": 2,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     }
+    ],
+    "bal": "shift",
+    "buffs": [
+     "DEF 2 -> 3"
+    ],
+    "nerfs": [
+     "ATK 6 -> 5"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "F-f3af5d3f1db",
+   "kind": "text",
+   "date": "2020-08-01T09:23:33+00:00",
+   "day": "2020-08-01",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "hp",
+    "to": 10,
+    "unit": "points"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-2fdbc5058cda"
+  },
+  {
+   "id": "F-f404acf2bab",
+   "kind": "text",
+   "date": "2020-08-01T09:23:33+00:00",
+   "day": "2020-08-01",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "atk",
+    "to": 5,
+    "unit": "bars"
+   }
+  },
+  {
+   "id": "F-fa367406fa6",
+   "kind": "text",
+   "date": "2020-08-01T09:23:33+00:00",
+   "day": "2020-08-01",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "def",
+    "to": 4,
+    "unit": "points"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-2fdbc5058cda"
+  },
+  {
+   "id": "F-fbd50586cc4",
+   "kind": "text",
+   "date": "2020-08-01T09:23:33+00:00",
+   "day": "2020-08-01",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "spd",
+    "to": 3,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-2fdbc5058cda"
+  },
+  {
+   "id": "F-fe1b9030730",
+   "kind": "text",
+   "date": "2020-08-01T09:23:41+00:00",
+   "day": "2020-08-01",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f1459344b3c",
+   "kind": "text",
+   "date": "2020-08-06T08:43:53+00:00",
+   "day": "2020-08-06",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-2fdbc5058cda",
+   "kind": "discord",
+   "date": "2020-08-08T10:45:04+00:00",
+   "day": "2020-08-08",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-2fdbc5058cda.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -1. Gains abilities for non-minion kills 1) +2 bars to every stat 2) Heal 6 HP when Pandora attacks 3) (AAT) (OPT) Intercept an attack 4) (OPT) (OYT) Imprison a creature that attacked you, and immunity to CD",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     5,
+     4
+    ],
+    "stats": [
+     {
+      "hp": 8,
+      "def": 3,
+      "atk": 5,
+      "spd": 4
+     },
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 6,
+      "spd": 3
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 8 -> 10",
+     "DEF 3 -> 4",
+     "ATK 5 -> 6"
+    ],
+    "nerfs": [
+     "SPD 4 -> 3"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 521
+  },
+  {
+   "id": "F-f8b55a97d65",
+   "kind": "text",
+   "date": "2020-08-14T00:56:40+00:00",
+   "day": "2020-08-14",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-1ca458abc22c",
+   "kind": "discord",
+   "date": "2020-08-14T01:19:07+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-1ca458abc22c.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -1. Gains abilities when this kills point-yielding creatures: 1) +2 bars to every stat 2) Heal 6 HP when Pandora attacks 3) (AAT) (OPT) Intercept an attack 4) (OPT) (OYT) Imprison a creature that attacked you, and immunity to CD",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     4,
+     5
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "F-fc1ba73e69e",
+   "kind": "text",
+   "date": "2020-08-14T11:15:17+00:00",
+   "day": "2020-08-14",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "atk",
+    "to": 7,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-81cc4b403a14"
+  },
+  {
+   "id": "D-P-81cc4b403a14",
+   "kind": "discord",
+   "date": "2020-08-14T21:45:23+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-81cc4b403a14.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2. Gains abilities when this kills point-yielding creatures: 1) +1 bars to every stat 2) Heal 6 HP when Pandora attacks 3) +1 bars to every stat and immunity to CD 4) (OPT) (AAT) Intercept an attack. (OPT) (OYT) Imprison a creature that attacked you.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 6,
+      "spd": 3
+     },
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "F-f3836de232e",
+   "kind": "text",
+   "date": "2020-08-30T07:07:42+00:00",
+   "day": "2020-08-30",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "field": "def",
+    "to": 2,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-bc4ac6e15bda"
+  },
+  {
+   "id": "D-P-bc4ac6e15bda",
+   "kind": "discord",
+   "date": "2020-08-31T09:04:51+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-bc4ac6e15bda.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2. Gains abilities when this kills point-yielding creatures: 1) +1 bars to every stat. 2) Heal 6 HP when Pandora attacks. 3) +1 bars to every stat and immunity to CD. 4) (OPT) (AAT) Intercept an attack. (OPT) (OYT) Imprison a creature that attacked you.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 4 -> 2"
+    ],
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "F-f83e9843d15",
+   "kind": "text",
+   "date": "2021-05-07T08:17:37+00:00",
+   "day": "2021-05-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-62dd173bdef9",
+   "kind": "discord",
+   "date": "2021-08-23T05:42:34+00:00",
+   "day": "2021-08-23",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-62dd173bdef9.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2. Gains abilities when this kills point-yielding creatures: 1) +1 bars to every stat. 2) Heal 4 HP when Pandora attacks. 3) +1 bars to every stat and immunity to CD. 4) (OPT)(AAT) Intercept an attack. (OPT)(OYT) Imprison a creature that attacked you.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "panda",
+      "panda"
+     ],
+     "drop": [
+      "rock"
+     ]
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "D-P-318218b8e015",
+   "kind": "discord",
+   "date": "2021-12-12T11:46:23+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-318218b8e015.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPT)(AAT) Intercept an attack. (OPT)(OYT) Imprison a creature that attacked you.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-1ade81fc6d5f.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPT)(AAT) Intercept an attack. (OPT)(OYT) Imprison a creature that attacked you.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 526
+  },
+  {
+   "id": "O-7522a5685624:Cards/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-03-25T10:47:51+00:00",
+   "day": "2023-03-25",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Organized psd files and ported more cards",
+   "repo": "first",
+   "image": "O-0e17e36e4d95.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT) Friendly creatures may intercept attacks for this creature. (EOT) (OYT) Grant a friendly creature an extra action on their next turn. Attackers take CD equal to their ATK.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2d64d8ab29d2:Cards/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-04-08T07:41:31+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "leroy pandora, p box",
+   "repo": "first",
+   "image": "O-5540808c6d24.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and (OPGT) Imprison a creature that attacked you.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-25f9138c0490:Cards/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-04-19T11:13:39+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Finished rest of debuff fixes",
+   "repo": "first",
+   "image": "O-c4ac55d737ad.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-da1f71160609:Cards/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-04-20T10:56:38+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Pandora",
+   "repo": "first",
+   "image": "O-de5238dc81d5.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23d47fd0b83f:Creatures/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:56:08+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-de5238dc81d5.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a457cc6e9120:Creatures/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:45:30+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the creatures",
+   "image": "O-de5238dc81d5.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ece0f955f388:Creatures/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-04-23T17:53:55+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "Attribute fixes",
+   "image": "O-78042fdeed48.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-0c496bb35546.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-402990380d47.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-6187751d7cea.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Pandas/5 Stars/Pandora.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-e63f25bc03b0.webp",
+   "fields": {
+    "name": {
+     "value": "Pandora",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "panda",
+      "panda"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Attackers of Pandora take CD equal to their ATK -2.\nGains abilities when this kills point-yielding creatures:\n1) +1 bars to every stat.\n2) Heal 4 HP when Pandora attacks.\n3) +1 bars to every stat and immunity to CD.\n4) (OPGT) Intercept an attack and attacks inflict Imprisoned for 1 turn on creatures that attacked you.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 10,
+      "def": 2,
+      "atk": 7,
+      "spd": 3
+     },
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 7,
+      "spd": 3
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 2 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-05-01",
+  "sort": "2019-05-01",
+  "source": "discord",
+  "status": "owner"
+ }
+}

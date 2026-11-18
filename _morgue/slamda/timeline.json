@@ -1,0 +1,71 @@
+{
+ "card": "slamda",
+ "key": "Slamda",
+ "name": "Slamda",
+ "morgue": "candidate",
+ "first": {
+  "date": "2021-04-24T10:00:31.397000+00:00",
+  "day": "2021-04-24",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-5c5024e19f39",
+   "kind": "discord",
+   "date": "2021-04-24T10:00:31.397000+00:00",
+   "day": "2021-04-24",
+   "badge": "Discord",
+   "image": "P-5c5024e19f39.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 999
+  },
+  {
+   "id": "P-63cbe7a43d91",
+   "kind": "discord",
+   "date": "2023-04-03T00:23:25.026000+00:00",
+   "day": "2023-04-03",
+   "badge": "Discord",
+   "image": "P-63cbe7a43d91.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 999
+  },
+  {
+   "id": "P-f672338a3660",
+   "kind": "discord",
+   "date": "2023-10-26T19:05:23.742000+00:00",
+   "day": "2023-10-26",
+   "badge": "Discord",
+   "image": "P-f672338a3660.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 720,
+   "h": 732
+  },
+  {
+   "id": "P-b3634d5480c7",
+   "kind": "discord",
+   "date": "2023-10-26T20:07:00.623000+00:00",
+   "day": "2023-10-26",
+   "badge": "Discord",
+   "image": "P-b3634d5480c7.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 600,
+   "h": 1152
+  }
+ ],
+ "kind_of": "joke"
+}

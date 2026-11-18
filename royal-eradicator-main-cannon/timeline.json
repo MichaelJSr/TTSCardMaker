@@ -1,0 +1,203 @@
+{
+ "card": "royal-eradicator-main-cannon",
+ "key": "Royal Eradicator Main Cannon",
+ "name": "Royal Eradicator Main Cannon",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-16",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-b22b63640bcf",
+   "kind": "discord",
+   "date": "2023-11-16T12:07:49+00:00",
+   "day": "2023-11-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-b22b63640bcf.webp",
+   "fields": {
+    "name": {
+     "value": "Royal Eradicator Main Cannon",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Has 2 innate actions. Attacks are reduced by a further 0.5 per DEF. After using an action, lose 2 ATK. If this has remaining actions at (ENDT), gain +2 ATK per action.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 10,
+      "atk": 12,
+      "spd": 3
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-8b32826ac506",
+   "kind": "discord",
+   "date": "2023-11-16T12:19:26+00:00",
+   "day": "2023-11-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8b32826ac506.webp",
+   "fields": {
+    "name": {
+     "value": "Royal Eradicator Main Cannon",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Has 2 innate actions, attacks inflict Blazing. Attacks are reduced by a further 0.5 per DEF. After using an action, lose 2 ATK. If this has remaining actions at (ENDT), gain +2 ATK per action.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 10,
+      "atk": 10,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 9,
+      "def": 10,
+      "atk": 12,
+      "spd": 3
+     },
+     {
+      "hp": 9,
+      "def": 10,
+      "atk": 10,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 12 -> 10"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-2810c451ef47",
+   "kind": "discord",
+   "date": "2023-11-16T12:29:28+00:00",
+   "day": "2023-11-16",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2810c451ef47.webp",
+   "fields": {
+    "name": {
+     "value": "Royal Eradicator Main Cannon",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Has 2 innate actions. Attacks inflict Blazing for 2 turns. DMG dealt is reduced by a further 0.5 per DEF. After using an action, lose 2 ATK. (ENDT) Gain +2 ATK per unused action.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 10,
+      "atk": 10,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2023-11-16T12:43:14+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2023-11-16",
+  "sort": "2023-11-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

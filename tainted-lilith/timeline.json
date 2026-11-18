@@ -1,0 +1,74 @@
+{
+ "card": "tainted-lilith",
+ "key": "Tainted Lilith",
+ "name": "Tainted Lilith",
+ "kind": "creature",
+ "stop": {
+  "day": "2026-11-06",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-35ca58cfebe2",
+   "kind": "discord",
+   "date": "2026-11-06T00:01:20+00:00",
+   "day": "2026-11-06",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-35ca58cfebe2.webp",
+   "fields": {
+    "name": {
+     "value": "Tainted Lilith",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+5 SPD when attacking. After attacking, immediately make an additional attack at 25% ATK. This additional attack may target any creature on the PF and is immune to any effects that would force it to target a different creature.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 6,
+      "def": 4,
+      "atk": 6,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-06T07:14:52+00:00",
+  "changes": {
+   "ability_change": "formatting"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2026-11-06",
+  "sort": "2026-11-06",
+  "source": "discord",
+  "status": "owner"
+ }
+}

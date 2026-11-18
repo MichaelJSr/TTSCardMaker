@@ -1,0 +1,996 @@
+{
+ "card": "yin-yarn",
+ "key": "Yin Yarn",
+ "name": "Yin Yarn",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f77139060dd",
+   "kind": "text",
+   "date": "2019-05-14T01:49:17+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-aa2634f35877",
+   "kind": "discord",
+   "date": "2020-07-22T02:57:50+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-aa2634f35877.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the beginning of the turn yin yarn must assume either Mecha Form (+2 ATK/DEF/SPD, and 25% damage reduction) or Master form which allows Yin Yarn to pay points equal to the level +1 of one of your dead creatures to Summon a minion with that creature's ability and stat reductions of -2 Health/DEF and -1 ATK/SPD to the creature and it's minions.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 391,
+   "h": 785
+  },
+  {
+   "id": "D-P-89abde755c09",
+   "kind": "discord",
+   "date": "2020-07-24T08:24:39+00:00",
+   "day": "2020-07-24",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-89abde755c09.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the beginning of the turn yin yarn must assume either Mecha Form (7/4/8/7) with 25% damage reduction, or Master form which allows Yin Yarn to pay points equal to the level +1 of one of your dead creatures to Summon a minion with that creature's ability and stat reductions of -2 Health/DEF and -1 ATK/SPD to the creature and it's minions. This minion cannot be placed behind Yin Yarn on the field",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 394,
+   "h": 791
+  },
+  {
+   "id": "F-f0a55dc49ef",
+   "kind": "text",
+   "date": "2020-07-27T10:51:19+00:00",
+   "day": "2020-07-27",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "spd",
+    "from": 5,
+    "to": 6,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-71b61e2d8060"
+  },
+  {
+   "id": "D-P-71b61e2d8060",
+   "kind": "discord",
+   "date": "2020-07-28T07:20:34+00:00",
+   "day": "2020-07-28",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-71b61e2d8060.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the beginning of the turn yin yarn must assume either Mecha Form (7/4/8/7) with 25% damage reduction, or Master form which allows Yin Yarn to pay points equal to the level + 1 of one of your dead creatures to Summon a minion with that creature's ability and stat reductions of -2 Health/DEF and -1 ATK/SPD to the creature and it's minions. This minion cannot be placed behind Yin Yarn on the field",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A",
+   "w": 393,
+   "h": 790
+  },
+  {
+   "id": "F-fb02fc7a1a9",
+   "kind": "text",
+   "date": "2020-08-26T11:10:21+00:00",
+   "day": "2020-08-26",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-d2b0e07692f0",
+   "kind": "discord",
+   "date": "2020-09-08T07:41:38+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-d2b0e07692f0.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) This card must assume either Mecha Form (7/4/9/5) with 25% damage reduction, or Master form which can (OPT)(OYT) pay points equal to the level +1 of one of your dead creatures to Summon a minion with that creature's ability and stat reductions of -4 HP, -2 DEF, and -1 ATK/SPD to it and it's minions. This minion cannot be placed behind Yin Yarn on the field",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A",
+   "w": 393,
+   "h": 790
+  },
+  {
+   "id": "D-P-28fdfb750781",
+   "kind": "discord",
+   "date": "2020-10-08T06:00:07+00:00",
+   "day": "2020-10-08",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-28fdfb750781.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) This card must assume either Mecha Form (7/4/9/5) with 25% damage reduction, or Master form which can (OPT)(OYT) pay points equal to the level +1 of one of your dead creatures to Summon a minion with that creature's ability and stat reductions of -4 HP, -2 DEF, and -1 ATK/SPD to it and it's minions. This minion cannot be placed behind Yin Yarn on the field",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 7,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 400,
+   "h": 787
+  },
+  {
+   "id": "F-fdf148b73fd",
+   "kind": "text",
+   "date": "2021-08-04T12:37:02+00:00",
+   "day": "2021-08-04",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "spd",
+    "by": 1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-afcca980a55d"
+  },
+  {
+   "id": "D-P-afcca980a55d",
+   "kind": "discord",
+   "date": "2021-08-11T19:07:55+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-afcca980a55d.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At (BOFT) This card must assume either Mecha Form (7/4/9/5) with 25% damage reduction, or Master form which can (OPT)(OYT) pay points equal to the level +1 of one of your dead creatures to Summon a minion with that creature's ability and stat reductions of -4 HP, -2 DEF, and -1 ATK/SPD to it and its minions. This minion cannot be placed behind Yin Yarn on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 7,
+      "spd": 6
+     },
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 7,
+      "spd": 7
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "SPD 6 -> 7"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 399,
+   "h": 787
+  },
+  {
+   "id": "D-P-f0d93b7a8cbc",
+   "kind": "discord",
+   "date": "2021-12-15T10:44:20+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-f0d93b7a8cbc.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At (BOFT) This card must assume either Mecha Form (7/4/9/5) with 25% damage reduction, or Master form which can (OPT)(OYT) pay points equal to the level +1 of one of your dead creatures to Summon a minion with that creature's ability and stat reductions of -4 HP, -2 DEF, and -1 ATK/SPD to it and its minions. This minion cannot be placed behind Yin Yarn on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 400,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-8366e0d33629.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 7,
+      "spd": 7
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At (BOFT) This card must assume either Mecha Form (7/4/9/5) with 25% damage reduction, or Master form which can (OPT)(OYT) pay points equal to the level +1 of one of your dead creatures to Summon a minion with that creature's ability and stat reductions of -4 HP, -2 DEF, and -1 ATK/SPD to it and its minions. This minion cannot be placed behind Yin Yarn on the field.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 787
+  },
+  {
+   "id": "O-65dbc6ea48e9:Cards/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-04-12T19:23:24+00:00",
+   "day": "2023-04-12",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "KIRBY CARDS",
+   "repo": "first",
+   "image": "O-0367f70404f1.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOFT) This card must assume either:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: which can (OPT) pay points equal to the level +1 of one of your dead creatures to summon a minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions. \nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 7,
+      "spd": 7
+     },
+     {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 7 -> 6",
+     "SPD 7 -> 6"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8ebbd6be396f:Cards/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-04-20T22:28:24+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugged through all pending updates",
+   "repo": "first",
+   "image": "O-c4deb18ec462.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) and on summon, must choose a form:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: (OPT) pay points equal to the level +1 of one of your dead creatures to summon a minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions.\nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-c4deb18ec462.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) and on summon, must choose a form:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: (OPT) pay points equal to the level +1 of one of your dead creatures to summon a minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions.\nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-c4deb18ec462.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) and on summon, must choose a form:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: (OPT) pay points equal to the level +1 of one of your dead creatures to summon a minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions.\nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-12634e82f69f.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) and on summon, must choose a form:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: (OPT) pay points equal to the level +1 of one of your dead creatures to summon a minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions.\nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-3c011ec2f8eb.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) and on summon, must choose a form:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: (OPT) pay points equal to the level +1 of one of your dead creatures to summon a minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions.\nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-31891ff0fbab.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) and on summon, must choose a form:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: (OPT) pay points equal to the level +1 of one of your dead creatures to summon a minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions.\nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-e2ba49ebe57e.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) and on summon, must choose a form:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: (OPT) pay points equal to the level +1 of one of your dead creatures to summon a minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions.\nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1097c67e252:Creatures/Kirby/5 Stars/Yin_Yarn.png",
+   "kind": "old repo",
+   "date": "2023-11-02T22:28:51+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "templaticidasd",
+   "image": "O-643ebe95cdeb.webp",
+   "fields": {
+    "name": {
+     "value": "Yin Yarn",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 2,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) and on summon, must choose a form:\n Mecha Form: (7/4/9/5) with 25% damage reduction\n Master form: (OPT) pay points equal to the level +1 of one of your dead creatures to summon a protective minion with that creature's ability and stat reductions of \n-4 HP, -2 DEF, and -1 ATK/SPD\n to it and its minions.\nThis minion cannot be\nplaced behind Yin Yarn on the field.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-13",
+  "sort": "2019-02-13",
+  "source": "discord",
+  "status": "same"
+ }
+}

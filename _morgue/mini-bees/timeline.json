@@ -1,0 +1,57 @@
+{
+ "card": "mini-bees",
+ "key": "Mini Bees",
+ "name": "Mini Bees",
+ "morgue": "candidate",
+ "first": {
+  "date": "2021-04-24T09:58:34.648000+00:00",
+  "day": "2021-04-24",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-4e6be321e978",
+   "kind": "discord",
+   "date": "2021-04-24T09:58:34.648000+00:00",
+   "day": "2021-04-24",
+   "badge": "Discord",
+   "image": "P-4e6be321e978.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-54f43beafe9a",
+   "kind": "discord",
+   "date": "2023-03-30T23:01:51.021000+00:00",
+   "day": "2023-03-30",
+   "badge": "Discord",
+   "image": "P-54f43beafe9a.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-bd4216af6adb",
+   "kind": "discord",
+   "date": "2025-03-15T07:07:07.736000+00:00",
+   "day": "2025-03-15",
+   "badge": "Discord",
+   "image": "P-bd4216af6adb.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 350,
+   "h": 518
+  }
+ ],
+ "kind_of": "joke"
+}

@@ -1,0 +1,63 @@
+{
+ "card": "ingredient-gnome-berries",
+ "key": "Ingredient Gnome Berries",
+ "name": "Gnome Berries",
+ "kind": "item",
+ "stop": {
+  "day": "2023-11-17",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-6feb31e42d6c",
+   "kind": "discord",
+   "date": "2023-11-17T06:50:41+00:00",
+   "day": "2023-11-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-6feb31e42d6c.webp",
+   "fields": {
+    "name": {
+     "value": "Gnome Berries",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Heal 4 HP",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-11-09T18:54:10+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-17",
+  "sort": "2023-11-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

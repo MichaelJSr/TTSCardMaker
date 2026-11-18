@@ -1,0 +1,140 @@
+{
+ "card": "the-freezer",
+ "key": "The Freezer",
+ "name": "The Freezer",
+ "kind": "field",
+ "stop": {
+  "day": "2023-10-25",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e65062c9405a",
+   "kind": "discord",
+   "date": "2023-10-25T16:57:59+00:00",
+   "day": "2023-10-25",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-e65062c9405a.webp",
+   "fields": {
+    "name": {
+     "value": "The Freezer",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[ice], [water]: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-bbd217da4e5c:Field/1 Stars/The_Freezer.png",
+   "kind": "old repo",
+   "date": "2023-10-25T17:11:26+00:00",
+   "day": "2023-10-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field",
+   "image": "O-03dcc2092223.webp",
+   "fields": {
+    "name": {
+     "value": "The Freezer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[ice], [water]: +2 DEF",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-821fa8453c74:Field/1 Stars/The_Freezer.png",
+   "kind": "old repo",
+   "date": "2023-10-26T11:46:07+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item changes",
+   "image": "O-a18884a1231f.webp",
+   "fields": {
+    "name": {
+     "value": "The Freezer",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[water] Turns into: +2 DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-25",
+  "sort": "2023-10-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "card": "delirium",
+ "key": "Delirium",
+ "name": "Delirium",
+ "morgue": "candidate",
+ "first": {
+  "date": "2026-11-06T06:50:05.997000+00:00",
+  "day": "2026-11-06",
+  "channel": "joke-ideas",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-ad16a986fdf6",
+   "kind": "discord",
+   "date": "2026-11-06T06:50:05.997000+00:00",
+   "day": "2026-11-06",
+   "badge": "Discord",
+   "image": "P-ad16a986fdf6.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "joke-ideas",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

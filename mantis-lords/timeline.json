@@ -1,0 +1,980 @@
+{
+ "card": "mantis-lords",
+ "key": "Mantis Lords",
+ "name": "Mantis Lords",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-379c9c8c2a1e-c3",
+   "kind": "discord",
+   "date": "2019-02-16T22:18:57+00:00",
+   "day": "2019-02-16",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-379c9c8c2a1e-c3.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord until 3 have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 314,
+   "h": 656
+  },
+  {
+   "id": "F-fc7b8d94ed6",
+   "kind": "text",
+   "date": "2019-05-14T01:49:17+00:00",
+   "day": "2019-05-14",
+   "badge": "changelog",
+   "channel": "general-discussion",
+   "change": {
+    "field": "def",
+    "by": -2,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-3a39af82fde0"
+  },
+  {
+   "id": "D-P-3a39af82fde0",
+   "kind": "discord",
+   "date": "2020-07-22T02:54:04+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-3a39af82fde0.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 8
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 4 -> 2"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 393,
+   "h": 817
+  },
+  {
+   "id": "F-fe524661975",
+   "kind": "text",
+   "date": "2020-08-05T08:11:10+00:00",
+   "day": "2020-08-05",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f0c77c278ab",
+   "kind": "text",
+   "date": "2020-08-09T08:52:20+00:00",
+   "day": "2020-08-09",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-6761879917a2",
+   "kind": "discord",
+   "date": "2020-08-09T23:16:01+00:00",
+   "day": "2020-08-09",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-6761879917a2.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 396,
+   "h": 820
+  },
+  {
+   "id": "F-f664d7aab72",
+   "kind": "text",
+   "date": "2020-08-10T06:30:40+00:00",
+   "day": "2020-08-10",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-ff31bd27a2a",
+   "kind": "text",
+   "date": "2020-08-16T11:18:05+00:00",
+   "day": "2020-08-16",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "field": "def",
+    "from": 2,
+    "to": 4,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-235dc7e1ad03"
+  },
+  {
+   "id": "D-P-235dc7e1ad03",
+   "kind": "discord",
+   "date": "2020-08-18T10:57:16+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-235dc7e1ad03.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 2,
+      "atk": 5,
+      "spd": 8
+     },
+     {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 2 -> 4"
+    ],
+    "nerfs": [],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 396,
+   "h": 820
+  },
+  {
+   "id": "D-P-905113b67a8a",
+   "kind": "discord",
+   "date": "2021-12-15T11:59:40+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-905113b67a8a.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 396,
+   "h": 818
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-4a6e1517885d.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 396,
+   "h": 818
+  },
+  {
+   "id": "O-257dc970a875:Cards/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-1548ddba6466.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-d9b5c22ea5b9.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6f75ca603df9:Cards/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-04-11T22:07:06+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fixes",
+   "repo": "first",
+   "image": "O-15146d0af8f0.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-15146d0af8f0.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-15146d0af8f0.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. If all mantis lords currently on the field are destroyed, the next is summoned immediately. This ability cannot be negated or copied",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c35b370ae908:Creatures/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-04-25T03:03:39+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Mantis Lords Redesign",
+   "image": "O-31df553e173e.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. \nIf all mantis lords currently on the field are destroyed, the next is summoned immediately.\n This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-551d803fa4e4:Creatures/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-04-30T10:56:16+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Collector Nerf And a ton of Touch Ups",
+   "image": "O-8f2361db966a.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. \nIf all mantis lords currently on the field are destroyed, the next is summoned immediately.\n This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-085097e5916b:Creatures/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-04-30T13:04:01+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuffs",
+   "image": "O-6d50f1110bcf.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. \nIf all mantis lords currently on the field are destroyed, the next is summoned immediately.\n This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d42a25bc7bce:Creatures/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-10-15T13:23:59+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Hollow Knight Attribute Colroing",
+   "image": "O-17cb3a434825.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. \nIf all mantis lords currently on the field are destroyed, the next is summoned immediately.\n This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-77f75b27401c.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. \nIf all mantis lords currently on the field are destroyed, the next is summoned immediately.\n This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Hollow Knight/3 Stars/Mantis_Lords.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-48954feea559.webp",
+   "fields": {
+    "name": {
+     "value": "Mantis Lords",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 5,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "At the end of Mantis Lords' turn, summon 1 more mantis lord (with base stats) until 3 in total have been summoned. \nIf all mantis lords currently on the field are destroyed, the next is summoned immediately.\n This ability cannot be negated or copied.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-16",
+  "sort": "2019-02-16",
+  "source": "discord",
+  "status": "same"
+ }
+}

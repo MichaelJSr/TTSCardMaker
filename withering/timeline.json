@@ -1,0 +1,316 @@
+{
+ "card": "withering",
+ "key": "Withering",
+ "name": "Withering",
+ "kind": "debuff",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "F-f4bdfab83c1",
+   "kind": "text",
+   "date": "2020-08-14T00:39:49+00:00",
+   "day": "2020-08-14",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-3d643a7c71e9",
+   "kind": "discord",
+   "date": "2022-01-16T07:09:48+00:00",
+   "day": "2022-01-16",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-3d643a7c71e9.webp",
+   "fields": {
+    "name": {
+     "value": "Withering",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 HP, -1 ATK, -1 DEF, -1 SPD per turn.\nLasts indefinitely.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-a094b5bc5ed2:Auxillary/Status Effects/Debuffs/4 Stars/Withering.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-b4d2a3aa3bf2.webp",
+   "fields": {
+    "name": {
+     "value": "Withering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 HP, -1 ATK, -1 DEF, -1 SPD per turn.\nLasts indefinitely.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-50d561a9a6f6:Auxillary/Status Effects/Debuffs/4 Stars/Withering.png",
+   "kind": "old repo",
+   "date": "2023-04-05T09:41:22+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated all tier 4 debuffs",
+   "repo": "first",
+   "image": "O-25dd54f6ae80.webp",
+   "fields": {
+    "name": {
+     "value": "Withering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) -2 HP -1 DEF -1 ATK -1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "debuff"
+     ],
+     "drop": []
+    },
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-be2af3485d1e:Auxillary/Status Effects/Debuffs/4 Stars/Withering.png",
+   "kind": "old repo",
+   "date": "2023-04-05T22:46:32+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Doing a thankless job.",
+   "repo": "first",
+   "image": "O-129b0cc331c7.webp",
+   "fields": {
+    "name": {
+     "value": "Withering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) 2 DMG -1 DEF -1 ATK -1 SPD.\nLasts indefinitely",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Status Effects/Debuffs/4 Stars/Withering.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "image": "O-129b0cc331c7.webp",
+   "fields": {
+    "name": {
+     "value": "Withering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) 2 DMG -1 DEF -1 ATK -1 SPD.\nLasts indefinitely",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-679e477db203:Auxillary/Status Effects/Debuffs/4 Stars/Withering.png",
+   "kind": "old repo",
+   "date": "2023-10-21T08:30:12+00:00",
+   "day": "2023-10-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "updated rulebook",
+   "image": "O-c89c76375ec6.webp",
+   "fields": {
+    "name": {
+     "value": "Withering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) 2 DMG -1 DEF -1 ATK -1 SPD.\nLasts indefinitely",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 400,
+   "h": 400
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/4 Stars/Withering.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "image": "O-6ffe2e8c6bf3.webp",
+   "fields": {
+    "name": {
+     "value": "Withering",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOT) 2 DMG -1 DEF -1 ATK -1 SPD.\nLasts indefinitely.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2020-08-14",
+  "sort": "2020-08-14",
+  "source": "discord",
+  "status": "owner"
+ }
+}

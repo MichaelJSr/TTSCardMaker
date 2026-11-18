@@ -1,0 +1,29 @@
+{
+ "card": "gonedhi",
+ "key": "Gonedhi",
+ "name": "Gonedhi",
+ "morgue": "candidate",
+ "first": {
+  "date": "2025-04-25T05:52:24.066000+00:00",
+  "day": "2025-04-25",
+  "channel": "joke-ideas",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-8c5772838f6e",
+   "kind": "discord",
+   "date": "2025-04-25T05:52:24.066000+00:00",
+   "day": "2025-04-25",
+   "badge": "Discord",
+   "image": "P-8c5772838f6e.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "joke-ideas",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

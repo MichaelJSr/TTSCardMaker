@@ -1,0 +1,97 @@
+{
+ "card": "helpful-mannequin",
+ "key": "Helpful Mannequin",
+ "name": "Helpful Mannequin",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-19",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-402e1cb39e97",
+   "kind": "discord",
+   "date": "2023-11-18T06:52:27+00:00",
+   "day": "2023-11-18",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-402e1cb39e97.webp",
+   "fields": {
+    "name": {
+     "value": "Helpful Mannequin",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Put a 2 star or below item from the discard pile into your hand.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 3,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-05-04T07:41:09+00:00",
+  "changes": {
+   "stats": [
+    {
+     "hp": 5,
+     "def": 3,
+     "atk": 6,
+     "spd": 5
+    },
+    {
+     "hp": 3,
+     "def": 5,
+     "atk": 4,
+     "spd": 4
+    }
+   ],
+   "bal": "nerf",
+   "buffs": [
+    "DEF 3 -> 5"
+   ],
+   "nerfs": [
+    "HP 5 -> 3",
+    "ATK 6 -> 4",
+    "SPD 5 -> 4"
+   ],
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2023-11-18",
+  "sort": "2023-11-18",
+  "source": "discord",
+  "status": "same"
+ }
+}

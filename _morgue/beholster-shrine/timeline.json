@@ -1,0 +1,43 @@
+{
+ "card": "beholster-shrine",
+ "key": "Beholster Shrine",
+ "name": "Beholster Shrine",
+ "morgue": "candidate",
+ "first": {
+  "date": "2023-05-12T00:59:08.976000+00:00",
+  "day": "2023-05-12",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-bcbe906b1266",
+   "kind": "discord",
+   "date": "2023-05-12T00:59:08.976000+00:00",
+   "day": "2023-05-12",
+   "badge": "Discord",
+   "image": "P-bcbe906b1266.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-282ce634c1a7",
+   "kind": "discord",
+   "date": "2023-05-12T00:59:42.613000+00:00",
+   "day": "2023-05-12",
+   "badge": "Discord",
+   "image": "P-282ce634c1a7.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke"
+}

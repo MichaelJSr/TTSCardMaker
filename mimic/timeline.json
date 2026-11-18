@@ -1,0 +1,442 @@
+{
+ "card": "mimic",
+ "key": "Mimic",
+ "name": "Mimic",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-7364b20e5882",
+   "kind": "discord",
+   "date": "2020-08-10T04:52:40+00:00",
+   "day": "2020-08-10",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-7364b20e5882.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to 4 stars total of items in your hand, its cost equaling the cost of each item it copies, and sell value is decreased by 1/2 the star level of each targeted item.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-22a9b1323b76",
+   "kind": "discord",
+   "date": "2020-08-31T09:26:58+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-22a9b1323b76.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to 4 stars total of items in your hand for free, and sell value is decreased by 1/2 the star level of each targeted item.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-42d867ebd49a.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to 4 stars total of items in your hand for free, and sell value is decreased by 1/2 the star level of each targeted item.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-f085a8f13251:Items/Active/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-03-22T10:20:20+00:00",
+   "day": "2023-03-22",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Changed mimic to known items",
+   "repo": "first",
+   "image": "O-f3df3234fc5a.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to\n4 stars total of known\nitems (SP spent equals cost of cloned items), and sell value is\ndecreased by the SP of each targeted item.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Offense/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-f3df3234fc5a.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to\n4 stars total of known\nitems (SP spent equals cost of cloned items), and sell value is\ndecreased by the SP of each targeted item.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-85b2f9e097aa:Items/Offense/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:47:15+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Mimic",
+   "repo": "first",
+   "image": "O-1f8597c02e9e.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to\n4 stars total of known\nitems (SP spent equals cost of cloned items), and sell value is\ndecreased by the SP of each targeted item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-29bffbd84412:Items/Offense/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-04-08T08:27:54+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moved stacking percentage debuffs and buffs and other changes",
+   "repo": "first",
+   "image": "O-5d836317007e.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to\n4 stars total of known\nitems that are not discarded (SP spent equals cost of cloned items), and sell value is decreased by the SP of each targeted item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Offense/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-5d836317007e.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to\n4 stars total of known\nitems that are not discarded (SP spent equals cost of cloned items), and sell value is decreased by the SP of each targeted item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-733ddef6a721:Items/Offense/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-04-23T08:46:25+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "some pending updates",
+   "image": "O-41cf883b1b9f.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to\n4 stars total of known\nitems that are not discarded (SP spent equals cost of cloned items, and items are cloned as their base form).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2640043e00d0:Items/Offense/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-05-11T17:34:21+00:00",
+   "day": "2023-05-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mimic",
+   "image": "O-756512c7c9c0.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to\n4 stars total of known\nitems that are not discarded (SP spent equals cost of cloned items, and items are cloned as their base form).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-af33a661175f:Items/Support/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-10-13T03:36:21+00:00",
+   "day": "2023-10-13",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "support update",
+   "image": "O-39bd56758712.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to\n4 stars total of known\nitems that are not discarded. SP spent equals cost of cloned items, and items are cloned as their base form.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d030a1a35f96:Items/Support/4 Stars/Mimic.png",
+   "kind": "old repo",
+   "date": "2023-10-31T01:40:31+00:00",
+   "day": "2023-10-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "newcaeds",
+   "image": "O-39e03a1646ae.webp",
+   "fields": {
+    "name": {
+     "value": "Mimic",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This item can copy up to 4 stars total of known items that are not discarded. \nSP spent equals cost of cloned items, and items are cloned as their base form.\nCannot clone 0 star items.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-08-10",
+  "sort": "2020-08-10",
+  "source": "discord",
+  "status": "same"
+ }
+}

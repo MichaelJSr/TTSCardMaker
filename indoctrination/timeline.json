@@ -1,0 +1,338 @@
+{
+ "card": "indoctrination",
+ "key": "Indoctrination",
+ "name": "Indoctrination",
+ "kind": "aux item",
+ "stop": {
+  "day": "2023-03-30",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-a5916ea1f107",
+   "kind": "discord",
+   "date": "2023-03-20T01:15:51+00:00",
+   "day": "2023-03-20",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-a5916ea1f107.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. When the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 312,
+   "h": 488
+  },
+  {
+   "id": "O-9c20efff026c:Auxillary/Items/4 Stars/Dogma.png",
+   "kind": "old repo",
+   "date": "2023-03-30T05:54:56+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed felguard, added Dogma, added abbreviations",
+   "file": "Dogma",
+   "repo": "first",
+   "image": "O-caf28c98cdea.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. When the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 312,
+   "h": 488
+  },
+  {
+   "id": "O-2a9c92511650:Auxillary/Items/4 Stars/Dogma.png",
+   "kind": "old repo",
+   "date": "2023-03-30T16:26:44+00:00",
+   "day": "2023-03-30",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Dogma Equip in photoshop",
+   "file": "Dogma",
+   "repo": "first",
+   "image": "O-b48abef7c70d.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. When the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b16c6736c20c:Auxillary/Items/4 Stars/Dogma.png",
+   "kind": "old repo",
+   "date": "2023-04-02T00:20:11+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Touched a bunch of auxillary cards to standardize their size and delete some unused assets",
+   "file": "Dogma",
+   "repo": "first",
+   "image": "O-86441a7c47a9.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. When the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7d95f1eb94d5:Auxillary/Items/4 Stars/Dogma.png",
+   "kind": "old repo",
+   "date": "2023-04-02T20:38:12+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "dogma, skull, stotch",
+   "file": "Dogma",
+   "repo": "first",
+   "image": "O-5b469c237360.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. When the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-e043ac52978d:Auxillary/Items/4 Stars/Dogma.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:47:23+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added most auxillary",
+   "file": "Dogma",
+   "image": "O-5b469c237360.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. When the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-e737ab639518:Auxillary/Items/4 Stars/Dogma.png",
+   "kind": "old repo",
+   "date": "2023-09-27T10:55:18+00:00",
+   "day": "2023-09-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "file": "Dogma",
+   "image": "O-753d763149a5.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. When the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b8c3824d98cc:Auxillary/Items/Dogma.png",
+   "kind": "old repo",
+   "date": "2023-10-20T23:36:55+00:00",
+   "day": "2023-10-20",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Changed star levels of most minions and moved minions/aux items",
+   "file": "Dogma",
+   "image": "O-753d763149a5.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. When the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-573f3eb1c5fe:Auxillary/Items/Dogma.png",
+   "kind": "old repo",
+   "date": "2023-10-24T11:55:31+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "dogma",
+   "file": "Dogma",
+   "image": "O-39bebfbb23be.webp",
+   "fields": {
+    "name": {
+     "value": "Dogma",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "The creature this is equipped to is negated. +2 ATK -2 DEF. \nWhen the creature this is equipped to dies, its owner chooses a creature to be equipped with this.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-03-20",
+  "sort": "2023-03-20",
+  "source": "discord",
+  "status": "owner"
+ }
+}

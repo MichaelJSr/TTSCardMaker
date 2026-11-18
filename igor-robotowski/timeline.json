@@ -1,0 +1,78 @@
+{
+ "card": "igor-robotowski",
+ "key": "Igor Robotowski",
+ "name": "Igor Robotowski",
+ "kind": "creature",
+ "stop": {
+  "day": "2025-03-24",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-2ad2e99159dc",
+   "kind": "discord",
+   "date": "2025-03-24T12:20:00+00:00",
+   "day": "2025-03-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2ad2e99159dc.webp",
+   "fields": {
+    "name": {
+     "value": "Igor Robotowski",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "unknown"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(ENDT) MUST LOSE 2 SPD. (E2T) SPEND 8 BRICKS TO REPLACE THIS WITH IGOR ROBALLTOWSKI (RESET HP).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 0,
+      "atk": 6,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-24T23:50:06+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-03-24",
+  "sort": "2025-03-24",
+  "source": "discord",
+  "status": "same"
+ }
+}

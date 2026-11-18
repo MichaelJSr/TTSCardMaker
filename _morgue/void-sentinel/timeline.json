@@ -1,0 +1,57 @@
+{
+ "card": "void-sentinel",
+ "key": "Void Sentinel",
+ "name": "Void Sentinel",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-27T07:49:37+00:00",
+  "day": "2020-07-27",
+  "channel": "update-01-port",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-71381b94420c",
+   "kind": "discord",
+   "date": "2020-07-27T07:49:37+00:00",
+   "day": "2020-07-27",
+   "badge": "Discord",
+   "image": "P-71381b94420c.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-01-port",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-3eed5bae5526",
+   "kind": "discord",
+   "date": "2020-08-14T04:57:02.463000+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "image": "P-3eed5bae5526.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "P-9f0f6ae7b5c8",
+   "kind": "discord",
+   "date": "2020-08-14T04:59:26.509000+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "image": "P-9f0f6ae7b5c8.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "update-02-port",
+   "w": 350,
+   "h": 518
+  }
+ ],
+ "kind_of": "played"
+}

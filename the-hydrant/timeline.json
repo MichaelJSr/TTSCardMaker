@@ -1,0 +1,408 @@
+{
+ "card": "the-hydrant",
+ "key": "The Hydrant",
+ "name": "The Hydrant",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-e55468274568",
+   "kind": "discord",
+   "date": "2020-07-22T03:01:26+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-e55468274568.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this is used on a fire type creature then its armor is cut in half and its attack is reduced by one third. If used on a water type it gains 1 ATK and SPD. Hydrant can also be used to extinguish fire-based conditions.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "A-item",
+   "w": 398,
+   "h": 610
+  },
+  {
+   "id": "D-P-5cc04e80cffb",
+   "kind": "discord",
+   "date": "2020-08-14T00:37:33+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-5cc04e80cffb.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this is used on a fire type creature Inflict Doused (Armor -50% ATK -25%) If used on a water type it gains 1 ATK and SPD. Hydrant can also be used to cure fire-based de-buffs (excluding cursed inferno.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "A-item",
+   "w": 398,
+   "h": 611
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-0e2780a631e1.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this is used on a fire type creature Inflict Doused (Armor -50% ATK -25%) If used on a water type it gains 1 ATK and SPD. Hydrant can also be used to cure fire-based de-buffs (excluding cursed inferno.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 398,
+   "h": 611
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Offense/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "repo": "first",
+   "image": "O-0e2780a631e1.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If this is used on a fire type creature Inflict Doused (Armor -50% ATK -25%) If used on a water type it gains 1 ATK and SPD. Hydrant can also be used to cure fire-based de-buffs (excluding cursed inferno.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 398,
+   "h": 611
+  },
+  {
+   "id": "O-8fcc768b8239:Items/Offense/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2023-04-08T09:52:38+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Fire hydrant and removed doused",
+   "repo": "first",
+   "image": "O-f8f1af1a2f2b.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type creature, inflict 2 Enfeebled for 3 turns.\nIf used on a [water] type creature, inflict 1 Peppy and 1 Enraged for 2 turns.\nIf used on a nature creature, heal 3 HP and inflict 1 Hardened for 3 turns.\nThis can be used to cure Smoldering, Burning, or Blazing on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6a29e6879520:Items/Offense/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2023-04-08T10:32:59+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Danger badges Gasoline The Hydrant",
+   "repo": "first",
+   "image": "O-abf3a9cd1729.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, inflict 2 Enfeebled for 3 turns.\nIf used on a [water] type, inflict 1 Peppy and 1 Enraged for 2 turns.\nIf used on a nature attribute, heal 3 HP and inflict 1 Hardened for 3 turns.\nThis can be used to cure Smoldering, Burning, or Blazing on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Offense/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "image": "O-abf3a9cd1729.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, inflict 2 Enfeebled for 3 turns.\nIf used on a [water] type, inflict 1 Peppy and 1 Enraged for 2 turns.\nIf used on a nature attribute, heal 3 HP and inflict 1 Hardened for 3 turns.\nThis can be used to cure Smoldering, Burning, or Blazing on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f8640a1af075:Items/Offense/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2023-05-11T17:30:16+00:00",
+   "day": "2023-05-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Hydrant",
+   "image": "O-fb849106e847.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, inflict 2 Enfeebled for 3 turns.\nIf used on a [water] type, inflict 1 Peppy and 1 Enraged for 2 turns.\nIf used on a Nature attribute, heal 3 HP and inflict 1 Hardened for 3 turns.\nThis can be used to cure Smoldering, Burning, or Blazing on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Offense/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-e4400d7c8ebe.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, inflict 2 Enfeebled for 3 turns.\nIf used on a [water] type, inflict 1 Peppy and 1 Enraged for 2 turns.\nIf used on a Nature attribute, heal 3 HP and inflict 1 Hardened for 3 turns.\nThis can be used to cure Burning, Smoldering, or Blazing on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b0a72753da1d:Items/Offense/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:39:40+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "hydrant burning fix",
+   "image": "O-518a83c23d59.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, inflict 2 Enfeebled for 3 turns.\nIf used on a [water] type, inflict 1 Peppy and 1 Enraged for 2 turns.\nIf used on a Nature attribute, heal 3 HP and inflict 1 Hardened for 3 turns.\nThis can be used to cure Burning, Smoldering, or Blazing on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Offense/2 Stars/The_Hydrant.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-1bfce4dacf06.webp",
+   "fields": {
+    "name": {
+     "value": "The Hydrant",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "If used on a [fire] type, inflict 2 Enfeebled for 3 turns.\nIf used on a [water] type, inflict 1 Peppy and 1 Enraged for 2 turns.\nIf used on a Nature attribute, heal 3 HP and inflict 1 Hardened for 3 turns.\nThis can be used to cure Smoldering, Burning, or Blazing on a creature.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

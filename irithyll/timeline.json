@@ -1,0 +1,306 @@
+{
+ "card": "irithyll",
+ "key": "Irithyll",
+ "name": "Irithyll",
+ "kind": "field",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-3464a034b43d",
+   "kind": "discord",
+   "date": "2022-01-25T05:43:22+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-3464a034b43d.webp",
+   "fields": {
+    "name": {
+     "value": "Irithyll",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 3 less per [ice] on your field. [ice]: +2 Max HP. Royalty: +2 Max HP +2 DEF. Mythical: +1 HP per turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 959
+  },
+  {
+   "id": "D-P-1fca72ac8b23",
+   "kind": "discord",
+   "date": "2022-01-25T05:47:37+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-1fca72ac8b23.webp",
+   "fields": {
+    "name": {
+     "value": "Irithyll",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 3 less per [ice] on your field. [ice]: Attacks inflict Chill. Royalty: +2 Max HP +2 DEF.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 720,
+   "h": 955
+  },
+  {
+   "id": "O-a094b5bc5ed2:Field/3 Stars/Irithyll.PNG",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-2c26f8225223.webp",
+   "fields": {
+    "name": {
+     "value": "Irithyll",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 3 less per [ice] on your field. [ice]: Attacks inflict Chill. Royalty: +2 Max HP +2 DEF.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 955
+  },
+  {
+   "id": "O-8e96b86eab5d:Field/2 Stars/Irithyll.png",
+   "kind": "old repo",
+   "date": "2023-04-20T23:45:40+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "All field items done",
+   "repo": "first",
+   "image": "O-04483f567563.webp",
+   "fields": {
+    "name": {
+     "value": "Irithyll",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[ice]: Attacks inflict 2 turns of Chilled.\nRoyalty: +2 MAX HP +2 DEF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     2
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-86cd22b2d865:Field/2 Stars/Irithyll.png",
+   "kind": "old repo",
+   "date": "2023-04-21T08:32:46+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "added Field, MDW, and Types",
+   "image": "O-04483f567563.webp",
+   "fields": {
+    "name": {
+     "value": "Irithyll",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[ice]: Attacks inflict 2 turns of Chilled.\nRoyalty: +2 MAX HP +2 DEF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Field/2 Stars/Irithyll.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-d902d090da2d.webp",
+   "fields": {
+    "name": {
+     "value": "Irithyll",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[ice]: Attacks inflict 2 turns of Chilled.\nRoyalty: +2 MAX HP +2 DEF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/2 Stars/Irithyll.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-f568b98318cf.webp",
+   "fields": {
+    "name": {
+     "value": "Irithyll",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "[ice]: Attacks inflict 2 turns of Chilled\nRoyalty: +2 MAX HP, +2 DEF",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2022-01-25",
+  "sort": "2022-01-25",
+  "source": "discord",
+  "status": "same"
+ }
+}

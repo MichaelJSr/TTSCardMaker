@@ -1,0 +1,846 @@
+{
+ "card": "the-patients",
+ "key": "The Patients",
+ "name": "The Patients",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-03-20",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-bf87d6baf4e4",
+   "kind": "discord",
+   "date": "2022-02-02T05:04:47+00:00",
+   "day": "2022-02-02",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-bf87d6baf4e4.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature is composed of 3 separate entities that all share the same health bar. They may only use their actions to attack. If a patient is attacked, it cannot attack for its next 2 turns",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "D-P-40c9766b2c24",
+   "kind": "discord",
+   "date": "2023-03-20T01:00:05+00:00",
+   "day": "2023-03-20",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-40c9766b2c24.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions every turn, but it may only use those actions to attack. Each time this card is attacked it has one less action for 2 turns",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "git_look": true,
+   "era": "C",
+   "w": 388,
+   "h": 790
+  },
+  {
+   "id": "O-fff599319d26:Cards/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-03-20T04:38:41+00:00",
+   "day": "2023-03-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Port 6",
+   "repo": "first",
+   "image": "O-88f978be1bd0.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions every turn, but it may only use those actions to attack.\n Each time this card is attacked it has one less action for 2 turns.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 790
+  },
+  {
+   "id": "O-cce789937c46:Cards/Other/3 Stars/The Patients.PNG",
+   "kind": "old repo",
+   "date": "2023-04-08T07:26:17+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Patients",
+   "repo": "first",
+   "image": "O-61da5b04dde6.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions every turn, but it may only use those actions to attack.\n Each time this card is attacked it has one less action for 2 turns.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "machine"
+     ],
+     "drop": [
+      "undead"
+     ]
+    },
+    "ability_change": "same",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "O-4e295079d069:Cards/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-04-09T08:16:36+00:00",
+   "day": "2023-04-09",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Zero Override and Patients fix",
+   "repo": "first",
+   "image": "O-61da5b04dde6.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions every turn, but it may only use those actions to attack.\n Each time this card is attacked it has one less action for 2 turns.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": true,
+   "w": 390,
+   "h": 790
+  },
+  {
+   "id": "O-39305c878355:Cards/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-04-11T16:42:25+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "patients",
+   "repo": "first",
+   "image": "O-180591d29d25.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions every turn, but it may only use those actions to attack.\n Each time this card is attacked it has one less action for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stats"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e4f138a7f5ec:Cards/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-04-11T22:52:51+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "patiants",
+   "repo": "first",
+   "image": "O-dc939e026ed0.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions every turn, but it may only use those actions to attack.\n Each time this card is attacked it has one less action for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 6,
+      "atk": 4,
+      "spd": 8
+     },
+     {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 6 -> 4",
+     "SPD 8 -> 4"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-dc9a0cc020be:Cards/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-04-19T06:12:19+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "warrior patients dedede masher",
+   "repo": "first",
+   "image": "O-d7664e059ef0.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf a point-yielding creature attacks this, it loses an action for 2 turns. If a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ccbd8809528:Cards/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-04-19T11:13:28+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "patiants",
+   "repo": "first",
+   "image": "O-bc166fe89248.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf a point-yielding creature attacks this, it loses an action for 2 turns. If a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-bc166fe89248.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf a point-yielding creature attacks this, it loses an action for 2 turns. If a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-bc166fe89248.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf a point-yielding creature attacks this, it loses an action for 2 turns. If a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8bee0a031028:Creatures/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-05-26T14:05:57+00:00",
+   "day": "2023-05-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "changes",
+   "image": "O-ed8e8dc293ba.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf it’s attacked by a point-yielding creature this creature loses an action for 2 turns. If a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-d57ef494cfd9.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf it’s attacked by a point-yielding creature this creature loses an action for 2 turns. \nIf a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-9be0ac9840ea.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf it’s attacked by a point-yielding creature this creature loses an action for 2 turns. \nIf a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-633eae3fd4b3.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf it’s attacked by a point-yielding creature this creature loses an action for 2 turns. \nIf a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Other/3 Stars/The_Patients.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-84d56968c6ef.webp",
+   "fields": {
+    "name": {
+     "value": "The Patients",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 4,
+      "atk": 4,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 3 actions, but it may only use actions to attack.\nIf it’s attacked by a point-yielding creature this creature loses an action for 2 turns. \nIf a minion attacks this, it loses an action for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2022-02-02",
+  "sort": "2022-02-02",
+  "source": "discord",
+  "status": "same"
+ }
+}

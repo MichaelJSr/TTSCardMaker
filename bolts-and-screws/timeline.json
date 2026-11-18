@@ -1,0 +1,387 @@
+{
+ "card": "bolts-and-screws",
+ "key": "Bolts and Screws",
+ "name": "Bolts and Screws",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-aa254e3b6265",
+   "kind": "discord",
+   "date": "2020-09-03T01:41:55+00:00",
+   "day": "2020-09-03",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-aa254e3b6265.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and Bolts",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 2 HP and increases DEF by 1. If used on any other type, Sickens that creature.",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-11cc92edd764",
+   "kind": "discord",
+   "date": "2020-09-03T01:46:28+00:00",
+   "day": "2020-09-03",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-11cc92edd764.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and Bolts",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 2 HP and increases DEF by 1. If used on any other type, Sickens that creature for 1 turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-05fea01dfb74",
+   "kind": "discord",
+   "date": "2020-09-03T02:39:57+00:00",
+   "day": "2020-09-03",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-05fea01dfb74.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and Bolts",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1. If used on any other type, Sickens that creature for 1 turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Heal/1 Stars/Nuts_and_Bolts.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Nuts and Bolts",
+   "repo": "first",
+   "image": "O-9b654320e3d3.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and Bolts",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1. If used on any other type, sickens that\ncreature for 1 turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-1805f79440a2:Items/Heal/1 Stars/Nuts_and_Bolts.png",
+   "kind": "old repo",
+   "date": "2023-04-05T14:27:53+00:00",
+   "day": "2023-04-05",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some healing items",
+   "file": "Nuts and Bolts",
+   "repo": "first",
+   "image": "O-21b6e90214f6.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and bolts",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1. If used on any other type, sickens that\ncreature for 1 turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b54076b3055b:Items/Heal/1 Stars/Nuts_and_Bolts.png",
+   "kind": "old repo",
+   "date": "2023-04-19T10:32:37+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First set of debuff fixes on items",
+   "file": "Nuts and Bolts",
+   "repo": "first",
+   "image": "O-a86015682c9d.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and bolts",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1. If used on any other type, inflict 1 turn of Sickness.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Heal/1 Stars/Nuts_and_Bolts.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "file": "Nuts and Bolts",
+   "image": "O-a86015682c9d.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and bolts",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1. If used on any other type, inflict 1 turn of Sickness.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Heal/1 Stars/Nuts_and_Bolts.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "file": "Nuts and Bolts",
+   "image": "O-de7030de50cb.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and bolts",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1.\n If used on any other type, inflict 1 turn of Sickness.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Items/Heal/1 Stars/Nuts_and_Bolts.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "file": "Nuts and Bolts",
+   "image": "O-9ad001351f62.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and bolts",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1.\n If used on any other type, inflict 1 turn of Sickness.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     1,
+     2
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-60c362fee78c:Items/Heal/1 Stars/Nuts_and_Bolts.png",
+   "kind": "old repo",
+   "date": "2023-10-24T21:43:59+00:00",
+   "day": "2023-10-24",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field items",
+   "file": "Nuts and Bolts",
+   "image": "O-ce69b243efe3.webp",
+   "fields": {
+    "name": {
+     "value": "Nuts and bolts",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1.\n If used on any other type, inflict 1 turn of Sickness.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-03",
+  "sort": "2020-09-03",
+  "source": "discord",
+  "status": "owner"
+ }
+}

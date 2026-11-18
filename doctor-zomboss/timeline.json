@@ -1,0 +1,848 @@
+{
+ "card": "doctor-zomboss",
+ "key": "Doctor Zomboss",
+ "name": "Doctor Zomboss",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-03-31",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-070dbdcddd78",
+   "kind": "discord",
+   "date": "2023-03-31T13:05:43+00:00",
+   "day": "2023-03-31",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-070dbdcddd78.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "git header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 6,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-73f4689cf02f:Cards/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-03-31T13:07:15+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "zomboss",
+   "repo": "first",
+   "image": "O-476af0b7e3fa.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 6,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-1182e43eca86:Cards/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-03-31T13:38:40+00:00",
+   "day": "2023-03-31",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "dr zomboss starfruit stars",
+   "repo": "first",
+   "image": "O-b65ac837768a.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 2,
+      "def": 6,
+      "atk": 4,
+      "spd": 8
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-cc16d06eb6f1:Cards/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-04-03T06:57:30+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "zomboss fix and minion updates",
+   "repo": "first",
+   "image": "O-e19ab2e53249.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 2,
+      "def": 6,
+      "atk": 4,
+      "spd": 8
+     },
+     {
+      "hp": 8,
+      "def": 6,
+      "atk": 7,
+      "spd": 4
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "HP 2 -> 8",
+     "ATK 4 -> 7"
+    ],
+    "nerfs": [
+     "SPD 8 -> 4"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0c7bef951803:Cards/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-04-03T07:03:54+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "zomboss fix again",
+   "repo": "first",
+   "image": "O-660128f06a11.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e53eb5c274d8:Cards/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-04-07T00:46:59+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "slight zomboss nerf",
+   "repo": "first",
+   "image": "O-c887a61a9db5.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 6,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 6,
+      "atk": 7,
+      "spd": 4
+     },
+     {
+      "hp": 8,
+      "def": 6,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 7 -> 6"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8ebbd6be396f:Cards/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-04-20T22:28:24+00:00",
+   "day": "2023-04-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Chugged through all pending updates",
+   "repo": "first",
+   "image": "O-eb5b9adf915b.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 8,
+      "def": 6,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 6 -> 5"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-eb5b9adf915b.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-eb5b9adf915b.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite. (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4b6f8b7307a7:Creatures/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-04-30T18:45:47+00:00",
+   "day": "2023-04-30",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Touch ups and fixes",
+   "image": "O-8defc50b078c.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either blazing or frostbite.\n (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "undead"
+     ],
+     "drop": []
+    },
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8d151d6b4904:Creatures/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-10-08T22:03:14+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Pending Changes",
+   "image": "O-e23b461e0e27.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either Blazing or Frostbite for 2 turns.\n (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fc7850a56316:Creatures/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-10-08T23:05:34+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Lincdolt and zomboss",
+   "image": "O-bebe7495e812.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either Blazing or Frostbite for 2 turns.\n (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-55c334ac55cb.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either Blazing or Frostbite for 2 turns.\n (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-e835387479f5.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either Blazing or Frostbite for 2 turns.\n (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/5 Stars/Doctor_Zomboss.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-d534e359f711.webp",
+   "fields": {
+    "name": {
+     "value": "Doctor Zomboss",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "undead",
+      "machine"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "First turn and (EOT) gain +2 ATK for this attack and inflict either Blazing or Frostbite for 2 turns.\n (EOT) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-03-31",
+  "sort": "2023-03-31",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,179 @@
+{
+ "card": "utica-stock-exchange",
+ "key": "Utica Stock Exchange",
+ "name": "Utica Stock Exchange",
+ "kind": "field",
+ "stop": {
+  "day": "2023-10-27",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-fe6a4dc0af3a",
+   "kind": "discord",
+   "date": "2023-10-27T16:49:29+00:00",
+   "day": "2023-10-27",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-fe6a4dc0af3a.webp",
+   "fields": {
+    "name": {
+     "value": "Utica Stock Exchange",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) Both teams gain 2 points. (OPGT) You may sell items to this for 2x its sell cost, but your opponent may buy the items sold to this for only 2x the star level (can buy even if this is negated/ gone). Business: +2 DEF Industrial: +1 DEF +1 SPD",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6aa34293d3b0:Field/2 Stars/Utica_Stock_Exchange.png",
+   "kind": "old repo",
+   "date": "2023-10-27T20:29:11+00:00",
+   "day": "2023-10-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new cards",
+   "image": "O-393ef282f7d5.webp",
+   "fields": {
+    "name": {
+     "value": "Utica stock exchange",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(BOGT) Both teams gain 2 points.\n(OPGT) You may sell items to this for 2x its sell cost, but your opponent may buy the items sold to this for only 2x the star level (can buy even if this is negated/gone).\nBusiness: +2 DEF\nIndustrial: +1 DEF +1 SPD",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2880662b4401:Field/2 Stars/Utica_Stock_Exchange.png",
+   "kind": "old repo",
+   "date": "2023-10-28T08:14:45+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Utica stock exchange",
+   "image": "O-3a62c400b21e.webp",
+   "fields": {
+    "name": {
+     "value": "Utica stock exchange",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Business: +2 DEF\nIndustrial: +1 DEF +1 SPD\n(BOGT) Both teams gain 2 points.\n(OPGT) You may sell an item for 2x its sell cost, but opponents may buy any item sold to this for 2x its star level (even if this is negated/destroyed).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c0395cf71422:Field/2 Stars/Utica_Stock_Exchange.png",
+   "kind": "old repo",
+   "date": "2023-10-30T04:41:23+00:00",
+   "day": "2023-10-30",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Tyler and Utica",
+   "image": "O-b1efc0004529.webp",
+   "fields": {
+    "name": {
+     "value": "Utica stock exchange",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Business: +2 DEF\nIndustrial: +1 DEF +1 SPD\n(BOGT) Both teams gain 2 points.\n(OPGT) You may sell an item for 2x its sell cost, but opponents may buy any item sold to this for 2x its star level (even if this is negated/destroyed).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-10-27",
+  "sort": "2023-10-27",
+  "source": "discord",
+  "status": "same"
+ }
+}

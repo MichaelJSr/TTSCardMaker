@@ -1,0 +1,453 @@
+{
+ "card": "brad-armstrong",
+ "key": "Brad Armstrong",
+ "name": "Brad Armstrong",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-09-11",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-7d9c9ab54740",
+   "kind": "discord",
+   "date": "2023-08-21T03:03:37+00:00",
+   "day": "2023-08-21",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-7d9c9ab54740.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature attacks, either deal 6 damage to the same creature and inflict smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-64e9465528e9",
+   "kind": "discord",
+   "date": "2023-08-21T05:13:18+00:00",
+   "day": "2023-08-21",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-64e9465528e9.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature attacks, either deal 6 damage to the same creature (or next summoned creature) and inflict smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fa4fb2bf1401:Creatures/Other/4 Stars/Brad_Armstrong.png",
+   "kind": "old repo",
+   "date": "2023-09-11T04:39:33+00:00",
+   "day": "2023-09-11",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "some stuff",
+   "image": "O-acd67c3e4f86.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature attacks, either deal 6 damage to the same creature (or next summoned creature) and inflict smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Other/4 Stars/Brad_Armstrong.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-e670f63337f3.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature attacks, either deal 6 damage to the same creature (or next summoned creature) and inflict 2 turns of Smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-91189038796f:Creatures/Other/4 Stars/Brad_Armstrong.png",
+   "kind": "old repo",
+   "date": "2023-10-10T06:24:39+00:00",
+   "day": "2023-10-10",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "proposed changes",
+   "image": "O-f571918e7ace.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature attacks, either deal 5 damage to the same creature (or next summoned creature) and inflict 2 turns of Smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-427f4812b8ac:Creatures/Lisa/4 Stars/Brad_Armstrong.png",
+   "kind": "old repo",
+   "date": "2023-10-16T03:25:10+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Moved stuff to correct folders",
+   "image": "O-f571918e7ace.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature attacks, either deal 5 damage to the same creature (or next summoned creature) and inflict 2 turns of Smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Lisa/4 Stars/Brad_Armstrong.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-6dc4bb292928.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature attacks, either deal 5 damage to the same creature (or next summoned creature) and inflict 2 turns of Smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3518261d375b:Creatures/Lisa/4 Stars/Brad_Armstrong.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-8b1a854f168d.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature attacks, either deal 5 damage to the same creature (or next summoned creature) and inflict 2 turns of Smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Lisa/4 Stars/Brad_Armstrong.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-2c565eab993b.webp",
+   "fields": {
+    "name": {
+     "value": "Brad Armstrong",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "After this creature attacks, either deal 5 damage to the same creature (or next summoned creature) and inflict 2 turns of Smoldering, or deal 4 damage to all enemies on the PF.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-08-21",
+  "sort": "2023-08-21",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,80 @@
+{
+ "card": "morpho-knight",
+ "key": "Morpho Knight",
+ "name": "Morpho Knight",
+ "kind": "creatures",
+ "stop": {
+  "day": "2025-05-11",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-2ca88cdbc48b",
+   "kind": "discord",
+   "date": "2025-05-11T00:40:56+00:00",
+   "day": "2025-05-11",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-2ca88cdbc48b.webp",
+   "fields": {
+    "name": {
+     "value": "Morpho Knight",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire",
+      "undead"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When attacking creatures inflicted with Smoldering/Burning/Blazing, gain +2/4/6 ATK for that attack. (3PT) Spend 2 points to inflict Smoldering to 3 enemy creatures for 1 turn. (OYT) Spend 2 points to additionally gain the ability of the creature summoned by Butterfly until (ENDT).",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2025-05-11T04:18:09+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "stars",
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-05-11",
+  "sort": "2025-05-11",
+  "source": "discord",
+  "status": "same"
+ }
+}

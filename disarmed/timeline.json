@@ -1,0 +1,65 @@
+{
+ "card": "disarmed",
+ "key": "Disarmed",
+ "name": "Disarmed",
+ "kind": "debuff",
+ "stop": {
+  "day": "2025-03-22",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-633617676dd5",
+   "kind": "discord",
+   "date": "2025-03-22T10:12:48+00:00",
+   "day": "2025-03-22",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-633617676dd5.webp",
+   "fields": {
+    "name": {
+     "value": "Disarmed",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Equips have no effect.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "S",
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "git_first": {
+  "date": "2025-03-22T10:21:49+00:00",
+  "changes": {
+   "ability_change": "same"
+  }
+ },
+ "created": {
+  "date": "2025-03-22",
+  "sort": "2025-03-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

@@ -1,0 +1,841 @@
+{
+ "card": "macho-grubba",
+ "key": "Macho Grubba",
+ "name": "Macho Grubba",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9aa893511d6e",
+   "kind": "discord",
+   "date": "2019-02-25T05:25:32+00:00",
+   "day": "2019-02-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-9aa893511d6e.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Macho Grubba gains two action counters at the beginning of his turn and he can consume them to do the following per # of counters: Attack, Defend, increase attack by 3 for one turn, increase DEF by 3 for 2 turns, or increase speed by 2 for 2 turns. Leftover counters do not carry over to next turn. Macho Grubba cannot use the same boost twice in one turn.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 592,
+   "h": 1200
+  },
+  {
+   "id": "D-P-dd7c8cb28136",
+   "kind": "discord",
+   "date": "2020-07-22T02:56:31+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-dd7c8cb28136.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(TPT)(OYT)Macho Grubba can do one of the following: Attack, Defend, increase attack by 3 for one turn, increase DEF by 3 for 2 turns, or increase speed by 2 for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types",
+     "stats"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 390,
+   "h": 786
+  },
+  {
+   "id": "F-f3011de056c",
+   "kind": "text",
+   "date": "2020-08-17T11:32:37+00:00",
+   "day": "2020-08-17",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-af598cc185a8",
+   "kind": "discord",
+   "date": "2020-08-18T11:19:31+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-af598cc185a8.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and may spend 1 action to either increase attack by 3 for one turn, increase DEF by 3 for 2 turns, or increase speed by 2 for 2 turns.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 393,
+   "h": 789
+  },
+  {
+   "id": "F-f25fd654cb3",
+   "kind": "text",
+   "date": "2020-10-14T07:50:50+00:00",
+   "day": "2020-10-14",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f6d4fbcad01",
+   "kind": "text",
+   "date": "2021-08-07T07:58:09+00:00",
+   "day": "2021-08-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "atk",
+    "by": -1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-ee11ca5bc7fc"
+  },
+  {
+   "id": "F-f8e57b51179",
+   "kind": "text",
+   "date": "2021-08-07T07:58:09+00:00",
+   "day": "2021-08-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-ee11ca5bc7fc",
+   "kind": "discord",
+   "date": "2021-08-11T12:58:29+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-ee11ca5bc7fc.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light",
+      "rock"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and (OYT) may spend 1 action to either increase attack by 4 for one turn, increase DEF by 3 for 3 turns, or increase speed by 3 for 2 turns.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 7,
+      "def": 3,
+      "atk": 6,
+      "spd": 6
+     },
+     {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 6 -> 5"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 397,
+   "h": 787
+  },
+  {
+   "id": "D-P-0e1ee30f7507",
+   "kind": "discord",
+   "date": "2021-12-15T10:06:04+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-0e1ee30f7507.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and (OYT) may spend 1 action to either increase attack by 4 for one turn, increase DEF by 3 for 3 turns, or increase speed by 3 for 2 turns.",
+     "method": "git look: ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "rock"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 397,
+   "h": 789
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-7c8127e6fd4d.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and (OYT) may spend 1 action to either increase attack by 4 for one turn, increase DEF by 3 for 3 turns, or increase speed by 3 for 2 turns.",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 397,
+   "h": 789
+  },
+  {
+   "id": "O-56a4c17a6605:Cards/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-04-14T19:49:46+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "hooktail and grubba",
+   "repo": "first",
+   "image": "O-bdeec44dca0d.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and (OYT) may spend 1 action to either increase attack by 4 for one turn, increase DEF by 3 for 3 turns, or increase speed by 3 for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c87eb0c89d67:Cards/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-04-15T05:37:55+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "grubba",
+   "repo": "first",
+   "image": "O-9cdb377bacf4.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and (OYT) may spend 1 action to either increase attack by 4 for one turn, increase DEF by 3 for 3 turns, or increase speed by 3 for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-22c2de88cce3:Cards/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-04-16T02:24:27+00:00",
+   "day": "2023-04-16",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "grubba bg fix",
+   "repo": "first",
+   "image": "O-7187bf17ee66.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and (OYT) may spend 1 action to either increase attack by 4 for one turn, increase DEF by 3 for 3 turns, or increase speed by 3 for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-7187bf17ee66.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and (OYT) may spend 1 action to either increase attack by 4 for one turn, increase DEF by 3 for 3 turns, or increase speed by 3 for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-7187bf17ee66.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn and (OYT) may spend 1 action to either increase attack by 4 for one turn, increase DEF by 3 for 3 turns, or increase speed by 3 for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7538d4bd2f5e:Creatures/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-04-25T04:49:19+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "touch ups",
+   "image": "O-d1abbecb3b15.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn.\n May spend 1 action to do one of the following: \nincrease ATK by 4 for 1 turn,\nincrease DEF by 3 for 3 turns,\nincrease SPD by 3 for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-4af7de3f9e24.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn.\n May spend 1 action to do one of the following: \nincrease ATK by 4 for 1 turn,\nincrease DEF by 3 for 3 turns,\nincrease SPD by 3 for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-e7e4f80cf0be.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn.\n May spend 1 action to do one of the following: \nincrease ATK by 4 for 1 turn,\nincrease DEF by 3 for 3 turns,\nincrease SPD by 3 for 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/4 Stars/Macho_Grubba.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-363fcbf2b880.webp",
+   "fields": {
+    "name": {
+     "value": "Macho Grubba",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 3,
+      "atk": 5,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 1 extra action each turn.\n May spend 1 action to do one of the following: \nincrease ATK by 4 for 1 turn,\nincrease DEF by 3 for 3 turns,\nincrease SPD by 3 for 2 turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-25",
+  "sort": "2019-02-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

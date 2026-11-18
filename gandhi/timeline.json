@@ -1,0 +1,490 @@
+{
+ "card": "gandhi",
+ "key": "Gandhi",
+ "name": "Gandhi",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-04-22",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-1c5ae59627d9",
+   "kind": "discord",
+   "date": "2023-04-20T13:28:49+00:00",
+   "day": "2023-04-20",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-1c5ae59627d9.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a 4 star attack item from the deck. (OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from the deck so long as Gandhi has not used his any of his stored items. Items that Gandhi has drawn can only be used on his turn but for no sp cost.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-084648e87f43",
+   "kind": "discord",
+   "date": "2023-04-21T09:20:35+00:00",
+   "day": "2023-04-21",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-084648e87f43.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a 4 star attack item from a copy of the deck.\n(OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from a copy of the deck so long as this creature has not used his any of its stored items. \nItems that this creature has drawn can only be used on its turn but for no sp cost.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c7f41de5342b:Creatures/Other/5 Stars/Gandhi.png",
+   "kind": "old repo",
+   "date": "2023-04-22T09:37:23+00:00",
+   "day": "2023-04-22",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "gandhi",
+   "image": "O-c455534c97b9.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a 4 star attack item from a copy of the deck.\n(OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from a copy of the deck so long as this creature has not used his any of its stored items. \nItems that this creature has drawn can only be used on its turn but for no sp cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-23520e259cd8:Creatures/Other/5 Stars/Gandhi.png",
+   "kind": "old repo",
+   "date": "2023-04-23T12:47:43+00:00",
+   "day": "2023-04-23",
+   "badge": "old repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Gandhi change",
+   "image": "O-217030bb4e0e.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a 4 star attack item from a copy of the deck.\n(OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from a copy of the deck so long as this creature has not used his any of its stored items. \nItems that this creature has drawn can only be used on its turn but for no sp cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 9,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "HP 9 -> 8"
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-788ff45b6cf2:Creatures/Other/5 Stars/Gandhi.png",
+   "kind": "old repo",
+   "date": "2023-04-25T12:02:24+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "more touch ups",
+   "image": "O-617a0c7e841b.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a 4 star attack item from a copy of the deck.\n(OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from a copy of the deck so long as this creature has not used his any of its stored items. \nItems that this creature has drawn can only be used on its turn but for no sp cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7ebb5d2e7e5f:Creatures/Other/5 Stars/Gandhi.png",
+   "kind": "old repo",
+   "date": "2023-05-27T16:48:18+00:00",
+   "day": "2023-05-27",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Fixes and touch ups",
+   "image": "O-7025d5637781.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a random 4 star attack item from a copy of the deck.\n(OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from a copy of the deck so long as this creature has not used his any of its stored items. \nItems that this creature has drawn can only be used on its turn but for no sp cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a8481cd059c2:Creatures/Other/5 Stars/Gandhi.png",
+   "kind": "old repo",
+   "date": "2023-10-12T06:27:15+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending updates",
+   "image": "O-e946c38faf10.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a random 4 star attack item from a copy of the deck.\n(OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from a copy of the deck so long as this creature has not used his any of its stored items. \nItems that this creature has drawn can only be used on its turn but for no sp cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7fa6d9331f92:Creatures/Other/5 Stars/Gandhi.png",
+   "kind": "old repo",
+   "date": "2023-10-17T17:18:53+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "coloring",
+   "image": "O-6ef3c915d692.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a random 4 star attack item from a copy of the deck.\n(OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from a copy of the deck so long as this creature has not used his any of its stored items. \nItems that this creature has drawn can only be used on its turn but for no sp cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Other/5 Stars/Gandhi.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-6c4ba8220fb8.webp",
+   "fields": {
+    "name": {
+     "value": "Gandhi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 8,
+      "def": 5,
+      "atk": 7,
+      "spd": 4
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, draw a random 4 star attack item from a copy of the deck.\n(OPT) (2 points) Every turn after this creature's first, draw a 2 star attack item from a copy of the deck so long as this creature has not used his any of its stored items. \nItems that this creature has drawn can only be used on its turn but for no sp cost.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2023-04-20",
+  "sort": "2023-04-20",
+  "source": "discord",
+  "status": "same"
+ }
+}

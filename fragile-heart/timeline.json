@@ -1,0 +1,398 @@
+{
+ "card": "fragile-heart",
+ "key": "Fragile Heart",
+ "name": "Fragile Heart",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-834e6e38e8ba-c2",
+   "kind": "discord",
+   "date": "2020-07-29T06:17:53+00:00",
+   "day": "2020-07-29",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-834e6e38e8ba-c2.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile Heart",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP (but not current HP) of the Equipped creature is increased by 6. You can pay 4 points to convert this card into a non-temporary item",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 391,
+   "h": 609
+  },
+  {
+   "id": "F-f863aac7d69",
+   "kind": "text",
+   "date": "2020-08-04T06:07:47+00:00",
+   "day": "2020-08-04",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-2c5e2db9fbd9",
+   "kind": "discord",
+   "date": "2020-08-04T06:08:28+00:00",
+   "day": "2020-08-04",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-2c5e2db9fbd9.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile Heart",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP + 5 You can pay 4 points to convert this card into a non-temporary item",
+     "method": "ocr+known",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C-item",
+   "w": 398,
+   "h": 614
+  },
+  {
+   "id": "F-fbeea545f22",
+   "kind": "text",
+   "date": "2020-08-31T00:31:42+00:00",
+   "day": "2020-08-31",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-3913ed7d7b04",
+   "kind": "discord",
+   "date": "2020-09-08T09:19:42+00:00",
+   "day": "2020-09-08",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-3913ed7d7b04.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile Heart",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP + 5 Cannot be Unequipped You can pay 4 points to convert this card into a non-temporary item",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     3
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C-item",
+   "w": 399,
+   "h": 612
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/3 Stars/Fragile_Heart.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-1a355b479002.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile Heart",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP + 5 Cannot be Unequipped You can pay 4 points to convert this card into a non-temporary item",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 612
+  },
+  {
+   "id": "O-51c240a78396:Items/Equip/3 Stars/Fragile_Heart.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:00:17+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Charms",
+   "repo": "first",
+   "image": "O-44969474ea80.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nCannot be unquipped\nYou can pay 4 points to convert this card into a non-temporary item",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-617f50b82e4f:Items/Equip/3 Stars/Fragile_Heart.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:09:37+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fragile fix",
+   "repo": "first",
+   "image": "O-a9f75310892c.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nCannot be unquipped\nYou can pay 4 points to convert this card into a non-temporary item",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-ea24de2fb131:Items/Equip/3 Stars/Fragile_Heart.png",
+   "kind": "old repo",
+   "date": "2023-04-03T19:56:10+00:00",
+   "day": "2023-04-03",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "charm fix",
+   "repo": "first",
+   "image": "O-4851e839f2a9.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nCannot be unquipped\nYou can pay 4 points to convert this card into a non-temporary item",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9b63465c4558:Items/Equip/3 Stars/Fragile_Heart.png",
+   "kind": "old repo",
+   "date": "2023-04-06T00:44:15+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "fragile heart text",
+   "repo": "first",
+   "image": "O-48b591fe890f.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nYou can pay 4 points to convert this card into a non-temporary item",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Fragile_Heart.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-48b591fe890f.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\nYou can pay 4 points to convert this card into a non-temporary item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-07f89e3ee65c:Items/Equip/3 Stars/Fragile_Heart.png",
+   "kind": "old repo",
+   "date": "2023-10-28T18:22:57+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "updates",
+   "image": "O-d2de4681adca.webp",
+   "fields": {
+    "name": {
+     "value": "Fragile heart",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Max HP +5\n(OYT) You can pay 4 points to convert this card into a non-temporary item.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-29",
+  "sort": "2020-07-29",
+  "source": "discord",
+  "status": "same"
+ }
+}

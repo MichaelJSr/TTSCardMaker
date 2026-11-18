@@ -1,0 +1,301 @@
+{
+ "card": "flameblade",
+ "key": "Flameblade",
+ "name": "Flameblade",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d46348ffb73d",
+   "kind": "discord",
+   "date": "2020-09-06T22:50:46+00:00",
+   "day": "2020-09-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-d46348ffb73d.webp",
+   "fields": {
+    "name": {
+     "value": "Flameblade",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK -3 SPD. Attacks inflict Burn.",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/3 Stars/Flameblade.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-982a93524230.webp",
+   "fields": {
+    "name": {
+     "value": "Flameblade",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK -3 SPD. Attacks inflict Burn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-5e6b7c86df33:Items/Equip/3 Stars/Flameblade.png",
+   "kind": "old repo",
+   "date": "2023-03-19T22:30:57+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated all bloon changes",
+   "repo": "first",
+   "image": "O-a29d8b92a940.webp",
+   "fields": {
+    "name": {
+     "value": "Flameblade",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK -50%  SPD. \nAttacks inflict burn",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-4d0820af64bf:Items/Equip/3 Stars/Flameblade.png",
+   "kind": "old repo",
+   "date": "2023-04-11T00:49:52+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "flameblade",
+   "repo": "first",
+   "image": "O-6ee2a23b389c.webp",
+   "fields": {
+    "name": {
+     "value": "Flameblade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK -50%  SPD. \nAttacks inflict burn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-09f761e9a8e3:Items/Equip/3 Stars/Flameblade.png",
+   "kind": "old repo",
+   "date": "2023-04-11T14:06:16+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Chestnut",
+   "subject": "Lots more buff/debuff updates",
+   "repo": "first",
+   "image": "O-015f62ae2485.webp",
+   "fields": {
+    "name": {
+     "value": "Flameblade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK -50%  SPD. \nAttacks inflict 2 turns of burn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b54076b3055b:Items/Equip/3 Stars/Flameblade.png",
+   "kind": "old repo",
+   "date": "2023-04-19T10:32:37+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "First set of debuff fixes on items",
+   "repo": "first",
+   "image": "O-2a9bea4cc924.webp",
+   "fields": {
+    "name": {
+     "value": "Flameblade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK -50%  SPD.\nAttacks inflict 2 turns of burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/3 Stars/Flameblade.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-2a9bea4cc924.webp",
+   "fields": {
+    "name": {
+     "value": "Flameblade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK -50%  SPD.\nAttacks inflict 2 turns of burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Equip/3 Stars/Flameblade.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-54e814210f4b.webp",
+   "fields": {
+    "name": {
+     "value": "Flameblade",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+2 ATK -50%  SPD.\nAttacks inflict 2 turns of burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-06",
+  "sort": "2020-09-06",
+  "source": "discord",
+  "status": "same"
+ }
+}

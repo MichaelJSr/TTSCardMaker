@@ -1,0 +1,698 @@
+{
+ "card": "the-big-yellow-cat",
+ "key": "The Big Yellow Cat",
+ "name": "The Big Yellow Cat",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-8de07ceb70d0",
+   "kind": "discord",
+   "date": "2021-11-24T01:18:07+00:00",
+   "day": "2021-11-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8de07ceb70d0.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature enters the field for the first time, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff (tier 3). When a creature with \"diligent watch\" on it dies, this creature gains 3 ATK and 3 SPD (no matter where this creature is). When an enemy with \"resentful glare\" on it deals damage, it takes 3 damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 629
+  },
+  {
+   "id": "D-P-776bce815dae",
+   "kind": "discord",
+   "date": "2021-11-24T06:17:48+00:00",
+   "day": "2021-11-24",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-776bce815dae.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature enters the field for the first time, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff (tier 3). When a creature with \"diligent watch\" on it dies, this creature gains 3 ATK (no matter where this creature is). When an enemy with \"resentful glare\" on it deals damage, it takes 3 damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 10,
+      "def": 4,
+      "atk": 6,
+      "spd": 4
+     },
+     {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 4 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 629
+  },
+  {
+   "id": "D-P-ac9fb11670a3",
+   "kind": "discord",
+   "date": "2021-12-11T09:21:46+00:00",
+   "day": "2021-12-11",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-ac9fb11670a3.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature enters the field for the first time, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff (tier 3). When a creature with \"diligent watch\" on it dies, this creature gains 3 ATK (no matter where this creature is). When an enemy with \"resentful glare\" on it deals damage, it takes 3 damage.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "D-P-b0ac00099239",
+   "kind": "discord",
+   "date": "2022-01-25T05:05:57+00:00",
+   "day": "2022-01-25",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-b0ac00099239.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "git look: eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature enters the field for the first time, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-c819d4f6661a.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature enters the field for the first time, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 311,
+   "h": 628
+  },
+  {
+   "id": "O-cf8ae215bde7:Cards/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2023-04-06T00:32:14+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "The Big Yellow Cat",
+   "repo": "first",
+   "image": "O-64dc9b0a9584.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature enters the field for the first time, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-882e959ed725:Cards/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2023-04-08T08:22:31+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "Some scronym changes and general fixes",
+   "repo": "first",
+   "image": "O-2b9398b71d85.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "On first summon, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-619e4a47d0ae:Cards/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2023-04-11T06:07:15+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "repo": "first",
+   "image": "O-ad9d291249c6.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "When this creature enters the field for the first time, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-9e7d6dcdbafb:Cards/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:09:58+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "big fellow yat",
+   "repo": "first",
+   "image": "O-ac1271788477.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-ac1271788477.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-ac1271788477.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, choose a friendly creature to get the \"diligent watch\" buff and an enemy creature to get the \"resentful glare\" debuff.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "image": "O-fed5dc5e9479.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, choose a friendly creature to inflict Diligent Watch to and an enemy creature to inflict Resentful Glare to.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Omori/5 Stars/The_Big_Yellow_Cat.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-31c21cf6d445.webp",
+   "fields": {
+    "name": {
+     "value": "The Big Yellow Cat",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "light"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 10,
+      "def": 5,
+      "atk": 6,
+      "spd": 4
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPG) On summon, choose a friendly creature to inflict Diligent Watch to and an enemy creature to inflict Resentful Glare to.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-11-24",
+  "sort": "2021-11-24",
+  "source": "discord",
+  "status": "same"
+ }
+}

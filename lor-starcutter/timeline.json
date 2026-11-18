@@ -1,0 +1,800 @@
+{
+ "card": "lor-starcutter",
+ "key": "Lor Starcutter",
+ "name": "Lor Starcutter",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-9bf7f761e8c1",
+   "kind": "discord",
+   "date": "2019-02-25T05:25:20+00:00",
+   "day": "2019-02-25",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-9bf7f761e8c1.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Once per turn (OYT)(or on a team mates turn) The Lor Starcutter may imprison one of your team mates, but they retain the ability to switch out and you gain 2 points. You can (OYT) Pay 2 points to attack twice. (AAT)pay 3 points to prevent Lor Starcutter or the cards it has imprisoned from taking damage this turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 592,
+   "h": 1200
+  },
+  {
+   "id": "D-P-8d161248ba9a",
+   "kind": "discord",
+   "date": "2020-07-22T02:55:17+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-8d161248ba9a.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)The Lor Starcutter may intercept an attack on one of your creatures, however the creature who was protected may not attack this turn and you gain 2 points. Pay 2 points to attack twice.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     4
+    ],
+    "stats": [
+     {
+      "hp": 7,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 4 -> 5",
+     "ATK 5 -> 6",
+     "SPD 5 -> 6"
+    ],
+    "nerfs": [],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 800
+  },
+  {
+   "id": "F-f44d8ee0bec",
+   "kind": "text",
+   "date": "2020-09-09T07:51:48+00:00",
+   "day": "2020-09-09",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-1ea2095a5e97",
+   "kind": "discord",
+   "date": "2020-09-13T04:43:27+00:00",
+   "day": "2020-09-13",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-1ea2095a5e97.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)(OPT)This card may intercept an attack towards one of your creatures, however the creature who was protected may not attack this turn and you gain 2 points. Pay 2 points to attack twice.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 394,
+   "h": 786
+  },
+  {
+   "id": "D-P-f1c42b344831",
+   "kind": "discord",
+   "date": "2020-09-27T23:29:25+00:00",
+   "day": "2020-09-27",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-f1c42b344831.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT (OPT)This card may intercept an attack towards one of your creatures, however the creature who was protected may not attack this turn and you gain 2 points. Pay 2 points to gain an action",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 395,
+   "h": 788
+  },
+  {
+   "id": "F-f857bd8f25f",
+   "kind": "text",
+   "date": "2020-10-15T08:16:58+00:00",
+   "day": "2020-10-15",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fdfe90729ea",
+   "kind": "text",
+   "date": "2021-05-16T09:38:31+00:00",
+   "day": "2021-05-16",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-9bca04e5731f",
+   "kind": "discord",
+   "date": "2021-08-11T14:34:17+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-9bca04e5731f.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT (OPT)This card may intercept an attack towards one of your creatures, reducing the number of actions they have by 1 this turn, and you gain 2 points. (OYT)(OPT) Pay 2 points to gain an action",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 395,
+   "h": 788
+  },
+  {
+   "id": "D-P-2c5f81e228a0",
+   "kind": "discord",
+   "date": "2021-12-15T12:03:50+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-2c5f81e228a0.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)(OPT)This card may intercept an attack towards one of your creatures, reducing the number of actions they have by 1 this turn, and you gain 2 points. (OYT)(OPT)Pay 2 points to gain an action",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 392,
+   "h": 787
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Kirby/4 Stars/Lor_Starcutter.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-adff1aaeaf56.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)(OPT) This card may intercept an attack towards one of your creatures, reducing the number of actions they have by 1 this turn, and you gain 2 points. (OYT)(OPT) Pay 2 points to gain an action",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 392,
+   "h": 787
+  },
+  {
+   "id": "O-257dc970a875:Cards/Kirby/4 Stars/Lor_Starcutter.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-e9d78b68d399.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(AAT)(OPT) This card may intercept an attack towards one of your creatures, reducing the number of actions they have by 1 on their next turn, and you gain 2 points. (OYT)(OPT)Pay 2 points to gain an action",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 395,
+   "h": 789
+  },
+  {
+   "id": "O-b3e70b4852df:Cards/Kirby/4 Stars/Lor_Starcutter.png",
+   "kind": "old repo",
+   "date": "2023-04-08T21:56:39+00:00",
+   "day": "2023-04-08",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "Lor of starcutter",
+   "repo": "first",
+   "image": "O-2c61ff13e3a4.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)This card may intercept an attack, reducing the number of actions the intercepted creature has by 1 on their next turn, and you gain 2 points.\n(OPT)Pay 2 points to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e06117196818:Creatures/Kirby/4 Stars/Lor_Starcutter.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:46+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-2c61ff13e3a4.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)This card may intercept an attack, reducing the number of actions the intercepted creature has by 1 on their next turn, and you gain 2 points.\n(OPT)Pay 2 points to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3fd012cb22ad:Creatures/Kirby/4 Stars/Lor_Starcutter.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:50:25+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the kirby creatures",
+   "image": "O-2c61ff13e3a4.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)This card may intercept an attack, reducing the number of actions the intercepted creature has by 1 on their next turn, and you gain 2 points.\n(OPT)Pay 2 points to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-48eb0bc97c36:Creatures/Kirby/4 Stars/Lor_Starcutter.png",
+   "kind": "old repo",
+   "date": "2023-04-28T18:47:52+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "finished updates",
+   "image": "O-9b3cccdcf3e0.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)This card may intercept an attack, reducing the number of actions the intercepted creature has by 1 on their next turn, and you gain 2 points.\n(OPT)Pay 2 points to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Kirby/4 Stars/Lor_Starcutter.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-a97cf62d4e1b.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This card may intercept an attack, reducing the number of actions the intercepted creature has by 1 on their next turn, and you gain 2 points.\n(OPT)Pay 2 points to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Kirby/4 Stars/Lor_Starcutter.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-6a075b96f97b.webp",
+   "fields": {
+    "name": {
+     "value": "Lor Starcutter",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine",
+      "wind"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 5,
+      "atk": 6,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT) This card may intercept an attack, reducing the number of actions the intercepted creature has by 1 on their next turn, and you gain 2 points.\n(OPT)Pay 2 points to gain an action.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-02-25",
+  "sort": "2019-02-25",
+  "source": "discord",
+  "status": "owner"
+ }
+}

@@ -1,0 +1,318 @@
+{
+ "card": "shell-shock",
+ "key": "Shell Shock",
+ "name": "Shell Shock",
+ "kind": "debuff",
+ "stop": {
+  "day": "2023-10-18",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-4b3b147ffc84",
+   "kind": "discord",
+   "date": "2023-10-18T08:24:50+00:00",
+   "day": "2023-10-18",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-4b3b147ffc84.webp",
+   "fields": {
+    "name": {
+     "value": "Shell Shocked",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 DEF, +1 ATK, 50% chance for attack target to be moved one target over in a cockwise motion(can hit friendly creatures) .",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "S",
+   "w": 720,
+   "h": 720
+  },
+  {
+   "id": "D-P-292802f17a88",
+   "kind": "discord",
+   "date": "2023-10-18T09:06:24+00:00",
+   "day": "2023-10-18",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-292802f17a88.webp",
+   "fields": {
+    "name": {
+     "value": "Shell Shock",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 DEF, +1 ATK, 50% chance when attacking to hit target one clockwise slot over instead \n(can hit friendly creatures).",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Shell Shocked",
+     "Shell Shock"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "S",
+   "w": 720,
+   "h": 670
+  },
+  {
+   "id": "O-ca13a335110d:Auxillary/Status Effects/Debuffs/3 Stars/Shell_Shocked.png",
+   "kind": "old repo",
+   "date": "2023-10-18T09:56:44+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some creatures",
+   "file": "Shell Shocked",
+   "image": "O-4dc28d3652ba.webp",
+   "fields": {
+    "name": {
+     "value": "Shell Shock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 DEF, +1 ATK, 50% chance when attacking to hit target one clockwise slot over instead \n(can hit friendly creatures).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  },
+  {
+   "id": "O-75443b2188db:Auxillary/Status Effects/Debuffs/3 Stars/Shell_Shocked.png",
+   "kind": "old repo",
+   "date": "2023-10-22T20:37:13+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "a",
+   "file": "Shell Shocked",
+   "image": "O-b4ace8eaf75d.webp",
+   "fields": {
+    "name": {
+     "value": "Shell Shock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 DEF, +1 ATK, 50% chance when attacking to hit target one clockwise slot over instead \n(can hit friendly creatures).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     2
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  },
+  {
+   "id": "O-995e83120be4:Auxillary/Status Effects/Debuffs/2 Stars/Shell_Shocked.png",
+   "kind": "old repo",
+   "date": "2023-10-23T04:13:48+00:00",
+   "day": "2023-10-23",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "pending updates",
+   "file": "Shell Shocked",
+   "image": "O-b4ace8eaf75d.webp",
+   "fields": {
+    "name": {
+     "value": "Shell Shock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 DEF, +1 ATK, 50% chance when attacking to hit target one clockwise slot over instead \n(can hit friendly creatures).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 720
+  },
+  {
+   "id": "O-1b4190e966b6:Auxillary/Status Effects/Debuffs/2 Stars/Shell_Shocked.png",
+   "kind": "old repo",
+   "date": "2023-10-28T01:11:58+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "debuff stuff",
+   "file": "Shell Shocked",
+   "image": "O-5663a0dd3d7c.webp",
+   "fields": {
+    "name": {
+     "value": "Shell Shock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 DEF, +1 ATK, 50% chance when attacking to hit target one clockwise slot over instead \n(can hit friendly creatures).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     3
+    ],
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 720
+  },
+  {
+   "id": "O-d54835eaa550:Auxillary/Status Effects/Debuffs/3 Stars/Shell_Shocked.png",
+   "kind": "old repo",
+   "date": "2023-10-28T08:29:12+00:00",
+   "day": "2023-10-28",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Shell shocked moved (AGAIN)",
+   "file": "Shell Shocked",
+   "image": "O-5663a0dd3d7c.webp",
+   "fields": {
+    "name": {
+     "value": "Shell Shock",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "debuff"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "-2 DEF, +1 ATK, 50% chance when attacking to hit target one clockwise slot over instead \n(can hit friendly creatures).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 720
+  }
+ ],
+ "created": {
+  "date": "2023-10-18",
+  "sort": "2023-10-18",
+  "source": "discord",
+  "status": "same"
+ }
+}

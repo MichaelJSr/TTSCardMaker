@@ -1,0 +1,505 @@
+{
+ "card": "the-structure",
+ "key": "The Structure",
+ "name": "The Structure",
+ "kind": "field",
+ "stop": {
+  "day": "2023-05-07",
+  "source": "old repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-ad40b6d8214b",
+   "kind": "discord",
+   "date": "2023-05-07T08:35:50+00:00",
+   "day": "2023-05-07",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-ad40b6d8214b.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on your field All enemy creatures that are not [machine] take 2 damage at the end of their turns, and have their highest stat reduced by 1 Bar",
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 525,
+   "h": 788
+  },
+  {
+   "id": "D-P-c933a53fd89a",
+   "kind": "discord",
+   "date": "2023-05-07T08:36:15+00:00",
+   "day": "2023-05-07",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-c933a53fd89a.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on your field All enemy creatures that are not [machine] take 2 damage at the end of their turns, and have their highest stat reduced by 1 Bar",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 529,
+   "h": 783
+  },
+  {
+   "id": "D-P-636d99accc33",
+   "kind": "discord",
+   "date": "2023-05-07T08:38:51+00:00",
+   "day": "2023-05-07",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-636d99accc33.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on your field All enemy creatures that are not [machine] take 2 damage at the end of their turns, and have their highest stat reduced by 1 Bar",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 529,
+   "h": 785
+  },
+  {
+   "id": "D-P-0226d5710317",
+   "kind": "discord",
+   "date": "2023-05-07T08:41:38+00:00",
+   "day": "2023-05-07",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-0226d5710317.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on your field All enemy creatures that are not [machine] take 2 damage at the end of their turns, and have their highest stat reduced by 1 Bar",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "F",
+   "w": 527,
+   "h": 794
+  },
+  {
+   "id": "D-P-331073ddd4e7",
+   "kind": "discord",
+   "date": "2023-05-07T09:20:20+00:00",
+   "day": "2023-05-07",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-331073ddd4e7.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on your field All enemy creatures that are not [machine] take 2 damage at the end of their turns, and have their highest stat reduced by 1 Bar",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "D-P-3e8e8ec0c3d5",
+   "kind": "discord",
+   "date": "2023-05-07T10:11:12+00:00",
+   "day": "2023-05-07",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-3e8e8ec0c3d5.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on the field\nAll enemy creatures that are not [machine] Have their highest stat reduced by 1 bar,,and take 2 damage at the end of their turns.",
+     "method": "git look: psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-a7a9bd16dc4d:Field/4 Stars/The Structure.png",
+   "kind": "old repo",
+   "date": "2023-05-07T10:18:08+00:00",
+   "day": "2023-05-07",
+   "badge": "old repo",
+   "author": "Chestnut",
+   "subject": "The Structure",
+   "image": "O-42c15467750e.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on the field\nAll enemy creatures that are not [machine] Have their highest stat reduced by 1 bar,,and take 2 damage at the end of their turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-9e1fff00d39d:Field/4 Stars/The Structure.png",
+   "kind": "old repo",
+   "date": "2023-05-08T00:06:41+00:00",
+   "day": "2023-05-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fuxes",
+   "image": "O-e89b44894294.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on the field.\nAll enemy creatures that are not [machine] have their highest stat reduced by 1 bar and take 2 damage at the end of their turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-b6784688e909:Field/4 Stars/The Structure.png",
+   "kind": "old repo",
+   "date": "2023-05-08T00:07:46+00:00",
+   "day": "2023-05-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "fix",
+   "image": "O-eae7dac43744.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on the field.\nAll enemy creatures that are not [machine] have their highest stat reduced by 1 bar and take 2 damage at the end of their turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-f9ba00fc319d:Field/4 Stars/The Structure.png",
+   "kind": "old repo",
+   "date": "2023-10-12T01:27:42+00:00",
+   "day": "2023-10-12",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "field item attribute coloring",
+   "image": "O-84be2fabeba7.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less for each [machine] on your side of the field.\nAll creatures that are not [machine] have their highest stat reduced by 1 bar while this is on the field.\nEnemy creatures that are not [machine] take 2 damage at the end of their turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-4e94cb91b893:Field/4 Stars/The Structure.png",
+   "kind": "old repo",
+   "date": "2023-10-19T13:42:26+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "bobberlington",
+   "subject": "tutankoopa stats, blood bomb machine, structure piercing",
+   "image": "O-2cec5bdefa1f.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 2 less for each [machine] on your side of the field.\nAll creatures that are not [machine] have their highest stat reduced by 1 bar while this is on the field.\nEnemy creatures that are not [machine] take 2 piercing damage at the end of their turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c4d403d82af7:Field/4 Stars/The Structure.png",
+   "kind": "old repo",
+   "date": "2023-10-19T18:04:45+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Pending updates and tomato upscaling",
+   "image": "O-3c8e1e66dda5.webp",
+   "fields": {
+    "name": {
+     "value": "The Structure",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Costs 1 less for each [machine] on your side of the field.\nAll creatures that are not [machine] have their highest stat reduced by 1 bar while this is on the field (If tied owner of this item chooses)\nEnemy creatures that are not [machine] take 2 piercing damage at the end of their turns.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2023-05-07",
+  "sort": "2023-05-07",
+  "source": "discord",
+  "status": "same"
+ }
+}

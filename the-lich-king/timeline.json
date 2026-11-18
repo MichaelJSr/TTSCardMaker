@@ -1,0 +1,136 @@
+{
+ "card": "the-lich-king",
+ "key": "The Lich King",
+ "name": "The Lich King",
+ "kind": "creature",
+ "stop": {
+  "day": "2023-11-06",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-d69c2956b741",
+   "kind": "discord",
+   "date": "2023-11-05T23:39:43+00:00",
+   "day": "2023-11-05",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-d69c2956b741.webp",
+   "fields": {
+    "name": {
+     "value": "The Litch King",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "ice",
+      "undead"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Comes equipped with Frostmourne.\n(OPG) (OYT) Summon up to 3 non-protective minions with the stats of any 3 different dead point-yielding creature minus 2 bars in every stat that die at the end of their turns.\nMinions are [undead] and Military.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "D-P-dded938871e3",
+   "kind": "discord",
+   "date": "2023-11-06T04:14:47+00:00",
+   "day": "2023-11-06",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-dded938871e3.webp",
+   "fields": {
+    "name": {
+     "value": "The Lich King",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "ice",
+      "undead"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Comes equipped with Frostmourne.\n(OPG)(OYT) Summon up to 3 different dead point-yielding creatures as non-protective minions with -2 bars in all of their base stats.\nMay summon each minion to a creature of choice.\nThese minions die at the end of their turn.\nMinions are [undead] and Military.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 7,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "The Litch King",
+     "The Lich King"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D2",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "git_first": {
+  "date": "2023-11-06T23:49:34+00:00",
+  "changes": {
+   "ability_change": "changed",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2023-11-05",
+  "sort": "2023-11-05",
+  "source": "discord",
+  "status": "same"
+ }
+}

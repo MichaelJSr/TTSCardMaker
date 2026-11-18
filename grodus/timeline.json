@@ -1,0 +1,1064 @@
+{
+ "card": "grodus",
+ "key": "Grodus",
+ "name": "Grodus",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-bd5029471ce2",
+   "kind": "discord",
+   "date": "2020-07-23T10:26:28+00:00",
+   "day": "2020-07-23",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-bd5029471ce2.webp",
+   "fields": {
+    "name": {
+     "value": "Sir Grodus",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) Pay 2 points to summon 2 Grodus X's, with a max of 4. If there are 4 Grodus X's on the field, Grodus is invincible. Before attacking, Grodus can choose to make his attack piercing OR inflict frost bite OR inflict burning.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 537
+  },
+  {
+   "id": "D-P-2540d87b3e6c",
+   "kind": "discord",
+   "date": "2020-08-14T07:09:33+00:00",
+   "day": "2020-08-14",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-2540d87b3e6c.webp",
+   "fields": {
+    "name": {
+     "value": "Sir Grodus",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye header",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) (2 points) summon 2 Grodus X's, max 4. If 4 Grodus X's are alive, this card is invincible. Before attacking, make his attack piercing or inflict Frostbite or inflict Burn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-accbb030ba0d",
+   "kind": "discord",
+   "date": "2020-09-01T05:49:38+00:00",
+   "day": "2020-09-01",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-accbb030ba0d.webp",
+   "fields": {
+    "name": {
+     "value": "Sir Grodus",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) (2 points) summon 2 Grodus X's, max 4. If 4 Grodus X's are alive, this card is invincible. Before attacking, make his attack piercing or inflict Frostbite or inflict Burn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-ffaca2ef447",
+   "kind": "text",
+   "date": "2020-09-12T06:05:46+00:00",
+   "day": "2020-09-12",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-1276f09c5a86",
+   "kind": "discord",
+   "date": "2020-09-13T05:44:57+00:00",
+   "day": "2020-09-13",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-1276f09c5a86.webp",
+   "fields": {
+    "name": {
+     "value": "Sir Grodus",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric",
+      "magic"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (AAT) (2 points) summon 2 Grodus X's (max 4). If 4 Grodus X's are protecting this, its invincible. Before attacking, choose to inflict piercing or Frostbite or Burn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-dd219e3d7a1d",
+   "kind": "discord",
+   "date": "2021-12-12T09:29:56+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-dd219e3d7a1d.webp",
+   "fields": {
+    "name": {
+     "value": "Sir Grodus",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(AAT) (2 points) Summon 2 Grodus X's (max 4). If 4 Grodus X's are protecting this, its invincible. Before attacking, choose to inflict piercing, Frostbite, or Burn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-fa0f32b55b0",
+   "kind": "text",
+   "date": "2022-01-29T11:53:32+00:00",
+   "day": "2022-01-29",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "field": "atk",
+    "by": -1,
+    "unit": "bars"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Sir Grodus",
+   "repo": "first",
+   "image": "O-2bdb8bcc327b.webp",
+   "fields": {
+    "name": {
+     "value": "Sir Grodus",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(AAT) (2 points) Summon 2 Grodus X's (max 4). If 4 Grodus X's are protecting this, its invincible. Before attacking, choose to inflict piercing, Frostbite, or Burn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-5e6b7c86df33:Cards/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-03-19T22:30:57+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated all bloon changes",
+   "file": "Sir Grodus",
+   "repo": "first",
+   "image": "O-d14d72596c7e.webp",
+   "fields": {
+    "name": {
+     "value": "Sir Grodus",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT)(AAT) (2 points) Summon 2 Grodus X's (max 4). If 4 Grodus X's are protecting this, its invincible. Before attacking, choose to inflict piercing, Frostbite, or Burn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 6,
+      "spd": 5
+     },
+     {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 6 -> 5"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-4c558a3ae2dd:Cards/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-04-11T01:31:35+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "grodus",
+   "file": "Sir Grodus",
+   "repo": "first",
+   "image": "O-65aa5fcc70e3.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, its invincible.\n Before attacking, choose to inflict piercing, Frostbite, or Burn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Sir Grodus",
+     "Grodus"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fbf9b2007d81:Cards/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-04-14T19:11:31+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some mario touch ups",
+   "file": "Sir Grodus",
+   "repo": "first",
+   "image": "O-b540c5514dc9.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, its invincible.\n Before attacking, choose to inflict piercing, Frostbite, or Burn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-25f9138c0490:Cards/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-04-19T11:13:39+00:00",
+   "day": "2023-04-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Finished rest of debuff fixes",
+   "file": "Sir Grodus",
+   "repo": "first",
+   "image": "O-96397bbc841c.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, its invincible.\n Before attacking, choose to inflict piercing, Frostbite 2 turns, or Burning 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "file": "Sir Grodus",
+   "repo": "first",
+   "image": "O-96397bbc841c.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, its invincible.\n Before attacking, choose to inflict piercing, Frostbite 2 turns, or Burning 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "file": "Sir Grodus",
+   "image": "O-96397bbc841c.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, its invincible.\n Before attacking, choose to inflict piercing, Frostbite 2 turns, or Burning 2 turns.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-7538d4bd2f5e:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-04-25T04:49:19+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "touch ups",
+   "file": "Sir Grodus",
+   "image": "O-a000ae2534ec.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, it's invincible.\n Before attacking, choose to either make attack piercing, or inflict 2 turns of Frostbite or Burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-48eb0bc97c36:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-04-28T18:47:52+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "finished updates",
+   "file": "Sir Grodus",
+   "image": "O-6ce9925dc41c.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, it's invincible.\n Before attacking, choose to either make attack piercing, or inflict 2 turns of Frostbite or Burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-8aac6b9cf1c8:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-04-28T19:26:10+00:00",
+   "day": "2023-04-28",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "no more humans",
+   "file": "Sir Grodus",
+   "image": "O-7c608095b5a9.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, it's invincible.\n Before attacking, choose to either make attack piercing, or inflict 2 turns of Frostbite or Burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6d50e0efb61:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "file": "Sir Grodus",
+   "image": "O-c3fc8771be9c.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, it's invincible.\n Before attacking, choose to either make attack piercing, or inflict 2 turns of Frostbite or Burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "file": "Sir Grodus",
+   "image": "O-7898387deb11.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "magic",
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, it's invincible.\n Before attacking, choose to either make attack piercing, or inflict 2 turns of Frostbite or Burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f2a5c96615a0:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-10-19T19:53:24+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "removal magic",
+   "file": "Sir Grodus",
+   "image": "O-2f531584ef21.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, it's invincible.\n Before attacking, choose to either make attack piercing, or inflict 2 turns of Frostbite or Burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [],
+     "drop": [
+      "magic"
+     ]
+    },
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/4 Stars/Sir_Grodus.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "file": "Sir Grodus",
+   "image": "O-29f7b606171a.webp",
+   "fields": {
+    "name": {
+     "value": "Grodus",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 5,
+      "def": 4,
+      "atk": 5,
+      "spd": 5
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPGT)(2 points) Summon 2 Grodus X's (max 4). \nIf 4 Grodus X's are protecting this, it's invincible.\n Before attacking, choose to either make attack piercing, or inflict 2 turns of Frostbite or Burning.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-07-23",
+  "sort": "2020-07-23",
+  "source": "discord",
+  "status": "same"
+ }
+}

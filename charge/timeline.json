@@ -1,0 +1,409 @@
+{
+ "card": "charge",
+ "key": "Charge",
+ "name": "Charge",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-7d496339a868",
+   "kind": "discord",
+   "date": "2020-09-06T22:15:03+00:00",
+   "day": "2020-09-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-7d496339a868.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) (1 point) Use an action in order to increase this creature's ATK by 4 until the end of a global turn where this badge is not used by this creature.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-68eb6a6694a6",
+   "kind": "discord",
+   "date": "2020-09-06T22:17:04+00:00",
+   "day": "2020-09-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-68eb6a6694a6.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) (1 point) Use an action in order to increase this creature's ATK by 4 for the next turn on which it attacks.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "D-P-4dc8012b2595",
+   "kind": "discord",
+   "date": "2020-09-06T22:25:45+00:00",
+   "day": "2020-09-06",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-4dc8012b2595.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) (1 point) Use an action in order to increase this creature's ATK by 3 for the next turn on which it attacks.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "F-f882109a89c",
+   "kind": "text",
+   "date": "2021-11-18T08:33:18+00:00",
+   "day": "2021-11-18",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fe25ba39e2d",
+   "kind": "text",
+   "date": "2021-11-18T08:33:18+00:00",
+   "day": "2021-11-18",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "field": "stars",
+    "to": 1
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-9b06b1dc38bf"
+  },
+  {
+   "id": "D-P-9b06b1dc38bf",
+   "kind": "discord",
+   "date": "2021-11-20T22:32:24+00:00",
+   "day": "2021-11-20",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-9b06b1dc38bf.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) Use an action in order to increase this creature's ATK by 4 for its next attack.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B-item",
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Equip/1 Stars/Charge.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-dc8661e083f0.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) (OYT) Use an action in order to increase this creature's ATK by 4 for its next attack.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "w": 240,
+   "h": 351
+  },
+  {
+   "id": "O-de23de0f6927:Items/Equip/1 Stars/Charge.png",
+   "kind": "old repo",
+   "date": "2023-04-10T03:58:14+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "charge",
+   "repo": "first",
+   "image": "O-39cd9897f787.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT)(OPT) Use an action in order to increase this creature’s ATK by 4 for it’s next attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     1,
+     3
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-7e9bc936a57b:Items/Equip/1 Stars/Charge.png",
+   "kind": "old repo",
+   "date": "2023-04-11T00:44:35+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "charge",
+   "repo": "first",
+   "image": "O-dfa6ad1d49d8.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Use an action in order to increase this creature’s ATK by 4 for it’s next attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stars": [
+     3,
+     1
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-41eb86b37c86:Items/Equip/1 Stars/Charge.png",
+   "kind": "old repo",
+   "date": "2023-04-21T09:34:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added half the items",
+   "image": "O-dfa6ad1d49d8.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Use an action in order to increase this creature’s ATK by 4 for it’s next attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-d2ccb9000213:Items/Equip/1 Stars/Charge.png",
+   "kind": "old repo",
+   "date": "2023-05-11T17:09:26+00:00",
+   "day": "2023-05-11",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "charge",
+   "image": "O-a421ec42b696.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Use an action in order to increase this creature’s ATK by 4 for it’s next attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-c6d50e0efb61:Items/Equip/1 Stars/Charge.png",
+   "kind": "old repo",
+   "date": "2023-10-08T09:38:41+00:00",
+   "day": "2023-10-08",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Status Effects Coloring",
+   "image": "O-77e6328eb97f.webp",
+   "fields": {
+    "name": {
+     "value": "Charge",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OPT) Use an action in order to increase this creature’s ATK by 5 for it’s next attack.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-09-06",
+  "sort": "2020-09-06",
+  "source": "discord",
+  "status": "same"
+ }
+}

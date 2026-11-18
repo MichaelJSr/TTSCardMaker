@@ -1,0 +1,608 @@
+{
+ "card": "chris-jordi",
+ "key": "Chris & Jordi",
+ "name": "Chris & Jordi",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-fedb58af77c8-c3",
+   "kind": "discord",
+   "date": "2021-08-15T17:16:54+00:00",
+   "day": "2021-08-15",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-fedb58af77c8-c3.webp",
+   "fields": {
+    "name": {
+     "value": "Chris and Jordi",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this card chooses to attack it gains 2 additional actions this turn that must be used for attacking, but permanently loses 4 DEF. (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "w": 392,
+   "h": 788
+  },
+  {
+   "id": "D-P-1f6821e481d7",
+   "kind": "discord",
+   "date": "2021-08-23T05:55:58+00:00",
+   "day": "2021-08-23",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-1f6821e481d7.webp",
+   "fields": {
+    "name": {
+     "value": "Chris and Jordi",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this card chooses to attack it gains 2 additional actions this turn that must be used for attacking, but permanently loses 4 DEF. (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 788
+  },
+  {
+   "id": "F-fa285a0924e",
+   "kind": "text",
+   "date": "2021-11-23T00:05:38+00:00",
+   "day": "2021-11-23",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-15ba0e2ca981",
+   "kind": "discord",
+   "date": "2021-11-27T23:59:47+00:00",
+   "day": "2021-11-27",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-15ba0e2ca981.webp",
+   "fields": {
+    "name": {
+     "value": "Chris and Jordi",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this card chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking, but permanently loses 4 DEF. (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 400,
+   "h": 786
+  },
+  {
+   "id": "D-P-0ea339bf172a",
+   "kind": "discord",
+   "date": "2021-12-15T12:09:05+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-0ea339bf172a.webp",
+   "fields": {
+    "name": {
+     "value": "Chris and Jordi",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this card chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking, but permanently loses 4 DEF. (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "C",
+   "w": 399,
+   "h": 787
+  },
+  {
+   "id": "D-P-94fe1e0735b1",
+   "kind": "discord",
+   "date": "2021-12-26T17:35:58+00:00",
+   "day": "2021-12-26",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-94fe1e0735b1.webp",
+   "fields": {
+    "name": {
+     "value": "Chris and Jordi",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this card chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking, but permanently loses 4 DEF. (EOT) If this card chooses to defend it gains 2 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 399,
+   "h": 787
+  },
+  {
+   "id": "F-f268aec0a47",
+   "kind": "text",
+   "date": "2021-12-26T17:36:16+00:00",
+   "day": "2021-12-26",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Everhood/5 Stars/Chris_and_Jordi.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Chris and Jordi",
+   "repo": "first",
+   "image": "O-323d54cbebe1.webp",
+   "fields": {
+    "name": {
+     "value": "Chris and Jordi",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this card chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking, but permanently loses 4 DEF. (EOT) If this card chooses to defend it gains 2 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 787
+  },
+  {
+   "id": "O-d1294a9b20a7:Cards/Everhood/5 Stars/Chris_and_Jordi.png",
+   "kind": "old repo",
+   "date": "2023-04-17T23:19:21+00:00",
+   "day": "2023-04-17",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "everhood",
+   "file": "Chris and Jordi",
+   "repo": "first",
+   "image": "O-b5846e68b7d2.webp",
+   "fields": {
+    "name": {
+     "value": "Chris & Jordi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this creature chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking, but permanently loses 4 DEF.\nFirst turn & (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Chris and Jordi",
+     "Chris & Jordi"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Everhood/5 Stars/Chris_and_Jordi.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "file": "Chris and Jordi",
+   "repo": "first",
+   "image": "O-b5846e68b7d2.webp",
+   "fields": {
+    "name": {
+     "value": "Chris & Jordi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this creature chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking, but permanently loses 4 DEF.\nFirst turn & (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Everhood/5 Stars/Chris_and_Jordi.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "file": "Chris and Jordi",
+   "image": "O-b5846e68b7d2.webp",
+   "fields": {
+    "name": {
+     "value": "Chris & Jordi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this creature chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking, but permanently loses 4 DEF.\nFirst turn & (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e82b6ce5bce9:Creatures/Everhood/5 Stars/Chris_and_Jordi.png",
+   "kind": "old repo",
+   "date": "2023-10-17T04:27:29+00:00",
+   "day": "2023-10-17",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "color codings",
+   "file": "Chris and Jordi",
+   "image": "O-8cd4eafe7e38.webp",
+   "fields": {
+    "name": {
+     "value": "Chris & Jordi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this creature chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking,but will permanently lose 4 DEF.\nFirst turn & (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Everhood/5 Stars/Chris_and_Jordi.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "file": "Chris and Jordi",
+   "image": "O-4fe891ebdeca.webp",
+   "fields": {
+    "name": {
+     "value": "Chris & Jordi",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 5,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "electric"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 7,
+      "def": 6,
+      "atk": 8,
+      "spd": 6
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(EOT) If this creature chooses to attack it can decrease its ATK by 2 this turn to gain 2 actions that must be used for attacking,but will permanently lose 4 DEF.\nFirst turn & (EOT) If this card chooses to defend it gains 1 DEF permanently, and the DEF lost from its other ability is reduced by 2.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2021-08-15",
+  "sort": "2021-08-15",
+  "source": "discord",
+  "status": "owner"
+ }
+}

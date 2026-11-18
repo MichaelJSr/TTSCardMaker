@@ -1,0 +1,67 @@
+{
+ "card": "party",
+ "key": "Party!",
+ "name": "Party!",
+ "kind": "aux item",
+ "stop": {
+  "day": "2025-04-19",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-04f8255278d2",
+   "kind": "discord",
+   "date": "2025-04-19T13:22:16+00:00",
+   "day": "2025-04-19",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-04f8255278d2.webp",
+   "fields": {
+    "name": {
+     "value": "Party!",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "field"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Effect determined by creature",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2026-10-25T11:08:02+00:00",
+  "changes": {
+   "ability_change": "changed"
+  },
+  "approx": true
+ },
+ "created": {
+  "date": "2025-04-19",
+  "sort": "2025-04-19",
+  "source": "discord",
+  "status": "same"
+ }
+}

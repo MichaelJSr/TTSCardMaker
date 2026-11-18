@@ -1,0 +1,69 @@
+{
+ "card": "duel-flag",
+ "key": "Duel Flag",
+ "name": "Duel Flag",
+ "kind": "nme",
+ "stop": {
+  "day": "2025-10-17",
+  "source": "git"
+ },
+ "entries": [
+  {
+   "id": "D-P-8a849ebb44eb",
+   "kind": "discord",
+   "date": "2025-10-17T09:00:45+00:00",
+   "day": "2025-10-17",
+   "badge": "Discord",
+   "channel": "new-cards",
+   "image": "P-8a849ebb44eb.webp",
+   "fields": {
+    "name": {
+     "value": "Duel Flag",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "nme"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(Cost: 7 points)\nDeclare a duel between two slots on opposite sides of the field. Creatures in those slots may only attack or be attacked by the opposing slot until either one dies or at the end of the second global turn since this item's activation.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "D-item",
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "git_first": {
+  "date": "2025-10-17T09:06:45+00:00",
+  "changes": {
+   "ability_change": "formatting",
+   "unknown": [
+    "types"
+   ]
+  }
+ },
+ "created": {
+  "date": "2025-10-17",
+  "sort": "2025-10-17",
+  "source": "discord",
+  "status": "same"
+ }
+}

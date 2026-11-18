@@ -1,0 +1,1035 @@
+{
+ "card": "nailsage-sly",
+ "key": "Nailsage Sly",
+ "name": "Nailsage Sly",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-d4515a861021-c2",
+   "kind": "discord",
+   "date": "2019-06-13T08:17:41+00:00",
+   "day": "2019-06-13",
+   "badge": "Discord",
+   "channel": "general-discussion",
+   "image": "P-d4515a861021-c2.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye (repost P-115de77b0a4f)",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Nailsage Sly can only be attacked by targets that he has attacked during this turn, if he does not attack, then anyone can attack him",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 8,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 314,
+   "h": 634
+  },
+  {
+   "id": "F-fd63ddbc8a8",
+   "kind": "text",
+   "date": "2020-07-20T11:17:56+00:00",
+   "day": "2020-07-20",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-f1157dc1bdd",
+   "kind": "text",
+   "date": "2020-07-21T10:47:35+00:00",
+   "day": "2020-07-21",
+   "badge": "changelog",
+   "channel": "update-01",
+   "change": {
+    "field": "atk",
+    "to": 7,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-34b2f1763449"
+  },
+  {
+   "id": "D-P-34b2f1763449",
+   "kind": "discord",
+   "date": "2020-07-22T11:57:48+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "update-01-port",
+   "image": "P-34b2f1763449.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Nailsage Sly can only be attacked by targets that he has attacked during this turn, if he does not attack during his turn, then anyone can attack him",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 4,
+      "def": 4,
+      "atk": 8,
+      "spd": 10
+     },
+     {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 8 -> 7"
+    ],
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 2,
+   "era": "C",
+   "w": 389,
+   "h": 792
+  },
+  {
+   "id": "F-fb13f7bab39",
+   "kind": "text",
+   "date": "2021-08-07T07:48:04+00:00",
+   "day": "2021-08-07",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-7030496ca699",
+   "kind": "discord",
+   "date": "2021-08-11T20:02:43+00:00",
+   "day": "2021-08-11",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-7030496ca699.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 66% damage reduction to all attacks, excluding attacks from creatures that it has attacked during either the previous or current full turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "C",
+   "w": 389,
+   "h": 789
+  },
+  {
+   "id": "D-P-0a5d0d13781a",
+   "kind": "discord",
+   "date": "2021-12-15T11:22:08+00:00",
+   "day": "2021-12-15",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-0a5d0d13781a.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 66% damage reduction to all attacks, excluding attacks from creatures that it has attacked during either the previous or current full turn",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "posts": 1,
+   "git_look": true,
+   "era": "C",
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-177eb10ba0f3.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 66% damage reduction to all attacks, excluding attacks from creatures that it has\nattacked during either the previous or current full turn",
+     "method": "ocr+known",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "formatting"
+   },
+   "minor": false,
+   "w": 389,
+   "h": 788
+  },
+  {
+   "id": "O-257dc970a875:Cards/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-71ad8a5e62cc.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 66% damage reduction to all attacks, excluding attacks from creatures that it has\nattacked during either the previous or current full turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a4c6559073f9:Cards/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-04-02T01:31:55+00:00",
+   "day": "2023-04-02",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Removed unneeded assets up to 3 stars kirby, lots of space saved",
+   "repo": "first",
+   "image": "O-de8755ab7701.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This card has 66% damage reduction to all attacks, excluding attacks from creatures that it has\nattacked during either the previous or current full turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-34f31ec289d7:Cards/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-04-06T23:20:36+00:00",
+   "day": "2023-04-06",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "card to creature hollow knight",
+   "repo": "first",
+   "image": "O-c1e4843e3c78.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 66% damage reduction to all attacks, excluding attacks from creatures that it has\nattacked during either the previous or current full turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-6980327a3771:Cards/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-04-15T12:14:47+00:00",
+   "day": "2023-04-15",
+   "badge": "first repo",
+   "author": "hdckighfkvhvgmk",
+   "subject": "The Long Awaited Sly nerf",
+   "repo": "first",
+   "image": "O-9b6ceeb4587a.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks, excluding attacks from creatures that it has\nattacked during either the previous or current full turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-2e6631a35f67:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:54:07+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-9b6ceeb4587a.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks, excluding attacks from creatures that it has\nattacked during either the previous or current full turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e2b8b8c8ccd8:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:29:14+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creatures up to Hollow Knight",
+   "image": "O-9b6ceeb4587a.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks, excluding attacks from creatures that it has\nattacked during either the previous or current full turn",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-715767ae8046:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-04-25T12:03:14+00:00",
+   "day": "2023-04-25",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "touch ups?",
+   "image": "O-9f24fe07363a.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks;\n excluding attacks from creatures that it has attacked during either the previous or current global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4b03ceb980a4:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-06-16T09:04:38+00:00",
+   "day": "2023-06-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "some tempetization",
+   "image": "O-dad9f6621045.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks;\n excluding attacks from creatures that it has attacked during either the previous or current global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-d42a25bc7bce:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-10-15T13:23:59+00:00",
+   "day": "2023-10-15",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Hollow Knight Attribute Colroing",
+   "image": "O-e7d84d2ac13f.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks;\n excluding attacks from creatures that it has attacked during either the previous or current global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-a965a75e90a4:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-10-18T15:22:12+00:00",
+   "day": "2023-10-18",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "new stuff",
+   "image": "O-2ed074ede55f.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks;\n excluding attacks from creatures that it has attacked during either the previous or current global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-ef5d1cfc99b1:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-10-19T05:38:32+00:00",
+   "day": "2023-10-19",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute stuff",
+   "image": "O-907182b54494.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks;\n excluding attacks from creatures that it has attacked during either the previous or current global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c6edb642cecb:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-10-26T12:15:42+00:00",
+   "day": "2023-10-26",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "brainwashed, remove monster prodigy",
+   "image": "O-3adce54f5dfd.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks;\n excluding attacks from creatures that it has attacked during either the previous or current global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-10b4c1303aee.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks;\n excluding attacks from creatures that it has attacked during either the previous or current global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-0ef655f40224:Creatures/Hollow Knight/4 Stars/Nailsage_Sly.png",
+   "kind": "old repo",
+   "date": "2023-11-02T21:54:32+00:00",
+   "day": "2023-11-02",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "attribute fixing",
+   "image": "O-7d1aea7f66ac.webp",
+   "fields": {
+    "name": {
+     "value": "Nailsage Sly",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "wind"
+     ],
+     "method": "icon pictures",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 4,
+      "def": 4,
+      "atk": 7,
+      "spd": 10
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "This creature has 50% damage reduction to all attacks;\n excluding attacks from creatures that it has attacked during either the previous or current global turn.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2019-06-13",
+  "sort": "2019-06-13",
+  "source": "discord",
+  "status": "owner"
+ }
+}

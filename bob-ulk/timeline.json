@@ -1,0 +1,1200 @@
+{
+ "card": "bob-ulk",
+ "key": "Bob-Ulk",
+ "name": "Bob-Ulk",
+ "kind": "creature",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-ab3e9ea51ea8",
+   "kind": "discord",
+   "date": "2020-08-10T02:21:12+00:00",
+   "day": "2020-08-10",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-ab3e9ea51ea8.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Inflicts 6 damage to the creature that kills it. (EOT) This creature may explode onto an enemy when it attacks, killing itself in order to deal an additional 8 damage ontop of its attack.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 3,
+      "atk": 7,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-0a87b927c4ce",
+   "kind": "discord",
+   "date": "2020-08-13T12:32:39+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "card-classification",
+   "image": "P-0a87b927c4ce.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack. When this creature dies, deal its ATK as damage to the entire enemy primary field. (OYT) May suicide. Double its base ATK at the end of its turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 3,
+      "atk": 7,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 4,
+      "atk": 2,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [
+     "DEF 3 -> 4"
+    ],
+    "nerfs": [
+     "ATK 7 -> 2"
+    ],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-7e9756274729",
+   "kind": "discord",
+   "date": "2020-08-13T12:49:37+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "ideas-discussion",
+   "image": "P-7e9756274729.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack. When this creature dies, deal its ATK as damage to the entire enemy primary field. (OYT) May suicide. Gains (3 + turns alive) ATK at the end of its turn.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 4,
+      "atk": 2,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 4,
+      "atk": 3,
+      "spd": 3
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "ATK 2 -> 3"
+    ],
+    "nerfs": [],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "D-P-518fd3769075",
+   "kind": "discord",
+   "date": "2020-08-15T23:27:26+00:00",
+   "day": "2020-08-15",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-518fd3769075.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack. When this creature dies, deal its ATK as damage to the entire enemy primary field. (AAT) Blow up. Gains (3 + turns ended) ATK at the end of its turn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 4,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f688b50aed3",
+   "kind": "text",
+   "date": "2020-08-15T23:27:32+00:00",
+   "day": "2020-08-15",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "F-fd31eb72b58",
+   "kind": "text",
+   "date": "2020-08-25T10:55:28+00:00",
+   "day": "2020-08-25",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-f070b2f468d2",
+   "kind": "discord",
+   "date": "2020-08-31T02:30:31+00:00",
+   "day": "2020-08-31",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-f070b2f468d2.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack. When this creature dies, deal its ATK as damage to the entire enemy primary field. (AAT) Blow up. Gains +3 ATK at the end of its turn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 5,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 4,
+      "atk": 3,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 5,
+      "atk": 3,
+      "spd": 3
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 4 -> 5"
+    ],
+    "nerfs": [],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f46f12a79be",
+   "kind": "text",
+   "date": "2020-09-09T10:17:03+00:00",
+   "day": "2020-09-09",
+   "badge": "changelog",
+   "channel": "update-03",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-175e4e4ddc82",
+   "kind": "discord",
+   "date": "2020-09-09T10:24:36+00:00",
+   "day": "2020-09-09",
+   "badge": "Discord",
+   "channel": "update-03-port",
+   "image": "P-175e4e4ddc82.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items. When this creature dies, deal its ATK as damage to the entire enemy primary field. (OYT) Blow up. Gains +3 ATK at the end of its turn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 3,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 5,
+      "atk": 3,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 8,
+      "atk": 3,
+      "spd": 3
+     }
+    ],
+    "bal": "buff",
+    "buffs": [
+     "DEF 5 -> 8"
+    ],
+    "nerfs": [],
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f7485d47080",
+   "kind": "text",
+   "date": "2021-04-24T10:13:08+00:00",
+   "day": "2021-04-24",
+   "badge": "changelog",
+   "channel": "update-04",
+   "change": {
+    "field": "atk",
+    "by": -1,
+    "unit": "bars"
+   },
+   "confirmed": true,
+   "confirmed_by": "D-P-a7cdf68a6fba"
+  },
+  {
+   "id": "D-P-a7cdf68a6fba",
+   "kind": "discord",
+   "date": "2021-08-21T03:50:07+00:00",
+   "day": "2021-08-21",
+   "badge": "Discord",
+   "channel": "update-04-port",
+   "image": "P-a7cdf68a6fba.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "icon+known",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items. When this creature dies, deal its ATK as damage to the entire enemy primary field. (OYT) Blow up. Gains +3 ATK at the end of its turn.",
+     "method": "ocr",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 8,
+      "atk": 3,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 8,
+      "atk": 2,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "ATK 3 -> 2"
+    ],
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f4e072e18e6",
+   "kind": "text",
+   "date": "2021-12-12T09:08:12+00:00",
+   "day": "2021-12-12",
+   "badge": "changelog",
+   "channel": "update-05",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-e6d5e1d1781a",
+   "kind": "discord",
+   "date": "2021-12-12T09:12:52+00:00",
+   "day": "2021-12-12",
+   "badge": "Discord",
+   "channel": "update-05-port",
+   "image": "P-e6d5e1d1781a.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-ulk",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items. (BOGT) Gain +3 ATK. When this creature dies, deal its ATK as damage to the entire enemy primary field. (OYT) May blow up.",
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "F-f1bcc03d9ce",
+   "kind": "text",
+   "date": "2022-01-26T08:00:01+00:00",
+   "day": "2022-01-26",
+   "badge": "changelog",
+   "channel": "update-06",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
+   "id": "D-P-dd6e641d0d0b",
+   "kind": "discord",
+   "date": "2022-01-29T08:05:52+00:00",
+   "day": "2022-01-29",
+   "badge": "Discord",
+   "channel": "update-06-port",
+   "image": "P-dd6e641d0d0b.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-ulk",
+     "method": "git look: file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "git look: folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "git look: picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items. (BOGT) Gain +3 ATK. When this dies, deal its ATK as damage to the entire enemy primary field. (OYT) May die.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "git look: eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "git_look": true,
+   "era": "B",
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-a094b5bc5ed2:Cards/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "repo": "first",
+   "image": "O-5476d7eab122.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-ulk",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 8,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items. (BOGT) Gain +3 ATK. When this dies, deal its ATK as damage to the entire enemy primary field. (OYT) May die.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 350,
+   "h": 518
+  },
+  {
+   "id": "O-257dc970a875:Cards/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-03-19T21:26:26+00:00",
+   "day": "2023-03-19",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Updated to port 6",
+   "repo": "first",
+   "image": "O-3a67bb4290b8.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-ulk",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items. (BOGT) Gain +3 ATK. When this creature dies, deal its ATK as damage to the entire enemy primary field. (OYT) May blow up.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "fire"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "stats": [
+     {
+      "hp": 3,
+      "def": 8,
+      "atk": 2,
+      "spd": 3
+     },
+     {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [],
+    "nerfs": [
+     "DEF 8 -> 7"
+    ],
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fff599319d26:Cards/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-03-20T04:38:41+00:00",
+   "day": "2023-03-20",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Port 6",
+   "repo": "first",
+   "image": "O-f5a9c5ac265d.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items. (BOGT) Gain +3 ATK. When this creature dies, deal its ATK as damage to the entire enemy primary field. (OYT) May blow up.",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "types": {
+     "add": [
+      "machine"
+     ],
+     "drop": [
+      "fire"
+     ]
+    },
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-cdae71a37142:Cards/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-04-10T09:22:48+00:00",
+   "day": "2023-04-10",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Kingchin and bob-ulk",
+   "repo": "first",
+   "image": "O-d696d37d4bc5.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items.\n(BOGT) Gain +3 ATK.\n(OYT) May double its ATK then destroy itself.\n(OD) Deal half its ATK as DMG to all enemies on the (PF).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-fbf9b2007d81:Cards/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-04-14T19:11:31+00:00",
+   "day": "2023-04-14",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "some mario touch ups",
+   "repo": "first",
+   "image": "O-d4535b4ff6c0.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items.\n(BOGT) Gain +3 ATK.\n(OYT) May double its ATK then destroy itself.\n(OD) Deal half its ATK as DMG to all enemies on the (PF).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-e1ef965c009e:Creatures/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:55:23+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Moving Cards to Creatures",
+   "repo": "first",
+   "image": "O-d4535b4ff6c0.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items.\n(BOGT) Gain +3 ATK.\n(OYT) May double its ATK then destroy itself.\n(OD) Deal half its ATK as DMG to all enemies on the (PF).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-bb5f8f5ff1f7:Creatures/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-04-21T11:15:50+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added creature up to Other",
+   "image": "O-d4535b4ff6c0.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items.\n(BOGT) Gain +3 ATK.\n(OYT) May double its ATK then destroy itself.\n(OD) Deal half its ATK as DMG to all enemies on the (PF).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-f1f6be4bda66:Creatures/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-10-16T04:05:27+00:00",
+   "day": "2023-10-16",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "mario cards templiticize and attribute coloring",
+   "image": "O-2d7ccdf1dcca.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items.\n(BOGT) Gain +3 ATK.\n(OYT) May double its ATK then destroy itself.\n(OD) Deal half its ATK as DMG to all enemies on the (PF).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-3518261d375b:Creatures/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-10-22T09:20:06+00:00",
+   "day": "2023-10-22",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "GOODBYE RECON",
+   "image": "O-89595a615b8e.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items.\n(BOGT) Gain +3 ATK.\n(OYT) May double its ATK then destroy itself.\n(OD) Deal half its ATK as DMG to all enemies on the (PF).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-c19d8b91a709:Creatures/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-10-29T16:00:27+00:00",
+   "day": "2023-10-29",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "Thic Bars update",
+   "image": "O-949e050bd016.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items.\n(BOGT) Gain +3 ATK.\n(OYT) May double its ATK then destroy itself.\n(OD) Deal half its ATK as DMG to all enemies on the (PF).",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "O-4d61e9e7c35f:Creatures/Mario/2 Stars/Bob-ulk.png",
+   "kind": "old repo",
+   "date": "2023-10-31T18:27:09+00:00",
+   "day": "2023-10-31",
+   "badge": "old repo",
+   "author": "Croissant",
+   "subject": "stuff",
+   "image": "O-611a699a1b47.webp",
+   "fields": {
+    "name": {
+     "value": "Bob-Ulk",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 2,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [
+      "machine"
+     ],
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 3,
+      "def": 7,
+      "atk": 2,
+      "spd": 3
+     },
+     "method": "picture",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Cannot attack, defend, or equip items.\n(BOGT) Gain +3 ATK.\n(OYT) May double its ATK then destroy itself.\n(OD) Deal half its ATK as DMG to all enemies on the (PF).",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "unknown"
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "created": {
+  "date": "2020-08-10",
+  "sort": "2020-08-10",
+  "source": "discord",
+  "status": "same"
+ }
+}

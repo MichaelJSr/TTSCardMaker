@@ -1,0 +1,29 @@
+{
+ "card": "tyler-kool",
+ "key": "Tyler Kool",
+ "name": "Tyler Kool",
+ "morgue": "candidate",
+ "first": {
+  "date": "2023-04-07T04:15:54.931000+00:00",
+  "day": "2023-04-07",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-19e6f09e632b",
+   "kind": "discord",
+   "date": "2023-04-07T04:15:54.931000+00:00",
+   "day": "2023-04-07",
+   "badge": "Discord",
+   "image": "P-19e6f09e632b.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 568,
+   "h": 695
+  }
+ ],
+ "kind_of": "joke"
+}

@@ -1,0 +1,285 @@
+{
+ "card": "impassable-obstruction",
+ "key": "Impassable Obstruction",
+ "name": "Impassable Obstruction",
+ "kind": "item",
+ "stop": {
+  "day": "2022-08-24",
+  "source": "first repo"
+ },
+ "entries": [
+  {
+   "id": "D-P-528db374d56a",
+   "kind": "discord",
+   "date": "2020-07-22T03:02:13+00:00",
+   "day": "2020-07-22",
+   "badge": "Discord",
+   "channel": "port",
+   "image": "P-528db374d56a.webp",
+   "fields": {
+    "name": {
+     "value": "Impassible Obstruction",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Completely blocks all damage conditions or other effects of one item (not lv 5) or attack.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "first"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "D-P-ea5d0da5e0d7",
+   "kind": "discord",
+   "date": "2020-08-18T10:55:09+00:00",
+   "day": "2020-08-18",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-ea5d0da5e0d7.webp",
+   "fields": {
+    "name": {
+     "value": "Impassible Obstruction",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "icon",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negates one attack",
+     "method": "ocr",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "changed"
+   },
+   "minor": false,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Active/3 Stars/Impassible_Obstruction.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "file": "Impassible Obstruction",
+   "repo": "first",
+   "image": "O-dc5764d295ec.webp",
+   "fields": {
+    "name": {
+     "value": "Impassible Obstruction",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "folder",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negates one attack",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": false,
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-9c44d43354ab:Items/Support/3 star/Impassible_Obstruction.png",
+   "kind": "old repo",
+   "date": "2023-04-07T07:23:07+00:00",
+   "day": "2023-04-07",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "File pathing",
+   "file": "Impassible Obstruction",
+   "repo": "first",
+   "image": "O-dc5764d295ec.webp",
+   "fields": {
+    "name": {
+     "value": "Impassible Obstruction",
+     "method": "file name",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negates one attack",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "types": {
+     "value": [],
+     "method": "eye",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": true,
+   "w": 399,
+   "h": 616
+  },
+  {
+   "id": "O-6cfb610a3e83:Items/Support/3 star/Impassible_Obstruction.png",
+   "kind": "old repo",
+   "date": "2023-04-11T07:01:31+00:00",
+   "day": "2023-04-11",
+   "badge": "first repo",
+   "author": "Croissant",
+   "subject": "items",
+   "file": "Impassible Obstruction",
+   "repo": "first",
+   "image": "O-549ab50a1ccf.webp",
+   "fields": {
+    "name": {
+     "value": "Impassable obstruction",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negates 1 attack",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "name": [
+     "Impassible Obstruction",
+     "Impassable obstruction"
+    ],
+    "ability_change": "unknown",
+    "unknown": [
+     "stars"
+    ]
+   },
+   "minor": false,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-6c0d9ebc48ce:Items/Support/3 Stars/Impassible_Obstruction.png",
+   "kind": "old repo",
+   "date": "2023-04-21T00:14:24+00:00",
+   "day": "2023-04-21",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Renamed support folder to be correct",
+   "file": "Impassible Obstruction",
+   "repo": "first",
+   "image": "O-549ab50a1ccf.webp",
+   "fields": {
+    "name": {
+     "value": "Impassable obstruction",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negates 1 attack",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  },
+  {
+   "id": "O-2a28f900fc24:Items/Support/3 Stars/Impassible_Obstruction.png",
+   "kind": "old repo",
+   "date": "2023-04-21T10:03:13+00:00",
+   "day": "2023-04-21",
+   "badge": "old repo",
+   "author": "MichaelJSr",
+   "subject": "Added the rest of the items",
+   "file": "Impassible Obstruction",
+   "image": "O-549ab50a1ccf.webp",
+   "fields": {
+    "name": {
+     "value": "Impassable obstruction",
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "psd",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Negates 1 attack",
+     "method": "psd",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same"
+   },
+   "minor": true,
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "created": {
+  "date": "2020-07-22",
+  "sort": "2020-07-22",
+  "source": "discord",
+  "status": "same"
+ }
+}

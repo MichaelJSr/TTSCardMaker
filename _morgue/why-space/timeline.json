@@ -1,0 +1,43 @@
+{
+ "card": "why-space",
+ "key": "WHY SPACE",
+ "name": "WHY SPACE",
+ "morgue": "candidate",
+ "first": {
+  "date": "2022-01-17T04:09:07.157000+00:00",
+  "day": "2022-01-17",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-8c3be298dd0e",
+   "kind": "discord",
+   "date": "2022-01-17T04:09:07.157000+00:00",
+   "day": "2022-01-17",
+   "badge": "Discord",
+   "image": "P-8c3be298dd0e.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 495,
+   "h": 736
+  },
+  {
+   "id": "P-aaf2b1a1c8e7",
+   "kind": "discord",
+   "date": "2025-02-17T23:53:49.253000+00:00",
+   "day": "2025-02-17",
+   "badge": "Discord",
+   "image": "P-aaf2b1a1c8e7.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 495,
+   "h": 736
+  }
+ ],
+ "kind_of": "joke"
+}
