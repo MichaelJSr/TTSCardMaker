@@ -1692,12 +1692,13 @@ function renderStatsView(r) {
     if (rest.length > 2) idle(more, { timeout: 400 }); else drawing = false; };
   const drawRest = () => { started = true; if (!drawing) { drawing = true; idle(more, { timeout: 400 }); } };
   setTimeout(drawRest, 300);
-  if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
-    if (top && slot && slot.getBoundingClientRect().top > vh) requestAnimationFrame(() => setTimeout(() => { if (job === statsJob) fill(); }));
-    else fill();
-  } else {
+  // below the first screen, at the top of the page: after it has painted (also when analytics.json lands before that paint)
+  const fillSoon = () => { if (top && slot && slot.getBoundingClientRect().top > vh) requestAnimationFrame(() => setTimeout(() => { if (job === statsJob) fill(); }));
+    else fill(); };
+  if (S.analytics) fillSoon();
+  else {
     $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
-    loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && onStats()) slot.innerHTML = `<p class="muted load-error">${esc(failText("the balance section", e))}</p>`; fill(null); });
+    loadAnalytics().then(() => fillSoon(), e => { const slot = $("#stats-balance", view); if (slot && onStats()) slot.innerHTML = `<p class="muted load-error">${esc(failText("the balance section", e))}</p>`; fill(null); });
   }
 }
 // a turned phone (across 600 px): each chart drawn again in place for the new width; open tables and the place stay
