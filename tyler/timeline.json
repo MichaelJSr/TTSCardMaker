@@ -21,6 +21,26 @@
      "value": "Tyler",
      "method": "ocr+name",
      "confidence": "sure"
+    },
+    "stars": {
+     "value": 4,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "(OYT) Spend 3 points to do one of 3 complaints: \"It's actually broken\": Reduces the target's highest stat (in bars) by 50% \"You're actually feeding\": Looks like Tyler has to carry the team. Steal all of a teammate's remaining health, leaving them at 1. \"ADD A TANK\": Summons a beefalo minion (1/14/1/5) Also if defense lowers his damage to negative then it heals the target.",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stats": {
+     "value": {
+      "hp": 9,
+      "def": 9,
+      "atk": 0,
+      "spd": 10
+     },
+     "method": "triage",
+     "confidence": "sure"
     }
    },
    "changes": {
@@ -29,29 +49,6 @@
    "minor": false,
    "posts": 1,
    "era": "C",
-   "w": 588,
-   "h": 1172
-  },
-  {
-   "id": "O-a094b5bc5ed2:Cards/Meme/4 Stars/Tyler.png",
-   "kind": "old repo",
-   "date": "2022-08-24T11:49:36+00:00",
-   "day": "2022-08-24",
-   "badge": "first repo",
-   "author": "MichaelJSr",
-   "subject": "Initial commit",
-   "repo": "first",
-   "image": "O-b2be56956707.webp",
-   "fields": {
-    "name": {
-     "value": "Tyler",
-     "method": "file name",
-     "confidence": "sure"
-    }
-   },
-   "changes": {},
-   "minor": false,
-   "meme_copy": true,
    "w": 588,
    "h": 1172
   },
@@ -96,11 +93,36 @@
     }
    },
    "changes": {
-    "ability_change": "unknown",
+    "stars": [
+     4,
+     5
+    ],
+    "stats": [
+     {
+      "hp": 9,
+      "def": 9,
+      "atk": 0,
+      "spd": 10
+     },
+     {
+      "hp": 7,
+      "def": 7,
+      "atk": 4,
+      "spd": 7
+     }
+    ],
+    "bal": "nerf",
+    "buffs": [
+     "ATK 0 -> 4"
+    ],
+    "nerfs": [
+     "HP 9 -> 7",
+     "DEF 9 -> 7",
+     "SPD 10 -> 7"
+    ],
+    "ability_change": "changed",
     "unknown": [
-     "stars",
-     "types",
-     "stats"
+     "types"
     ]
    },
    "minor": false,
@@ -248,9 +270,9 @@
   }
  ],
  "created": {
-  "date": "2019-05-03",
-  "sort": "2019-05-03",
+  "date": "2019-05-02",
+  "sort": "2019-05-02",
   "source": "discord",
-  "status": "same"
+  "status": "pacific"
  }
 }

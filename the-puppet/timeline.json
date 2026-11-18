@@ -594,44 +594,6 @@
    "h": 800
   },
   {
-   "id": "O-a094b5bc5ed2:Cards/Meme/5 Stars/The_Puppet.png",
-   "kind": "old repo",
-   "date": "2022-08-24T11:49:36+00:00",
-   "day": "2022-08-24",
-   "badge": "first repo",
-   "author": "MichaelJSr",
-   "subject": "Initial commit",
-   "repo": "first",
-   "image": "O-edcb6b233108.webp",
-   "fields": {
-    "name": {
-     "value": "The Puppet",
-     "method": "file name",
-     "confidence": "sure"
-    },
-    "stars": {
-     "value": 5,
-     "method": "folder",
-     "confidence": "sure"
-    },
-    "stats": {
-     "value": {
-      "hp": 7,
-      "def": 3,
-      "atk": 6,
-      "spd": 5
-     },
-     "method": "picture",
-     "confidence": "sure"
-    }
-   },
-   "changes": {},
-   "minor": false,
-   "meme_copy": true,
-   "w": 350,
-   "h": 537
-  },
-  {
    "id": "O-257dc970a875:Cards/Fnaf/5 Stars/The_Puppet.png",
    "kind": "old repo",
    "date": "2023-03-19T21:26:26+00:00",

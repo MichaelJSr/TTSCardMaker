@@ -60,34 +60,6 @@
    "h": 1440
   }
  ],
- "git_first": {
-  "date": "2025-03-08T11:49:38+00:00",
-  "changes": {
-   "stats": [
-    {
-     "hp": 8,
-     "def": 4,
-     "atk": 8,
-     "spd": 4
-    },
-    {
-     "hp": 7,
-     "def": 4,
-     "atk": 8,
-     "spd": 4
-    }
-   ],
-   "bal": "nerf",
-   "buffs": [],
-   "nerfs": [
-    "HP 8 -> 7"
-   ],
-   "ability_change": "unknown",
-   "unknown": [
-    "types"
-   ]
-  }
- },
  "created": {
   "date": "2025-03-08",
   "sort": "2025-03-08",

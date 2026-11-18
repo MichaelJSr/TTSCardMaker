@@ -252,7 +252,7 @@
      "DEF 0 -> 10"
     ],
     "nerfs": [],
-    "ability_change": "removed"
+    "ability_change": "same"
    },
    "minor": false,
    "w": 720,

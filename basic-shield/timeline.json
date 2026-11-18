@@ -169,12 +169,34 @@
    "badge": "Discord",
    "channel": "ideas-discussion",
    "image": "P-f9a825e61308.webp",
-   "fields": {},
+   "fields": {
+    "name": {
+     "value": "Wooden Shield",
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 1,
+     "method": "triage",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "+1 DEF -1 SPD.",
+     "method": "triage",
+     "confidence": "sure"
+    }
+   },
    "changes": {
-    "ability_change": "unknown",
+    "name": [
+     "Basic Shield",
+     "Wooden Shield"
+    ],
+    "stars": [
+     2,
+     1
+    ],
+    "ability_change": "changed",
     "unknown": [
-     "name",
-     "stars",
      "types",
      "stats"
     ]
@@ -218,10 +240,16 @@
     }
    },
    "changes": {
-    "ability_change": "unknown",
+    "name": [
+     "Wooden Shield",
+     "Basic Shield"
+    ],
+    "stars": [
+     1,
+     2
+    ],
+    "ability_change": "changed",
     "unknown": [
-     "name",
-     "stars",
      "types",
      "stats"
     ]
@@ -417,9 +445,9 @@
   }
  ],
  "created": {
-  "date": "2020-07-22",
-  "sort": "2020-07-22",
+  "date": "2020-07-21",
+  "sort": "2020-07-21",
   "source": "discord",
-  "status": "same"
+  "status": "pacific"
  }
 }

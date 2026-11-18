@@ -318,7 +318,7 @@
      ],
      "drop": []
     },
-    "ability_change": "removed"
+    "ability_change": "same"
    },
    "minor": false,
    "w": 720,
@@ -598,6 +598,6 @@
   "date": "2020-07-18",
   "sort": "2020-07-18",
   "source": "discord",
-  "status": "owner"
+  "status": "same"
  }
 }

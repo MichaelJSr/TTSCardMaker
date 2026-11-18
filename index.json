@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated": "2026-11-17T21:03:02+00:00",
+ "generated": "2026-11-18T04:52:48+00:00",
  "about": "Card timelines before the card repo (preview): per card its versions from Discord (date and channel), the old pre-wipe repo and the first repo (date, mapped author, commit subject) and changelog facts (data only). Only sure fields; no message text, posters or links.",
  "cards": {
   "a-snack": {
@@ -1127,7 +1127,7 @@
    "key": "Double Pain",
    "name": "Double Pain",
    "dir": "double-pain",
-   "versions": 11,
+   "versions": 10,
    "texts": 2
   },
   "dr-robotnik-s-roboticizer": {
@@ -4753,7 +4753,7 @@
    "key": "The Puppet",
    "name": "The Puppet",
    "dir": "the-puppet",
-   "versions": 22,
+   "versions": 21,
    "texts": 2
   },
   "the-queen": {
@@ -4956,7 +4956,7 @@
    "key": "Tyler",
    "name": "Tyler",
    "dir": "tyler",
-   "versions": 5,
+   "versions": 4,
    "texts": 0
   },
   "unbread-twins": {
@@ -5768,7 +5768,7 @@
     "channel": "ideas-discussion",
     "source": "discord"
    },
-   "versions": 1,
+   "versions": 2,
    "kind": "joke",
    "id": "LC-a385f53db0"
   },
@@ -6505,689 +6505,3546 @@
   }
  ],
  "created": {
+  "A Snack": {
+   "date": "2023-10-12",
+   "sort": "2023-10-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-13"
+  },
+  "A Snack2": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-13",
+   "same": true
+  },
+  "A Snack3": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-13",
+   "same": true
+  },
+  "ABBI": {
+   "date": "2022-12-18",
+   "sort": "2022-12-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-12-18",
+   "same": true
+  },
+  "Abigail": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Abyss Watcher": {
+   "date": "2022-06-16",
+   "sort": "2022-06-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-06-17"
+  },
   "Acro": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Acrophobia": {
+   "date": "2022-12-18",
+   "sort": "2022-12-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-12-18",
+   "same": true
+  },
+  "Adrenaline": {
+   "date": "2023-10-18",
+   "sort": "2023-10-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-18",
+   "same": true
+  },
+  "Afraid": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Air Totem": {
+   "date": "2021-08-20",
+   "sort": "2021-08-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-08-21"
+  },
+  "Alex YIIK": {
+   "date": "2022-05-30",
+   "sort": "2022-05-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-05-30",
+   "same": true
+  },
+  "All-Purpose Medical Kit": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "All-Purpose Medical Kit2": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
   "Amazing Mirror": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-03-22"
+  },
+  "Ancient Altar": {
+   "date": "2020-07-14",
+   "sort": "2020-07-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-14",
+   "same": true
+  },
+  "Ancient Fuelweaver": {
+   "date": "2019-05-09",
+   "sort": "2019-05-09",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-05-10"
+  },
+  "Ancient Stopwatch": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
+  },
+  "Anubisath Guardian": {
+   "date": "2026-05-28",
+   "sort": "2026-05-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2026-05-28",
+   "same": true
+  },
+  "Apex Predator": {
+   "date": "2025-04-22",
+   "sort": "2025-04-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-04-22",
+   "same": true
+  },
+  "Arachnophobia": {
+   "date": "2022-12-18",
+   "sort": "2022-12-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-12-18",
+   "same": true
   },
   "Armored Squit": {
    "date": "2023-04-29",
    "sort": "2023-04-29",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-04-30"
+   "status": "same",
+   "was": "2023-04-29",
+   "same": true
+  },
+  "Artemis Missiles": {
+   "date": "2025-02-28",
+   "sort": "2025-02-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-28",
+   "same": true
+  },
+  "Assault Panda": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Asteroid Field": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "Astr Meiana": {
+   "date": "2025-05-05",
+   "sort": "2025-05-05",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-05-05",
+   "same": true
+  },
+  "Astr Mionion": {
+   "date": "2025-05-05",
+   "sort": "2025-05-05",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-05-05",
+   "same": true
+  },
+  "Auto Croissant": {
+   "date": "2023-11-20",
+   "sort": "2023-11-20",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-20",
+   "same": true
+  },
+  "Avatar of Wrath": {
+   "date": "2020-07-12",
+   "sort": "2020-07-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-13"
   },
   "Azamoth the Forgotten King": {
-   "date": "2023-09-11",
-   "sort": "2023-09-11",
+   "date": "2023-09-10",
+   "sort": "2023-09-10",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "pacific",
+   "was": "2023-09-11"
   },
   "Azamoth the Possessed Vessel": {
-   "date": "2023-09-11",
-   "sort": "2023-09-11",
+   "date": "2023-09-10",
+   "sort": "2023-09-10",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-11-05"
+   "status": "pacific",
+   "was": "2023-09-11"
+  },
+  "Baba": {
+   "date": "2023-10-06",
+   "sort": "2023-10-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-06",
+   "same": true
+  },
+  "Back In Time Juice": {
+   "date": "2026-02-02",
+   "sort": "2026-02-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2026-02-03"
   },
   "Bag of Evil": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Bag of Good": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-05"
+  },
+  "Balloon Boy": {
+   "date": "2020-07-12",
+   "sort": "2020-07-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-12",
+   "same": true
+  },
+  "Barry The Barrel": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-05"
+  },
+  "Basic Shield": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
+  },
+  "Battle Helmet": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Battle Spear": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Become Back Money": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-17"
+  },
+  "Beldam": {
+   "date": "2020-12-18",
+   "sort": "2020-12-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-12-18",
+   "same": true
+  },
+  "Bench": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "BergenTRUCK": {
+   "date": "2025-07-26",
+   "sort": "2025-07-26",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-07-26",
+   "same": true
+  },
+  "Berserk!": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-13",
+   "same": true
   },
   "Big Bomb": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Binge Eater": {
+   "date": "2023-10-12",
+   "sort": "2023-10-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-13"
+  },
+  "Black Hole": {
+   "date": "2026-02-02",
+   "sort": "2026-02-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2026-02-03"
+  },
+  "Black Light Bulb": {
+   "date": "2022-02-25",
+   "sort": "2022-02-25",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-02-26"
+  },
+  "Blank Card": {
+   "date": "2023-08-31",
+   "sort": "2023-08-31",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-09-01"
+  },
+  "Blasphemous Blade": {
+   "date": "2023-05-07",
+   "sort": "2023-05-07",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-05-07",
+   "same": true
+  },
+  "Blazing": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Bleach": {
+   "date": "2021-11-30",
+   "sort": "2021-11-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-30",
+   "same": true
+  },
+  "Blindness": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Block Hopper": {
+   "date": "2023-06-03",
+   "sort": "2023-06-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-06-03",
+   "same": true
   },
   "Blockade": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Blood Bomb": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-13",
+   "same": true
   },
   "Blood Ritual": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
   },
   "Blooper Tentacle": {
    "date": "2020-07-18",
    "sort": "2020-07-18",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-08-23"
+   "status": "same",
+   "was": "2020-07-18",
+   "same": true
+  },
+  "Blue Marker": {
+   "date": "2023-10-28",
+   "sort": "2023-10-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-28",
+   "same": true
+  },
+  "Bob-Ulk": {
+   "date": "2020-08-09",
+   "sort": "2020-08-09",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-10"
+  },
+  "Bobberlington": {
+   "date": "2023-10-29",
+   "sort": "2023-10-29",
+   "source": "old repo",
+   "status": "pacific",
+   "was": "2023-10-30",
+   "psd": true
+  },
+  "Bobbery": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
+  },
+  "Boggly Woods": {
+   "date": "2021-12-26",
+   "sort": "2021-12-26",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-26",
+   "same": true
+  },
+  "Boko Club": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-04",
+   "same": true
   },
   "Bolts and Screws": {
-   "date": "2020-09-03",
-   "sort": "2020-09-03",
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "pacific",
+   "was": "2020-09-03"
   },
   "Bomb": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Bone's Loans": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
+  },
+  "Brad Armstrong": {
+   "date": "2023-08-20",
+   "sort": "2023-08-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-08-21"
+  },
+  "Bubble": {
+   "date": "2022-06-16",
+   "sort": "2022-06-16",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-06-16",
+   "same": true
+  },
+  "Bucket of Lard": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "old repo",
+   "status": "same",
+   "was": "2023-10-13",
+   "same": true
+  },
+  "Bugzzy": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Bulborb Larva": {
+   "date": "2026-01-31",
+   "sort": "2026-01-31",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2026-02-01"
   },
   "Burdened": {
-   "date": "2020-08-14",
-   "sort": "2020-08-14",
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "Burly Bomb": {
+   "date": "2020-09-06",
+   "sort": "2020-09-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-06",
+   "same": true
+  },
+  "Burning": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
    "was": "2022-01-16"
+  },
+  "Burst Laser II": {
+   "date": "2025-02-28",
+   "sort": "2025-02-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-28",
+   "same": true
+  },
+  "Butterfly": {
+   "date": "2025-05-10",
+   "sort": "2025-05-10",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-05-11"
+  },
+  "Buzzo": {
+   "date": "2023-09-02",
+   "sort": "2023-09-02",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-09-02",
+   "same": true
+  },
+  "Cabbage": {
+   "date": "2025-02-03",
+   "sort": "2025-02-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-02-04"
+  },
+  "Cake Mix": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-05"
+  },
+  "Cancer": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-13",
+   "same": true
+  },
+  "Candy Corn": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Captain Spaceboy": {
+   "date": "2021-12-13",
+   "sort": "2021-12-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-12-14"
+  },
+  "Cat": {
+   "date": "2021-11-22",
+   "sort": "2021-11-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-22",
+   "same": true
+  },
+  "Cave of the Past": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-15"
+  },
+  "Chained": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-04-05"
+  },
+  "Charge": {
+   "date": "2020-09-06",
+   "sort": "2020-09-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-06",
+   "same": true
+  },
+  "Charm of the Vampire": {
+   "date": "2023-11-19",
+   "sort": "2023-11-19",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-20"
+  },
+  "Cheap": {
+   "date": "2025-05-04",
+   "sort": "2025-05-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-05-05"
+  },
+  "Chef Saltbaker": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-17"
+  },
+  "Chicken": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Chilled": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Chomp": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
   },
   "Chris & Jordi": {
    "date": "2021-08-15",
    "sort": "2021-08-15",
    "source": "discord",
-   "status": "owner",
-   "was": "2021-08-23"
+   "status": "same",
+   "was": "2021-08-15",
+   "same": true
+  },
+  "Chuckya": {
+   "date": "2023-05-10",
+   "sort": "2023-05-10",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-05-10",
+   "same": true
+  },
+  "Claw": {
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-03"
+  },
+  "Clock": {
+   "date": "2023-06-03",
+   "sort": "2023-06-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-06-03",
+   "same": true
+  },
+  "Clot Black": {
+   "date": "2023-11-15",
+   "sort": "2023-11-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-15",
+   "same": true
+  },
+  "Clot Blood": {
+   "date": "2023-11-15",
+   "sort": "2023-11-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-15",
+   "same": true
+  },
+  "Clot Bone": {
+   "date": "2023-11-15",
+   "sort": "2023-11-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-15",
+   "same": true
+  },
+  "Clot Gold": {
+   "date": "2023-11-15",
+   "sort": "2023-11-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-15",
+   "same": true
+  },
+  "Clot White": {
+   "date": "2023-11-15",
+   "sort": "2023-11-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-15",
+   "same": true
+  },
+  "Cloud Soiree": {
+   "date": "2021-12-16",
+   "sort": "2021-12-16",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-16",
+   "same": true
   },
   "Colosseum of Fools": {
    "date": "2023-10-24",
    "sort": "2023-10-24",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-10-25",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true,
    "psd": true
   },
   "Computer Virus": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-22"
+  },
+  "Condemned": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Confusion": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Consolation Prize": {
+   "date": "2023-10-29",
+   "sort": "2023-10-29",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-29",
+   "same": true
   },
   "Contracted": {
    "date": "2021-12-04",
    "sort": "2021-12-04",
    "source": "discord",
-   "status": "owner",
-   "was": "2022-01-16"
+   "status": "same",
+   "was": "2021-12-04",
+   "same": true
+  },
+  "Copper Sword": {
+   "date": "2020-07-24",
+   "sort": "2020-07-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-24",
+   "same": true
+  },
+  "Corrupted Blood": {
+   "date": "2023-11-05",
+   "sort": "2023-11-05",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-06"
   },
   "Corruption": {
    "date": "2020-08-12",
    "sort": "2020-08-12",
    "source": "changelog",
-   "status": "owner",
-   "was": "2022-01-16"
+   "status": "same",
+   "was": "2020-08-12",
+   "same": true
   },
   "Corruptor": {
    "date": "2020-07-25",
    "sort": "2020-07-25",
-   "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-26"
-  },
-  "Crowned Magolor": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
    "source": "discord",
-   "status": "owner",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Cortez": {
+   "date": "2020-08-25",
+   "sort": "2020-08-25",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-26"
+  },
+  "Credit Card": {
+   "date": "2023-11-18",
+   "sort": "2023-11-18",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-19"
+  },
+  "Crimson Flag": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
-  "Crystal Bits": {
-   "date": "2020-07-26",
-   "sort": "2020-07-26",
+  "Crock Pot": {
+   "date": "2025-03-01",
+   "sort": "2025-03-01",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-04-13"
+   "status": "pacific",
+   "was": "2025-03-02"
+  },
+  "Croissant": {
+   "date": "2023-05-26",
+   "sort": "2023-05-26",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-05-26",
+   "same": true
+  },
+  "Crowned Magolor": {
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-02-25"
+  },
+  "Crystal Bits": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-26"
+  },
+  "Crystal Guardian": {
+   "date": "2023-11-02",
+   "sort": "2023-11-02",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-02",
+   "same": true
+  },
+  "Crystal King": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
   },
   "Crystal Peak": {
    "date": "2023-10-23",
    "sort": "2023-10-23",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-10-25",
+   "status": "same",
+   "was": "2023-10-23",
+   "same": true,
    "psd": true
   },
-  "Dark Matter Swordsman": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
-   "source": "changelog",
-   "status": "owner",
+  "Crystal Spikes": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
+  },
+  "Curse": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-04-05"
+  },
+  "Cursed Inferno": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Dad's Ring": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
+  },
+  "Danger Badges": {
+   "date": "2019-04-16",
+   "sort": "2019-04-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-04-17"
+  },
+  "Dark Bramble": {
+   "date": "2023-11-02",
+   "sort": "2023-11-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-03"
+  },
+  "Dark Daroach": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Dark Esau": {
+   "date": "2025-03-12",
+   "sort": "2025-03-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-12",
+   "same": true
+  },
+  "Dark Matter": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Dark Matter Swordsman": {
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
+   "source": "changelog",
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Dark Mind": {
+   "date": "2020-07-18",
+   "sort": "2020-07-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-18",
+   "same": true
+  },
+  "Dark Mind Eye": {
+   "date": "2020-07-20",
+   "sort": "2020-07-20",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-20",
+   "same": true
   },
   "Dark Nebula": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
   },
   "Dark Ritual": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-31"
   },
   "Dark Sword": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-22"
+  },
+  "Dark Tentacle": {
+   "date": "2022-12-18",
+   "sort": "2022-12-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-12-18",
+   "same": true
   },
   "Daroach": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Dashmaster": {
+   "date": "2020-07-29",
+   "sort": "2020-07-29",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-30"
+  },
+  "Dead Orchid Children": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "Deep Focus": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-14"
+  },
+  "Deepnest": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "Defcon Panda": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Delicate Flower": {
+   "date": "2023-04-17",
+   "sort": "2023-04-17",
+   "source": "first repo",
+   "status": "pacific",
+   "was": "2023-04-18",
+   "psd": true
+  },
+  "Delta": {
+   "date": "2025-05-03",
+   "sort": "2025-05-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-05-03",
+   "same": true
+  },
+  "Despair": {
+   "date": "2023-04-03",
+   "sort": "2023-04-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-03",
+   "same": true
+  },
+  "Diligent Watch": {
+   "date": "2022-01-21",
+   "sort": "2022-01-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-22"
+  },
+  "Dimension D": {
+   "date": "2022-01-16",
+   "sort": "2022-01-16",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-01-16",
+   "same": true
+  },
+  "Dirty Bed": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
+  },
+  "Disarmed": {
+   "date": "2025-03-22",
+   "sort": "2025-03-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-22",
+   "same": true
+  },
+  "Disgusted": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
   },
   "Doc": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Doctor Zomboss": {
+   "date": "2023-03-31",
+   "sort": "2023-03-31",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-03-31",
+   "same": true
+  },
+  "Dogma": {
+   "date": "2023-03-19",
+   "sort": "2023-03-19",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-03-20"
+  },
+  "DooPliss": {
+   "date": "2020-08-25",
+   "sort": "2020-08-25",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-26"
+  },
+  "Door Shield": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-05"
+  },
+  "Double Pain": {
+   "date": "2019-04-16",
+   "sort": "2019-04-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-04-17"
+  },
+  "Dr Robotnik's Roboticizer": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-15"
   },
   "Dragon Mount": {
    "date": "2020-07-22",
    "sort": "2020-07-22",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-26"
+   "status": "same",
+   "was": "2020-07-22",
+   "same": true
   },
   "Drawcia": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-18"
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Drawcia Soul": {
+   "date": "2020-07-18",
+   "sort": "2020-07-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-18",
+   "same": true
+  },
+  "Dreamshield": {
+   "date": "2024-02-03",
+   "sort": "2024-02-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2024-02-04"
+  },
+  "Drone": {
+   "date": "2023-10-18",
+   "sort": "2023-10-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-18",
+   "same": true
   },
   "Dryya": {
    "date": "2023-05-01",
    "sort": "2023-05-01",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "same",
+   "was": "2023-05-01",
+   "same": true
+  },
+  "Duel Flag": {
+   "date": "2025-10-17",
+   "sort": "2025-10-17",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-10-17",
+   "same": true
+  },
+  "Dull Knife": {
+   "date": "2024-07-21",
+   "sort": "2024-07-21",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-07-21",
+   "same": true
+  },
+  "Dumplings": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Dung Defender": {
+   "date": "2019-03-10",
+   "sort": "2019-03-10",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-03-11"
   },
   "Dyna Blade": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
   },
   "Dynamite": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "E Gadd's Garage": {
+   "date": "2023-11-13",
+   "sort": "2023-11-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-13",
+   "same": true
+  },
+  "Earth Totem": {
+   "date": "2021-08-20",
+   "sort": "2021-08-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-08-21"
+  },
+  "Eden's Soul": {
+   "date": "2023-04-01",
+   "sort": "2023-04-01",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-01",
+   "same": true
   },
   "Edible": {
-   "date": "2023-11-01",
-   "sort": "2023-11-01",
+   "date": "2023-10-31",
+   "sort": "2023-10-31",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "pacific",
+   "was": "2023-11-01"
+  },
+  "Electric Dart": {
+   "date": "2023-11-10",
+   "sort": "2023-11-10",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-11"
   },
   "Electro Probe": {
    "date": "2020-07-18",
    "sort": "2020-07-18",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-04-13"
+   "status": "same",
+   "was": "2020-07-18",
+   "same": true
+  },
+  "Elemental World": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
+  },
+  "Elmadan": {
+   "date": "2023-10-29",
+   "sort": "2023-10-29",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-29",
+   "same": true
+  },
+  "Empowered": {
+   "date": "2022-01-21",
+   "sort": "2022-01-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-22"
+  },
+  "Empress Bulblax": {
+   "date": "2026-01-22",
+   "sort": "2026-01-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2026-01-22",
+   "same": true
+  },
+  "Empty": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-04-05"
+  },
+  "Energy Ritual": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Enfeebled": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Engorged": {
+   "date": "2025-08-28",
+   "sort": "2025-08-28",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-08-29"
+  },
+  "Enraged": {
+   "date": "2022-01-21",
+   "sort": "2022-01-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-22"
   },
   "Erasure": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-09-08"
+   "status": "pacific",
+   "was": "2019-05-14"
   },
   "Error Room": {
    "date": "2023-10-28",
    "sort": "2023-10-28",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-10-31",
+   "status": "same",
+   "was": "2023-10-28",
+   "same": true,
    "psd": true
   },
+  "Evil Cookie": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
+  },
+  "Excess Express": {
+   "date": "2025-03-11",
+   "sort": "2025-03-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-12"
+  },
   "Exposed": {
-   "date": "2023-04-05",
-   "sort": "2023-04-05",
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
    "source": "first repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "pacific",
+   "was": "2023-04-05"
+  },
+  "Fahr Outpost": {
+   "date": "2025-03-08",
+   "sort": "2025-03-08",
+   "source": "git",
+   "status": "same",
+   "was": "2025-03-08",
+   "same": true
   },
   "False Knight": {
    "date": "2019-02-16",
    "sort": "2019-02-16",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "same",
+   "was": "2019-02-16",
+   "same": true
   },
   "Fatty Whale": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
   },
   "Fawful": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-18"
+   "status": "pacific",
+   "was": "2019-02-25"
+  },
+  "Feast": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Felhunter": {
+   "date": "2021-09-09",
+   "sort": "2021-09-09",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-09-09",
+   "same": true
   },
   "Final Dark Mind Eye": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-18"
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Fire Staff": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Fire Totem": {
+   "date": "2021-08-20",
+   "sort": "2021-08-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-08-21"
+  },
+  "Fireball": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
   },
   "Flame Bomb": {
    "date": "2020-07-22",
    "sort": "2020-07-22",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-04-13"
+   "status": "same",
+   "was": "2020-07-22",
+   "same": true
+  },
+  "Flame Trap": {
+   "date": "2025-03-20",
+   "sort": "2025-03-20",
+   "source": "git",
+   "status": "pacific",
+   "was": "2025-03-21"
+  },
+  "Flameblade": {
+   "date": "2020-09-06",
+   "sort": "2020-09-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-06",
+   "same": true
+  },
+  "Flip": {
+   "date": "2023-09-26",
+   "sort": "2023-09-26",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-09-26",
+   "same": true
   },
   "Flower of Decay": {
    "date": "2020-07-18",
    "sort": "2020-07-18",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-08-04"
+   "status": "same",
+   "was": "2020-07-18",
+   "same": true
+  },
+  "Flurrie": {
+   "date": "2023-10-18",
+   "sort": "2023-10-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-18",
+   "same": true
+  },
+  "Fog Canyon": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "Fool Eater": {
+   "date": "2024-01-14",
+   "sort": "2024-01-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-01-14",
+   "same": true
+  },
+  "Forget Me Now": {
+   "date": "2023-09-11",
+   "sort": "2023-09-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-09-12"
+  },
+  "Forgotten Crossroads": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "Forsaken City": {
+   "date": "2023-10-25",
+   "sort": "2023-10-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-25",
+   "same": true
+  },
+  "Fragile Heart": {
+   "date": "2020-07-28",
+   "sort": "2020-07-28",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-29"
   },
   "Fragile Strength": {
-   "date": "2020-07-29",
-   "sort": "2020-07-29",
+   "date": "2020-07-28",
+   "sort": "2020-07-28",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-08-03"
+   "status": "pacific",
+   "was": "2020-07-29"
   },
   "Freeze Spell": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Frog": {
+   "date": "2021-08-15",
+   "sort": "2021-08-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-08-15",
+   "same": true
+  },
+  "Frostbite": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Frostmourne": {
+   "date": "2023-11-05",
+   "sort": "2023-11-05",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-05",
+   "same": true
+  },
+  "Frozen": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Funky D Luffy": {
+   "date": "2025-04-19",
+   "sort": "2025-04-19",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-04-19",
+   "same": true
+  },
+  "Future Niiue": {
+   "date": "2025-12-08",
+   "sort": "2025-12-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-12-08",
+   "same": true
+  },
+  "Fuzzy Horde": {
+   "date": "2020-08-15",
+   "sort": "2020-08-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-15",
+   "same": true
+  },
+  "Galacta Knight": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
   "Galacta Warrior": {
    "date": "2020-07-25",
    "sort": "2020-07-25",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-27"
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Gandhi": {
+   "date": "2023-04-20",
+   "sort": "2023-04-20",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-20",
+   "same": true
   },
   "Gasoline": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-22"
+  },
+  "Glaive Main Cannon": {
+   "date": "2021-09-08",
+   "sort": "2021-09-08",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-09-09"
+  },
+  "Glitz Pit": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
+  },
+  "Glowing Womb": {
+   "date": "2020-07-29",
+   "sort": "2020-07-29",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-30"
+  },
+  "Glued": {
+   "date": "2025-02-12",
+   "sort": "2025-02-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-02-13"
   },
   "God Tamer": {
-   "date": "2019-05-26",
-   "sort": "2019-05-26",
+   "date": "2019-05-25",
+   "sort": "2019-05-25",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-26"
+  },
+  "Godhead": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
   },
   "Godskin Apostle": {
    "date": "2023-04-24",
    "sort": "2023-04-24",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-10-20"
+   "status": "same",
+   "was": "2023-04-24",
+   "same": true
   },
   "Godskin Noble": {
    "date": "2023-04-24",
    "sort": "2023-04-24",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-10-20"
+   "status": "same",
+   "was": "2023-04-24",
+   "same": true
+  },
+  "Gold Fuzzy": {
+   "date": "2020-08-15",
+   "sort": "2020-08-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-15",
+   "same": true
   },
   "Golden Bomb": {
    "date": "2019-04-28",
    "sort": "2019-04-28",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "same",
+   "was": "2019-04-28",
+   "same": true
+  },
+  "Golden Freddy": {
+   "date": "2020-07-13",
+   "sort": "2020-07-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-13",
+   "same": true
   },
   "Golden Metronome": {
    "date": "2019-04-28",
    "sort": "2019-04-28",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "same",
+   "was": "2019-04-28",
+   "same": true
+  },
+  "Goombella": {
+   "date": "2023-10-18",
+   "sort": "2023-10-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-18",
+   "same": true
   },
   "Gooper Blooper": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-02-25"
   },
   "Grand Doomer": {
    "date": "2020-07-21",
    "sort": "2020-07-21",
-   "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-21",
+   "same": true
   },
   "Grapes": {
    "date": "2020-07-20",
    "sort": "2020-07-20",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "same",
+   "was": "2020-07-20",
+   "same": true
+  },
+  "Green Mage": {
+   "date": "2021-07-12",
+   "sort": "2021-07-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-07-12",
+   "same": true
+  },
+  "Greenpath": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "Grey Prince Zote": {
+   "date": "2019-06-13",
+   "sort": "2019-06-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-06-13",
+   "same": true
+  },
+  "Grief": {
+   "date": "2025-03-18",
+   "sort": "2025-03-18",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-19"
+  },
+  "Grimmchild": {
+   "date": "2023-04-12",
+   "sort": "2023-04-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-12",
+   "same": true
+  },
+  "Grimora": {
+   "date": "2023-10-20",
+   "sort": "2023-10-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-21"
+  },
+  "Groda": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-04",
+   "same": true
+  },
+  "Grodus": {
+   "date": "2020-07-23",
+   "sort": "2020-07-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-23",
+   "same": true
+  },
+  "Grodus X": {
+   "date": "2020-07-23",
+   "sort": "2020-07-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-23",
+   "same": true
+  },
+  "Gulka": {
+   "date": "2024-01-14",
+   "sort": "2024-01-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-01-14",
+   "same": true
   },
   "Gust of Trees": {
-   "date": "2020-08-24",
-   "sort": "2020-08-24",
+   "date": "2020-08-23",
+   "sort": "2020-08-23",
    "source": "discord",
-   "status": "earlier",
-   "was": "2023-10-19"
+   "status": "pacific",
+   "was": "2020-08-24"
+  },
+  "Gust of Wind": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "HR-D3": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "HR-H": {
+   "date": "2020-07-18",
+   "sort": "2020-07-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-18",
+   "same": true
+  },
+  "Hadal Stew": {
+   "date": "2025-04-09",
+   "sort": "2025-04-09",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-04-09",
+   "same": true
+  },
+  "Halberd Main Cannon": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
   },
   "Halberd Reactor": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-03-22"
+  },
+  "Halo": {
+   "date": "2023-10-12",
+   "sort": "2023-10-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-13"
+  },
+  "Hardened": {
+   "date": "2022-01-21",
+   "sort": "2022-01-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-22"
+  },
+  "Hawk": {
+   "date": "2021-11-22",
+   "sort": "2021-11-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-22",
+   "same": true
+  },
+  "Healing Ritual": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Heavy Blow": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "Heavy Ion": {
+   "date": "2025-02-28",
+   "sort": "2025-02-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-28",
+   "same": true
+  },
+  "Heavy Lobster": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
   "Heavy Mole": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-22"
   },
   "Hegemol": {
-   "date": "2023-05-26",
-   "sort": "2023-05-26",
+   "date": "2023-05-25",
+   "sort": "2023-05-25",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-06-13"
+   "status": "pacific",
+   "was": "2023-05-26"
+  },
+  "Helpful Mannequin": {
+   "date": "2023-11-17",
+   "sort": "2023-11-17",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-18"
+  },
+  "Hemorrhaging": {
+   "date": "2022-01-25",
+   "sort": "2022-01-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-01-25",
+   "same": true
+  },
+  "Hero Cap": {
+   "date": "2025-12-08",
+   "sort": "2025-12-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-12-08",
+   "same": true
   },
   "Hexed": {
    "date": "2020-08-14",
    "sort": "2020-08-14",
    "source": "changelog",
-   "status": "owner",
-   "was": "2022-01-16"
+   "status": "same",
+   "was": "2020-08-14",
+   "same": true
+  },
+  "Hive Knight": {
+   "date": "2019-05-25",
+   "sort": "2019-05-25",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-05-26"
+  },
+  "Hiveblood": {
+   "date": "2020-07-28",
+   "sort": "2020-07-28",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-29"
+  },
+  "Holo Defense API": {
+   "date": "2023-05-09",
+   "sort": "2023-05-09",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-05-09",
+   "same": true
   },
   "Holy Blade": {
    "date": "2019-04-28",
    "sort": "2019-04-28",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "same",
+   "was": "2019-04-28",
+   "same": true
   },
   "Holy Card": {
    "date": "2023-05-11",
    "sort": "2023-05-11",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-10-18"
+   "status": "same",
+   "was": "2023-05-11",
+   "same": true
+  },
+  "Holy Mantle": {
+   "date": "2023-08-31",
+   "sort": "2023-08-31",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-09-01"
+  },
+  "Hook": {
+   "date": "2020-08-28",
+   "sort": "2020-08-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-28",
+   "same": true
+  },
+  "Hooktail": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "Hooktail Castle": {
+   "date": "2021-12-16",
+   "sort": "2021-12-16",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-16",
+   "same": true
   },
   "Hornet": {
    "date": "2019-02-16",
    "sort": "2019-02-16",
    "source": "discord",
-   "status": "owner",
+   "status": "same",
+   "was": "2019-02-16",
+   "same": true
+  },
+  "Hot Spring": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "How to Jump": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-13",
+   "same": true
+  },
+  "Humphrey": {
+   "date": "2022-02-08",
+   "sort": "2022-02-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-02-08",
+   "same": true
+  },
+  "Humphrey's Belly": {
+   "date": "2022-02-07",
+   "sort": "2022-02-07",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-02-08"
+  },
+  "Hyper": {
+   "date": "2022-01-21",
+   "sort": "2022-01-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-22"
+  },
+  "Ice Bomb": {
+   "date": "2020-08-31",
+   "sort": "2020-08-31",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-01"
+  },
+  "Ice Dragon": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Ice Staff": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Ice Storm": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-05"
+  },
+  "Igor Roballtowski": {
+   "date": "2025-03-24",
+   "sort": "2025-03-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-24",
+   "same": true
+  },
+  "Igor Robotowski": {
+   "date": "2025-03-24",
+   "sort": "2025-03-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-24",
+   "same": true
+  },
+  "Imp": {
+   "date": "2021-09-09",
+   "sort": "2021-09-09",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-09-09",
+   "same": true
+  },
+  "Impassable Obstruction": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
   "Imprisoned": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2022-01-16"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Inconspicuous Cake": {
+   "date": "2021-11-20",
+   "sort": "2021-11-20",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-20",
+   "same": true
   },
   "Indoctrination": {
-   "date": "2023-03-20",
-   "sort": "2023-03-20",
+   "date": "2023-03-19",
+   "sort": "2023-03-19",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-04-02"
+   "status": "pacific",
+   "was": "2023-03-20"
   },
   "Infected": {
    "date": "2023-04-08",
    "sort": "2023-04-08",
    "source": "first repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "same",
+   "was": "2023-04-08",
+   "same": true
+  },
+  "Infected Crossroads": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "Ingredient Desert Limes": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-17"
+  },
+  "Ingredient Distillery Dough": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-17"
+  },
+  "Ingredient Gnome Berries": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-17"
+  },
+  "Ingredient Icy Sugar Cubes": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-17"
+  },
+  "Ingredient Pineapple Mint": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-17"
+  },
+  "Ingredient Wondertart": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-17"
+  },
+  "Inkhole": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "Inner Eye": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
   },
   "Insane": {
    "date": "2023-04-22",
    "sort": "2023-04-22",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "same",
+   "was": "2023-04-22",
+   "same": true
   },
   "Inspired": {
    "date": "2020-08-13",
    "sort": "2020-08-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2022-01-22"
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Ipsilon": {
+   "date": "2025-05-03",
+   "sort": "2025-05-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-05-03",
+   "same": true
+  },
+  "Irithyll": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
+  },
+  "Iron Spikes": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Iron Sword": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Jack-in-the-Box Zombie": {
+   "date": "2023-04-01",
+   "sort": "2023-04-01",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-01",
+   "same": true
+  },
+  "Jera": {
+   "date": "2023-11-13",
+   "sort": "2023-11-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-14"
   },
   "Jetpack": {
    "date": "2020-07-25",
    "sort": "2020-07-25",
-   "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-26"
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Jevil": {
+   "date": "2023-11-03",
+   "sort": "2023-11-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-04"
+  },
+  "Joel Miller": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-15"
+  },
+  "John Ward": {
+   "date": "2025-04-20",
+   "sort": "2025-04-20",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-04-20",
+   "same": true
+  },
+  "Joy": {
+   "date": "2023-09-02",
+   "sort": "2023-09-02",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-09-02",
+   "same": true
   },
   "Kabula": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Kalecgos": {
+   "date": "2019-04-26",
+   "sort": "2019-04-26",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-04-27"
+  },
+  "Katarina": {
+   "date": "2020-08-19",
+   "sort": "2020-08-19",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-19",
+   "same": true
+  },
+  "Keelhaul Key": {
+   "date": "2025-03-11",
+   "sort": "2025-03-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-12"
+  },
+  "Kel": {
+   "date": "2021-11-24",
+   "sort": "2021-11-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-24",
+   "same": true
+  },
+  "King Bob-omb": {
+   "date": "2025-04-28",
+   "sort": "2025-04-28",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-04-29"
+  },
+  "King Dedede": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
+  },
+  "King Harkinian": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-15"
+  },
+  "Kingsoul": {
+   "date": "2020-07-29",
+   "sort": "2020-07-29",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-30"
   },
   "Knight Lost A Lot": {
    "date": "2021-08-15",
    "sort": "2021-08-15",
    "source": "discord",
-   "status": "owner",
-   "was": "2021-08-21"
+   "status": "same",
+   "was": "2021-08-15",
+   "same": true
+  },
+  "Koops": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
+  },
+  "Koro-Sensei": {
+   "date": "2023-09-08",
+   "sort": "2023-09-08",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-09-09"
+  },
+  "Krabby Patty": {
+   "date": "2023-11-07",
+   "sort": "2023-11-07",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-08"
+  },
+  "Kracko": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Kyle": {
+   "date": "2023-05-31",
+   "sort": "2023-05-31",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-05-31",
+   "same": true
   },
   "Landia": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-03-22"
+  },
+  "Lazy Worm": {
+   "date": "2023-11-22",
+   "sort": "2023-11-22",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-23"
+  },
+  "Leaf Shield": {
+   "date": "2020-09-06",
+   "sort": "2020-09-06",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-07"
+  },
+  "Leeroy Jenkins": {
+   "date": "2019-05-08",
+   "sort": "2019-05-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-05-08",
+   "same": true
+  },
+  "Leshy": {
+   "date": "2023-10-31",
+   "sort": "2023-10-31",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-31",
+   "same": true
+  },
+  "Life Link": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
+  },
+  "Life Shroom": {
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-03-30",
+   "same": true
   },
   "Lightning Bolt": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Lil Spood": {
+   "date": "2025-03-11",
+   "sort": "2025-03-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-12"
+  },
+  "Lit Bob-omb": {
+   "date": "2025-04-28",
+   "sort": "2025-04-28",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-04-29"
+  },
+  "Little Guy": {
+   "date": "2025-02-19",
+   "sort": "2025-02-19",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-02-20"
+  },
+  "Living Bread": {
+   "date": "2021-12-11",
+   "sort": "2021-12-11",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-11",
+   "same": true
+  },
+  "Loony": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-04-05"
   },
   "Lor Starcutter": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-02-25"
   },
   "Lord Crump": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-02-25"
   },
   "Lorian": {
    "date": "2022-09-22",
    "sort": "2022-09-22",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-11-05",
+   "status": "same",
+   "was": "2022-09-22",
+   "same": true,
    "as": "Twin Princes"
+  },
+  "Lost Kin": {
+   "date": "2024-02-03",
+   "sort": "2024-02-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2024-02-04"
   },
   "Lothric": {
    "date": "2022-09-22",
    "sort": "2022-09-22",
    "source": "discord",
-   "status": "owner",
-   "was": "2022-09-27",
+   "status": "same",
+   "was": "2022-09-22",
+   "same": true,
    "as": "Twin Princes"
   },
-  "Macho Grubba": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+  "Love": {
+   "date": "2023-08-15",
+   "sort": "2023-08-15",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2023-08-16"
+  },
+  "Machine Gun": {
+   "date": "2025-03-01",
+   "sort": "2025-03-01",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-02"
+  },
+  "Macho Grubba": {
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-02-25"
+  },
+  "Maggy's Bow": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "old repo",
+   "status": "same",
+   "was": "2023-10-13",
+   "same": true
+  },
+  "Magic Hammer": {
+   "date": "2019-04-28",
+   "sort": "2019-04-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-04-28",
+   "same": true
   },
   "Magic Shield": {
    "date": "2020-07-21",
    "sort": "2020-07-21",
-   "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-21",
+   "same": true
+  },
+  "Magnet-shroom": {
+   "date": "2023-06-03",
+   "sort": "2023-06-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-06-03",
+   "same": true
+  },
+  "Magnum Opus": {
+   "date": "2023-05-26",
+   "sort": "2023-05-26",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-05-26",
+   "same": true
+  },
+  "Magnus von Grapple": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-14"
   },
   "Magolor": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Man-Serpent's Shield": {
+   "date": "2023-04-23",
+   "sort": "2023-04-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-23",
+   "same": true
+  },
+  "Mangle": {
+   "date": "2020-07-13",
+   "sort": "2020-07-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-13",
+   "same": true
+  },
+  "Mantis": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "Mantis Lords": {
+   "date": "2019-02-16",
+   "sort": "2019-02-16",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-02-16",
+   "same": true
+  },
+  "Mari": {
+   "date": "2021-07-31",
+   "sort": "2021-07-31",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-07-31",
+   "same": true
+  },
+  "Marilyn": {
+   "date": "2020-10-11",
+   "sort": "2020-10-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-10-12"
   },
   "Marked For Death": {
    "date": "2023-04-05",
    "sort": "2023-04-05",
    "source": "first repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "same",
+   "was": "2023-04-05",
+   "same": true
   },
   "Marked For Life": {
    "date": "2023-04-05",
    "sort": "2023-04-05",
    "source": "first repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "same",
+   "was": "2023-04-05",
+   "same": true
+  },
+  "Markoth": {
+   "date": "2024-02-03",
+   "sort": "2024-02-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2024-02-04"
+  },
+  "Martlet": {
+   "date": "2024-02-02",
+   "sort": "2024-02-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2024-02-03"
   },
   "Marx": {
    "date": "2020-07-21",
    "sort": "2020-07-21",
    "source": "changelog",
-   "status": "owner",
+   "status": "same",
+   "was": "2020-07-21",
+   "same": true
+  },
+  "Masher": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Masked Dedede": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Massive Moss Charger": {
+   "date": "2025-03-18",
+   "sort": "2025-03-18",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-19"
+  },
+  "Master Hand": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Matterling": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Maxim Tomato": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
   "Mechanical Shield": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-22"
   },
   "Mega Titan": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Meta Knight": {
+   "date": "2020-07-24",
+   "sort": "2020-07-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-24",
+   "same": true
   },
   "Metal General": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Metal Shield": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
-  "Mettaton": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+  "Metronome": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
    "source": "discord",
-   "status": "owner",
+   "status": "pacific",
    "was": "2020-07-22"
+  },
+  "Metronome Lite": {
+   "date": "2020-09-06",
+   "sort": "2020-09-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-06",
+   "same": true
+  },
+  "Mettaton": {
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-02-25"
+  },
+  "Mettaton EX": {
+   "date": "2025-03-02",
+   "sort": "2025-03-02",
+   "source": "git",
+   "status": "pacific",
+   "was": "2025-03-03"
   },
   "Mettaton NEO": {
    "date": "2020-07-28",
    "sort": "2020-07-28",
    "source": "changelog",
-   "status": "owner",
-   "was": "2025-03-03"
+   "status": "same",
+   "was": "2020-07-28",
+   "same": true
+  },
+  "Miasma": {
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-03"
+  },
+  "Michael's Blessing": {
+   "date": "2024-05-10",
+   "sort": "2024-05-10",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-05-10",
+   "same": true
+  },
+  "Mighty Pebble": {
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-02",
+   "same": true
+  },
+  "Miles Edgeworth": {
+   "date": "2023-11-06",
+   "sort": "2023-11-06",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-07"
+  },
+  "Militron": {
+   "date": "2023-11-04",
+   "sort": "2023-11-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-04",
+   "same": true
+  },
+  "Militron (No Armor)": {
+   "date": "2023-11-04",
+   "sort": "2023-11-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-04",
+   "same": true
+  },
+  "Mimic": {
+   "date": "2020-08-09",
+   "sort": "2020-08-09",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-10"
+  },
+  "Minecraft Panda": {
+   "date": "2021-12-12",
+   "sort": "2021-12-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-12",
+   "same": true
+  },
+  "Mini Auto Croissant": {
+   "date": "2025-03-01",
+   "sort": "2025-03-01",
+   "source": "git",
+   "status": "same",
+   "was": "2025-03-01",
+   "same": true
+  },
+  "Mini Bee": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Mini Doomer": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-26"
+  },
+  "Mini Drill": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Minion Dematerializer": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Miracle Matter": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Mol D Truffy": {
+   "date": "2026-01-22",
+   "sort": "2026-01-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2026-01-22",
+   "same": true
+  },
+  "Mom's Knife": {
+   "date": "2023-11-15",
+   "sort": "2023-11-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-16"
+  },
+  "Monkey D Goofy": {
+   "date": "2025-10-10",
+   "sort": "2025-10-10",
+   "source": "git",
+   "status": "same",
+   "was": "2025-10-10",
+   "same": true
+  },
+  "Monkey D Letion": {
+   "date": "2025-04-02",
+   "sort": "2025-04-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-04-03"
+  },
+  "Monkey D Pression": {
+   "date": "2025-03-21",
+   "sort": "2025-03-21",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-21",
+   "same": true
+  },
+  "Monkey D Vour": {
+   "date": "2025-03-18",
+   "sort": "2025-03-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-18",
+   "same": true
+  },
+  "Monster Meat": {
+   "date": "2023-10-15",
+   "sort": "2023-10-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-15",
+   "same": true
+  },
+  "Moose Goose": {
+   "date": "2023-10-15",
+   "sort": "2023-10-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-15",
+   "same": true
+  },
+  "Morpho Knight": {
+   "date": "2025-05-10",
+   "sort": "2025-05-10",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-05-11"
+  },
+  "Morshu": {
+   "date": "2020-08-07",
+   "sort": "2020-08-07",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-07",
+   "same": true
+  },
+  "Mosling": {
+   "date": "2023-10-15",
+   "sort": "2023-10-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-15",
+   "same": true
+  },
+  "Moss Charger": {
+   "date": "2025-03-18",
+   "sort": "2025-03-18",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-19"
+  },
+  "Motivation": {
+   "date": "2023-08-14",
+   "sort": "2023-08-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-08-15"
+  },
+  "Mr Jawsum": {
+   "date": "2021-11-21",
+   "sort": "2021-11-21",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-21",
+   "same": true
+  },
+  "Mr Krabs": {
+   "date": "2022-02-06",
+   "sort": "2022-02-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-02-06",
+   "same": true
+  },
+  "Mr Softener": {
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-03-30",
+   "same": true
+  },
+  "Ms Mowz": {
+   "date": "2023-10-19",
+   "sort": "2023-10-19",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-19",
+   "same": true
+  },
+  "Mushroom": {
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-03-30",
+   "same": true
+  },
+  "Mystery Gift": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
   },
   "NME Salesman": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "NME Stock": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-14"
+  },
+  "NME Stock2": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-15"
   },
   "Nailsage Sly": {
    "date": "2019-06-13",
    "sort": "2019-06-13",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "same",
+   "was": "2019-06-13",
+   "same": true
+  },
+  "Nasty Patty": {
+   "date": "2023-11-07",
+   "sort": "2023-11-07",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-08"
+  },
+  "Nasus": {
+   "date": "2020-07-24",
+   "sort": "2020-07-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-25"
+  },
+  "Nebulous Precipice": {
+   "date": "2021-12-17",
+   "sort": "2021-12-17",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-17",
+   "same": true
   },
   "Necrodeus": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Nefarious Chip": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
+  },
+  "Newspaper": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-05"
+  },
+  "Nightmare": {
+   "date": "2019-02-12",
+   "sort": "2019-02-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-02-13"
+  },
+  "Nightmare King Grimm": {
+   "date": "2020-07-13",
+   "sort": "2020-07-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-13",
+   "same": true
+  },
+  "Niiue": {
+   "date": "2023-04-06",
+   "sort": "2023-04-06",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-04-07"
+  },
+  "Niko": {
+   "date": "2023-07-11",
+   "sort": "2023-07-11",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-07-11",
+   "same": true
   },
   "Nosk": {
-   "date": "2019-03-11",
-   "sort": "2019-03-11",
+   "date": "2019-03-10",
+   "sort": "2019-03-10",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-11"
+  },
+  "Nuclear Proliferation": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
+  },
+  "Old Bonnie": {
+   "date": "2020-07-18",
+   "sort": "2020-07-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-18",
+   "same": true
+  },
+  "Old Chica": {
+   "date": "2020-07-18",
+   "sort": "2020-07-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-18",
+   "same": true
   },
   "Old Foxy": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-31"
   },
   "Old Freddy": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Ominous Red Circle": {
+   "date": "2025-10-30",
+   "sort": "2025-10-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-10-30",
+   "same": true
+  },
+  "Omori": {
+   "date": "2022-02-23",
+   "sort": "2022-02-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-02-23",
+   "same": true
+  },
+  "Oryx the Exalted God": {
+   "date": "2023-09-10",
+   "sort": "2023-09-10",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-09-10",
+   "same": true
+  },
+  "Overseer": {
+   "date": "2023-10-18",
+   "sort": "2023-10-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-18",
+   "same": true
+  },
+  "PANDA Mk A": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "PANDA Mk F": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "PANDA Mk T": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "POW Block": {
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-03-30",
+   "same": true
+  },
+  "Paint Bomb": {
+   "date": "2020-07-27",
+   "sort": "2020-07-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-27",
+   "same": true
+  },
+  "Paint Warrior": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Paintbrush": {
+   "date": "2023-10-28",
+   "sort": "2023-10-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-28",
+   "same": true
+  },
+  "Palace of Shadow": {
+   "date": "2025-03-08",
+   "sort": "2025-03-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-08",
+   "same": true
+  },
+  "Pan D Luffy": {
+   "date": "2026-01-21",
+   "sort": "2026-01-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2026-01-22"
+  },
+  "Pananda Peel": {
+   "date": "2026-02-02",
+   "sort": "2026-02-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2026-02-03"
   },
   "Panda": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-24"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Pandabal": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Pandamonium": {
+   "date": "2020-07-22",
+   "sort": "2020-07-22",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-23"
+  },
+  "Pandanoko": {
+   "date": "2025-07-02",
+   "sort": "2025-07-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-07-03"
+  },
+  "Pandevourer": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
   },
   "Pandora's Box": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Pandora's Gym": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "Panseida": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Papa Chip": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
+  },
+  "Papa's Cookie": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
+  },
+  "Paralyzed": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Party!": {
+   "date": "2025-04-19",
+   "sort": "2025-04-19",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-04-19",
+   "same": true
   },
   "Pep Drink": {
    "date": "Before 2020",
@@ -7197,203 +10054,1966 @@
    "was": "2020-07-22"
   },
   "Pepperoni Pizza": {
-   "date": "2020-07-22",
-   "sort": "2020-07-22",
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "pacific",
+   "was": "2020-07-22"
   },
   "Peppy": {
-   "date": "2020-08-14",
-   "sort": "2020-08-14",
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2022-01-22"
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "Pessimism": {
+   "date": "2025-03-22",
+   "sort": "2025-03-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-22",
+   "same": true
+  },
+  "Peter Panda": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Pie": {
+   "date": "2020-08-08",
+   "sort": "2020-08-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-08",
+   "same": true
+  },
+  "Pike Beam": {
+   "date": "2025-02-28",
+   "sort": "2025-02-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-28",
+   "same": true
+  },
+  "Piko Piko Hammer": {
+   "date": "2025-02-10",
+   "sort": "2025-02-10",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-10",
+   "same": true
+  },
+  "Pile Of Swords": {
+   "date": "2025-04-28",
+   "sort": "2025-04-28",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-04-29"
+  },
+  "Pillow": {
+   "date": "2023-06-03",
+   "sort": "2023-06-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-06-03",
+   "same": true
   },
   "Pix": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-02-25"
+  },
+  "Pizza": {
+   "date": "2023-09-25",
+   "sort": "2023-09-25",
+   "source": "old repo",
+   "status": "same",
+   "was": "2023-09-25",
+   "same": true
+  },
+  "Plague": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Po": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "PoD01Red Bloon": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD02Black Bloon": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD03White Bloon": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD04Zebra Bloon": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD05Lead Bloon": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD06Rainbow Bloon": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD07Ceramic Bloon": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD08MOAB": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD09DDT": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD10BFB": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD11ZOMG": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "PoD12BAD": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-13"
+  },
+  "Poison": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Poison Circle": {
+   "date": "2021-11-27",
+   "sort": "2021-11-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-27",
+   "same": true
+  },
+  "Poison Shiv": {
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-02",
+   "same": true
+  },
+  "Poison Trap": {
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-03"
+  },
+  "Polar Star": {
+   "date": "2025-03-01",
+   "sort": "2025-03-01",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-02"
+  },
+  "Polevaulter Zombie": {
+   "date": "2023-04-01",
+   "sort": "2023-04-01",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-01",
+   "same": true
+  },
+  "Pontiff Sulyvahn": {
+   "date": "2023-10-15",
+   "sort": "2023-10-15",
+   "source": "old repo",
+   "status": "same",
+   "was": "2023-10-15",
+   "same": true
+  },
+  "Poorly Drawn Cabbage": {
+   "date": "2025-02-03",
+   "sort": "2025-02-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-02-04"
   },
   "Portal": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Pot Full of Spiders!": {
+   "date": "2025-03-11",
+   "sort": "2025-03-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-12"
+  },
+  "Potato": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
   },
   "Primal Aspid": {
    "date": "2023-04-29",
    "sort": "2023-04-29",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-10-20"
+   "status": "same",
+   "was": "2023-04-29",
+   "same": true
+  },
+  "Prince of Darkness": {
+   "date": "2020-08-12",
+   "sort": "2020-08-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-12",
+   "same": true
+  },
+  "Project PANDA": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Pure Vessel": {
+   "date": "2020-07-13",
+   "sort": "2020-07-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-13",
+   "same": true
+  },
+  "Puzzled Cat": {
+   "date": "2025-02-28",
+   "sort": "2025-02-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-28",
+   "same": true
+  },
+  "Qiraji Soldier": {
+   "date": "2026-05-28",
+   "sort": "2026-05-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2026-05-28",
+   "same": true
   },
   "Quick Slash": {
-   "date": "2020-07-29",
-   "sort": "2020-07-29",
+   "date": "2020-07-28",
+   "sort": "2020-07-28",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-08-03"
+   "status": "pacific",
+   "was": "2020-07-29"
+  },
+  "Quote": {
+   "date": "2025-03-01",
+   "sort": "2025-03-01",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-02"
+  },
+  "Rapier": {
+   "date": "2020-08-28",
+   "sort": "2020-08-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-28",
+   "same": true
+  },
+  "Rasta Beast": {
+   "date": "2021-05-19",
+   "sort": "2021-05-19",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-05-20"
+  },
+  "Raw Cock": {
+   "date": "2020-10-10",
+   "sort": "2020-10-10",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-10-11"
+  },
+  "Recursion": {
+   "date": "2023-04-05",
+   "sort": "2023-04-05",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-05",
+   "same": true
+  },
+  "Red Knife": {
+   "date": "2024-07-21",
+   "sort": "2024-07-21",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-07-21",
+   "same": true
+  },
+  "Reflection": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-26"
+  },
+  "Regen": {
+   "date": "2022-01-21",
+   "sort": "2022-01-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-22"
   },
   "Regeneration Potion": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-10-04"
+   "status": "pacific",
+   "was": "2019-03-22"
+  },
+  "Regenerative Shield": {
+   "date": "2023-10-29",
+   "sort": "2023-10-29",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-29",
+   "same": true
+  },
+  "Regret": {
+   "date": "2023-08-15",
+   "sort": "2023-08-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-08-15",
+   "same": true
+  },
+  "Reinforced": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "first repo",
+   "status": "same",
+   "was": "2023-04-04",
+   "same": true
+  },
+  "Remote Detonator": {
+   "date": "2023-10-31",
+   "sort": "2023-10-31",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-31",
+   "same": true
+  },
+  "Resentful Glare": {
+   "date": "2022-01-21",
+   "sort": "2022-01-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-22"
+  },
+  "Resting Grounds": {
+   "date": "2023-10-25",
+   "sort": "2023-10-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-25",
+   "same": true
+  },
+  "Restrained": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-04-05"
+  },
+  "Retro Kirby": {
+   "date": "2020-07-24",
+   "sort": "2020-07-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-25"
   },
   "Return to Sender": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Reverse Mushroom": {
+   "date": "2021-11-30",
+   "sort": "2021-11-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-30",
+   "same": true
+  },
+  "Rock Bottom": {
+   "date": "2023-08-31",
+   "sort": "2023-08-31",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-09-01"
+  },
+  "Rogueport": {
+   "date": "2021-12-16",
+   "sort": "2021-12-16",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-16",
+   "same": true
+  },
+  "Rope": {
+   "date": "2020-08-07",
+   "sort": "2020-08-07",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-07",
+   "same": true
+  },
+  "Royal Eradicator Main Cannon": {
+   "date": "2023-11-16",
+   "sort": "2023-11-16",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-16",
+   "same": true
+  },
+  "Rusty Knife": {
+   "date": "2024-07-21",
+   "sort": "2024-07-21",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-07-21",
+   "same": true
+  },
+  "SOMETHING": {
+   "date": "2021-11-23",
+   "sort": "2021-11-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-23",
+   "same": true
+  },
+  "Sabre": {
+   "date": "2020-08-28",
+   "sort": "2020-08-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-28",
+   "same": true
+  },
+  "Sacred Heart": {
+   "date": "2023-11-14",
+   "sort": "2023-11-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-15"
+  },
+  "Salt": {
+   "date": "2025-10-30",
+   "sort": "2025-10-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-10-30",
+   "same": true
+  },
+  "Sandwich of Rejects": {
+   "date": "2024-05-10",
+   "sort": "2024-05-10",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2024-05-11"
+  },
+  "Sans": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
+  },
+  "Scapular": {
+   "date": "2023-06-03",
+   "sort": "2023-06-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-06-03",
+   "same": true
+  },
+  "Second Wind": {
+   "date": "2020-08-02",
+   "sort": "2020-08-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-03"
+  },
+  "Shadow Chopper": {
+   "date": "2020-08-08",
+   "sort": "2020-08-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-08",
+   "same": true
+  },
+  "Shadow Duelist": {
+   "date": "2020-08-08",
+   "sort": "2020-08-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-08",
+   "same": true
+  },
+  "Shadow Miner": {
+   "date": "2020-08-08",
+   "sort": "2020-08-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-08",
+   "same": true
+  },
+  "Shadow Queen": {
+   "date": "2025-03-08",
+   "sort": "2025-03-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-08",
+   "same": true
+  },
+  "Shakra": {
+   "date": "2025-10-31",
+   "sort": "2025-10-31",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-10-31",
+   "same": true
   },
   "Sharp Baldur": {
    "date": "2023-04-29",
    "sort": "2023-04-29",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-04-30"
+   "status": "same",
+   "was": "2023-04-29",
+   "same": true
   },
-  "Smeckeldorfed": {
-   "date": "2023-04-05",
-   "sort": "2023-04-05",
-   "source": "first repo",
-   "status": "owner",
-   "was": "2023-05-10"
+  "Shattered Omori": {
+   "date": "2025-03-12",
+   "sort": "2025-03-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-12",
+   "same": true
   },
-  "Spinni": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
-   "source": "changelog",
-   "status": "owner",
+  "Shell Shield": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
+  },
+  "Shell Shock": {
+   "date": "2023-10-18",
+   "sort": "2023-10-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-18",
+   "same": true
+  },
+  "Shellphone": {
+   "date": "2023-06-03",
+   "sort": "2023-06-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-06-03",
+   "same": true
+  },
+  "Shia Surprise!": {
+   "date": "2023-10-15",
+   "sort": "2023-10-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-15",
+   "same": true
+  },
+  "Shield Master Pi": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Shield of Ogmur": {
+   "date": "2023-09-10",
+   "sort": "2023-09-10",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-09-11"
+  },
+  "Shield of the Guilty": {
+   "date": "2023-04-23",
+   "sort": "2023-04-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-23",
+   "same": true
+  },
+  "Shiny Knife": {
+   "date": "2024-07-21",
+   "sort": "2024-07-21",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-07-21",
+   "same": true
+  },
+  "Shooting Star": {
+   "date": "2020-09-06",
+   "sort": "2020-09-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-06",
+   "same": true
+  },
+  "Sickness": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Sigil of Divinity": {
+   "date": "2025-03-18",
+   "sort": "2025-03-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-18",
+   "same": true
+  },
+  "Sigma": {
+   "date": "2025-05-03",
+   "sort": "2025-05-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-05-03",
+   "same": true
+  },
+  "Silithid": {
+   "date": "2026-05-28",
+   "sort": "2026-05-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2026-05-28",
+   "same": true
+  },
+  "Skeleton Mate": {
+   "date": "2023-10-20",
+   "sort": "2023-10-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-21"
+  },
+  "Skullord": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
-  "Standstill": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
+  "Slugcat": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "Smeckeldorfed": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "first repo",
+   "status": "pacific",
+   "was": "2023-04-05"
+  },
+  "Smoke Bomb": {
+   "date": "2020-09-04",
+   "sort": "2020-09-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-04",
+   "same": true
+  },
+  "Smoldering": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Smorg": {
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-02",
+   "same": true
+  },
+  "Snake": {
+   "date": "2025-03-01",
+   "sort": "2025-03-01",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-02"
+  },
+  "Sniffle Thwomp": {
+   "date": "2023-11-04",
+   "sort": "2023-11-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-04",
+   "same": true
+  },
+  "Snow Angel": {
+   "date": "2021-11-23",
+   "sort": "2021-11-23",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-11-24"
+  },
+  "Snow Bunny": {
+   "date": "2019-04-16",
+   "sort": "2019-04-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-04-17"
+  },
+  "Softened": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Sonic": {
+   "date": "2025-02-09",
+   "sort": "2025-02-09",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-02-10"
+  },
+  "Soul Master": {
+   "date": "2019-03-10",
+   "sort": "2019-03-10",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-03-11"
+  },
+  "Soul Sanctum": {
+   "date": "2023-10-25",
+   "sort": "2023-10-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-25",
+   "same": true
+  },
+  "Spaghetti": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Spamton Neo": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-15"
+  },
+  "Spawn of the Forbidden One": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "Spice": {
+   "date": "2020-09-03",
+   "sort": "2020-09-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-04"
+  },
+  "Spicy Spray": {
+   "date": "2023-10-13",
+   "sort": "2023-10-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-14"
+  },
+  "Spiky Ball Trap": {
+   "date": "2025-03-20",
+   "sort": "2025-03-20",
+   "source": "git",
+   "status": "pacific",
+   "was": "2025-03-21"
+  },
+  "Spinni": {
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-08-02"
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Spiralhorn Shield": {
+   "date": "2023-04-23",
+   "sort": "2023-04-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-23",
+   "same": true
+  },
+  "Spirit Flame": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Springtrap": {
+   "date": "2025-10-17",
+   "sort": "2025-10-17",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-10-17",
+   "same": true
+  },
+  "Spuder": {
+   "date": "2023-10-18",
+   "sort": "2023-10-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-18",
+   "same": true
+  },
+  "Spur": {
+   "date": "2025-03-01",
+   "sort": "2025-03-01",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-02"
+  },
+  "Squash Candy": {
+   "date": "2020-09-06",
+   "sort": "2020-09-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-06",
+   "same": true
+  },
+  "Staff of Purity": {
+   "date": "2023-04-01",
+   "sort": "2023-04-01",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-01",
+   "same": true
+  },
+  "Stalwart Shell": {
+   "date": "2020-07-29",
+   "sort": "2020-07-29",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-30"
+  },
+  "Standstill": {
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
+   "source": "changelog",
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Star Cannon": {
+   "date": "2024-03-22",
+   "sort": "2024-03-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-03-22",
+   "same": true
   },
   "Star Dream": {
-   "date": "2023-09-11",
-   "sort": "2023-09-11",
+   "date": "2023-09-10",
+   "sort": "2023-09-10",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-09-12",
+   "status": "pacific",
+   "was": "2023-09-11",
    "psd": true
   },
+  "Star Jar": {
+   "date": "2023-10-30",
+   "sort": "2023-10-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-30",
+   "same": true
+  },
+  "Star Scraper": {
+   "date": "2023-12-03",
+   "sort": "2023-12-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-12-03",
+   "same": true
+  },
+  "Stay": {
+   "date": "2020-11-23",
+   "sort": "2020-11-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-11-23",
+   "same": true
+  },
+  "Steady Body": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
+  },
   "Steam Sale": {
-   "date": "2023-04-15",
-   "sort": "2023-04-15",
+   "date": "2023-04-14",
+   "sort": "2023-04-14",
    "source": "first repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "pacific",
+   "was": "2023-04-15"
   },
   "Sting Shard": {
    "date": "2020-07-22",
    "sort": "2020-07-22",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-26"
+   "status": "same",
+   "was": "2020-07-22",
+   "same": true
   },
-  "Strawberry Shortcake": {
-   "date": "2019-03-31",
-   "sort": "2019-03-31",
-   "source": "changelog",
-   "status": "owner",
+  "Stingy's Floor and Ceiling": {
+   "date": "2023-11-03",
+   "sort": "2023-11-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-04"
+  },
+  "Stone Golem": {
+   "date": "2025-02-11",
+   "sort": "2025-02-11",
+   "source": "git",
+   "status": "pacific",
+   "was": "2025-02-12"
+  },
+  "Stone Spikes": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
-  "Tainted Cain": {
-   "date": "2026-11-06",
-   "sort": "2026-11-06",
+  "Stopwatch": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
    "source": "discord",
-   "status": "owner",
-   "was": null
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Storo": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Stotch": {
+   "date": "2022-01-13",
+   "sort": "2022-01-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-01-13",
+   "same": true
+  },
+  "Stranger": {
+   "date": "2022-12-06",
+   "sort": "2022-12-06",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-12-07"
+  },
+  "Strawberry Shortcake": {
+   "date": "2019-03-30",
+   "sort": "2019-03-30",
+   "source": "changelog",
+   "status": "pacific",
+   "was": "2019-03-31"
+  },
+  "Stubborn King": {
+   "date": "2023-10-29",
+   "sort": "2023-10-29",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-29",
+   "same": true
+  },
+  "Stubborn Queen": {
+   "date": "2025-10-29",
+   "sort": "2025-10-29",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-10-30"
+  },
+  "Stuffed": {
+   "date": "2025-08-28",
+   "sort": "2025-08-28",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-08-29"
+  },
+  "Suffocation": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "Sumo Panda": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Super Shroom": {
+   "date": "2020-09-06",
+   "sort": "2020-09-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-06",
+   "same": true
+  },
+  "Supreme Jeh'Oul": {
+   "date": "2021-11-27",
+   "sort": "2021-11-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-27",
+   "same": true
+  },
+  "Sweetheart": {
+   "date": "2021-11-23",
+   "sort": "2021-11-23",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-11-24"
+  },
+  "Sword": {
+   "date": "2020-08-28",
+   "sort": "2020-08-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-28",
+   "same": true
+  },
+  "Sword Knight": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Sword of Aeons": {
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-09-03"
+  },
+  "Tai Lung": {
+   "date": "2023-10-15",
+   "sort": "2023-10-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-15",
+   "same": true
+  },
+  "Tainted Bethany": {
+   "date": "2023-09-09",
+   "sort": "2023-09-09",
+   "source": "old repo",
+   "status": "same",
+   "was": "2023-09-09",
+   "same": true,
+   "psd": true
+  },
+  "Tainted Cain": {
+   "date": "2026-11-05",
+   "sort": "2026-11-05",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2026-11-06"
+  },
+  "Tainted Eden": {
+   "date": "2023-11-12",
+   "sort": "2023-11-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-13"
+  },
+  "Tainted Eve": {
+   "date": "2023-11-15",
+   "sort": "2023-11-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-15",
+   "same": true
   },
   "Tainted Forgotten": {
-   "date": "2026-11-06",
-   "sort": "2026-11-06",
+   "date": "2026-11-05",
+   "sort": "2026-11-05",
    "source": "discord",
-   "status": "owner",
-   "was": null
+   "status": "pacific",
+   "was": "2026-11-06"
+  },
+  "Tainted Isaac": {
+   "date": "2023-11-14",
+   "sort": "2023-11-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-14",
+   "same": true
+  },
+  "Tainted Jacob": {
+   "date": "2025-03-12",
+   "sort": "2025-03-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-03-12",
+   "same": true
+  },
+  "Tainted Keeper": {
+   "date": "2023-09-09",
+   "sort": "2023-09-09",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-09-10"
   },
   "Tainted Lazarus": {
-   "date": "2023-09-10",
-   "sort": "2023-09-10",
+   "date": "2023-09-09",
+   "sort": "2023-09-09",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-10-09",
+   "status": "pacific",
+   "was": "2023-09-10",
    "psd": true
   },
   "Tainted Lilith": {
-   "date": "2026-11-06",
-   "sort": "2026-11-06",
+   "date": "2026-11-05",
+   "sort": "2026-11-05",
    "source": "discord",
-   "status": "owner",
-   "was": null
+   "status": "pacific",
+   "was": "2026-11-06"
+  },
+  "Tainted Lost": {
+   "date": "2023-10-05",
+   "sort": "2023-10-05",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-05",
+   "same": true
+  },
+  "Tainted Magdalene": {
+   "date": "2023-11-13",
+   "sort": "2023-11-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-13",
+   "same": true
   },
   "Tainted Soul": {
-   "date": "2026-11-06",
-   "sort": "2026-11-06",
+   "date": "2026-11-05",
+   "sort": "2026-11-05",
    "source": "discord",
-   "status": "owner",
-   "was": null
+   "status": "pacific",
+   "was": "2026-11-06"
+  },
+  "Tanjerin": {
+   "date": "2020-09-02",
+   "sort": "2020-09-02",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-09-02",
+   "same": true
+  },
+  "Taranza": {
+   "date": "2023-05-03",
+   "sort": "2023-05-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-05-04"
+  },
+  "Termination Shock": {
+   "date": "2025-03-20",
+   "sort": "2025-03-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-21"
+  },
+  "Terry Hintz": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-10-15"
+  },
+  "Thalassophobia": {
+   "date": "2022-12-18",
+   "sort": "2022-12-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-12-18",
+   "same": true
+  },
+  "The Abyss Watchers": {
+   "date": "2022-06-16",
+   "sort": "2022-06-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-06-17"
+  },
+  "The Bagel": {
+   "date": "2024-07-23",
+   "sort": "2024-07-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-07-23",
+   "same": true
+  },
+  "The Bank": {
+   "date": "2023-10-25",
+   "sort": "2023-10-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-25",
+   "same": true
+  },
+  "The Beast": {
+   "date": "2025-05-04",
+   "sort": "2025-05-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-05-04",
+   "same": true
+  },
+  "The Big Yellow Cat": {
+   "date": "2021-11-23",
+   "sort": "2021-11-23",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-11-24"
+  },
+  "The Bull": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "The Claw": {
+   "date": "2023-05-10",
+   "sort": "2023-05-10",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-05-10",
+   "same": true
   },
   "The Collector": {
    "date": "2023-04-29",
    "sort": "2023-04-29",
    "source": "old repo",
-   "status": "owner",
-   "was": "2023-11-06",
+   "status": "same",
+   "was": "2023-04-29",
+   "same": true,
    "psd": true
   },
-  "The Great Papyrus": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+  "The Core": {
+   "date": "2023-10-28",
+   "sort": "2023-10-28",
    "source": "discord",
-   "status": "owner",
+   "status": "same",
+   "was": "2023-10-28",
+   "same": true
+  },
+  "The Evil, Fricked Up Cursed Idol": {
+   "date": "2025-02-09",
+   "sort": "2025-02-09",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-09",
+   "same": true
+  },
+  "The Farlands": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
+  },
+  "The Flash": {
+   "date": "2023-10-18",
+   "sort": "2023-10-18",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-18",
+   "same": true
+  },
+  "The Freezer": {
+   "date": "2023-10-25",
+   "sort": "2023-10-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-25",
+   "same": true
+  },
+  "The Gates of Ahn'Qiraj": {
+   "date": "2026-05-28",
+   "sort": "2026-05-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2026-05-28",
+   "same": true
+  },
+  "The Great Papyrus": {
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-02-25"
+  },
+  "The Hive": {
+   "date": "2023-10-24",
+   "sort": "2023-10-24",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-24",
+   "same": true
+  },
+  "The Hydrant": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "The Kestrel": {
+   "date": "2025-02-28",
+   "sort": "2025-02-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-28",
+   "same": true
+  },
+  "The Kingchin": {
+   "date": "2021-11-30",
+   "sort": "2021-11-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-30",
+   "same": true
+  },
+  "The Krusty Krab": {
+   "date": "2023-11-07",
+   "sort": "2023-11-07",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-08"
+  },
+  "The Last Cabbage Merchant": {
+   "date": "2025-02-03",
+   "sort": "2025-02-03",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-02-04"
+  },
+  "The Lich King": {
+   "date": "2023-11-05",
+   "sort": "2023-11-05",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-11-05",
+   "same": true
+  },
+  "The Maelstrom": {
+   "date": "2023-08-14",
+   "sort": "2023-08-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-08-14",
+   "same": true
+  },
+  "The Man Behind The Slaughter": {
+   "date": "2025-10-17",
+   "sort": "2025-10-17",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-10-17",
+   "same": true
+  },
+  "The Maverick": {
+   "date": "2021-11-22",
+   "sort": "2021-11-22",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-11-23"
+  },
+  "The Orb of Confusion": {
+   "date": "2026-02-02",
+   "sort": "2026-02-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2026-02-03"
+  },
+  "The Panda Future": {
+   "date": "2021-04-29",
+   "sort": "2021-04-29",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-04-29",
+   "same": true
+  },
+  "The Patients": {
+   "date": "2022-02-01",
+   "sort": "2022-02-01",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-02-02"
+  },
+  "The Plaguelands": {
+   "date": "2022-01-15",
+   "sort": "2022-01-15",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-16"
+  },
+  "The Puppet": {
+   "date": "2020-07-13",
+   "sort": "2020-07-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-13",
+   "same": true
+  },
+  "The Queen": {
+   "date": "2025-05-03",
+   "sort": "2025-05-03",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-05-03",
+   "same": true
+  },
+  "The Radiance": {
+   "date": "2020-07-13",
+   "sort": "2020-07-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-13",
+   "same": true
+  },
+  "The Ringed City": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
+  },
+  "The Shade": {
+   "date": "2023-11-11",
+   "sort": "2023-11-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-12"
+  },
+  "The Spire": {
+   "date": "2022-01-24",
+   "sort": "2022-01-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-01-25"
+  },
+  "The Structure": {
+   "date": "2023-05-07",
+   "sort": "2023-05-07",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-05-07",
+   "same": true
+  },
+  "The Temple of Ahn'Qiraj": {
+   "date": "2026-05-28",
+   "sort": "2026-05-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2026-05-28",
+   "same": true
+  },
+  "The Thin Man": {
+   "date": "2022-02-05",
+   "sort": "2022-02-05",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-02-05",
+   "same": true
+  },
+  "The Watcher": {
+   "date": "2023-10-30",
+   "sort": "2023-10-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-30",
+   "same": true
+  },
+  "Thickened": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-04",
+   "same": true
+  },
+  "Thinned": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-04-05"
+  },
+  "Thorns of Agony": {
+   "date": "2023-10-14",
+   "sort": "2023-10-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-14",
+   "same": true
+  },
+  "Thunder Thighs": {
+   "date": "2023-11-22",
+   "sort": "2023-11-22",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2023-11-23"
+  },
+  "Thunderfury Blessed Blade of the Windseeker": {
+   "date": "2024-07-24",
+   "sort": "2024-07-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2024-07-25"
+  },
+  "Time Riddle": {
+   "date": "2020-08-21",
+   "sort": "2020-08-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-22"
+  },
+  "Titanium Sword": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Tomato": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
    "was": "2020-07-22"
   },
   "Tomorrow I'll": {
-   "date": "2020-07-22",
-   "sort": "2020-07-22",
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
    "source": "discord",
-   "status": "owner",
-   "was": "2023-04-11"
-  },
-  "Toriel": {
-   "date": "2019-05-14",
-   "sort": "2019-05-14",
-   "source": "changelog",
-   "status": "owner",
+   "status": "pacific",
    "was": "2020-07-22"
   },
-  "Undyne": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+  "Toriel": {
+   "date": "2019-05-13",
+   "sort": "2019-05-13",
+   "source": "changelog",
+   "status": "pacific",
+   "was": "2019-05-14"
+  },
+  "Toy Bonnie": {
+   "date": "2020-07-12",
+   "sort": "2020-07-12",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-18"
+   "status": "same",
+   "was": "2020-07-12",
+   "same": true
+  },
+  "Toy Chica": {
+   "date": "2020-07-12",
+   "sort": "2020-07-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-12",
+   "same": true
+  },
+  "Toy Freddy": {
+   "date": "2020-07-12",
+   "sort": "2020-07-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-12",
+   "same": true
+  },
+  "Traitor Lord": {
+   "date": "2019-06-13",
+   "sort": "2019-06-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-06-13",
+   "same": true
+  },
+  "Trick Room": {
+   "date": "2025-04-19",
+   "sort": "2025-04-19",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-04-19",
+   "same": true
+  },
+  "Turtle": {
+   "date": "2021-11-22",
+   "sort": "2021-11-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-22",
+   "same": true
+  },
+  "Tutankoopa": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Twilit Woods": {
+   "date": "2021-12-26",
+   "sort": "2021-12-26",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-26",
+   "same": true
+  },
+  "Twin Emperors": {
+   "date": "2022-06-16",
+   "sort": "2022-06-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2022-06-17"
+  },
+  "Tyler": {
+   "date": "2019-05-02",
+   "sort": "2019-05-02",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-05-03"
+  },
+  "Unbread Twins": {
+   "date": "2021-12-12",
+   "sort": "2021-12-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-12-12",
+   "same": true
+  },
+  "Unbreakable Heart": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-04",
+   "same": true
+  },
+  "Unbreakable Strength": {
+   "date": "2023-04-04",
+   "sort": "2023-04-04",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-04-04",
+   "same": true
+  },
+  "Undyne": {
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-02-25"
+  },
+  "Utica Stock Exchange": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
+  },
+  "Uumuu": {
+   "date": "2019-05-25",
+   "sort": "2019-05-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-05-25",
+   "same": true
   },
   "Vigor": {
    "date": "2023-04-04",
    "sort": "2023-04-04",
    "source": "first repo",
-   "status": "owner",
-   "was": "2023-11-06"
+   "status": "same",
+   "was": "2023-04-04",
+   "same": true
+  },
+  "Vivian": {
+   "date": "2023-10-30",
+   "sort": "2023-10-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-30",
+   "same": true
+  },
+  "Voidwalker": {
+   "date": "2021-09-09",
+   "sort": "2021-09-09",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-09-09",
+   "same": true
+  },
+  "Volt Shroom": {
+   "date": "2019-04-16",
+   "sort": "2019-04-16",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-04-17"
+  },
+  "WX-78": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Waddle Dee": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Wand of Obesity": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Warcraftian Druid": {
+   "date": "2021-11-22",
+   "sort": "2021-11-22",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-11-23"
+  },
+  "Warcraftian Hunter": {
+   "date": "2021-11-12",
+   "sort": "2021-11-12",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-12",
+   "same": true
+  },
+  "Warcraftian Mage": {
+   "date": "2021-11-11",
+   "sort": "2021-11-11",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-11",
+   "same": true
+  },
+  "Warcraftian Paladin": {
+   "date": "2021-11-11",
+   "sort": "2021-11-11",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-11",
+   "same": true
+  },
+  "Warcraftian Priest": {
+   "date": "2021-09-13",
+   "sort": "2021-09-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-09-13",
+   "same": true
+  },
+  "Warcraftian Rogue": {
+   "date": "2021-09-08",
+   "sort": "2021-09-08",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-09-08",
+   "same": true
+  },
+  "Warcraftian Shaman": {
+   "date": "2021-08-20",
+   "sort": "2021-08-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-08-21"
+  },
+  "Warcraftian Warlock": {
+   "date": "2021-09-09",
+   "sort": "2021-09-09",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-09-09",
+   "same": true
+  },
+  "Warcraftian Warrior": {
+   "date": "2021-09-12",
+   "sort": "2021-09-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-09-13"
+  },
+  "Warrior Dee": {
+   "date": "2020-07-22",
+   "sort": "2020-07-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-22",
+   "same": true
+  },
+  "Water Totem": {
+   "date": "2021-08-20",
+   "sort": "2021-08-20",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2021-08-21"
   },
   "Watermelon": {
-   "date": "2019-03-22",
-   "sort": "2019-03-22",
+   "date": "2019-03-21",
+   "sort": "2019-03-21",
    "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-03-22"
+  },
+  "Watermelon2": {
+   "date": "2026-01-14",
+   "sort": "2026-01-14",
+   "source": "git",
+   "status": "pacific",
+   "was": "2026-01-15"
+  },
+  "Waxwell": {
+   "date": "2019-05-15",
+   "sort": "2019-05-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-05-15",
+   "same": true
+  },
+  "Wendy": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
+  "Whacka Bump": {
+   "date": "2024-07-23",
+   "sort": "2024-07-23",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-07-23",
+   "same": true
   },
   "Wham Bam Bone": {
    "date": "Before 2020",
@@ -7402,41 +12022,232 @@
    "status": "earlier",
    "was": "2020-07-22"
   },
+  "Wham Bam Jewel": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Wham Bam Rock": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "Whelp": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Whippy D Cream": {
+   "date": "2025-03-21",
+   "sort": "2025-03-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-03-22"
+  },
+  "Whispy Woods": {
+   "date": "2020-07-15",
+   "sort": "2020-07-15",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-15",
+   "same": true
+  },
+  "White Defender": {
+   "date": "2024-01-14",
+   "sort": "2024-01-14",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-01-14",
+   "same": true
+  },
+  "White Space": {
+   "date": "2022-01-16",
+   "sort": "2022-01-16",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-01-16",
+   "same": true
+  },
+  "Wickerbottom": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "Wigfrid": {
+   "date": "2019-05-05",
+   "sort": "2019-05-05",
+   "source": "discord",
+   "status": "same",
+   "was": "2019-05-05",
+   "same": true
+  },
+  "Wilson": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
+  },
   "Withering": {
-   "date": "2020-08-14",
-   "sort": "2020-08-14",
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
    "source": "changelog",
-   "status": "owner",
-   "was": "2022-01-16"
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "Wokey D Pronouns": {
+   "date": "2024-08-06",
+   "sort": "2024-08-06",
+   "source": "discord",
+   "status": "same",
+   "was": "2024-08-06",
+   "same": true
+  },
+  "Wolf": {
+   "date": "2021-11-22",
+   "sort": "2021-11-22",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-11-22",
+   "same": true
+  },
+  "Wolfgang": {
+   "date": "2020-07-25",
+   "sort": "2020-07-25",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-25",
+   "same": true
+  },
+  "Wooden Spikes": {
+   "date": "2020-07-21",
+   "sort": "2020-07-21",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-22"
+  },
+  "X-Fist": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-08-14"
+  },
+  "YIIK Panda": {
+   "date": "2022-05-30",
+   "sort": "2022-05-30",
+   "source": "discord",
+   "status": "same",
+   "was": "2022-05-30",
+   "same": true
+  },
+  "Yin Yarn": {
+   "date": "2019-02-12",
+   "sort": "2019-02-12",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2019-02-13"
+  },
+  "Yoshi Kid": {
+   "date": "2023-10-27",
+   "sort": "2023-10-27",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-27",
+   "same": true
+  },
+  "You are going DOWN you Sputnik!": {
+   "date": "2025-05-11",
+   "sort": "2025-05-11",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-05-12"
+  },
+  "Z!!!!!": {
+   "date": "2025-10-09",
+   "sort": "2025-10-09",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2025-10-10"
   },
   "Ze'mer": {
-   "date": "2023-03-25",
-   "sort": "2023-03-25",
+   "date": "2023-03-24",
+   "sort": "2023-03-24",
    "source": "first repo",
-   "status": "owner",
-   "was": "2023-04-18",
+   "status": "pacific",
+   "was": "2023-03-25",
    "psd": true
+  },
+  "Zenith Martlet": {
+   "date": "2025-02-28",
+   "sort": "2025-02-28",
+   "source": "discord",
+   "status": "same",
+   "was": "2025-02-28",
+   "same": true
   },
   "Zero": {
    "date": "2020-07-21",
    "sort": "2020-07-21",
-   "source": "changelog",
-   "status": "owner",
-   "was": "2020-07-22"
+   "source": "discord",
+   "status": "same",
+   "was": "2020-07-21",
+   "same": true
   },
   "Zero Override": {
-   "date": "2019-02-25",
-   "sort": "2019-02-25",
+   "date": "2019-02-24",
+   "sort": "2019-02-24",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-07-22"
+   "status": "pacific",
+   "was": "2019-02-25"
   },
   "Zess Deluxe": {
-   "date": "2020-07-28",
-   "sort": "2020-07-28",
+   "date": "2020-07-27",
+   "sort": "2020-07-27",
    "source": "discord",
-   "status": "owner",
-   "was": "2020-08-08"
+   "status": "pacific",
+   "was": "2020-07-28"
+  },
+  "Zess Dynamite": {
+   "date": "2020-07-27",
+   "sort": "2020-07-27",
+   "source": "discord",
+   "status": "pacific",
+   "was": "2020-07-28"
+  },
+  "Zigg": {
+   "date": "2021-05-19",
+   "sort": "2021-05-19",
+   "source": "discord",
+   "status": "same",
+   "was": "2021-05-19",
+   "same": true
+  },
+  "Zoltan": {
+   "date": "2023-10-19",
+   "sort": "2023-10-19",
+   "source": "discord",
+   "status": "same",
+   "was": "2023-10-19",
+   "same": true
+  },
+  "Zompanda": {
+   "date": "2020-08-13",
+   "sort": "2020-08-13",
+   "source": "discord",
+   "status": "same",
+   "was": "2020-08-13",
+   "same": true
   }
  }
 }

@@ -267,7 +267,7 @@
     }
    },
    "changes": {
-    "ability_change": "removed"
+    "ability_change": "same"
    },
    "minor": false,
    "w": 720,

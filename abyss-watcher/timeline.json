@@ -105,7 +105,7 @@
     }
    },
    "changes": {
-    "ability_change": "formatting"
+    "ability_change": "same"
    },
    "minor": false,
    "w": 350,
@@ -316,7 +316,7 @@
      ],
      "drop": []
     },
-    "ability_change": "removed"
+    "ability_change": "same"
    },
    "minor": false,
    "w": 720,
@@ -795,9 +795,9 @@
   }
  ],
  "created": {
-  "date": "2022-06-17",
-  "sort": "2022-06-17",
+  "date": "2022-06-16",
+  "sort": "2022-06-16",
   "source": "discord",
-  "status": "same"
+  "status": "pacific"
  }
 }
