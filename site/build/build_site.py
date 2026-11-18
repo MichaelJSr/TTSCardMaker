@@ -3191,7 +3191,8 @@ def parse_history(text, last=None, renamed=None, sweeps=None):
     """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, committer time, author
     name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins]).
     A bot commit's change of a PNG its Recompressed trailers name is left out: the same image, losslessly smaller.
-    last (a dict): filled with {path: (commit that last changed it, its blob then)}, recompressions included.
+    last (a dict): filled with {(path, blob): the newest commit that made that blob there}, recompressions included (so a
+    merge that kept the older side's file still has a commit for it).
     renamed (a dict): filled with {sha: {new path: old path}} from a bot commit's Renamed trailers.
     sweeps (a set): filled with the shas of commits with a Card-sweep trailer."""
     commits = []
@@ -3222,7 +3223,7 @@ def parse_history(text, last=None, renamed=None, sweeps=None):
             if len(parts) >= 5:
                 entries.append((parts[4], parts[2], parts[3], unquote_path(path)))
                 if last is not None and parts[4] != "D":
-                    last.setdefault(entries[-1][3], (sha, parts[3]))
+                    last.setdefault((entries[-1][3], parts[3]), sha)
         if same and name.lower() == BOT_AUTHOR.lower():
             entries = [e for e in entries if not (e[0] == "M" and e[3] in same)]
         commits.append((sha, int(ts or 0), name, email, subject, entries, editors))
@@ -5293,7 +5294,7 @@ def main():
             by_png.setdefault(e["png"], []).append(e)
     last, renamed, sweeps, pairs = {}, {}, set(), {}
     commits = git_history(last, renamed, sweeps)
-    pin = lambda path: last[path][0] if path in tree and last.get(path, (None, None))[1] == tree[path] else None
+    pin = lambda path: last.get((path, tree[path])) if path in tree else None
     for e in cards:                               # deck.js: the TTS save's pinned links (AutoCroissant tts_save _pin_links)
         if e.get("png") and pin(e["png"]):
             e["pin"] = pin(e["png"])

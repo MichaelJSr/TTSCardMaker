@@ -1188,7 +1188,9 @@ relies on:
   image versions' copies keep the old 360 settings under their own tag (`VERSION_QUALITY`, `version_tag()`, cards.json
   `thumbs.v`, app.js `versionCopy`), so none of the ~5,000 is made again.
 - Card pages' og:image (2026-11-11): the card's PNG on raw GitHub at the commit that last changed it (`pin`, as the
-  TTS save's links), else at the build's commit (`card_raw`); no width/height (link previews measure it). The 480 px
+  TTS save's links), else at the build's commit (`card_raw`); no width/height (link previews measure it). Since
+  2026-11-18 `pin` is the newest commit that made the tree's blob (parse_history `last` by path and blob): a merge that
+  kept the older side's PNG (a7b787f0, Chris & Jordi) left it unpinned, so every build's page changed and redeployed. The 480 px
   `<img>-og.jpg` went: 788 files, 57 MB of every Pages artifact (169 -> 112 MB deflated) and of the image cache
   (147 -> 89 MB). PNGs: median 1.7 MB, max 4.8 MB (X's limit 5 MB).
 - 96 px (2026-11-10): `SMALL_SIZES` {96: (720, 60)}, made from the cached 720 px AVIF (no PNG download)
