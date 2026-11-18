@@ -5052,9 +5052,32 @@ def data_stamps(data, folders):
     return out
 
 
-def version_files(versions):
+def card_sections(cid, history, balance):
+    """A card's own part of history.json and analytics.json, for its versions file (app.js loadVersions: its History,
+    Balance and recorded changes without the all-cards files): texts (its rows, c/n into shas, its commits) and bal (its
+    row, the changes' c into its commits; its cohort, minCohort)."""
+    out = {}
+    rows = history.get(cid)
+    if rows:
+        idx = sorted({v[k] for v in rows for k in ("c", "n") if k in v})
+        at = {i: n for n, i in enumerate(idx)}
+        out["texts"] = [{**v, **{k: at[v[k]] for k in ("c", "n") if k in v}} for v in rows]
+        out["shas"] = [history["_shas"][i] for i in idx]
+    a = balance.get("cards", {}).get(cid)
+    if a:
+        idx = sorted({r["c"] for r in a.get("changes", []) if "c" in r})
+        at = {i: n for n, i in enumerate(idx)}
+        card = {**a, "changes": [{**r, "c": at[r["c"]]} if "c" in r else r for r in a["changes"]]} if "changes" in a else a
+        cohorts = balance.get("cohorts", {})
+        out["bal"] = {"card": card, "cohorts": {a["cohort"]: cohorts[a["cohort"]]} if a.get("cohort") in cohorts else {},
+                      "minCohort": balance.get("minCohort"), "commits": [balance["commits"][i] for i in idx]}
+    return out
+
+
+def version_files(versions, sections=lambda cid: {}):
     """data/versions/<id>.json, versions.json cut to one card (app.js loadVersions, on the card's open): repo, visible,
-    hb, that card's commits, its rows (indexes into those), minor, early; for every card and Morgue entry with rows."""
+    hb, that card's commits, its rows (indexes into those), minor, early; for every card and Morgue entry with rows;
+    sections(cid): more of the card's own (card_sections)."""
     shared = {k: versions[k] for k in ("repo", "visible", "hb") if k in versions}
     out = {}
     for cid in sorted(set(versions["cards"]) | set(versions.get("early", {}))):
@@ -5064,6 +5087,7 @@ def version_files(versions):
         for part in ("minor", "early"):
             if cid in versions.get(part, {}):
                 one[part] = {cid: versions[part][cid]}
+        one.update(sections(cid))
         out[f"{cid}.json"] = json.dumps(one, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     return out
 
@@ -5624,7 +5648,7 @@ def main():
         for name, blob in details.items():
             with open(os.path.join(DIST, "data", "details", name), "wb") as fh:
                 fh.write(blob)
-    per_card = version_files(versions)        # one small file per card, fetched when it opens (Image versions)
+    per_card = version_files(versions, lambda cid: card_sections(cid, history, balance))   # one small file per card, fetched when it opens (Image versions, History, Balance)
     if per_card:
         os.makedirs(os.path.join(DIST, "data", "versions"))
         for name, blob in per_card.items():

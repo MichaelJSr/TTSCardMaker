@@ -39,6 +39,7 @@ const S = {
   season: "",                                              // the Stats SpongeBob chart's picked season (this session)
   seriesMode: "",                                          // the Stats series chart's Series / Subseries (this session)
   changelog: {},                                           // the Changes tabs' files by name (loadChangelog)
+  cardBal: new Map(),                                      // a card's Balance row from its versions file (loadVersions): analytics.json's shape
   selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
   toTop: false,                                            // a Stats chart link was followed: the grid opens at its top
   notPick: new Set(),                                      // series, subseries, author: ≠ pressed with nothing picked yet
@@ -132,7 +133,7 @@ const loadBook = () => (bookP ||= Promise.all([getJson("rules.json"), (early("ru
   bookChapters();
 }).catch(e => { bookP = null; throw e; }));
 const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
-  for (const c of S.cards) if (h[c.id]) c.history = h[c.id];
+  for (const c of S.cards) if (h[c.id]) { c.history = h[c.id]; delete c.historyShas; }   // over a versions file's (the same rows)
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
 let recentP = null;                                       // Recently updated's earlier texts (build_site recent_texts): cards.json's recent, else this
@@ -141,7 +142,9 @@ const COPIES = "https://raw.githubusercontent.com";       // the older versions'
 const preconnect = href => document.querySelector(`link[rel="preconnect"][href="${href}"]`)
   || document.head.append(Object.assign(document.createElement("link"), { rel: "preconnect", href }));
 // Image versions: data/versions/<id>.json, one card's part of the versions (build_site version_files), merged into
-// S.versions (its commits' indexes moved past those in); with it the copies' host is connected, so a pick skips TLS setup
+// S.versions (its commits' indexes moved past those in); with it the copies' host is connected, so a pick skips TLS setup.
+// It also holds the card's texts (c.history, its own shas) and Balance row (S.cardBal: analytics.json's shape cut to the
+// card), so its dialog needs neither history.json nor analytics.json (build_site card_sections)
 const versionsP = new Map(), versionsDone = new Set();
 const versionsIn = c => versionsDone.has(c.id);
 const loadVersions = c => versionsP.get(c.id) || versionsP.set(c.id, (preconnect(COPIES), getJson(`versions/${encodeURIComponent(c.id)}.json`)).then(d => {
@@ -150,6 +153,8 @@ const loadVersions = c => versionsP.get(c.id) || versionsP.set(c.id, (preconnect
   A.commits.push(...d.commits);
   for (const [id, rows] of Object.entries(d.cards || {})) A.cards[id] = rows.map(([ci, ...rest]) => [ci + off, ...rest]);
   Object.assign(A.minor, d.minor); Object.assign(A.early, d.early); versionsDone.add(c.id);
+  if (d.texts && !c.history) { c.history = d.texts; c.historyShas = d.shas || []; }
+  if (d.bal) S.cardBal.set(c.id, { cards: { [c.id]: d.bal.card }, cohorts: d.bal.cohorts, minCohort: d.bal.minCohort, commits: d.bal.commits });
 }).catch(e => { versionsP.delete(c.id); throw e; })).get(c.id);
 // loaded on first use (esbuild chunks; without esbuild, the modules): charts.js (stats.js, balance.js, insights.js) for the Stats
 // page and the grid filters its charts link to; balance.js alone for the cards' Balance blocks; profile.js for the People tab
@@ -1093,12 +1098,26 @@ function openCard(id, showDetails = false) {
       if (S.data.heavy.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
   };
   const heavyPaths = () => { if (S.data.heavy.length && (c.iv && !versionsIn(c) || theirs && !versionsIn(o))) fillVersions(); };
-  nearby.disconnect();                                   // history.json, analytics.json once their slots are within a screen (phones: far down)
-  if (c.hv && !c.history) nearby.on(["#card-changes", "#history-slot"], () => loadHistory().then(() => { fillHistory(); fillBalance(); heavyPaths(); }, () => {}));
-  else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) nearby.on(["#card-changes"], () => loadHistory().then(() => { fillBalance(); heavyPaths(); }, () => {}));   // its original's texts
-  else if (c.history || balanceOf(c).history) nearby.on(["#card-changes", "#history-slot"], heavyPaths);   // its texts in already
-  else if (hasBalance(c)) nearby.on(["#card-changes"], heavyPaths);                                      // stats changes only
-  if (hasBalance(c) && !S.analytics) nearby.on(["#card-balance", "#card-changes"], () => loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; }));
+  const noBalance = () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; };
+  const allCards = () => {                               // history.json, analytics.json once their slots are within a screen (phones: far down)
+    if (c.hv && !c.history) nearby.on(["#card-changes", "#history-slot"], () => loadHistory().then(() => { fillHistory(); fillBalance(); heavyPaths(); }, () => {}));
+    else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) nearby.on(["#card-changes"], () => loadHistory().then(() => { fillBalance(); heavyPaths(); }, () => {}));   // its original's texts
+    else if (c.history || balanceOf(c).history) nearby.on(["#card-changes", "#history-slot"], heavyPaths);   // its texts in already
+    else if (hasBalance(c)) nearby.on(["#card-changes"], heavyPaths);                                      // stats changes only
+    if (hasBalance(c) && !S.analytics) nearby.on(["#card-balance", "#card-changes"], () => loadAnalytics().then(fillBalance, noBalance));
+  };
+  nearby.disconnect();
+  // a card with a versions file (not a duplicate): its texts and Balance row come with it, balance.js once its slots are
+  // near; a file that failed or lacks them: the all-cards files, as before
+  const viaFile = (c.iv || c.ive) && !c.dup && !S.history;
+  if (!viaFile) allCards();
+  else loadVersions(c).then(() => {
+    if (parseHash().arg !== c.id) return;
+    if (c.hv && !c.history || hasBalance(c) && !S.analytics && !S.cardBal.has(c.id)) { allCards(); return; }
+    nearby.on(["#card-changes", "#history-slot"], () => { fillHistory(); heavyPaths(); });
+    if (hasBalance(c) && (Bal || S.analytics)) fillBalance();                   // balance.js in already: at once
+    else if (hasBalance(c)) nearby.on(["#card-balance", "#card-changes", "#history-slot"], () => loadBalance().then(fillBalance, noBalance));   // History too: its fill moves them up
+  }, () => { if (parseHash().arg === c.id) allCards(); });
   if ((c.iv || c.ive) && !versionsIn(c)) { const box = $(".ver-box", modal);   // its versions file now (~1 KB), the list once the box is open (closed on a phone)
     loadVersions(c).catch(() => {});
     if (!box || box.open) fillVersions(); else box.addEventListener("toggle", fillVersions, { once: true }); }
@@ -1242,7 +1261,7 @@ function pinVersion(c, i) {
   const was = verBase?.id === c.id ? verBase.i : -1, picked = $(".ver-item[aria-pressed='true']", modal);
   const again = () => { const p = $(".ver-item[aria-pressed='true']", modal); if (p && parseHash().arg === c.id) showVersion(c, +p.dataset.i); };
   if (was !== i) {                                       // what an older version here had: the recorded changes, its text then
-    if (!S.analytics) loadAnalytics().then(again, () => {});
+    if (!S.analytics && !versionsIn(balanceOf(c))) loadAnalytics().then(again, () => {});   // else its versions file's row (fieldsAt)
     if (c.hv && !c.history) loadHistory().then(again, () => {});
   }
   verBase = was === i ? null : { id: c.id, i };
@@ -1275,8 +1294,9 @@ function fieldsAt(c, vs, i) {
   if (i === 0) return now;
   // an older version here: its text then; stars, stats and types rolled back through the card's recorded changes after it
   const out = { name: undefined, stars: now.stars, types: now.types && [...now.types], stats: now.stats && [...now.stats], ability: textAt(c, v.ts) ?? undefined };
-  const rows = (S.analytics?.cards?.[balanceOf(c).id]?.changes || []).filter(r => !r.early && r.ts > v.ts + 3600);
-  if (!S.analytics) { out.stars = out.types = out.stats = undefined; return out; }
+  const bo = balanceOf(c), A = S.analytics || S.cardBal.get(bo.id) || (versionsIn(bo) ? { cards: {} } : null);   // its versions file's row
+  const rows = (A?.cards?.[bo.id]?.changes || []).filter(r => !r.early && r.ts > v.ts + 3600);
+  if (!A) { out.stars = out.types = out.stats = undefined; return out; }
   for (const r of rows) {                                // newest first: each undone
     if (r.approx && Math.abs(r.ts - v.ts) < 86400) { if (r.stats) out.stats = undefined; if (r.stars) out.stars = undefined; if (r.types) out.types = undefined; continue; }
     if (r.stats && out.stats !== undefined) out.stats = r.stats[0] ? [...r.stats[0]] : null;
@@ -1369,16 +1389,16 @@ for (const end of ["pointercancel", "lostpointercapture"]) modal.addEventListene
 const canRevert = c => editing() && (!c.dup || !!c.variantOf || pictureNumber(c.psd, c.png) !== null);
 /** c's PNG path at commit ref (time ts): its image version there or the newest before it (renames followed), else today's */
 const pngAt = (c, ref, ts) => { const vs = versionList(c).filter(v => v.sha); return (vs.find(v => v.sha.startsWith(ref)) || vs.find(v => v.ts <= ts) || vs[vs.length - 1])?.path || c.png; };
-const historyOf = c => historyHtml(c, S.data.repo, S.history?._shas, canRevert(c), (ref, ts) => pngAt(c, ref, ts));
+const historyOf = c => historyHtml(c, S.data.repo, c.historyShas || S.history?._shas, canRevert(c), (ref, ts) => pngAt(c, ref, ts));
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
 const hasBalance = c => !!balanceOf(c).balance;
 function balanceHtml(c, part = "balance") {          // part: "balance" (the line) or "changes" (the recorded changes)
   if (!hasBalance(c)) return "";
-  if (!S.analytics) return part === "balance" ? `<h3>Balance</h3><p class="muted">Loading…</p>` : "";
-  const o = balanceOf(c);
+  const o = balanceOf(c), A = S.analytics || (Bal && S.cardBal.get(o.id));   // all cards', else its versions file's
+  if (!A) return part === "balance" ? `<h3>Balance</h3><p class="muted">Loading…</p>` : "";
   const texts = o.hv && !o.history ? null : (o.history || []).map(v => v.ability).concat(o.ability || "");
-  return (part === "balance" ? Bal.balanceBlock : Bal.changesBlock)(c, S.analytics, { texts, repo: S.data.repo, pathAt: (ref, ts) => pngAt(o, ref, ts) });
+  return (part === "balance" ? Bal.balanceBlock : Bal.changesBlock)(c, A, { texts, repo: S.data.repo, pathAt: (ref, ts) => pngAt(o, ref, ts) });
 }
 function closeModal() {
   if (modal.hidden) return;
