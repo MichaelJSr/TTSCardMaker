@@ -1087,6 +1087,7 @@ function openCard(id, showDetails = false) {
   const fillVersions = () => {
     if (theirs && !versionsIn(o)) loadVersions(o).then(() => { if (S.data.heavy.length && S.analytics) fillBalance(); }, () => {});
     if (c.iv || c.ive) loadVersions(c).then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c, versionsOpen(c.id));
+      if (c.hv && !c.history) loadHistory().catch(() => {});   // the compare's texts, before the first pick
       if (S.data.heavy.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
   };
   const heavyPaths = () => { if (S.data.heavy.length && (c.iv && !versionsIn(c) || theirs && !versionsIn(o))) fillVersions(); };
