@@ -1935,7 +1935,9 @@ new MutationObserver(() => {
   const back = o?.isConnected ? o : (o?.dataset?.open && $(`[data-open="${CSS.escape(o.dataset.open)}"]`, view)) || null;   // a redrawn grid: the card's new tile
   if ((!at || at === document.body) && back && !(back.matches("input, textarea") && matchMedia("(pointer: coarse)").matches)) back.focus({ preventScroll: true });
 }).observe(modal, { attributes: true, attributeFilter: ["hidden"], childList: true });   // childList: one dialog swapped for another
-function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
+function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`;
+  const h = $(".dialog > :is(h2, h3)", modal); if (h) h.id = "dialog-title";   // its heading names it (screen readers)
+  modal.hidden = false; }
 
 // the rulebook editor (rulebook-edit.js): a chapter's text beside its page, published as one commit
 let rbEditP = null;
