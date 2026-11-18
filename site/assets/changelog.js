@@ -165,19 +165,21 @@ export function groupHtml(group, repo, kinds = null) {
   const folded = minor.length ? `<details class="cl-sec cl-minor"><summary data-tip="Small picture changes and text changes in formatting only: not posted in Discord">${plural(minor.length, "minor change")}</summary><ul class="cl-lines" data-fold="${folds.push(minor) - 1}"></ul></details>` : "";
   return `<section class="panel cl-push" data-at="${esc(link || `${who} ${at}`)}"><h3>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${head}</a>` : head}<span class="muted">: ${esc(countsOf(group))}</span></h3>${secs}${tail}${folded}</section>`;
 }
-/** Groups under a heading per day (Pacific), newest first by time (a push split across builds, or one older than the
-    last build's, keeps one heading per day), then by seq */
-function daysHtml(groups, repo, kinds) {
-  let day = "", out = "";
-  const byTime = [...groups].reverse().map((g, i) => [g, whoOf(g)[1] || 0, i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]);
-  for (const [g] of byTime) {
+/** The groups in drawing order: newest first by time (a push split across builds, or one older than the last build's,
+    keeps one heading per day), then by seq */
+const byTime = groups => [...groups].reverse().map((g, i) => [g, whoOf(g)[1] || 0, i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map(x => x[0]);
+/** Groups under a heading per day (Pacific), one part per block (its day's heading before it); skip: the first ones,
+    drawn already (a head file's), only their days followed */
+function* daysParts(groups, repo, kinds, skip = 0) {
+  let day = "", n = 0;
+  for (const g of byTime(groups)) {
+    const at = whoOf(g)[1], key = dayKey(at);
+    if (n++ < skip) { if (!kinds || g.some(e => kinds.includes(e.kind))) day = key; continue; }
     const html = groupHtml(g, repo, kinds);
     if (!html) continue;
-    const at = whoOf(g)[1], key = dayKey(at);
-    if (key !== day) { out += `<h3 class="cl-day">${esc(dayLabel(at))}</h3>`; day = key; }
-    out += html;
+    yield (key !== day ? `<h3 class="cl-day">${esc(dayLabel(at))}</h3>` : "") + html;
+    day = key;
   }
-  return out;
 }
 const CHIP_NOUN = { kind: ["change"], tag: ["card"], via: ["batch", "batches"] };   // what a chip's count counts
 const chips = (options, selected, counts, key) => `<div class="chips">${options.map(([v, label]) => `<button type="button" class="chip${selected.includes(v) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}" aria-pressed="${selected.includes(v)}" aria-label="${esc(label)}, ${plural(counts.get(v) || 0, ...CHIP_NOUN[key])}">${esc(label)}<span class="n" aria-hidden="true">${counts.get(v) || 0}</span></button>`).join("")}</div>`;
@@ -195,20 +197,28 @@ function sourceHtml(C) {
 /** A file renamed in its own folder, the card's name kept (cardfix2's underscores, 11-13): file housekeeping, not a card
     change, so off the Changes page ("moved to 1 Stars from 1 Stars"). */
 export const fileRename = e => e.kind === "moved" && !!e.from_path && folder(e.from_path) === folder(e.path);
-/** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=) */
-export function changelogHtml(C, params) {
-  folds = [];
-  const events = eventsOf(C).filter(e => !fileRename(e)), kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
-  const counts = new Map();
-  for (const e of events) counts.set(e.kind, (counts.get(e.kind) || 0) + 1);
+const changelogEvents = C => eventsOf(C).filter(e => !fileRename(e));
+/** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=); in parts: the heading,
+    then one per push block. A head file (changelog-head.json: the newest pushes, the whole file's total and counts)
+    gives the first parts; skip: the head's blocks, drawn already (the rest of the whole file) */
+export function* changelogParts(C, params, skip = 0) {
+  const events = changelogEvents(C), kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
+  const counts = new Map(C.counts ? Object.entries(C.counts) : []), total = C.total ?? events.length;
+  if (!C.counts) for (const e of events) counts.set(e.kind, (counts.get(e.kind) || 0) + 1);
   const present = KINDS.filter(([k]) => counts.get(k));
-  const body = !events.length ? `<p class="empty">No card changes in the last ${esc(C.days)} days.</p>`
-    : daysHtml(pushGroups(events), C.repo, kinds.length ? kinds : null) || `<p class="empty">No ${esc(kinds.join(", "))} changes in the last ${esc(C.days)} days.</p>`;
-  return `<section class="panel"><h3>Changelog${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>
+  if (!skip) {
+    folds = [];
+    yield `<section class="panel"><h3>Changelog${total ? ` <span class="muted">${total}</span>` : ""}</h3>
     <p class="muted">Every card change the card sync recorded in the last ${esc(C.days)} days, one block per push, as posted in Discord (the guards' fixes only here). Times are Pacific.</p>
     ${sourceHtml(C)}${present.length > 1 ? chips(present, kinds, counts, "kind") : ""}</section>
-    ${body}`;
+    `;
+    if (!events.length) { yield `<p class="empty">No card changes in the last ${esc(C.days)} days.</p>`; return; }
+  }
+  let any = !!skip;
+  for (const part of daysParts(pushGroups(events), C.repo, kinds.length ? kinds : null, skip)) { any = true; yield part; }
+  if (!any) yield `<p class="empty">No ${esc(kinds.join(", "))} changes in the last ${esc(C.days)} days.</p>`;
 }
+export const changelogHtml = (C, params) => [...changelogParts(C, params)].join("");
 /** The Archive tab: cards whose PSD left the card folders, newest first, with their tag (?tag= filters) */
 export function archiveHtml(rows, repo, params = null) {
   const tags = csv(params, "tag").filter(t => ARCHIVE_TAGS.some(([k]) => k === t)), counts = new Map();
@@ -231,20 +241,42 @@ export function batchHtml(b, repo) {
   return `<section class="panel cl-push" data-at="${esc(b.sha || String(b.at))}"><h3>${who}, ${esc(when(b.at))}<span class="muted">: ${plural(n, "change")} ${esc(VIA[b.via] || "")}${commit}</span></h3>
     <ul class="cl-lines">${[...cards, ...authors, ...people].join("")}${b.more ? `<li class="muted">and ${esc(b.more)} more${b.sha && repo ? ` in the <a href="https://github.com/${esc(repo)}/commit/${esc(b.sha)}" target="_blank" rel="noopener">commit</a>` : ""}</li>` : ""}</ul></section>`;
 }
-/** The Database edits tab: the card sync's edited and authors events by push, and the edit batches (?via=) */
-export function editsHtml(C, params) {
-  folds = [];
-  const events = C.events.filter(e => EDIT_KINDS.includes(e.kind));
+const editEvents = C => C.events.filter(e => EDIT_KINDS.includes(e.kind));
+/** The Database edits tab: the card sync's edited and authors events by push, and the edit batches (?via=); in parts as
+    the Changelog's. A head file (edits-head.json: the newest pushes, and the newest batches when every event fits; head:
+    the whole file's counts) gives the first parts; from: what it drew ({groups, header, batches}: the rest of the whole file) */
+export function* editsParts(C, params, from = null) {
+  const events = editEvents(C), head = C.head;
   const batches = C.edits.batches, via = csv(params, "via").filter(v => VIA[v]);
-  const counts = new Map();
-  for (const b of batches) counts.set(b.via, (counts.get(b.via) || 0) + 1);
+  const counts = new Map(head ? Object.entries(head.via) : []);
+  if (!head) for (const b of batches) counts.set(b.via, (counts.get(b.via) || 0) + 1);
+  const nEvents = head ? head.events : events.length, nBatches = head ? head.batches : batches.length;
   const present = Object.keys(VIA).filter(v => counts.get(v)).map(v => [v, { website: "Website", git: "Commits" }[v]]);
   const shownBatches = via.length ? batches.filter(b => via.includes(b.via)) : batches;
-  const applied = events.length ? daysHtml(pushGroups(events), C.repo, EDIT_KINDS) : `<p class="muted">No database edits in the last ${esc(C.days)} days.</p>`;
-  return `<section class="panel"><h3>Database edits</h3>
+  if (!from) {
+    folds = [];
+    yield `<section class="panel"><h3>Database edits</h3>
     <p class="muted">Edits to the card data that don't come from a PSD: the website's Edit button (Discord's /update_metadata and /alias until 2026-10-25), and commits to Card Edits.json or Card Authors.txt. Times are Pacific.</p></section>
-    <h3 class="cl-day">Applied by the card sync${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>${applied}
-    <h3 class="cl-day">Edit batches${batches.length ? ` <span class="muted">${batches.length}</span>` : ""}</h3>
+    <h3 class="cl-day">Applied by the card sync${nEvents ? ` <span class="muted">${nEvents}</span>` : ""}</h3>`;
+    if (!events.length) yield `<p class="muted">No database edits in the last ${esc(C.days)} days.</p>`;
+  }
+  yield* daysParts(pushGroups(events), C.repo, EDIT_KINDS, from?.groups || 0);
+  if (nEvents > events.length) return;                   // a head short of the events: the rest from the whole file
+  if (!from?.header) yield `
+    <h3 class="cl-day">Edit batches${nBatches ? ` <span class="muted">${nBatches}</span>` : ""}</h3>
     ${present.length > 1 ? chips(present, via, counts, "via") : ""}
-    ${shownBatches.length ? shownBatches.map(b => batchHtml(b, C.repo)).join("") : `<p class="muted">No edit batches in the last ${esc(C.days)} days.</p>`}`;
+    ${shownBatches.length ? "" : `<p class="muted">No edit batches in the last ${esc(C.days)} days.</p>`}`;
+  for (const b of shownBatches.slice(from?.batches || 0)) yield batchHtml(b, C.repo);
+}
+export const editsHtml = (C, params) => [...editsParts(C, params)].join("");
+/** A head file's blocks are the whole file's first ones, event for event (the build cuts it so): how many groups and
+    batches it drew, for the rest's parts; null when they differ (then the whole file is drawn again) */
+export function headDrawn(H, C, edits = false) {
+  const of = edits ? editEvents : changelogEvents, sig = g => g.map(e => `${e.seq}:${e.kind}`).join(",");
+  const h = byTime(pushGroups(of(H))), c = byTime(pushGroups(of(C)));
+  if (h.length > c.length || h.some((g, i) => sig(g) !== sig(c[i]))) return null;
+  if (!edits) return h.length;
+  const header = H.head.events <= editEvents(H).length, batches = header ? H.edits.batches : [];   // every event in: its batches' heading too
+  if (batches.some((b, i) => JSON.stringify(b) !== JSON.stringify(C.edits.batches[i]))) return null;
+  return { groups: h.length, header, batches: batches.length };
 }

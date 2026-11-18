@@ -1746,6 +1746,26 @@ const NEEDS = { "": "recent", changelog: "changelog.json", archive: "archive.jso
 // a minor fold's lines, drawn on its first open (changelog.js foldHtml; capture: toggle doesn't bubble); the Changelog's
 // come from changelog-minor.json, loaded then (a failed load: the next open tries again)
 const MINOR = "changelog-minor.json";
+// a tab's first screen at once (build_site changelog_heads: its newest pushes, the whole file's counts), its whole file
+// loading beside it; then the rest of the blocks appended while the page is idle (no long task; nothing shown moves).
+// A filter (?kind=, ?via=) or a place to restore (Back/Forward, a reload) waits for the whole file, as before
+const HEADS = { "changelog.json": "changelog-head.json", "edits.json": "edits-head.json" };
+let headView = null, restHost = null;                    // the tab drawn from its head: {file, H, host, page}; its rest's
+function appendRest(hv, C) {                             // also under a card dialog opened meanwhile
+  const edits = hv.file === "edits.json", none = new URLSearchParams(), from = CL.headDrawn(hv.H, C, edits);
+  if (from === null) { hv.page(edits ? CL.editsHtml(C, none) : CL.changelogHtml(C, none)); return; }   // not its first blocks: drawn whole
+  const parts = edits ? CL.editsParts(C, none, from) : CL.changelogParts(C, none, from);
+  const idle = window.requestIdleCallback || (f => setTimeout(f, 50));
+  const more = () => {
+    if (!hv.host.isConnected) return;
+    const end = performance.now() + 8;
+    let html = "", p;
+    do { p = parts.next(); if (!p.done) html += p.value; } while (!p.done && performance.now() < end);
+    if (html) hv.host.insertAdjacentHTML("beforeend", html);
+    if (!p.done) idle(more, { timeout: 400 });
+  };
+  idle(more, { timeout: 400 });
+}
 document.addEventListener("toggle", e => { const ul = e.target.open && e.target.matches?.(".cl-minor") && $("ul[data-fold]", e.target);
   if (!ul || !CL || (ul.childElementCount && !$(".load-error", ul))) return;
   const n = +ul.dataset.fold, draw = () => { if (ul.isConnected) ul.innerHTML = CL.foldHtml(n, S.changelog[MINOR]); };
@@ -1767,8 +1787,16 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   const again = () => { const now = here(); if (now) renderChanges(now, held); };
   const file = NEEDS[tab] !== "recent" && NEEDS[tab], C = file && S.changelog[file];
   if (file && !C) {
-    page(`<div class="loading">Loading the changelog…</div>`);
-    loadChangelog(file).then(again, e => { if (here()) page(failBox("the changelog", e)); });
+    const head = !S.restoring && !S.placing && ![...r.params.keys()].length ? HEADS[file] : null, H = head && S.changelog[head];
+    if (H) {
+      page(file === "edits.json" ? CL.editsHtml(H, r.params) : CL.changelogHtml(H, r.params));
+      headView = { file, H, host: view.firstElementChild, page };
+    } else page(`<div class="loading">Loading the changelog…</div>`);
+    if (head && !H) loadChangelog(head).then(() => { if (!S.changelog[file]) again(); }, () => {});
+    loadChangelog(file).then(() => { const hv = headView;   // the whole file: the rest below the head's blocks, else drawn
+      if (hv?.file === file && hv.host.isConnected) { headView = null; restHost = hv.host; appendRest(hv, S.changelog[file]); }
+      else if (!restHost?.isConnected) again(); },
+    e => { if (here()) page(failBox("the changelog", e)); });
     return;
   }
   if (NEEDS[tab] === "recent" && !S.recent && S.data.recent) S.recent = new Map(Object.entries(S.data.recent));   // in cards.json: at once

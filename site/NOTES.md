@@ -1189,6 +1189,13 @@ relies on:
   auto`, 3000 px stand-ins, scoped to #view so the rulebook editor's preview is untouched) or two at a time while the
   page is idle (`drawn`, from 300 ms after open), every chapter at once as above (`rb-all`; a deep link: the chapters
   down to its target, so nothing above the reader changes size later, also where scroll anchoring is missing).
+  The Changelog and Database edits tabs draw their first screen from a small head file at once (changelog-head.json,
+  edits-head.json: build_site `changelog_heads`, the newest pushes, at least 100 events, cut where no left-out push is
+  newer, with the whole file's heading counts and chips; ~6-8 KB gzipped), their whole file loading beside it; the rest
+  of the blocks are then appended a few at a time while the page is idle (`appendRest`, 8 ms slices; changelog.js
+  `changelogParts` / `editsParts` draw in parts, so the whole draw is the same HTML; `headDrawn` checks the head's blocks
+  are the whole file's first ones, else the tab is drawn again whole). A filter (?kind=, ?via=), Back/Forward or a
+  reload's place waits for the whole file, as before.
 - `diffWords` keeps its HTML (2026-11-04: a Map by before + "\0" + after, the oldest dropped past 2000; ~1,000 pairs
   exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
 - Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first

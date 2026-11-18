@@ -71,7 +71,7 @@ cards.json morgue, picture only, never a live card (morgue_cards).
 
 Output (site/dist): data/cards.json (everything the first screen needs; its cards as columns), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json, data/changelog.json, data/archive.json and data/edits.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/recent.json (the Recently updated tab's earlier texts), data/changelog-minor.json (a Changelog push's minor changes, when their fold opens), data/details/<id>.json (a card's Details dropdown),
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/recent.json (the Recently updated tab's earlier texts), data/changelog-minor.json (a Changelog push's minor changes, when their fold opens), data/changelog-head.json and data/edits-head.json (those two tabs' first screens), data/details/<id>.json (a card's Details dropdown),
 data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/editing.json (the card fields only edit mode reads, EDITOR_FIELDS: loaded with the editor),
@@ -3553,6 +3553,75 @@ def changelog_files(changelog):
             "edits.json": {**head, "events": [e for e in changelog["events"] if e.get("kind") in EDIT_EVENTS], "edits": changelog["edits"]}}
 
 
+HEAD_ROWS = 100                               # a Changes tab's first screen: its newest pushes, at least this many events
+HEAD_BATCHES = 5                              # and its newest edit batches when every edit event fits
+
+
+def push_groups(events):
+    """changelog.js pushGroups: the events in seq order, consecutive ones with one build, push and re-read flag together."""
+    out, last = [], None
+    for e in sorted(events, key=lambda e: e.get("seq") or 0):
+        key = (e.get("build"), (e.get("push") or {}).get("after"), e.get("kind") == "reparse")
+        if key != last:
+            out.append([])
+        out[-1].append(e)
+        last = key
+    return out
+
+
+def group_at(group):
+    """changelog.js whoOf's time: the push's, else its first event's (daysHtml draws newest first by it)."""
+    push = group[0].get("push") or {}
+    return (push["at"] if push.get("at") is not None else group[0].get("at")) or 0
+
+
+def head_groups(groups, rows=HEAD_ROWS):
+    """How many of the newest groups (seq order) a head file holds: at least `rows` events, none older than a group left
+    out, so that its blocks are the whole file's first ones as changelog.js draws them (by time, then seq)."""
+    older = [0]                               # older[s]: the newest time among groups[:s]
+    for g in groups:
+        older.append(max(older[-1], group_at(g)))
+    oldest, count = float("inf"), 0
+    for s in range(len(groups) - 1, -1, -1):
+        oldest, count = min(oldest, group_at(groups[s])), count + len(groups[s])
+        if count >= rows and oldest >= older[s]:
+            return len(groups) - s
+    return len(groups)
+
+
+def changelog_counts(events):
+    """changelog.js changelogParts' heading total and kind counts: a stub's minor events by kind, file renames (fileRename:
+    moved within its own folder) left out."""
+    folder = lambda p: "/".join(str(p or "").split("/")[:-1])
+    counts = {}
+    for e in events:
+        if e.get("kind") == "moved" and e.get("from_path") and folder(e["from_path"]) == folder(e.get("path")):
+            continue
+        for kind, n in (e["minors"].items() if e.get("minors") else [(e.get("kind"), 1)]):
+            counts[kind] = counts.get(kind, 0) + n
+    return sum(counts.values()), counts
+
+
+def changelog_heads(files):
+    """changelog-head.json, edits-head.json: a Changes tab's first screen, drawn at once (app.js renderChanges; the rest of
+    the whole file's blocks are appended when it is in): its newest pushes (head_groups) with the whole file's heading
+    counts; edits: its newest batches too when every event fits."""
+    C, E = files["changelog.json"], files["edits.json"]
+    groups = push_groups(C["events"])
+    total, counts = changelog_counts(C["events"])
+    out = {"changelog-head.json": {**{k: v for k, v in C.items() if k != "events"}, "total": total, "counts": counts,
+                                   "events": [e for g in groups[len(groups) - head_groups(groups):] for e in g]}}
+    groups, batches = push_groups(E["events"]), E["edits"]["batches"]
+    k, via = head_groups(groups), {}
+    for b in batches:
+        via[b.get("via")] = via.get(b.get("via"), 0) + 1
+    out["edits-head.json"] = {**{k: v for k, v in E.items() if k not in ("events", "edits")},
+                              "head": {"events": len(E["events"]), "batches": len(batches), "via": via},
+                              "events": [e for g in groups[len(groups) - k:] for e in g],
+                              "edits": {**E["edits"], "batches": batches[:HEAD_BATCHES] if k == len(groups) else []}}
+    return out
+
+
 def read_changelog(folder):
     """The card sync's events in seq order (db/changelog/YYYY-MM.jsonl, one per line), and its manifest's build facts;
     (None, None) without the folder. A bad line is skipped, one warning per file."""
@@ -4671,7 +4740,7 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
 IMPORT_RE = re.compile(r'((?:from\s+|import\()"\./([\w-]+\.js))"')   # a module's imports (static, dynamic), as they are stamped
 # the build's clock and facts (changelog.json's source: the data's build, run): a data commit that changes only them
 # deploys nothing
-VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("source",)}
+VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("source",), "changelog-head.json": ("source",)}
 
 
 def stamp_of(data):
@@ -5539,6 +5608,7 @@ def main():
     files = {"cards.json": {**data, "cards": columns(shown), "recent": recent}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "recent.json": recent, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
+    files.update(changelog_heads(files))      # the Changelog's and Database edits' first screens
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
