@@ -66,7 +66,7 @@ const BUILD = document.querySelector('meta[name="build"]')?.content || "";
 const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // cards.json's (index.html preloads it), else a file without its own
 // the other data files' own stamps (build_site data_stamps): a deploy keeps the unchanged ones cached
 const DATA_V = (() => { try { return JSON.parse(document.querySelector('meta[name="data"]')?.content || "{}"); } catch { return {}; } })();
-const dataUrl = name => { const v = DATA_V[name.startsWith("details/") ? "details/" : name]; return `data/${name}${/^[0-9a-f]+$/.test(v || "") ? `?v=${v}` : V}`; };
+const dataUrl = name => { const v = DATA_V[/^(details|versions)\//.exec(name)?.[0] || name]; return `data/${name}${/^[0-9a-f]+$/.test(v || "") ? `?v=${v}` : V}`; };
 const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 96 / 192 / 240 / 360 / 480 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 96 too at 64 px or less */
@@ -126,7 +126,7 @@ const failText = (what, e, then = " It will try again when you're back online.")
 const failBox = (what, e) => `<div class="empty load-error">${esc(failText(what, e))} <a href="javascript:location.reload()">Reload</a></div>`;
 // loaded on demand: the rulebook (data/rules.json: its chapters' text and its pictures' sizes; rulebook.js draws them), and
 // older versions of card text
-let historyP = null, versionsP = null, RB = null, bookP = null;
+let historyP = null, RB = null, bookP = null;
 const loadBook = () => (bookP ||= Promise.all([getJson("rules.json"), (early("rulebook.js"), import("./rulebook.js")), sheet("rulebook")]).then(([d, m]) => {
   RB = m; S.book = { images: d.images, built: d.chapters, cover: d.cover || [] };
   bookChapters();
@@ -140,8 +140,17 @@ const loadRecent = () => (recentP ||= getJson("recent.json").then(d => { S.recen
 const COPIES = "https://raw.githubusercontent.com";       // the older versions' copies' host (versionCopy)
 const preconnect = href => document.querySelector(`link[rel="preconnect"][href="${href}"]`)
   || document.head.append(Object.assign(document.createElement("link"), { rel: "preconnect", href }));
-// with versions.json, the copies' host is connected: a pick soon after skips its TLS setup
-const loadVersions = () => (versionsP ||= (preconnect(COPIES), getJson("versions.json")).then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
+// Image versions: data/versions/<id>.json, one card's part of the versions (build_site version_files), merged into
+// S.versions (its commits' indexes moved past those in); with it the copies' host is connected, so a pick skips TLS setup
+const versionsP = new Map(), versionsDone = new Set();
+const versionsIn = c => versionsDone.has(c.id);
+const loadVersions = c => versionsP.get(c.id) || versionsP.set(c.id, (preconnect(COPIES), getJson(`versions/${encodeURIComponent(c.id)}.json`)).then(d => {
+  const A = S.versions ||= { repo: d.repo, visible: d.visible, hb: d.hb, commits: [], cards: {}, minor: {}, early: {} };
+  const off = A.commits.length;
+  A.commits.push(...d.commits);
+  for (const [id, rows] of Object.entries(d.cards || {})) A.cards[id] = rows.map(([ci, ...rest]) => [ci + off, ...rest]);
+  Object.assign(A.minor, d.minor); Object.assign(A.early, d.early); versionsDone.add(c.id);
+}).catch(e => { versionsP.delete(c.id); throw e; })).get(c.id);
 // loaded on first use (esbuild chunks; without esbuild, the modules): charts.js (stats.js, balance.js, insights.js) for the Stats
 // page and the grid filters its charts link to; balance.js alone for the cards' Balance blocks; profile.js for the People tab
 // and person pages.
@@ -1074,16 +1083,21 @@ function openCard(id, showDetails = false) {
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
   const fillHistory = () => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyOf(c); };
-  const fillVersions = () => loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c, versionsOpen(c.id));
-    if (S.data.heavy.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
-  const heavyPaths = () => { if (S.data.heavy.length && c.iv && !S.versions) fillVersions(); };
+  const o = balanceOf(c), theirs = o !== c && o.iv;     // a duplicate's Changes links: its original's paths (pngAt(o))
+  const fillVersions = () => {
+    if (theirs && !versionsIn(o)) loadVersions(o).then(() => { if (S.data.heavy.length && S.analytics) fillBalance(); }, () => {});
+    if (c.iv || c.ive) loadVersions(c).then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c, versionsOpen(c.id));
+      if (S.data.heavy.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
+  };
+  const heavyPaths = () => { if (S.data.heavy.length && (c.iv && !versionsIn(c) || theirs && !versionsIn(o))) fillVersions(); };
   nearby.disconnect();                                   // history.json, analytics.json once their slots are within a screen (phones: far down)
   if (c.hv && !c.history) nearby.on(["#card-changes", "#history-slot"], () => loadHistory().then(() => { fillHistory(); fillBalance(); heavyPaths(); }, () => {}));
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) nearby.on(["#card-changes"], () => loadHistory().then(() => { fillBalance(); heavyPaths(); }, () => {}));   // its original's texts
   else if (c.history || balanceOf(c).history) nearby.on(["#card-changes", "#history-slot"], heavyPaths);   // its texts in already
   else if (hasBalance(c)) nearby.on(["#card-changes"], heavyPaths);                                      // stats changes only
   if (hasBalance(c) && !S.analytics) nearby.on(["#card-balance", "#card-changes"], () => loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; }));
-  if ((c.iv || c.ive) && !S.versions) { const box = $(".ver-box", modal);   // versions.json once the box is open (closed on a phone)
+  if ((c.iv || c.ive) && !versionsIn(c)) { const box = $(".ver-box", modal);   // its versions file now (~1 KB), the list once the box is open (closed on a phone)
+    loadVersions(c).catch(() => {});
     if (!box || box.open) fillVersions(); else box.addEventListener("toggle", fillVersions, { once: true }); }
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
@@ -1125,7 +1139,7 @@ function placeholderOf(c) {
 const EARLY_BADGE = { discord: "Discord", "old repo": "old repo" };
 const earlyBadge = v => (v.repo === "first" ? "first repo" : EARLY_BADGE[v.early] || "");    // versions.json early r: the first repo's files
 const versionList = c => {
-  if (!S.versions) return [];
+  if (!versionsIn(c)) return [];
   const rows = S.versions.cards[c.id] || [];
   const minor = new Set(S.versions.minor[c.id] || []);        // build_site: a picture change under the share that shows, no data change
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; })
@@ -1155,7 +1169,7 @@ function versionsOpen(id) {
 function versionsHtml(c, open) {
   if (!c.iv && !c.ive) return "";
   const box = (n, body) => `<details class="ver-box" data-id="${esc(c.id)}"${open ? " open" : ""}><summary>Image versions <span class="muted">${n}</span></summary>${body}</details>`;
-  if (!S.versions) return box((c.iv || 0) - (c.ivm || 0) + (c.ive || 0) - (c.ivme || 0), `<p class="muted">Loading…</p>`);
+  if (!versionsIn(c)) return box((c.iv || 0) - (c.ivm || 0) + (c.ive || 0) - (c.ivme || 0), `<p class="muted">Loading…</p>`);
   const vs = versionList(c);
   if (vs.length < 2) return "";
   const base = verBase?.id === c.id ? verBase.i : -1;
@@ -2137,7 +2151,7 @@ const actions = {
   "card-revert": el => { const c = S.byId.get(el.dataset.id), ts = +el.dataset.ts, ref = el.dataset.sha;
     if (!c || !editing()) return;
     el.disabled = true;
-    (c.iv ? loadVersions().catch(() => {}) : Promise.resolve()).then(() => editor.revertCard(c, { ref, ts, then: el.dataset.path || pngAt(c, ref, ts) }))
+    (c.iv ? loadVersions(c).catch(() => {}) : Promise.resolve()).then(() => editor.revertCard(c, { ref, ts, then: el.dataset.path || pngAt(c, ref, ts) }))
       .catch(e => toast(`Couldn't revert (${e.message})`)).finally(() => { el.disabled = false; }); },
   "flag-issue": el => { const box = document.getElementById(el.getAttribute("aria-controls") || ""); if (!box) return;   // Needs handling: a flag's issue (flags.js)
     box.hidden = !box.hidden; el.setAttribute("aria-expanded", String(!box.hidden)); hideTip(); },

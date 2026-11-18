@@ -4960,23 +4960,41 @@ def steady(files, blobs):
                              ensure_ascii=False).encode("utf-8") if VOLATILE.get(name) else blob for name, blob in blobs.items()}
 
 
-def data_stamp(data, details):
-    """The data's stamp: the data files (steady()) and the details files ({name: bytes})."""
+def data_stamp(data, folders):
+    """The data's stamp: the data files (steady()) and the folders' files ({"details/": {name: bytes}, ...})."""
     digest = hashlib.sha256()
     for name in sorted(data):
         digest.update(name.encode() + b"\0" + data[name] + b"\0")
-    for name in sorted(details):
-        digest.update(f"details/{name}".encode() + b"\0" + details[name] + b"\0")
+    for folder in sorted(folders):
+        for name in sorted(folders[folder]):
+            digest.update(f"{folder}{name}".encode() + b"\0" + folders[folder][name] + b"\0")
     return digest.hexdigest()[:10]
 
 
-def data_stamps(data, details):
+def data_stamps(data, folders):
     """index.html's meta data, app.js getJson's ?v=: {file: its own stamp} (data: steady()'s), so a deploy keeps unchanged
-    files cached; "details/": one over the details files. Not cards.json: on the build's stamp, its build facts stay fresh
-    (edit.js: a publish is live)."""
+    files cached; a folder ("details/", "versions/"): one over its files. Not cards.json: on the build's stamp, its build
+    facts stay fresh (edit.js: a publish is live)."""
     out = {name: stamp_of(blob) for name, blob in sorted(data.items()) if name != "cards.json"}
-    if details:
-        out["details/"] = data_stamp({}, details)
+    for folder, files in sorted(folders.items()):
+        if files:
+            out[folder] = data_stamp({}, {folder: files})
+    return out
+
+
+def version_files(versions):
+    """data/versions/<id>.json, versions.json cut to one card (app.js loadVersions, on the card's open): repo, visible,
+    hb, that card's commits, its rows (indexes into those), minor, early; for every card and Morgue entry with rows."""
+    shared = {k: versions[k] for k in ("repo", "visible", "hb") if k in versions}
+    out = {}
+    for cid in sorted(set(versions["cards"]) | set(versions.get("early", {}))):
+        rows = versions["cards"].get(cid, [])
+        at = {ci: n for n, ci in enumerate(sorted({r[0] for r in rows}))}
+        one = {**shared, "commits": [versions["commits"][ci] for ci in at], "cards": {cid: [[at[r[0]], *r[1:]] for r in rows]}}
+        for part in ("minor", "early"):
+            if cid in versions.get(part, {}):
+                one[part] = {cid: versions[part][cid]}
+        out[f"{cid}.json"] = json.dumps(one, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     return out
 
 
@@ -5514,6 +5532,7 @@ def main():
     chapters, rule_images = rulebook_chapters()
     cover_sizes, cover_files = cover_copies(rule_images)
     shown, editing = editor_split(cards)
+    # versions.json: app.js reads data/versions/ since 2026-11-18; kept one release for tabs still on the older app.js
     files = {"cards.json": {**data, "cards": columns(shown)}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "recent.json": recent_texts(cards, history), "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
@@ -5531,6 +5550,12 @@ def main():
         os.makedirs(os.path.join(DIST, "data", "details"))
         for name, blob in details.items():
             with open(os.path.join(DIST, "data", "details", name), "wb") as fh:
+                fh.write(blob)
+    per_card = version_files(versions)        # one small file per card, fetched when it opens (Image versions)
+    if per_card:
+        os.makedirs(os.path.join(DIST, "data", "versions"))
+        for name, blob in per_card.items():
+            with open(os.path.join(DIST, "data", "versions", name), "wb") as fh:
                 fh.write(blob)
     for part in ("img", "fonts"):             # the rulebook's pictures (the listed ones) and web fonts
         src = os.path.join(RULEBOOK, part)
@@ -5565,7 +5590,8 @@ def main():
     texts.update({f"{n}.css": t for n, t in sheets.items()})
     assets = asset_stamps(texts)
     data = steady(files, blobs)
-    version, own = data_stamp(data, details), data_stamps(data, details)
+    folders = {"details/": details, "versions/": per_card}
+    version, own = data_stamp(data, folders), data_stamps(data, folders)
     os.makedirs(os.path.join(DIST, "assets"))
     packed = bundle({name: text for name, text in texts.items() if name.endswith(".js")})   # with esbuild: one script and its chunks
     if packed:
