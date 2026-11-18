@@ -15499,40 +15499,46 @@
   ]
  },
  "Creatures/Pandas/5 Stars/Pandora.psd": {
-  "blob": "69752e03f93da13918bca88f32b8b7eceabb18fc",
+  "blob": "51c10e2e0f4f52e3a029268a696ef22ebd199c87",
   "links": [
    {
-    "drawn": "04e5ff0d24ebdb486a3186bf1f169692c7cd821b",
+    "drawn": null,
     "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "size": 394293
    },
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "985310538d777659586c5fbef4783387b386f084",
-    "name": "Pandora - fat_panda_by_happy_rat_d3llzh7-fullview-transformed.png",
-    "path": "MDW/Linked/Pandora - fat_panda_by_happy_rat_d3llzh7-fullview-transformed.png",
-    "size": 2214421
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
    },
    {
-    "drawn": "83151f5be1698ab759a5a0a3d294d1fd6d2a9512",
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
     "name": "Pandora - Flublubble-transformed.png",
     "path": "MDW/Linked/Pandora - Flublubble-transformed.png",
     "size": 514015
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
@@ -17179,28 +17185,22 @@
   ]
  },
  "Field/2 Stars/The_Farlands.psd": {
-  "blob": "acbe686eaf29dc9c92ec1fe2ea078545a1cb29c3",
+  "blob": "88b1b76084bf54ae3a11dd47638a509a5bb12236",
   "links": [
    {
-    "drawn": "d9328fb43026776efe55e14fec2b45f518c72f81",
-    "name": "The_Farlands - 5wb1froz6qv31.png",
-    "path": "MDW/Linked/The_Farlands - 5wb1froz6qv31.png",
-    "size": 1287709
-   },
-   {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "drawn": null,
     "name": "field.png",
     "path": "Types/field.png",
     "size": 20013
@@ -18116,34 +18116,22 @@
   ]
  },
  "Items/Attack/1 Stars/Bleach.psd": {
-  "blob": "beae1c994bb2ea31d8ac5b5180aedc243a3f5dbc",
+  "blob": "9edbe7c21fb9f00fac8fc0cb6df91669952a5828",
   "links": [
    {
-    "drawn": "372122e624ad587ed6017cf2ca070737ffdde055",
-    "name": "Bleach - library_pedestal.png",
-    "path": "MDW/Linked/Bleach - library_pedestal.png",
-    "size": 518
-   },
-   {
-    "drawn": "372122e624ad587ed6017cf2ca070737ffdde055",
-    "name": "Bleach - library_pedestal.png",
-    "path": "MDW/Linked/Bleach - library_pedestal.png",
-    "size": 518
-   },
-   {
-    "drawn": "f34deb90eca738e0927e07ba57259dec11f389da",
+    "drawn": null,
     "name": "Bleach - bleach_pic.png",
     "path": "MDW/Linked/Bleach - bleach_pic.png",
     "size": 201477
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "drawn": null,
     "name": "Attack.png",
     "path": "Types/Attack.png",
     "size": 819546
@@ -18174,22 +18162,22 @@
   ]
  },
  "Items/Attack/2 Stars/Bomb.psd": {
-  "blob": "4592c4003597c8fc10ed6813372c70a23afe012c",
+  "blob": "63e5d19f4143544a659c2aba55fbb287399b6c8b",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "drawn": null,
     "name": "Attack.png",
     "path": "Types/Attack.png",
     "size": 819546
    },
    {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "drawn": null,
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": null,
     "name": "Attack.png",
     "path": "Types/Attack.png",
     "size": 819546
@@ -18226,22 +18214,16 @@
   ]
  },
  "Items/Attack/2 Stars/Ice_Bomb.psd": {
-  "blob": "85dff4a5903cba1c13bdd8308d612c81309b90fd",
+  "blob": "5ddff2b3bdd7294db28b56f63df56d329616c0e9",
   "links": [
    {
-    "drawn": "3d6080f543a0509f4636e296d268efecbbee6f3d",
-    "name": "Ice_Bomb - Ice_Bomb (1).png",
-    "path": "MDW/Linked/Ice_Bomb - Ice_Bomb (1).png",
-    "size": 680059
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "drawn": null,
     "name": "Attack.png",
     "path": "Types/Attack.png",
     "size": 819546
@@ -18431,22 +18413,22 @@
   ]
  },
  "Items/Attack/4 Stars/Golden_Bomb.psd": {
-  "blob": "695bb448e095100c4a07e47e4f6197d9b425f802",
+  "blob": "90334e8d71d0f96829c73497ef268020a82b9a84",
   "links": [
    {
-    "drawn": "28cf3d72244d990ee15e06045f9f1ad96c6b357b",
+    "drawn": null,
     "name": "Golden_Bomb - kisspng-bomb-encapsulated-postscript-clip-art-grenade-5acaed8746f3b3.0320173615232485192906.png",
     "path": "MDW/Linked/Golden_Bomb - kisspng-bomb-encapsulated-postscript-clip-art-grenade-5acaed8746f3b3.0320173615232485192906.png",
     "size": 691518
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "drawn": null,
     "name": "Attack.png",
     "path": "Types/Attack.png",
     "size": 819546
@@ -19629,16 +19611,16 @@
   ]
  },
  "Items/Equip/3 Stars/Magic_Hammer.psd": {
-  "blob": "5b150c941bc3347db01b1d8f71ffce58d50b9232",
+  "blob": "7b16da9e165e472e3cdb0caac2a975d3ad8f7b74",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
@@ -19646,16 +19628,16 @@
   ]
  },
  "Items/Equip/3 Stars/Mechanical_Shield.psd": {
-  "blob": "8b3ceba93b8b56a7a8381e83280dcb212cb9e9f0",
+  "blob": "7b2415a669bda7452213e5eda30fe06e39a412cb",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
@@ -19732,22 +19714,16 @@
   ]
  },
  "Items/Equip/3 Stars/Poison_Shiv.psd": {
-  "blob": "f396e59674a9780e37cd35f0afc1f4aa257dfc73",
+  "blob": "857bcdf565040d3a956f1a8ac24616c794651af2",
   "links": [
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
@@ -20575,10 +20551,22 @@
   ]
  },
  "Items/Heal/1 Stars/Potato.psd": {
-  "blob": "1fe56795b3cae4bb6d48061df30637bb9a6af951",
+  "blob": "ceee41f29c02a89ef72f2a6fd76962fba1e088a4",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   },
+   {
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
@@ -20707,28 +20695,34 @@
   ]
  },
  "Items/Heal/2 Stars/Grapes.psd": {
-  "blob": "3387876d3a9e9bafe09ce64073b5f6116481d3b9",
+  "blob": "412168f62d9afeb446dea7313830374f86e5cba6",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -20905,22 +20899,28 @@
   ]
  },
  "Items/Heal/2 Stars/Pepperoni_Pizza.psd": {
-  "blob": "3a9f4f5dc0ed2b7826786b6af47b59f5634297b3",
+  "blob": "f9269519a8ee99abc0a07aab537edb701b860837",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -21015,28 +21015,28 @@
   ]
  },
  "Items/Heal/2 Stars/Strawberry_Shortcake.psd": {
-  "blob": "917eae562cb7808ffa3718f5a8b1636f34fbcf78",
+  "blob": "3b26e1a375f3a941282e9d35961d53069baf4308",
   "links": [
    {
-    "drawn": "2b89ca0c88d6c24a6a454ddff5cc53a333d3ba9e",
+    "drawn": null,
     "name": "Strawberry_Shortcake - purble-place-game838.webp",
     "path": "MDW/Linked/Strawberry_Shortcake - purble-place-game838.webp",
     "size": 56790
    },
    {
-    "drawn": "6137deb53e6dc477077c7f1dd5771582c9756021",
+    "drawn": null,
     "name": "Strawberry_Shortcake - PngItem_2010345.png",
     "path": "MDW/Linked/Strawberry_Shortcake - PngItem_2010345.png",
     "size": 1148372
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -21414,22 +21414,22 @@
   ]
  },
  "Items/Infliction/1 Stars/Smoke_Bomb.psd": {
-  "blob": "d590ed4ecdf8ad2139cc4cf6bf762882575ce72d",
+  "blob": "6141ccee0336dafeaa40674be167afbbef969b05",
   "links": [
    {
-    "drawn": "930a834b38f8a876ec569924fc74a1bc5c277d8d",
+    "drawn": null,
     "name": "Smoke_Bomb - pngwing.com.png",
     "path": "MDW/Linked/Smoke_Bomb - pngwing.com.png",
     "size": 177357
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "drawn": null,
     "name": "Infliction.png",
     "path": "Types/Infliction.png",
     "size": 78460
@@ -21838,22 +21838,22 @@
   ]
  },
  "Items/Support/2 Stars/Erasure.psd": {
-  "blob": "8a834f3c4ac85cbad4e60f9676e4ad4e86968e74",
+  "blob": "6c2146c2c43b70ef2cb8f7dbb42edd83fb9c8d75",
   "links": [
    {
-    "drawn": "e59c291e76823dc1894bbe8e154c7a59e2db60cd",
+    "drawn": null,
     "name": "Erasure - 441674.jpg",
     "path": "MDW/Linked/Erasure - 441674.jpg",
     "size": 588891
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
@@ -22110,16 +22110,16 @@
   ]
  },
  "Items/Support/3 Stars/Blue_Marker.psd": {
-  "blob": "98c6e9b562bdd8c44a71d7a2c3f018152a30693d",
+  "blob": "1bdff597832423f898bacac46189800324d972ab",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
@@ -22127,10 +22127,10 @@
   ]
  },
  "Items/Support/3 Stars/Credit_Card.psd": {
-  "blob": "392fdebb7cde6a09ffa5f752ebc0f0ed7ae8acd0",
+  "blob": "ef5bceebc4547aba4fb7cf7910e6ea513255df28",
   "links": [
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
@@ -22316,22 +22316,22 @@
   ]
  },
  "Items/Support/3 Stars/Shia_Surprise!.psd": {
-  "blob": "ae1e2d8eb947c8909a54e2ee231ec80582978070",
+  "blob": "55e904530c677abdfb2085f2d5441259ae16ee4d",
   "links": [
    {
-    "drawn": "29e4ede0ac14633c570188fefb9a390c184fc1d6",
+    "drawn": null,
     "name": "Shia_Surprise! - Gravestone_HD-transformed.png",
     "path": "MDW/Linked/Shia_Surprise! - Gravestone_HD-transformed.png",
     "size": 432555
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
@@ -25743,262 +25743,256 @@
   ]
  },
  "MDW/Templates/Item_Template.psd": {
-  "blob": "09b5691c47a5606a365ca62b1f6380a981aebb1a",
+  "blob": "23827935f14ec1f432079c5d4add67c04ba79f71",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "d3b2c5ea498bc34684017451f8634c70c4379ff3",
+    "drawn": null,
     "name": "Salt - Layer 1.psb",
     "path": "MDW/Linked/Salt - Layer 1.psb",
     "size": 3626502
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "c659c492806f52480508f989cb55a426afe1aac5",
+    "drawn": null,
     "name": "bFables.png",
     "path": "Types/Stars/bFables.png",
     "size": 368729
    },
    {
-    "drawn": "75d7fb1062f4f81eb510a6cb441f85819eae9617",
+    "drawn": null,
     "name": "Fallen_Star.png",
     "path": "Types/Stars/Fallen_Star.png",
     "size": 2480
    },
    {
-    "drawn": "42202bbec256fcd7533b9262b980906a0c142b27",
+    "drawn": null,
     "name": "Shadow_Queen - Vi1.png",
     "path": "MDW/Linked/Shadow_Queen - Vi1.png",
     "size": 367
    },
    {
-    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "drawn": null,
     "name": "Starstorm.png",
     "path": "Types/Stars/Starstorm.png",
     "size": 324
    },
    {
-    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
+    "drawn": null,
     "name": "Ninja Star.png",
     "path": "Types/Stars/Ninja Star.png",
     "size": 14188
    },
    {
-    "drawn": "27e828a4b0084d24fe092bb1807253c468cca9b2",
+    "drawn": null,
     "name": "Scrap.png",
     "path": "Types/Stars/Scrap.png",
     "size": 27348
    },
    {
-    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
+    "drawn": null,
     "name": "Patrick Star.png",
     "path": "Types/Stars/Patrick Star.png",
     "size": 152994
    },
    {
-    "drawn": "ca1bbfb03595f64e2268a57aca0b510b2e52af4e",
+    "drawn": null,
     "name": "YinYangUltra.png",
     "path": "Types/Stars/YinYangUltra.png",
     "size": 1137393
    },
    {
-    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "drawn": null,
     "name": "Solar Sun.png",
     "path": "Types/Stars/Solar Sun.png",
     "size": 1374450
    },
    {
-    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "drawn": null,
     "name": "Elden Stars.png",
     "path": "Types/Stars/Elden Stars.png",
     "size": 1194210
    },
    {
-    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
+    "drawn": null,
     "name": "Star of beth.png",
     "path": "Types/Stars/Star of beth.png",
     "size": 2247
    },
    {
-    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "drawn": null,
     "name": "Guild Seal.png",
     "path": "Types/Stars/Guild Seal.png",
     "size": 1880154
    },
    {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "drawn": null,
     "name": "Nether_Star.png",
     "path": "Types/Stars/Nether_Star.png",
     "size": 10708
    },
    {
-    "drawn": "7bce3270adea13c48ca9f9233617f60d91925363",
+    "drawn": null,
     "name": "Nebula Star.png",
     "path": "Types/Stars/Nebula Star.png",
     "size": 253389
    },
    {
-    "drawn": "6a79e1709a529b3353886f2e415702bbe68bed17",
+    "drawn": null,
     "name": "Lol star.png",
     "path": "Types/Stars/Lol star.png",
     "size": 97082
    },
    {
-    "drawn": "85d77d7d27e05776d8d725f0802dccc9e34f3bea",
+    "drawn": null,
     "name": "Triforce.png",
     "path": "Types/Stars/Triforce.png",
     "size": 1712857
    },
    {
-    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "drawn": null,
     "name": "undertale.png",
     "path": "Types/Stars/undertale.png",
     "size": 28256
    },
    {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "drawn": null,
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
     "size": 332571
    },
    {
-    "drawn": "6c9df83521a4b44ee2fd840d1b40e21be2a8eb32",
+    "drawn": null,
     "name": "Crystal_Star.png",
     "path": "Types/Stars/Crystal_Star.png",
     "size": 5027
    },
    {
-    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "drawn": null,
     "name": "Sapphire_Starold.png",
     "path": "Types/Stars/Sapphire_Starold.png",
     "size": 3871
    },
    {
-    "drawn": "c51a965abbf8c0c5de3ca2e57f915507396f1c77",
+    "drawn": null,
     "name": "Diamond_Star.png",
     "path": "Types/Stars/Diamond_Star.png",
     "size": 2255
    },
    {
-    "drawn": "a4c373803a920ed5d04093d88cba8b6f40454c3c",
+    "drawn": null,
     "name": "Emerald_Star.png",
     "path": "Types/Stars/Emerald_Star.png",
     "size": 2162
    },
    {
-    "drawn": "127ac246e772f9b0113d5c83be4db5aa7f20d0d1",
+    "drawn": null,
     "name": "Gold_Star.png",
     "path": "Types/Stars/Gold_Star.png",
     "size": 2010
    },
    {
-    "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
+    "drawn": null,
     "name": "Ruby_Star.png",
     "path": "Types/Stars/Ruby_Star.png",
     "size": 4718
    },
    {
-    "drawn": "35c838cb2a80a5bdc8ae0c2f9fb0e19424ed68a1",
+    "drawn": null,
     "name": "Garnet_Star.png",
     "path": "Types/Stars/Garnet_Star.png",
     "size": 2093
    },
    {
-    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "drawn": null,
     "name": "Omori star.png",
     "path": "Types/Stars/Omori star.png",
     "size": 114793
    },
    {
-    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "drawn": null,
     "name": "Dst Star.png",
     "path": "Types/Stars/Dst Star.png",
     "size": 112511
    },
    {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "drawn": null,
     "name": "Warpstar.png",
     "path": "Types/Stars/Warpstar.png",
     "size": 648064
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "drawn": null,
     "name": "field.png",
     "path": "Types/field.png",
     "size": 20013
    },
    {
-    "drawn": "31e3afb2b7f6a112eb4639f95e94891d2f748b08",
+    "drawn": null,
     "name": "Hero_Cap - Deploy.psb",
     "path": "MDW/Linked/Hero_Cap - Deploy.psb",
     "size": 1048576
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
    },
    {
-    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "drawn": null,
     "name": "Infliction.png",
     "path": "Types/Infliction.png",
     "size": 78460
    },
    {
-    "drawn": "77824ad3eb394b38fdb0a92d3672c90688794242",
+    "drawn": null,
     "name": "Negation.png",
     "path": "Types/Negation.png",
     "size": 243500
    },
    {
-    "drawn": "23bf9264064724f83faf67776362102cbfaaa57f",
+    "drawn": null,
     "name": "Counter.png",
     "path": "Types/Counter.png",
     "size": 58570
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
    },
    {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "drawn": null,
     "name": "Attack.png",
     "path": "Types/Attack.png",
     "size": 819546
    },
    {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "drawn": null,
     "name": "Fragile Equip.png",
     "path": "Types/Fragile Equip.png",
     "size": 23023
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
    },
    {
-    "drawn": "4fb6b1d8b6485fabd2b86fa08d37ff1b69a398f7",
+    "drawn": null,
     "name": "NME.png",
     "path": "Types/NME.png",
     "size": 757779
