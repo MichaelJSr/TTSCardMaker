@@ -47,7 +47,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - `getJson(name)` app.js:~58: `fetch("data/"+name+"?v=<build>")` relative to `<base>`; ordinary HTTP cache keyed by the `?v=` build hash. `cards.json` is preloaded in index.html:12 and awaited in `init()` before first render.
 - Files (dist/data/, sizes from the 2026-10-20 build):
   - cards.json 409 KB: `{generated, repo:"MichaelJSr/TTSCardMaker", botRepo:"bobberlington/AutoCroissant", raw:"https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/", cards (2026-11-15: columns {n, cols{field: [value|null]}}, app.js rowsOf makes the rows), icons{}, banlist{notes[], groups[{title, entries[{name, reason, id}]}]}, branch:"main", files{edits,authors,banlist,admins,profiles,decks}, admins[logins], people[], peopleMap{git:shown}, decks{public,private}}`. icons = `{normalizedName: {file:"icons/x.webp", name, kind:"type"|...}}`.
-  - rules.json `{chapters:[{id, num, title, file, source}], images:{file:[w, h, stamp]}}` (lazy: rulebook tab; since 2026-10-29 the chapters of site/rulebook, drawn by rulebook.js; the Photoshop pages are no longer on the site). history.json 48 KB `{cardId: [{ts, ability}]}` (lazy: a card with `hv`). recent.json `{cardId: ability}` (lazy: the Recently updated tab; its rows' last earlier text where the text changed, build_site `recent_texts`). versions.json `{repo, commits[[sha,ts,author,subject]], cards{id:[[commitIdx, path]]}, minor{id:[row index]}, visible}`. Since 2026-11-09 (owner): a row is minor (folded under "N minor changes" in the card page's Image versions, never dropped) when its picture changed under `visible` (0.02) of the card's pixels (db/png_changes.json, AutoCroissant png_changes; a pair not measured shows) and no real change of the card's data came since the row before; history.json merges texts that differ only in formatting (analytics `text_key`).
+  - rules.json `{chapters:[{id, num, title, file, source}], images:{file:[w, h, stamp]}}` (lazy: rulebook tab; since 2026-10-29 the chapters of site/rulebook, drawn by rulebook.js; the Photoshop pages are no longer on the site). history.json 48 KB `{cardId: [{ts, ability}]}` (lazy: a card with `hv`). recent.json `{cardId: ability}` (lazy: the Recently updated tab; its rows' last earlier text where the text changed, build_site `recent_texts`). versions.json `{repo, commits[[sha,ts,author,subject]], cards{id:[[commitIdx, path]]}, minor{id:[row index]}, visible}`; since 2026-11-18 app.js reads versions/<id>.json instead, the same shape cut to one card (its own commits, `early` and `hb` too; build_site `version_files`, ~1 KB gzipped; `loadVersions(c)` merges each into S.versions, moving its commit indexes; fetched when the card opens, a duplicate's original's with it for its Changes links). Since 2026-11-09 (owner): a row is minor (folded under "N minor changes" in the card page's Image versions, never dropped) when its picture changed under `visible` (0.02) of the card's pixels (db/png_changes.json, AutoCroissant png_changes; a pair not measured shows) and no real change of the card's data came since the row before; history.json merges texts that differ only in formatting (analytics `text_key`).
   - details/<id>.json (2026-10-21; 0.9-16.7 KB each, median 3.7 KB, one per card or rulebook page with `details: true`; lazy: the card or rulebook page's Details dropdown, `loadDetails` memoised per card id in app.js): the bot's psd_details.json record `{id, name, path, at, parser, canvas{w,h,mode,depth,icc}, fonts{font:{layers[], supplied}}, text[{layer,text,font,size,color,visible}], effects{layer:[names]}, smart_objects[], icons, stats{hp,def,atk,spd}, fx[], overlays[], template{name_layer, ability_layers, deviations}, tree[[name, kind, visible, children?]]}`; a section the bot couldn't read is a short string. Section 11.
   - decks.json (2026-10-21; lazy: `#/decks`, a deck page, a person's Decks panel): `{generated, decks: [{owner, slug, name, description, cards[visible ids], dropped, field|null, updated, n}], private: [{owner, slug, kdf{name,hash,iter,salt}, iv, data, updated}]}`, both newest first. cards.json carries the counts as `decks: {public, private}` and `files.decks = "site/decks"`. Section 12.
   - analytics.json (2026-10-22; 105 KB, 13 KB gzipped; lazy: the Stats page's Balance section, a card with `balance: true`): section 14.
@@ -1149,7 +1149,7 @@ relies on:
 - Deploys: site.yml runs on pushes that touch what the build reads (`paths`). `build.txt` digests the whole site
   without the build time (`dist_digest`); a run whose build equals the live one (its build.txt) doesn't deploy (§28).
 - Data stamps (11-12): each data file but cards.json has its own (`<meta name="data">`, `data_stamps`, app.js `dataUrl`;
-  details/: one for all), so a deploy keeps the unchanged ones cached (a Card checks deploy: a card page reloads
+  details/ and versions/: one each for all their files), so a deploy keeps the unchanged ones cached (a Card checks deploy: a card page reloads
   290 -> 166 KB, Changelog 413 -> 168). cards.json keeps the build's: its `source` tells edit.js a publish is live, and a
   profile or deck publish leaves cards.json unchanged.
 - Second pass (2026-10-31, scratch perf2: trace.mjs, interact.mjs, firstload.mjs, lh-ab.sh). No sibling combinator before
@@ -1169,6 +1169,16 @@ relies on:
   The rulebook's and the editor's styles are sheets of their own since 2026-11-12 (`split_css`, listed in every page's
   `<meta name="sheets">`; a Rulebook link's head script preloads the rulebook's): index.html 24.9 -> 18.1 KB gzipped.
   AutoCroissant rulebook_pages reads the linked sheets' url()s too (PLAIN_JS).
+- Card timelines pass (2026-11-18, OPTIMIZE-1117; phone 390 px, CPU 4x, Slow 4G, local builds served like Pages):
+  Image versions read one file per card (`versions/<id>.json`, fetched when the card opens: the phone's tap on the
+  closed box no longer waits for the 2.6 MB all-cards file); Stats' first open starts analytics.json beside charts.js
+  (as a link to it did); history.json starts once the Image versions list is drawn (the first compare pick loads only
+  its picture); Stats charts below the first screen are drawn once near (`content-visibility: auto`) or two at a time
+  while the page is idle (`drawn`; the Balance and History fill restarts it), and every chart at once while Back/Forward
+  or a reload restores a place (`charts-all`: S.restoring, S.placing until settle() ends), so the place lands as before.
+  Medians (scratch s10c/opt1): Image versions tap 2.50 s -> 16 ms; Stats 2.29 -> 1.15 s (first charts 911 -> 917 ms);
+  compare a repo version 1.05 -> 0.85 s; Stats warm, network not throttled, 429 -> 300 ms; desktop the same within
+  noise (a second card's list 6 -> 21 ms: its own file). versions.json is still written for one release.
 - `diffWords` keeps its HTML (2026-11-04: a Map by before + "\0" + after, the oldest dropped past 2000; ~1,000 pairs
   exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
 - Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first
@@ -1594,7 +1604,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   `heavy_commits`: commits of `HEAVY_PSDS` (45) card PSDs or more, cards.json `heavy` (12-char shas, text.js
   `setHeavy`). `commitLink(repo, sha, label, path)` links them to `commits/<sha>/<the PNG's path then>` (the card's
   history from there, <1 s), or not at all without a path: Image versions pass `v.path`, History and Recorded changes
-  `pngAt` (drawn again once versions.json is in). Never the PSD's path made a PNG (ABBI.psd, Abbi.png). The changelog,
+  `pngAt` (drawn again once the card's versions file is in). Never the PSD's path made a PNG (ABBI.psd, Abbi.png). The changelog,
   Archive, edit batches and person pages keep their commit links.
 
 ## 38. The Font filter (2026-10-25, owner: "can you allow filtering by font? have a text box for entering a font with autofill")
