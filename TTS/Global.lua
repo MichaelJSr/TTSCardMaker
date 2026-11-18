@@ -10,7 +10,8 @@ local TEAMS = {
 
 local LARGE_CARD_SCALE = {x=3, y=1, z=3}
 
--- Large cards by Nickname: the save updater (AutoCroissant tts_save) fills these rows from Auxiliary/Creatures
+-- Large cards by Nickname: the save updater (AutoCroissant tts_save) fills these rows from Auxiliary/Creatures and
+-- the creatures a minions deck includes
 local resizeTargets = {
     ["Azamoth The Possessed Vessel"] = true,
     ["Igor Roballtowski"]            = true,

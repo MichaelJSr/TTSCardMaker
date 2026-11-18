@@ -301,6 +301,8 @@ def main(path):
             large_names.add(o.get("Nickname"))
             scales["large"][s] += 1
         elif "/Creatures/" in face:
+            if parents and (s[0] or 3.0) < 2.9:     # a creature in a minion-sized deck (Stubborn Queen): resized too
+                large_names.add(o.get("Nickname"))
             scales["creature"][s] += 1
         elif "/Items/" in face or "/Field/" in face or "/N.M.E/" in face:
             scales["item/field/nme"][s] += 1
@@ -314,10 +316,11 @@ def main(path):
         warn(f"resizeTargets {n!r}: no large creature card with that Nickname in the save")
     small_named = Counter()
     for o, _ in every:
-        if o.get("Name") in CARDS and o.get("Nickname") in targets and LARGE not in ((own_entry(o) or {}).get("FaceURL") or ""):
+        face = (own_entry(o) or {}).get("FaceURL") or ""
+        if o.get("Name") in CARDS and o.get("Nickname") in targets and "/Creatures/" not in face:
             small_named[o.get("Nickname")] += 1
     for n, c in small_named.items():
-        fail(f"{c} non-large card(s) named {n!r} would be resized to 3x by resizeTargets")
+        fail(f"{c} non-creature card(s) named {n!r} would be resized to 3x by resizeTargets")
     for kind, c in scales.items():
         notes.append(f"card scale (x,z) {kind}: {dict(c.most_common(4))}")
     for o, parents in every:
