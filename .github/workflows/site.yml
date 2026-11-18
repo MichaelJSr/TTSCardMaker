@@ -221,8 +221,9 @@ jobs:
       # header, and in carddata's config as actions/checkout keeps it (Data wait fetches there), as Card sync's clone.
       # The plates branch's v/ (older versions' copies) by name, its trees only, in a clone of its own (a depth-1 fetch
       # here would make the history shallow): build_site lists those missing for the versions job (none listed: all).
-      # The card timelines (the history branch, AutoCroissant scripts/history_branch.py): that branch alone, depth 1, in
-      # $RUNNER_TEMP/history (HISTORY_DIR); no branch or a failed clone: the site builds without them.
+      # The card timelines (the history branch, AutoCroissant scripts/history_branch.py): that branch alone, depth 1, its
+      # JSON only (blobless, sparse: no picture fetched; build_site serves them from raw.githubusercontent.com at its
+      # commit) in $RUNNER_TEMP/history (HISTORY_DIR); no branch or a failed clone: the site builds without them.
       - name: Setup start
         env:
           UV_PYTHON: ${{ steps.py.outputs.python || steps.python.outputs.python-path }}
@@ -284,8 +285,16 @@ jobs:
               && mv "$RUNNER_TEMP/plates-v.tmp" "$RUNNER_TEMP/plates-v.txt" && wc -l < "$RUNNER_TEMP/plates-v.txt"
           }
           history() {
-            GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
-              timeout 300 git clone -q --depth 1 --no-tags --single-branch --branch history "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$RUNNER_TEMP/history"
+            export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+            h=$RUNNER_TEMP/history
+            if ! { timeout 120 git clone -q --depth 1 --filter=blob:none --sparse --no-tags --single-branch --branch history \
+                     "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$h" \
+                   && timeout 180 git -C "$h" sparse-checkout set --no-cone '/*.json' '/*/timeline.json' '/_morgue/*/timeline.json'; }; then
+              echo "::warning::history: the JSON-only clone failed; the whole branch instead"
+              rm -rf "$h"
+              timeout 300 git clone -q --depth 1 --no-tags --single-branch --branch history "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$h" || return 1
+            fi
+            du -sh "$h"
           }
           start uv packages
           start npm npm install --prefix "$RUNNER_TEMP/esbuild" --no-save --no-audit --no-fund esbuild@0.28.2

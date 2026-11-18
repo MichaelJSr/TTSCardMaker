@@ -56,7 +56,8 @@ Where the data comes from:
     cards and activity chart. Bad entries skipped.
   * Card timelines before this repo (HISTORY_DIR: the history branch's checkout, site.yml's, or the local preview's; unset: the
     site goes without them, as before): each card's versions from the old pre-wipe repo (the first repo's among them),
-    and Discord after its own in Image versions (versions.json early; webps copied to dist/history/),
+    and Discord after its own in Image versions (versions.json early; webps from raw.githubusercontent.com at the
+    history branch's commit, versions.json hb: history_host; a folder that is no checkout: copied to dist/history/),
     their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
     Morgue's entries from Discord (cards.json morgue, lost: joke or played), the MDW Morgue cards' Discord pictures
     (after their PNG's newest version here, the current one: history_mdw) and the Created dates they move earlier
@@ -258,6 +259,9 @@ MORGUE = "MDW/The Morgue/"                    # retired cards (owner 11-08): car
 # the card timelines before this repo (AutoCroissant discord_preview; docs/Future/CARD_TIMELINE.md): the history branch's
 # checkout (site.yml's), or the local preview's; unset or missing: the site goes without them
 HISTORY_DIR = os.environ.get("HISTORY_DIR", "")
+# its pictures' host (owner 11-17 (3): not in the Pages artifact): raw.githubusercontent.com at the history checkout's
+# commit, as the plates' older copies (D19); HISTORY_URL another (a local preview's server); neither: dist/history copies
+HISTORY_URL = os.environ.get("HISTORY_URL", "")
 HISTORY_ROWS = ("discord", "old repo")                         # Image versions' rows (changelog facts: Recorded changes only)
 HISTORY_KINDS = HISTORY_ROWS + ("text",)
 HISTORY_BEFORE = ("discord", "text")                            # before the card's first git record (stop at git; the old repo overlaps it)
@@ -1496,6 +1500,8 @@ def history_rows(folder, t):
             row["f"] = fields
         if e.get("minor"):
             row["minor"] = 1
+        if row["ts"] is None and history_ts({"date": e.get("before")}) is not None:
+            row["b"] = history_ts({"date": e["before"]})   # an owner's undated Meme copy: before this (no date of its own)
         rows.append(row)
     return sorted(rows[::-1], key=lambda r: r["ts"] if r["ts"] is not None else float("-inf"), reverse=True)
 
@@ -1673,21 +1679,54 @@ def history_mdw(hist, morgue, early, versions, commits, renamed, people):
     return cut
 
 
-def copy_history(hist, rows):
-    """Each row's webp into dist/history/ (hardlinks); rows whose file is missing lose their img."""
+def history_host(folder):
+    """(base URL, files) of the card timelines' pictures: HISTORY_URL with the folder's files; for a history branch
+    checkout (site.yml's: its JSON alone, no picture fetched) raw.githubusercontent.com pinned to its commit, as the
+    plates' older copies are served, with the files its tree lists; (None, None) else: copied into dist/history."""
+    if HISTORY_URL:
+        return HISTORY_URL.rstrip("/") + "/", None
+    if not os.path.exists(os.path.join(folder, ".git")):
+        return None, None                         # no checkout of its own
+    try:
+        sha = subprocess.run(["git", "-C", folder, "rev-parse", "--verify", "-q", "HEAD^{commit}"], capture_output=True,
+                             text=True, timeout=60, check=True).stdout.strip()
+        files = subprocess.run(["git", "-C", folder, "ls-tree", "-r", "-z", "--name-only", sha], capture_output=True,
+                               timeout=120, check=True).stdout.decode("utf-8", "replace").split("\0")
+    except (OSError, subprocess.SubprocessError):
+        return None, None
+    if not re.fullmatch(r"[0-9a-f]{40}", sha):
+        return None, None
+    return f"https://raw.githubusercontent.com/{CARD_REPO}/{sha}/", set(filter(None, files))
+
+
+def copy_history(hist, rows, morgue=()):
+    """The rows' webps: each row's img a path under versions.json hb (history_host; the Morgue entries' pic that URL), else
+    copied into dist/history/ (hardlinks); rows whose file is missing lose their img (a Morgue entry's pic too). Returns
+    (how many, hb or None)."""
+    base, files = history_host(hist["dir"])
+    have = (lambda rel: rel in files) if files is not None else (lambda rel: os.path.isfile(os.path.join(hist["dir"], rel)))
     n = 0
     for row in rows:
         if not row.get("img"):
             continue
-        src = os.path.join(hist["dir"], row["img"][len("history/"):])
-        if not os.path.isfile(src):
+        rel = row["img"][len("history/"):]
+        if not have(rel):
             row.pop("img")
             continue
-        dst = os.path.join(DIST, row["img"])
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        link_or_copy(src, dst)
+        if base:
+            row["img"] = quote(rel)
+        else:
+            dst = os.path.join(DIST, row["img"])
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            link_or_copy(os.path.join(hist["dir"], rel), dst)
         n += 1
-    return n
+    for e in morgue:
+        rel = e["pic"][len("history/"):] if str(e.get("pic") or "").startswith("history/") else None
+        if rel and not have(rel):
+            e.pop("pic")
+        elif rel and base:
+            e["pic"] = base + quote(rel)
+    return n, base
 
 
 def retired_into(morgue, archived):
@@ -2531,7 +2570,8 @@ def parse_created():
         except ValueError:
             ok = False
         if ok:
-            out[card_key(name)] = {"date": day, "from": entry["from"]}
+            before = entry.get("before")          # made before that year: a photo of the physical card (Pep Drink)
+            out[card_key(name)] = {"date": day, "from": entry["from"], **({"before": before} if type(before) is int else {})}
         else:
             bad.append(name)
     if bad:
@@ -2548,19 +2588,23 @@ def created_ts(e):
 
 
 def apply_created(cards, created, proposed=None):
-    """created (UTC day) per card: the earliest evidence, its first Discord post (the file) or its first upload (fs); a hand
-    entry wins. createdFrom says which. Logs, never fails. The bot keeps the same rule (AutoCroissant
-    card_edits.CardDates.created) with its own first upload: the earliest version its database holds.
-    proposed: the card timelines' dates (load_history created): one earlier than both wins, never over a hand entry
-    (createdFrom discord, old repo, git, first repo, changelog or photo; createdWas: the date it replaced); "Before
-    2020" (a physical card photo, owner Q6) is HISTORY_DAY with createdBefore 2020."""
-    used, later, today, moved = set(), 0, datetime.now(timezone.utc).date().isoformat(), 0
+    """created (Pacific day, the site's dates: owner 11-17) per card: the earliest evidence, its first Discord post (the
+    file) or its first upload (fs); a hand entry wins, and so does one made before a year (the file's before: a physical
+    card photo's, HISTORY_DAY with createdBefore, createdFrom photo). createdFrom says which. Logs, never fails. The bot
+    keeps the same rule (AutoCroissant card_edits.CardDates.created) with its own first upload: the earliest version its
+    database holds. proposed: the card timelines' dates (load_history created): one earlier than both wins, never over
+    a hand entry (createdFrom discord, old repo, git, first repo, changelog or photo; createdWas: the date it replaced);
+    one on the same day gives its source (the file's labels are discord and git); "Before 2020" (a physical card photo,
+    owner Q6) is HISTORY_DAY with createdBefore 2020."""
+    used, later, today, moved = set(), 0, datetime.now(analytics.ZONE).date().isoformat(), 0
     for e in cards:
         found = created.get(card_key(e["key"]))
-        upload = datetime.fromtimestamp(e["fs"], timezone.utc).date().isoformat() if e.get("fs") else None
+        upload = datetime.fromtimestamp(e["fs"], analytics.ZONE).date().isoformat() if e.get("fs") else None
         if found:
             used.add(card_key(e["key"]))
-        if found and (found["from"] == "hand" or not upload or found["date"] <= upload):
+        if found and found.get("before"):
+            e["created"], e["createdFrom"], e["createdBefore"] = HISTORY_DAY, "photo", found["before"]
+        elif found and (found["from"] == "hand" or not upload or found["date"] <= upload):
             e["created"], e["createdFrom"] = found["date"], found["from"]
         elif upload:
             e["created"], e["createdFrom"] = upload, "git"
@@ -2574,6 +2618,8 @@ def apply_created(cards, created, proposed=None):
             if p["date"] == BEFORE_DAY:
                 e["createdBefore"] = 2020
             moved += 1
+        elif day and day == e.get("created") and not e.get("createdBefore") and e.get("createdFrom") in ("discord", "git"):
+            e["createdFrom"] = HISTORY_FROM[p["source"]]      # the same day: where the timelines found it (Pizza's old repo)
     if proposed:
         log(f"created: {moved} cards dated earlier by the card timelines ({len(proposed)} proposed)")
     dated = [e for e in cards if e.get("created")]
@@ -5306,9 +5352,12 @@ def main():
         warn(f"card timelines: {cut} Discord or changelog entries at or after their card's first version here left out")
     if early:
         versions["early"] = early
+        pictures, base = copy_history(hist, [r for rows in early.values() for r in rows], [c for c in morgue if c.get("lost")])
+        if base:
+            versions["hb"] = base                 # the rows' pictures' host (app.js versionList)
         log(f"card timelines: {sum(len(r) for r in early.values())} versions before this repo on {len(early)} cards "
-            f"({sum(1 for c in morgue if c.get('lost'))} Morgue entries from Discord), "
-            f"{copy_history(hist, [r for rows in early.values() for r in rows])} pictures")
+            f"({sum(1 for c in morgue if c.get('lost'))} Morgue entries from Discord), {pictures} pictures"
+            + (f" from {base}" if base else " copied into dist/history"))
     moved = set_updated(cards, real, data_key, shown_at)
     log(f"updated: {moved} of {sum(1 for e in cards if e.get('ts'))} cards dated by their last real change")
 
