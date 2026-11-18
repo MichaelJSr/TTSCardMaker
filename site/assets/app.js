@@ -1169,7 +1169,7 @@ function versionsOpen(id) {
   return !modal.hidden && was?.dataset.id === id ? was.open : !matchMedia("(max-width: 820px)").matches;
 }
 function versionsHtml(c, open) {
-  if (!c.iv && !c.ive) return "";
+  if ((c.iv || 0) + (c.ive || 0) < 2) return "";          // one version: nothing to compare (as versionList's < 2 below)
   const box = (n, body) => `<details class="ver-box" data-id="${esc(c.id)}"${open ? " open" : ""}><summary>Image versions <span class="muted">${n}</span></summary>${body}</details>`;
   if (!versionsIn(c)) return box((c.iv || 0) - (c.ivm || 0) + (c.ive || 0) - (c.ivme || 0), `<p class="muted">Loading…</p>`);
   const vs = versionList(c);
