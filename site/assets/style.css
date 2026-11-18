@@ -716,7 +716,7 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .ver-row.ver-base .ver-item { border-style: dashed; border-color: var(--accent); }
 .ver-base-tag { font-size: 11px; font-weight: 500; padding: 0 6px; }
 .ver-changes { margin-top: 10px; font-size: 13.5px; } .ver-ch { margin: 4px 0 0; padding-left: 18px; line-height: 1.45; }
-.ver-ch-k { font-weight: 600; } .ver-two figcaption .fact { font-size: 11px; padding: 0 6px; }
+.ver-ch-k { font-weight: 600; }
 .ver-minor > summary { cursor: pointer; width: fit-content; padding: 2px; font-size: 12.5px; color: var(--muted); }
 .ver-minor[open] > summary { margin-bottom: 6px; }
 .ver-compare figure { margin: 0; } .ver-compare img { width: 100%; height: auto; border-radius: 10px; background: var(--surface-2); display: block; }
@@ -725,6 +725,37 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .ver-src { font-size: 11px; font-weight: 500; padding: 0 6px; }   /* a version or change from before this repo: where from */
 .ver-compare .empty { aspect-ratio: 1 / 2; display: grid; place-items: center; padding: 10px; text-align: center; }
 .ver-text { margin-top: 10px; font-size: 14px; background: var(--surface-2); border-radius: 10px; padding: 8px 10px; }
+/* the compare view's modes (compare.js): 2-up, Swipe, Onion skin, Difference; both pictures fit one box size (contain);
+   the stacked modes' box is a 2-up box's size, centred, so a switch never moves the page */
+.ver-modes { display: inline-flex; flex-wrap: wrap; max-width: 100%; border: 1px solid var(--border); border-radius: 9px; overflow: hidden; }
+.ver-mode { padding: 5px 11px; font-size: 13px; border: 0; border-radius: 0; background: var(--surface-2); color: var(--ink-2); }
+.ver-mode + .ver-mode { border-left: 1px solid var(--border); }
+.ver-mode[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 22%, var(--surface-2)); color: var(--ink); font-weight: 600; }
+.ver-ctl { display: flex; align-items: center; min-height: 32px; font-size: 12.5px; color: var(--muted); }
+.ver-hint { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ver-hint[hidden] { display: none; }
+label.ver-hint { display: flex; align-items: center; gap: 8px; color: var(--ink-2); } .ver-onion { width: min(180px, 40vw); margin: 0; }
+.ver-pics { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.ver-pic { aspect-ratio: var(--ar); border-radius: 10px; background: var(--surface-2); overflow: hidden; }
+.ver-pic > a { display: block; height: 100%; }
+.ver-compare .ver-pic img { width: 100%; height: 100%; object-fit: contain; border-radius: 0; background: none; }
+.ver-compare .ver-pic .empty { aspect-ratio: auto; height: 100%; }
+.ver-caps { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 6px; font-size: 12.5px; line-height: 1.35; }
+.ver-caps .fact { font-size: 11px; padding: 0 6px; } .ver-size { display: block; min-height: 1.35em; color: var(--muted); }
+.ver-cmp:not([data-mode="2up"]) .ver-pics { display: block; width: calc(50% - 5px); margin: 0 auto; aspect-ratio: var(--ar);
+  border-radius: 10px; overflow: hidden; isolation: isolate; background: var(--surface-2); touch-action: pan-y; }
+.ver-cmp:not([data-mode="2up"]) .ver-pic { position: absolute; inset: 0; border-radius: 0; background: none; }
+.ver-cmp:not([data-mode="2up"]) .ver-pic > a { pointer-events: none; }
+.ver-cmp[data-mode="swipe"] .ver-pics { cursor: ew-resize; user-select: none; -webkit-user-select: none; }
+.ver-cmp[data-mode="swipe"] .ver-pic.ver-b { clip-path: inset(0 0 0 var(--x)); }
+.ver-cmp[data-mode="onion"] .ver-is-pick, .ver-cmp[data-mode="diff"] .ver-is-pick { z-index: 1; }
+.ver-cmp[data-mode="onion"] .ver-is-pick { opacity: var(--op); }
+.ver-cmp[data-mode="diff"] .ver-pics { background: #000; }
+.ver-cmp[data-mode="diff"] .ver-is-pick { mix-blend-mode: difference; }
+.ver-swipe { position: absolute; top: 0; bottom: 0; left: var(--x); width: 0; z-index: 2; outline: none; }
+.ver-swipe::before { content: ""; position: absolute; top: 0; bottom: 0; left: -1px; width: 2px; background: #fff; box-shadow: 0 0 0 1px rgb(0 0 0 / .5); }
+.ver-grip { position: absolute; top: 50%; left: 0; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / .55); }
+.ver-grip::before { content: "\2039\00a0\203a"; position: absolute; inset: 0; display: grid; place-items: center; color: #222; font: 700 13px/1 system-ui, sans-serif; }
+.ver-swipe:focus-visible .ver-grip { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 /* ---- editing ---- */
 /* outside edit mode too (in the page): the Font box's token picker, fresh.js's new-deploy bar, card states and flags */

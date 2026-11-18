@@ -5,6 +5,7 @@ import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml, stampOf, pictureNumber, sameAbility } from "./history.js";
+import { compareView, MODE_KEY, MODES, modeOf, boxRatio, pctAt, slideKey, sizesText, swipeAria } from "./compare.js";
 import { deckPasses, SEALED } from "./login.js";
 import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
@@ -1174,7 +1175,7 @@ function showVersion(c, i) {
   const vs = versionList(c), v = vs[i], box = $("#ver-compare");
   if (!v || !box) return;
   $$(".ver-item", modal).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
-  if (verBase?.id === c.id && vs[verBase.i] && verBase.i !== i) { box.innerHTML = compareHtml(c, vs, verBase.i, i); return; }
+  if (verBase?.id === c.id && vs[verBase.i] && verBase.i !== i) { box.innerHTML = compareHtml(c, vs, verBase.i, i); const v = $(".ver-cmp", box); if (v) cmpSizes(v); return; }
   if (v.early || vs[0].early) { box.innerHTML = earlyVersion(c, vs, i); return; }
   // text at that time, when the bot's text history lines up with the commit (the latest text at or before it; the
   // current one from when it started, not from the last PSD commit)
@@ -1280,21 +1281,56 @@ function changesHtml(c, vs, a, b) {
   const text = known && !same && y.ability ? `<div class="ver-text"><div>${diffWords(x.ability, y.ability)}</div></div>` : "";
   return `<div class="ver-changes"><div class="muted">Changes from the ${wa} version to the ${wb} version</div><ul class="ver-ch">${rows.join("")}</ul>${text}</div>`;
 }
-/** Two versions side by side, the older left (the list is newest first: the higher index), and their changes */
+/** Two versions in the compare view (compare.js: 2-up, Swipe, Onion skin, Difference; the older left, the list being
+ *  newest first: the higher index), and their changes */
+let cmpAt = { swipe: 50, onion: 50 };                   // the divider and the opacity, kept from one pick to the next
 function compareHtml(c, vs, base, i) {
   const [a, b] = base > i ? [base, i] : [i, base];
-  const fig = k => {
+  const side = k => {
     const w = vs[k], tags = `${k === base ? ` <span class="fact ver-base-tag">base</span>` : ""}${k === 0 ? ` <span class="fact">current</span>` : ""}`;
     const cap = `${esc(versionWhen(w))}${w.early ? ` · ${earlyBadge(w)}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}${tags}`
       + (w.sha ? commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path) : "");
     const alt = `${c.name}, ${k === 0 ? "current version" : `version ${versionWhen(w)}`}`;
-    const pic = w.early ? (w.img ? `<a href="${esc(w.img)}" target="_blank" rel="noopener"><img src="${esc(w.img)}" data-early alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}></a>` : `<div class="empty">No picture</div>`)
-      : k === 0 ? `<img src="${curImg(c)}" alt="${esc(alt)}">`
-      : `<a href="${esc(versionUrl(w))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, w))}" data-png="${esc(versionUrl(w))}" alt="${esc(alt)}" loading="lazy"></a>`;
-    return `<figure>${pic}<figcaption>${cap}</figcaption></figure>`;
+    const pic = w.early ? (w.img ? `<a href="${esc(w.img)}" target="_blank" rel="noopener"><img src="${esc(w.img)}" data-early alt="${esc(alt)}" draggable="false"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}></a>` : `<div class="empty">No picture</div>`)
+      : k === 0 ? `<img src="${curImg(c)}" alt="${esc(alt)}" draggable="false">`
+      : `<a href="${esc(versionUrl(w))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, w))}" data-png="${esc(versionUrl(w))}" alt="${esc(alt)}" draggable="false"></a>`;
+    return { pic, cap, when: versionWhen(w), base: k === base, size: w.early ? (w.w ? [w.w, w.h] : null) : c.tw ? [c.tw, c.th] : null };
   };
-  return `<div class="ver-pair ver-two">${fig(a)}${fig(b)}</div>${changesHtml(c, vs, a, b)}`;
+  const [x, y] = [side(a), side(b)];
+  return `${compareView(pref(MODE_KEY), x, y, boxRatio([x.size, y.size]), cmpAt)}${changesHtml(c, vs, a, b)}`;
 }
+/** The compare view's pictures' own sizes under them, once both are in, when they differ (as GitHub) */
+function cmpSizes(box) {
+  const im = ["a", "b"].map(k => $(`.ver-pic.ver-${k} img`, box)), caps = ["a", "b"].map(k => $(`.ver-cap.ver-${k} .ver-size`, box));
+  if (im.some(m => !m || !m.complete || !m.naturalWidth) || caps.some(x => !x)) return;
+  const t = sizesText(...im.map(m => [m.naturalWidth, m.naturalHeight]));
+  caps.forEach((x, n) => { x.textContent = t ? t[n] : ""; });
+}
+const cmpSwipe = (box, x) => {                          // the divider at x (0-100)
+  cmpAt.swipe = x; box.style.setProperty("--x", `${x}%`);
+  const sw = $(".ver-swipe", box);
+  if (sw) for (const [k, v] of Object.entries(swipeAria(x, sw.dataset.a, sw.dataset.b))) sw.setAttribute(k, v);
+};
+modal.addEventListener("load", e => { const box = e.target.closest?.(".ver-cmp"); if (box) cmpSizes(box); }, true);
+modal.addEventListener("input", e => {
+  const r = e.target; if (!r.matches?.(".ver-onion")) return;
+  const box = r.closest(".ver-cmp"), v = +r.value;
+  cmpAt.onion = v; box.style.setProperty("--op", String(v / 100)); const out = $("output", r.parentElement); if (out) out.textContent = `${v}%`;
+});
+let swiping = null;                                      // the pointer dragging the divider
+modal.addEventListener("pointerdown", e => {
+  const pics = e.target.closest?.(".ver-cmp[data-mode='swipe'] .ver-pics");
+  if (!pics || (e.pointerType === "mouse" && e.button !== 0)) return;
+  e.preventDefault(); swiping = e.pointerId; pics.setPointerCapture(e.pointerId);
+  const r = pics.getBoundingClientRect(); cmpSwipe(pics.closest(".ver-cmp"), pctAt(e.clientX, r.left, r.width));
+  $(".ver-swipe", pics)?.focus({ preventScroll: true });
+});
+modal.addEventListener("pointermove", e => {
+  if (swiping !== e.pointerId) return;
+  const pics = e.target.closest?.(".ver-pics"); if (!pics) return;
+  const r = pics.getBoundingClientRect(); cmpSwipe(pics.closest(".ver-cmp"), pctAt(e.clientX, r.left, r.width));
+});
+for (const end of ["pointerup", "pointercancel", "lostpointercapture"]) modal.addEventListener(end, e => { if (swiping === e.pointerId) swiping = null; });
 // ---- revert (editors): a History or Image versions "Revert to this version", the card's files as they were at that
 // version's commit (edit.js revertCard). A picture-only duplicate's texts are its original's PSD's: no Revert there
 const canRevert = c => editing() && (!c.dup || !!c.variantOf || pictureNumber(c.psd, c.png) !== null);
@@ -2090,6 +2126,15 @@ const actions = {
   "flag-issue": el => { const box = document.getElementById(el.getAttribute("aria-controls") || ""); if (!box) return;   // Needs handling: a flag's issue (flags.js)
     box.hidden = !box.hidden; el.setAttribute("aria-expanded", String(!box.hidden)); hideTip(); },
   "version-pin": el => { const c = cardOf(parseHash().arg); if (c) pinVersion(c, +el.dataset.i); },
+  "ver-mode": el => {                                    // the compare view's mode (compare.js): CSS lays it out, kept for next time
+    const box = el.closest(".ver-cmp"), mode = modeOf(el.dataset.mode); if (!box) return;
+    box.dataset.mode = mode;
+    $$(".ver-mode", box).forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === mode)));
+    $$(".ver-hint", box).forEach(h => { h.hidden = h.dataset.for !== mode; });
+    const sw = $(".ver-swipe", box); if (sw) { sw.hidden = mode !== "swipe"; sw.tabIndex = mode === "swipe" ? 0 : -1; }
+    try { localStorage.setItem(MODE_KEY, mode); } catch { /* storage blocked: this page only */ }
+    srStatus.textContent = `Compare view: ${MODES.find(([k]) => k === mode)[1]}`;
+  },
   "version-pick": el => { const id = parseHash().arg, c = cardOf(id); if (c) { if (!arrowing && verBase?.id === c.id && verBase.i === +el.dataset.i) pinVersion(c, verBase.i); showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "to-cards": () => { const sec = $(".browse > section", view), to = sec && $(".grid > .tile, .row-name, .empty a", sec);   // past the filters: the first card
     if (to) to.focus(); else if (sec) { sec.tabIndex = -1; sec.focus(); } },
@@ -2193,6 +2238,11 @@ document.addEventListener("keydown", e => {
     const all = $$(".ver-item", modal).filter(b => !b.closest(".ver-minor:not([open])")), next = all[all.indexOf(item) + (e.key === "ArrowDown" ? 1 : -1)];
     if (next) { next.focus(); arrowing = true; try { next.click(); } finally { arrowing = false; } }   // passing the compare base keeps it
     return;
+  }
+  const sw = document.activeElement?.closest?.(".ver-swipe");
+  if (sw && !e.metaKey && !e.ctrlKey && !e.altKey) {     // the compare view's divider: its keys, never the card arrows
+    const to = slideKey(cmpAt.swipe, e.key, e.shiftKey);
+    if (to !== null) { e.preventDefault(); cmpSwipe(sw.closest(".ver-cmp"), to); return; }
   }
   const ctab = document.activeElement?.closest?.(".change-tabs a");
   if (ctab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key) && !e.metaKey && !e.ctrlKey && !e.altKey) {   // the Changes tabs: arrows choose the next
