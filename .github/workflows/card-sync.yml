@@ -1238,6 +1238,7 @@ jobs:
           TOKEN: ${{ github.token }}
           CARD_FILES: &main-files |
             /.github/actions/
+            /.github/scripts/pages_wait.py
             /.mailmap
             /site/Card Edits.json
             /site/Card Authors.txt
@@ -1299,7 +1300,10 @@ jobs:
       # it), beside the guards' wait, Newest and the bake; into $RUNNER_TEMP/pdf/out (--out: Newest's reset wipes the
       # checkout), its report, err and exit code beside it. Rulebook PDF keeps it unless main's head moved its inputs
       # since (out/inputs); stopped when the lane does not go. The last lane's look that landed in no M (KEPT_SH, from
-      # Rulebook look kept's artifact for HEAD's pages.json) fetched beside the history wait: --kept.
+      # Rulebook look kept's artifact for HEAD's pages.json) fetched beside the history wait: --kept. A push's lane looks
+      # at once (--wait 0); the website lagging HEAD (exit 3), the push's own Pages build decides first, served here
+      # before it deploys (SERVE_SH, 90 s at most; --local: kept when its pages are the PDF's, else exit 4); else, or none,
+      # the website's look as ever (a printed PDF links the website). One part at a time, its pid for a stop, all in 690 s.
       - name: Rulebook PDF start
         id: pdf-start
         if: steps.fonts-first.outcome == 'success' && steps.venv.outcome == 'success'
@@ -1322,6 +1326,38 @@ jobs:
             fi
             [ "$1" != fetch ] || exit 0
             [ "$(cat "$k.code")" = 0 ] && [ -s "$k.json" ] && echo "$k.json"
+          # The push's site run (site.yml's push run at GITHUB_SHA, else the data job's early build: EARLY) and its Pages
+          # artifact of the run's attempt once listed (pages_wait.py; none when the build uploads none): downloaded,
+          # extracted into $1 and served on 127.0.0.1:$2 (python3's http.server, its pid in $1.pid). Exit 1 without one.
+          SERVE_SH: |
+            set -eo pipefail
+            dir=$1 port=$2 api=repos/$GITHUB_REPOSITORY/actions run=""
+            for _ in 1 2 3 4 5 6 7 8 9 10; do
+              run=$(gh api "$api/workflows/site.yml/runs?event=push&head_sha=$GITHUB_SHA" \
+                --jq '.workflow_runs[0] // empty | "\(.id) \(.run_attempt)"') || run=""
+              [ -n "$run" ] || run=$(gh api "$api/workflows/site.yml/runs?event=workflow_dispatch&per_page=30" \
+                --jq "[.workflow_runs[] | select(.display_title == \"$EARLY\")][0] // empty | \"\\(.id) \\(.run_attempt)\"") || run=""
+              [ -z "$run" ] || break
+              sleep 2
+            done
+            [ -n "$run" ] || { echo "No site run of ${GITHUB_SHA:0:8}"; exit 1; }
+            read -r id try <<< "$run"
+            : > "$dir.out"
+            GITHUB_RUN_ID=$id GITHUB_RUN_ATTEMPT=$try GITHUB_OUTPUT=$dir.out \
+              python3 "$GITHUB_WORKSPACE/.github/scripts/pages_wait.py" artifact "github-pages-a$try" "Pages upload" || exit 1
+            art=$(sed -n 's/^artifact=//p' "$dir.out")
+            [ -n "$art" ] || exit 1
+            printf 'Authorization: Bearer %s\n' "$GH_TOKEN" | curl -sSfL --max-time 60 -H @- -o "$dir.zip" \
+              "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/artifacts/$art/zip"
+            mkdir -p "$dir"
+            unzip -p "$dir.zip" artifact.tar | tar -x -C "$dir"
+            rm -f "$dir.zip"
+            python3 -m http.server --bind 127.0.0.1 --directory "$dir" "$port" > /dev/null 2>&1 < /dev/null &
+            echo "$!" > "$dir.pid"
+            until curl -sf -o /dev/null "http://127.0.0.1:$port/build.txt"; do kill -0 "$!"; sleep 0.05; done
+            echo "$(date -u +%T) site run $id's artifact $art served"
+          EARLY: Card browser (after ${{ github.run_id }} data)   # site.yml's run-name of the data job's early build
+          LOCAL_PORT: "8137"
         run: |
           bg=$RUNNER_TEMP/pdf
           mkdir -p "$bg"
@@ -1338,12 +1374,42 @@ jobs:
               fi
               last=() prior=$(bash -c "$KEPT_SH" kept) || prior=""
               [ -z "$prior" ] || last=(--kept "$prior")
-              CHROME=$(command -v google-chrome || command -v chromium || true) timeout -k 10 690 \
-                "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" --out "$bg/out" "${last[@]}" \
-                > "$bg/report.md" 2> "$bg/err" &
-              echo "$!" > "$bg/pid"
-              if [ -e "$bg/stop" ]; then kill "$!" 2> /dev/null || true; fi      # timeout ends its process group
-              wait "$!" || code=$?
+              export CHROME
+              CHROME=$(command -v google-chrome || command -v chromium || true)
+              end=$((SECONDS + 690))
+              part() {                            # part <seconds> <command...>, in end's time; none after a stop
+                local s=$((end - SECONDS))
+                [ "$1" -ge "$s" ] || s=$1
+                shift
+                if [ -e "$bg/stop" ] || [ "$s" -le 0 ]; then return 2; fi
+                timeout -k 10 "$s" "$@" &
+                echo "$!" > "$bg/pid"
+                if [ -e "$bg/stop" ]; then kill "$!" 2> /dev/null || true; fi      # timeout ends its process group
+                wait "$!"
+              }
+              look() {
+                part 690 "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" \
+                  --out "$bg/out" "${last[@]}" "$@" > "$bg/report.md" 2> "$bg/err"
+              }
+              if [ "$GITHUB_EVENT_NAME" != push ]; then
+                look || code=$?
+              elif look --wait 0 || code=$?; [ "$code" = 3 ]; then
+                cat "$bg/report.md"
+                code=0 dir=$RUNNER_TEMP/pages
+                if part 90 bash -c "$SERVE_SH" serve "$dir" "$LOCAL_PORT"; then
+                  look --local "http://127.0.0.1:$LOCAL_PORT" || code=$?
+                else
+                  code=4
+                fi
+                [ ! -s "$dir.pid" ] || kill "$(cat "$dir.pid")" 2> /dev/null || true
+                rm -rf "$dir" "$dir.zip" &
+                if [ "$code" != 0 ]; then
+                  echo "$(date -u +%T) the push's build: exit $code"
+                  [ ! -s "$bg/report.md" ] || cat "$bg/report.md"
+                  left=$((end - SECONDS - 90)) code=0
+                  look --wait "$((left < 600 ? left : 600))" || code=$?
+                fi
+              fi
             fi
             echo "$code" > "$bg/code" ) < /dev/null > "$bg/log" 2>&1 &
 
@@ -1643,6 +1709,7 @@ jobs:
               GIT_NO_LAZY_FETCH=1 git -C "$ws" diff-tree --quiet -r "$at" HEAD -- "${inputs[@]}" || moved=true
             fi
             if [ "$moved" = true ]; then
+              touch "$bg/stop"
               until [ -s "$bg/pid" ] || [ -s "$bg/code" ]; do sleep 0.05; done
               [ -s "$bg/code" ] || kill "$(cat "$bg/pid")" 2> /dev/null || true
               echo "Rulebook PDF: main's head moved what the look read at ${at:0:8}: looked at again."
