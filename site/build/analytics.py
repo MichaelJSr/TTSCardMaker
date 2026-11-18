@@ -537,7 +537,8 @@ def build(cards, stats, old_stats, now=None, psd_commits=None, lineage=None, int
         chain = page_chain(e, stats, old_stats)
         before = (early or {}).get(e["id"]) or {}
         rows = sorted(card_changes(e, chain, psd_commits, lineage) + list(before.get("rows") or ()), key=lambda r: -r["ts"])
-        trend = trend_of(early_chain(before.get("points")) + chain) if e["id"] in out_cards else []
+        mine = sorted(early_chain(before.get("points")) + chain, key=when)     # in time order (Shadow Queen's Discord
+        trend = trend_of(mine) if e["id"] in out_cards else []                  # picture after its first version here)
         if rows or trend:
             entry = out_cards.setdefault(e["id"], {})
             if rows:
