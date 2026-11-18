@@ -28,7 +28,7 @@
    inputs), none from a retry or while another run is unfinished; past minute 60 nothing is pushed. Re-pin: the save
    run again on M, a change is a second commit on M; none when the links were current or main moved. The save starts
    in the background before the rulebook PDF; TTS save waits for it (its report, changed, its exit code). A look's new
-   key no landed M carried: kept at refs/rulebook-look/kept (no branch), read back for HEAD's pages.json only.
+   key no landed M carried: kept as an artifact named for HEAD's pages.json (no ref), read back for it only.
 6. The timer: the schedule's run looks for a push run about to bake (Another timer: one with its Bake and
    save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as none) and skips
    its main lane when there is one (no cancel: the data lane ran); else it goes. A push's run has no timer: its main
@@ -73,6 +73,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import zipfile
 
 from checks_env import REPO
 
@@ -1490,30 +1491,48 @@ def save_cases(flow: dict) -> None:
         code, text, _ = run_step(job, "save", tmp, {"STARTED": "failure"}, tmp)
     check(code == 1 and "did not start" in text, "save: a start step that failed fails TTS save at once")
 
-    # Rulebook look kept on a sandbox origin: the look at refs/rulebook-look/kept (no branch or tag), the same commit
-    # again; KEPT_SH (both look steps') fetches it once and names it for HEAD's pages.json only
-    kept_sh = step(job, "pdf-start")["env"]["KEPT_SH"]
+    # Rulebook look kept: the workspace's pages.json uploaded as rulebook-look-<HEAD's pages.json's blob id> (no ref, no
+    # push); KEPT_SH (both look steps') reads the newest unexpired one of this repo (a fake gh on canned artifacts) once
+    # per blob id, for HEAD's pages.json only
+    kept, kept_sh = step(job, "Rulebook look kept"), step(job, "pdf-start")["env"]["KEPT_SH"]
+    check(kept.get("uses", "").startswith("actions/upload-artifact@") and "run" not in kept
+          and kept["with"].get("name") == "rulebook-look-${{ steps.pages.outputs.base }}"
+          and kept["with"].get("path") == "TTS/Rulebook/pages.json",
+          f"rulebook look kept: an artifact named for HEAD's pages.json, nothing pushed ({kept.get('with')})")
     with tempfile.TemporaryDirectory() as tmp:
         work, bare = origin(tmp)
         commit(work, {"TTS/Rulebook/pages.json": '{"key": "k0", "pages": []}\n'})
         git(work, "push", "-q", "origin", "main")
         ws = checkout(tmp, bare)
         base, look = git(ws, "rev-parse", "HEAD:TTS/Rulebook/pages.json"), '{"key": "k1", "pre": "p1", "pages": []}\n'
-        write(os.path.join(ws, "TTS/Rulebook/pages.json"), look)
-        tips = []
-        for _ in range(2):
-            code, text, _ = run_step(job, "Rulebook look kept", ws, {"BASE": base, "GIT_NO_LAZY_FETCH": "1"}, tmp)
-            tips.append(git(bare, "rev-parse", "-q", "--verify", "refs/rulebook-look/kept", check_=False) if code == 0 else text)
-        refs = git(bare, "for-each-ref", "--format=%(refname)").split()
-        read = lambda: _run('bash -c "$KEPT_SH" kept', ws, {**served(f"file://{bare}"), "KEPT_SH": kept_sh}, tmp)[1].strip()  # noqa: E731
+        arts, calls, fake = os.path.join(tmp, "arts"), os.path.join(tmp, "gh.calls"), os.path.join(tmp, "bin")
+        for d in (arts, os.path.join(tmp, "runner")):
+            os.makedirs(d, exist_ok=True)
+        for aid, text in ((5, "fork"), (6, "older"), (7, look), (8, "expired")):
+            with zipfile.ZipFile(os.path.join(arts, f"{aid}.zip"), "w") as z:
+                z.writestr("pages.json", text)
+        mine = {"repository_id": 1, "head_repository_id": 1}
+        write(os.path.join(arts, "none.json"), '{"artifacts": []}')
+        write(os.path.join(arts, f"rulebook-look-{base}.json"), json.dumps({"artifacts": [   # newest first
+            {"id": 8, "expired": True, "workflow_run": mine}, {"id": 5, "expired": False, "workflow_run": {"repository_id": 1, "head_repository_id": 2}},
+            {"id": 7, "expired": False, "workflow_run": mine}, {"id": 6, "expired": False, "workflow_run": mine}]}))
+        write(os.path.join(fake, "gh"), "#!/bin/bash\n"
+              f'q=""; prev=""; for a in "$@"; do [ "$prev" = --jq ] && q=$a; prev=$a; done; echo "$2" >> "{calls}"\n'
+              f'case $2 in */zip) id=${{2%/zip}}; cat "{arts}/${{id##*/}}.zip";; '
+              f'*) n=${{2#*name=}}; f="{arts}/${{n%%&*}}.json"; [ -f "$f" ] || f="{arts}/none.json"; jq -r "$q" "$f";; esac\n')
+        os.chmod(os.path.join(fake, "gh"), 0o755)
+        env = {"KEPT_SH": kept_sh, "GH_TOKEN": "x", "PATH": f"{fake}:{os.environ['PATH']}"}
+        read = lambda *a: _run(f'bash -c "$KEPT_SH" kept {" ".join(a)}', ws, env, tmp)[1].strip()  # noqa: E731
+        early = read("fetch")
         named = read()
         held = bool(named) and open(named, encoding="utf-8").read() == look
+        n = len(open(calls).read().split())
         commit(ws, {"TTS/Rulebook/pages.json": '{"key": "k2", "pages": [1]}\n'})          # HEAD's pages.json moved
         other = read()
-        ok = (len(tips[0]) == 40 and tips[0] == tips[1] and refs == ["refs/heads/main", "refs/rulebook-look/kept"]
-              and git(bare, "log", "-1", "--format=%s", "refs/rulebook-look/kept") == base and held and other == "")
-        check(ok, f"rulebook look kept: pushed outside refs/heads and refs/tags, once ({tips}); read back for HEAD's "
-                  f"pages.json ({held}), not after it moved ({other!r})")
+        asked = open(calls).read().split()
+        ok = early == "" and held and n == 2 and other == "" and len(asked) == 3 and f"rulebook-look-{base}&" not in asked[2]
+        check(ok, f"rulebook look kept: read back for HEAD's pages.json, the newest unexpired of this repo ({held}), "
+                  f"fetched once ({n} calls); not after it moved ({other!r}, {asked[2:]})")
 
 
 def records_cases(flow: dict) -> None:
