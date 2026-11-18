@@ -13,7 +13,7 @@
    History start's fetch late: the cached copy, restored, fetches the commits since it and is joined first, a broken
    one waits for the fetch; site.yml's History start, join and wait the same cases; Cards start failed: the checkout as
    ever): stoogedings-src/ alone
-   and a hand-edited save don't start the data lane; fonts, stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does, without the dispatch's inputs. The Build
+   and a hand-edited save don't start the data lane; fonts, stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does, without the dispatch's inputs; so does the builder's rulebook text when it differs from db/rulebook.json (a chapter not checked out: not compared). The Build
    step's arguments: the dispatch's inputs, none after the bake; --own the main lane's commits since the last build.
    The main Gate: a push and a dispatch go; the schedule goes when a card input or the save changed (the lane's own
    commits aside) since the last live run whose Bake and save succeeded (faked run lists; dry runs passed over), or
@@ -824,9 +824,14 @@ def timer_cases(flow: dict) -> None:
 
 
 def _bot(ws: str) -> None:
-    """The builder checkout a gate reads: PARSER_VERSION 2, psd_details VERSION 3, one commit."""
+    """The builder checkout a gate reads: PARSER_VERSION 2, psd_details VERSION 3, a rulebook text of the chapters
+    joined, one commit."""
     write(os.path.join(ws, "bot/commands/psd_parser.py"), "PARSER_VERSION = 2\n")
     write(os.path.join(ws, "bot/commands/psd_details.py"), "VERSION = 3\n")
+    write(os.path.join(ws, "bot/global_config.py"), 'RULEBOOK_SRC = "site/rulebook"\n')
+    write(os.path.join(ws, "bot/commands/rulebook.py"), "from global_config import RULEBOOK_SRC\n"
+          "def chapters(files): return [t for p, t in sorted(files.items()) if p.startswith(RULEBOOK_SRC + '/')]\n"
+          "def rulebook_text(entries): return ''.join(entries)\n")
     subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)
     git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "bot")
 
@@ -840,6 +845,8 @@ def gate_cases(flow: dict) -> None:
     with tempfile.TemporaryDirectory() as tmp:
         work, bare = origin(tmp)
         os.makedirs(os.path.join(tmp, "runner"))
+        write(os.path.join(tmp, "runner", "venv/bin/python"), f'#!/bin/sh\nexec "{sys.executable}" "$@"\n')   # the rulebook's
+        os.chmod(os.path.join(tmp, "runner", "venv/bin/python"), 0o755)
         cases = [  # (files, message, author, expected go)
             ({"MDW/Fonts/stoogedings-src/x.svg": "svg 2"}, "icon source", "t", False),
             ({"site/index.html": "y"}, "site code", "t", False),
@@ -894,6 +901,23 @@ def gate_cases(flow: dict) -> None:
                           + ("" if code == 0 else f"\n{text}"))
 
         check(all(full) and len(full) == len(cases), f"data gate: on the data lane's depth-1 checkout (Cards start) after History start, join and wait ({full})")
+        for files, book, want, what in (                    # (d) the builder's rulebook text (_bot's) vs db/rulebook.json
+                ({"site/rulebook/01-a.md": "A\n"}, "A\n", "false", "the builder's rulebook text matches"),
+                ({}, "old\n", "true", "the builder's rulebook text differs"),
+                ({"site/rulebook/x/02-b.md": "B\n"}, "old\n", "false", "a chapter not checked out: not compared")):
+            if files:
+                commit(work, files, "rulebook")
+                git(work, "push", "-q", "origin", "main")
+                git(ws, "fetch", "-q", "origin", "main")
+                git(ws, "checkout", "-q", "-B", "main", "FETCH_HEAD")
+            write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
+                {"card_commit": git(ws, "rev-parse", "HEAD"), "builder": {"parser_version": 2, "details_version": 3},
+                 "pending": {"stale": []}}))
+            write(os.path.join(ws, "carddata/db/rulebook.json"), book)
+            code, text, out = run_step(data, "gate", ws, DATA_GATE, tmp)
+            check(code == 0 and out.get("go") == want and ("rulebook text differs" in text) == (want == "true")
+                  and ("not compared" in text) == ("not compared" in what),
+                  f"data gate: {what} -> go={out.get('go')} (want {want})" + ("" if code == 0 else f"\n{text}"))
 
         # The main lane's gate: the cursor is the head of the last run whose Bake and save succeeded
         fake = os.path.join(tmp, "bin")

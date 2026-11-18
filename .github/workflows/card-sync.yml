@@ -653,8 +653,9 @@ jobs:
         run: *records-sh
 
       # Go when (a) a card input changed since the last build's main commit, (b) a budgeted re-parse is pending, (c) the
-      # builder's PARSER_VERSION or psd_details VERSION differs from the data's, (e) events are unposted, (f) a dispatch
-      # asks, there is no data yet, or the bake's M is to be re-read (the after job). GO in the env.
+      # builder's PARSER_VERSION or psd_details VERSION differs from the data's, (d) the builder's rulebook text (its own
+      # rulebook.py on main's site/rulebook/*.md, as Build reads them) differs from db/rulebook.json, (e) events are
+      # unposted, (f) a dispatch asks, there is no data yet, or the bake's M is to be re-read (the after job). GO in the env.
       - name: Gate
         id: gate
         env:
@@ -703,6 +704,21 @@ jobs:
             built=$(jq -r '.builder.details_version // ""' "$manifest")
             details=$(sed -n 's/^VERSION *= *\([0-9][0-9]*\).*/\1/p' bot/commands/psd_details.py)
             if [ "$details" != "$built" ]; then why+=("details version ${built:-none} -> $details"); fi
+            book=$(git ls-tree -rz --name-only HEAD -- site/rulebook/ | "$RUNNER_TEMP/venv/bin/python" -I -c '
+          import sys
+          sys.path.insert(0, "bot")
+          from commands import rulebook
+          paths = [p for p in sys.stdin.buffer.read().decode().split("\0") if p.endswith(".md")]
+          if paths:                                 # none: not compared
+              files = {p: open(p, encoding="utf-8", errors="replace", newline="").read() for p in paths}
+              try:
+                  db = open("carddata/db/rulebook.json", encoding="utf-8").read()
+              except FileNotFoundError:
+                  db = None
+              print("same" if rulebook.rulebook_text(rulebook.chapters(files)) == db else "differs")
+          ') || book=unread
+            if [ "$book" = differs ]; then why+=("the builder's rulebook text differs from db/rulebook.json"); fi
+            if [ "$book" = unread ]; then echo "::warning::the rulebook text was not compared (a chapter not checked out?)"; fi
             shopt -s nullglob
             logs=("$db"/changelog/*.jsonl)
             last=0
