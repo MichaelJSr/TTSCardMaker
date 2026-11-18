@@ -1663,6 +1663,7 @@ let statsJob = 0, statsNarrow = false, statsW = innerWidth;   // narrow: the cha
 const statsCtx = () => ({ cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage, season: S.season, seriesMode: S.seriesMode, narrow: statsNarrow });
 function renderStatsView(r) {
   if (!St) {                                             // the first open: charts.js
+    if (!S.analytics) loadAnalytics().catch(() => {});   // and analytics.json beside it (renderStatsView fills with it)
     view.innerHTML = `<div class="loading">Loading…</div>`;
     whenLoaded(loadCharts(), "the Stats page", () => { const h = parseHash(); if (h.name === "stats") renderView(h, location.hash || hashOf(h)); });
     return;
