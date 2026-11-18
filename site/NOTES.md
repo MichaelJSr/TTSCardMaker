@@ -1125,7 +1125,9 @@ relies on:
   may still run, and Back mid-scroll landed on the later chapter); an old numbered id goes on
   to renderRules' redirect; a publish's `rerender()` still redraws. Phones at 4x CPU: no ~120 ms task per Back.
 - Rulebook: no `content-visibility` on its pages: the TOC's smooth jumps landed off target (the pages'
-  estimated heights change as they render on the way).
+  estimated heights change as they render on the way). Since 2026-11-18 its chapters have it, as Stats' charts (below):
+  every chapter is drawn before a contents jump, a same-book scroll, Back/Forward, a reload's place or a redraw
+  mid-book (`rb-all`), and a deep link draws every chapter down to its target first (`drawn`).
 - Read `scrollY` and the window size before replacing the view (renderCards `win`, renderStatsView `top`, `vh`): read
   after, they force a layout of the short page (`innerWidth` too on phones) and the scroll position clamps.
 - Mentions: `mentions()` parses without building the icons' HTML (`parse(text, self, false)`); it must keep finding
@@ -1183,6 +1185,10 @@ relies on:
   Medians (scratch s10c/opt1): Image versions tap 2.50 s -> 16 ms; Stats 2.29 -> 1.15 s (first charts 911 -> 917 ms);
   compare a repo version 1.05 -> 0.85 s; Stats warm, network not throttled, 429 -> 300 ms; desktop the same within
   noise (a second card's list 6 -> 21 ms: its own file). versions.json is still written for one release.
+  Round 2 (scratch s10c/opt2): the Rulebook's chapters below the first screen are drawn once near (`content-visibility:
+  auto`, 3000 px stand-ins, scoped to #view so the rulebook editor's preview is untouched) or two at a time while the
+  page is idle (`drawn`, from 300 ms after open), every chapter at once as above (`rb-all`; a deep link: the chapters
+  down to its target, so nothing above the reader changes size later, also where scroll anchoring is missing).
 - `diffWords` keeps its HTML (2026-11-04: a Map by before + "\0" + after, the oldest dropped past 2000; ~1,000 pairs
   exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
 - Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first

@@ -474,6 +474,7 @@ function route(e) {
   if (r.name === "rules" && r.arg !== "print" && was?.name === "rules" && was.arg !== "print" && q(was.params) === q(r.params) && viewSig() === S.viewSig
     && view.firstElementChild?.matches(".rules") && !$(".loading", view) && (!r.arg || S.book.chapters.some(c => c.id === r.arg.split("/")[0]))) {
     closeModal(); setTitle(r);   // another chapter of the book drawn: scroll, no redraw (an old numbered id: renderRules)
+    view.classList.add("rb-all");                        // every chapter drawn first, so the scroll lands (style.css)
     const [ch, sec] = r.arg.split("/");
     if (ch && !q(r.params) && rulesAt !== location.hash) document.getElementById(sec ? `${ch}--${sec}` : ch)?.scrollIntoView();   // Back/Forward too: a contents link's smooth scroll may still run
     rulesAt = S.renderedHash = S.listHash = hash;
@@ -1442,7 +1443,7 @@ function renderRules(r) {
   const q = bookFold((r.params.get("q") || "").trim());
   if (document.activeElement !== qInput) qInput.value = "";
   const chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
-  const banned = S.data.banlist, can = editing();
+  const banned = S.data.banlist, can = editing(), top = scrollY === 0 && !S.restoring;   // before the view goes (see renderCards)
   const label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;
   view.innerHTML = `<div class="rules${q ? " rb-searching" : ""}">
     <nav class="toc" aria-label="Rulebook chapters"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
@@ -1469,9 +1470,19 @@ function renderRules(r) {
     highlight($$(".rb-chapter", view), q);
     for (const b of $$(".rb-chapter .badge[data-tip]", view)) if (badgeWords(b).includes(q) && !bookFold(b.textContent).includes(q)) b.classList.add("rb-hit");
   }
+  // chapters below the first screen drawn once near (style.css) or two at a time while the page is idle; every chapter at
+  // once while Back/Forward or a reload restores a place or a redraw starts mid-book (rb-all), so the place lands as before
+  view.classList.toggle("rb-all", !top || !!S.placing);
+  const book = $(".rb-book", view), idle = window.requestIdleCallback || (f => setTimeout(f, 50));
+  const more = () => { if (!book.isConnected) return; const rest = $$(":scope > .rb-chapter:not(.drawn)", book);
+    for (const c of rest.slice(0, 2)) c.classList.add("drawn");
+    if (rest.length > 2) idle(more, { timeout: 400 }); };
+  setTimeout(() => idle(more, { timeout: 400 }), 300);
   watchToc();
   const [ch, sec] = (r.arg || "").split("/");
-  if (ch && !q && rulesAt !== location.hash) settleAt(document.getElementById(sec ? `${ch}--${sec}` : ch));   // #/rules/<chapter>[/<section>]
+  const to = ch && !q && rulesAt !== location.hash ? document.getElementById(sec ? `${ch}--${sec}` : ch) : null;
+  if (to) for (const c of $$(":scope > .rb-chapter", book)) { c.classList.add("drawn"); if (c.contains(to)) break; }   // a deep link: nothing above it changes size later
+  if (to) settleAt(to);                                  // #/rules/<chapter>[/<section>]
   rulesAt = location.hash;
   const input = $("#rules-q");
   input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
@@ -2213,6 +2224,7 @@ document.addEventListener("click", e => {
   if (scroll) {                                          // a rulebook page's link: its #/rules/<id> in the address bar too
     e.preventDefault(); const el = document.getElementById(scroll.dataset.scroll);
     if (scroll.closest(".stats-jump")) view.classList.add("charts-all");   // Stats: every chart drawn first, so the jump lands (style.css)
+    if (scroll.closest(".rules")) view.classList.add("rb-all");             // the rulebook's chapters too
     el?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     const to = scroll.getAttribute("href");
     if (to?.startsWith("#/rules/") && to !== location.hash) { rulesAt = to; history.pushState(null, "", to); syncUrl(parseHash()); S.renderedHash = S.listHash = to; }
