@@ -1080,15 +1080,22 @@ const versionList = c => {
   const rows = S.versions.cards[c.id] || [];
   const minor = new Set(S.versions.minor[c.id] || []);        // build_site: a picture change under the share that shows, no data change
   return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; })
-    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, repo: r.r, ts: r.ts, channel: r.ch, author: r.a, subject: r.s, file: r.fl, as: r.as,
-      img: r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor })));
+    .concat((S.versions.early?.[c.id] || []).map(r => ({ early: r.k, repo: r.r, ts: r.ts, before: r.b, channel: r.ch, author: r.a, subject: r.s, file: r.fl, as: r.as,
+      img: r.img && (S.versions.hb || "") + r.img, w: r.w, h: r.h, fields: r.f || {}, minor: !!r.minor })));   // hb: the history branch's commit (build_site history_host)
 };
-const versionWhen = v => (v.ts ? date(v.ts) : "Undated");
+const versionWhen = v => (v.ts ? date(v.ts) : v.before ? `before ${date(v.before)}` : "Undated");   // before: an owner's undated Meme copy
 const versionMsg = v => [v.subject, v.file && `file ${v.file}`, v.as && `as ${v.as}`].filter(Boolean).join(" · ");
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
 // an older version's 360 px copy on the plates branch (build_site version_images, not in the site); one not made yet: its PNG
 const versionCopy = (c, v) => `${COPIES}/${S.versions.repo}/plates/v/${c.id}/${v.sha.slice(0, 10)}-${S.data.thumbs.v}.avif`;
-modal.addEventListener("error", e => { const t = e.target; if (t.dataset?.png) { t.src = t.dataset.png; delete t.dataset.png; } }, true);
+modal.addEventListener("error", e => {
+  const t = e.target;
+  if (t.dataset?.png) { t.src = t.dataset.png; delete t.dataset.png; }
+  else if (t.dataset?.early !== undefined) {               // a timeline picture that didn't load: said so, its row stays
+    const box = Object.assign(document.createElement("div"), { className: "empty", textContent: "Picture missing" });
+    (t.closest("a") || t).replaceWith(box);
+  }
+}, true);
 /** Under the card's picture: open beside the text, closed in one column (style.css .detail), where the card's text comes
  *  after it; a redraw of the same card keeps it as it was. */
 function versionsOpen(id) {
@@ -1101,8 +1108,9 @@ function versionsHtml(c, open) {
   if (!S.versions) return box((c.iv || 0) - (c.ivm || 0) + (c.ive || 0) - (c.ivme || 0), `<p class="muted">Loading…</p>`);
   const vs = versionList(c);
   if (vs.length < 2) return "";
-  const item = (v, i) => `<button type="button" class="ver-item${v.early ? " ver-early" : ""}" data-action="version-pick" data-i="${i}" aria-pressed="false">
-        <span class="when">${versionWhen(v)}${i === 0 ? ` <span class="fact">current</span>` : ""}${v.early ? ` <span class="fact ver-src">${earlyBadge(v)}</span>` : ""}</span><span class="who">${esc(v.author || (v.channel ? `#${v.channel}` : ""))}</span><span class="msg">${esc(versionMsg(v))}</span></button>`;
+  const base = verBase?.id === c.id ? verBase.i : -1;
+  const item = (v, i) => `<div class="ver-row${i === base ? " ver-base" : ""}"><button type="button" class="ver-item${v.early ? " ver-early" : ""}" data-action="version-pick" data-i="${i}" aria-pressed="false">
+        <span class="when">${versionWhen(v)}${i === 0 ? ` <span class="fact">current</span>` : ""}${v.early ? ` <span class="fact ver-src">${earlyBadge(v)}</span>` : ""}${i === base ? ` <span class="fact ver-base-tag">base</span>` : ""}</span><span class="who">${esc(v.author || (v.channel ? `#${v.channel}` : ""))}</span><span class="msg">${esc(versionMsg(v))}</span></button>${pinButton(v, i, i === base)}</div>`;
   const rows = vs.map((v, i) => [v, i]), major = rows.filter(([v]) => !v.minor), minor = rows.filter(([v]) => v.minor);
   const share = Math.round(S.versions.visible * 100);
   // minor changes (owner 11-09): folded, never dropped (versions.json visible: AutoCroissant png_changes.VISIBLE)
@@ -1110,7 +1118,7 @@ function versionsHtml(c, open) {
   return box(major.length, `
     <div class="versions">
       <div class="ver-list" role="group" aria-label="Image versions, newest first">${major.map(([v, i]) => item(v, i)).join("")}</div>${folded}
-      <div class="ver-compare" id="ver-compare" aria-live="polite"><p class="muted">Pick a version to compare (↑ ↓).</p></div>
+      <div class="ver-compare" id="ver-compare" aria-live="polite"><p class="muted">${base >= 0 && vs[base] ? `Base: ${esc(versionWhen(vs[base]))}. Pick a version to compare with it (↑ ↓).` : "Pick a version to compare (↑ ↓). Pin one (right-click, long-press or its pin) to compare others with it."}</p></div>
     </div>`);
 }
 // the current picture beside a version: the dialog's own 480 px one (1x screens) when it shows it, else 720 px
@@ -1119,6 +1127,7 @@ function showVersion(c, i) {
   const vs = versionList(c), v = vs[i], box = $("#ver-compare");
   if (!v || !box) return;
   $$(".ver-item", modal).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+  if (verBase?.id === c.id && vs[verBase.i] && verBase.i !== i) { box.innerHTML = compareHtml(c, vs, verBase.i, i); return; }
   if (v.early || vs[0].early) { box.innerHTML = earlyVersion(c, vs, i); return; }
   // text at that time, when the bot's text history lines up with the commit (the latest text at or before it; the
   // current one from when it started, not from the last PSD commit)
@@ -1139,7 +1148,7 @@ function earlyVersion(c, vs, i) {
   const caption = w => `${versionWhen(w)}${w.early ? ` · ${earlyBadge(w)}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}`
     + (w.sha ? commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path) : "") + (versionMsg(w) ? `<br><span class="muted">${esc(versionMsg(w))}</span>` : "");
   const src = w => (w.early ? w.img : img(c, 720));
-  const pic = (w, alt) => (src(w) ? `<img src="${esc(src(w))}" alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
+  const pic = (w, alt) => (src(w) ? `<img src="${esc(src(w))}"${w.early ? " data-early" : ""} alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
     : `<div class="empty">No picture</div>`);
   if (i === 0) return `<figure>${pic(v, `${c.name}, current version`)}<figcaption>${caption(v)}<br>Current version</figcaption></figure>`;
   const then = v.fields?.ability;
@@ -1147,6 +1156,91 @@ function earlyVersion(c, vs, i) {
       <figure>${pic(cur, `${c.name}, current version`)}<figcaption>Current<br><span class="muted">${cur.early ? caption(cur) : `${date(cur.ts)}${commitAfter(S.versions.repo, cur.sha, `Commit for the ${date(cur.ts)} image version`, cur.path)}`}</span></figcaption></figure></div>
       ${then && c.ability && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>`
         : then === "" && c.ability ? `<div class="ver-text muted">No ability then</div>` : ""}`;
+}
+// ---- compare two versions (owner 11-17 (5)): a pinned base (right-click, long-press or the pin on its row; again to
+// unpin, or pick it) is what every version picked is compared with, instead of the current card: both pictures side by
+// side, the older left, and what changed between them (stars, stats, types, name, the ability's words) from what each
+// version has: an early row's sure fields, this repo's versions the card data (the current card, its text then
+// (textAt), its recorded changes rolled back); a field one side doesn't have is said so, never guessed
+let verBase = null, arrowing = false;                    // {id, i}: the pinned version of the open card; an arrow's pick
+const pinButton = (v, i, on) => `<button type="button" class="ver-pin" data-action="version-pin" data-i="${i}" aria-pressed="${on}" aria-label="${on ? "Unpin" : "Pin"} the ${esc(versionWhen(v))} version${on ? "" : " as the base to compare with"}" data-tip="${on ? "Unpin: compare with the current card again" : "Pin: compare other versions with this one"}"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M10.6 1.2 14.8 5.4 13.4 6.8 12.7 6.1 9.9 8.9 10.3 12 9.2 13.1 6.4 10.3 2.4 14.3 1.7 13.6 5.7 9.6 2.9 6.8 4 5.7 7.1 6.1 9.9 3.3 9.2 2.6Z"/></svg></button>`;
+function pinVersion(c, i) {
+  const was = verBase?.id === c.id ? verBase.i : -1, picked = $(".ver-item[aria-pressed='true']", modal);
+  const again = () => { const p = $(".ver-item[aria-pressed='true']", modal); if (p && parseHash().arg === c.id) showVersion(c, +p.dataset.i); };
+  if (was !== i) {                                       // what an older version here had: the recorded changes, its text then
+    if (!S.analytics) loadAnalytics().then(again, () => {});
+    if (c.hv && !c.history) loadHistory().then(again, () => {});
+  }
+  verBase = was === i ? null : { id: c.id, i };
+  const slot = $("#versions-slot"), open = versionsOpen(c.id);
+  if (slot) slot.innerHTML = versionsHtml(c, open);
+  const now = picked ? +picked.dataset.i : -1;
+  if (now >= 0 && (!verBase || now !== i)) showVersion(c, now);
+  $(`.ver-pin[data-i="${i}"]`, modal)?.focus({ preventScroll: true });
+  srStatus.textContent = verBase ? `Pinned the ${versionWhen(versionList(c)[i])} version: picked versions are compared with it.` : "Unpinned: picked versions are compared with the current card.";
+}
+const ITEM_KINDS = new Set(["equip", "fragile equip", "fragile_equip", "active", "heal", "food", "support", "attack", "infliction", "counter", "negation", "deploy", "offense", "protective", "nme"]);   // an item's kinds: no timeline reads them (AutoCroissant discord_chain ITEM_KINDS)
+const STAT_KEYS = ["hp", "def", "atk", "spd"];
+const lineOf = x => (x && STAT_KEYS.every(k => Number.isInteger(x[k])) ? STAT_KEYS.map(k => x[k]) : null);
+/** A version's fields for the comparison: {name, stars, types, stats [4], ability}, undefined where it has none known */
+function fieldsAt(c, vs, i) {
+  const v = vs[i], item = ["item", "aux item", "nme"].includes(c.type);
+  const kinds = t => (item ? (t || []).filter(x => !ITEM_KINDS.has(String(x).toLowerCase())) : t);
+  if (v.early) {
+    const f = v.fields || {};
+    return { name: f.name, stars: f.stars, types: f.types && kinds(f.types), stats: lineOf(f.stats) || undefined, ability: f.ability };
+  }
+  const now = { name: c.name, stars: c.stars, types: kinds(c.types || []), stats: c.hp != null ? STAT_KEYS.map(k => c[k] ?? 0) : null, ability: c.ability || "" };
+  if (i === 0) return now;
+  // an older version here: its text then; stars, stats and types rolled back through the card's recorded changes after it
+  const out = { name: undefined, stars: now.stars, types: now.types && [...now.types], stats: now.stats && [...now.stats], ability: textAt(c, v.ts) ?? undefined };
+  const rows = (S.analytics?.cards?.[balanceOf(c).id]?.changes || []).filter(r => !r.early && r.ts > v.ts + 3600);
+  if (!S.analytics) { out.stars = out.types = out.stats = undefined; return out; }
+  for (const r of rows) {                                // newest first: each undone
+    if (r.approx && Math.abs(r.ts - v.ts) < 86400) { if (r.stats) out.stats = undefined; if (r.stars) out.stars = undefined; if (r.types) out.types = undefined; continue; }
+    if (r.stats && out.stats !== undefined) out.stats = r.stats[0] ? [...r.stats[0]] : null;
+    if (r.stars && out.stars !== undefined) out.stars = r.stars[0];
+    if (r.types && out.types) { const t = [...out.types]; for (const x of r.types.add || []) { const k = t.indexOf(x); if (k >= 0) t.splice(k, 1); } out.types = kinds(t.concat(r.types.drop || [])); }
+    if (r.lines || r.kind) out.stats = undefined;       // a creature count or kind changed: its stats aren't one line
+  }
+  return out;
+}
+const typeList = t => (t.length ? t.map(x => esc(String(x).replace(/_/g, " "))).join(", ") : "none");
+/** What changed from version a (older) to b, field by field */
+function changesHtml(c, vs, a, b) {
+  const x = fieldsAt(c, vs, a), y = fieldsAt(c, vs, b), wa = esc(versionWhen(vs[a])), wb = esc(versionWhen(vs[b]));
+  const unknown = (p, q) => (p === undefined && q === undefined ? "not known for either version" : `not known for the ${p === undefined ? wa : wb} version`);
+  const rows = [];
+  const row = (label, html) => rows.push(`<li><span class="ver-ch-k">${label}</span> ${html}</li>`);
+  if (x.name !== undefined || y.name !== undefined) row("Name", x.name === undefined || y.name === undefined ? unknown(x.name, y.name) : norm(x.name) === norm(y.name) ? `same (${esc(y.name)})` : `${esc(x.name)} → <b>${esc(y.name)}</b>`);
+  row("Stars", x.stars === undefined || y.stars === undefined ? unknown(x.stars, y.stars) : x.stars === y.stars ? `same (${y.stars ?? "none"})` : `${x.stars ?? "none"} → <b>${y.stars ?? "none"}</b>`);
+  if (c.hp != null || x.stats || y.stats) row("Stats", x.stats === undefined || y.stats === undefined ? unknown(x.stats, y.stats) : !x.stats || !y.stats ? `${x.stats ? x.stats.join("/") : "none"} → <b>${y.stats ? y.stats.join("/") : "none"}</b>`
+    : x.stats.every((n, k) => n === y.stats[k]) ? `same (${y.stats.join("/")})` : STAT_KEYS.map((k, n) => (x.stats[n] === y.stats[n] ? "" : `${k.toUpperCase()} ${x.stats[n]} → <b class="${y.stats[n] > x.stats[n] ? "diff-up" : "diff-down"}">${y.stats[n]}</b>`)).filter(Boolean).join(", "));
+  if (x.types === undefined || y.types === undefined) row("Types", unknown(x.types, y.types));
+  else {
+    const add = y.types.filter(t => !x.types.includes(t)), drop = x.types.filter(t => !y.types.includes(t));
+    row("Types", !add.length && !drop.length ? `same (${typeList(y.types)})` : [add.length ? `+${typeList(add)}` : "", drop.length ? `−${typeList(drop)}` : ""].filter(Boolean).join(" "));
+  }
+  const ability = x.ability === undefined || y.ability === undefined ? unknown(x.ability, y.ability)
+    : x.ability === y.ability ? "same" : !y.ability ? "removed" : !x.ability ? "added" : "changed (changes highlighted)";
+  row("Ability", ability);
+  const text = x.ability !== undefined && y.ability !== undefined && x.ability !== y.ability && y.ability ? `<div class="ver-text"><div>${diffWords(x.ability, y.ability)}</div></div>` : "";
+  return `<div class="ver-changes"><div class="muted">Changes from the ${wa} version to the ${wb} version</div><ul class="ver-ch">${rows.join("")}</ul>${text}</div>`;
+}
+/** Two versions side by side, the older left (the list is newest first: the higher index), and their changes */
+function compareHtml(c, vs, base, i) {
+  const [a, b] = base > i ? [base, i] : [i, base];
+  const fig = k => {
+    const w = vs[k], tags = `${k === base ? ` <span class="fact ver-base-tag">base</span>` : ""}${k === 0 ? ` <span class="fact">current</span>` : ""}`;
+    const cap = `${esc(versionWhen(w))}${w.early ? ` · ${earlyBadge(w)}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}${tags}`
+      + (w.sha ? commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path) : "");
+    const alt = `${c.name}, ${k === 0 ? "current version" : `version ${versionWhen(w)}`}`;
+    const pic = w.early ? (w.img ? `<a href="${esc(w.img)}" target="_blank" rel="noopener"><img src="${esc(w.img)}" data-early alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}></a>` : `<div class="empty">No picture</div>`)
+      : k === 0 ? `<img src="${curImg(c)}" alt="${esc(alt)}">`
+      : `<a href="${esc(versionUrl(w))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, w))}" data-png="${esc(versionUrl(w))}" alt="${esc(alt)}" loading="lazy"></a>`;
+    return `<figure>${pic}<figcaption>${cap}</figcaption></figure>`;
+  };
+  return `<div class="ver-pair ver-two">${fig(a)}${fig(b)}</div>${changesHtml(c, vs, a, b)}`;
 }
 // ---- revert (editors): a History or Image versions "Revert to this version", the card's files as they were at that
 // version's commit (edit.js revertCard). A picture-only duplicate's texts are its original's PSD's: no Revert there
@@ -1166,6 +1260,7 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
 }
 function closeModal() {
   if (modal.hidden) return;
+  verBase = null;
   nearby.disconnect();
   modal.hidden = true; modal.innerHTML = ""; document.body.style.overflow = ""; shut();
   document.title = "Impossibility Simulator · Card Browser";
@@ -1939,7 +2034,8 @@ const actions = {
       .catch(e => toast(`Couldn't revert (${e.message})`)).finally(() => { el.disabled = false; }); },
   "flag-issue": el => { const box = document.getElementById(el.getAttribute("aria-controls") || ""); if (!box) return;   // Needs handling: a flag's issue (flags.js)
     box.hidden = !box.hidden; el.setAttribute("aria-expanded", String(!box.hidden)); hideTip(); },
-  "version-pick": el => { const id = parseHash().arg, c = cardOf(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
+  "version-pin": el => { const c = cardOf(parseHash().arg); if (c) pinVersion(c, +el.dataset.i); },
+  "version-pick": el => { const id = parseHash().arg, c = cardOf(id); if (c) { if (!arrowing && verBase?.id === c.id && verBase.i === +el.dataset.i) pinVersion(c, verBase.i); showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "to-cards": () => { const sec = $(".browse > section", view), to = sec && $(".grid > .tile, .row-name, .empty a", sec);   // past the filters: the first card
     if (to) to.focus(); else if (sec) { sec.tabIndex = -1; sec.focus(); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
@@ -2040,7 +2136,7 @@ document.addEventListener("keydown", e => {
   if (item && (e.key === "ArrowDown" || e.key === "ArrowUp")) {   // move through the version list (minor ones when open)
     e.preventDefault();
     const all = $$(".ver-item", modal).filter(b => !b.closest(".ver-minor:not([open])")), next = all[all.indexOf(item) + (e.key === "ArrowDown" ? 1 : -1)];
-    if (next) { next.focus(); next.click(); }
+    if (next) { next.focus(); arrowing = true; try { next.click(); } finally { arrowing = false; } }   // passing the compare base keeps it
     return;
   }
   const ctab = document.activeElement?.closest?.(".change-tabs a");
@@ -2105,6 +2201,9 @@ document.addEventListener("keydown", e => { const el = e.target; if (e.key !== "
 let touchAt = -1e9;
 document.addEventListener("pointerdown", e => { if (e.pointerType === "touch") touchAt = performance.now(); }, true);
 document.addEventListener("contextmenu", e => { const el = xTarget(e.target); if (!el) return; e.preventDefault(); if (performance.now() - touchAt > 1500) actions["toggle-param"](el, true); });
+// an Image versions row: a right-click pins it as the compare base (a long press on touch: wireTips below)
+const verRow = t => (t?.closest?.(".ver-item") && modal.contains(t) ? t.closest(".ver-item") : null);
+document.addEventListener("contextmenu", e => { const el = verRow(e.target); if (!el) return; e.preventDefault(); if (performance.now() - touchAt > 1500) actions["version-pin"](el); });
 wireTips(document, tips, (cx, cy, box) => {             // box: a focused element's, the tooltip under it (else over it)
   const r = tip.getBoundingClientRect();
   let x = cx + 14, y = cy + 16;
@@ -2112,7 +2211,7 @@ wireTips(document, tips, (cx, cy, box) => {             // box: a focused elemen
   else if (x + r.width > innerWidth - 8) x = Math.max(8, cx - r.width - 14);
   if (!box && y + r.height > innerHeight - 8) y = cy - r.height - 14;
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
-}, { match: xTarget, run: el => actions["toggle-param"](el, true) });
+}, { match: t => xTarget(t) || verRow(t), run: el => (el.matches(".ver-item") ? actions["version-pin"](el) : actions["toggle-param"](el, true)) });
 
 // The reader's place across a reload (a deploy's, fresh.js, or their own): sessionStorage "at" = the address, scrollY and
 // the tile or rulebook section at the window's top with its offset; restoreAt puts it back once the view is drawn. With a

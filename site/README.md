@@ -43,17 +43,24 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   phone): every commit that changed the
   card's image, compared side by side with the current one, with the text of that time when it differs (each version,
 text or image, links its commit when it is known), and the artwork sources when set. With the card timelines
-(`HISTORY_DIR`: the `history` branch, which site.yml fetches alone and shallow; AutoCroissant `commands/discord_preview.py`
-builds it, `scripts/history_branch.py` commits it), the versions from before this repo
-follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"; the first repo's "first
-repo") and Discord's (date and channel, never a poster or message); each compares
+(`HISTORY_DIR`: the `history` branch, which site.yml fetches alone, shallow and without its pictures; they load from
+raw.githubusercontent.com at that branch's commit, as the older versions' copies do from the plates branch, never from
+the site; AutoCroissant `commands/discord_preview.py` builds it, `scripts/history_branch.py` commits it), the versions
+from before this repo follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"; the first
+repo's "first repo"; an owner's undated Meme folder copy "before" its oldest dated picture, listed oldest) and Discord's
+(date and channel, never a poster or message); each compares
 with the current card like the others (its own sure ability as "Text then", a blank ability box as "No ability
 then"), with no link and no Revert, and their changes (and the update changelogs' facts, as data only, each once: a
 fact its version also shows is that version's change; a blank box after a text "Ability removed") join Recorded
 changes and the balance charts (an owner-mapped Meme folder copy is a row only: no change, no chart point); a
 Discord or changelog row is always before the
 card's first version here. A Morgue card from `MDW/The Morgue` with Discord pictures lists them after its PNG's newest
-version (the current one they compare with; nothing to revert). The current
+version (the current one they compare with; nothing to revert). Any version can be pinned as the base (right-click,
+long-press or its pin button; again to unpin): every version picked is then compared with it instead of the current
+card, both pictures side by side (the older left) with what changed between them (stars, stats, types, name, the
+ability's words highlighted), from what each version has (a timeline row's sure fields; this repo's versions the card
+data: the current card, the text then and its recorded changes rolled back); a field one side lacks is said so. Dates
+are Pacific days everywhere (the bot's clock), Created too. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
   that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
   variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own. Signed in, each earlier text with a
