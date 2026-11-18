@@ -4,7 +4,7 @@ import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
 import * as changes from "./changes.js";
-import { date, month, TZ, textAt, textChanged, historyHtml, stampOf, pictureNumber } from "./history.js";
+import { date, month, TZ, textAt, textChanged, historyHtml, stampOf, pictureNumber, sameAbility } from "./history.js";
 import { deckPasses, SEALED } from "./login.js";
 import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
@@ -1138,7 +1138,7 @@ function showVersion(c, i) {
     ? `<figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
     : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, v))}" data-png="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
       <figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
-      ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
+      ${then && !sameAbility(then, c.ability) ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }
 /** A version from before this repo (or a Morgue entry's): its picture beside the current one, with its date, source,
  *  author and commit subject (old repo, first repo) or channel (Discord), never a link or Revert; "Text then": the
@@ -1154,8 +1154,8 @@ function earlyVersion(c, vs, i) {
   const then = v.fields?.ability;
   return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}</figcaption></figure>
       <figure>${pic(cur, `${c.name}, current version`)}<figcaption>Current<br><span class="muted">${cur.early ? caption(cur) : `${date(cur.ts)}${commitAfter(S.versions.repo, cur.sha, `Commit for the ${date(cur.ts)} image version`, cur.path)}`}</span></figcaption></figure></div>
-      ${then && c.ability && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>`
-        : then === "" && c.ability ? `<div class="ver-text muted">No ability then</div>` : ""}`;
+      ${then && c.ability && !sameAbility(then, c.ability) ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>`
+        : then === "" && c.ability && !sameAbility(then, c.ability) ? `<div class="ver-text muted">No ability then</div>` : ""}`;
 }
 // ---- compare two versions (owner 11-17 (5)): a pinned base (right-click, long-press or the pin on its row; again to
 // unpin, or pick it) is what every version picked is compared with, instead of the current card: both pictures side by
@@ -1228,10 +1228,9 @@ function changesHtml(c, vs, a, b) {
     const add = y.types.filter(t => !x.types.includes(t)), drop = x.types.filter(t => !y.types.includes(t));
     row("Types", !add.length && !drop.length ? `same (${typeList(y.types)})` : [add.length ? `+${typeList(add)}` : "", drop.length ? `−${typeList(drop)}` : ""].filter(Boolean).join(" "));
   }
-  const ability = x.ability === undefined || y.ability === undefined ? unknown(x.ability, y.ability)
-    : x.ability === y.ability ? "same" : !y.ability ? "removed" : !x.ability ? "added" : "changed (changes highlighted)";
-  row("Ability", ability);
-  const text = x.ability !== undefined && y.ability !== undefined && x.ability !== y.ability && y.ability ? `<div class="ver-text"><div>${diffWords(x.ability, y.ability)}</div></div>` : "";
+  const known = x.ability !== undefined && y.ability !== undefined, same = known && sameAbility(x.ability, y.ability);   // a minion label beside a blank: no change
+  row("Ability", !known ? unknown(x.ability, y.ability) : same ? "same" : !y.ability ? "removed" : !x.ability ? "added" : "changed (changes highlighted)");
+  const text = known && !same && y.ability ? `<div class="ver-text"><div>${diffWords(x.ability, y.ability)}</div></div>` : "";
   return `<div class="ver-changes"><div class="muted">Changes from the ${wa} version to the ${wb} version</div><ul class="ver-ch">${rows.join("")}</ul>${text}</div>`;
 }
 /** Two versions side by side, the older left (the list is newest first: the higher index), and their changes */

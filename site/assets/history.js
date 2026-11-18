@@ -31,6 +31,17 @@ export function pictureNumber(psd, png) {
 export const textSince = c => c.since ?? c.ts;
 /** Did the card's last PSD commit change its text? Not when the text is older (that commit changed the art or stats only) */
 export const textChanged = c => !(c.since && c.ts && c.since < c.ts);
+// a minion box's label alone: no ability (owner 11-17: the label became the type icon; AutoCroissant discord_chain
+// MINION_LABEL, label_blank)
+const MINION_LABEL = /^\s*(non[\s-]*)?protect(ive|ing)\s+minion\s*\.?\s*$/i;
+const labelKind = t => { const m = MINION_LABEL.exec(String(t)); return m ? (m[1] ? "non" : "protective") : null; };
+/** Two abilities with no change between them: the same text, both blank, or a minion's label beside a blank box or the
+ *  same label again; a label to the other label (Whelp) or to real text is a change */
+export const sameAbility = (x, y) => {
+  if (x === y) return true;
+  const kinds = new Set([x, y].filter(t => String(t ?? "").trim()).map(labelKind));
+  return !kinds.size || (kinds.size === 1 && !kinds.has(null));
+};
 /** The texts oldest first (history.json's), the current one dated by textSince */
 const textsOf = c => (c.history || []).concat(c.ability ? [{ ts: textSince(c), ability: c.ability, current: true }] : []);
 /** The text at an image version's commit time: the latest text at or before it (an hour's slack), else null */
