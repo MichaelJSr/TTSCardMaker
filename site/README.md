@@ -59,7 +59,12 @@ version (the current one they compare with; nothing to revert). Any version can 
 long-press or its pin button; again to unpin): every version picked is then compared with it instead of the current
 card, both pictures side by side (the older left) with what changed between them (stars, stats, types, name, the
 ability's words highlighted), from what each version has (a timeline row's sure fields; this repo's versions the card
-data: the current card, the text then and its recorded changes rolled back); a field one side lacks is said so. Dates
+data: the current card, the text then and its recorded changes rolled back); a field one side lacks is said so. The
+pictures show in one of four modes, as GitHub's image diff (`compare.js`; the last one kept in localStorage `ver-mode`):
+2-up (side by side, the default), Swipe (one box, a divider dragged by mouse, touch or its arrow keys: the older left of
+it, the newer right), Onion skin (the picked over the base, an opacity range) and Difference (the picked over the base
+with CSS `mix-blend-mode: difference` on black: unchanged pixels are black, no canvas reads). Both pictures fit the same
+box (contain, centred) in every mode, each picture's size under it when they differ; a switch never moves the page. Dates
 are Pacific days everywhere (the bot's clock), Created too. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
   that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
