@@ -1328,7 +1328,8 @@ jobs:
             [ "$(cat "$k.code")" = 0 ] && [ -s "$k.json" ] && echo "$k.json"
           # The push's site run (site.yml's push run at GITHUB_SHA, else the data job's early build: EARLY) and its Pages
           # artifact of the run's attempt once listed (pages_wait.py; none when the build uploads none): downloaded,
-          # extracted into $1 and served on 127.0.0.1:$2 (python3's http.server, its pid in $1.pid). Exit 1 without one.
+          # extracted into $1 and served on 127.0.0.1:$2 (python3's http.server, its pid in $1.pid). Exit 1 without one,
+          # or when the website deploys another build before it is listed (build.txt, every 2 s: the website's look then).
           SERVE_SH: |
             set -eo pipefail
             dir=$1 port=$2 api=repos/$GITHUB_REPOSITORY/actions run=""
@@ -1343,8 +1344,17 @@ jobs:
             [ -n "$run" ] || { echo "No site run of ${GITHUB_SHA:0:8}"; exit 1; }
             read -r id try <<< "$run"
             : > "$dir.out"
+            live() { curl -sf --max-time 5 "$SITE_URL/build.txt?t=$(date +%s%N)" || echo "$was"; }
+            was="" was=$(live)
             GITHUB_RUN_ID=$id GITHUB_RUN_ATTEMPT=$try GITHUB_OUTPUT=$dir.out \
-              python3 "$GITHUB_WORKSPACE/.github/scripts/pages_wait.py" artifact "github-pages-a$try" "Pages upload" || exit 1
+              python3 "$GITHUB_WORKSPACE/.github/scripts/pages_wait.py" artifact "github-pages-a$try" "Pages upload" & w=$!
+            ( while sleep 2; do
+                if [ "$(live)" != "$was" ]; then echo "The website deployed another build first"; kill "$w"; break; fi
+              done ) & p=$!
+            code=0
+            wait "$w" || code=$?
+            kill "$p" 2> /dev/null || true
+            [ "$code" = 0 ] || exit 1
             art=$(sed -n 's/^artifact=//p' "$dir.out")
             [ -n "$art" ] || exit 1
             printf 'Authorization: Bearer %s\n' "$GH_TOKEN" | curl -sSfL --max-time 60 -H @- -o "$dir.zip" \
