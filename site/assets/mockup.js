@@ -1891,6 +1891,19 @@ export function steadyPitch(lines) {
   const c = lines.map(l => (l[1] + l[3]) / 2), d = c.slice(1).map((v, i) => v - c[i]), m = median(d), ok = d.filter(x => x >= 0.7 * m && x <= 1.3 * m);
   return ok.length ? ok.reduce((t, x) => t + x, 0) / ok.length : m;
 }
+/** A laid line's first baseline from its ink top (top: a psd_details box's) at its set size s0, at z: the top plus its
+ *  tallest piece above the baseline as paintLines draws it (letters' ink, a badge's pill, an icon's glyph), scaled from
+ *  the frame's top when the text shrank; null when nothing on it reaches up. */
+export function firstBase(ctx, line, { top, s0, z, frame, fam }) {
+  let up = 0;
+  for (const p of line?.pieces || []) {
+    if (p.badge) { const cap = capOf(ctx, fam, s0), f = badgeFit(s0, cap), { h } = pillOf(p, s0, cap); up = Math.max(up, f.top - (f.h - h) / 2); }
+    else if (p.icon) { const g = iconEm(p); up = Math.max(up, (g ? 0.82 - (1 - g.h) / 2 : 0.82 * 1.05) * s0); }
+    else if (p.text?.trim()) { ctx.font = `${s0}px ${fam}`; ctx.textBaseline = "alphabetic"; const a = ctx.measureText(p.text.trim()).actualBoundingBoxAscent; if (Number.isFinite(a)) up = Math.max(up, a); }
+  }
+  if (!(up > 0)) return null;
+  return frame ? frame[1] + (top + up - frame[1]) * z / s0 : top + up * z / s0;
+}
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
  *  record's frame and px (box text) wraps at the frame at its set size, as the bake; with px and no frame (point
@@ -1956,6 +1969,8 @@ function drawText(ctx, job, imgs, W) {
   }
   const pitch = pitch0 * (z / size);
   let base = top + z * (role === "name" ? 0.8 : 0.7);   // an Ability: textBlocks leaves out thin ascender rows, so its top sits low
+  if (role === "ability" && !point && !geo && kc && layer?.box?.length === 4 && plain(layer.text) === plain(old))   // no plate layout: its own first baseline
+    base = firstBase(ctx, layout(looked(tokenize(old, icons), old), maxW, size / grow, measure)[0], { top: layer.box[1] * kc, s0: size / grow, z, frame, fam }) ?? base;
   if (role === "name" && old) {                       // a title keeps its baseline: where its old ink's top and bottom put it
     ctx.font = `${size}px ${fam}`; ctx.textBaseline = "alphabetic";
     const m = ctx.measureText(String(old).replace(/\r/g, "").split("\n")[0]), up = m.actualBoundingBoxAscent, tall = up + m.actualBoundingBoxDescent;
