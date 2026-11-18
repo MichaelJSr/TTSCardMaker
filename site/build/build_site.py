@@ -1456,7 +1456,7 @@ def load_history(folder):
         except ValueError:
             ok = False
         if ok and c.get("source") in HISTORY_FROM:
-            out["created"][card_key(key)] = {"date": day, "source": c["source"]}
+            out["created"][card_key(key)] = {"date": day, "source": c["source"], **({"same": True} if c.get("same") else {})}
         else:
             bad.append(f"created {key}")
     if bad:
@@ -2621,7 +2621,8 @@ def apply_created(cards, created, proposed=None):
         elif day and day == e.get("created") and not e.get("createdBefore") and e.get("createdFrom") in ("discord", "git"):
             e["createdFrom"] = HISTORY_FROM[p["source"]]      # the same day: where the timelines found it (Pizza's old repo)
     if proposed:
-        log(f"created: {moved} cards dated earlier by the card timelines ({len(proposed)} proposed)")
+        log(f"created: {moved} cards dated earlier by the card timelines ({sum(not p.get('same') for p in proposed.values())} "
+            f"proposed, {sum(bool(p.get('same')) for p in proposed.values())} on the file's own day)")
     dated = [e for e in cards if e.get("created")]
     by = Counter(e["createdFrom"] for e in dated)
     more = "".join(f", {by[k]} {k}" for k in ("old repo", "first repo", "changelog", "photo") if by[k])   # the timelines' (proposed)
