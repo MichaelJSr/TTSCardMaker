@@ -453,8 +453,10 @@ function align(was, now) {
  *  of the letters it replaces (no blanks, icons, badges or status words: statuses, the status names); typed-in text the
  *  nearest letter's before it on its line, else after, or the body's (the commonest outside status words) between two
  *  colours of a line of several; a paragraph the edit moved its own, letter for letter where kept, else its commonest;
- *  a kept status word's letters the nearest letter's on their line (the chart's goes on after). Its runs ([] none). */
-export function bakeInk(was, list, now, statuses = null) {
+ *  a kept status word's letters the nearest letter's on their line (the chart's goes on after); whole lines typed right
+ *  under a header (heads: psd_details' header lines' text, psd_edit header_looks) the next line's first letter's. Its
+ *  runs ([] none). */
+export function bakeInk(was, list, now, statuses = null, heads = null) {
   was = String(was ?? ""); now = String(now ?? "");
   const n = was.length, m = now.length;
   if (!list?.length) return [];
@@ -490,9 +492,35 @@ export function bakeInk(was, list, now, statuses = null) {
     for (const [p, q, k] of kl) for (let d = 0; d < k; d++) from.set(t0 + q + d, s0 + p + d);
     for (let k = t0; k < t1; k++) if (changed[k]) out[k] = from.has(k) ? col[from.get(k)] : c[0];
   }
+  for (const [lo, hi, c] of headInk(was, now, heads, letter, drawn, col)) out.fill(c, lo, hi);
   const runs = [];
   out.forEach((c, k) => { const r = runs[runs.length - 1]; if (c && r?.color === c && r.end === k) r.end++; else if (c) runs.push({ start: k, end: k + 1, color: c }); });
   return runs;
+}
+/** [[start, end, colour]] over now: each insertion of whole lines right under a header line of was (heads: those lines'
+ *  text) and above a line with letters, in that line's first letter's colour (no status word: letter), as the bake
+ *  sets it (psd_edit header_looks); a typed line took the header's look, a second cost line. */
+function headInk(was, now, heads, letter, drawn, col) {
+  const names = new Set((heads || []).map(h => String(h).trim()).filter(Boolean)), out = [];
+  if (!names.size) return out;
+  const added = [];                                   // insertions at one place joined (a break is a part of its own)
+  for (const [a0, a1, b0, b1, kept] of taParts(was, now)) {
+    if (kept || a1 > a0) continue;
+    const last = added[added.length - 1];
+    if (last && last[0] === a0 && last[2] === b0) last[2] = b1; else added.push([a0, b0, b1]);
+  }
+  for (const [a0, b0, b1] of added) {
+    if (!now.slice(b0, b1).trim()) continue;
+    const after = was[a0] === "\n" && now[b0] === "\n", before = a0 > 0 && was[a0 - 1] === "\n" && now[b1 - 1] === "\n";
+    if (!after && !before) continue;
+    const end = after ? a0 : a0 - 1, top = was.lastIndexOf("\n", end - 1) + 1;
+    if (!names.has(was.slice(top, end).trim())) continue;
+    let k = end + 1, first = -1;
+    for (; k < was.length && first < 0; k++) if (letter(k)) first = k;
+    for (k = end + 1; first < 0 && k < was.length; k++) if (!/\s/.test(was[k]) && !drawn[k]) first = k;
+    if (first >= 0) out.push(after ? [b0 + 1, b1, col[first]] : [b0, b1, col[first]]);
+  }
+  return out;
 }
 /** Per letter of now, edited from was: null where the edit keeps it, else the index in was of the letter whose run the
  *  bake types it in (psd_edit changed_range's span, edit_parts' changed parts; plain_typed: a replacement's first
@@ -544,17 +572,18 @@ export function glyphRuns(t) {
   }
   return out;
 }
-/** The card's own colours on a redrawn text, as the bake gives them (bakeInk; statuses: the status names, an Ability's):
+/** The card's own colours on a redrawn text, as the bake gives them (bakeInk; statuses: the status names, heads: the
+ *  header lines, an Ability's):
  *  the field's; a part's (old: its layer's text) the field's colours where that text is in the field, followed to the
  *  new; null without any. */
-export function baseInk(card, field, text, old = null, statuses = null) {
+export function baseInk(card, field, text, old = null, statuses = null, heads = null) {
   const was = String(card?.ink?.built?.[field] ?? card?.[field] ?? ""), list = inkOf(card, field, was) || [];
   const some = r => (r.length ? r : null);
-  if (old == null) return some(bakeInk(was, list, text, statuses));
+  if (old == null) return some(bakeInk(was, list, text, statuses, heads));
   const at = old ? was.indexOf(old) : -1;
   if (at < 0) return null;
   const own = list.filter(r => r.end > at && r.start < at + old.length).map(r => ({ ...r, start: Math.max(0, r.start - at), end: Math.min(old.length, r.end - at) }));
-  return some(bakeInk(old, own, text, statuses));
+  return some(bakeInk(old, own, text, statuses, heads));
 }
 /** [start, end] of each badge tokenize finds in text, in order. */
 const badgeAt = text => {
@@ -1442,7 +1471,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
-    const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null, role === "ability" ? statuses : null);    // the card's own colours on what is unchanged
+    const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null, role === "ability" ? statuses : null, role === "ability" ? layer?.heads : null);    // the card's own colours on what is unchanged
     if (added && layer?.added && own) { jobs.push({ role, text, label, area: { box: own, seed: null }, fam, layer, measure, icons, colors, statuses, kc, look: true }); continue; }   // as the bake sets it
     if (added) {                                      // top: at the top of the bake's area, as tall as its lines
       jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true, top: !!own });
