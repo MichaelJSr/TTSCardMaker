@@ -1915,7 +1915,9 @@ function drawText(ctx, job, imgs, W) {
   const grow = was > 0 && was < 1 ? 1 / was : 1;     // a bake set it smaller (its verdict's ability_fit): from the card maker's size, as the next bake
   size *= grow;
   const maxW = point ? Infinity : frame ? (left ? frame[2] - found.box[0] : frame[2] - frame[0]) : left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
-  const pitch0 = steadyPitch(found.lines) * grow || size * LINE, top = found.lines[0][1];
+  const steady = steadyPitch(found.lines) * grow, top = found.lines[0][1];
+  const lead = !steady && kc && layer?.lead > 0 && (role === "name" || frame) ? layer.lead * kc * grow : 0;   // one line: its layer's own leading (psd_details lead), as the bake sets the next
+  let pitch0 = steady || lead || size * LINE;
   // Room for an Ability at its size, as the bake leaves it (psd_edit fit_below, ink_beyond): its new ink ends no lower
   // than the old text's, or lower but on the card and off the design below (the backdrop under the old text, BEYOND)
   function roomBelow() {
@@ -1945,7 +1947,9 @@ function drawText(ctx, job, imgs, W) {
   let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tframe ? -1 : tokenize(old).length, found, tframe ? (left ? tframe[2] - found.box[0] : tframe[2] - tframe[0]) : maxW, size, measure, W, left)
     : point ? pointLayout(paras, size, reach, measure) : fit(paras, maxW, Infinity, size, measure);
   if (tframe) over = false;                           // the bake grows its box to hold the lines
-  if (role !== "name" && !roomBelow()) {              // past the area's bottom: smaller, down to 40%; still past it: said so
+  let roomy = role === "name" || roomBelow();
+  if (!roomy && lead) { pitch0 = size * LINE; roomy = roomBelow(); }   // an Ability at its leading only where it keeps its size
+  if (!roomy) {                                       // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
     while (need(z) > room2 && z > size * 0.4) { z *= 0.94; lines = layout(paras, maxW, z, measure); }
     over = need(z) > room2 + 1;
