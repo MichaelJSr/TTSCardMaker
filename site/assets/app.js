@@ -1673,7 +1673,7 @@ function renderStatsView(r) {
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
   statsNarrow = St.stats.narrowOf(view);
   St.stats.renderStats(view, statsCtx(), r.params);
-  view.classList.toggle("charts-all", S.restoring || !!S.placing);   // Back/Forward, a reload's place: every chart drawn (style.css)
+  view.classList.toggle("charts-all", !top || !!S.placing);   // Back/Forward, a reload's place, a redraw mid-page: every chart drawn (style.css)
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; History goes in with it
     const now = parseHash(S.renderedHash);
@@ -2211,6 +2211,7 @@ document.addEventListener("click", e => {
   const scroll = e.target.closest("[data-scroll]");
   if (scroll) {                                          // a rulebook page's link: its #/rules/<id> in the address bar too
     e.preventDefault(); const el = document.getElementById(scroll.dataset.scroll);
+    if (scroll.closest(".stats-jump")) view.classList.add("charts-all");   // Stats: every chart drawn first, so the jump lands (style.css)
     el?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     const to = scroll.getAttribute("href");
     if (to?.startsWith("#/rules/") && to !== location.hash) { rulesAt = to; history.pushState(null, "", to); syncUrl(parseHash()); S.renderedHash = S.listHash = to; }

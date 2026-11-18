@@ -1175,7 +1175,8 @@ relies on:
   (as a link to it did); history.json starts once the Image versions list is drawn (the first compare pick loads only
   its picture); Stats charts below the first screen are drawn once near (`content-visibility: auto`) or two at a time
   while the page is idle (`drawn`; the Balance and History fill restarts it), and every chart at once while Back/Forward
-  or a reload restores a place (`charts-all`: S.restoring, S.placing until settle() ends), so the place lands as before.
+  or a reload restores a place, a redraw starts mid-page (a theme switch, a filter) or a Balance/History link jumps
+  (`charts-all`: not at the top, S.placing until settle() ends, `.stats-jump`), so the place lands as before.
   Medians (scratch s10c/opt1): Image versions tap 2.50 s -> 16 ms; Stats 2.29 -> 1.15 s (first charts 911 -> 917 ms);
   compare a repo version 1.05 -> 0.85 s; Stats warm, network not throttled, 429 -> 300 ms; desktop the same within
   noise (a second card's list 6 -> 21 ms: its own file). versions.json is still written for one release.
