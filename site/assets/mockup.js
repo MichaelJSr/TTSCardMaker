@@ -12,6 +12,7 @@
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
 import { colorRanges, drawnSpans, inkOf, layerColors, phraseText, spansOf, statusSpans } from "./textcolor.js";
+import { SAME_RUN, taBlocks, taMoves, taParts } from "./textalign.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -423,8 +424,8 @@ export function colourize(paras, text, colors, field, statuses = null, base = nu
     return out.map(x => (x.color ? x : { text: x.text }));
   })));
 }
-const SAME_RUN = 3, INK_CELLS = 600000;              // psd_edit.SAME_RUN; bakeInk's alignment at most this many cells
-/** The longest common letters of was and now as [[a0, a1, b0, b1, kept]] (bakeInk's); null past INK_CELLS. */
+const INK_CELLS = 600000;                            // typedAt's alignment at most this many cells
+/** The longest common letters of was and now as [[a0, a1, b0, b1, kept]] (typedAt's); null past INK_CELLS. */
 function align(was, now) {
   const n = was.length, m = now.length;
   if (n * m > INK_CELLS) return null;
@@ -440,42 +441,47 @@ function align(was, now) {
   return segs;
 }
 /** The colours the bake gives an edited text (psd_edit edit_styles), from list ([{start, end, color}] over was, none:
- *  the main ink): kept letters keep theirs (a kept stretch under SAME_RUN letters without a break joins the change); a
- *  changed stretch takes the commonest of the letters it replaces (no blanks, icons or badges); typed-in text the
- *  nearest letter's before it on its line, else after, or the main ink between two colours of a line of several. Its
- *  runs ([] none); null past INK_CELLS. */
-export function bakeInk(was, list, now) {
+ *  the main ink), lined up as the bake does (textalign.js: paragraphs, then words): kept letters keep theirs (a kept
+ *  stretch under SAME_RUN letters without a break joins its paragraph's change); a changed stretch takes the commonest
+ *  of the letters it replaces (no blanks, icons, badges or status words: statuses, the status names); typed-in text the
+ *  nearest letter's before it on its line, else after, or the body's (the commonest outside status words) between two
+ *  colours of a line of several; a paragraph the edit moved its own, letter for letter where kept, else its commonest;
+ *  a kept status word's letters the nearest letter's on their line (the chart's goes on after). Its runs ([] none). */
+export function bakeInk(was, list, now, statuses = null) {
   was = String(was ?? ""); now = String(now ?? "");
   const n = was.length, m = now.length;
   if (!list?.length) return [];
-  const segs = align(was, now);
-  if (!segs) return null;
-  const col = Array(n).fill(null), drawn = Array(n).fill(false);
+  const col = Array(n).fill(null), drawn = Array(n).fill(false), status = Array(n).fill(false);
   for (const r of list) for (let i = Math.max(0, r.start); i < Math.min(n, r.end); i++) col[i] = r.color;
   for (const [s, e] of drawnSpans(was)) for (let i = s; i < e; i++) drawn[i] = true;
-  const parts = [];                                   // edit_parts: a short kept stretch is part of the change
-  for (const s of segs) {
-    const last = parts[parts.length - 1], kept = s[4] && (s[1] - s[0] >= SAME_RUN || was.slice(s[0], s[1]).includes("\n"));
-    if (last && !last[4] && !kept) { last[1] = s[1]; last[3] = s[3]; } else parts.push([s[0], s[1], s[2], s[3], kept]);
-  }
-  const letter = i => !/\s/.test(was[i]) && !drawn[i];
+  for (const [s, e] of statusSpans(was, statuses)) for (let i = s; i < e; i++) status[i] = true;
+  const letter = i => !/\s/.test(was[i]) && !drawn[i] && !status[i];
+  const commonest = (lo, hi, ok) => { const count = new Map(); for (let k = lo; k < hi; k++) if (ok(k)) count.set(col[k], (count.get(col[k]) || 0) + 1); return count.size ? [[...count].reduce((x, y) => (y[1] > x[1] ? y : x))[0]] : null; };
+  const body = commonest(0, n, k => !status[k])?.[0] ?? null;   // body_fill
   const lineOf = (lo, hi) => [was.lastIndexOf("\n", lo - 1) + 1, (k => (k < 0 ? n : k))(was.indexOf("\n", hi))];
   const near = (lo, hi) => {
     const [top, bottom] = lineOf(lo, hi), seen = new Set();
     for (let k = top; k < bottom; k++) if (letter(k)) seen.add(col[k]);
-    if (seen.size > 1 && !(lo > top && hi < bottom && col[lo - 1] === col[hi])) return null;   // typed between two colours: the main ink (body_fill)
+    if (seen.size > 1 && !(lo > top && hi < bottom && col[lo - 1] === col[hi])) return body;   // typed between two colours
     for (let k = lo - 1; k >= top; k--) if (letter(k)) return col[k];
     for (let k = hi; k < bottom; k++) if (letter(k)) return col[k];
     return null;
   };
-  const out = Array(m).fill(null);
-  for (const [a0, a1, b0, b1, kept] of parts) {
-    if (kept) { for (let k = 0; k < b1 - b0; k++) out[b0 + k] = col[a0 + k]; continue; }
+  const beside = i => { const [top, bottom] = lineOf(i, i + 1); for (let k = i - 1; k >= top; k--) if (letter(k)) return col[k]; for (let k = i + 1; k < bottom; k++) if (letter(k)) return col[k]; return body; };
+  const out = Array(m).fill(null), changed = Array(m).fill(false);
+  for (const [a0, a1, b0, b1, kept] of taParts(was, now)) {   // a kept status word's letters: the nearest letter's (the edit resets them)
+    if (kept) { for (let k = 0; k < b1 - b0; k++) out[b0 + k] = status[a0 + k] ? beside(a0 + k) : col[a0 + k]; continue; }
     if (b1 <= b0) continue;
-    const count = new Map();
-    for (let k = a0; k < a1; k++) if (letter(k)) count.set(col[k], (count.get(col[k]) || 0) + 1);
-    const c = count.size ? [...count].reduce((x, y) => (y[1] > x[1] ? y : x))[0] : was.slice(a0, a1).trim() ? null : near(a0, a1);
-    out.fill(c, b0, b1);
+    changed.fill(true, b0, b1);
+    const c = commonest(a0, a1, letter), bare = !was.slice(a0, a1).split("").some((x, k) => !/\s/.test(x) && !status[a0 + k]);
+    out.fill(c ? c[0] : bare ? near(a0, a1) : null, b0, b1);   // replacing only blanks and status words: as typed
+  }
+  for (const [[s0, e0], [t0, t1], kl] of taMoves(was, now)) {   // a moved paragraph: its own colours
+    const c = commonest(s0, e0, letter);
+    if (!c) continue;
+    const from = new Map();
+    for (const [p, q, k] of kl) for (let d = 0; d < k; d++) from.set(t0 + q + d, s0 + p + d);
+    for (let k = t0; k < t1; k++) if (changed[k]) out[k] = from.has(k) ? col[from.get(k)] : c[0];
   }
   const runs = [];
   out.forEach((c, k) => { const r = runs[runs.length - 1]; if (c && r?.color === c && r.end === k) r.end++; else if (c) runs.push({ start: k, end: k + 1, color: c }); });
@@ -531,18 +537,17 @@ export function glyphRuns(t) {
   }
   return out;
 }
-/** The card's own colours on a redrawn text, as the bake gives them (bakeInk; past its size, as its page keeps them over
- *  a staged edit: textcolor.js inkOf): the field's; a part's (old: its layer's text) the field's colours where that
- *  text is in the field, followed to the new; null without any. */
-export function baseInk(card, field, text, old = null) {
+/** The card's own colours on a redrawn text, as the bake gives them (bakeInk; statuses: the status names, an Ability's):
+ *  the field's; a part's (old: its layer's text) the field's colours where that text is in the field, followed to the
+ *  new; null without any. */
+export function baseInk(card, field, text, old = null, statuses = null) {
   const was = String(card?.ink?.built?.[field] ?? card?.[field] ?? ""), list = inkOf(card, field, was) || [];
-  const some = r => (r?.length ? r : null);
-  if (old == null) { const ink = bakeInk(was, list, text); return ink ? some(ink) : inkOf(card, field, text); }
+  const some = r => (r.length ? r : null);
+  if (old == null) return some(bakeInk(was, list, text, statuses));
   const at = old ? was.indexOf(old) : -1;
   if (at < 0) return null;
   const own = list.filter(r => r.end > at && r.start < at + old.length).map(r => ({ ...r, start: Math.max(0, r.start - at), end: Math.min(old.length, r.end - at) }));
-  const ink = bakeInk(old, own, text);
-  return ink ? some(ink) : own.length ? inkOf({ [field]: old, ink: { [field]: own.map(r => [r.start, r.end, r.color]) } }, field, text) : null;
+  return some(bakeInk(old, own, text, statuses));
 }
 /** [start, end] of each badge tokenize finds in text, in order. */
 const badgeAt = text => {
@@ -556,9 +561,9 @@ const badgeAt = text => {
   return out;
 };
 /** How the bake sets each badge of text, edited from old (psd_edit): one that holds most of an old badge's kept letters
- *  (bakeInk's alignment) keeps that badge's size and tracking, {bem, tk} from badges (psd_details: [em, track] per old
- *  badge, null when not in the icon font); a typed one is fitted, tracked as the layer's badges at their commonest size
- *  (icon_style), {tk}. Per badge, in order; null: as before. */
+ *  (taBlocks: psd_edit kept_chars) keeps that badge's size and tracking, {bem, tk} from badges (psd_details: [em, track]
+ *  per old badge, null when not in the icon font); a typed one is fitted, tracked as the layer's badges at their
+ *  commonest size (icon_style), {tk}. Per badge, in order; null: as before. */
 export function badgeLooks(text, old, badges) {
   text = String(text ?? "").replace(/\r/g, ""); old = String(old ?? "").replace(/\r/g, "");
   const now = badgeAt(text), looks = now.map(() => null);
@@ -569,13 +574,10 @@ export function badgeLooks(text, old, badges) {
   now.forEach((_, i) => { if (tk) looks[i] = { tk }; });
   const was = badgeAt(old);
   if (was.length !== badges.length) return looks;
-  const from = now.map(() => -1), segs = old === text ? [[0, old.length, 0, text.length, true]] : align(old, text);
-  if (segs) {                                         // an old badge's home: the new one with most of its kept letters (psd_edit
-    const moved = Array(old.length).fill(-1), into = was.map(() => new Map());   // "edited"); of those it is home to, the one giving it most
-    for (const [a0, a1, b0, , kept] of segs) if (kept) for (let k = 0; k < a1 - a0; k++) moved[a0 + k] = b0 + k;
-    was.forEach(([a, b], i) => { for (let k = a; k < b; k++) { const j = now.findIndex(([c, d]) => c <= moved[k] && moved[k] < d); if (j >= 0) into[i].set(j, (into[i].get(j) || 0) + 1); } });
-    into.forEach((n, i) => { if (!n.size) return; const j = pick(n); if (from[j] < 0 || n.get(j) > into[from[j]].get(j)) from[j] = i; });
-  } else if (now.length === was.length) from.forEach((_, j) => { from[j] = j; });   // past INK_CELLS: in order
+  const from = now.map(() => -1), moved = Array(old.length).fill(-1), into = was.map(() => new Map());   // an old badge's home: the new one with most
+  for (const [a0, b0, n] of old === text ? [[0, 0, old.length]] : taBlocks(old, text)) for (let k = 0; k < n; k++) moved[a0 + k] = b0 + k;   // of its kept letters
+  was.forEach(([a, b], i) => { for (let k = a; k < b; k++) { const j = now.findIndex(([c, d]) => c <= moved[k] && moved[k] < d); if (j >= 0) into[i].set(j, (into[i].get(j) || 0) + 1); } });
+  into.forEach((n, i) => { if (!n.size) return; const j = pick(n); if (from[j] < 0 || n.get(j) > into[from[j]].get(j)) from[j] = i; });   // (psd_edit "edited"); of those, the one giving it most
   from.forEach((i, j) => { const b = badges[i]; if (i >= 0) looks[j] = Array.isArray(b) && b[0] > 0 ? { bem: b[0], tk: b[1] || 0 } : null; });
   return looks;
 }
@@ -1430,7 +1432,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
-    const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null);    // the card's own colours on what is unchanged
+    const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null, role === "ability" ? statuses : null);    // the card's own colours on what is unchanged
     if (added && layer?.added && own) { jobs.push({ role, text, label, area: { box: own, seed: null }, fam, layer, measure, icons, colors, statuses, kc, look: true }); continue; }   // as the bake sets it
     if (added) {                                      // top: at the top of the bake's area, as tall as its lines
       jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true, top: !!own });
