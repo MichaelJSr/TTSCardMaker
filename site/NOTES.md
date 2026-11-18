@@ -338,9 +338,6 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     names no lane again on that page. Its hand-over is `card-preview-<request>` in the lane's run, the
     same zip as `card-preview`, with `run` the press's own run. Every press is still dispatched, baked cold and
     published as ever. The client shows whichever hand-over comes first. A 422 with `lane` dispatches again without it.
-    A new run shows in GitHub's runs lists 2-6 s after it is made; the lane lists main's check suites too, where the
-    run's suite is listed about 0.65 s after the run is made (one GraphQL query reads its run; the preview job's
-    `checks: read`); the runs list stays the way in when those are refused.
     A press's run starts no lane of its own when its named lane handed it over. A press on a newer commit of the card
     repo (a push since the lane's) is baked there: the lane fetches that commit's trees and follows it when
     `MDW/Fonts`, `card-preview.yml` and `.github/actions` are the same there. A lane ends at a newer press of its

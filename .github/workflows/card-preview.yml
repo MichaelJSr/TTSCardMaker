@@ -7,7 +7,7 @@
 # psd-tools fork's one pin) come in a venv cached per that file (.github/actions/cards-python).
 # The warm lane (owner D22; AutoCroissant card_preview_lane): the preview's process stays up 4 minutes after its press
 # and bakes its editor's next presses, each named to it by the website (inputs.lane, in the run-name: the lane's run and
-# the git blob the website posted with the card and edit; its check suite on main brings it in about a second).
+# the git blob the website posted with the card and edit).
 name: Card preview
 run-name: Card preview ${{ inputs.request }}${{ inputs.lane && format(' lane {0}', inputs.lane) || '' }}
 
@@ -47,7 +47,6 @@ jobs:
     permissions:
       contents: read
       actions: read     # the lane: its editor's runs, a named lane's hand-over
-      checks: read      # the lane: main's check suites (a press's run, before the runs list has it)
     outputs:
       ok: ${{ steps.validate.outputs.ok }}
       saved: ${{ steps.setup.outputs.wheels == 'built' || steps.font-cache.outputs.cache-hit != 'true' }}
