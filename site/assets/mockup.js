@@ -376,8 +376,9 @@ export function textColours(masked, bg, known = null, stroke = null) {
   return guess;
 }
 
-/** Ability text as paragraphs of chunks (no break inside a chunk), each piece {text}, {icon, no, sticker} (an icon token
- *  the site has, "[fire]", "[fire:no]", "[fire:sticker]" with its masks; another bracket or variant stays text) or {badge,
+/** Ability text as paragraphs of chunks (no break inside a chunk), each piece {text}, {icon, no, sticker, vary, vfile} (an
+ *  icon token the site has, "[fire]", "[fire:no]", "[fire:sticker]" with its masks, a variant it has with its picture;
+ *  another bracket or variant stays text) or {badge,
  *  group} (a timing tag, "(1CD)", as text.js reads it; a cost, "(2 points)", with cost {n, word, kind}; another
  *  parenthesis stays text). */
 export function tokenize(text, icons = {}) {
@@ -387,7 +388,7 @@ export function tokenize(text, icons = {}) {
     const out = []; let at = 0;
     for (const m of chunk.matchAll(PIECE)) {
       let piece = null;
-      if (m[1] != null) { const t = splitToken(m[1]), ic = t && icons[norm(t.base)]; if (ic) piece = { icon: ic.file, name: t.base, ...(ic.a > 0 ? { a: ic.a } : {}), no: t.v === "no", sticker: t.v === "sticker" && ["tint", "sticker"].every(v => ic.v?.includes(v)) ? { tint: variantFile(ic, "tint"), outline: variantFile(ic, "sticker") } : null }; }
+      if (m[1] != null) { const t = splitToken(m[1]), ic = t && icons[norm(t.base)]; if (ic) piece = { icon: ic.file, name: t.base, ...(ic.a > 0 ? { a: ic.a } : {}), no: t.v === "no", sticker: t.v === "sticker" && ["tint", "sticker"].every(v => ic.v?.includes(v)) ? { tint: variantFile(ic, "tint"), outline: variantFile(ic, "sticker") } : null, ...(VARIANT_REACH[t.v] != null && ic.v?.includes(t.v) ? { vary: t.v, vfile: variantFile(ic, t.v) } : {}) }; }
       else if (m[3] != null) { const c = costs[+m[3]], own = c.kind === "souls" || c.kind === "counters"; piece = { badge: `${c.n} ${c.word}`, group: own ? "own" : c.kind, cost: own ? null : c, src: c.src }; }
       else { const t = tagInfo(m[2]); if (t) piece = { badge: t.tag.replace("-", "\u2212"), group: t.group, ring: cooldownOf(m[2]) }; }
       if (!piece) continue;
@@ -415,7 +416,13 @@ export function colourize(paras, text, colors, field, statuses = null, base = nu
     const src = p.text ?? p.src ?? "", i = src ? text.indexOf(src, cursor) : -1;
     if (i < 0) return [p];
     cursor = i + src.length;
-    if (p.text == null) return [p];
+    if (p.text == null) {                            // a :tint or :sticker in its run's colour: the nearest letter's
+      if (p.vary !== "tint" && p.vary !== "sticker") return [p];
+      let a = i - 1, b = i + src.length;
+      while (a >= 0 && /\s/.test(text[a]) && text[a] !== "\n") a--;
+      while (b < text.length && /[ \t]/.test(text[b])) b++;
+      return [{ ...p, ink: at(i) || (a >= 0 && text[a] !== "\n" ? at(a) : null) || (b < text.length && text[b] !== "\n" ? at(b) : null) }];
+    }
     const out = [];
     for (let k = 0; k < src.length; k++) {
       const c = at(i + k), last = out[out.length - 1];
@@ -586,9 +593,12 @@ const lumOf = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
 /** ranges without the colours under 3:1 against rgb (none: all): they stay in the text's own colour. */
 const seenOn = (ranges, rgb) => { if (!rgb) return ranges; const b = lumOf(rgb); return ranges.filter(r => { const c = lumOf(hexRgb(r.color) || [0, 0, 0]); return (Math.max(b, c) + 0.05) / (Math.min(b, c) + 0.05) >= 3; }); };
 const ICON_EM = 1.1;                                  // an icon's width in ems (its shape unknown)
+const VARIANT_REACH = { tint: 0, sticker: 0.0729, glow: 0.3021, darkglow: 0.3021 };   // cards.json iconVariants (build_site variant_reach)
+const VARIANT_PAD = { sticker: 0.03, glow: 0.26, darkglow: 0.26 };   // build_stoogedings: OUTLINE - SIDE, GLOW_SIZE - SIDE (em) each side
+const LAYERED = new Set(["sticker", "no", "glow", "darkglow"]);   // psd_edit LAYERED: typed at tracking 0
 /** An icon glyph as build_stoogedings draws it, in ems: its picture (a: width over height) 1 em tall, 1.4 wide at most,
- *  0.04 each side; null when its shape is unknown. */
-const iconEm = p => { const a = p?.a; if (!(a > 0)) return null; const h = a <= 1.4 ? 1 : 1.4 / a; return { h, w: h * a, adv: h * a + 0.08 }; };
+ *  0.04 each side, a variant's spacers (pad) each side beyond; null when its shape is unknown. */
+const iconEm = p => { const a = p?.a; if (!(a > 0)) return null; const h = a <= 1.4 ? 1 : 1.4 / a, pad = VARIANT_PAD[p.vary] || 0; return { h, w: h * a, adv: h * a + 0.08 + 2 * pad, pad }; };
 const BADGE_EM = 0.78;                                // a badge's letters, in ems of the text, at BADGE_H
 const BADGE_H = 0.92;                                 // the pill's height in ems before it is fitted
 export const BADGE_RATIO = 1.35;                      // the pill over the text's capital height (AutoCroissant psd_edit)
@@ -1698,7 +1708,7 @@ async function drawIconBox(ctx, label, value, { icons, head, W, H, tpl }) {
   }
 }
 async function iconImages(text, icons) {
-  const files = new Set(tokenize(text, icons).flat(2).filter(p => p.icon).flatMap(p => [p.icon, p.sticker?.tint, p.sticker?.outline].filter(Boolean))), out = new Map();
+  const files = new Set(tokenize(text, icons).flat(2).filter(p => p.icon).flatMap(p => [p.icon, p.sticker?.tint, p.sticker?.outline, p.vfile].filter(Boolean))), out = new Map();
   for (const f of files) out.set(f, await loadImage(f));
   return out;
 }
@@ -1733,8 +1743,15 @@ function glyphText(ctx, t, fam, z, track, how) {
     }
   }
 }
-/** im's alpha in box [x, y, w, h] grown by r px, in one colour: a layer Stroke round an icon. */
-function outlineIcon(ctx, im, [x, y, w, h], colour, r) {
+/** im's alpha in box [x, y, w, h] grown by r px, in one colour: a layer Stroke round an icon. solid: every pixel im
+ *  covers at all counts whole (the bake strokes a soft halo to its faintest edge). */
+function outlineIcon(ctx, im, [x, y, w, h], colour, r, solid = false) {
+  if (solid) {
+    const c = document.createElement("canvas"); c.width = Math.max(1, Math.ceil(w)); c.height = Math.max(1, Math.ceil(h));
+    const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(im, 0, 0, c.width, c.height);
+    const d = g.getImageData(0, 0, c.width, c.height); for (let i = 3; i < d.data.length; i += 4) d.data[i] = d.data[i] ? 255 : 0;
+    g.putImageData(d, 0, 0); im = c;
+  }
   const pad = Math.ceil(r) + 2, c = document.createElement("canvas"); c.width = Math.ceil(w + 2 * pad); c.height = Math.ceil(h + 2 * pad);
   const g = c.getContext("2d");
   for (let k = 0; k < 32; k++) { const t = k / 16 * Math.PI; for (const f of [1, 0.66, 0.33]) g.drawImage(im, pad + Math.cos(t) * r * f, pad + Math.sin(t) * r * f, w, h); }
@@ -1802,10 +1819,25 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
         paintMask(ctx, imgs.get(p.sticker.tint), [bx, by, s, s], fill);
       } else if (p.icon) {
         const im = imgs.get(p.icon), s = z * 1.05, g = iconEm(p), ez = p.ez || z;   // ez: a spliced icon's own size
-        const box = g ? [p.left ? x + 0.04 * ez : x + (p.w - g.w * ez) / 2, y - (0.82 - (1 - g.h) / 2) * ez, g.w * ez, g.h * ez] : [x + (p.w - s) / 2, y - s * 0.82, s, s];
-        if (im && g && stroke && strokeW > 0) outlineIcon(ctx, im, box, stroke, strokeW / 2);   // the bake's Stroke outlines the glyph too
-        if (im) ctx.drawImage(im, ...box);
-        if (p.no) { ctx.save(); ctx.strokeStyle = "#e11"; ctx.lineWidth = Math.max(2, z * 0.12); ctx.beginPath(); ctx.moveTo(x + p.w * 0.1, y - s * 0.75); ctx.lineTo(x + p.w * 0.9, y + s * 0.1); ctx.stroke(); ctx.restore(); }
+        const box = g ? [p.left ? x + (0.04 + g.pad) * ez : x + (p.w - g.w * ez) / 2, y - (0.82 - (1 - g.h) / 2) * ez, g.w * ez, g.h * ez] : [x + (p.w - s) / 2, y - s * 0.82, s, s];
+        const near = line.pieces.slice(0, line.pieces.indexOf(p)).reverse().find(q => q.text?.trim()) || line.pieces.slice(line.pieces.indexOf(p) + 1).find(q => q.text?.trim());
+        const tc = (p.ink && hexRgb(p.ink)) || (near?.color && hexRgb(near.color)) || fill;   // a variant in the text colour: its letters'
+        const vim = p.vary && imgs.get(p.vfile), sq = (r) => { const side = Math.max(box[2], box[3]) * (1 + 2 * r); return [box[0] + box[2] / 2 - side / 2, box[1] + box[3] / 2 - side / 2, side, side]; };
+        const rim = stroke && strokeW > 0 ? (pic, b, solid) => outlineIcon(ctx, pic, b, stroke, strokeW / 2, solid) : () => {};   // the bake's Stroke round the glyph's ink
+        const sign = (colour, extra) => {             // build_stoogedings prohibition: a ring and a bar on the icon box's middle
+          const cx = g ? box[0] + box[2] / 2 : x + p.w / 2, cy = y - 0.32 * ez, r = 0.53 * ez, lw = 0.14 * r, k = Math.SQRT1_2 * (r - lw / 2);
+          ctx.save(); ctx.strokeStyle = rgb(colour); ctx.lineWidth = lw + extra; ctx.beginPath(); ctx.arc(cx, cy, r - lw / 2, 0, 2 * Math.PI); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(cx - k, cy - k); ctx.lineTo(cx + k, cy + k); ctx.stroke(); ctx.restore();
+        };
+        if (vim && p.vary === "tint") { rim(vim, box); paintMask(ctx, vim, box, tc); }   // one colour: the text's
+        else if (vim && (p.vary === "glow" || p.vary === "darkglow")) { const q = sq(VARIANT_REACH[p.vary]); rim(vim, q, true); ctx.drawImage(vim, ...q); }   // the halo with the icon on it (a Stroke makes the halo a disc)
+        else {
+          if (vim && p.vary === "sticker") { const q = sq(VARIANT_REACH.sticker); rim(vim, q); paintMask(ctx, vim, q, tc); }   // the outline in the text colour
+          else if (im && g) rim(im, box);
+          if (p.no && stroke && strokeW > 0) sign(stroke, strokeW);
+          if (im) ctx.drawImage(im, ...box);
+        }
+        if (p.no) sign([0xe0, 0x1b, 0x22], 0);
       } else if (p.badge) {
         const cap = capOf(ctx, fam, z), fitted = badgeFit(z, cap), { h, k } = pillOf(p, z, cap), top = y - fitted.top + (fitted.h - h) / 2, r = h / 2, em = h / PILL_EM;   // on the capitals' middle
         const lab = label ? label(em) : null, set = p.cost ? null : lab, side = lab ? 0.04 * em : z * 0.06 * k;
@@ -1997,8 +2029,8 @@ function drawText(ctx, job, imgs, W) {
     }
   }
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
-  const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid
-  job.lined = plan && !shrunk && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: role === "name" && !(R.frame && !split), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
+  const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid, unless spliced on the card (the bake shrinks ink off it only)
+  job.lined = plan && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
@@ -2042,8 +2074,8 @@ const FIT_PAD = 1;                                    // image px a spliced line
 const LETTERS_ONLY = /[()[\]{}\u0001\u0002]/;          // a badge, icon or cost: never spliced as letters
 /** A plate crop's layout (card_plates.layout) for old, the website's text of its layer (\r dropped), in image px (k per
  *  canvas px): {was, lines: [{s, e, base, left, right, top, bottom, just, para}], x: Map(char index -> pen x of the
- *  letter it starts), ink: Map(char index -> [left, right] of its ink), vary: Set(char index) of the icons the
- *  plate spells with a variant, frame: [left, right] | null}, indexes into was
+ *  letter it starts), ink: Map(char index -> [left, right] of its ink), vary: Map(char index -> variant) of the icons
+ *  the plate spells with a variant, frame: [left, right] | null}, indexes into was
  *  (para -1: a blank line the website trims); null when it has none or its text (icon variants aside) is not old's. */
 export function recordLayout(c, old, k) {
   if (!c || typeof c.text !== "string" || !Array.isArray(c.lines) || !c.lines.length || !Array.isArray(c.glyphs) || !(k > 0)) return null;
@@ -2063,13 +2095,13 @@ export function recordLayout(c, old, k) {
     if (!x.has(j)) x.set(j, g[1] * k);
     if (g.length >= 4 && !ink.has(j)) ink.set(j, [g[2] * k, g[3] * k]);
   }
-  return { was, lines, x, ink, vary: new Set(heads.map(i => at(i) + shift)), frame: Array.isArray(c.frame) ? c.frame.map(v => v * k) : null };
+  return { was, lines, x, ink, vary: new Map(heads.map(([i, v]) => [at(i) + shift, v])), frame: Array.isArray(c.frame) ? c.frame.map(v => v * k) : null };
 }
-/** t without its icon variants ([dark:sticker] -> [dark]), at(i): t's index i there, heads: t's indexes of the tokens
- *  that had one; null when it has none. */
+/** t without its icon variants ([dark:sticker] -> [dark]), at(i): t's index i there, heads: [t's index, variant] of the
+ *  tokens that had one; null when it has none. */
 function noVariants(t) {
   const cut = [], heads = [];
-  for (const m of t.matchAll(/\[([^[\]]{1,70})\]/g)) { const v = splitToken(m[1]); if (v?.v) { cut.push([m.index + 1 + v.base.length, m.index + m[0].length - 1]); heads.push(m.index); } }
+  for (const m of t.matchAll(/\[([^[\]]{1,70})\]/g)) { const v = splitToken(m[1]); if (v?.v) { cut.push([m.index + 1 + v.base.length, m.index + m[0].length - 1]); heads.push([m.index, v.v]); } }
   if (!cut.length) return null;
   const to = []; let T = "";
   for (let i = 0, j = 0; i <= t.length; i++) {
@@ -2207,10 +2239,11 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
   const starts = [...X.keys()].filter(j => j >= l.s && j < l.e).sort((m, n) => m - n), step = new Map();
   starts.forEach((j, n) => { const e = starts[n + 1] ?? l.e; if (e - j === 1 && !step.has(was[j])) step.set(was[j], xOf(e) - X.get(j)); });
   const pillW = t => layout(tokenize(t, icons), Infinity, zl, measure)[0]?.w || 0;
-  const one = t => tokenize(t, icons)[0]?.[0]?.[0], ic = tag && one(tag.run)?.icon ? [iconEm(one(tag.was)), iconEm(one(tag.run))] : [];
+  const one = t => tokenize(t, icons)[0]?.[0]?.[0], to = tag && one(tag.run), ic = to?.icon ? [iconEm((o => o && { ...o, vary: R.vary?.get(a) ?? o.vary })(one(tag.was))), iconEm(to)] : [];   // the old as the plate spells it
   const [g0, g1] = ic[0]?.w && ic[1] ? ic : [], inkW = g0 && R.ink.has(a) ? R.ink.get(a)[1] - R.ink.get(a)[0] : 0, ez0 = g0 ? (xb - xa) / g0.adv : 0;
-  const left = !!g0 && !R.vary?.has(a) && inkW > 0 && inkW / g0.w < 0.9 * ez0, ez = left ? inkW / g0.w : ez0;   // the old icon's size: its pen step (a variant's), its ink where tracking spaces it out
-  const w = g0 ? xb - xa + (g1.adv - g0.adv) * ez : tag ? (xb - xa) * pillW(tag.run) / pillW(tag.was) : [...run].every(ch => step.has(ch)) ? [...run].reduce((t, ch) => t + step.get(ch), 0) : measure(run, z) * k;
+  const vy = R.vary?.has(a), left = !!g0 && zl < 0.9 * ez0 && (vy || (inkW > 0 && inkW / g0.w < 0.9 * ez0)), ez = !left ? ez0 : vy ? zl : inkW / g0.w;   // the old icon's size: its pen step, where tracking spaces it out its ink (a variant's: the line's size)
+  const flat = g0 && LAYERED.has(to.no ? "no" : to.vary);   // psd_edit sets a layered variant at tracking 0
+  const w = g0 ? (flat ? g1.adv * ez : xb - xa + (g1.adv - g0.adv) * ez) : tag ? (xb - xa) * pillW(tag.run) / pillW(tag.was) : [...run].every(ch => step.has(ch)) ? [...run].reduce((t, ch) => t + step.get(ch), 0) : measure(run, z) * k;
   if (!Number.isFinite(w)) return null;
   const dw = w - (xb - xa), width = l.right - l.left + dw, space = step.get(" ") ?? measure(" ", z) * k;
   const [dp, ds] = l.just === 1 || l.just === 4 ? [-dw, 0] : l.just === 2 || l.just === 5 ? [-dw / 2, dw / 2] : [0, dw];

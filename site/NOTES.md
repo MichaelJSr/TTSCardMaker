@@ -692,7 +692,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     one colour or a shadow 8 px past its level's Stroke, at 15% or more; 74 cards) is cast under the typed letters
     (`paintEffects`: the letters, plus a Stroke set deeper, grown by the spread, blurred at sigma size / sqrt 6, moved,
     tinted, blended), on canvases cropped to the lines; a browser without canvas blur draws the letters alone.
-  - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; a timing tag text.js knows is a badge,
+  - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; a variant the site has a picture of
+    drawn as the bake prints it (2026-11-18): `:glow`/`:darkglow` its halo picture with the font's spacers (0.26 em each
+    side), a layer Stroke making the halo a disc; `:tint` its mask and `:sticker` its outline in the nearest letter's
+    colour; `:no` the font's ring and bar; a layered one typed on a tracked line untracked, as psd_edit sets it;
+    a timing tag text.js knows is a badge,
     any case, drawn as its pill in the site's colours; another bracket or parenthesis stays text; no break inside
     "[ice]."). Under an overlay (`oneColour(rec, layer)`: an enabled ColorOverlay, GradientOverlay or PatternOverlay in
     the details record's `effects` on the ability layer's path or a group above it; 2026-10-25) a badge is a pill
