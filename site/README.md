@@ -15,7 +15,8 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   **The Morgue** (under Retired; `morgue=1`): the retired cards in `MDW/The Morgue` (a PSD with its PNG), picture and
   name only, never in the default list, decks, the TTS save, Stats or counts of live cards; with the card timelines
   (below), also the joke cards and the cards played but lost before git (or before this repo, when an older repo had
-  their file), from Discord (picture, first post's day and channel).
+  their file), from Discord (picture, first post's day and channel); an in-joke on a live card too (Tyler, The Panda
+  Future: named as the card, a `-morgue` page) links to that card ("Live card").
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
   column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
@@ -60,11 +61,13 @@ long-press or its pin button; again to unpin): every version picked is then comp
 card, both pictures side by side (the older left) with what changed between them (stars, stats, types, name, the
 ability's words highlighted), from what each version has (a timeline row's sure fields; this repo's versions the card
 data: the current card, the text then and its recorded changes rolled back); a field one side lacks is said so. The
-pictures show in one of four modes, as GitHub's image diff (`compare.js`; the last one kept in localStorage `ver-mode`):
+pictures show in one of four modes wherever two sit side by side (a version beside the current card too), as GitHub's
+image diff (`compare.js`; the last one kept in localStorage `ver-mode`, and for the page when storage is blocked):
 2-up (side by side, the default), Swipe (one box, a divider dragged by mouse, touch or its arrow keys: the older left of
-it, the newer right), Onion skin (the picked over the base, an opacity range) and Difference (the picked over the base
+it, the newer right; a finger moves it only going sideways or by a tap, so a page scroll over it stays a scroll), Onion skin (the picked over the base, an opacity range) and Difference (the picked over the base
 with CSS `mix-blend-mode: difference` on black: unchanged pixels are black, no canvas reads). Both pictures fit the same
-box (contain, centred) in every mode, each picture's size under it when they differ; a switch never moves the page. Dates
+box (contain, centred) in every mode, a timeline picture's own size under it when the two differ (this repo's versions
+show copies: no size); a switch never moves the page; with a picture missing the pair stays 2-up with a note. Dates
 are Pacific days everywhere (the bot's clock), Created too. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
   that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
