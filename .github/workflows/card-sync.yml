@@ -959,7 +959,7 @@ jobs:
       # build has not started or is past Images start (run for an early build only) with Data wait not failed. A
       # follow-up's push run (site-push): while its Follow-up build runs under 80 s in (its looks go on to 90 s; it ends only
       # at a data commit holding the guards' landing: this one's, the first) or Follow-up upload ran; later in that step or
-      # still deploying the push's, looked at every 2 s (90 s at most). Missing, replaced while pending in pages-build,
+      # not yet in it, looked at every 2 s (90 s at most). Missing, replaced while pending in pages-build,
       # built on its own, or ended: dispatched here.
       - name: Site build
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.data-commit.outputs.committed == 'true' || env.AFTER != '') }}
