@@ -1539,9 +1539,10 @@ def save_cases(flow: dict) -> None:
 
 def pdf_start_cases(flow: dict) -> None:
     """Rulebook PDF start, on a fake look and fake GitHub (run lists by gh; the site run's jobs, artifacts and zip by
-    pages_wait.py and curl): a push's lane looks at once; the website lagging, the push's Pages build is served on
-    localhost and decides (kept: the website not looked at), its exit 4, no artifact or a failed download: the website's
-    look; the website up to date or another event: one look as ever. The server is stopped and its build removed."""
+    pages_wait.py and curl; the website's build.txt): a push's lane looks at once; the website lagging, the push's Pages
+    build is served on localhost and decides (kept: the website not looked at), its exit 4, no artifact, a failed
+    download or another build deployed before it is listed: the website's look; the website up to date or another
+    event: one look as ever. The server is stopped and its build removed."""
     import http.server
     import io
     import socket
@@ -1571,10 +1572,12 @@ def pdf_start_cases(flow: dict) -> None:
                 return
             if path == "/blob/5":
                 body = blob.getvalue()
+            elif path == "/live/build.txt":             # the website: another deploy at state["deploy"]
+                body = b"d2 p2\n" if time.monotonic() > state["deploy"] else b"d0 p0\n"
             elif path.endswith("/runs/77/artifacts"):
-                body = json.dumps({"artifacts": [{"id": 5, "name": "github-pages-a1", "expired": False}] if state["listed"] else []}).encode()
-            elif path.endswith("/runs/77/jobs"):
-                body = json.dumps({"jobs": [{"name": "build", "status": "in_progress", "run_attempt": 1, "steps": [
+                body = json.dumps({"artifacts": [{"id": 5, "name": "github-pages-a1", "expired": False}] if state["listed"] is True else []}).encode()
+            elif path.endswith("/runs/77/jobs"):           # listed None: still building
+                body = json.dumps({"jobs": [{"name": "build", "status": "in_progress", "run_attempt": 1, "steps": [] if state["listed"] is None else [
                     {"name": "Pages upload", "status": "completed", "conclusion": "success" if state["listed"] else "skipped"}]}]}).encode()
             else:
                 self.send_response(404)
@@ -1595,9 +1598,10 @@ def pdf_start_cases(flow: dict) -> None:
                 ("exit 4", "push", 3, True, True, 4, ["--wait 0", "--local", "--wait"]),
                 ("no artifact", "push", 3, False, True, 0, ["--wait 0", "--wait"]),
                 ("download failed", "push", 3, True, False, 0, ["--wait 0", "--wait"]),
+                ("deployed first", "push", 3, None, True, 0, ["--wait 0", "--wait"]),
                 ("website up to date", "push", 0, True, True, 0, ["--wait 0"]),
                 ("schedule", "schedule", 0, True, True, 0, [""])):
-            state.update(listed=listed, zip=zipped)
+            state.update(listed=listed, zip=zipped, deploy=time.monotonic() + (1 if listed is None else 1e9))
             with tempfile.TemporaryDirectory() as tmp:
                 ws, runner, fake = os.path.join(tmp, "ws"), os.path.join(tmp, "runner"), os.path.join(tmp, "bin")
                 git(tmp, "init", "-q", "ws")
@@ -1620,7 +1624,8 @@ def pdf_start_cases(flow: dict) -> None:
                     s.bind(("127.0.0.1", 0))
                     port = s.getsockname()[1]
                 env = {**env0, "GH_TOKEN": "x", "GITHUB_WORKSPACE": ws, "GITHUB_EVENT_NAME": event, "GITHUB_SHA": "abc1234",
-                       "GITHUB_API_URL": f"http://127.0.0.1:{api.server_port}", "SITE_URL": "https://site", "LOCAL_PORT": str(port),
+                       "GITHUB_API_URL": f"http://127.0.0.1:{api.server_port}", "SITE_URL": f"http://127.0.0.1:{api.server_port}/live",
+                       "LOCAL_PORT": str(port),
                        "EARLY": "Card browser (after 1 data)", "PATH": f"{fake}:{os.environ['PATH']}"}
                 began = time.monotonic()
                 code, text, _ = run_step(job, "pdf-start", os.path.join(ws, "bot"), env, tmp)
@@ -1633,13 +1638,17 @@ def pdf_start_cases(flow: dict) -> None:
                     stopped = s.connect_ex(("127.0.0.1", port)) != 0
                 served = open(saw).read() == build.decode() if os.path.exists(saw) else None
                 asked = open(calls + ".gh").read() if os.path.exists(calls + ".gh") else ""
-                ok = (code == 0 and open(done).read().strip() == "0" and got == want and stopped
+                ended = open(done).read().strip() if os.path.exists(done) else None
+                ok = (code == 0 and ended == "0" and got == want and stopped and time.monotonic() - began < 15
                       and not os.path.exists(os.path.join(runner, "pages")) and served is ("--local" in want or None)
                       and ("site.yml" in asked) == (wait0 == 3))
                 log = os.path.join(runner, "pdf", "log")
                 check(ok, f"Rulebook PDF start, {name}: looks {got}, the build served to --local {served}, the server stopped "
-                          f"{stopped}, in {time.monotonic() - began:.1f} s"
+                          f"{stopped}, exit {ended} in {time.monotonic() - began:.1f} s"
                       + ("" if ok else f"\n{text}\n{open(log).read() if os.path.exists(log) else ''}"))
+                if ended is None:                   # a case that did not end: stopped as Rulebook PDF stop does
+                    write(os.path.join(runner, "pdf", "stop"), "")
+                    subprocess.run(["kill", open(os.path.join(runner, "pdf", "pid")).read().strip()], check=False)
                 if not stopped:                     # a failed case's server: stopped here
                     subprocess.run(["kill", open(os.path.join(runner, "pages.pid")).read().strip()], check=False)
     finally:
