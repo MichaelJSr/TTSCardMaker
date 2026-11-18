@@ -5,7 +5,7 @@ import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml, stampOf, pictureNumber, sameAbility } from "./history.js";
-import { compareView, MODE_KEY, MODES, modeOf, boxRatio, pctAt, slideKey, sizesText, swipeAria } from "./compare.js";
+import { compareView, MODE_KEY, MODES, modeOf, boxRatio, pctAt, slideKey, swipeAria } from "./compare.js";
 import { deckPasses, SEALED } from "./login.js";
 import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
@@ -1025,6 +1025,7 @@ function openCard(id, showDetails = false) {
         <div class="facts">
           ${c.morgue ? `<a class="fact" href="#/cards?morgue=1" data-tip="${esc(c.lost ? `${LOST_TIP[c.lost] || LOST_TIP.joke}: from Discord, never in the card repo` : `Retired: in MDW/The Morgue${c.retired ? ` since ${date(c.retired)}` : ""}, out of play`)}">The Morgue</a>` : ""}
           ${c.lost ? `<span class="fact" data-tip="${c.firstOld ? "Its first record in the old repo" : "Its first post on Discord"}">${c.lost === "played" ? (c.inGit ? "Played, lost before this repo" : "Played, lost before git") : "Joke card"}${c.first ? (c.firstOld ? ` · in the old repo ${day(c.first)}` : ` · first posted ${day(c.first)}`) : ""}${c.firstCh ? ` in #${esc(c.firstCh)}` : ""}</span>` : ""}
+          ${c.live && S.byId.has(c.live) ? `<a class="fact" href="#/card/${esc(c.live)}" data-tip="The same picture is this card's oldest version">Live card: ${esc(S.byId.get(c.live).name)}</a>` : ""}
           ${c.morgue && c.type === "unknown" ? "" : `<a class="fact" href="#/cards?${scope}kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>`}
           ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
           ${c.stars ? `<a class="fact" href="#/cards?${scope}stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
@@ -1137,12 +1138,13 @@ const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${
 // an older version's 360 px copy on the plates branch (build_site version_images, not in the site); one not made yet: its PNG
 const versionCopy = (c, v) => `${COPIES}/${S.versions.repo}/plates/v/${c.id}/${v.sha.slice(0, 10)}-${S.data.thumbs.v}.avif`;
 modal.addEventListener("error", e => {
-  const t = e.target;
-  if (t.dataset?.png) { t.src = t.dataset.png; delete t.dataset.png; }
-  else if (t.dataset?.early !== undefined) {               // a timeline picture that didn't load: said so, its row stays
+  const t = e.target, cmp = t.closest?.(".ver-cmp");
+  if (t.dataset?.png) { t.src = t.dataset.png; delete t.dataset.png; return; }
+  if (t.dataset?.early !== undefined) {                    // a timeline picture that didn't load: said so, its row stays
     const box = Object.assign(document.createElement("div"), { className: "empty", textContent: "Picture missing" });
     (t.closest("a") || t).replaceWith(box);
   }
+  if (cmp && t.tagName === "IMG") cmp.classList.add("ver-lack");   // the compare view: 2-up only (compare.js LACK)
 }, true);
 /** Under the card's picture: open beside the text, closed in one column (style.css .detail), where the card's text comes
  *  after it; a redraw of the same card keeps it as it was. */
@@ -1175,19 +1177,24 @@ function showVersion(c, i) {
   const vs = versionList(c), v = vs[i], box = $("#ver-compare");
   if (!v || !box) return;
   $$(".ver-item", modal).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
-  if (verBase?.id === c.id && vs[verBase.i] && verBase.i !== i) { box.innerHTML = compareHtml(c, vs, verBase.i, i); const v = $(".ver-cmp", box); if (v) cmpSizes(v); return; }
+  if (verBase?.id === c.id && vs[verBase.i] && verBase.i !== i) { box.innerHTML = compareHtml(c, vs, verBase.i, i); return; }
   if (v.early || vs[0].early) { box.innerHTML = earlyVersion(c, vs, i); return; }
   // text at that time, when the bot's text history lines up with the commit (the latest text at or before it; the
   // current one from when it started, not from the last PSD commit)
   const then = textAt(c, v.ts);
   const link = w => commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path);
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
-  box.innerHTML = i === 0
-    ? `<figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
-    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, v))}" data-png="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
-      <figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
-      ${then && !sameAbility(then, c.ability) ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
+  if (i === 0) { box.innerHTML = `<figure><img src="${curImg(c)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`; return; }
+  const revert = editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : "";
+  const size = c.tw ? [c.tw, c.th] : null;               // the box: the card's shape (its copies' sizes aren't its own)
+  box.innerHTML = nowPair({ pic: `<a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, v))}" data-png="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" draggable="false"></a>`,
+    cap: caption + revert, when: date(v.ts), size }, { pic: `<img src="${curImg(c)}" alt="${esc(c.name)}, current version" draggable="false">`,
+    cap: `Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span>`, size },
+  then && !sameAbility(then, c.ability) ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : "");
 }
+/** An old version beside today's card (no pin) in the compare view too (owner 11-17 ~23:50 (1)), old the picked one;
+ *  extra: what goes under it ("Text then") */
+const nowPair = (old, cur, extra) => `${compareView(cmpMode ?? pref(MODE_KEY), old, { ...cur, when: "current" }, boxRatio([old.size, cur.size]), cmpAt)}${extra}`;
 /** A version from before this repo (or a Morgue entry's): its picture beside the current one, with its date, source,
  *  author and commit subject (old repo, first repo) or channel (Discord), never a link or Revert; "Text then": the
  *  ability read off it when that read is sure */
@@ -1196,14 +1203,16 @@ function earlyVersion(c, vs, i) {
   const caption = w => `${versionWhen(w)}${w.early ? ` · ${earlyBadge(w)}` : ""}${w.author ? ` · ${esc(w.author)}` : ""}${w.channel ? ` · #${esc(w.channel)}` : ""}`
     + (w.sha ? commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path) : "") + (versionMsg(w) ? `<br><span class="muted">${esc(versionMsg(w))}</span>` : "");
   const src = w => (w.early ? w.img : img(c, 720));
-  const pic = (w, alt) => (src(w) ? `<img src="${esc(src(w))}"${w.early ? " data-early" : ""} alt="${esc(alt)}" loading="lazy"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
+  const pic = (w, alt, lazy = true) => (src(w) ? `<img src="${esc(src(w))}"${w.early ? " data-early" : ""} alt="${esc(alt)}"${lazy ? ` loading="lazy"` : ` draggable="false"`}${w.w ? ` width="${w.w}" height="${w.h}"` : ""}>`
     : `<div class="empty">No picture</div>`);
   if (i === 0) return `<figure>${pic(v, `${c.name}, current version`)}<figcaption>${caption(v)}<br>Current version</figcaption></figure>`;
   const then = v.fields?.ability;
-  return `<div class="ver-pair"><figure>${v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : ""}`)}</a>` : pic(v, "")}<figcaption>${caption(v)}</figcaption></figure>
-      <figure>${pic(cur, `${c.name}, current version`)}<figcaption>Current<br><span class="muted">${cur.early ? caption(cur) : `${date(cur.ts)}${commitAfter(S.versions.repo, cur.sha, `Commit for the ${date(cur.ts)} image version`, cur.path)}`}</span></figcaption></figure></div>
-      ${then && c.ability && !sameAbility(then, c.ability) ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>`
-        : then === "" && c.ability && !sameAbility(then, c.ability) ? `<div class="ver-text muted">No ability then</div>` : ""}`;
+  const side = w => ({ none: !src(w), size: w.early ? (w.w ? [w.w, w.h] : null) : c.tw ? [c.tw, c.th] : null, own: w.early && w.w ? [w.w, w.h] : null });
+  return nowPair({ ...side(v), pic: v.img ? `<a href="${esc(v.img)}" target="_blank" rel="noopener">${pic(v, `${c.name}, version from ${v.ts ? date(v.ts) : ""}`, false)}</a>` : pic(v, "", false),
+    cap: caption(v), when: versionWhen(v) }, { ...side(cur), pic: pic(cur, `${c.name}, current version`, false),
+    cap: `Current<br><span class="muted">${cur.early ? caption(cur) : `${date(cur.ts)}${commitAfter(S.versions.repo, cur.sha, `Commit for the ${date(cur.ts)} image version`, cur.path)}`}</span>` },
+  then && c.ability && !sameAbility(then, c.ability) ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>`
+    : then === "" && c.ability && !sameAbility(then, c.ability) ? `<div class="ver-text muted">No ability then</div>` : "");
 }
 // ---- compare two versions (owner 11-17 (5)): a pinned base (right-click, long-press or the pin on its row; again to
 // unpin, or pick it) is what every version picked is compared with, instead of the current card: both pictures side by
@@ -1283,7 +1292,7 @@ function changesHtml(c, vs, a, b) {
 }
 /** Two versions in the compare view (compare.js: 2-up, Swipe, Onion skin, Difference; the older left, the list being
  *  newest first: the higher index), and their changes */
-let cmpAt = { swipe: 50, onion: 50 };                   // the divider and the opacity, kept from one pick to the next
+let cmpAt = { swipe: 50, onion: 50 }, cmpMode = null;  // the divider, the opacity and the mode picked here (storage blocked too), kept from one pick to the next
 function compareHtml(c, vs, base, i) {
   const [a, b] = base > i ? [base, i] : [i, base];
   const side = k => {
@@ -1294,43 +1303,50 @@ function compareHtml(c, vs, base, i) {
     const pic = w.early ? (w.img ? `<a href="${esc(w.img)}" target="_blank" rel="noopener"><img src="${esc(w.img)}" data-early alt="${esc(alt)}" draggable="false"${w.w ? ` width="${w.w}" height="${w.h}"` : ""}></a>` : `<div class="empty">No picture</div>`)
       : k === 0 ? `<img src="${curImg(c)}" alt="${esc(alt)}" draggable="false">`
       : `<a href="${esc(versionUrl(w))}" target="_blank" rel="noopener"><img src="${esc(versionCopy(c, w))}" data-png="${esc(versionUrl(w))}" alt="${esc(alt)}" draggable="false"></a>`;
-    return { pic, cap, when: versionWhen(w), base: k === base, size: w.early ? (w.w ? [w.w, w.h] : null) : c.tw ? [c.tw, c.th] : null };
+    return { pic, cap, when: versionWhen(w), base: k === base, size: w.early ? (w.w ? [w.w, w.h] : null) : c.tw ? [c.tw, c.th] : null,
+      own: w.early && w.w ? [w.w, w.h] : null, none: !!w.early && !w.img };   // own: a timeline picture's size (this repo's: copies)
   };
   const [x, y] = [side(a), side(b)];
-  return `${compareView(pref(MODE_KEY), x, y, boxRatio([x.size, y.size]), cmpAt)}${changesHtml(c, vs, a, b)}`;
-}
-/** The compare view's pictures' own sizes under them, once both are in, when they differ (as GitHub) */
-function cmpSizes(box) {
-  const im = ["a", "b"].map(k => $(`.ver-pic.ver-${k} img`, box)), caps = ["a", "b"].map(k => $(`.ver-cap.ver-${k} .ver-size`, box));
-  if (im.some(m => !m || !m.complete || !m.naturalWidth) || caps.some(x => !x)) return;
-  const t = sizesText(...im.map(m => [m.naturalWidth, m.naturalHeight]));
-  caps.forEach((x, n) => { x.textContent = t ? t[n] : ""; });
+  return `${compareView(cmpMode ?? pref(MODE_KEY), x, y, boxRatio([x.size, y.size]), cmpAt)}${changesHtml(c, vs, a, b)}`;
 }
 const cmpSwipe = (box, x) => {                          // the divider at x (0-100)
   cmpAt.swipe = x; box.style.setProperty("--x", `${x}%`);
   const sw = $(".ver-swipe", box);
   if (sw) for (const [k, v] of Object.entries(swipeAria(x, sw.dataset.a, sw.dataset.b))) sw.setAttribute(k, v);
 };
-modal.addEventListener("load", e => { const box = e.target.closest?.(".ver-cmp"); if (box) cmpSizes(box); }, true);
 modal.addEventListener("input", e => {
   const r = e.target; if (!r.matches?.(".ver-onion")) return;
   const box = r.closest(".ver-cmp"), v = +r.value;
   cmpAt.onion = v; box.style.setProperty("--op", String(v / 100)); const out = $("output", r.parentElement); if (out) out.textContent = `${v}%`;
 });
-let swiping = null;                                      // the pointer dragging the divider
+// the divider: a mouse press moves it there and drags; a finger drags it only once it goes sideways (up or down the page
+// scrolls, touch-action pan-y) or a tap puts it there
+let swiping = null;                                      // {id, pics, x, y, on}: the pointer on the Swipe box
+const swipeTo = (pics, clientX) => { const r = pics.getBoundingClientRect(); cmpSwipe(pics.closest(".ver-cmp"), pctAt(clientX, r.left, r.width)); };
 modal.addEventListener("pointerdown", e => {
-  const pics = e.target.closest?.(".ver-cmp[data-mode='swipe'] .ver-pics");
+  const pics = e.target.closest?.(".ver-cmp[data-mode='swipe']:not(.ver-lack) .ver-pics");
   if (!pics || (e.pointerType === "mouse" && e.button !== 0)) return;
-  e.preventDefault(); swiping = e.pointerId; pics.setPointerCapture(e.pointerId);
-  const r = pics.getBoundingClientRect(); cmpSwipe(pics.closest(".ver-cmp"), pctAt(e.clientX, r.left, r.width));
+  swiping = { id: e.pointerId, pics, x: e.clientX, y: e.clientY, on: e.pointerType === "mouse" };
+  if (!swiping.on) return;
+  e.preventDefault(); pics.setPointerCapture(e.pointerId); swipeTo(pics, e.clientX);
   $(".ver-swipe", pics)?.focus({ preventScroll: true });
 });
 modal.addEventListener("pointermove", e => {
-  if (swiping !== e.pointerId) return;
-  const pics = e.target.closest?.(".ver-pics"); if (!pics) return;
-  const r = pics.getBoundingClientRect(); cmpSwipe(pics.closest(".ver-cmp"), pctAt(e.clientX, r.left, r.width));
+  const s = swiping; if (s?.id !== e.pointerId) return;
+  if (!s.on) {
+    const dx = Math.abs(e.clientX - s.x), dy = Math.abs(e.clientY - s.y);
+    if (dy > 4 && dy >= dx) { swiping = null; return; }  // a scroll
+    if (dx < 6) return;
+    s.on = true; $(".ver-swipe", s.pics)?.focus({ preventScroll: true });
+  }
+  swipeTo(s.pics, e.clientX);
 });
-for (const end of ["pointerup", "pointercancel", "lostpointercapture"]) modal.addEventListener(end, e => { if (swiping === e.pointerId) swiping = null; });
+modal.addEventListener("pointerup", e => {
+  const s = swiping; if (s?.id !== e.pointerId) return;
+  if (!s.on && Math.abs(e.clientX - s.x) < 6 && Math.abs(e.clientY - s.y) < 6) { swipeTo(s.pics, e.clientX); $(".ver-swipe", s.pics)?.focus({ preventScroll: true }); }   // a tap
+  swiping = null;
+});
+for (const end of ["pointercancel", "lostpointercapture"]) modal.addEventListener(end, e => { if (swiping?.id === e.pointerId) swiping = null; });
 // ---- revert (editors): a History or Image versions "Revert to this version", the card's files as they were at that
 // version's commit (edit.js revertCard). A picture-only duplicate's texts are its original's PSD's: no Revert there
 const canRevert = c => editing() && (!c.dup || !!c.variantOf || pictureNumber(c.psd, c.png) !== null);
@@ -2128,7 +2144,7 @@ const actions = {
   "version-pin": el => { const c = cardOf(parseHash().arg); if (c) pinVersion(c, +el.dataset.i); },
   "ver-mode": el => {                                    // the compare view's mode (compare.js): CSS lays it out, kept for next time
     const box = el.closest(".ver-cmp"), mode = modeOf(el.dataset.mode); if (!box) return;
-    box.dataset.mode = mode;
+    box.dataset.mode = cmpMode = mode;
     $$(".ver-mode", box).forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === mode)));
     $$(".ver-hint", box).forEach(h => { h.hidden = h.dataset.for !== mode; });
     const sw = $(".ver-swipe", box); if (sw) { sw.hidden = mode !== "swipe"; sw.tabIndex = mode === "swipe" ? 0 : -1; }

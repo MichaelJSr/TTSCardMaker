@@ -1646,9 +1646,19 @@ def history_morgue(hist, slug, old_slugs=()):
             e["firstOld"] = True                       # first seen in the old repo, not on Discord
         if t.get("git_file") or e.get("firstOld"):
             e["inGit"] = True                          # a file in the old or first repo: lost before this repo
+        if isinstance(t.get("live"), str):
+            e["_live"] = t["live"]                     # an in-joke's live card (owner 11-17 ~23:50): live_links
         out.append(e)
         rows[e["id"]] = mine
     return out, rows
+
+
+def live_links(morgue, by_key):
+    """An in-joke Morgue entry's live card (its timeline's 'live', a name): live, that card's id, when it is one."""
+    for e in morgue:
+        name = e.pop("_live", None)
+        if name and (card := by_key.get(card_key(name))):
+            e["live"] = card["id"]
 
 
 def history_mdw(hist, morgue, early, versions, commits, renamed, people):
@@ -5158,6 +5168,7 @@ def main():
     for field in ("key", "name"):
         for e in cards:
             by_key.setdefault(card_key(e[field]), e)
+    live_links(morgue, by_key)
     for e in cards:
         found = edits.get(card_key(e["key"]))
         if not found or "dup_of" not in found[0]:
