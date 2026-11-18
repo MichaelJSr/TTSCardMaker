@@ -550,8 +550,9 @@ RECENT_ROWS = 60                              # app.js renderChanges: Recently u
 
 
 def recent_texts(cards, history):
-    """recent.json: {id: its last earlier text} for the Recently updated rows (newest ts, ties at the last row kept)
-    whose text changed with the update (history.js textChanged), so that tab needs no history.json."""
+    """cards.json's recent (and recent.json, one release): {id: its last earlier text} for the Recently updated rows
+    (newest ts, ties at the last row kept) whose text changed with the update (history.js textChanged), so that tab needs
+    no history.json."""
     rows = sorted((e for e in cards if e.get("ts") and not e.get("hidden")), key=lambda e: -e["ts"])
     last = rows[RECENT_ROWS - 1]["ts"] if len(rows) >= RECENT_ROWS else 0
     return {e["id"]: history[e["id"]][-1]["ability"] for e in rows if e["ts"] >= last and e.get("ability") and e["id"] in history
@@ -5532,8 +5533,10 @@ def main():
     chapters, rule_images = rulebook_chapters()
     cover_sizes, cover_files = cover_copies(rule_images)
     shown, editing = editor_split(cards)
-    # versions.json: app.js reads data/versions/ since 2026-11-18; kept one release for tabs still on the older app.js
-    files = {"cards.json": {**data, "cards": columns(shown)}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "recent.json": recent_texts(cards, history), "versions.json": versions, "users.json": {"users": profiles},
+    # versions.json: app.js reads data/versions/ since 2026-11-18; kept one release for tabs still on the older app.js.
+    # recent.json too: cards.json carries it as recent since 2026-11-18 (Recently updated draws at once)
+    recent = recent_texts(cards, history)
+    files = {"cards.json": {**data, "cards": columns(shown), "recent": recent}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "recent.json": recent, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}

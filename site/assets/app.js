@@ -135,7 +135,7 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   for (const c of S.cards) if (h[c.id]) c.history = h[c.id];
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
-let recentP = null;                                       // Recently updated's earlier texts (build_site recent_texts)
+let recentP = null;                                       // Recently updated's earlier texts (build_site recent_texts): cards.json's recent, else this
 const loadRecent = () => (recentP ||= getJson("recent.json").then(d => { S.recent = new Map(Object.entries(d)); }).catch(e => { recentP = null; throw e; }));
 const COPIES = "https://raw.githubusercontent.com";       // the older versions' copies' host (versionCopy)
 const preconnect = href => document.querySelector(`link[rel="preconnect"][href="${href}"]`)
@@ -1771,6 +1771,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
     loadChangelog(file).then(again, e => { if (here()) page(failBox("the changelog", e)); });
     return;
   }
+  if (NEEDS[tab] === "recent" && !S.recent && S.data.recent) S.recent = new Map(Object.entries(S.data.recent));   // in cards.json: at once
   if (NEEDS[tab] === "recent" && !S.recent && !S.history) {   // history.json (a card's dialog) has the texts too
     page(`<div class="loading">Loading recent changes…</div>`);
     whenLoaded(loadRecent(), "recent changes", again);
