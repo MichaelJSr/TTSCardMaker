@@ -62,6 +62,8 @@
    after Fixes to land with 25 PSDs or fewer to convert (by the API, its run id kept), Follow up's dispatch with fixes whether Land
    landed or ran (tried 3 times) unless that start did and neither lane of its run was cancelled; a follow-up's data job
    gets the main lane's extra time for the wait.
+11. Rulebook PDF start (faked look and GitHub): a push's lane whose website lags has its Pages build served on localhost
+   to decide (--local); its exit 4, no artifact or a failed download: the website's look; the server stopped after.
 Exits 1 when a case gets the wrong answer.
 """
 import atexit
@@ -1535,6 +1537,115 @@ def save_cases(flow: dict) -> None:
                   f"fetched once ({n} calls); not after it moved ({other!r}, {asked[2:]})")
 
 
+def pdf_start_cases(flow: dict) -> None:
+    """Rulebook PDF start, on a fake look and fake GitHub (run lists by gh; the site run's jobs, artifacts and zip by
+    pages_wait.py and curl): a push's lane looks at once; the website lagging, the push's Pages build is served on
+    localhost and decides (kept: the website not looked at), its exit 4, no artifact or a failed download: the website's
+    look; the website up to date or another event: one look as ever. The server is stopped and its build removed."""
+    import http.server
+    import io
+    import socket
+    import tarfile
+    import threading
+    job = flow["jobs"]["main"]
+    env0 = step(job, "pdf-start")["env"]
+    build = b"d1 pg\n"
+    tar = io.BytesIO()
+    with tarfile.open(fileobj=tar, mode="w") as t:
+        info = tarfile.TarInfo("./build.txt")
+        info.size = len(build)
+        t.addfile(info, io.BytesIO(build))
+    blob = io.BytesIO()
+    with zipfile.ZipFile(blob, "w") as z:
+        z.writestr("artifact.tar", tar.getvalue())
+    state = {}
+
+    class Api(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            path = self.path.split("?")[0]
+            if path.endswith("/artifacts/5/zip"):
+                self.send_response(302 if state["zip"] else 404)
+                self.send_header("Location", "/blob/5")
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return
+            if path == "/blob/5":
+                body = blob.getvalue()
+            elif path.endswith("/runs/77/artifacts"):
+                body = json.dumps({"artifacts": [{"id": 5, "name": "github-pages-a1", "expired": False}] if state["listed"] else []}).encode()
+            elif path.endswith("/runs/77/jobs"):
+                body = json.dumps({"jobs": [{"name": "build", "status": "in_progress", "run_attempt": 1, "steps": [
+                    {"name": "Pages upload", "status": "completed", "conclusion": "success" if state["listed"] else "skipped"}]}]}).encode()
+            else:
+                self.send_response(404)
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *args):
+            pass
+    api = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Api)
+    threading.Thread(target=api.serve_forever, daemon=True).start()
+    try:
+        for name, event, wait0, listed, zipped, local, want in (
+                ("kept", "push", 3, True, True, 0, ["--wait 0", "--local"]),
+                ("exit 4", "push", 3, True, True, 4, ["--wait 0", "--local", "--wait"]),
+                ("no artifact", "push", 3, False, True, 0, ["--wait 0", "--wait"]),
+                ("download failed", "push", 3, True, False, 0, ["--wait 0", "--wait"]),
+                ("website up to date", "push", 0, True, True, 0, ["--wait 0"]),
+                ("schedule", "schedule", 0, True, True, 0, [""])):
+            state.update(listed=listed, zip=zipped)
+            with tempfile.TemporaryDirectory() as tmp:
+                ws, runner, fake = os.path.join(tmp, "ws"), os.path.join(tmp, "runner"), os.path.join(tmp, "bin")
+                git(tmp, "init", "-q", "ws")
+                write(os.path.join(ws, ".github/scripts/pages_wait.py"), open(os.path.join(REPO, ".github/scripts/pages_wait.py")).read())
+                os.makedirs(os.path.join(ws, "bot"))
+                write(os.path.join(runner, "history.code"), "0\n")
+                calls, saw = os.path.join(tmp, "calls"), os.path.join(tmp, "saw")
+                # the look: its args logged; --local reads the build served there
+                write(os.path.join(runner, "venv", "bin", "python"), "#!/bin/bash\n"
+                      f'a="$*"; echo "$a" >> "{calls}"\n'
+                      f'case $a in *--local*) curl -sf "${{a##*--local }}/build.txt" > "{saw}" && echo "kept; the push\'s build" && exit {local}; exit 4 ;;\n'
+                      f'  *"--wait 0"*) echo "lags"; exit {wait0} ;; esac\necho "the website\'s look"\n')
+                write(os.path.join(fake, "fc-list"), "#!/bin/bash\necho 'Noto Color Emoji'\n")
+                write(os.path.join(fake, "gh"), "#!/bin/bash\n"
+                      f'echo "$2" >> "{calls}.gh"\n'
+                      'case $2 in *site.yml/runs?event=push*) echo "77 1";; esac\n')
+                for f in (os.path.join(runner, "venv", "bin", "python"), os.path.join(fake, "fc-list"), os.path.join(fake, "gh")):
+                    os.chmod(f, 0o755)
+                with socket.socket() as s:
+                    s.bind(("127.0.0.1", 0))
+                    port = s.getsockname()[1]
+                env = {**env0, "GH_TOKEN": "x", "GITHUB_WORKSPACE": ws, "GITHUB_EVENT_NAME": event, "GITHUB_SHA": "abc1234",
+                       "GITHUB_API_URL": f"http://127.0.0.1:{api.server_port}", "SITE_URL": "https://site", "LOCAL_PORT": str(port),
+                       "EARLY": "Card browser (after 1 data)", "PATH": f"{fake}:{os.environ['PATH']}"}
+                began = time.monotonic()
+                code, text, _ = run_step(job, "pdf-start", os.path.join(ws, "bot"), env, tmp)
+                done = os.path.join(runner, "pdf", "code")
+                while not os.path.exists(done) and time.monotonic() - began < 30:
+                    time.sleep(0.05)
+                time.sleep(0.2)
+                got = [next((w for w in ("--local", "--wait 0", "--wait") if w in line), "") for line in open(calls).read().splitlines()]
+                with socket.socket() as s:
+                    stopped = s.connect_ex(("127.0.0.1", port)) != 0
+                served = open(saw).read() == build.decode() if os.path.exists(saw) else None
+                asked = open(calls + ".gh").read() if os.path.exists(calls + ".gh") else ""
+                ok = (code == 0 and open(done).read().strip() == "0" and got == want and stopped
+                      and not os.path.exists(os.path.join(runner, "pages")) and served is ("--local" in want or None)
+                      and ("site.yml" in asked) == (wait0 == 3))
+                log = os.path.join(runner, "pdf", "log")
+                check(ok, f"Rulebook PDF start, {name}: looks {got}, the build served to --local {served}, the server stopped "
+                          f"{stopped}, in {time.monotonic() - began:.1f} s"
+                      + ("" if ok else f"\n{text}\n{open(log).read() if os.path.exists(log) else ''}"))
+                if not stopped:                     # a failed case's server: stopped here
+                    subprocess.run(["kill", open(os.path.join(runner, "pages.pid")).read().strip()], check=False)
+    finally:
+        api.shutdown()
+
+
 def records_cases(flow: dict) -> None:
     """Bake records: the refusals always, M's part (its baked events given M) only when M landed; nothing on a dry run."""
     job = flow["jobs"]["main"]
@@ -1948,7 +2059,7 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
 
 GROUPS = {"plans": plans, "timer": timer_cases, "gate": gate_cases, "history": history_cases, "build": build_cases,
           "tell": tell_cases, "fonts": fonts_cases, "bake": bake_cases, "main": main_cases, "save": save_cases,
-          "records": records_cases, "guard": guard_cases, "chain": chain_cases, "lane": lane_cases}
+          "records": records_cases, "guard": guard_cases, "chain": chain_cases, "lane": lane_cases, "pdf": pdf_start_cases}
 
 
 def main():
