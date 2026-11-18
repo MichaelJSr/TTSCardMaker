@@ -18502,22 +18502,16 @@
   ]
  },
  "Items/Counter/1 Stars/Poison_Trap.psd": {
-  "blob": "a1cf363d36d9025376fd13f7b040fc0e945bcbfe",
+  "blob": "85dc7ee942562870d5f2276aedfb15a63f20dccf",
   "links": [
    {
-    "drawn": "bb4a855c3b10c0f25a1c664c4c9006152a271bf6",
-    "name": "Poison_Trap - Poisoned_Spikes.png",
-    "path": "MDW/Linked/Poison_Trap - Poisoned_Spikes.png",
-    "size": 1174575
-   },
-   {
-    "drawn": "a6dfaa63017446c87785ab0d7c39298b91eadba0",
+    "drawn": null,
     "name": "Hero_Cap - Offense.png",
     "path": "MDW/Linked/Hero_Cap - Offense.png",
     "size": 1078694
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
@@ -21030,28 +21024,40 @@
   ]
  },
  "Items/Heal/2 Stars/Regeneration_Potion.psd": {
-  "blob": "16a5c4aabda57d59b056eaa806a6a2cad3bdbab4",
+  "blob": "d6dc4c3f3377a50b24e8a0d399824ee18adb2603",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
