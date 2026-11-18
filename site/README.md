@@ -245,10 +245,13 @@ needs that folder's `requirements.txt`: without it the build warns and variants 
 where links fail). The edit mock-up's fonts get WOFF2 copies in `fonts/` (every glyph kept; cached by blob in
 `site/.cache/woff2`, NOTES §32); the browser falls back to the file on raw.githubusercontent.com without one. The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
 computed by `site/build/analytics.py` from the same bot data) loads when the Stats page (beside its charts' scripts) or a
-creature, minion or card with recorded changes is opened; `rules.json`, `history.json`, `users.json` and
-`contributions.json` load when the rulebook, a card's history (or its Image versions list, for the compare's texts) or the
-People tab is opened; `versions/<id>.json` (one card's Image versions, about 1 KB; `versions.json` holds them all, kept
-one release for open tabs on the older script) when that card opens; `recent.json` (the earlier texts the Recently updated tab marks) when that tab is opened; `changelog.json`, `archive.json` or `edits.json` when the Changelog, Archive or Database edits tab is opened (each tab its own; `changelog-minor.json` when a Changelog "minor changes" fold first opens); `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
+duplicate with recorded changes is opened; `rules.json`, `history.json`, `users.json` and
+`contributions.json` load when the rulebook, a duplicate's history or the
+People tab is opened; `versions/<id>.json` (one card's Image versions, and its own texts and Balance row, about 1 KB;
+`versions.json` holds the versions of all, kept one release for open tabs on the older script) when that card opens;
+the Recently updated tab's earlier texts come in `cards.json` (`recent`; `recent.json` kept one release); `changelog-head.json`
+or `edits-head.json` (a first screen) beside `changelog.json` or `edits.json`, and `archive.json`, when the Changelog,
+Database edits or Archive tab is opened (each tab its own; `changelog-minor.json` when a Changelog "minor changes" fold first opens); `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened; `editing.json` (the fields only edit mode reads) with the editor. `tts.json` is the TTS save's: its global script
 (`TTS/Global.lua`) fetches it for the Card details, Find a card and Rules buttons (`build_site.py` `tts_details`). Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The Action ships the scripts as
