@@ -121,7 +121,9 @@ export function compile(query) {
   m = lower.match(/^(\w+)\s*(<=|>=|==?|<|>)\s*(-?\d+)$/);
   if (m && NUM[m[1]]) {
     const get = NUM[m[1]], v = Number(m[3]), op = OPS[m[2]] || OPS["=="];
-    return c => { const x = get(c); return x != null && op(x, v); };
+    const meets = c => { const x = get(c); return x != null && op(x, v); };
+    if (m[1] === "stars") return meets;
+    return c => (c.creatures?.length ? c.creatures.some(meets) : meets(c));   // several creatures: any one (the bot too)
   }
   m = q.match(/^(\w+)\s*(==?|~)\s*(.+)$/);
   if (m && STR[m[1].toLowerCase()]) {

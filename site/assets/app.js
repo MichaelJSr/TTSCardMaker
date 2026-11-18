@@ -608,7 +608,7 @@ function filterCards(p, { facets = true } = {}) {
   if (series) list = list.filter(c => c.series === series);
   if (subseries) list = list.filter(c => c.subseries === subseries);
   if (author) list = list.filter(c => c.author === author);
-  for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
+  for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => (c.creatures?.length ? c.creatures : [c]).some(x => x[k] != null && x[k] >= r[0] && x[k] <= r[1])); }   // any creature
   const flagFns = { alias: c => !!(c.aliases && c.aliases.length),
     dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(webEdited(c) || c._staged || c._sent), unpublished: c => !!c._staged,
     mentions: c => others(S.mentions.get(c.id), c), mentioned: c => others(S.mentionedBy.get(c.id), c),
