@@ -200,9 +200,10 @@ function sparkline(points) {
   return `<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(`Total stats over time: ${totals.join(", ")}`)}"><path class="line" d="${d}"/>${dots}<text class="val" x="${X(last.ts) + 8}" y="${Y(last.total) + 4}">${last.total}</text></svg>`;
 }
 
-/** a card's year created, "Before 2020" for a physical card photo's (cards.json createdBefore: no day), and its search */
+/** a card's year created, "Before 2020" for a physical card photo's (cards.json createdBefore: no day), and its search
+ *  ("before 2020" only: created<2020 also meets 2019) */
 export const createdYear = c => (c.createdBefore ? `Before ${c.createdBefore}` : c.created.slice(0, 4));
-export const createdQuery = y => (y.startsWith("Before ") ? `created<${y.slice(7)}` : `created==${y}`);
+export const createdQuery = y => (y.startsWith("Before ") ? `created=="${y.toLowerCase()}"` : `created==${y}`);
 
 // ---- describing a change ------------------------------------------------------------------------------------------
 const statsLine = l => STATS.map(([, lab], i) => `${lab} ${l[i]}`).join(" · ");
