@@ -21764,7 +21764,7 @@
   ]
  },
  "Items/Negation/2 Stars/Metronome.psd": {
-  "blob": "737d29f469431c3e45f2efcf8be926ec967bedde",
+  "blob": "7f77a12c1eed72580fc05a2e5edf70ca694bbf76",
   "links": [
    {
     "drawn": null,
@@ -21999,13 +21999,19 @@
   ]
  },
  "Items/Support/2 Stars/Gasoline.psd": {
-  "blob": "2ca72ede1716f923f73f7e2cc16ecf4666d3eace",
+  "blob": "2c00c6e9071a118dd86259acbee37d9811188c63",
   "links": [
    {
     "drawn": null,
     "name": "Bleach - 123.png",
     "path": "MDW/Linked/Bleach - 123.png",
     "size": 1110596
+   },
+   {
+    "drawn": "3cc25b9a4ca5b6c4fa79a513e541d08413736cea",
+    "name": "Gasoline - Layer 3.psb",
+    "path": "MDW/Linked/Gasoline - Layer 3.psb",
+    "size": 1091192
    },
    {
     "drawn": null,
@@ -24359,6 +24365,10 @@
  },
  "MDW/Linked/Galacta_Warrior - Layer 14.psb": {
   "blob": "67a80bfd62a5a41decba132b486e88c6d2eb7e2f",
+  "links": []
+ },
+ "MDW/Linked/Gasoline - Layer 3.psb": {
+  "blob": "3cc25b9a4ca5b6c4fa79a513e541d08413736cea",
   "links": []
  },
  "MDW/Linked/Grey_Prince_Zote - Layer 50.psb": {
@@ -27827,7 +27837,7 @@
   ]
  },
  "N.M.E/Metronome_Lite.psd": {
-  "blob": "044db937ea7b7b93d7b23e7f77102f94634a082d",
+  "blob": "2092c5e1b3408b6023cd1b38ea524231ad129a29",
   "links": [
    {
     "drawn": null,
@@ -29319,6 +29329,9 @@
   },
   "MDW/Linked/Gasoline - Gasoline.png": {
    "47968db6a356f89671bbeb52f6a22e769755851d": 3127070
+  },
+  "MDW/Linked/Gasoline - Layer 3.psb": {
+   "3cc25b9a4ca5b6c4fa79a513e541d08413736cea": 1091192
   },
   "MDW/Linked/Giegue - Gie.png": {
    "ac7e75122e450bcde50552a969afda2eaa6b01e7": 93286
@@ -31982,6 +31995,7 @@
   "3c773f2c778df7cd14ef1db10b7d76678de03579": "7e73ee897880809026fda689198ee9c44d3ce40a",
   "3c867bedcd6df6bcc4984b706810eb755076464d": "f9437720fca4fbc56708aaa9db81c93d6101e97d",
   "3ca4eefd7388be39cf9111020d684c4ff33678dd": "a70158ae8555afb88ce13ef38ff649299d5cf13b",
+  "3cc25b9a4ca5b6c4fa79a513e541d08413736cea": "ae8d5039b31feae1d233dbde903b79279c820657",
   "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6": "fcee250ae29d3d1b0add19c6347c1944dec84b2a",
   "3ce222fb5f04db08b6a9ef357a977802a72ec140": "b21cddefc30d6ef121988584412d875e7abd5433",
   "3d6080f543a0509f4636e296d268efecbbee6f3d": "69216726325147887fcac2b7d8bfa73be3dc0143",
