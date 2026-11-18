@@ -622,6 +622,7 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 .charts { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 14px; }
 @media (max-width: 500px) { .charts { grid-template-columns: 1fr; } }
 .chart { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; min-width: 0; }
+#view:not(.charts-all) .charts > section.chart:not(.drawn) { content-visibility: auto; contain-intrinsic-size: auto 420px; }   /* Stats: drawn once near, or while idle (app.js) */
 .chart.wide { grid-column: 1 / -1; }
 .chart header { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .chart h3 { margin: 0; font-size: 15px; } .chart p.sub { margin: 2px 0 10px; color: var(--muted); font-size: 13px; }

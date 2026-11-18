@@ -255,6 +255,7 @@ async function init() {
   renderAccount();
   const typed = qInput.value;                            // typed before the scripts ran (route() clears an unfocused box)
   const at = takeAt();                                   // a reload: the reader's place
+  S.placing = !!at && !at.m;                             // until settle() ends: every Stats chart drawn (renderStatsView)
   if (at?.list && parseHash().name === "card") S.listHash = at.list;   // the list under its card dialog
   readPage();                                            // tint()'s colour, while only the shell is drawn
   route();
@@ -1672,6 +1673,7 @@ function renderStatsView(r) {
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
   statsNarrow = St.stats.narrowOf(view);
   St.stats.renderStats(view, statsCtx(), r.params);
+  view.classList.toggle("charts-all", S.restoring || !!S.placing);   // Back/Forward, a reload's place: every chart drawn (style.css)
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; History goes in with it
     const now = parseHash(S.renderedHash);
@@ -1679,8 +1681,17 @@ function renderStatsView(r) {
     const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
     if (A) put("stats-balance", Bal.statsHtml(A, statsCtx(), now.params));
     put("stats-history", St.insights.historyHtml(statsCtx(), now.params));
+    if (started) drawRest();
   };
   const job = ++statsJob, slot = $("#stats-balance", view);
+  // the charts below the first screen drawn two at a time while the page is idle, so a fling down finds them drawn
+  const idle = window.requestIdleCallback || (f => setTimeout(f, 50));
+  let drawing = false, started = false;
+  const more = () => { if (job !== statsJob) return; const rest = $$(".charts > section.chart:not(.drawn)", view);
+    for (const s of rest.slice(0, 2)) s.classList.add("drawn");
+    if (rest.length > 2) idle(more, { timeout: 400 }); else drawing = false; };
+  const drawRest = () => { started = true; if (!drawing) { drawing = true; idle(more, { timeout: 400 }); } };
+  setTimeout(drawRest, 300);
   if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
     if (top && slot && slot.getBoundingClientRect().top > vh) requestAnimationFrame(() => setTimeout(() => { if (job === statsJob) fill(); }));
     else fill();
@@ -2385,7 +2396,7 @@ function restoreAt(a) {
 function settle(a, dialog = false) {
   const STOP = ["wheel", "touchstart", "keydown", "pointerdown"], t0 = performance.now();
   let done = false, ready = 0, drawn = 0, ok = 0, tall = 0;
-  const stop = () => { done = true; for (const k of STOP) removeEventListener(k, stop, true); };
+  const stop = () => { done = true; S.placing = false; for (const k of STOP) removeEventListener(k, stop, true); };
   for (const k of STOP) addEventListener(k, stop, { capture: true, passive: true });   // the reader moved: theirs
   const tick = () => {
     if (done) return;
