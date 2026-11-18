@@ -92,6 +92,8 @@ main { padding: 16px; outline: none; }
 .chip.on { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--accent-ink); }
 .chip .n, .check .n { opacity: .65; margin-left: 4px; font-size: 11px; }
 .chip.on .n { opacity: 1; }
+.filters .chip .n { font-variant-numeric: tabular-nums; }
+.filters .chip .n[style] { display: inline-block; min-width: calc(var(--d) * 1ch); text-align: right; }   /* room for the search's count */
 :root[data-theme="light"] :is(.chip, .check) .n { opacity: 1; }   /* light: .65 of --ink-2 was 3.2:1 */
 :root[data-theme="light"] :is(.chip:not(.on, .x), .check:not(.x)) .n { color: var(--muted); }
 a.chip:hover { text-decoration: none; }

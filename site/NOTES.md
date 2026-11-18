@@ -1569,7 +1569,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 
 ## 38. The Font filter (2026-10-25, owner: "can you allow filtering by font? have a text box for entering a font with autofill")
 - Sidebar, after Author: a Font box. Typing suggests the fonts the searched cards use with their card counts ("Perpetua,
-  95 cards"; counted over the search like the Font chips, not the sidebar filters), through tokens.js's name list
+  95 cards"; counted over the cards the other filters leave, the Font filter's own set aside), through tokens.js's name list
   (`data-suggest="font"`, `suggestNames`: any case, anywhere in the name, spaces, `_`, `-` ignored); ↑ ↓ Enter Esc,
   click, tap. Enter with no row chosen adds the best suggestion. Picked and excluded fonts stay in the list, marked
   ("picked": a pick says "Already picked"; "excluded": a pick moves it to the picked). Picked fonts
@@ -1588,6 +1588,11 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   `S.notPick` while nothing is picked). Params `x<key>`, comma lists, but one value for series, subseries and author
   (grid.js `ONE`: a comma is part of the name). grid.js `X_TESTS` and `dropExcluded` drop the cards; an excluded chip
   shows "−n", the cards it removes. AutoCroissant `tests/test_site_exclude.py`.
+- **Chip counts** (2026-11-18): a chip's number is what pressing it gives: the cards every other filter leaves (Kind,
+  Stars, Item type and Font set their own picks aside, since a second pick adds its own cards; Types and Needs handling
+  count the list), a card once per value ('panda, panda'). Which chips show and the Types order follow the search alone,
+  and a count keeps room for the search's digits (`chipList` `room`, tabular digits), so no chip moves under a press
+  (236 presses checked, as before); while a link's data loads, the search alone.
 - **Missing filter** (bdcda57a): sidebar options for cards lacking a value (grid.js `MISSING`: series, subseries, types,
   ability, author, stars, stats, item type, ratings, artwork source); `missing=` keeps cards
   missing all the picked ones; an option no card lacks is hidden. Every sort puts cards lacking the sorted value last,

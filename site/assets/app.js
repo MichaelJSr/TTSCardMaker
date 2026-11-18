@@ -202,12 +202,12 @@ const tokenApi = { vocab: () => [], icon: (t, o) => S.renderer?.icon(t, o) ?? nu
 let tokensMod = null, tokensP = null;
 const useTokens = m => { if (!tokensMod) { tokensMod = m; m.install(tokenApi); } return m; };   // once: the editor imports the same module
 const loadTokens = () => (tokensP ||= (early("tokens.js"), import("./tokens.js")).then(useTokens).catch(e => { tokensP = null; throw e; }));
-// the Font box's suggestions: the fonts the searched cards use, counted as the Font chips count them (the search, not
-// the sidebar filters); picked and excluded ones marked (picking an excluded one moves it back in)
+// the Font box's suggestions: the fonts used by the cards the other filters leave (the Font filter's own picks and
+// exclusions set aside); picked and excluded ones marked (picking an excluded one moves it back in)
 function fontEntries() {
   if (!S.fontUse) return [];
   const n = new Map(), p = parseHash().params, on = new Set(vals(p, "font")), off = new Set(vals(p, "xfont"));
-  for (const c of filterCards(p, { facets: false })) for (const f of fontsOf(c)) n.set(f, (n.get(f) || 0) + 1);
+  for (const c of filterCards(without(p, "font", "xfont"))) for (const f of new Set(fontsOf(c))) n.set(f, (n.get(f) || 0) + 1);
   return [...n].map(([value, k]) => ({ value, n: k, note: `${k} card${k === 1 ? "" : "s"}${on.has(value) ? ", picked" : off.has(value) ? ", excluded" : ""}` }));
 }
 function whenLoaded(promise, what, rerender) {
@@ -541,6 +541,7 @@ function toResults(was) {
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
 const MULTI = new Set([...CF.MULTI, "font", "xfont"]);                   // repeated params, one value each (names may hold commas)
 const vals = (p, k) => (MULTI.has(k) ? CF.vals(p, k) : csv(p, k));       // cf, xcf, font, xfont
+const without = (p, ...ks) => { const q = new URLSearchParams(p); for (const k of ks) q.delete(k); return q; };
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
 // edited on the website: an editor's fields (changes.fieldEditors), never a _by AutoCroissant entry (the 2026-10-22
 // migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
@@ -610,14 +611,16 @@ function sortCards(list, sort = "name", dir = "") {
   }
   return list.sort(G.byKey(key, desc));
 }
-// xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v)); del: a ✕ after each
-function chipList(key, options, selected, counts, xs = [], removes = null, del = null) {
+// xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v)); del: a ✕ after each;
+// room: the search's own counts, whose digits a count keeps its room for (a press elsewhere never re-wraps the chips)
+function chipList(key, options, selected, counts, xs = [], removes = null, del = null, room = null) {
   return `<div class="chips">${options.map(([v, label]) => { const x = xs.includes(String(v)), n = x ? removes(key, String(v)) : counts?.get(String(v)) || 0, on = !x && selected.includes(String(v));
-    return `${del ? `<span class="chip-wrap">` : ""}<button type="button" class="chip${x ? " x" : on ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}" aria-pressed="${on}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : counts ? ` aria-label="${esc(label)}, ${n} card${n === 1 ? "" : "s"}"` : ""}>${esc(label)}${counts ? `<span class="n" aria-hidden="true">${x ? `−${n}` : n}</span>` : ""}</button>${del ? `${del(v, label)}</span>` : ""}`; }).join("")}</div>`;
+    const d = room && !x ? String(room.get(String(v)) || 0).length : 0;
+    return `${del ? `<span class="chip-wrap">` : ""}<button type="button" class="chip${x ? " x" : on ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}" aria-pressed="${on}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : counts ? ` aria-label="${esc(label)}, ${n} card${n === 1 ? "" : "s"}"` : ""}>${esc(label)}${counts ? `<span class="n" aria-hidden="true"${d > 1 ? ` style="--d:${d}"` : ""}>${x ? `−${n}` : n}</span>` : ""}</button>${del ? `${del(v, label)}</span>` : ""}`; }).join("")}</div>`;
 }
 // the Font chips: chipList's, each with a ✕ that forgets it (a click turns it off and on, like Kind)
-const fontChips = (...a) => chipList("font", S.fontKept.map(f => [f, f]), ...a,
-  v => `<button type="button" class="ghost font-del" data-action="font-forget" data-value="${esc(v)}" title="Remove this font" aria-label="Remove the font ${esc(v)}">✕</button>`);
+const fontChips = (sel, counts, xs, removes, room) => chipList("font", S.fontKept.map(f => [f, f]), sel, counts, xs, removes,
+  v => `<button type="button" class="ghost font-del" data-action="font-forget" data-value="${esc(v)}" title="Remove this font" aria-label="Remove the font ${esc(v)}">✕</button>`, room);
 const XABLE = new Set(["kind", "stars", "sub", "types", "flags", "missing", "cf", "font"]);   // a right-click (long press) excludes
 const NOT_KEYS = ["series", "subseries", "author"];                              // a select with a ≠ toggle
 /** a sidebar control a right-click or long press on `t` excludes with, or null */
@@ -632,14 +635,21 @@ function renderCards(r) {
   const list = listOf(p);
   S.list = list;
   if (S.selected.size) { const ids = new Set(list.map(c => c.id)); for (const id of S.selected) if (!ids.has(id)) S.selected.delete(id); }   // a drag carries only shown cards
-  const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
-  const kindCounts = count(base, kindOf), starCounts = count(base, c => c.stars), subCounts = count(base, c => c.subtype);
-  const typeCounts = count(base, c => c.types || []);
+  const changed = needsAnalytics(p) && !S.analytics, fontWait = needsFonts(p) && !S.fontUse;
+  const waiting = changed || fontWait || (needsCharts(p) && !St);   // a Stats link's filters, a font link: the grid again once analytics.json (charts.js, cardfonts.json) is in
+  // a chip's number is what pressing it gives: the cards the other filters leave (Kind, Stars, Item type, Font: any of the
+  // picks, so their own are set aside); which chips show and their order: the search alone. Loading: the search alone
+  const others = k => (waiting ? base : k && p.has(k) ? filterCards(without(p, k)) : list);
+  const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of new Set([].concat(f(c)))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };   // a card once ('girl, girl')
+  const kindSeen = count(base, kindOf), kindCounts = count(others("kind"), kindOf);
+  const starOf = c => c.stars, subOf = c => c.subtype, starCounts = count(others("stars"), starOf), subCounts = count(others("sub"), subOf);
+  const typeSeen = count(base, c => c.types || []), typeCounts = count(others(), c => c.types || []);
   const xs = k => G.xvals(p, k), removed = new Map();
   const removes = (k, v) => { const id = `${k}\u0001${v}`; if (!removed.has(id)) { const q = new URLSearchParams(p); q.set(`x${k}`, xs(k).filter(x => x !== v).join(","));
     removed.set(id, Math.max(0, filterCards(q).length - list.length)); } return removed.get(id); };   // without it, less with it
-  const needCounts = count(base, c => HANDLING.map(([k]) => k).filter(k => (k === "flagged" ? flagged(c) : hasFlag(c, k))));
-  const needOpts = HANDLING.filter(([k]) => needCounts.get(k) || csv(p, "flags").includes(k) || xs("flags").includes(k));
+  const needsOf = c => HANDLING.map(([k]) => k).filter(k => (k === "flagged" ? flagged(c) : hasFlag(c, k)));
+  const needSeen = count(base, needsOf), needCounts = count(others(), needsOf);
+  const needOpts = HANDLING.filter(([k]) => needSeen.get(k) || csv(p, "flags").includes(k) || xs("flags").includes(k));
   const miss = csv(p, "missing"), xmiss = xs("missing"), missCounts = new Map(G.MISSING.map(([k, , , test]) => [k, list.filter(test).length]));   // what ticking it would show
   const series = [...new Set(S.cards.map(c => c.series).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const pickOf = k => p.get(k) || p.get(`x${k}`) || "";                        // the select shows an excluded value too
@@ -651,18 +661,19 @@ function renderCards(r) {
   const authors = [...new Set(S.cards.map(c => c.author).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const starOpts = [...new Set(S.cards.map(c => c.stars).filter(Boolean))].sort((a, b) => a - b).map(s => [s, `${s}★`]);
   const subOpts = [...new Set(S.cards.map(c => c.subtype).filter(Boolean))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
-  const typeOpts = [...typeCounts.keys()].sort((a, b) => (typeCounts.get(b) || 0) - (typeCounts.get(a) || 0));
+  const typeOpts = [...typeSeen.keys()].sort((a, b) => (typeSeen.get(b) || 0) - (typeSeen.get(a) || 0));
   const missOpts = G.MISSING.filter(([k]) => missCounts.get(k) || miss.includes(k) || xmiss.includes(k));      // none to show: hidden
   const mine = CF.saved(), cfIn = CF.vals(p, "cf"), cfOut = CF.vals(p, "xcf");                         // My filters (myfilters.js)
   const cfRemoves = v => { const q = new URLSearchParams(p); q.delete("xcf"); for (const x of cfOut) if (x !== v) q.append("xcf", x); return Math.max(0, filterCards(q).length - list.length); };
   const cfSave = v => (mine.includes(v) ? "" : `<button type="button" class="chip cf-save" data-action="cf-save" data-value="${esc(v)}" title="Save to My filters">Save</button>`);   // from a link
-  const fontIn = vals(p, "font"), fontOut = vals(p, "xfont"), fontCounts = S.fontUse ? count(base, fontsOf) : null;   // the Font filter
+  const fontIn = vals(p, "font"), fontOut = vals(p, "xfont"), fontCounts = S.fontUse ? count(others("font"), fontsOf) : null;   // the Font filter
+  const fontSeen = S.fontUse ? count(base, fontsOf) : null;
   for (const f of [...fontIn, ...fontOut]) if (!S.fontKept.includes(f)) S.fontKept.push(f);   // a font off stays listed (owner 10-26), not in the address
   const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
   const view_ = p.get("view") || pref("view") || "grid", size = p.get("size") || pref("size") || "m";
   const handling = csv(p, "flags").some(f => HANDLING.some(([k]) => k === f));   // Needs handling: a list with each card's flags
   const morgue = !!p.get("morgue"), edits = editing() && !morgue;      // the Morgue's cards: nothing to edit or drag
-  const morgueN = S.morgue.length ? filterCards(new URLSearchParams([...(p.get("q") ? [["q", p.get("q")]] : []), ["morgue", "1"]]), { facets: false }).length : 0;
+  const morgueN = !S.morgue.length ? 0 : morgue ? others().length : filterCards(new URLSearchParams([...without(p, "morgue"), ["morgue", "1"]]), { facets: !waiting }).length;
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
   if (morgue) active.push(["morgue", "The Morgue"]);
@@ -689,8 +700,6 @@ function renderCards(r) {
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
-  const changed = needsAnalytics(p) && !S.analytics, fontWait = needsFonts(p) && !S.fontUse;
-  const waiting = changed || fontWait || (needsCharts(p) && !St);   // a Stats link's filters, a font link: the grid again once analytics.json (charts.js, cardfonts.json) is in
   if (waiting) (changed ? loadAnalytics() : fontWait ? loadFonts() : loadCharts()).then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
     () => { const el = $(".browse .loading", view); if (el) el.textContent = changed ? "Couldn't load the recorded changes." : "Couldn't load the filter."; });
 
@@ -699,24 +708,24 @@ function renderCards(r) {
       <button type="button" class="skip-cards" data-action="to-cards">Skip to cards</button>
       ${mine.length ? `<h3>My filters</h3>${mine.map(v => { const x = cfOut.includes(v), f = CF.pred(v), n = x ? cfRemoves(v) : f ? list.filter(f).length : list.length;
         return `<div class="cf-row"><label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="cf" data-value="${esc(v)}"${!x && cfIn.includes(v) ? " checked" : ""}${x ? ` aria-label="${esc(v)}: excluded"` : ""}> <span class="cf-q">${esc(v)}</span><span class="n">${x ? `−${n}` : n}</span></label><button type="button" class="ghost cf-del" data-action="cf-delete" data-value="${esc(v)}" title="Remove this filter" aria-label="Remove the filter ${esc(v)}">✕</button></div>`; }).join("")}` : ""}
-      <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts, xs("kind"), removes)}
+      <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindSeen.get(k)), csv(p, "kind"), kindCounts, xs("kind"), removes, null, kindSeen)}
       ${S.morgue.length || morgue ? `<h3>Retired</h3>${chipList("morgue", [["1", "The Morgue"]], csv(p, "morgue"), new Map([["1", morgueN]]))}` : ""}
-      <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts, xs("stars"), removes)}
-      ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts, xs("sub"), removes)}` : ""}
+      <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts, xs("stars"), removes, null, count(base, starOf))}
+      ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts, xs("sub"), removes, null, count(base, subOf))}` : ""}
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t), x = xs("types").includes(t), on = !x && csv(p, "types").includes(t), name = t.replace(/_/g, " ");
-        return `<button type="button" class="icon-toggle${on ? " on" : ""}${x ? " x" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(x ? `not ${name} (removes ${removes("types", t)})` : `${name} (${typeCounts.get(t)})`)}" aria-pressed="${on}"${x ? ` aria-label="${esc(name)}: excluded"` : ""}>${ic ? `<img${G.loCls(ic) ? ` class="${G.loCls(ic)}"` : ""} loading="lazy" src="${esc(ic.file)}"${G.iconSet(ic, 26)} alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
+        return `<button type="button" class="icon-toggle${on ? " on" : ""}${x ? " x" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(x ? `not ${name} (removes ${removes("types", t)})` : `${name} (${typeCounts.get(t) || 0})`)}" aria-pressed="${on}"${x ? ` aria-label="${esc(name)}: excluded"` : ""}>${ic ? `<img${G.loCls(ic) ? ` class="${G.loCls(ic)}"` : ""} loading="lazy" src="${esc(ic.file)}"${G.iconSet(ic, 26)} alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
       <h3>Series</h3>${notSel("series", `<select data-action="select-param" data-key="series" aria-label="Series"><option value="">All series</option>${series.map(s => `<option${s === pickOf("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}
       ${subseries.length || pickOf("subseries") ? `<h3>Subseries</h3>${notSel("subseries", `<select data-action="select-param" data-key="subseries" aria-label="Subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(pickOf("subseries"))}</option>` : ""}${subseries.map(s => `<option${s === pickOf("subseries") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
       <h3>Author</h3>${notSel("author", `<select data-action="select-param" data-key="author" aria-label="Author"><option value="">Anyone</option>${authors.map(a => `<option${a === pickOf("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
       <h3>Font</h3><input type="text" class="font-box" data-suggest="font" autocomplete="off" spellcheck="false" placeholder="Type a font…" title="Cards using any picked font" aria-label="Font: cards using any picked font">
-      ${S.fontKept.length ? `${fontChips(fontIn, fontCounts, fontOut, fontRemoves)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
+      ${S.fontKept.length ? `${fontChips(fontIn, fontCounts, fontOut, fontRemoves, fontSeen)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
       <h3>Flags</h3>${FLAGS.filter(([f]) => !EDIT_FLAGS.has(f) || editing() || csv(p, "flags").includes(f) || xs("flags").includes(f))
         .map(([f, l]) => { const x = xs("flags").includes(f);
           return `<label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${!x && csv(p, "flags").includes(f) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}${x ? `<span class="n">−${removes("flags", f)}</span>` : ""}</label>`; }).join("")}
       ${missOpts.length ? `<h3>Missing</h3>${missOpts.map(([k, l, tip]) => { const x = xmiss.includes(k);
         return `<label class="check${x ? " x" : ""}"${tip ? ` title="${esc(tip)}"` : ""}><input type="checkbox" data-action="toggle-param" data-key="missing" data-value="${k}"${!x && miss.includes(k) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}<span class="n">${x ? `−${removes("missing", k)}` : missCounts.get(k)}</span></label>`; }).join("")}` : ""}
-      ${needOpts.length ? `<h3>Needs handling</h3>${chipList("flags", needOpts, csv(p, "flags"), needCounts, xs("flags"), removes)}` : ""}
+      ${needOpts.length ? `<h3>Needs handling</h3>${chipList("flags", needOpts, csv(p, "flags"), needCounts, xs("flags"), removes, null, needSeen)}` : ""}
       <p class="muted x-hint">Right-click or long-press a filter to exclude it.</p>
       <p><button type="button" class="ghost" data-action="clear-filters">Clear all filters</button></p>
     </aside>
