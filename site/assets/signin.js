@@ -1,6 +1,6 @@
 // Password sign-in: the GitHub token encrypted with its owner's password, published as site/logins/<login>.json so any
-// device signs in with login + password. DOM-free at import: edit.js wires the forms built here (imported by edit.js only:
-// the editor's chunk; this browser's sealed token is login.js).
+// device signs in with login + password. DOM-free at import: edit.js wires the forms built here (a chunk of its own: app.js
+// shows the sign-in form while the editor loads; this browser's sealed token is login.js).
 import { esc, LOGIN_RE } from "./text.js";
 import { b64, unb64, utf8 } from "./login.js";
 
@@ -144,6 +144,29 @@ export function signInHtml({ mode = "token", last = "", note = "", repo = "", lo
       encrypted with a key that can't leave the browser (Sign out removes both). A password file (<code>${esc(logins)}/&lt;login&gt;.json</code>)
       is public: it holds your token encrypted with your password, so anyone can try to guess the password offline. A long
       password you use nowhere else is what keeps it safe.</p>`;
+}
+/** The sign-in form as app.js shows it while the editor loads (dialog d): the mode buttons work; a submit or Forgot
+ *  password goes to hold(status, replay) while d has data-signin-early (edit.js openHub removes it, taking the form over). */
+export function earlyForm(d, hold) {
+  const pw = d.querySelector("#signin-pw-form"), box = d.querySelector("#signin-token-box"), mine = () => d.hasAttribute("data-signin-early");
+  const focus = () => d.querySelector(box.hidden ? (d.querySelector("#signin-login").value ? "#signin-password" : "#signin-login") : "#signin-token").focus();
+  d.dataset.signinEarly = "";
+  d.addEventListener("click", e => {
+    const m = e.target.closest("[data-signin-mode]"), forgot = e.target.closest("[data-pw-forgot]");
+    if (!mine()) return;                          // edit.js's from now
+    if (m) {
+      pw.hidden = m.dataset.signinMode !== "password"; box.hidden = !pw.hidden;
+      for (const b of d.querySelectorAll("[data-signin-mode]")) { b.classList.toggle("on", b === m); b.setAttribute("aria-pressed", b === m); }
+      focus();
+    } else if (forgot) hold("#signin-pw-status", () => forgot.click());
+  });
+  d.addEventListener("submit", e => {
+    if (!mine()) return;
+    e.preventDefault();
+    const f = e.target;
+    hold(f === pw ? "#signin-pw-status" : "#signin-status", () => f.dispatchEvent(new Event("submit", { cancelable: true })));
+  }, true);
+  focus();
 }
 /** The password checks as a list: each problem, or one line saying it's fine. */
 export function checksHtml(r, again = null) {

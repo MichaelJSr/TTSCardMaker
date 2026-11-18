@@ -313,9 +313,47 @@ function loadEditor(say = false) {                       // say: "Loading…" wh
     if (S.ready) { ed.init(); previews.init(); }          // else init() does
     if (toastEl.textContent === note) toastEl.hidden = true;
     return ed;
-  }).catch(e => { editorP = null; toast(failText("the editor", e, "") + (navigator.onLine === false ? "" : " Reload the page to try again.")); throw e; }));
+  }).catch(e => { editorP = null; toast(editorFailed(e)); throw e; }));
 }
+const editorFailed = e => failText("the editor", e, "") + (navigator.onLine === false ? "" : " Reload the page to try again.");
 const withEditor = fn => loadEditor(true).then(fn, () => {});
+// signed out, nothing kept (no editor at boot): Sign in and Edit show the sign-in form at once from its own chunk
+// (signin.js) while the editor loads behind it; edit.js openHub then takes the form over as typed. Until then the mode
+// buttons work here; a submit or Forgot password waits for the editor ("Loading…"; a failed load says so there).
+const SIGNIN_NOTE = { "edit-hub": () => "", "edit-card": el => { const c = S.byId.get(el?.dataset?.id || currentCard()); return c ? `Sign in to edit ${c.name}.` : null; } };
+let signinP = null, signin = null;                       // signin: the press waiting for the editor {name, el, dlg, held, on}
+const isUp = d => !!d?.isConnected && !modal.hidden;
+function signInFirst(name, el) {
+  if (!S.ready || wantsEditor() || typeof SIGNIN_NOTE[name]?.(el) !== "string") return false;
+  if (signin && (!signin.dlg || isUp(signin.dlg))) { if (!signin.dlg) Object.assign(signin, { name, el }); return true; }   // on its way
+  const w = signin = { name, el, dlg: null, held: null, on: false };
+  (signinP ||= (early("signin.js"), Promise.all([import("./signin.js"), sheet("editing").catch(() => {})]))).then(([M]) => {
+    if (signin !== w || editor !== IDLE) return;         // the editor came first: openHub draws it
+    const last = pref("edit-last-login") || "";          // as edit.js hubHtml
+    showDialog(M.signInHtml({ note: SIGNIN_NOTE[w.name](w.el) ?? "", mode: last || S.data.passwords ? "password" : "token", last, repo: S.data.repo, logins: S.data.files.logins }));
+    M.earlyForm(w.dlg = $(".dialog", modal), (status, run) => hold(w, status, run));
+  }, () => { signinP = null; });                         // openHub draws it when the editor comes
+  waitEditor(w);                                         // after: the form's requests go first
+  return true;
+}
+function hold(w, status, run) {                          // pressed before edit.js wired the form: run once it has
+  w.held = run;
+  const s = $(status, w.dlg); if (s) s.textContent = "Loading…";
+  if (!w.on) waitEditor(w);                              // after a failed load: once more
+}
+function waitEditor(w) {
+  w.on = true;
+  loadEditor().then(() => {
+    w.on = false; if (signin === w) signin = null;
+    if (w.dlg && !isUp(w.dlg)) return;                   // closed meanwhile: stays closed
+    actions[w.name]?.(w.el);                             // edit.js openHub takes the form over
+    if (isUp(w.dlg) && !w.dlg.hasAttribute("data-signin-early")) w.held?.();
+  }, e => {
+    w.on = false; w.held = null;
+    if (isUp(w.dlg)) for (const s of $$("#signin-status, #signin-pw-status", w.dlg)) s.textContent = editorFailed(e);
+    else if (signin === w) signin = null;
+  });
+}
 // the fields only edit mode reads (data/editing.json, build_site EDITOR_FIELDS): onto the cards once, before any edit
 let editFields = null;
 function addEditFields() {
@@ -2057,7 +2095,7 @@ const actions = {
 /** An action by name; one only edit mode has (edit.js, tray.js) loads it first. */
 function act(name, el) {
   if (actions[name]) actions[name](el);
-  else if (editor === IDLE) withEditor(() => actions[name]?.(el));
+  else if (editor === IDLE && !signInFirst(name, el)) withEditor(() => actions[name]?.(el));
 }
 document.addEventListener("click", e => {
   if (e.target.closest("a.details-link")) return;     // the browser follows it
@@ -2171,7 +2209,7 @@ document.addEventListener("keydown", e => {
   else if (inCard && e.key === "d") toggleDeck(id);
   else if (inCard && e.key === "c") copy(shareUrl(id), "link: paste it in Discord");
   else if (inCard && e.key === "x" && S.byId.has(id)) actions["compare-add"]({ dataset: { id } });
-  else if (inCard && e.key === "e" && S.byId.has(id)) { e.preventDefault(); withEditor(ed => ed.open(id)); }
+  else if (inCard && e.key === "e" && S.byId.has(id)) { e.preventDefault(); act("edit-card", { dataset: { id } }); }
 });
 
 // tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview; when they go: tip.js

@@ -1798,7 +1798,8 @@ export function createEditor(app) {
     return Object.keys(map).map(g => `<label class="erow"><span>${esc(g)}</span><input data-git="${esc(g)}" value="${esc(stage.people[g] ?? map[g])}"></label>`).join("");
   }
   function openHub(note = "", then = null) {         // then: what to open once signed in
-    app.showDialog(hubHtml(note));
+    const early = !me && !app.modal.hidden && app.modal.querySelector(".dialog[data-signin-early]");   // app.js's (signin.js): taken over as typed
+    if (early) early.removeAttribute("data-signin-early"); else app.showDialog(hubHtml(note));
     const form = document.getElementById("signin-form"), pwForm = document.getElementById("signin-pw-form");
     const next = () => (then ? then() : openHub());
     if (form) {
@@ -1816,7 +1817,7 @@ export function createEditor(app) {
           openHub(note, then);
         }
       });
-      focus();
+      if (!early || !app.modal.contains(document.activeElement)) focus();
       form.addEventListener("submit", async e => {
         e.preventDefault();
         const status = document.getElementById("signin-status");
