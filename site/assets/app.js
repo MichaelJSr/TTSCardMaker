@@ -76,7 +76,7 @@ const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand",
   "old repo": "Its first version in the old card repo, before this one", photo: "Made before 2020: a photo of the physical card shows it",
   "first repo": "Its first version in the first card repo (2022-23), before the old one",
-  changelog: "Named in a 2019 balance-change list on Discord, before its first picture",
+  changelog: "Named in a balance-change list or update changelog on Discord, before its first picture",
   review: "Its creation date as given on the card timelines' review page" };
 const createdText = c => (c.createdBefore ? `before ${c.createdBefore}` : day(c.created));
 const createdTip = c => (CREATED_TIP[c.createdFrom] || "Created") + (c.createdWas ? ` (the card timelines moved it from ${day(c.createdWas)})` : "");
