@@ -1030,6 +1030,9 @@ export function paintedOver(rec, colors, typed = [], edit = null) {
 const obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : null);
 const centreOf = b => [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
 const boxAt = ([cx, cy], w, h) => [cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2];
+/** A unit's erase box (glow included) kept within half the icon's larger side of its core: a record's box past that
+ *  (Holo Defense API, Ice Dragon: the whole card) is not its glow. */
+export const capBox = ({ core: c, box: b }) => { const m = 0.5 * Math.max(c[2] - c[0], c[3] - c[1]); return [Math.max(b[0], c[0] - m), Math.max(b[1], c[1] - m), Math.min(b[2], c[2] + m), Math.min(b[3], c[3] + m)]; };
 /** Stars from `from` to `to` on the record's header.stars: {erase: [box], draw: [box], refused, boxed}. A shown star stays when
  *  one of the count's centres (at[to], the bake's plan) is within a quarter of a star of its own; the others are erased
  *  (their box, glow included) and a star drawn at every centre none covers. A count whose stars all shrink to fit their
@@ -1041,13 +1044,13 @@ export function starPlan(stars, from, to) {
   if (!units.length || units.length !== from || !Array.isArray(at)) return { erase: [], draw: [], refused: why, boxed: true };
   const w = median(units.map(u => u.core[2] - u.core[0])), h = median(units.map(u => u.core[3] - u.core[1])), tol = 0.25 * Math.max(w, h);
   const s = +obj(st.scale)?.[to];
-  if (s > 0 && s < 1) return { erase: units.map(u => u.box), draw: at.map(t => boxAt(t, w * s, h * s)), refused: why, boxed: false };
+  if (s > 0 && s < 1) return { erase: units.map(capBox), draw: at.map(t => boxAt(t, w * s, h * s)), refused: why, boxed: false };
   const left = units.map(u => ({ u, c: centreOf(u.core) })), draw = [];
   for (const t of at) {
     const i = left.findIndex(({ c }) => Math.abs(c[0] - t[0]) <= tol && Math.abs(c[1] - t[1]) <= tol);
     if (i >= 0) left.splice(i, 1); else draw.push(boxAt(t, w, h));
   }
-  return { erase: left.map(({ u }) => u.box), draw, refused: why, boxed: false };
+  return { erase: left.map(({ u }) => capBox(u)), draw, refused: why, boxed: false };
 }
 /** Type icons for `now` on the record's header.types, as psd_edit.plan_types does it: kept icons stay in their
  *  slot, removed ones are erased, a kept icon past the new count moves to the first free slot (centre on centre, its own
@@ -1072,10 +1075,10 @@ export function typePlan(types, now, first = null) {
   const spots = [...row.slice(0, count).map(u => u.core), ...more], erase = [], draw = [], gone = [];
   const free = spots.map((_, i) => i).filter(i => !(i < row.length && kept[i]));
   row.forEach((u, i) => {
-    if (!kept[i]) { erase.push(u.box); gone.push(i); }
+    if (!kept[i]) { erase.push(capBox(u)); gone.push(i); }
     else if (i >= count) {
       const to = centreOf(spots[free.shift()]), c = centreOf(u.core), dx = Math.round(to[0] - c[0]), dy = Math.round(to[1] - c[1]);
-      erase.push(u.box); gone.push(i); draw.push({ name: u.name, core: [u.core[0] + dx, u.core[1] + dy, u.core[2] + dx, u.core[3] + dy] });
+      erase.push(capBox(u)); gone.push(i); draw.push({ name: u.name, core: [u.core[0] + dx, u.core[1] + dy, u.core[2] + dx, u.core[3] + dy] });
     }
   });
   for (const name of added) draw.push({ name, core: spots[free.shift()] });
