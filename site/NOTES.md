@@ -1177,6 +1177,9 @@ relies on:
   while the page is idle (`drawn`; the Balance and History fill restarts it), and every chart at once while Back/Forward
   or a reload restores a place, a redraw starts mid-page (a theme switch, a filter) or a Balance/History link jumps
   (`charts-all`: not at the top, S.placing until settle() ends, `.stats-jump`), so the place lands as before.
+  Balance and History below the first screen are filled after it has painted (`fillSoon`), also when analytics.json
+  lands before that paint (a fast or cached network: it now starts beside charts.js; filled at once, the first Stats
+  frame on a phone at CPU 4x came 150 -> 224 ms, now 114 ms; desktop 34 -> 57, now 32 ms; scratch s10c/fixopt2).
   Medians (scratch s10c/opt1): Image versions tap 2.50 s -> 16 ms; Stats 2.29 -> 1.15 s (first charts 911 -> 917 ms);
   compare a repo version 1.05 -> 0.85 s; Stats warm, network not throttled, 429 -> 300 ms; desktop the same within
   noise (a second card's list 6 -> 21 ms: its own file). versions.json is still written for one release.
