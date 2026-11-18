@@ -888,6 +888,7 @@ jobs:
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; nothing posted"; exit 0; fi
           posts=$RUNNER_TEMP/discord.json
           n=$(jq '.messages | length' "$posts")
+          last=$(jq '[.messages[]? | .body != null] | rindex(true) // -1' "$posts")   # the last one sent
           for ((i = 0; i < n; i++)); do
             silent=$(jq ".messages[$i].body == null" "$posts")       # the guards' events alone: no post, the cursor moves
             if [ "$silent" != true ] && ! jq -c ".messages[$i].body" "$posts" | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK"; then
@@ -896,7 +897,7 @@ jobs:
             fi
             "$RUNNER_TEMP/venv/bin/python" -m commands.changelog advance --db "$GITHUB_WORKSPACE/carddata/db" \
               --seq "$(jq ".messages[$i].cursor.seq" "$posts")" --push "$(jq -r ".messages[$i].cursor.push // \"\"" "$posts")"
-            if [ "$silent" != true ]; then sleep 1; fi
+            if [ "$silent" != true ] && [ "$i" -lt "$last" ]; then sleep 1; fi   # 1 s between two sends
           done
 
       # db/ and the cursor as one commit on data, never forced; a rejected push fails the job (gate G6's case), but over
