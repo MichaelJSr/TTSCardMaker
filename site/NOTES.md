@@ -1207,8 +1207,9 @@ relies on:
   no draw of these tabs is one long task (~200 ms at 4x CPU before). A filter (?kind=, ?via=), Back/Forward or a
   reload's place draws the whole file at once, as before. An empty window (no card change in 180 days, or card data
   without a changelog) shows its heading and note once; a head with no blocks while the whole file has some is drawn
-  again whole. Without requestIdleCallback (Safari) each slice is its own task (`setTimeout` 0, not 50 ms), so the
-  whole list is no later there either.
+  again whole. Without requestIdleCallback (Safari) each slice is its own task (`setTimeout` 0, not 50 ms): phone,
+  Slow 4G, CPU 4x, the whole Changelog is in at 1.49 s (a draw at once: 1.41 s; with 50 ms gaps: 2.00 s), its first
+  screen at 0.68 s.
 - `diffWords` keeps its HTML (2026-11-04: a Map by before + "\0" + after, the oldest dropped past 2000; ~1,000 pairs
   exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
 - Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first
