@@ -4,12 +4,12 @@
   "details_version": 10,
   "parser_version": 7
  },
- "built_at": "2026-11-19T16:25:35Z",
+ "built_at": "2026-11-19T17:43:40Z",
  "card_commit": "400c52911355053d4c2e2f2228407e86eedc8011",
  "card_repo": "MichaelJSr/TTSCardMaker",
  "files": {
   "old_stats.json": "30d3053add25d9475acb154c43940a44944a79f569474becef6bb1166f42a3a5",
-  "psd_details.json": "541fd9870764e4f4fb59a00cbfe77657fb5af3a7f387fb4af03f30e78abc02a1",
+  "psd_details.json": "966a0d367fecc73ee095fadfa3a5e794c2066b0647ebb02d3b343faf18c29908",
   "rulebook.json": "13c9986311328d9507b4946fb996b077ce73895e24f86d9fa6f91f77069c538c",
   "stats.json": "ef89a47b761c94f11de487f388b16b9c89edd26756228aeca85507244d783429"
  },
@@ -26,6 +26,6 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/44565900401",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/44580210620",
  "schema": 1
 }
