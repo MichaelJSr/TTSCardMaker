@@ -951,6 +951,7 @@ GLYPH_SET = "".join(map(chr, range(33, 127))) + "\u2122\u00ae\u00a9\u00e9\u2019\
 #   mockup.js checks (psd_edit.PLAIN_MARKS among them)
 MGP_FONT = "MyriadPro-Regular"                # psd_edit.MGP_FONT: the bake sets a typed letter its font lacks in it
 NOTDEF_MAX = 600                              # a longer .notdef path: a frame of its bounds
+GAPS_VERSION = 2                              # bump when font_gaps changes (2: empty glyphs)
 
 
 def ps_name(name):
@@ -1014,8 +1015,9 @@ def font_faces(data):
 def font_gaps(data):
     """
     Per face of a font file: [the GLYPH_SET characters its cmap lacks, its .notdef as [advance, SVG path] in 1/1000 em,
-    y up ([advance] when empty; a frame of its bounds past NOTDEF_MAX)], or None when it lacks none. The bake draws such
-    a typed character as the .notdef (psd_edit.no_glyph), and mockup.js so.
+    y up ([advance] when empty; a frame of its bounds past NOTDEF_MAX), those its glyph for is empty (Belisa plumilla
+    manual's ':')], or None when it draws them all. The bake sets such a typed character in another font
+    (psd_edit.glyph_fonts), else as the .notdef (no_glyph), and mockup.js so.
     """
     import struct
     from fontTools.pens.boundsPen import BoundsPen
@@ -1026,11 +1028,17 @@ def font_gaps(data):
         font = TTFont(io.BytesIO(data), lazy=True, fontNumber=i if many else -1)
         cmap = font.getBestCmap() or {}
         lacks = "".join(c for c in GLYPH_SET if ord(c) not in cmap)
-        if not lacks:
+        glyphs = font.getGlyphSet()
+
+        def empty(g):
+            pen = BoundsPen(glyphs)
+            glyphs[g].draw(pen)
+            return pen.bounds is None
+        blank = "" if "SVG " in font else "".join(c for c in GLYPH_SET if ord(c) in cmap and empty(cmap[ord(c)]))
+        if not lacks and not blank:
             out.append(None)
             continue
         em, name = 1000 / font["head"].unitsPerEm, font.getGlyphOrder()[0]
-        glyphs = font.getGlyphSet()
         pen = SVGPathPen(glyphs, lambda v: str(round(v * em)))
         glyphs[name].draw(pen)
         path = pen.getCommands()
@@ -1041,7 +1049,7 @@ def font_gaps(data):
             t = max(1, round(min(x1 - x0, y1 - y0) / 12))
             path = f"M{x0} {y0}H{x1}V{y1}H{x0}ZM{x0 + t} {y0 + t}V{y1 - t}H{x1 - t}V{y0 + t}Z"
         adv = round(font["hmtx"][name][0] * em)
-        out.append([lacks, [adv, path] if path else [adv]])
+        out.append([lacks, [adv, path] if path else [adv], blank])
     return out
 
 
@@ -1055,8 +1063,8 @@ def font_bytes(path):
 
 def web_fonts(tree, names):
     """
-    {font name: {"file": MDW/Fonts path, "_bytes": its size, "_face": its index in a .ttc / .otc, "lacks" and "notdef":
-    font_gaps'}} for the PSD fonts in
+    {font name: {"file": MDW/Fonts path, "_bytes": its size, "_face": its index in a .ttc / .otc, "lacks", "notdef" and
+    "empty": font_gaps'}} for the PSD fonts in
     names a top-level MDW/Fonts file supplies, as font_check decides it (a face with exactly that PostScript name; the
     first file by path wins), for the mock-up to load as a web font (web_woff2 keeps those it can). Face names (and a used
     file's gaps) are cached by blob sha
@@ -1105,12 +1113,13 @@ def web_fonts(tree, names):
         except Exception as e:                    # no fontTools, or a font it can't read: its characters drawn as today
             log(f"font gaps {p}: {type(e).__name__}: {e}")
             return []
-    todo = sorted(p for p in {exact[n][0] for n in names} if not isinstance(used[tree[p]].get("gaps"), list))
+    todo = sorted(p for p in {exact[n][0] for n in names}
+                  if not isinstance(used[tree[p]].get("gaps"), list) or used[tree[p]].get("gv") != GAPS_VERSION)
     if todo and importlib.util.find_spec("fontTools"):
         with ThreadPoolExecutor(max_workers=8) as pool:
             for p, row in zip(todo, pool.map(gaps, todo)):
                 if row is not None:
-                    used[tree[p]]["gaps"] = row
+                    used[tree[p]].update(gaps=row, gv=GAPS_VERSION)
     try:
         os.makedirs(CACHE, exist_ok=True)
         with open(path + ".tmp", "w", encoding="utf-8") as fh:
@@ -1125,7 +1134,7 @@ def web_fonts(tree, names):
         row = used[tree[p]].get("gaps") or []
         gap = row[i] if i < len(row) else None
         out[name] = {"file": p, "_bytes": size[p], **({} if p.lower().endswith(WEB_FONTS) else {"_face": i}),
-                     **({"lacks": gap[0], "notdef": gap[1]} if gap else {})}
+                     **({"lacks": gap[0], "notdef": gap[1]} if gap else {}), **({"empty": gap[2]} if gap and len(gap) > 2 and gap[2] else {})}
     return out
 
 
