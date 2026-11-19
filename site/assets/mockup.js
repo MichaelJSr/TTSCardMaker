@@ -1849,7 +1849,7 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
  *  round the one-colour icon, in the text's fill. shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
  *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. tex:
  *  letterLook's, over the letters of its colour. */
-function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null }) {
+export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null }) {
   ctx.textBaseline = "alphabetic";
   if (effects?.length) paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx });
   const copy = (c, how) => paintCopy(ctx, lines, { at, base, pitch, z, fam, track, hx, fill, stroke, strokeW, shades }, c, how);
@@ -1889,6 +1889,7 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
         const x0 = x + side, x1 = x + p.w - (p.tk || 0) / 1000 * em - side;     // a cooldown's ring: the pill's left end, its label after it; its tracking after
         const pill = (d = 0) => { ctx.beginPath(); ctx.moveTo(x0 + r, top + d); ctx.arcTo(x1 - d, top + d, x1 - d, top + h - d, r - d); ctx.arcTo(x1 - d, top + h - d, x0 + d, top + h - d, r - d); ctx.arcTo(x0 + d, top + h - d, x0 + d, top + d, r - d); ctx.arcTo(x0 + d, top + d, x1 - d, top + d, r - d); ctx.closePath(); };   // d: inset
         ctx.save(); pill();
+        if (!one && stroke && strokeW > 0) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = strokeW; ctx.stroke(); }   // the layer's Stroke round the pill
         ctx.font = lab ? lab.font(z * BADGE_EM * k) : `800 ${z * BADGE_EM * k}px ${fam}`; ctx.textAlign = "center";
         let lx = (x0 + (p.ring ? RING_W * h : 0) + x1) / 2, ly = top + h * 0.5 + z * BADGE_EM * k * 0.36;
         const letters = how => {                      // the label, centred by its ink as the font centres it
