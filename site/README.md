@@ -405,7 +405,8 @@ title (ties share it, nobody at 0): **Top card maker** (cards), **Top editor** (
 commits), and the top of the three added together is the **Top contributor**. A commit is credited by its git name, else by the GitHub login in a noreply
 email, each looked up in the profiles' `author` fields and then in `[people]` (`Card Authors.txt`); otherwise by the git
 name as written. A website login (`_by` or `Edit-by`) maps the same way, else to the person whose noreply commits carry
-it, else to itself (any case). So a person committing under two names shows twice until an admin adds one `[people]`
+it, else to itself (any case). An edit counts for the logins whose new `_by` stamps it wrote, else for its author; a git name nothing
+else credits whose commits stamped one login (a website publish carries the editor's GitHub name and email) is that login's person's. So a person committing under two names shows twice until an admin adds one `[people]`
 line (`git name = shown name`; one person committing under two git names is merged in `.mailmap` instead) or, when the other name is their GitHub login, their profile names their author; their
 GitHub login's page (`#/u/<login>`, where their decks link) opens their person page. The GitHub picture and link come only from a GitHub login known to be the person's: their profile's
 login, else the login in their noreply commit emails, their website `_by` stamps or `Edit-by` trailers (a git name is

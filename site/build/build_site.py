@@ -3759,7 +3759,7 @@ def edit_changes(before, after):
     return out
 
 
-def edit_batches(commits, people, by_login, id_of, name_of, since, row_of, fields_by=None):
+def edit_batches(commits, people, by_login, id_of, name_of, since, row_of, fields_by=None, stamped=None):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
     Authors.txt line (a website publish batch, a commit by hand). The bot's bakes (they write verdicts
@@ -3772,7 +3772,7 @@ def edit_batches(commits, people, by_login, id_of, name_of, since, row_of, field
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
     fields_by: filled with {credited name: {field: lines}} over every line (BATCH_LINES doesn't cut it; a Card Authors.txt
     line is "author", but not in the commit that created the file: 813 imported credits); the bot left out. row_of:
-    login_rows().
+    login_rows(). stamped: filled with {sha: [the _by logins of the stamps it wrote]} (contributions credits those).
     """
     def card(key, name):
         row = {"key": name or key, "name": name_of(name or key)}       # name: as written, when the site lacks the card
@@ -3821,6 +3821,8 @@ def edit_batches(commits, people, by_login, id_of, name_of, since, row_of, field
         if not (cards or authors or people_changes):
             continue
         stamps = sorted({shown(by) for _, _, _, by in cards if by and str(by).lower() != BOT_AUTHOR.lower()}, key=str.lower)
+        if stamps and stamped is not None:
+            stamped[sha] = sorted({str(by) for _, _, _, by in cards if by and str(by).lower() != BOT_AUTHOR.lower()}, key=str.lower)
         named = {shown(e) for e in editors}
         by = stamps or sorted(named, key=str.lower) or [who(name, email, people, by_login)]
         tally(by, [f for _, _, fields, _ in cards for f in fields] + ["author"] * (len(authors) if before["a"] else 0))   # the file's creation: an import
@@ -3959,11 +3961,13 @@ def is_card_file(path):
         and not any(p in SKIP_PARTS or p in RULE_PARTS for p in path.split("/"))
 
 
-def contributions(cards, people, profiles, edits, commits, balance=None, revisions=None, archived=(), fields_by=None, row_of=None):
+def contributions(cards, people, profiles, edits, commits, balance=None, revisions=None, archived=(), fields_by=None, row_of=None, stamped=None):
     """{"since", "people": [{key, logins, github?, cards, edits, commits, first, recent, recentEdits,
     months, + person_extras' keys}], "site"?: {z}} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
-    (a hand commit counts, a pure move doesn't). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
+    (a hand commit counts, a pure move doesn't), credited to the logins whose new _by stamps it wrote (stamped), else to
+    its author; a git name nothing else credits whose commits stamped one person (a website publish carries the editor's
+    GitHub name) is that person's, in logins too. commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
     added, isn't a change), one however many files. The bot's own commits and stamps are left out, but a bake (a bot
     commit changing a card, with Edit-by trailers, one per card and editor) is one card commit of each editor it names,
     its recent entry counting their trailers as cards, never an edit (their batch already counted). A login is the row credit() names, else the row its noreply commits credit most, else its own (any
@@ -3973,10 +3977,18 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
     emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
     n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" Pacific, cards created (created, else fs), edits, commits]].
     balance: analytics.json; revisions: card_revisions(); archived: archived_cards(); fields_by: edit_batches' (person_extras);
-    row_of: login_rows() (made here without)."""
+    row_of: login_rows() (made here without); stamped: edit_batches'."""
     by_login = {p["login"].lower(): p for p in profiles}
     rec, seen_logins, spelled = {}, {}, {}
     row_of = row_of or login_rows(commits, people, by_login)
+    stamped = stamped or {}
+    taken = {n.lower() for n in [*people.values(), *(c.get("author") for c in cards), *(p.get("author") for p in profiles), BOT_AUTHOR] if n} | set(by_login)   # names already someone's
+    wrote = {}                                    # a git name nothing credits -> {its stamps' row or login: (name, login)}
+    for sha, _, name, email, *_ in commits:
+        if name and name.lower() not in taken and who(name, email, people, by_login) == name:
+            for login in stamped.get(sha, ()):
+                wrote.setdefault(name.lower(), {}).setdefault((row_of(login) or login).lower(), (name, login))
+    aka = {n: next(iter(v.values())) for n, v in wrote.items() if len(v) == 1}   # one person's: (name as written, login)
 
     def key_of(login):
         """A website or Edit-by login -> the credited name: row_of(), else the login as first spelled."""
@@ -4006,6 +4018,8 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
     for sha, ts, name, email, subject, entries, editors in commits:
         bot = name.lower() == BOT_AUTHOR.lower()
         key = who(name, email, people, by_login)
+        if not bot and key == name and name.lower() in aka:
+            key = key_of(aka[name.lower()][1])
         if not bot and (not key or key.lower() == BOT_AUTHOR.lower()):
             continue
         gone = {old for s, old, _, _ in entries if s == "D"}
@@ -4029,11 +4043,27 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
         edited = any(p in EDIT_PATHS and changed(s, new) for s, _, new, p in entries)
         if not touched and not edited:
             continue
+        logins = stamped.get(sha, ()) if edited else ()
+        done = set()
+        for login in logins:                  # the edit: the editors' whose stamps it wrote, one each
+            k = key_of(login)
+            if k in done or k.lower() == BOT_AUTHOR.lower():
+                continue
+            done.add(k)
+            x = rec_of(k)
+            known(k, login)
+            seen(x, ts)
+            x["edits"] += 1
+            tally(x, ts, 1)
+            if len(x["recentEdits"]) < RECENT_COMMITS:
+                x["recentEdits"].append([ts, subject, sha])
+        if not touched and logins:
+            continue
         r = rec_of(key)
         m = NOREPLY_RE.match(email or "")
         known(key, m and m.group(1))
         seen(r, ts)
-        if edited:
+        if edited and not logins:
             r["edits"] += 1
             tally(r, ts, 1)
             if len(r["recentEdits"]) < RECENT_COMMITS:
@@ -4047,13 +4077,14 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
         by = meta.get("_by")
         if by and by.lower() != BOT_AUTHOR.lower():
             known(key_of(by), by)
+    joined = {n: key_of(login) for n, (_, login) in aka.items()}      # a git name aka -> its row
     out = []
     for r in rec.values():
         if not (r["cards"] or r["edits"] or r["commits"]):
             continue
         names = {r["key"]} | {p["login"] for p in profiles if p.get("author") == r["key"]} | {g for g, shown in PEOPLE_AS_WRITTEN.items() if shown == r["key"]} \
-            | set(seen_logins.get(r["key"], ()))
-        own_names = {n.lower(): n for n in sorted(names, reverse=True) if (row_of(n) or n) == r["key"]}   # a name credits one row
+            | set(seen_logins.get(r["key"], ())) | {aka[n][0] for n, k in joined.items() if k == r["key"]}
+        own_names = {n.lower(): n for n in sorted(names, reverse=True) if (row_of(n) or joined.get(n.lower()) or n) == r["key"]}   # a name credits one row
         r["logins"] = sorted(own_names.values(), key=str.lower)
         own = [n for n in r["logins"] if n.lower() in by_login and LOGIN_RE.match(n)]
         counted = seen_logins.get(r["key"], {})
@@ -4067,7 +4098,7 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
     zs = [v["z_total"] for v in (balance or {}).get("cards", {}).values() if "z_total" in v]
     if zs:
         res["site"] = {"z": round(sum(zs) / len(zs), 2)}
-    person_extras(out, cards, commits, people, by_login, balance or {}, revisions, archived or (), fields_by or {}, row_of)
+    person_extras(out, cards, commits, {**people, **joined}, by_login, balance or {}, revisions, archived or (), fields_by or {}, row_of)
     return res
 
 
@@ -5591,15 +5622,17 @@ def main():
     events, manifest = read_changelog(data_dir)
     if events is None:
         warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
-    fields_by = {}                                # the person pages' edits by field: all time
+    fields_by, stamped = {}, {}                   # the person pages' edits by field: all time; each commit's stamps
     try:
-        every = edit_batches(edit_history(), people, by_login, id_of, name_of, 0, row_of, fields_by=fields_by)
+        every = edit_batches(edit_history(), people, by_login, id_of, name_of, 0, row_of, fields_by=fields_by, stamped=stamped)
         batches = {"batches": [b for b in every["batches"] if b["at"] >= since]}
     except Exception as e:                        # never a failed build
         warn(f"no edit batches: {type(e).__name__}: {e}")
         batches = {"batches": []}
         fields_by.clear()
-    contrib = contributions(cards, people, profiles, edits, commits, balance=balance, revisions=revs, archived=archived, fields_by=fields_by, row_of=row_of)
+        stamped.clear()
+    contrib = contributions(cards, people, profiles, edits, commits, balance=balance, revisions=revs, archived=archived, fields_by=fields_by, row_of=row_of,
+                            stamped=stamped)
     titles = titles_of(contrib["people"])
     person_of = {login.lower(): r for r in contrib["people"] for login in r["logins"]}        # a profile's login -> its contributions
     previews = {}                                 # u/<name>/ -> its link-preview text, for the share dialog too
