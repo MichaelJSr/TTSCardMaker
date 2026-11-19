@@ -28,7 +28,8 @@
 # channel once ("Card guards failed on <login>'s push <sha8>: <failed steps> <run>"; a cancel by hand does not), and
 # leaves the failure marker comment Card sync reads too, so a push broken in both is told once.
 # One main lane per guarded push (P-2): a push with fixes to land (on) marks its check job
-# ("Fixes to land"); that push's Card sync run skips its main lane. With 25 PSDs or fewer to convert the check job starts
+# ("Fixes to land"); that push's Card sync run skips its main lane, or keeps it to the TTS save alone when every fix
+# keeps each card picture ("Pictures kept"). With 25 PSDs or fewer to convert the check job starts
 # Card sync right after the mark (that run sets up, then waits for Landed; Follow up starts another if a newer run took a
 # lane's place), else the post job's Follow up starts it, landed or not.
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
@@ -626,7 +627,7 @@ jobs:
           python -m commands.card_guards check "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
       # Whether there is anything to land or tell (none: no Land, no post job). summary.json's told, writes and card
-      # errors. fixes: a push's writes to land (on).
+      # errors. fixes: a push's writes to land (on); kept: each of them keeps every card picture (summary.json's kept).
       # normalise: the PSDs the Normalise step converts (on and dry only; never `all`), counted as writes.
       - name: Plan for the post job
         id: plan
@@ -642,6 +643,7 @@ jobs:
             "$OUT/summary.json" > /dev/null && echo "land=true" >> "$GITHUB_OUTPUT"
           if [ "$GITHUB_EVENT_NAME" = push ] && [ "$MODE" = on ] && jq -e --argjson n "$n" '.writes + $n > 0' "$OUT/summary.json" > /dev/null; then
             echo "fixes=true" >> "$GITHUB_OUTPUT"
+            if jq -e '.kept == true' "$OUT/summary.json" > /dev/null; then echo "kept=true" >> "$GITHUB_OUTPUT"; fi
           fi
           echo "card_errors=$(jq '.card_errors // 0' "$OUT/summary.json")" >> "$GITHUB_OUTPUT"
 
@@ -685,6 +687,14 @@ jobs:
               && printf 'started=true\nrun=%s\n' "$(jq -r '.workflow_run_id // ""' <<< "$out" 2> /dev/null)" > "$e.out"
             touch "$e.done" ) < /dev/null > "$e.log" 2>&1 &
           echo $! > "$e.pid"
+
+      # The mark Card sync's push lane reads beside Fixes to land (by this name): every fix keeps each card picture's pixels
+      # and path (lossless recompressions, PSD writes and the conversions, linked files), so that lane saves the TTS save
+      # at once and the run Start Card sync starts re-pins after Landed. Before Decided.
+      - name: Pictures kept
+        if: always() && steps.plan.outputs.kept == 'true'
+        shell: bash
+        run: echo "This push's fixes keep every card picture, so its Card sync lane saves the TTS save now."
 
       # The verdict is in: Card sync's wait ends here (by this name), not at the job's end. Keep it after Fixes to land.
       - name: Decided

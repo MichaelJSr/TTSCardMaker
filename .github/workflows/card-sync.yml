@@ -30,8 +30,10 @@
 # fixes to land (card-guards.yml's "Fixes to land"); with 25 PSDs or fewer to convert their check job starts Card sync
 # right after that mark (input guards: both lanes set up while the guards land, then wait for its Landed; a lane of it a
 # newer run replaced is started again by Follow up), else their Follow up starts it once they land (or land nothing), so
-# its one main lane bakes and saves the fixed PNGs. The schedule's and a chained run's skip
-# theirs while any guards run with fixes is unfinished.
+# its one main lane bakes and saves the fixed PNGs. When every fix keeps each card picture (the check job's "Pictures
+# kept": lossless recompressions, PSD writes and conversions, linked files) the push's lane still saves the TTS save at
+# their Decided, alone (no bake, rulebook PDF or redraw), and that run re-pins after the landing. The schedule's and a
+# chained run's skip theirs while any guards run with fixes is unfinished.
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) from the card workflows' venv cache.
 name: Card sync
@@ -457,7 +459,9 @@ jobs:
       # sync once they land, landed or not (its Follow up). A push's run looks for its own push's (in Bake and save, after
       # its setup): unfinished, or finished with Follow up done. The schedule's and a chained run's look here for any
       # unfinished one (two hours back). One found: this run's main lane is skipped (its data lane ran; a push's lane
-      # skips its Gate and the rest). Runs that cannot be read count as none (the main lane goes on). A follow-up (guards:
+      # skips its Gate and the rest), but a push's whose fixes keep every card picture (the check job's "Pictures kept",
+      # with Fixes to land) goes on for the save alone (kept: no bake, rulebook PDF or redraw; the guards' run re-pins after
+      # Landed). Runs that cannot be read count as none (the main lane goes on). A follow-up (guards:
       # the run whose check job started this one, before Land) waits in both lanes after their setup until that check
       # job reaches Landed (Land and its guard-events and guard-records uploads done) or ends: 3 s looks for 2 minutes,
       # then 15 s, 60 at most (the check job's own cap); it holds nothing. With a first attempt's push P (the first
@@ -476,6 +480,7 @@ jobs:
           FIXES: Fixes to land        # card-guards.yml's check-job step
           DECIDED: Decided            # its check-job step after Fixes to land
           FOLLOW: Follow up           # card-guards.yml's post-job step that dispatches Card sync
+          KEPT: Pictures kept         # its check-job step before Decided: every fix keeps each card picture
           LANDED: Landed              # its check-job step after Land and its uploads
           RUN: ${{ inputs.guards }}   # a follow-up's guards run
         run: |
@@ -526,16 +531,17 @@ jobs:
           fi
           decided="(.status == \"completed\" or any(.steps[]?; .name == \"$DECIDED\" and .status == \"completed\"))"
           fixes="any(.name == \"$FIXES\" and .conclusion == \"success\")"
-          check_job() {    # the run's: "<check job id, 0 if none> <it is past Decided: 1|0> <hold>"
+          kept="any(.name == \"$KEPT\" and .conclusion == \"success\")"
+          check_job() {    # the run's: "<check job id, 0 if none> <it is past Decided: 1|0> <hold> <kept>"
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "([.jobs[] | select(.name == \"check\")][0]) as \$c
               | [.jobs[].steps // [] | .[]] as \$s | \"\(\$c.id // 0) \(if \$c != null and (\$c | $decided) then 1 else 0 end) \((\$s | $fixes)
-                and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\"))))\"" || echo "0 0 false"
+                and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\")))) \(\$s | $kept)\"" || echo "0 0 false false"
           }
           body=$RUNNER_TEMP/guards-check.json
           while read -r id status; do
             [ -n "$id" ] || continue
             if [ -z "$SHA" ] && [ "$status" = completed ]; then continue; fi     # another push's: unfinished only
-            read -r cid dec hold <<< "$(check_job)"
+            read -r cid dec hold keep <<< "$(check_job)"
             if [ -n "$SHA" ] && [ "$dec" != 1 ] && [ "$status" != completed ]; then
               # this push's: its check job's Decided (or its end) settles Fixes to land; 12 min at most. That job alone by
               # conditional reads (a 304 is free, the body kept) every 1 s for 2 minutes or until 15 counted reads in a row,
@@ -548,7 +554,7 @@ jobs:
                   status=$(gh api "$q" --jq ".workflow_runs[] | select(.id == $id) | .status") || status=""
                   [ "$status" != completed ] || break
                 fi
-                if [ "$cid" = 0 ]; then n=$((n + 1)); read -r cid dec hold <<< "$(check_job)"
+                if [ "$cid" = 0 ]; then n=$((n + 1)); read -r cid dec hold keep <<< "$(check_job)"
                 else
                   IFS=, read -r code used new <<< "$({ echo "Authorization: Bearer $GH_TOKEN"; [ -z "$tag" ] || echo "If-None-Match: $tag"; } \
                     | curl -sS --max-time 5 -H @- -H "Accept: application/vnd.github+json" -o "$body.new" \
@@ -558,13 +564,19 @@ jobs:
                   elif [ "$code" = 200 ]; then      # anything else: a failed look
                     n=$((n + 1)) c=$((c + 1)) tag=$new
                     mv "$body.new" "$body"
-                    read -r dec hold <<< "$(jq -r "\"\(if $decided then 1 else 0 end) \([.steps[]?] | $fixes)\"" "$body" || echo "0 false")"
+                    read -r dec hold keep <<< "$(jq -r "\"\(if $decided then 1 else 0 end) \([.steps[]?] | $fixes) \([.steps[]?] | $kept)\"" "$body" || echo "0 false false")"
                   fi
                 fi
                 [ "$dec" != 1 ] || break
               done
-              [ "$dec" = 1 ] || read -r cid dec hold <<< "$(check_job)"      # ended or cut: the run's jobs once more
+              [ "$dec" = 1 ] || read -r cid dec hold keep <<< "$(check_job)"      # ended or cut: the run's jobs once more
               [ -z "$u0" ] || echo "Check job: $k looks, $c changed; rate limit used $u0 -> $used (a 304 is free when it moved less than the looks)"
+            fi
+            if [ "$hold" = true ] && [ -n "$SHA" ] && [ "$keep" = true ]; then
+              echo "kept=$id" >> "$GITHUB_OUTPUT"
+              echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id lands fixes that keep every card picture: this lane saves the TTS save now; the Card sync run it starts bakes and re-pins after the landing." \
+                | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
             fi
             if [ "$hold" = true ]; then
               echo "run=$id" >> "$GITHUB_OUTPUT"
@@ -1616,9 +1628,9 @@ jobs:
             echo "No linked picture or icon glyph due." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
-      # Rulebook PDF start's look stopped: the guards hold the lane, or it does not go
+      # Rulebook PDF start's look stopped: the guards hold the lane, keep it to the save, or it does not go
       - name: Rulebook PDF stop
-        if: ${{ !cancelled() && steps.pdf-start.outcome == 'success' && env.GO != 'true' }}
+        if: ${{ !cancelled() && steps.pdf-start.outcome == 'success' && (env.GO != 'true' || steps.guards.outputs.kept) }}
         run: |
           bg=$RUNNER_TEMP/pdf
           touch "$bg/stop"
@@ -1642,10 +1654,10 @@ jobs:
       # The bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits nothing.
       # A card's error fails the step but keeps B for the others (the bake's
       # per-card rule); no B means the lane goes on from main's head. --pending: a push's run, the schedule's, their
-      # retries and bake=pending.
+      # retries and bake=pending. Not in a kept lane (Guards' fixes: the save alone), nor its rulebook PDF or redraw.
       - name: Bake
         id: bake
-        if: env.GO == 'true' && steps.venv.outcome == 'success' && inputs.bake != 'none'
+        if: env.GO == 'true' && steps.venv.outcome == 'success' && inputs.bake != 'none' && !steps.guards.outputs.kept
         timeout-minutes: 50
         working-directory: bot
         env:
@@ -1705,7 +1717,7 @@ jobs:
       # here (after a lag, once), with the kept look (KEPT_SH) as Rulebook PDF start's.
       - name: Rulebook PDF
         id: pages
-        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' && !steps.guards.outputs.kept }}
         continue-on-error: true
         timeout-minutes: 12
         working-directory: bot
@@ -1817,7 +1829,7 @@ jobs:
       # A count of 0 at this HEAD (TTS save start's psd_links due, never under what the redraw draws): no redraw.
       - name: Linked redraw
         id: redraw
-        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' && !steps.guards.outputs.kept }}
         timeout-minutes: 50
         working-directory: bot
         env:
@@ -2038,10 +2050,10 @@ jobs:
 
       # The website edits left for the chain: card_bake.pending at this run's end (B, or main's head) with this run's
       # verdicts on the data's (over the cap, main moved under a card). Not after a rejected M: its retry or another run
-      # does them; nor in a held lane (the guards' run does).
+      # does them; nor in a held or kept lane (the guards' run does).
       - name: Leftover edits
         id: left
-        if: env.DRY_RUN != 'true' && steps.gate.outcome == 'success' && steps.venv.outcome == 'success' && steps.main.outputs.rejected != 'true'
+        if: env.DRY_RUN != 'true' && steps.gate.outcome == 'success' && steps.venv.outcome == 'success' && steps.main.outputs.rejected != 'true' && !steps.guards.outputs.kept
         continue-on-error: true   # uncounted: the safety schedule looks again
         timeout-minutes: 1        # Commit main's reserve covers it
         working-directory: bot
