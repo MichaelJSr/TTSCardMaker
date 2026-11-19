@@ -1765,6 +1765,10 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   Divinity's 7 today), not 10; the form clamps a typed value to it.
 - Item types: the filter takes any card with that item type; an auxiliary item's comes from its item-type icon since
   2026-11-08 (§51). Missing > "No item type" counts auxiliary items too, to find them.
+  Since 2026-11-19 an item printing two item-type symbols (9: Salt, Life Shroom, Magnum Opus, Electric Dart...) has
+  both, as the TTS decks: grid.js `itemTypes` (its subtype, then its other item-type icons by `ICON_ITEM_TYPES` = AC
+  card_models.AUX_ITEM_TYPES) for the filter and its counts, `subtype==`, the card's facts, the table's Kind and Stats'
+  items chart (counted under each). The stored `subtype` (editor, Rename, Missing) stays one.
 - Creatures by series (owner 10-31): a Series / Subseries toggle (series first; app.js action `series-mode`, kept for the
   session), each list whole in a box that scrolls (style.css `.scroll-box`), the table following the toggle. No other
   chart folds or scrolls (a folding pass over every tall chart was tried and reverted the same day).
