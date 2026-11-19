@@ -542,13 +542,15 @@ export function typedAt(was, now) {
   return out;
 }
 const PLAIN_MARKS = { "\u2014": "-", "\u2013": "-", "\u2026": "...", "\u201c": '"', "\u201d": '"' };   // psd_edit.PLAIN_MARKS (owner D13)
+const MGP_FONT = "MyriadPro-Regular";               // psd_edit.MGP_FONT: a typed letter its font lacks, as Photoshop sets it
 const AS = { "\ufdd0": 1, "\ufdd1": 3, "\ufdd2": "-", "\ufdd3": "...", "\ufdd4": '"' }, STAND = { 1: "\ufdd0", 3: "\ufdd1", "-": "\ufdd2", "...": "\ufdd3", '"': "\ufdd4" };   // glyphPlan's
 const STOOD = /[\ufdd0-\ufdd4]/;                     // stand-ins (noncharacters): that many .notdefs, or a mark plain
 /** text as the bake sets the typed letters its font can't draw (lacks: data/fonts.json's): a D13 mark plain
- *  (psd_edit.plain_typed), any other, or a plain one it lacks too, as its .notdef (no_glyph); kept letters, icons and
- *  badges as they are, and letters typed into another font's run (one the font lacks, yet printed: The Structure's
- *  digits). {text: the same length, with stand-ins glyphRuns reads, boxes: the letters set as .notdef}. */
-export function glyphPlan(text, old, lacks) {
+ *  (psd_edit.plain_typed), any other, or a plain one it lacks too, in Myriad Pro (mgp: MGP_FONT's lacks, null: no
+ *  such web font; psd_edit.missing_glyphs: draw's family falls back to it), else as its .notdef (no_glyph); kept
+ *  letters, icons and badges as they are, and letters typed into another font's run (one the font lacks, yet printed:
+ *  The Structure's digits). {text: the same length, with stand-ins glyphRuns reads, boxes: the letters set as .notdef}. */
+export function glyphPlan(text, old, lacks, mgp = null) {
   text = String(text ?? ""); old = String(old ?? "");
   if (!lacks || !text) return { text, boxes: "" };
   const typed = typedAt(old, text), drawn = drawnSpans(old);
@@ -559,6 +561,7 @@ export function glyphPlan(text, old, lacks) {
     const c = text[i], plain = PLAIN_MARKS[c];
     if (typed[i] == null || !lacks.includes(c) || other(typed[i])) out += c;
     else if (plain && !lacks.includes(plain[0])) out += STAND[plain];
+    else if (typeof mgp === "string" && !mgp.includes(plain?.[0] || c)) out += plain ? STAND[plain] : c;
     else { out += STAND[plain?.length || 1]; boxes += plain?.[0] || c; }
   }
   return { text: out, boxes: [...new Set(boxes)].join("") };
@@ -1414,7 +1417,14 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const ready = await Promise.race([pending, new Promise(r => setTimeout(() => r(null), 60))]);   // a loaded font draws at once
     if (ready === null) pending.then(f => { if (f) onFont?.(); }); else fam = ready;
     if (name) out.fonts[name] = fam; else out.standIn.push(label);
-    return { fam: fam ? `"${fam}", ${STAND_IN}` : STAND_IN, layer, gaps: fam ? fontMap?.[name] : null };
+    const gaps = fam ? fontMap?.[name] : null;
+    let mfam = "", mgp = null;
+    if (gaps?.lacks && fontMap?.[MGP_FONT]) {         // the letters it lacks fall back to Myriad Pro (glyphPlan's mgp)
+      const p = loadFont(MGP_FONT, { getFonts, raw }), got = await Promise.race([p, new Promise(r => setTimeout(() => r(null), 60))]);
+      if (got === null) p.then(f => { if (f) onFont?.(); }); else mfam = got;
+      if (got !== "") mgp = fontMap[MGP_FONT].lacks || "";
+    }
+    return { fam: fam ? `"${fam}", ${mfam ? `"${mfam}", ` : ""}${STAND_IN}` : STAND_IN, layer, gaps, mgp };
   };
   const badgeFont = labelFont();
   let bfam = await Promise.race([badgeFont, new Promise(r => setTimeout(() => r(null), 60))]);
@@ -1436,9 +1446,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const look = Array.isArray(rec?.addRoom) && obj(rec?.addLook) && rec.addLook.px > 0 ? { ...rec.addLook, added: true } : null;   // how the bake sets an added ability
   for (const { role, label, path, id, added } of specs) fams.push(await family(role, label, path, id, added ? look : null));
   for (const [k, s] of specs.entries()) {             // typed letters its font can't draw: as the bake sets them
-    const { fam, gaps } = fams[k];
+    const { fam, gaps, mgp } = fams[k];
     if (s.text == null || typeof gaps?.lacks !== "string" || !Array.isArray(gaps.notdef)) continue;
-    const plan = glyphPlan(s.text, s.added ? "" : s.old, gaps.lacks), [adv, d] = gaps.notdef;
+    const plan = glyphPlan(s.text, s.added ? "" : s.old, gaps.lacks, mgp), [adv, d] = gaps.notdef;
     if (plan.text === s.text) continue;
     s.text = plan.text;
     if (!NOTDEFS.has(fam)) NOTDEFS.set(fam, { adv: (+adv || 0) / 1000, path: d && typeof Path2D !== "undefined" ? new Path2D(d) : null });
