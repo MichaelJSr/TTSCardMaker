@@ -1227,6 +1227,16 @@ relies on:
   exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
 - Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first
   screen loads ~26 of the 60 (was all), CLS 0.15 -> 0.
+- The Morgue list's small copies (2026-11-19, owner: "make small copies", the full picture still opens on tap): each
+  Morgue entry from Discord has a 360 px AVIF copy of its shown picture on the history branch (AutoCroissant
+  `discord_preview` list_copies: `<webp stem>-list.avif`, the grid's 360 settings, q52 4:4:4; named in its timeline's
+  `list`), cards.json morgue `lpic` (build_site `history_morgue`, only when it is the copy of `pic`); grid.js `thumb` at
+  360 px or less and `imgAttrs` give it to tiles, table rows and tips; the dialog and the compare keep the webp (a
+  tile's loaded copy shows first, the webp swaps in: `morgueFirst`). AVIF, not WebP: the 77 copies are 1.39 MB
+  (avg 18.0 KB) against 2.39 MB at the writer's WebP q80 (31.1 KB) and 4.14 MB full. Phone, Slow 4G, CPU 4x, cold,
+  n=6 (scratch s1110/morgue-1119): the Morgue list 4.09 -> 1.75 s (599 -> 221 KB; a WebP copy 2.68 s); a Morgue entry
+  opened from it shows its picture at once, the webp 0.70 s later (one request; before, the list had loaded it).
+  Everything else the same within the spread; desktop the same (the list moves 1.46 -> 0.56 MB).
 
 ## 28. Pictures: AVIF, the deploy gate (2026-10-24, owner's decisions)
 
