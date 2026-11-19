@@ -194,6 +194,10 @@ KIND_LABEL = {"creature": "Creature", "item": "Item", "field": "Field card", "mi
               "aux item": "Auxiliary item", "creatures": "Auxiliary creature", "debuff": "Debuff", "buff": "Buff"}
 KIND_PLURAL = {"creature": "creatures", "item": "items", "field": "field cards", "minion": "minions", "nme": "N.M.E. items",
                "aux item": "auxiliary items", "status": "status effects", "creatures": "auxiliary creatures"}   # app.js KINDS
+# an item-type icon's item type (grid.js ICON_ITEM_TYPES, AC card_models.AUX_ITEM_TYPES)
+ICON_ITEM_TYPES = {"equip": "equip", "fragile equip": "equip", "food": "heal", "active": "active", "attack": "attack",
+                   "infliction": "infliction", "deploy": "deploy", "support": "support", "counter": "counter",
+                   "negation": "negation", "field": "field"}
 CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
 # the hand-kept website files, directly under site/ (in MDW/ until 2026-10-20); read by the build and the bot, never published
 AUTHORS_PATH = "site/Card Authors.txt"
@@ -4483,6 +4487,14 @@ def rulebook_text(source):
     return re.sub(r"\n{3,}", "\n\n", "\n".join(out)).strip()
 
 
+def kind_label(kind, c):
+    """'Item (heal, equip)': the kind, then an item's subtype and each other item type it prints (grid.js itemTypes)."""
+    subs = [c["subtype"]] if c.get("subtype") else []
+    if kind in ITEM_KINDS:
+        subs += [k for k in dict.fromkeys(map(ICON_ITEM_TYPES.get, c.get("types") or [])) if k and k not in subs]
+    return KIND_LABEL.get(kind, kind) + (f" ({', '.join(subs)})" if subs else "")
+
+
 def game_text(cards, rules, banlist, icons):
     """game.txt: a header, the rulebook chapters in book order, the ban list, then every visible card by
     kind and series; a duplicate as its own card, its text only when it differs. Stats as printed (bars). ’ as '."""
@@ -4506,8 +4518,7 @@ def game_text(cards, rules, banlist, icons):
         for c in group:
             bars = [" ".join(f"{k.upper()} {s[k]}" for k in STAT_KEYS if s.get(k) is not None) for s in c.get("creatures") or [c]
                     if any(s.get(k) is not None for k in STAT_KEYS)]
-            label = KIND_LABEL.get(kind, kind) + (f" ({c['subtype']})" if c.get("subtype") else "")
-            line = [c["name"], label, f"{c['stars']}★" if c.get("stars") is not None else "",
+            line = [c["name"], kind_label(kind, c), f"{c['stars']}★" if c.get("stars") is not None else "",
                     ", ".join(t.replace("_", " ") for t in c.get("types") or []), "; ".join(bars),
                     " / ".join(x for x in (c.get("series"), c.get("subseries")) if x)]
             orig = by_id.get(c.get("dup"))           # a duplicate: same text not repeated
@@ -4763,7 +4774,7 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
         name = str(c["name"]).lower()
         aliases = {a.lower(): a for a in (c.get("aliases") or []) + (c.get("webAliases") or []) + (c.get("was") or []) if a.strip() and a.lower() not in name}
         out_cards[c["png"]] = {k: v for k, v in {
-            "n": c["name"], "k": KIND_LABEL.get(c.get("type"), c.get("type") or "") + (f" ({c['subtype']})" if c.get("subtype") else ""),
+            "n": c["name"], "k": kind_label(c.get("type") or "", c),
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
