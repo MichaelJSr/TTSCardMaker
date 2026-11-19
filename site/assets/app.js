@@ -108,8 +108,8 @@ const detailsLink = c => (c.details ? `<a class="fact details-link" href="#/card
 const psdChips = c => { const b = psdBadges(c); return b && b + detailsLink(c); };
 
 // ---- boot ------------------------------------------------------------------------------------------
-async function getJson(name) {
-  const r = await fetch(dataUrl(name));
+async function getJson(name, init) {
+  const r = await fetch(dataUrl(name), init);
   if (!r.ok) throw Object.assign(new Error(`${name}: HTTP ${r.status}`), { http: r.status });
   return r.json();
 }
@@ -177,9 +177,36 @@ const loadCharts = () => (chartsP ||= (early("charts.js"), import("./charts.js")
 const loadBalance = () => (Bal ? Promise.resolve() : balP ||= (early("balance.js"), import("./balance.js")).then(m => { Bal = m; }).catch(e => { balP = null; throw e; }));   // or charts.js's
 const loadProfile = () => (profileP ||= (early("profile.js"), import("./profile.js")).then(m => { Pf = m; }).catch(e => { profileP = null; throw e; }));
 // balance analytics (data/analytics.json, with balance.js: S.analytics set means Bal is in): the Stats page's Balance section,
-// the cards' Balance blocks and the grid's bal, cohort, month and change filters
-let analyticsP = null;
-const loadAnalytics = () => (analyticsP ||= Promise.all([getJson("analytics.json"), loadBalance()]).then(([d]) => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
+// the cards' Balance blocks and the grid's bal, cohort, month and change filters. low: analyticsSoon's prefetch (low
+// priority; aheadDrop cancels it until a real use takes it over)
+let analyticsP = null, ahead = null, soon = false, soonFor = null;
+const loadAnalytics = (low = false) => {
+  if (!low) ahead = null;
+  if (analyticsP) return analyticsP;
+  if (low) ahead = new AbortController();
+  const p = analyticsP = Promise.all([getJson("analytics.json", low ? { priority: "low", signal: ahead.signal } : undefined), loadBalance()])
+    .then(([d]) => { S.analytics = d; ahead = null; }).catch(e => { if (analyticsP === p) analyticsP = null; throw e; });
+  return p;
+};
+// Stats right after a card's Balance (the dialog reads its own file): analytics.json once that dialog's pictures near the
+// screen are in and the page is idle; cancelled when another card or page opens first, so it never slows them
+function analyticsSoon(id) {
+  if (soon || S.analytics || analyticsP || navigator.connection?.saveData) return;
+  soon = true; soonFor = id;
+  const here = () => !modal.hidden && parseHash().arg === id;
+  const shown = () => new Promise(res => {                // pictures on screen still loading (a strip's clipped ones are not)
+    const ims = $$("img", modal), io = new IntersectionObserver(es => { io.disconnect(); res(es.filter(e => e.isIntersecting && !e.target.complete).map(e => e.target)); }, { root: modal });
+    if (!ims.length) res([]); else for (const i of ims) io.observe(i);
+  });
+  const loaded = i => new Promise(r => { i.addEventListener("load", r, { once: true }); i.addEventListener("error", r, { once: true }); });
+  const tick = () => shown().then(wait => {
+    if (!here()) { soon = false; return; }
+    if (wait.length) { Promise.race([Promise.all(wait.map(loaded)), new Promise(r => setTimeout(r, 1000))]).then(tick); return; }
+    (window.requestIdleCallback || (f => setTimeout(f, 0)))(() => { if (here()) loadAnalytics(true).catch(() => { soon = false; }); else soon = false; }, { timeout: 2000 });
+  });
+  tick();
+}
+const aheadDrop = () => { if (!ahead) return; ahead.abort(); ahead = null; analyticsP = null; soon = false; };
 // the Changes page's Changelog, Archive and Database edits tabs, each its own file (NEEDS; build_site changelog_files), with
 // their renderers (changelog.js, loaded on first use beside the file): S.changelog[file] set means CL is in
 const changelogP = {};
@@ -470,6 +497,7 @@ function route(e) {
       S.list = listOf(parseHash(S.listHash).params); view.replaceChildren();
       markTab("cards"); if (pageH1) pageH1.textContent = pageName({ name: "cards" });
     }
+    if (r.arg !== soonFor) aheadDrop();                // another card: its loads first
     openCard(r.arg, r.params.has("details"));
     return;
   }
@@ -486,6 +514,7 @@ function route(e) {
     return;
   }
   if (!S.restoring && was && was.name !== r.name) S.toTop = true;   // another section opens at its top
+  if (r.name !== "stats") aheadDrop();
   closeModal();
   renderView(r, hash);
   if (listAt) { const g = listAt; listAt = null; if (hash === g.list) settle(g); }   // a reloaded card dialog's first close (Back too): the list's place
@@ -1114,6 +1143,7 @@ function openCard(id, showDetails = false) {
   else loadVersions(c).then(() => {
     if (parseHash().arg !== c.id) return;
     if (c.hv && !c.history || hasBalance(c) && !S.analytics && !S.cardBal.has(c.id)) { allCards(); return; }
+    if (hasBalance(c) && !S.analytics) nearby.on(["#card-balance", "#card-changes"], () => analyticsSoon(c.id));   // for Stats next
     nearby.on(["#card-changes", "#history-slot"], () => { fillHistory(); heavyPaths(); });
     if (hasBalance(c) && (Bal || S.analytics)) fillBalance();                   // balance.js in already: at once
     else if (hasBalance(c)) nearby.on(["#card-balance", "#card-changes", "#history-slot"], () => loadBalance().then(fillBalance, noBalance));   // History too: its fill moves them up
@@ -1789,7 +1819,7 @@ function appendRest(hv, C) {                             // also under a card di
   appendParts(hv.host, edits ? CL.editsParts(C, none, from) : CL.changelogParts(C, none, from));
 }
 // parts (changelog.js changelogParts / editsParts) appended to host in 8 ms slices while the page is idle (without
-// requestIdleCallback, Safari: a slice per task, so the whole list is no later than drawn at once)
+// requestIdleCallback, Safari: a slice per task; the whole list ends ~5% after a draw at once)
 function appendParts(host, parts) {
   const idle = window.requestIdleCallback || (f => setTimeout(f, 0));
   const more = () => {
