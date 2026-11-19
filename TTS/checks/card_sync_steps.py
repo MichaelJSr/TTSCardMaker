@@ -54,7 +54,8 @@
 10. One main lane per guarded push (P-2; faked gh and curl): Guards' fixes (in the push's Bake and save, after its setup)
    waits for the push's own guards' check job (conditional reads 1 s apart, 3 s after 2 minutes or 15 changed in a row),
    then skips the rest of the push's main lane (its Gate on) when that guards run has
-   fixes to land (card-guards.yml's "Fixes to land"; unfinished, or done with Follow up started), the schedule's and a
+   fixes to land (card-guards.yml's "Fixes to land"; unfinished, or done with Follow up started), or keeps it to the save
+   alone (no bake, rulebook PDF, redraw or leftovers) when they keep every card picture ("Pictures kept"), the schedule's and a
    chain's while any guards run with fixes is unfinished; it goes when the guards have nothing to land, failed to start
    Card sync, were cancelled, are absent or unreadable. A follow-up's wait ends at its guards run's Landed or the check
    job's end (never another job's), holds nothing, slows to 15 s looks after 2 minutes and stops at 60. card-guards.yml's
@@ -463,6 +464,10 @@ def plans(flow: dict) -> None:
     p = plan(flow, "main", event="push", outputs={**baked, "guards": {"run": "51"}})
     check({"venv", "guards"} <= runs(p) and not {"Newest", "gate", "bake", "save", "main", "left", "Tell Discord"} & runs(p),
           "main, a push whose guards land fixes: the setup and the wait, then nothing (their Follow up's run bakes)")
+    p = plan(flow, "main", event="push", outputs={**baked, "guards": {"kept": "59"}, "save": {"changed": "true"}})
+    check({"venv", "guards", "Newest", "gate", "save-start", "save", "main"} <= runs(p)
+          and not {"bake", "pages", "redraw", "left", "records", "repin"} & runs(p) and "Rulebook PDF stop" in runs(p),
+          "main, a push whose guards' fixes keep every card picture: the save alone (no bake, rulebook PDF, redraw or leftovers)")
     p = plan(flow, "main", event="push", outputs={**baked, "main": {"pushed": "true", "m": "m" * 40}})
     q = plan(flow, "main", event="schedule", outputs=edits)
     r = plan(flow, "main", event="schedule", outputs={**baked, "main": {"rejected": "true"}})
@@ -1859,8 +1864,11 @@ def lane_cases(flow: dict) -> None:
     check(any(s.get("name") == mark["env"]["FIXES"] and s.get("if") == "always() && steps.plan.outputs.fixes == 'true'" for s in guards["jobs"]["check"]["steps"])
           and step(guards["jobs"]["post"], "follow").get("name") == mark["env"]["FOLLOW"]
           and step(guards["jobs"]["check"], mark["env"]["LANDED"]).get("if") == "always()"
-          and guards["jobs"]["check"]["outputs"].get("fixes") == "${{ steps.plan.outputs.fixes }}",
-          "card-guards.yml: the check job's marks and the post job's Follow up carry the names Card sync reads")
+          and guards["jobs"]["check"]["outputs"].get("fixes") == "${{ steps.plan.outputs.fixes }}"
+          and step(guards["jobs"]["check"], mark["env"]["KEPT"]).get("if") == "always() && steps.plan.outputs.kept == 'true'"
+          and [s.get("name") for s in guards["jobs"]["check"]["steps"]].index(mark["env"]["KEPT"])
+          < [s.get("name") for s in guards["jobs"]["check"]["steps"]].index(mark["env"]["DECIDED"]),
+          "card-guards.yml: the check job's marks (Pictures kept before Decided) and the post job's Follow up carry the names Card sync reads")
 
     with tempfile.TemporaryDirectory() as tmp:
         fake = os.path.join(tmp, "bin")
@@ -1891,15 +1899,17 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
         os.makedirs(os.path.join(tmp, "runner"), exist_ok=True)
         jobs_dir = os.path.join(tmp, "jobs")
         st = lambda name, conclusion: {"name": name, "status": "completed" if conclusion else "in_progress", "conclusion": conclusion}  # noqa: E731
-        check_job = lambda fixes: {"name": "check", "status": "completed", "steps": [  # noqa: E731
-            st("Plan for the post job", "success"), st("Fixes to land", "success" if fixes else "skipped")]}
+        check_job = lambda fixes, kept=False: {"name": "check", "status": "completed", "steps": [  # noqa: E731
+            st("Plan for the post job", "success"), st("Fixes to land", "success" if fixes else "skipped"),
+            st("Pictures kept", "success" if kept else "skipped")]}
         for rid, doc in ((51, [check_job(True), {"name": "post", "status": "waiting"}]),                    # in its window
                          (52, [check_job(True), {"name": "post", "status": "in_progress", "steps": [st("Land", None)]}]),
                          (53, [check_job(False), {"name": "post", "status": "waiting"}]),                   # no writes
                          (54, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "success"), st("Follow up", "success")]}]),
                          (55, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "failure"), st("Follow up", "failure")]}]),
                          (56, [check_job(True), {"name": "post", "status": "completed", "conclusion": "cancelled", "steps": []}]),
-                         (57, [{"id": 570, "name": "check", "status": "in_progress", "steps": [st("Plan for the post job", None)]}])):  # still checking
+                         (57, [{"id": 570, "name": "check", "status": "in_progress", "steps": [st("Plan for the post job", None)]}]),  # still checking
+                         (59, [check_job(True, True), {"name": "post", "status": "waiting"}])):                # every picture kept
             write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": doc}))
         write(os.path.join(jobs_dir, "job-570.json"), json.dumps(json.load(open(os.path.join(jobs_dir, "57.json")))["jobs"][0]))
         stamp = lambda minutes: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() - minutes * 60))  # noqa: E731
@@ -1907,6 +1917,8 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
         sha = "c" * 40
         cases = [  # (SHA, guards runs, the run held by, what)
             (sha, [run(51, "in_progress")], "51", "the push's guards waiting to land fixes: skipped"),
+            (sha, [run(59, "in_progress")], "", "the push's guards' fixes keep every card picture: goes, the save alone"),
+            ("", [run(59, "in_progress")], "59", "the schedule: an unfinished guards run whose fixes keep the pictures: skipped"),
             (sha, [run(52, "in_progress")], "52", "the push's guards landing: skipped"),
             (sha, [run(53, "in_progress")], "", "the push's guards with nothing to land (no writes): goes"),
             (sha, [run(54, "completed")], "54", "the push's guards done, Follow up started Card sync: skipped"),
@@ -1925,7 +1937,7 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
                 os.remove(f) if os.path.exists(f) else None
             env_ = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": sha_, "FAKE_JOBS": jobs_dir,
                     "FAKE_GUARDS": json.dumps({"workflow_runs": runs}), "GITHUB_SERVER_URL": "https://github.com",
-                    "GITHUB_API_URL": "https://api.github.com", **{k: mark["env"][k] for k in ("FIXES", "DECIDED", "FOLLOW")}, **extra}
+                    "GITHUB_API_URL": "https://api.github.com", **{k: mark["env"][k] for k in ("FIXES", "DECIDED", "FOLLOW", "KEPT")}, **extra}
             code_, text_, out_ = run_step(timer, "guards", tmp, {**env_, **as_functions(fake, "sleep", "curl")}, tmp)
             naps_ = open(calls + ".naps").read().split() if os.path.exists(calls + ".naps") else []
             return env_, code_, text_, out_, open(calls).read() if os.path.exists(calls) else "", naps_
@@ -1933,6 +1945,7 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
         for want_sha, runs, want, what in cases:
             env, code, text, out, asked, naps = lane(runs, want_sha)
             ok = code == 0 and out.get("run", "") == want and ((f"head_sha={want_sha}" in asked) == bool(want_sha))
+            ok = ok and (out.get("kept") == "59") == (59 in [r["id"] for r in runs] and bool(want_sha))     # kept: a push's alone
             waits = any(r["id"] == 57 for r in runs)
             ok = ok and (asked.count("curl 304 570") > 50 and naps[:1] == ["1"] and naps[-1:] == ["3"]) == waits   # 1 s looks, 3 s after 2 minutes
             ok = ok and (asked.count("/jobs") == 1 or waits or not want_sha or not runs)      # one jobs read: past Decided, the hold from it
@@ -1999,8 +2012,12 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
                 ("workflow_dispatch", "on", {"told": 0, "writes": 2}, ("true", None), "a landing dispatch: no fixes (no push run waits)")):
             write(os.path.join(out_dir, "summary.json"), json.dumps({**summ, "card_errors": 0}))
             code, text, out = run_step(guards["jobs"]["check"], "plan", tmp, {"OUT": out_dir, "MODE": mode, "GITHUB_EVENT_NAME": event}, tmp)
-            check(code == 0 and (out.get("land"), out.get("fixes")) == want, f"guards Plan: {what} -> land={out.get('land')} fixes={out.get('fixes')}"
-                  + ("" if code == 0 else f"\n{text}"))
+            check(code == 0 and (out.get("land"), out.get("fixes")) == want and "kept" not in out,
+                  f"guards Plan: {what} -> land={out.get('land')} fixes={out.get('fixes')}" + ("" if code == 0 else f"\n{text}"))
+        for event, kept, want in (("push", True, "true"), ("push", False, None), ("workflow_dispatch", True, None)):
+            write(os.path.join(out_dir, "summary.json"), json.dumps({"told": 0, "writes": 2, "card_errors": 0, "kept": kept}))
+            code, text, out = run_step(guards["jobs"]["check"], "plan", tmp, {"OUT": out_dir, "MODE": "on", "GITHUB_EVENT_NAME": event}, tmp)
+            check(code == 0 and out.get("kept") == want, f"guards Plan: a {event}'s fixes, every picture kept {kept} -> kept={out.get('kept')}")
         cond = lambda ran, fixes: bool(evaluate(follow["if"], {  # noqa: E731
             "steps": {}, "needs": {"check": {"outputs": {"fixes": fixes, "land_ran": ran}}},
             "functions": {"always": lambda: True}}))
@@ -2056,13 +2073,13 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
         at = check_steps.index(start)
         check(got == [(0, 0, "true", "4242", False), (0, 0, "true", "", False), (0, 0, None, None, True), (None, 0, None, None, False)]
               and asked == [post, post, post, []]
-              and [s.get("name") for s in check_steps[at - 1:at + 2:2]] == [mark["env"]["FIXES"], mark["env"]["DECIDED"]]
+              and [check_steps[i].get("name") for i in (at - 1, at + 1, at + 2)] == [mark["env"][k] for k in ("FIXES", "KEPT", "DECIDED")]
               and start["if"] == "${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise <= 25 }}"
               and start.get("continue-on-error") == "true" and early["name"] == mark["env"]["LANDED"]
               and guards["jobs"]["check"]["outputs"]["early"] == "${{ steps.early.outputs.started }}"
               and guards["jobs"]["check"]["outputs"]["early_run"] == "${{ steps.early.outputs.run }}"
               and follow["env"]["EARLY"] == "${{ needs.check.outputs.early }}" and follow["env"]["EARLY_RUN"] == "${{ needs.check.outputs.early_run }}",
-              f"guards Start Card sync: the check job's, right after Fixes to land with fixes and 25 PSDs or fewer to convert, this run's id as guards, "
+              f"guards Start Card sync: the check job's, right after Fixes to land (then Pictures kept, Decided) with fixes and 25 PSDs or fewer to convert, this run's id as guards, "
               f"in the background; Landed joins it: its run id by the API; failed or not started, Follow up starts it ({got})")
 
 
