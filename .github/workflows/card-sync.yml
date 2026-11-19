@@ -1585,13 +1585,13 @@ jobs:
             echo "$at" > "$bg/at"
           }
           look_data() {                         # busy: a new head in hand (TTS save waits for it, else stops this at once)
-            local seen new at run moved i nap=0.1
+            local seen new at run moved nap=0.1
             [ -e "$ws/carddata/.git" ] && seen=$(cat "$nb/seen" 2> /dev/null || git -C "$ws/carddata" rev-parse HEAD) || return 0
             run=$(jq -r '.run // ""' "$ws/carddata/db/manifest.json" 2> /dev/null) || run=""
             if [ -n "$run" ] && [ "$run" = "$RUN_URL" ]; then : > "$nb/mine"; return 0; fi    # read after this run's build
             while :; do
               [ "$SECONDS" -lt 300 ] || nap=0.3                 # ~1 s apart for 5 minutes, then ~3 s
-              for i in 1 2 3 4 5 6 7 8 9 10; do [ ! -e "$nb/stop" ] || return 0; sleep "$nap"; done
+              for _ in 1 2 3 4 5 6 7 8 9 10; do [ ! -e "$nb/stop" ] || return 0; sleep "$nap"; done
               new=$(timeout 5 git -C "$ws/carddata" ls-remote origin refs/heads/data) || continue
               new=${new%%[[:space:]]*}
               [ -n "$new" ] && [ "$new" != "$seen" ] || continue
