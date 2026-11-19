@@ -1774,17 +1774,28 @@ let headView = null, restHost = null;                    // the tab drawn from i
 function appendRest(hv, C) {                             // also under a card dialog opened meanwhile
   const edits = hv.file === "edits.json", none = new URLSearchParams(), from = CL.headDrawn(hv.H, C, edits);
   if (from === null) { hv.page(edits ? CL.editsHtml(C, none) : CL.changelogHtml(C, none)); return; }   // not its first blocks: drawn whole
-  const parts = edits ? CL.editsParts(C, none, from) : CL.changelogParts(C, none, from);
+  restHost = hv.host;
+  appendParts(hv.host, edits ? CL.editsParts(C, none, from) : CL.changelogParts(C, none, from));
+}
+// parts (changelog.js changelogParts / editsParts) appended to host in 8 ms slices while the page is idle
+function appendParts(host, parts) {
   const idle = window.requestIdleCallback || (f => setTimeout(f, 50));
   const more = () => {
-    if (!hv.host.isConnected) return;
+    if (!host.isConnected) return;
     const end = performance.now() + 8;
     let html = "", p;
     do { p = parts.next(); if (!p.done) html += p.value; } while (!p.done && performance.now() < end);
-    if (html) hv.host.insertAdjacentHTML("beforeend", html);
+    if (html) host.insertAdjacentHTML("beforeend", html);
     if (!p.done) idle(more, { timeout: 400 });
   };
   idle(more, { timeout: 400 });
+}
+// the whole file in already (a fast or cached network, a second visit): its first blocks at once, the rest as above
+function firstParts(parts) {
+  const end = performance.now() + 8;
+  let html = "", n = 0, p;
+  do { p = parts.next(); if (!p.done) html += p.value; } while (!p.done && (++n < 9 || performance.now() < end));
+  return html;
 }
 document.addEventListener("toggle", e => { const ul = e.target.open && e.target.matches?.(".cl-minor") && $("ul[data-fold]", e.target);
   if (!ul || !CL || (ul.childElementCount && !$(".load-error", ul))) return;
@@ -1814,7 +1825,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
     } else page(`<div class="loading">Loading the changelog…</div>`);
     if (head && !H) loadChangelog(head).then(() => { if (!S.changelog[file]) again(); }, () => {});
     loadChangelog(file).then(() => { const hv = headView;   // the whole file: the rest below the head's blocks, else drawn
-      if (hv?.file === file && hv.host.isConnected) { headView = null; restHost = hv.host; appendRest(hv, S.changelog[file]); }
+      if (hv?.file === file && hv.host.isConnected) { headView = null; appendRest(hv, S.changelog[file]); }
       else if (!restHost?.isConnected) again(); },
     e => { if (here()) page(failBox("the changelog", e)); });
     return;
@@ -1826,9 +1837,14 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
     return;
   }
   const updated = `<p class="muted">Site updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific), the last build that changed it, from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
-  if (tab === "changelog") { page(CL.changelogHtml(C, r.params)); return; }
+  if (tab === "changelog" || tab === "edits") {
+    const parts = tab === "edits" ? CL.editsParts(C, r.params) : CL.changelogParts(C, r.params);
+    if (S.restoring || S.placing || [...r.params.keys()].length) { page([...parts].join("")); return; }   // a filter or a place: whole, as before
+    page(firstParts(parts));
+    restHost = view.firstElementChild; appendParts(restHost, parts);
+    return;
+  }
   if (tab === "archive") { page(CL.archiveHtml(C.archived, C.repo, r.params)); return; }
-  if (tab === "edits") { page(CL.editsHtml(C, r.params)); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
   const item = (c, diff = true) => {          // diff: the text change since the last earlier text (history.json's once loaded)
     const last = !diff ? null : c.history?.length ? c.history[c.history.length - 1].ability : S.recent?.get(c.id);
