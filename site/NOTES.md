@@ -1193,10 +1193,15 @@ relies on:
   at once and keeps the chapter on screen in place by hand (`keep`, on scroll; browsers that anchor skip it).
   A card's dialog reads its History, Balance and recorded changes from its versions file (§2, `card_sections`; per-card
   files ~1.0 -> 1.2 KB gzipped median): balance.js loads once those slots come near, history.json and analytics.json
-  not at all (desktop card open ~100 KB less). Trade-off: Stats opened right after a card's Balance loads analytics.json
-  itself (beside charts.js), so on a phone on Slow 4G its Balance and History fill ~0.16 s later (904 -> 1,066 ms, n=5);
-  the card step before it is ~2.7 s shorter. Not prefetched: that would put the 51 KB back on every phone that scrolls
-  to a card's Balance, on the line its History thumbnails use, for a later Stats visit.
+  not at all for the dialog (desktop card open 372 -> 269 KB). So that Stats opened right after a card's Balance does
+  not wait on analytics.json beside charts.js (phone, Slow 4G: its Balance and History filled 904 -> 1,066 ms),
+  analytics.json is fetched once the Balance comes near, at low priority, after the dialog's pictures on screen are in
+  and the page is idle (`analyticsSoon`; not with Save-Data). Another card or page opening first cancels it
+  (`aheadDrop`, an AbortController; the next Balance starts it again); Stats, or any other real use, takes it over
+  (`loadAnalytics()` without `low`). Phone, Slow 4G, CPU 4x, n=5 (scratch s10c/opt2fix2): Stats after a card 1,064 ->
+  896 ms (before the card's file: 900), first chart 831 -> 770 ms; the card, its Balance/History and a second card's
+  open the same (1.05 / 2.04 / 1.02 s); a second card opened mid-fetch 1.02 / 1.01 s. Cost: the 51 KB come back on a
+  phone that reaches a card's Balance, after its pictures, and on a desktop card open (269 -> 319 KB, same time).
   The Changelog and Database edits tabs draw their first screen from a small head file at once (changelog-head.json,
   edits-head.json: build_site `changelog_heads`, the newest pushes, at least 100 events, cut where no left-out push is
   newer, with the whole file's heading counts and chips; ~6-8 KB gzipped), their whole file loading beside it; the rest
