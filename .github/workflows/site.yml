@@ -326,8 +326,10 @@ jobs:
       # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs and uncached
       # icons (Types/) are downloaded on demand and their resized images cached between runs. Depth 1, blob:none; main's every
       # commit and tree (no file contents) for the image-version history come in the background (History start).
+      # A run without after (a dispatch, the schedule): main's head now, not at its dispatch (it may wait in pages-build).
       - uses: actions/checkout@v7
         with:
+          ref: ${{ github.event_name != 'push' && !inputs.after && 'refs/heads/main' || '' }}
           fetch-depth: 1
           filter: blob:none
           sparse-checkout-cone-mode: false
