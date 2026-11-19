@@ -1,5 +1,6 @@
 // Constructed hand builder. Rules from the rulebook ("03 Setting Up") and site/Constructed Ban List.txt.
 import { esc, plain, norm } from "./text.js";
+import { thumb } from "./grid.js";
 
 export const HAND = [
   { kind: "creature", label: "Creatures", tiers: [[5, 1], [4, 2], [3, 3], [2, 1]] },
@@ -212,14 +213,15 @@ export function download(name, text) {
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
-export function printSheet(deck, byId, raw) {
+export function printSheet(deck, byId, raw, thumbs, root) {   // the card view's 720 px copies (~290 dpi at 63 mm), else the PNG
   const cards = [...deck.cards, deck.field].map(id => byId.get(id)).filter(c => c && c.png);
+  const src = c => (c.img ? new URL(thumb(thumbs, c, 720), root).href : raw + urlPath(c.png));   // absolute: the window is about:blank
   const w = window.open("", "_blank");
   if (!w) return false;
   w.document.write(`<!doctype html><title>${esc(deck.name)}</title><style>
     body{margin:8mm;font:12px system-ui} .sheet{display:flex;flex-wrap:wrap;gap:2mm} img{width:63mm;height:auto;break-inside:avoid}
     @media print{.hint{display:none}}</style><p class="hint">${cards.length} cards — use your browser's Print (⌘/Ctrl+P).</p>
-    <div class="sheet">${cards.map(c => `<img src="${esc(raw + urlPath(c.png))}" alt="${esc(c.name)}">`).join("")}</div>`);
+    <div class="sheet">${cards.map(c => `<img src="${esc(src(c))}" alt="${esc(c.name)}">`).join("")}</div>`);
   w.document.close();
   return true;
 }
