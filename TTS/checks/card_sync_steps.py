@@ -50,7 +50,8 @@
    a chained one); none when nothing is left, a lane failed, another live run's lane reads it (queued, waiting), after
    CHAIN_IDLE runs without progress or CHAIN_MAX runs (said in the summary), or on a dry run; a fork's run's bake
    records are passed over; the dispatch is tried 3 times. A push's run also looks after its data lane (Chain after the
-   data, the same step), so a re-parse goes on at once.
+   data, the same step), so a re-parse goes on at once. TTS names this run's data commit moved after its save read the
+   data: one plain run (no chain input), past the caps; none while another run's lane reads it.
 10. One main lane per guarded push (P-2; faked gh and curl): Guards' fixes (in the push's Bake and save, after its setup)
    waits for the push's own guards' check job (conditional reads 1 s apart, 3 s after 2 minutes or 15 changed in a row),
    then skips the rest of the push's main lane (its Gate on) when that guards run has
@@ -65,6 +66,8 @@
    gets the main lane's extra time for the wait.
 11. Rulebook PDF start (faked look and GitHub): a push's lane whose website lags has its Pages build served on localhost
    to decide (--local); its exit 4, no artifact or a failed download: the website's look; the server stopped after.
+12. The save's data watcher (a sandbox data branch): a data commit moving names makes the save again on it (this run's
+   build: named run); the same names keep it; idle, TTS save stops the watcher at once; Re-pin takes the save's names.
 Exits 1 when a case gets the wrong answer.
 """
 import atexit
@@ -375,11 +378,11 @@ def plans(flow: dict) -> None:
 
     # The data lane
     p = plan(flow, "data", inputs={"dry_run": True}, outputs=go)
-    check(p["env"]["DRY_RUN"] == "true" and {"build", "posts"} <= runs(p) and not {"Site build start", "data-commit", "Site build", "Card checks", "Send the posts"} & runs(p),
+    check(p["env"]["DRY_RUN"] == "true" and {"build", "posts"} <= runs(p) and not {"Site build start", "data-commit", "Site build", "Card checks", "Send the posts", "tts-names"} & runs(p),
           "data, dry dispatch: build and posts; nothing committed, sent or dispatched")
     p = plan(flow, "data", event="push", outputs={**go, "data-commit": {"committed": "true"}})
-    check({"Site build start", "venv", "fonts", "build", "posts", "Send the posts", "data-commit", "Site build", "Card checks"} <= runs(p),
-          "data, a push at once: the early site build and checks, build, posts, data commit, their fallbacks")
+    check({"Site build start", "venv", "fonts", "build", "posts", "Send the posts", "data-commit", "Site build", "Card checks", "tts-names"} <= runs(p),
+          "data, a push at once: the early site build and checks, build, posts, data commit, their fallbacks, its TTS names")
     p = plan(flow, "data", event="schedule", outputs=go, outcomes={"build": "failure"})
     check(not {"Send the posts", "data-commit"} & runs(p) and "Tell Discord" in runs(p),
           "data, build failed: no posts, no data commit; Discord told")
@@ -419,8 +422,10 @@ def plans(flow: dict) -> None:
                   ["gate", "fonts", "font-cache"], ["gate", "fonts", "font-cache", "Fonts (cache miss)"]],
           f"fonts: a push's and a follow-up's before their wait, fetched again when Newest moved them; the schedule's after its Gate ({got})")
     p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
-    check(p["env"]["AFTER"] == "m" * 40 and {"records-in", "build", "Send the posts", "data-commit", "Site build"} <= runs(p),
-          "after: the data lane on M with the bake's records; the site build follows the bake even with db/ unchanged")
+    check(p["env"]["AFTER"] == "m" * 40 and {"records-in", "build", "Send the posts", "data-commit", "Site build"} <= runs(p)
+          and "tts-names" not in runs(plan(flow, "after", event="push", outputs={**go, "data-commit": {"committed": "true"}},
+                                           needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})),
+          "after: the data lane on M with the bake's records; the site build follows the bake even with db/ unchanged; no TTS names")
     p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"top": "r" * 40, "redrawn": "true"}}})
     check(p["env"]["AFTER"] == "r" * 40 and {"records-in", "build", "data-commit", "Site build"} <= runs(p),
           "after a link redraw alone: the data lane on its commit")
@@ -1542,6 +1547,95 @@ def save_cases(flow: dict) -> None:
                   f"fetched once ({n} calls); not after it moved ({other!r}, {asked[2:]})")
 
 
+def names_cases(flow: dict) -> None:
+    """The save's data watcher (save-sh's look_data on a sandbox data branch; a fake save that ends once told, a fake
+    NAMES_PY comparing the two files): a data commit moving names makes the save again on it (this run's build: named
+    run, the watcher done); the same names keep the save; another run's commit moving names makes it again and the
+    watcher goes on; idle, TTS save stops it at once (named old); read after this run's build: named run, nothing
+    watched; a Bake's B: the watcher stopped, the save made again on B, a new watcher. Re-pin takes the save's names."""
+    job = flow["jobs"]["main"]
+    url = "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/1"
+
+    def lines(path: str, n: int, seconds: float = 15) -> bool:
+        end = time.monotonic() + seconds
+        while time.monotonic() < end:
+            if os.path.exists(path) and len(open(path).read().splitlines()) >= n:
+                return True
+            time.sleep(0.02)
+        return False
+
+    for name, stats, run, saves, named in (("moved", "names 2", url, 2, "run"), ("same", "names 1", url, 1, "run"),
+                                           ("another run's", "names 2", "https://x/runs/2", 2, "old"),
+                                           ("idle", None, None, 1, "old"), ("read after this run's build", None, url, 1, "run"),
+                                           ("a Bake's B", None, None, 2, "old")):
+        with tempfile.TemporaryDirectory() as tmp:
+            _, bare = origin(tmp)
+            ws = checkout(tmp, bare)
+            os.makedirs(os.path.join(ws, "bot"))
+            work, data = os.path.join(tmp, "data-work"), os.path.join(tmp, "data.git")
+            os.makedirs(work)
+            git(work, "init", "-q", "-b", "data")
+            commit(work, {"db/stats.json": "names 1", "db/manifest.json": json.dumps({"run": url if run and not stats else "https://x/runs/0"})})
+            subprocess.run(["git", "clone", "-q", "--bare", work, data], check=True)
+            subprocess.run(["git", "clone", "-q", "--depth", "1", "--branch", "data", f"file://{data}",
+                            os.path.join(ws, "carddata")], check=True)
+            runner, log, gate = os.path.join(tmp, "runner"), os.path.join(tmp, "names.log"), os.path.join(tmp, "go")
+            nb = os.path.join(runner, "names")
+            python = os.path.join(runner, "venv", "bin", "python")
+            write(python, '#!/bin/bash\nif [ "$1" = -c ]; then cmp -s "$3" "$4" || echo Cards/One.png; exit 0; fi\n'
+                          f'echo "$5" >> "{log}"\nuntil [ -e "{gate}" ] || [ "$SECONDS" -ge 30 ]; do sleep 0.02; done\n'
+                          'echo "report names: $(cat "$5")"\n')
+            os.chmod(python, 0o755)
+            write(os.path.join(runner, "history-fetch.code"), "0\n")
+            env = {"GITHUB_WORKSPACE": ws, "NAMES_PY": "-", "RUN_URL": url, "AUTOCROISSANT_LOCAL_DIR": ws}
+            code, text, _ = run_step(job, "save-start", os.path.join(ws, "bot"), env, tmp)
+            ok, took = code == 0 and lines(log, 1), 0.0
+            if name == "a Bake's B":                      # TTS save start on B: the watcher stopped, both made again
+                was = int(open(os.path.join(nb, "pid")).read())
+                commit(ws, {"site/Card Edits.json": '{"baked": 1}'})
+                code, text, _ = run_step(job, "save-start", os.path.join(ws, "bot"), env, tmp)
+                try:
+                    os.kill(was, 0)
+                    ok = False
+                except ProcessLookupError:
+                    pass
+                ok = (ok and code == 0 and "The Bake committed" in text and lines(log, 2)
+                      and int(open(os.path.join(nb, "pid")).read()) != was
+                      and open(os.path.join(runner, "save", "at")).read().strip() == git(ws, "rev-parse", "HEAD")
+                      and git(ws, "status", "--porcelain", "--", "TTS") == "")
+            if stats:
+                at = time.monotonic()
+                commit(work, {"db/stats.json": stats, "db/manifest.json": json.dumps({"run": run})})
+                git(work, "push", "-q", data, "data")
+                ok = ok and lines(os.path.join(nb, "log"), 1) and lines(log, saves)
+                took = time.monotonic() - at
+            head = git(work, "rev-parse", "HEAD")
+            at = time.monotonic()
+            write(gate, "")
+            code2, text2, out = run_step(job, "save", ws, {"STARTED": "success"}, tmp)
+            joined = time.monotonic() - at
+            pid = int(open(os.path.join(nb, "pid")).read())
+            try:
+                os.kill(pid, 0)
+                gone = False
+            except ProcessLookupError:
+                gone = True
+            used = open(os.path.join(runner, "save", "names")).read().strip()
+            newer = bool(stats) and saves == 2
+            want = os.path.join(nb, f"{head}.json") if newer else os.path.join(ws, "carddata", "db", "stats.json")
+            ok = (ok and code2 == 0 and out.get("named") == named and used == want and gone and joined < 3
+                  and len(open(log).read().splitlines()) == saves
+                  and f"report names: {stats if newer else 'names 1'}" in text2
+                  and (not stats or ("made again" in text2) == (saves == 2)))
+            if ok and name == "moved":                    # Re-pin: the save's names
+                write(python, '#!/bin/bash\necho "args: $*"\n')
+                code3, text3, _ = run_step(job, "repin", os.path.join(ws, "bot"), {"GITHUB_WORKSPACE": ws, "GIT_NO_LAZY_FETCH": "1",
+                                                                                   "M": git(ws, "rev-parse", "HEAD")}, tmp)
+                ok = code3 == 0 and f"--names {want}" in text3 and "were current" in text3
+            check(ok, f"names, {name}: {saves} save(s), named={out.get('named')}, the data seen in {took:.1f} s, "
+                      f"TTS save joined in {joined:.2f} s, the watcher gone={gone}" + ("" if ok else f"\n{text}\n{text2}"))
+
+
 def pdf_start_cases(flow: dict) -> None:
     """Rulebook PDF start, on a fake look and fake GitHub (run lists by gh; the site run's jobs, artifacts and zip by
     pages_wait.py and curl; the website's build.txt): a push's lane looks at once; the website lagging, the push's Pages
@@ -1726,7 +1820,7 @@ def chain_cases(flow: dict) -> None:
         other = lambda rid, status="in_progress", title="Card sync": json.dumps(  # noqa: E731
             [{"databaseId": rid, "status": status, "displayTitle": title}])
         base = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "GITHUB_RUN_ID": "99", "FAKE_JOBS": jobs, "CHAIN": "",
-                "BUILDER": "", "LANES": "data=success main=success after=skipped", "PROGRESS": "true", "DUE": "", "LAG": "",
+                "BUILDER": "", "LANES": "data=success main=success after=skipped", "PROGRESS": "true", "DUE": "", "LAG": "", "NAMES": "",
                 "CHAIN_IDLE": chain["steps"][0]["env"]["CHAIN_IDLE"], "CHAIN_MAX": chain["steps"][0]["env"]["CHAIN_MAX"],
                 "DATA_LANE": "Card data", "MAIN_LANE": LANE, "FAKE_MANIFEST": stale(0), "FAKE_MERGED": '{"merged": {"7": 3}}',
                 "FAKE_ARTIFACTS": art(7), "FAKE_RUNS": "[]"}
@@ -1770,6 +1864,21 @@ def chain_cases(flow: dict) -> None:
             ok = (code == 0 and got == want and (says in text or says in " ".join(args))
                   and (not args or {"dry_run=false", "bake=pending", "card-sync.yml"} <= set(args)))
             check(ok, f"chain: {what} -> {got or 'no dispatch'}" + ("" if ok else f"\n{text}\n{args}"))
+        # this run's data commit moved TTS names its save never read: one plain run (no chain input), past the caps
+        for env, sent_ok, says, what in (({}, True, "a plain one", "names: one plain run"),
+                                         ({"FAKE_MANIFEST": stale(400)}, True, "a plain one", "names and a re-parse left: one plain run"),
+                                         ({"CHAIN": "now 11 0"}, True, "a plain one", "names at CHAIN_MAX: still one plain run"),
+                                         ({"BUILDER": "abc"}, True, "builder_ref=abc", "names: a pinned builder carried"),
+                                         ({"FAKE_RUNS": other(42, "queued")}, False, "run 42 is unfinished", "names, a run queued: none")):
+            for path in (sent, tries):
+                if os.path.exists(path):
+                    os.remove(path)
+            code, text, out = run_step(chain, "chain", tmp, {**base, "NAMES": "true", **env}, tmp)
+            args = open(sent).read().split("\n") if os.path.exists(sent) else []
+            ok = (code == 0 and bool(args) == sent_ok and (says in text or says in " ".join(args))
+                  and (not args or ({"dry_run=false", "bake=pending", "card-sync.yml"} <= set(args)
+                                    and not any(a.startswith("chain=") for a in args))))
+            check(ok, f"chain: {what} -> {' '.join(args[3:]) or 'no dispatch'}" + ("" if ok else f"\n{text}\n{args}"))
         for fails, want, what in ((1, "now", "the dispatch failed once: tried again, dispatched"),
                                   (3, None, "the dispatch failed 3 times: a warning, none (the schedule picks it up)")):
             if os.path.exists(tries):
@@ -2093,7 +2202,8 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
 
 GROUPS = {"plans": plans, "timer": timer_cases, "gate": gate_cases, "history": history_cases, "build": build_cases,
           "tell": tell_cases, "fonts": fonts_cases, "bake": bake_cases, "main": main_cases, "save": save_cases,
-          "records": records_cases, "guard": guard_cases, "chain": chain_cases, "lane": lane_cases, "pdf": pdf_start_cases}
+          "records": records_cases, "guard": guard_cases, "chain": chain_cases, "lane": lane_cases, "pdf": pdf_start_cases,
+          "names": names_cases}
 
 
 def main():
