@@ -1557,6 +1557,7 @@ jobs:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
           AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/history.git   # History start's: refresh tops up main
           NAMES_PY: *names-py
+          MAIN: ${{ steps.gate.outputs.main }}   # --baked: a name the Bake took out of Card Edits.json names its card
         run: &save-sh |
           save="TTS/Impossibility Simulator.json" bg=$RUNNER_TEMP/save ws=$GITHUB_WORKSPACE nb=$RUNNER_TEMP/names
           head=$(git -C "$ws" rev-parse HEAD)
@@ -1576,7 +1577,7 @@ jobs:
             echo "$names" > "$bg/names"
             ( code=0
               until [ -s "$RUNNER_TEMP/history-fetch.code" ]; do sleep 0.05; done   # history.git in (the copy may have won)
-              timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$ws/$save" --names "$names" \
+              timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$ws/$save" --names "$names" --baked "$MAIN" \
                 > "$RUNNER_TEMP/save.md" 2> "$bg/err" &
               echo "$!" > "$bg/pid"
               wait "$!" || code=$?
@@ -1774,7 +1775,7 @@ jobs:
           exit "$code"
 
       # The save on the checkout (B's Card Edits.json and decks), names from the data branch's head (Card Edits.json's
-      # first). In the background while the rulebook PDF prints (the save pins
+      # first, then the names B took out of it). In the background while the rulebook PDF prints (the save pins
       # main before M and reads only pages.json's PDF name): TTS save waits for it (20 minutes at most). Early save's
       # kept while HEAD is still main's head; else (B) stopped and made again here, the count too; started here in a lane
       # Pending edits or Linked due let go.
@@ -1787,6 +1788,7 @@ jobs:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
           AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/history.git
           NAMES_PY: *names-py
+          MAIN: ${{ steps.gate.outputs.main }}
         run: *save-sh
 
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
@@ -2187,9 +2189,11 @@ jobs:
           AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/history.git
           GIT_NO_LAZY_FETCH: "1"
           M: ${{ steps.main.outputs.top }}
+          MAIN: ${{ steps.gate.outputs.main }}
         run: |
           save="TTS/Impossibility Simulator.json"
-          names=(--names "$(cat "$RUNNER_TEMP/save/names" 2> /dev/null || echo "$GITHUB_WORKSPACE/carddata/db/stats.json")")   # the save's
+          names=(--names "$(cat "$RUNNER_TEMP/save/names" 2> /dev/null || echo "$GITHUB_WORKSPACE/carddata/db/stats.json")"   # the save's
+                 --baked "$MAIN")
           "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$GITHUB_WORKSPACE/$save" "${names[@]}" | tee "$RUNNER_TEMP/repin.md"
           cd "$GITHUB_WORKSPACE"
           export GIT_INDEX_FILE=$RUNNER_TEMP/repin.index
