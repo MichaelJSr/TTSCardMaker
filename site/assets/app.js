@@ -1498,6 +1498,17 @@ function renderRules(r) {
     for (const c of rest.slice(0, 2)) c.classList.add("drawn");
     if (rest.length > 2) idle(more, { timeout: 400 }); };
   setTimeout(() => idle(more, { timeout: 400 }), 300);
+  // no scroll anchoring (WebKit): a jump past chapters not drawn yet (a scrollbar drag, find in page) draws them at once
+  // and keeps the chapter on screen in place by hand
+  const keep = () => { const all = book.isConnected && !view.classList.contains("rb-all") ? $$(":scope > .rb-chapter", book) : [];
+    const rest = all.filter(c => !c.classList.contains("drawn"));
+    if (!rest.length || getComputedStyle(document.documentElement).overflowAnchor === "auto") { removeEventListener("scroll", keep); return; }
+    const above = rest.filter(c => c.getBoundingClientRect().top < innerHeight);
+    if (!above.length) return;
+    const at = all.find(c => c.getBoundingClientRect().bottom > innerHeight / 2) || above[above.length - 1], y = at.getBoundingClientRect().top;
+    for (const c of above) c.classList.add("drawn");
+    scrollBy(0, at.getBoundingClientRect().top - y); };
+  addEventListener("scroll", keep, { passive: true });
   watchToc();
   const [ch, sec] = (r.arg || "").split("/");
   const to = ch && !q && rulesAt !== location.hash ? document.getElementById(sec ? `${ch}--${sec}` : ch) : null;
@@ -1777,9 +1788,10 @@ function appendRest(hv, C) {                             // also under a card di
   restHost = hv.host;
   appendParts(hv.host, edits ? CL.editsParts(C, none, from) : CL.changelogParts(C, none, from));
 }
-// parts (changelog.js changelogParts / editsParts) appended to host in 8 ms slices while the page is idle
+// parts (changelog.js changelogParts / editsParts) appended to host in 8 ms slices while the page is idle (without
+// requestIdleCallback, Safari: a slice per task, so the whole list is no later than drawn at once)
 function appendParts(host, parts) {
-  const idle = window.requestIdleCallback || (f => setTimeout(f, 50));
+  const idle = window.requestIdleCallback || (f => setTimeout(f, 0));
   const more = () => {
     if (!host.isConnected) return;
     const end = performance.now() + 8;

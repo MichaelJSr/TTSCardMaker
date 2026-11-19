@@ -1188,10 +1188,15 @@ relies on:
   Round 2 (scratch s10c/opt2): the Rulebook's chapters below the first screen are drawn once near (`content-visibility:
   auto`, 3000 px stand-ins, scoped to #view so the rulebook editor's preview is untouched) or two at a time while the
   page is idle (`drawn`, from 300 ms after open), every chapter at once as above (`rb-all`; a deep link: the chapters
-  down to its target, so nothing above the reader changes size later, also where scroll anchoring is missing).
+  down to its target, so nothing above the reader changes size later, also where scroll anchoring is missing). Where
+  scroll anchoring is missing (WebKit), a jump past chapters not drawn yet (a scrollbar drag, find in page) draws them
+  at once and keeps the chapter on screen in place by hand (`keep`, on scroll; browsers that anchor skip it).
   A card's dialog reads its History, Balance and recorded changes from its versions file (§2, `card_sections`; per-card
   files ~1.0 -> 1.2 KB gzipped median): balance.js loads once those slots come near, history.json and analytics.json
-  not at all (desktop card open ~100 KB less).
+  not at all (desktop card open ~100 KB less). Trade-off: Stats opened right after a card's Balance loads analytics.json
+  itself (beside charts.js), so on a phone on Slow 4G its Balance and History fill ~0.16 s later (904 -> 1,066 ms, n=5);
+  the card step before it is ~2.7 s shorter. Not prefetched: that would put the 51 KB back on every phone that scrolls
+  to a card's Balance, on the line its History thumbnails use, for a later Stats visit.
   The Changelog and Database edits tabs draw their first screen from a small head file at once (changelog-head.json,
   edits-head.json: build_site `changelog_heads`, the newest pushes, at least 100 events, cut where no left-out push is
   newer, with the whole file's heading counts and chips; ~6-8 KB gzipped), their whole file loading beside it; the rest
@@ -1200,7 +1205,10 @@ relies on:
   are the whole file's first ones, else the tab is drawn again whole). With the whole file in first (a fast or cached
   network, a second visit) the tab draws its first blocks at once and appends the rest the same way (`firstParts`), so
   no draw of these tabs is one long task (~200 ms at 4x CPU before). A filter (?kind=, ?via=), Back/Forward or a
-  reload's place draws the whole file at once, as before.
+  reload's place draws the whole file at once, as before. An empty window (no card change in 180 days, or card data
+  without a changelog) shows its heading and note once; a head with no blocks while the whole file has some is drawn
+  again whole. Without requestIdleCallback (Safari) each slice is its own task (`setTimeout` 0, not 50 ms), so the
+  whole list is no later there either.
 - `diffWords` keeps its HTML (2026-11-04: a Map by before + "\0" + after, the oldest dropped past 2000; ~1,000 pairs
   exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
 - Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first

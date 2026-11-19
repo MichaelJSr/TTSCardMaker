@@ -200,13 +200,13 @@ export const fileRename = e => e.kind === "moved" && !!e.from_path && folder(e.f
 const changelogEvents = C => eventsOf(C).filter(e => !fileRename(e));
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=); in parts: the heading,
     then one per push block. A head file (changelog-head.json: the newest pushes, the whole file's total and counts)
-    gives the first parts; skip: the head's blocks, drawn already (the rest of the whole file) */
-export function* changelogParts(C, params, skip = 0) {
+    gives the first parts; skip: the head's blocks, drawn already with its heading (the rest of the whole file) */
+export function* changelogParts(C, params, skip = null) {
   const events = changelogEvents(C), kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
   const counts = new Map(C.counts ? Object.entries(C.counts) : []), total = C.total ?? events.length;
   if (!C.counts) for (const e of events) counts.set(e.kind, (counts.get(e.kind) || 0) + 1);
   const present = KINDS.filter(([k]) => counts.get(k));
-  if (!skip) {
+  if (skip === null) {
     folds = [];
     yield `<section class="panel"><h3>Changelog${total ? ` <span class="muted">${total}</span>` : ""}</h3>
     <p class="muted">Every card change the card sync recorded in the last ${esc(C.days)} days, one block per push, as posted in Discord (the guards' fixes only here). Times are Pacific.</p>
@@ -214,8 +214,8 @@ export function* changelogParts(C, params, skip = 0) {
     `;
     if (!events.length) { yield `<p class="empty">No card changes in the last ${esc(C.days)} days.</p>`; return; }
   }
-  let any = !!skip;
-  for (const part of daysParts(pushGroups(events), C.repo, kinds.length ? kinds : null, skip)) { any = true; yield part; }
+  let any = skip !== null;
+  for (const part of daysParts(pushGroups(events), C.repo, kinds.length ? kinds : null, skip || 0)) { any = true; yield part; }
   if (!any) yield `<p class="empty">No ${esc(kinds.join(", "))} changes in the last ${esc(C.days)} days.</p>`;
 }
 export const changelogHtml = (C, params) => [...changelogParts(C, params)].join("");
@@ -274,7 +274,7 @@ export const editsHtml = (C, params) => [...editsParts(C, params)].join("");
 export function headDrawn(H, C, edits = false) {
   const of = edits ? editEvents : changelogEvents, sig = g => g.map(e => `${e.seq}:${e.kind}`).join(",");
   const h = byTime(pushGroups(of(H))), c = byTime(pushGroups(of(C)));
-  if (h.length > c.length || h.some((g, i) => sig(g) !== sig(c[i]))) return null;
+  if (h.length > c.length || !h.length && c.length || h.some((g, i) => sig(g) !== sig(c[i]))) return null;   // an empty head drew 'No ... changes'
   if (!edits) return h.length;
   const header = H.head.events <= editEvents(H).length, batches = header ? H.edits.batches : [];   // every event in: its batches' heading too
   if (batches.some((b, i) => JSON.stringify(b) !== JSON.stringify(C.edits.batches[i]))) return null;
