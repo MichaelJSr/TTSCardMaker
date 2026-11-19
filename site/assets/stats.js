@@ -5,7 +5,7 @@ import { total } from "./search.js";
 import { HAND } from "./deck.js";
 import { date } from "./history.js";
 import { artList } from "./art.js";
-import { loCls, iconSet } from "./grid.js";
+import { loCls, iconSet, itemTypes } from "./grid.js";
 import { fmt, cardsHref, roundedTop, niceMax, hbar, trunc, columns, table, chartCard as card } from "./chartkit.js";
 export { narrowOf } from "./chartkit.js";   // app.js renderStatsView
 
@@ -199,13 +199,13 @@ function cardCharts(pool, creatures, L, narrow) {
   const items = pool.filter(c => c.type === "item" && c.subtype && c.stars);
   if (items.length) {
     const stars = starsOf(items), types = new Map();
-    for (const c of items) { const r = types.get(c.subtype) || types.set(c.subtype, new Map()).get(c.subtype); r.set(c.stars, (r.get(c.stars) || 0) + 1); }
+    for (const c of items) for (const t of itemTypes(c)) { const r = types.get(t) || types.set(t, new Map()).get(t); r.set(c.stars, (r.get(c.stars) || 0) + 1); }   // each it prints
     const rows = [...types].map(([t, m]) => Object.assign([t[0].toUpperCase() + t.slice(1), ...stars.map(st => m.get(st) || 0), [...m.values()].reduce((a, b) => a + b, 0)], { key: t })).sort((a, b) => b[b.length - 1] - a[a.length - 1] || a[0].localeCompare(b[0]));
     const head = ["Item type", ...stars.map(st => `${st}★`), "All"];
     out.push(card("itemtypes", "Items by type and stars", "Item cards per type and star level.",
       heatTable(head, rows.map(r => [r[0], ...r.slice(1, -1).map(v => v || ""), String(r[r.length - 1])]), { shade: stars.map((_, i) => i + 1), all: true,
         href: (k, i) => L({ kind: "item", sub: rows[k].key, stars: i >= 1 && i <= stars.length ? stars[i - 1] : "" }) }),
-      table(head, rows)));
+      table(head, rows), { tip: "An item printing two item types (Cake Mix: heal and attack) counts under each" }));
   }
   return out;
 }

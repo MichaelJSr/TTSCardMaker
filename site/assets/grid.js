@@ -68,6 +68,15 @@ export const byKey = (key, desc = false) => { const keys = [].concat(key), s = d
     return s * byName(a, b);
   }; };
 
+// an item-type icon's item type (AC card_models.AUX_ITEM_TYPES): an item counts at its subtype and each one it prints
+export const ICON_ITEM_TYPES = { equip: "equip", "fragile equip": "equip", food: "heal", active: "active", attack: "attack",
+  infliction: "infliction", deploy: "deploy", support: "support", counter: "counter", negation: "negation", field: "field" };
+const ITEM_KINDS = new Set(["item", "aux item", "nme"]);
+/** a card's item types: its subtype, then an item's other item-type icons (Salt: heal, infliction; AC item_types) */
+export const itemTypes = c => { const out = c.subtype ? [c.subtype] : [];
+  if (ITEM_KINDS.has(c.type)) for (const t of c.types || []) { const k = ICON_ITEM_TYPES[t]; if (k && !out.includes(k)) out.push(k); }
+  return out; };
+
 const STATS = ["hp", "def", "atk", "spd"];
 // the Missing filter: [param value, label, title (no data-tip: a tap would leave it up), test]; lacking = absent, null, "" or []
 export const MISSING = [
@@ -88,7 +97,7 @@ const STATUS = new Set(["debuff", "buff"]);
 export const X_TESTS = {
   kind: (c, v) => c.type === v || (v === "status" && STATUS.has(c.type)),
   stars: (c, v) => c.stars === +v,
-  sub: (c, v) => c.subtype === v,
+  sub: (c, v) => itemTypes(c).includes(v),
   types: (c, v) => !!c.types?.includes(v),
   missing: (c, v) => !!MISSING.find(m => m[0] === v)?.[3](c),       // xmissing=series: has a series
   series: (c, v) => c.series === v,

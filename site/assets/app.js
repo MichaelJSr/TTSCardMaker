@@ -601,7 +601,7 @@ function filterCards(p, { facets = true } = {}) {
   const series = p.get("series"), subseries = p.get("subseries"), author = p.get("author");
   if (kinds.length) list = list.filter(c => kinds.includes(kindOf(c)) || kinds.includes(c.type));      // debuff, buff: a Stats link
   if (st.length) list = list.filter(c => st.includes(c.stars));
-  if (subs.length) list = list.filter(c => subs.includes(c.subtype));
+  if (subs.length) list = list.filter(c => G.itemTypes(c).some(s => subs.includes(s)));
   if (types.length) list = list.filter(c => types.every(t => (c.types || []).includes(t)));
   if (series) list = list.filter(c => c.series === series);
   if (subseries) list = list.filter(c => c.subseries === subseries);
@@ -689,7 +689,7 @@ function renderCards(r) {
   const others = k => (waiting ? base : k && p.has(k) ? filterCards(without(p, k)) : list);
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of new Set([].concat(f(c)))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };   // a card once ('girl, girl')
   const kindSeen = count(base, kindOf), kindCounts = count(others("kind"), kindOf);
-  const starOf = c => c.stars, subOf = c => c.subtype, starCounts = count(others("stars"), starOf), subCounts = count(others("sub"), subOf);
+  const starOf = c => c.stars, subOf = G.itemTypes, starCounts = count(others("stars"), starOf), subCounts = count(others("sub"), subOf);
   const typeSeen = count(base, c => c.types || []), typeCounts = count(others(), c => c.types || []);
   const xs = k => G.xvals(p, k), removed = new Map();
   const removes = (k, v) => { const id = `${k}\u0001${v}`; if (!removed.has(id)) { const q = new URLSearchParams(p); q.set(`x${k}`, xs(k).filter(x => x !== v).join(","));
@@ -707,7 +707,7 @@ function renderCards(r) {
     return `<div class="sel-row${x ? " x" : ""}">${html}<button type="button" class="not" data-action="not-param" data-key="${k}" aria-pressed="${x}" title="Exclude this ${k}" aria-label="Exclude this ${k}">≠</button></div>`; };
   const authors = [...new Set(S.cards.map(c => c.author).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const starOpts = [...new Set(S.cards.map(c => c.stars).filter(Boolean))].sort((a, b) => a - b).map(s => [s, `${s}★`]);
-  const subOpts = [...new Set(S.cards.map(c => c.subtype).filter(Boolean))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
+  const subOpts = [...new Set(S.cards.flatMap(G.itemTypes))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
   const typeOpts = [...typeSeen.keys()].sort((a, b) => (typeSeen.get(b) || 0) - (typeSeen.get(a) || 0));
   const missOpts = G.MISSING.filter(([k]) => missCounts.get(k) || miss.includes(k) || xmiss.includes(k));      // none to show: hidden
   const mine = CF.saved(), cfIn = CF.vals(p, "cf"), cfOut = CF.vals(p, "xcf");                         // My filters (myfilters.js)
@@ -955,7 +955,7 @@ function sizerRows(rest, rows) {
   const text = (...lines) => { let line = 0, word = 0; for (const [t, size = 13.5] of lines) { if (!t) continue; line = Math.max(line, measure(t, size));
     for (const x of t.split(/\s+|(?<=-)(?=\p{L})/u)) if (x) word = Math.max(word, measure(x, size)); } return [line, word]; };
   const len = v => { const n = String(v ?? "").length; return [n, n]; };
-  const cols = c => [[0, 0], text([c.name]), text([`${KIND_LABEL[c.type] || c.type}${c.subtype ? ` · ${cap(c.subtype)}` : ""}`]),
+  const cols = c => [[0, 0], text([c.name]), text([kindText(c)]),
     text([c.series], [c.subseries, 12]), len(c.stars), len(c.hp), len(c.def), len(c.atk), len(c.spd), len(c.hp != null ? total(c) : ""),
     [(c.types || []).filter(iconFor).length, 0], text([c.author]), text([createdText(c)]), text([date(c.ts)]), text([psdSize(c)])];
   const top = [], pick = new Set();
@@ -1000,8 +1000,9 @@ function fitTable(t) {
 const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="">` : ""}
   <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
+const kindText = c => [KIND_LABEL[c.type] || c.type, ...G.itemTypes(c).map(cap)].join(" · ");   // "Item · Heal · Infliction"
 const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img || c.pic ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 30)} alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
-      <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
+      <td>${esc(kindText(c))}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
       <td>${(c.types || []).map(t => iconImg(t, "tok", 18)).join("")}</td><td>${esc(c.author || "")}</td><td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td><td>${date(c.ts)}</td><td class="num size">${psdSize(c)}</td></tr>`;
 
@@ -1073,7 +1074,7 @@ function openCard(id, showDetails = false) {
           ${c.lost ? `<span class="fact" data-tip="${c.firstOld ? "Its first record in the old repo" : "Its first post on Discord"}">${c.lost === "played" ? (c.inGit ? "Played, lost before this repo" : "Played, lost before git") : "Joke card"}${c.first ? (c.firstOld ? ` · in the old repo ${day(c.first)}` : ` · first posted ${day(c.first)}`) : ""}${c.firstCh ? ` in #${esc(c.firstCh)}` : ""}</span>` : ""}
           ${c.live && S.byId.has(c.live) ? `<a class="fact" href="#/card/${esc(c.live)}" data-tip="The same picture is this card's oldest version">Live card: ${esc(S.byId.get(c.live).name)}</a>` : ""}
           ${c.morgue && c.type === "unknown" ? "" : `<a class="fact" href="#/cards?${scope}kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>`}
-          ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
+          ${G.itemTypes(c).map(t => `<a class="fact" href="#/cards?sub=${encodeURIComponent(t)}">${esc(cap(t))}</a>`).join("")}
           ${c.stars ? `<a class="fact" href="#/cards?${scope}stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
           ${c.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(c.series)}">${esc(c.series)}</a>` : ""}
           ${c.subseries ? `<a class="fact" href="#/cards?subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}

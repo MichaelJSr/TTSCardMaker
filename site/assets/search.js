@@ -9,10 +9,12 @@
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
 //                   (series== and series~ match a subseries too; a known field's lone = reads as ==)
 //   alias==zote  alias~clot                                 any one alias (as the bot)
+//   subtype==infliction                                     any one item type (Salt: heal, infliction; as the bot)
 //   created>=2025  created==2023-10  created<2021-06-01                   dates at the precision given (as the bot)
 //   has:alias  flag:hand  flag:bars  flag:name  flag:any
 import { flagged, hasFlag } from "./flags.js";
 import { norm } from "./text.js";
+import { itemTypes } from "./grid.js";
 
 export const total = c => (c.hp ?? 0) + (c.def ?? 0) + (c.atk ?? 0) + (c.spd ?? 0);
 const hasStats = c => c.hp != null || c.def != null || c.atk != null || c.spd != null;
@@ -24,9 +26,9 @@ const NUM = {
 const DATE = { created: c => c.created };                // "YYYY-MM-DD"
 const OPS = { "<": (a, b) => a < b, "<=": (a, b) => a <= b, "==": (a, b) => a === b, ">=": (a, b) => a >= b, ">": (a, b) => a > b };
 const STR = {
-  type: c => c.type, subtype: c => c.subtype, series: c => c.series, subseries: c => c.subseries, author: c => c.author,
+  type: c => c.type, subtype: itemTypes, series: c => c.series, subseries: c => c.subseries, author: c => c.author,
   path: c => c.psd || c.png, ability: c => c.ability, types: c => (c.types || []).join(" "),
-  name: c => c.name, alias: c => c.aliases || [], aliases: c => c.aliases || [], created: c => (c.createdBefore ? `before ${c.createdBefore}` : c.created),   // aliases: each its own
+  name: c => c.name, alias: c => c.aliases || [], aliases: c => c.aliases || [], created: c => (c.createdBefore ? `before ${c.createdBefore}` : c.created),   // aliases, item types: each its own
 };
 export const FLAGS = {
   "has:alias": c => !!(c.aliases && c.aliases.length),
