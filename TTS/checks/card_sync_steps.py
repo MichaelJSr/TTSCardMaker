@@ -1961,6 +1961,14 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
             ok = ok and f"Check job: {len(naps)} looks, {len(naps) - n304} changed; rate limit used 7 -> 7" in text
             check(ok, f"Guards' fixes: the check job alone by conditional reads, 1 s apart (another job's Decided is not it): {what}"
                   + ("" if ok else f"\n{text}\n{asked}\n{naps}"))
+        kept_ = {"id": 600, "name": "check", "status": "in_progress", "steps": [st("Fixes to land", "success"), st("Decided", None)]}
+        write(os.path.join(jobs_dir, "60.json"), json.dumps({"jobs": [kept_]}))
+        write(os.path.join(jobs_dir, "job-600.json"), json.dumps(kept_))
+        write(os.path.join(jobs_dir, "job-600.json.later"), json.dumps({**kept_, "steps": [
+            st("Fixes to land", "success"), st("Pictures kept", "success"), st("Decided", "success")]}))
+        _, code, text, out, asked, naps = lane([run(60, "in_progress")], FAKE_USED="7", FAKE_LOOKS="2")
+        check(code == 0 and out.get("kept") == "60" and "run" not in out and asked.count("/jobs") == 1,
+              "Guards' fixes: Pictures kept read with Decided by the conditional reads -> the save alone" + ("" if code == 0 else f"\n{text}"))
         os.remove(calls + ".naps")
         code, text, out = run_step(timer, "guards", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Guards' fixes: runs not read -> none (the main lane goes on)")
