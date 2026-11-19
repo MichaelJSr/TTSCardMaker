@@ -995,7 +995,8 @@ const printed = (p, f) => (f === "name" ? p.title || [] : p.ability || []).filte
  *  [{one, label, why}]. Refused when an enabled Color, Gradient or Pattern Overlay, the part's own or a group's above it,
  *  hides every title or Ability part the colour paints (layerColors). A part's own isn't counted for a whole field's
  *  colour or a phrase on a field that has one (it goes off), a phrase that is all of the part's text (_whole_span) or
- *  one after it, nor a lone Color Overlay under a phrase. The record has no opacity, blend mode or fill. typed: the
+ *  one after it, nor a lone Color Overlay under a phrase; a part's clip (an opaque layer clipped onto it or its group
+ *  over it, _clipped_over) counts as its own. The record has no opacity, blend mode or fill. typed: the
  *  fields `edit` retypes; their colours are checked in the new text (a box's own, a one-layer field's), as plan_colors
  *  does. */
 export function paintedOver(rec, colors, typed = [], edit = null) {
@@ -1018,7 +1019,9 @@ export function paintedOver(rec, colors, typed = [], edit = null) {
     const full = one.phrase ? mine.filter(([, c, t]) => whole(t, c[0])).map(([x]) => x) : [];
     const hid = mine.map(([x]) => {
       const path = String(x?.layer || "").split("/"), own = on(path.join("/"));
-      if (own.length && one.phrase && !lit.has(f) && !done.has(x) && !full.includes(x) && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
+      const mineToo = one.phrase && !lit.has(f) && !done.has(x) && !full.includes(x);
+      if (mineToo && x?.clip) return `its clipped layer '${x.clip}'`;
+      if (own.length && mineToo && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
       for (let i = path.length - 1; i > 0; i--) { const e = on(path.slice(0, i).join("/")); if (e.length) return `its group '${path[i - 1]}''s ${e[0]}`; }
       return null;
     });
