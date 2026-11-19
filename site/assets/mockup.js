@@ -2598,14 +2598,21 @@ function shownFill(data, W, c, k, R, layer, read) {
     memo.set(i, f); return f;
   };
 }
-/** Old fill colour per index of R.was from the record's layer (runs over its text), or null when its text isn't R's. */
+/** Old fill colour per index of R.was from the record's layer (runs over its text), or null when its text (icon variants
+ *  aside) isn't R's. */
 function tintOld(lay, R) {
   if (!R || !lay) return null;
-  const T = String(lay.text ?? "").replace(/[\r\u0003]/g, "\n"), core = R.was.trim();
-  if (!core || T.trim() !== core) return null;
+  const T0 = String(lay.text ?? "").replace(/[\r\u0003]/g, "\n"), core = R.was.trim();
+  if (!core) return null;
+  let T = T0; const back = [];                        // T's index -> the record's
+  if (T.trim() !== core) {                            // the record has [dark:sticker], the website [dark]
+    const v = noVariants(T0); if (!v || v.T.trim() !== core) return null;
+    for (let j = 0; j < T0.length; j++) back[v.at(j)] = j;
+    T = v.T;
+  }
   const shift = R.was.indexOf(core) - T.indexOf(core), cols = Array.isArray(lay.colors) ? lay.colors : [lay.color];
-  const runs = Array.isArray(lay.runs) && lay.runs.length ? lay.runs : [[0, T.length, 0]];
-  return i => { const j = i - shift, r = runs.find(([a, b]) => j >= a && j < b); return hexRgb(r ? cols[r[2]] : lay.color); };
+  const runs = Array.isArray(lay.runs) && lay.runs.length ? lay.runs : [[0, T0.length, 0]];
+  return i => { const j = back[i - shift] ?? i - shift, r = runs.find(([a, b]) => j >= a && j < b); return hexRgb(r ? cols[r[2]] : lay.color); };
 }
 /** The letters want paints: [{f (old fill), nw (new colour), ink, line}]; never a space, nor an icon or badge (drawnSpans)
  *  unless all. */
