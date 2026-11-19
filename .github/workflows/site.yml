@@ -248,8 +248,8 @@ jobs:
       actions: read       # Data wait: Card sync's jobs; Deploy wait: the version job
     runs-on: ubuntu-latest
     # the first run downloads every card PNG (~1.6 GB); three stuck deploys add ~19 min; an early build's Data wait 25
-    # (a push's: Early build, and its Follow-up build 10 with three more deploys)
-    timeout-minutes: ${{ github.event_name == 'push' && 121 || inputs.after && 92 || 67 }}
+    # (a push's: Early build, and its Follow-up build 14 with three more deploys)
+    timeout-minutes: ${{ github.event_name == 'push' && 125 || inputs.after && 92 || 67 }}
     outputs:
       saved: ${{ steps.og-save.outcome == 'success' || steps.cache-save.outcome == 'success' }}
       copies: ${{ steps.copies.outputs.artifact-id }}
@@ -706,20 +706,21 @@ jobs:
 
       # A push's early build whose guards land fixes (card-guards.yml's check job: Fixes to land, and Start Card sync: the
       # follow-up Card sync it started) builds again here as that follow-up's early build: its Site build start dispatches
-      # none while this run is unfinished, and its Site build counts this run while this step runs (card-sync.yml). 90 s at
-      # most from here, the guards' Decided included: main's and the data's heads by git every 0.5 s, for the guards'
-      # landing (a commit after this push naming it in Guarded-push) and then a "Card data" commit on a main holding it (its
-      # subject's "(main X)", among the data's newest 10: Card checks' may be on top; only Card sync's data jobs write
-      # those, one at a time: the follow-up's first; this build's own data one: nothing to do); till the landing, the jobs
-      # API every 8th look (Landed with none on main: nothing landed). Then that main and data, the PSD sizes when a PSD
-      # moved, the build (Landing images made the landing's pictures meanwhile) and its upload, deployed by the version
-      # job under versions 3 and 4. No fixes, none in time, or a failure: the job ends as before (that Site build
-      # dispatches one).
+      # none while this run is unfinished, and its Site build counts this run while this step's window lasts (card-sync.yml:
+      # the same window). Till 90 s after this step saw the guards' check job past Landed (the data commit comes after it;
+      # a big landing takes ~1 s per 10 MB), 6 minutes at most from here, the guards' Decided included: main's and the
+      # data's heads by git every 0.5 s, for the guards' landing (a commit after this push naming it in Guarded-push) and
+      # then a "Card data" commit on a main holding it (its subject's "(main X)", among the data's newest 10: Card checks'
+      # may be on top; only Card sync's data jobs write those, one at a time: the follow-up's first; this build's own data
+      # one: nothing to do); till Landed and the landing, the jobs API every 8th look (Landed with none on main: nothing
+      # landed). Then that main and data, the PSD sizes when a PSD moved, the build (Landing images made the landing's
+      # pictures meanwhile) and its upload, deployed by the version job under versions 3 and 4. No fixes, none in time, or
+      # a failure: the job ends as before (that Site build dispatches one).
       - name: Follow-up build
         id: build2
         if: steps.early.outputs.after && steps.build.outcome == 'success'
         continue-on-error: true
-        timeout-minutes: 10
+        timeout-minutes: 14
         env:
           GH_TOKEN: ${{ github.token }}
           CARD_DATA_DIR: carddata/db
@@ -732,7 +733,11 @@ jobs:
         run: |
           bg=$RUNNER_TEMP/setup
           api=repos/$GITHUB_REPOSITORY/actions
-          end=$((SECONDS + 90))
+          cap=$((SECONDS + 360)) end=$((SECONDS + 360)) since=''   # card-sync.yml's Site build: the same 360 and 90
+          past() {                              # Landed seen: 90 s from now, within the cap
+            [ -z "$since" ] || return 0
+            since=$SECONDS end=$((SECONDS + 90 < cap ? SECONDS + 90 : cap))
+          }
           stop() {                              # Landing images: none started after; its log
             [ -s "$bg/landing.pid" ] || return 0
             touch "$bg/landing.stop"
@@ -771,9 +776,9 @@ jobs:
             holds FETCH_HEAD
           }
           guards=$(timeout 10 gh api "$api/workflows/card-guards.yml/runs?event=push&head_sha=$GITHUB_SHA" --jq '.workflow_runs[0].id // empty') || guards=
-          fixes=false
+          fixes=false landed=''
           while [ -n "$guards" ] && [ "$SECONDS" -lt "$end" ]; do
-            read -r decided fixes _ <<< "$(check)"
+            read -r decided fixes landed <<< "$(check)"
             [ "$decided" != true ] || break
             sleep 2
           done
@@ -783,6 +788,7 @@ jobs:
             exit 0
           fi
           was=$(git rev-parse HEAD) seen=$(git -C carddata rev-parse HEAD 2> /dev/null) || seen=
+          [ "$landed" != true ] || past
           landing=$(search HEAD) at=$was got='' i=0
           if [ -n "$landing" ] && holds HEAD; then
             stop
@@ -791,9 +797,10 @@ jobs:
           fi
           while [ "$SECONDS" -lt "$end" ]; do
             look && { got=1; break; }
-            if [ -z "$landing" ] && [ $(( i++ % 8 )) = 0 ]; then
+            if { [ -z "$landing" ] || [ -z "$since" ]; } && [ $(( i++ % 8 )) = 0 ]; then
               read -r _ _ landed <<< "$(check)"
-              if [ "$landed" = true ] && timeout 30 git fetch -q --no-tags --filter=blob:none origin main; then
+              [ "$landed" != true ] || past
+              if [ "$landed" = true ] && [ -z "$landing" ] && timeout 30 git fetch -q --no-tags --filter=blob:none origin main; then
                 at=$(git rev-parse FETCH_HEAD) landing=$(search FETCH_HEAD)
                 [ -n "$landing" ] || break      # past Landed with none on main: nothing landed
               fi

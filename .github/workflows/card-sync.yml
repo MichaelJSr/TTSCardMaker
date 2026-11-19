@@ -973,10 +973,11 @@ jobs:
       # (its PNGs), whatever the data did. Not when Site build start's run is unfinished and under 19 minutes old: it is
       # still in its Data wait (20 minutes at most) and builds this. The push's own run instead (site-push): only while its
       # build has not started or is past Images start (run for an early build only) with Data wait not failed. A
-      # follow-up's push run (site-push): while its Follow-up build runs under 80 s in (its looks go on to 90 s; it ends only
-      # at a data commit holding the guards' landing: this one's, the first) or Follow-up upload ran; later in that step or
-      # not yet in it, looked at every 2 s (90 s at most). Missing, replaced while pending in pages-build,
-      # built on its own, or ended: dispatched here.
+      # follow-up's push run (site-push): while its Follow-up build runs with 10 s or more of its window left (site.yml's:
+      # till 90 s after the guards' Landed, 360 s from its start at most; 90 s at least; it ends only at a data commit
+      # holding the guards' landing: this one's, the first) or Follow-up upload ran; later in that step or not yet in it,
+      # looked at every 2 s (90 s at most). Missing, replaced while pending in pages-build, built on its own, or ended:
+      # dispatched here.
       - name: Site build
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.data-commit.outputs.committed == 'true' || env.AFTER != '') }}
         timeout-minutes: 4
@@ -987,11 +988,15 @@ jobs:
         run: |   # 3 tries (a brief API error); a lasting one fails the job
           if at=$(cat "$RUNNER_TEMP/site-start" 2> /dev/null) && [ $(( $(date +%s) - at )) -lt 1140 ] && [ -n "$GUARDS" ] \
               && run=$(cat "$RUNNER_TEMP/site-push" 2> /dev/null); then
+            landed=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GUARDS/jobs" --jq '([.jobs[] | select(.name == "check")][0] // {}) as $c
+              | [$c.steps[]? | select(.name == "Landed" and .status == "completed") | .completed_at][0] // $c.completed_at
+              | fromdate? // 0') || landed=0    # unread: 90 s from the step's start
             for _ in $(seq 45); do
               round=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run/jobs" --jq '([.jobs[] | select(.name == "build")][0] // {}) as $b
                 | ([$b.steps[]? | {(.name): .}] | add // {}) as $s
                 | if $b.status != "in_progress" then "no"
-                  elif ($s["Follow-up build"] | .status == "in_progress" and now - ((.started_at | fromdate?) // 0) < 80)
+                  elif ($s["Follow-up build"] | ((.started_at | fromdate?) // 0) as $t
+                    | .status == "in_progress" and now < ([[$t, '"${landed:-0}"'] | max + 90, $t + 360] | min) - 10)
                     or ($s["Follow-up upload"] | .status == "in_progress" or .conclusion == "success") then "yes"
                   elif $s["Follow-up build"].conclusion == "skipped" or $s["Follow-up upload"].conclusion == "skipped" then "no"
                   else "wait" end') || round=no
