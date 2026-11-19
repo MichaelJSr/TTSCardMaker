@@ -711,8 +711,8 @@ jobs:
           exit "$(cat "$list.done")"
 
       # With fixes to land, in the background beside Normalise: Land's history clone (git_commit's), reading the checkout's
-      # objects too (Pushed blobs' two sides of each PSD and PNG). With those land pushes by git at any size, delta search
-      # sending only what changed (e58b8cfd's landing: 70.0 -> 6.05 MB). Failed: land clones it as before.
+      # objects too (Pushed blobs' two sides of each PSD and PNG). With those land pushes by git at any size, without
+      # delta search (GitHub would rebuild each delta'd PSD: 11dd8d06's push took 46 s). Failed: land clones it as before.
       - name: History clone start
         if: ${{ !cancelled() && steps.plan.outputs.fixes == 'true' }}
         continue-on-error: true
