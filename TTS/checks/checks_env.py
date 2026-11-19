@@ -2,18 +2,22 @@
 import functools
 import glob
 import hashlib
+import io
 import json
 import os
 import shutil
 import subprocess
 import sys
+import tarfile
+import time
 from urllib.request import urlopen
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.environ.get("TTS_REPO") or os.path.join(HERE, "..", ".."))     # TTSCardMaker
 SAVE = os.path.join(REPO, "TTS", "Impossibility Simulator.json")
 HISTORY = os.path.expanduser(os.environ.get("TTS_HISTORY", "/tmp/tts-checks/history.git"))    # full history, blobless
-BOT = os.path.expanduser(os.environ.get("AUTOCROISSANT", "~/Desktop/AutoCroissant"))         # the updater's code
+BOT = os.path.expanduser(os.environ.get("AUTOCROISSANT", ""))      # the updater's code; unset: AC main (bot_main)
+BOT_REPO_URL = "https://github.com/bobberlington/AutoCroissant.git"     # card-sync.yml's BOT_REPO (BUILDER_REF main)
 LUA_PYTHONS = (os.environ.get("LUA_PYTHON", ""), "~/.venvs/tts-checks/bin/python")
 CARD_REPO_URL = "https://github.com/MichaelJSr/TTSCardMaker.git"
 SITE_URL = "https://michaeljsr.github.io/TTSCardMaker"
@@ -165,14 +169,41 @@ def site_cards() -> list:
     return out
 
 
-def copy_bot(dest: str) -> None:
-    """The updater's code copied to dest: global_config.py and every commands/*.py (whatever tts_save imports)."""
-    if not os.path.exists(os.path.join(BOT, "commands", "tts_save.py")):
-        sys.exit(f"no updater at {BOT} (set AUTOCROISSANT)")
+def bot_main() -> str:
+    """A bare depth-1 clone of AutoCroissant main (the updater Card sync runs) beside TTS_HISTORY: made, or fetched.
+    Exits when that fails: an older updater would be tested."""
+    clone = os.path.join(os.path.dirname(HISTORY), "autocroissant.git")
+    for _ in range(2):                                      # twice: another run may hold its lock
+        if os.path.exists(clone):
+            cmd = ["git", "-C", clone, "fetch", "-q", "--depth", "1", "--no-tags", "origin",
+                   "+refs/heads/main:refs/heads/main"]
+        else:
+            os.makedirs(os.path.dirname(clone), exist_ok=True)
+            cmd = ["git", "clone", "-q", "--bare", "--depth", "1", "--branch", "main", BOT_REPO_URL, clone]
+        if subprocess.run(cmd).returncode == 0:
+            return clone
+        time.sleep(3)
+    sys.exit(f"could not fetch AutoCroissant main into {clone} (or set AUTOCROISSANT to a checkout)")
+
+
+def copy_bot(dest: str) -> str:
+    """The updater's code copied to dest: global_config.py and every commands/*.py (whatever tts_save imports) of
+    $AUTOCROISSANT, else of AutoCroissant main. Returns where from."""
     os.makedirs(os.path.join(dest, "commands"), exist_ok=True)
+    if not BOT:
+        clone = bot_main()
+        git = functools.partial(subprocess.run, capture_output=True, check=True)
+        sha = git(["git", "-C", clone, "rev-parse", "main"], text=True).stdout.strip()
+        tar = git(["git", "-C", clone, "archive", sha, "global_config.py", "commands/*.py"]).stdout
+        with tarfile.open(fileobj=io.BytesIO(tar)) as t:
+            t.extractall(dest, filter="data")
+        return f"AutoCroissant main {sha[:8]}"
+    if not os.path.exists(os.path.join(BOT, "commands", "tts_save.py")):
+        sys.exit(f"no updater at {BOT} (AUTOCROISSANT)")
     shutil.copy(os.path.join(BOT, "global_config.py"), dest)
     for path in glob.glob(os.path.join(BOT, "commands", "*.py")):
         shutil.copy(path, os.path.join(dest, "commands"))
+    return BOT
 
 
 def runner_env() -> dict:

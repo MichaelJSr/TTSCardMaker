@@ -26,7 +26,7 @@ updater's inputs (decks.json, Card Edits.json, Global.lua, pages.json); it needs
 
 | Variable | Default | What |
 |---|---|---|
-| `AUTOCROISSANT` | `~/Desktop/AutoCroissant` | the updater's code (`commands/tts_save.py` and what it imports) |
+| `AUTOCROISSANT` | AutoCroissant main | an AutoCroissant checkout: the updater's code (`commands/tts_save.py` and what it imports) `updater_idempotent.py` runs; unset: main, the code Card sync runs, from a bare depth-1 clone `autocroissant.git` beside `TTS_HISTORY`, made or fetched each run (a failed fetch fails the check) |
 | `TTS_HISTORY` | `/tmp/tts-checks/history.git` | bare blobless clone with main's full history, made or fetched on use (the checkout is shallow; under `run_all.py`, fetched once); a file a blobless checkout lacks (an old save, a `TTS_REF` file) is fetched into it, never lazily |
 | `TTS_REF` | the save's own commit, else `origin/main` | the commit whose tree, `decks.json` and `Global.lua` `drift.py`, the contents checks and `verify_rules_snapshot.py` read (and `updater_idempotent.py` for an edited save); unset: the checkout's HEAD when the checkout's `origin/main` has it and the save is HEAD's (a work branch: its merge-base), else `origin/main` |
 | `TTS_REPO` | this repo | the TTSCardMaker checkout |
@@ -36,7 +36,7 @@ updater's inputs (decks.json, Card Edits.json, Global.lua, pages.json); it needs
 | `LUA_PYTHON` | | a Python with lupa |
 
 Network: the website's `cards.json` and `tts.json` (`lua_mock.py`), GitHub raw (`links_http.py`) and
-`git fetch` of the history clone. Keep `TTS_HISTORY` out of `/tmp` on a Mac that reboots (e.g.
+`git fetch` of the history clone and of AutoCroissant main (`updater_idempotent.py` without `AUTOCROISSANT`). Keep `TTS_HISTORY` out of `/tmp` on a Mac that reboots (e.g.
 `~/Documents/Tools/wt/scratch/tts/history.git`): a new clone is a full-history download. `card_sync_steps.py` needs git 2.37+, bash and `jq`.
 Its sandbox git reads your global git config but runs no hooks and no auto maintenance, as on a runner.
 

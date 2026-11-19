@@ -3,7 +3,8 @@ db/stats.json); it must report no changes and leave the bytes identical. Also: p
 Usage: updater_idempotent.py [save.json]
 Inputs (decks.json, Card Edits, Global.lua/.xml, pages.json): a commit's own save, that commit's; else beside the save,
 else TTSCardMaker origin/main.
-Code: $AUTOCROISSANT's updater modules (copied; its repo_history.json is never touched), run by this Python."""
+Code: the updater modules of $AUTOCROISSANT, else of AutoCroissant main (copied; its repo_history.json is never
+touched), run by this Python."""
 import atexit
 import json
 import os
@@ -43,7 +44,7 @@ def setup():
             continue
         open(os.path.join(local, path), "wb").write(data)
     bot = os.path.join(work, "bot")
-    copy_bot(bot)
+    print("updater:", copy_bot(bot))
     stats, data = os.path.join(work, "stats.json"), file_at(DATA_REF, "db/stats.json")
     if data is None:
         sys.exit(f"no db/stats.json at {DATA_REF} (git fetch origin +data:refs/remotes/origin/data)")
