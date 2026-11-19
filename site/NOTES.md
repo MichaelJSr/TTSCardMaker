@@ -737,7 +737,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     icons and badges never): a D13 mark the font lacks is drawn plain (plain_typed), any other the font's own .notdef at
     its advance (no_glyph: a box, or a gap when empty), said in the caption ("The ability's font has no '+': the bake
     prints a box there."); a letter typed into another font's run (the replaced letter, else the one before, is one the
-    font lacks yet the card prints: The Structure's digits) is drawn as before. The text keeps its length (stand-in
+    font lacks yet the card prints: The Structure's digits) is drawn as before. Since r51 the bake sets a typed letter
+    its font lacks in Myriad Pro (psd_edit.missing_glyphs, as Photoshop 2023 does): `record_fonts` always offers
+    MyriadPro-Regular, the family lists it after the card's font for a font with `lacks`, and glyphPlan (`mgp`: its
+    lacks) leaves such a letter (a D13 mark's plain one too) to that fallback; only one Myriad lacks too is a .notdef
+    and a caption. The text keeps its length (stand-in
     noncharacters U+FDD0-FDD4 that `measure` and `glyphText` expand). The Rendered preview's note "font: name: '.' has
     no glyph in its font (drawn as a box)" reads "The title's font has no '.': it prints as a box or a gap.". Measured
     on 22 website-shaped edits (18 boxes or gaps, 4 typed dashes; plates on): wrong px against the bake 178,816 -> 62,659,

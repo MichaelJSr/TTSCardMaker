@@ -943,6 +943,7 @@ FONT_NAMES_VERSION = 2                        # bump when font_faces changes (2:
 FONT_WEB_MAX = 8 * 1024 * 1024                # a bigger font (its WOFF2 copy, else the file) isn't offered: the mock-up draws a stand-in
 GLYPH_SET = "".join(map(chr, range(33, 127))) + "\u2122\u00ae\u00a9\u00e9\u2019\u2014\u2013\u2026\u201c\u201d"   # typed characters
 #   mockup.js checks (psd_edit.PLAIN_MARKS among them)
+MGP_FONT = "MyriadPro-Regular"                # psd_edit.MGP_FONT: the bake sets a typed letter its font lacks in it
 NOTDEF_MAX = 600                              # a longer .notdef path: a frame of its bounds
 
 
@@ -1206,8 +1207,8 @@ def web_loadable(fonts):
 
 def record_fonts(records):
     """The font names the text layers of the details records ask for (font, and lf: mockup.js draws a layer in it), an
-    added ability's (addLook) too."""
-    return {t[k] for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
+    added ability's (addLook) too, and MGP_FONT (a typed letter its font lacks: psd_edit.missing_glyphs)."""
+    return {MGP_FONT} | {t[k] for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
             + [rec.get("addLook")] if isinstance(t, dict) for k in ("font", "lf") if isinstance(t.get(k), str)}
 
 
