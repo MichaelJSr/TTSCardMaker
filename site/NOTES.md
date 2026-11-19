@@ -1202,6 +1202,13 @@ relies on:
   896 ms (before the card's file: 900), first chart 831 -> 770 ms; the card, its Balance/History and a second card's
   open the same (1.05 / 2.04 / 1.02 s); a second card opened mid-fetch 1.02 / 1.01 s. Cost: the 51 KB come back on a
   phone that reaches a card's Balance, after its pictures, and on a desktop card open (269 -> 319 KB, same time).
+  A version picked or pinned in the dialog while it is in flight cancels it too (`aheadHold`: the compare's pictures
+  come from raw.githubusercontent.com, another connection, so low priority alone can't keep them first); it starts
+  again once they are in (`shown` waits on the compare's pictures, and the idle step looks again before it fetches).
+  Phone, Slow 4G, CPU 4x, n=5 (scratch s10c/opt2fix3), a compare picked 1.2 s after the Balance filled: 866 ms before
+  the prefetch, 1,083 ms with it uncancelled, 867 ms now (1.5 s: 850 / 917 / 849 ms); Stats after that compare 1,075
+  -> 914 ms. Those cancels came 30-150 ms after the request, before its first byte (a 562 ms round trip); a later
+  one wastes what has arrived, at most the 51 KB.
   The Changelog and Database edits tabs draw their first screen from a small head file at once (changelog-head.json,
   edits-head.json: build_site `changelog_heads`, the newest pushes, at least 100 events, cut where no left-out push is
   newer, with the whole file's heading counts and chips; ~6-8 KB gzipped), their whole file loading beside it; the rest
