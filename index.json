@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated": "2026-11-18T04:52:48+00:00",
+ "generated": "2026-11-18T09:23:26+00:00",
  "about": "Card timelines before the card repo (preview): per card its versions from Discord (date and channel), the old pre-wipe repo and the first repo (date, mapped author, commit subject) and changelog facts (data only). Only sure fields; no message text, posters or links.",
  "cards": {
   "a-snack": {
@@ -1127,7 +1127,7 @@
    "key": "Double Pain",
    "name": "Double Pain",
    "dir": "double-pain",
-   "versions": 10,
+   "versions": 11,
    "texts": 2
   },
   "dr-robotnik-s-roboticizer": {
@@ -2835,7 +2835,7 @@
    "key": "Mini Bee",
    "name": "Mini Bee",
    "dir": "mini-bee",
-   "versions": 10,
+   "versions": 9,
    "texts": 4
   },
   "mini-doomer": {
@@ -4081,7 +4081,7 @@
    "key": "SOMETHING",
    "name": "SOMETHING",
    "dir": "something",
-   "versions": 17,
+   "versions": 16,
    "texts": 0
   },
   "sonic": {
@@ -5408,6 +5408,19 @@
    "id": "LC-3740905112"
   },
   {
+   "dir": "_morgue/tyler-morgue",
+   "name": "Tyler",
+   "first": {
+    "date": "2019-05-03T05:56:13.494000+00:00",
+    "day": "2019-05-03",
+    "channel": "general-discussion",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-24017e4534-joke"
+  },
+  {
    "dir": "_morgue/mr-grabby",
    "name": "Mr. Grabby",
    "first": {
@@ -5416,7 +5429,7 @@
     "channel": "general-discussion",
     "source": "discord"
    },
-   "versions": 6,
+   "versions": 7,
    "kind": "joke",
    "id": "LC-0ce0969636"
   },
@@ -5911,7 +5924,7 @@
     "channel": "meme-cards",
     "source": "discord"
    },
-   "versions": 3,
+   "versions": 4,
    "kind": "joke",
    "id": "LC-4e6be321e9"
   },
@@ -5953,6 +5966,19 @@
    "versions": 2,
    "kind": "joke",
    "id": "LC-d59ed10930"
+  },
+  {
+   "dir": "_morgue/the-panda-future-morgue",
+   "name": "The Panda Future",
+   "first": {
+    "date": "2021-04-29T08:34:59.359000+00:00",
+    "day": "2021-04-29",
+    "channel": "meme-cards",
+    "source": "discord"
+   },
+   "versions": 1,
+   "kind": "joke",
+   "id": "LC-4e0aea4307-joke"
   },
   {
    "dir": "_morgue/dogma-ter",

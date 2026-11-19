@@ -114,7 +114,7 @@
     ]
    },
    "minor": false,
-   "posts": 2,
+   "posts": 1,
    "era": "A-item",
    "w": 400,
    "h": 612
@@ -129,6 +129,43 @@
    "change": {
     "ability": "changed"
    }
+  },
+  {
+   "id": "D-P-3dd79e24b14e",
+   "kind": "discord",
+   "date": "2020-08-13T08:23:39+00:00",
+   "day": "2020-08-13",
+   "badge": "Discord",
+   "channel": "update-02-port",
+   "image": "P-3dd79e24b14e.webp",
+   "fields": {
+    "name": {
+     "value": "Double Pain",
+     "method": "ocr+name",
+     "confidence": "sure"
+    },
+    "stars": {
+     "value": 3,
+     "method": "eye",
+     "confidence": "sure"
+    },
+    "ability": {
+     "value": "Can only be equipped to your creatures and cannot be unequipped. Damage taken from all sources and damage dealt by the equipped creature's attack stat are doubled (After DEF calculation)",
+     "method": "owner (as P-d8db6e0e252c)",
+     "confidence": "sure"
+    }
+   },
+   "changes": {
+    "ability_change": "same",
+    "unknown": [
+     "types"
+    ]
+   },
+   "minor": true,
+   "posts": 1,
+   "era": "A-item",
+   "w": 399,
+   "h": 611
   },
   {
    "id": "F-f8bfd92b3c6",

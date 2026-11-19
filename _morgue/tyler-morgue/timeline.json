@@ -1,0 +1,30 @@
+{
+ "card": "tyler-morgue",
+ "key": "Tyler",
+ "name": "Tyler",
+ "morgue": "candidate",
+ "first": {
+  "date": "2019-05-03T05:56:13.494000+00:00",
+  "day": "2019-05-03",
+  "channel": "general-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-24017e453479",
+   "kind": "discord",
+   "date": "2019-05-03T05:56:13.494000+00:00",
+   "day": "2019-05-03",
+   "badge": "Discord",
+   "image": "P-24017e453479.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 588,
+   "h": 1172
+  }
+ ],
+ "kind_of": "joke",
+ "live": "Tyler"
+}

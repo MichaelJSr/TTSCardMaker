@@ -9,45 +9,6 @@
  },
  "entries": [
   {
-   "id": "O-a094b5bc5ed2:Cards/Meme/3 Stars/Something.png",
-   "kind": "old repo",
-   "date": null,
-   "day": null,
-   "badge": "first repo",
-   "author": "MichaelJSr",
-   "subject": "Initial commit",
-   "repo": "first",
-   "image": "O-839ce2a59ae1.webp",
-   "fields": {
-    "name": {
-     "value": "Mr. Grabby",
-     "method": "triage",
-     "confidence": "sure"
-    },
-    "stars": {
-     "value": 3,
-     "method": "folder",
-     "confidence": "sure"
-    },
-    "stats": {
-     "value": {
-      "hp": 2,
-      "def": 10,
-      "atk": 7,
-      "spd": 6
-     },
-     "method": "triage",
-     "confidence": "sure"
-    }
-   },
-   "changes": {},
-   "minor": false,
-   "meme_copy": true,
-   "before": "2021-11-23T08:51:28+00:00",
-   "w": 616,
-   "h": 956
-  },
-  {
    "id": "D-P-983430cab555",
    "kind": "discord",
    "date": "2021-11-23T08:51:28+00:00",

@@ -1,0 +1,30 @@
+{
+ "card": "the-panda-future-morgue",
+ "key": "The Panda Future",
+ "name": "The Panda Future",
+ "morgue": "candidate",
+ "first": {
+  "date": "2021-04-29T08:34:59.359000+00:00",
+  "day": "2021-04-29",
+  "channel": "meme-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-4e0aea4307a3",
+   "kind": "discord",
+   "date": "2021-04-29T08:34:59.359000+00:00",
+   "day": "2021-04-29",
+   "badge": "Discord",
+   "image": "P-4e0aea4307a3.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "meme-cards",
+   "w": 397,
+   "h": 611
+  }
+ ],
+ "kind_of": "joke",
+ "live": "The Panda Future"
+}
