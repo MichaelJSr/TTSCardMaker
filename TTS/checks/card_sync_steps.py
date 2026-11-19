@@ -67,7 +67,8 @@
 11. Rulebook PDF start (faked look and GitHub): a push's lane whose website lags has its Pages build served on localhost
    to decide (--local); its exit 4, no artifact or a failed download: the website's look; the server stopped after.
 12. The save's data watcher (a sandbox data branch): a data commit moving names makes the save again on it (this run's
-   build: named run); the same names keep it; idle, TTS save stops the watcher at once; Re-pin takes the save's names.
+   build: named run); the same names keep it; idle, TTS save stops the watcher at once; Re-pin takes the save's names;
+   every save and Re-pin pass --baked with the Gate's main.
 Exits 1 when a case gets the wrong answer.
 """
 import atexit
@@ -1552,7 +1553,8 @@ def names_cases(flow: dict) -> None:
     NAMES_PY comparing the two files): a data commit moving names makes the save again on it (this run's build: named
     run, the watcher done); the same names keep the save; another run's commit moving names makes it again and the
     watcher goes on; idle, TTS save stops it at once (named old); read after this run's build: named run, nothing
-    watched; a Bake's B: the watcher stopped, the save made again on B, a new watcher. Re-pin takes the save's names."""
+    watched; a Bake's B: the watcher stopped, the save made again on B, a new watcher. Every save and Re-pin get --baked
+    with the Gate's main (the names B took out of Card Edits.json); Re-pin takes the save's names."""
     job = flow["jobs"]["main"]
     url = "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/1"
 
@@ -1583,11 +1585,12 @@ def names_cases(flow: dict) -> None:
             nb = os.path.join(runner, "names")
             python = os.path.join(runner, "venv", "bin", "python")
             write(python, '#!/bin/bash\nif [ "$1" = -c ]; then cmp -s "$3" "$4" || echo Cards/One.png; exit 0; fi\n'
-                          f'echo "$5" >> "{log}"\nuntil [ -e "{gate}" ] || [ "$SECONDS" -ge 30 ]; do sleep 0.02; done\n'
+                          f'echo "$5" >> "{log}"\necho "$6 $7" >> "{log}.args"\nuntil [ -e "{gate}" ] || [ "$SECONDS" -ge 30 ]; do sleep 0.02; done\n'
                           'echo "report names: $(cat "$5")"\n')
             os.chmod(python, 0o755)
             write(os.path.join(runner, "history-fetch.code"), "0\n")
-            env = {"GITHUB_WORKSPACE": ws, "NAMES_PY": "-", "RUN_URL": url, "AUTOCROISSANT_LOCAL_DIR": ws}
+            main = git(ws, "rev-parse", "HEAD")
+            env = {"GITHUB_WORKSPACE": ws, "NAMES_PY": "-", "RUN_URL": url, "AUTOCROISSANT_LOCAL_DIR": ws, "MAIN": main}
             code, text, _ = run_step(job, "save-start", os.path.join(ws, "bot"), env, tmp)
             ok, took = code == 0 and lines(log, 1), 0.0
             if name == "a Bake's B":                      # TTS save start on B: the watcher stopped, both made again
@@ -1625,13 +1628,14 @@ def names_cases(flow: dict) -> None:
             want = os.path.join(nb, f"{head}.json") if newer else os.path.join(ws, "carddata", "db", "stats.json")
             ok = (ok and code2 == 0 and out.get("named") == named and used == want and gone and joined < 3
                   and len(open(log).read().splitlines()) == saves
+                  and set(open(log + ".args").read().splitlines()) == {f"--baked {main}"}
                   and f"report names: {stats if newer else 'names 1'}" in text2
                   and (not stats or ("made again" in text2) == (saves == 2)))
             if ok and name == "moved":                    # Re-pin: the save's names
                 write(python, '#!/bin/bash\necho "args: $*"\n')
                 code3, text3, _ = run_step(job, "repin", os.path.join(ws, "bot"), {"GITHUB_WORKSPACE": ws, "GIT_NO_LAZY_FETCH": "1",
-                                                                                   "M": git(ws, "rev-parse", "HEAD")}, tmp)
-                ok = code3 == 0 and f"--names {want}" in text3 and "were current" in text3
+                                                                                   "M": git(ws, "rev-parse", "HEAD"), "MAIN": main}, tmp)
+                ok = code3 == 0 and f"--names {want} --baked {main}" in text3 and "were current" in text3
             check(ok, f"names, {name}: {saves} save(s), named={out.get('named')}, the data seen in {took:.1f} s, "
                       f"TTS save joined in {joined:.2f} s, the watcher gone={gone}" + ("" if ok else f"\n{text}\n{text2}"))
 
