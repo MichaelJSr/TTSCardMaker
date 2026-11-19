@@ -1,0 +1,61 @@
+{
+ "v": 2,
+ "request": "probe-eo7pjr143myw",
+ "card": "Mini Doomer",
+ "path": "Auxiliary/Minions/Mini_Doomer.psd",
+ "png": "Auxiliary/Minions/Mini_Doomer.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "9609e0119b258774373dbd31e4a4beb97e963eb6",
+  "psd_blob": "3973c05aa4226ee26bb7015e81a39845a934546a",
+  "png_blob": "26e0414988e2e04cb4465be26cd9389333247dfa"
+ },
+ "edit": {
+  "hp": 7
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "hp": "baked"
+ },
+ "reason": "hp 5 -> 7",
+ "changes": [
+  {
+   "field": "hp",
+   "old": 5,
+   "new": 7
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "hp": {
+   "bad_pct": 0.0,
+   "mean": 0.264,
+   "max": 2.0
+  }
+ },
+ "region": [
+  359,
+  1199,
+  1174,
+  1285
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.avif",
+  "before": "before.avif"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/44465651236",
+ "took_s": 2.0,
+ "at": "2026-11-19T05:30:47Z",
+ "variant": null,
+ "parts": {},
+ "size": [
+  1200,
+  2400
+ ]
+}
