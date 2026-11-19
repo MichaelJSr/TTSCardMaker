@@ -213,7 +213,7 @@ const aheadHold = id => { if (ahead && soonFor === id && $$("#ver-compare img", 
 const changelogP = {};
 let CL = null;
 const loadChangelog = file => (changelogP[file] ||= Promise.all([getJson(file), (early("changelog.js"), import("./changelog.js"))])
-  .then(([d, m]) => { CL = m; S.changelog[file] = d; }).catch(e => { delete changelogP[file]; throw e; }));
+  .then(([d, m]) => { CL = m; m.useNames(id => S.byId.get(id)?.name); S.changelog[file] = d; }).catch(e => { delete changelogP[file]; throw e; }));
 let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
 const loadContrib = () => (contribP ||= Promise.all([getJson("contributions.json"), loadProfile()]).then(([d]) => { S.contrib = d; S.titles = Pf.titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));

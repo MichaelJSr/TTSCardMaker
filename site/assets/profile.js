@@ -3,7 +3,7 @@
 // and card commits per person, from build_site.py contributions()). Pure functions, plus the person page and the People
 // table. All profile text is user-written: everything is escaped and only internal routes are linked.
 import { esc, tagInfo, tagHtml, TAG, dateFmt, LOGIN_RE, noted } from "./text.js";
-import { editorFields, archiveTag, archiveTagHtml, fieldName } from "./changes.js";
+import { editorFields, archiveTag, archiveTagHtml, fieldName, keptName } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./chartkit.js";
 import { byName } from "./grid.js";
@@ -471,11 +471,14 @@ export function stylePanelHtml(s, mix, x, n, stars) {
   if (!chips && !words && !mixes) return "";
   return panel("Style", `${chips}${words}${mixes}`);
 }
-/** Archived cards (P17): the build's rows (newest first) with their tag. */
-export function archivedPanelHtml(rows) {
-  if (!rows?.length) return "";
+/** Archived cards (P17): the build's rows (newest first) with their tag; file renames (keptName) left off. byId: the
+    cards by id (a renamed card's name today) */
+export function archivedPanelHtml(rows, byId = null) {
+  const now = r => byId?.get(r.renamedId)?.name;
+  rows = (rows || []).filter(r => !keptName(r, now(r)));
+  if (!rows.length) return "";
   const years = r => { const a = r.created ? r.created.slice(0, 4) : "", b = r.at ? String(new Date(r.at * 1000).getUTCFullYear()) : ""; return a && b && a !== b ? `${a}–${b}` : a || b; };
-  const li = r => `<li><b>${esc(r.title || r.card)}</b> ${archiveTagHtml(r)}${archiveTag(r) === "renamed" && r.renamed_to ? ` renamed to ${r.renamedId ? `<a href="#/card/${encodeURIComponent(r.renamedId)}">${esc(r.renamed_to)}</a>` : esc(r.renamed_to)}` : ""}${years(r) ? ` <span class="muted">· ${years(r)}</span>` : ""}</li>`;
+  const li = r => `<li><b>${esc(r.title || r.card)}</b> ${archiveTagHtml(r)}${archiveTag(r) === "renamed" && r.renamed_to ? ` renamed to ${r.renamedId ? `<a href="#/card/${encodeURIComponent(r.renamedId)}">${esc(now(r) || r.renamed_to)}</a>` : esc(r.renamed_to)}` : ""}${years(r) ? ` <span class="muted">· ${years(r)}</span>` : ""}</li>`;
   return panel(`Archived cards <span class="muted">${rows.length}</span>`, `<ul class="p-list">${rows.map(li).join("")}</ul>`);
 }
 
@@ -490,7 +493,7 @@ export function personHtml(x) {
   const kinds = starKinds(own, x.kindOf, x.kinds), kind = kinds.length > 1 && kinds.includes(x.starKind) ? x.starKind : "";   // ?stars=<kind>; else all
   const style = own.length ? stylePanelHtml(styleOf(own, x.cards, { mentions: x.mentions, statusIds }), mixOf(own, x.cards, x.kindOf, kind), x, own.length, { key: person.key, kinds, kind }) : "";
   const rest = `${activityHtml(person)}${balancePanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
-    + `${cardsPanelHtml(person, x)}${archivedPanelHtml(person.archived)}${decksPanelHtml(x)}`;
+    + `${cardsPanelHtml(person, x)}${archivedPanelHtml(person.archived, x.byId)}${decksPanelHtml(x)}`;
   if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${rest}`;
   return `<div class="profile"><div class="panel"><h2 class="person-name">${avatarHtml(person.github, 48)}${esc(person.key)}</h2>
     ${person.github ? `<div class="facts">${githubFact(person.github)}</div>` : ""}${contributionsHtml(person, x)}

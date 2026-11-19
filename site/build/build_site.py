@@ -3594,26 +3594,29 @@ def head_groups(groups, rows=HEAD_ROWS):
     return len(groups)
 
 
-def changelog_counts(events):
+def changelog_counts(events, names=None):
     """changelog.js changelogParts' heading total and kind counts: a stub's minor events by kind, file renames (fileRename:
-    moved within its own folder) left out."""
+    moved within its own folder, or renamed from the name the card shows today, names: {id: name}) left out."""
     folder = lambda p: "/".join(str(p or "").split("/")[:-1])
     counts = {}
     for e in events:
         if e.get("kind") == "moved" and e.get("from_path") and folder(e["from_path"]) == folder(e.get("path")):
+            continue
+        now = (names or {}).get(e.get("renamedId"))
+        if e.get("kind") == "renamed" and e.get("renamed_to") and now and (e.get("card") or e.get("title")) == now:
             continue
         for kind, n in (e["minors"].items() if e.get("minors") else [(e.get("kind"), 1)]):
             counts[kind] = counts.get(kind, 0) + n
     return sum(counts.values()), counts
 
 
-def changelog_heads(files):
+def changelog_heads(files, names=None):
     """changelog-head.json, edits-head.json: a Changes tab's first screen, drawn at once (app.js renderChanges; the rest of
     the whole file's blocks are appended when it is in): its newest pushes (head_groups) with the whole file's heading
-    counts; edits: its newest batches too when every event fits."""
+    counts (names: the cards' {id: name}, as app.js S.byId); edits: its newest batches too when every event fits."""
     C, E = files["changelog.json"], files["edits.json"]
     groups = push_groups(C["events"])
-    total, counts = changelog_counts(C["events"])
+    total, counts = changelog_counts(C["events"], names)
     out = {"changelog-head.json": {**{k: v for k, v in C.items() if k != "events"}, "total": total, "counts": counts,
                                    "events": [e for g in groups[len(groups) - head_groups(groups):] for e in g]}}
     groups, batches = push_groups(E["events"]), E["edits"]["batches"]
@@ -5668,7 +5671,7 @@ def main():
     files = {"cards.json": {**data, "cards": columns(shown), "recent": recent}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
-    files.update(changelog_heads(files))      # the Changelog's and Database edits' first screens
+    files.update(changelog_heads(files, {c["id"]: c.get("name") for c in shown}))   # the Changelog's and Database edits' first screens
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:

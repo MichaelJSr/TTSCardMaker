@@ -34,6 +34,9 @@ export const ARCHIVE_TAGS = [["renamed", "Renamed"], ["retired", "Retired"], ["u
 /** The tag's key from the fields (renamed_to, moved_to: its PSD moved into MDW) */
 export const archiveTag = r => (r.renamed_to ? "renamed"
   : (r.moved_to || "").startsWith("MDW/Unfinished/") ? "unfinished" : r.moved_to ? "retired" : "deleted");
+/** A rename from the name the card shows today (name: the renamed card's, S.byId): a file rename (11-11's P.A.N.D.A. Mk A),
+    off the Changes page and person pages; any name change stays, a letter's case too (D11) */
+export const keptName = (r, name) => !!r.renamed_to && !!name && (r.card || r.title) === name;
 /** The tag as a pill; its tip: where the PSD was (and went) */
 export function archiveTagHtml(r) {
   const t = archiveTag(r), label = ARCHIVE_TAGS.find(([k]) => k === t)[1];

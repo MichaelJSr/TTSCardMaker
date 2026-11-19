@@ -8,7 +8,7 @@
 import { flagsText } from "./flags.js";
 import { colorsChange } from "./textcolor.js";
 import { esc, diffWords, dateFmt } from "./text.js";
-import { FIELD, isBot, folder, ARCHIVE_TAGS, archiveTag, archiveTagHtml } from "./changes.js";
+import { FIELD, isBot, folder, ARCHIVE_TAGS, archiveTag, archiveTagHtml, keptName } from "./changes.js";
 
 const TZ = "America/Los_Angeles";                         // the bot's TIMEZONE: the posts' times, balance.js
 const CARD_SYNC = "Card sync";                            // the push of the run's own commit (changelog.CARD_SYNC)
@@ -40,6 +40,9 @@ const dayLabel = ts => DAY(new Date((ts || 0) * 1000));
 const dateLabel = ts => (ts ? DATE(new Date(ts * 1000)) : "");
 const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
 const short = sha => esc(String(sha || "").slice(0, 8));
+let nameOf = () => null;                                  // a card's name today by id (app.js: S.byId)
+export const useNames = f => { nameOf = f; };
+const renamedName = r => nameOf(r.renamedId) || r.renamed_to;   // as the site shows it, not the file's
 
 /** changelog.json's events, each push's stub of minor events (build_site minor_split) as one stand-in per event (`stub`,
     the stub's seq): pushGroups, the counts and the kind filter see every event; foldHtml draws the real ones */
@@ -124,7 +127,7 @@ export function eventHtml(e) {
   switch (e.kind) {
     case "restore": return `<li>Card data restored from ${short(e.restored_from || "?")}</li>`;
     case "new": return `<li>${title} <span class="muted">(${esc(kindWord(e.card_type))}${e.stars ? `, ${e.stars}★` : ""})</span>${e.by ? ` by ${esc(e.by)}` : ""}</li>`;
-    case "renamed": return `<li>${esc(e.card || e.title)} renamed to ${cardLink(e.renamedId, e.renamed_to || "?")}</li>`;   // the old name, as Discord's "renamed from"
+    case "renamed": return `<li>${esc(e.card || e.title)} renamed to ${cardLink(e.renamedId, renamedName(e) || "?")}</li>`;   // the old name, as Discord's "renamed from"
     case "moved": return `<li>${title} moved to ${esc(folder(e.path) || "?")}${e.from_path ? ` <span class="muted">from ${esc(folder(e.from_path))}</span>` : ""}</li>`;
     case "archived": return `<li>${esc(e.title || e.card)} ${archiveTagHtml(e)}</li>`;
     case "restored": return `<li>${title} <span class="muted">(PSD back)</span></li>`;
@@ -194,9 +197,11 @@ function sourceHtml(C) {
 }
 
 // ---- the tabs ---------------------------------------------------------------------------------------------------
-/** A file renamed in its own folder, the card's name kept (cardfix2's underscores, 11-13): file housekeeping, not a card
-    change, so off the Changes page ("moved to 1 Stars from 1 Stars"). */
-export const fileRename = e => e.kind === "moved" && !!e.from_path && folder(e.from_path) === folder(e.path);
+/** A file renamed in its own folder, the card's name kept (cardfix2's underscores, 11-13), or renamed from the name the
+    card shows today (keptName): file housekeeping, not a card change, so off the Changes page ("moved to 1 Stars from 1
+    Stars"). */
+export const fileRename = e => (e.kind === "moved" && !!e.from_path && folder(e.from_path) === folder(e.path))
+  || (e.kind === "renamed" && keptName(e, nameOf(e.renamedId)));
 const changelogEvents = C => eventsOf(C).filter(e => !fileRename(e));
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=); in parts: the heading,
     then one per push block. A head file (changelog-head.json: the newest pushes, the whole file's total and counts)
@@ -219,12 +224,14 @@ export function* changelogParts(C, params, skip = null) {
   if (!any) yield `<p class="empty">No ${esc(kinds.join(", "))} changes in the last ${esc(C.days)} days.</p>`;
 }
 export const changelogHtml = (C, params) => [...changelogParts(C, params)].join("");
-/** The Archive tab: cards whose PSD left the card folders, newest first, with their tag (?tag= filters) */
+/** The Archive tab: cards whose PSD left the card folders, newest first, with their tag (?tag= filters); file renames
+    (keptName) left off */
 export function archiveHtml(rows, repo, params = null) {
+  rows = rows.filter(r => !keptName(r, nameOf(r.renamedId)));
   const tags = csv(params, "tag").filter(t => ARCHIVE_TAGS.some(([k]) => k === t)), counts = new Map();
   for (const r of rows) counts.set(archiveTag(r), (counts.get(archiveTag(r)) || 0) + 1);
   const present = ARCHIVE_TAGS.filter(([k]) => counts.get(k)), shown = tags.length ? rows.filter(r => tags.includes(archiveTag(r))) : rows;
-  const line = r => `<li><b>${esc(r.title || r.card)}</b> ${archiveTagHtml(r)}${r.renamed_to ? ` renamed to ${cardLink(r.renamedId, r.renamed_to)}` : ""} <span class="muted">${esc(kindWord(r.card_type))}${r.stars ? ` · ${r.stars}★` : ""}${r.author ? ` · ${personLink(r.author)}` : ""}${r.at ? ` · ${esc(dateLabel(r.at))}` : ""}</span>${r.commit && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(r.commit)}" target="_blank" rel="noopener">${short(r.commit)}</a>` : ""}</li>`;
+  const line = r => `<li><b>${esc(r.title || r.card)}</b> ${archiveTagHtml(r)}${r.renamed_to ? ` renamed to ${cardLink(r.renamedId, renamedName(r))}` : ""} <span class="muted">${esc(kindWord(r.card_type))}${r.stars ? ` · ${r.stars}★` : ""}${r.author ? ` · ${personLink(r.author)}` : ""}${r.at ? ` · ${esc(dateLabel(r.at))}` : ""}</span>${r.commit && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(r.commit)}" target="_blank" rel="noopener">${short(r.commit)}</a>` : ""}</li>`;
   return `<section class="panel"><h3>Archive${rows.length ? ` <span class="muted">${rows.length}</span>` : ""}</h3><p class="muted">Renamed, retired (moved to MDW) or deleted cards.</p>
     ${present.length > 1 ? chips(present, tags, counts, "tag") : ""}
     ${shown.length ? `<ul class="cl-lines">${shown.map(line).join("")}</ul>` : `<p class="empty">No archived cards.</p>`}</section>`;
