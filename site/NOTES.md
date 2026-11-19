@@ -1184,7 +1184,8 @@ relies on:
   frame on a phone at CPU 4x came 150 -> 224 ms, now 114 ms; desktop 34 -> 57, now 32 ms; scratch s10c/fixopt2).
   Medians (scratch s10c/opt1): Image versions tap 2.50 s -> 16 ms; Stats 2.29 -> 1.15 s (first charts 911 -> 917 ms);
   compare a repo version 1.05 -> 0.85 s; Stats warm, network not throttled, 429 -> 300 ms; desktop the same within
-  noise (a second card's list 6 -> 21 ms: its own file). versions.json is still written for one release.
+  noise (a second card's list 6 -> 21 ms: its own file). versions.json and recent.json were written for one release
+  more (open tabs on the older app.js; fresh.js reloads them at the next deploy), then dropped (2026-11-19).
   Round 2 (scratch s10c/opt2): the Rulebook's chapters below the first screen are drawn once near (`content-visibility:
   auto`, 3000 px stand-ins, scoped to #view so the rulebook editor's preview is untouched) or two at a time while the
   page is idle (`drawn`, from 300 ms after open), every chapter at once as above (`rb-all`; a deep link: the chapters

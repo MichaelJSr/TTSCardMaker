@@ -248,9 +248,8 @@ where links fail). The edit mock-up's fonts get WOFF2 copies in `fonts/` (every 
 computed by `site/build/analytics.py` from the same bot data) loads when the Stats page (beside its charts' scripts) or a
 duplicate with recorded changes is opened; `rules.json`, `history.json`, `users.json` and
 `contributions.json` load when the rulebook, a duplicate's history or the
-People tab is opened; `versions/<id>.json` (one card's Image versions, and its own texts and Balance row, about 1 KB;
-`versions.json` holds the versions of all, kept one release for open tabs on the older script) when that card opens;
-the Recently updated tab's earlier texts come in `cards.json` (`recent`; `recent.json` kept one release); `changelog-head.json`
+People tab is opened; `versions/<id>.json` (one card's Image versions, and its own texts and Balance row, about 1 KB)
+when that card opens; the Recently updated tab's earlier texts come in `cards.json` (`recent`); `changelog-head.json`
 or `edits-head.json` (a first screen) beside `changelog.json` or `edits.json`, and `archive.json`, when the Changelog,
 Database edits or Archive tab is opened (each tab its own; `changelog-minor.json` when a Changelog "minor changes" fold first opens); `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened; `editing.json` (the fields only edit mode reads) with the editor. `tts.json` is the TTS save's: its global script

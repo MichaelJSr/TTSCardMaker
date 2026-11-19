@@ -56,8 +56,8 @@ Where the data comes from:
     cards and activity chart. Bad entries skipped.
   * Card timelines before this repo (HISTORY_DIR: the history branch's checkout, site.yml's, or the local preview's; unset: the
     site goes without them, as before): each card's versions from the old pre-wipe repo (the first repo's among them),
-    and Discord after its own in Image versions (versions.json early; webps from raw.githubusercontent.com at the
-    history branch's commit, versions.json hb: history_host; a folder that is no checkout: copied to dist/history/),
+    and Discord after its own in Image versions (versions early; webps from raw.githubusercontent.com at the
+    history branch's commit, versions hb: history_host; a folder that is no checkout: copied to dist/history/),
     their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
     Morgue's entries from Discord (cards.json morgue, lost: joke or played; lpic: its list copy), the MDW Morgue cards'
     Discord pictures (after their PNG's newest version here, the current one: history_mdw) and the Created dates they move earlier
@@ -70,8 +70,8 @@ original is a duplicate (the card data's duplicate_of). MDW/The Morgue's retired
 cards.json morgue, picture only, never a live card (morgue_cards).
 
 Output (site/dist): data/cards.json (everything the first screen needs; its cards as columns), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
-data/contributions.json, data/decks.json, data/versions.json, data/analytics.json, data/changelog.json, data/archive.json and data/edits.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/recent.json (the Recently updated tab's earlier texts), data/changelog-minor.json (a Changelog push's minor changes, when their fold opens), data/changelog-head.json and data/edits-head.json (those two tabs' first screens), data/details/<id>.json (a card's Details dropdown),
+data/contributions.json, data/decks.json, data/analytics.json, data/changelog.json, data/archive.json and data/edits.json (loaded when the rulebook, a card's text or image history, the
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog, Archive or Database edits tab are opened; analytics.py makes analytics.json), data/changelog-minor.json (a Changelog push's minor changes, when their fold opens), data/changelog-head.json and data/edits-head.json (those two tabs' first screens), data/details/<id>.json (a card's Details dropdown),
 data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/editing.json (the card fields only edit mode reads, EDITOR_FIELDS: loaded with the editor),
@@ -551,7 +551,7 @@ RECENT_ROWS = 60                              # app.js renderChanges: Recently u
 
 
 def recent_texts(cards, history):
-    """cards.json's recent (and recent.json, one release): {id: its last earlier text} for the Recently updated rows
+    """cards.json's recent: {id: its last earlier text} for the Recently updated rows
     (newest ts, ties at the last row kept) whose text changed with the update (history.js textChanged), so that tab needs
     no history.json."""
     rows = sorted((e for e in cards if e.get("ts") and not e.get("hidden")), key=lambda e: -e["ts"])
@@ -1478,7 +1478,7 @@ def history_ts(e):
 
 
 def history_rows(folder, t):
-    """A timeline's Image versions rows, newest first (undated ones last): versions.json early (app.js versionList).
+    """A timeline's Image versions rows, newest first (undated ones last): versions early (app.js versionList).
     k: kind; r: "first" for the first repo's versions (kind old repo); ts; ch: Discord channel; a, s: author and commit
     subject (old repo); fl: its file's name when not the card's (a rename, an MDW draft); as: the old card it was (a split,
     owner Q3); img (history/<folder>/<webp>), w, h; f: its sure
@@ -1714,7 +1714,7 @@ def history_host(folder):
 
 
 def copy_history(hist, rows, morgue=()):
-    """The rows' webps: each row's img a path under versions.json hb (history_host; the Morgue entries' pic and lpic that
+    """The rows' webps: each row's img a path under versions hb (history_host; the Morgue entries' pic and lpic that
     URL), else copied into dist/history/ (hardlinks); rows whose file is missing lose their img (a Morgue entry's pic and
     lpic too). Returns (how many, hb or None)."""
     base, files = history_host(hist["dir"])
@@ -5080,7 +5080,7 @@ def card_sections(cid, history, balance):
 
 
 def version_files(versions, sections=lambda cid: {}):
-    """data/versions/<id>.json, versions.json cut to one card (app.js loadVersions, on the card's open): repo, visible,
+    """data/versions/<id>.json, the versions cut to one card (app.js loadVersions, on the card's open): repo, visible,
     hb, that card's commits, its rows (indexes into those), minor, early; for every card and Morgue entry with rows;
     sections(cid): more of the card's own (card_sections)."""
     shared = {k: versions[k] for k in ("repo", "visible", "hb") if k in versions}
@@ -5631,10 +5631,8 @@ def main():
     chapters, rule_images = rulebook_chapters()
     cover_sizes, cover_files = cover_copies(rule_images)
     shown, editing = editor_split(cards)
-    # versions.json: app.js reads data/versions/ since 2026-11-18; kept one release for tabs still on the older app.js.
-    # recent.json too: cards.json carries it as recent since 2026-11-18 (Recently updated draws at once)
-    recent = recent_texts(cards, history)
-    files = {"cards.json": {**data, "cards": columns(shown), "recent": recent}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "recent.json": recent, "versions.json": versions, "users.json": {"users": profiles},
+    recent = recent_texts(cards, history)     # Recently updated draws at once (versions: data/versions/ alone since 11-19)
+    files = {"cards.json": {**data, "cards": columns(shown), "recent": recent}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     files.update(changelog_heads(files))      # the Changelog's and Database edits' first screens

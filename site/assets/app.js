@@ -136,8 +136,6 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   for (const c of S.cards) if (h[c.id]) { c.history = h[c.id]; delete c.historyShas; }   // over a versions file's (the same rows)
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
-let recentP = null;                                       // Recently updated's earlier texts (build_site recent_texts): cards.json's recent, else this
-const loadRecent = () => (recentP ||= getJson("recent.json").then(d => { S.recent = new Map(Object.entries(d)); }).catch(e => { recentP = null; throw e; }));
 const COPIES = "https://raw.githubusercontent.com";       // the older versions' copies' host (versionCopy)
 const preconnect = href => document.querySelector(`link[rel="preconnect"][href="${href}"]`)
   || document.head.append(Object.assign(document.createElement("link"), { rel: "preconnect", href }));
@@ -1192,10 +1190,10 @@ function placeholderOf(c) {
  *  swaps the webp in once loaded), else the webp */
 const morgueFirst = c => (c.lpic && [...document.images].some(i => i.complete && i.naturalWidth && i.getAttribute("src") === c.lpic) ? c.lpic : c.pic);
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card; then
-// its versions before this repo (versions.json early, build_site history_rows: the old repo, the first repo's among them,
+// its versions before this repo (versions early, build_site history_rows: the old repo, the first repo's among them,
 // Discord), never with a link or Revert
 const EARLY_BADGE = { discord: "Discord", "old repo": "old repo" };
-const earlyBadge = v => (v.repo === "first" ? "first repo" : EARLY_BADGE[v.early] || "");    // versions.json early r: the first repo's files
+const earlyBadge = v => (v.repo === "first" ? "first repo" : EARLY_BADGE[v.early] || "");    // versions early r: the first repo's files
 const versionList = c => {
   if (!versionsIn(c)) return [];
   const rows = S.versions.cards[c.id] || [];
@@ -1235,7 +1233,7 @@ function versionsHtml(c, open) {
         <span class="when">${versionWhen(v)}${i === 0 ? ` <span class="fact">current</span>` : ""}${v.early ? ` <span class="fact ver-src">${earlyBadge(v)}</span>` : ""}${i === base ? ` <span class="fact ver-base-tag">base</span>` : ""}</span><span class="who">${esc(v.author || (v.channel ? `#${v.channel}` : ""))}</span><span class="msg">${esc(versionMsg(v))}</span></button>${pinButton(v, i, i === base)}</div>`;
   const rows = vs.map((v, i) => [v, i]), major = rows.filter(([v]) => !v.minor), minor = rows.filter(([v]) => v.minor);
   const share = Math.round(S.versions.visible * 100);
-  // minor changes (owner 11-09): folded, never dropped (versions.json visible: AutoCroissant png_changes.VISIBLE)
+  // minor changes (owner 11-09): folded, never dropped (versions visible: AutoCroissant png_changes.VISIBLE)
   const folded = minor.length ? `<details class="ver-minor"><summary data-tip="${esc(`Changes to under ${share}% of the card's pixels, with no change to its data`)}">${minor.length} minor change${minor.length > 1 ? "s" : ""}</summary><div class="ver-list" role="group" aria-label="Minor image versions, newest first">${minor.map(([v, i]) => item(v, i)).join("")}</div></details>` : "";
   return box(major.length, `
     <div class="versions">
@@ -1879,12 +1877,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
     e => { if (here()) page(failBox("the changelog", e)); });
     return;
   }
-  if (NEEDS[tab] === "recent" && !S.recent && S.data.recent) S.recent = new Map(Object.entries(S.data.recent));   // in cards.json: at once
-  if (NEEDS[tab] === "recent" && !S.recent && !S.history) {   // history.json (a card's dialog) has the texts too
-    page(`<div class="loading">Loading recent changes…</div>`);
-    whenLoaded(loadRecent(), "recent changes", again);
-    return;
-  }
+  if (NEEDS[tab] === "recent" && !S.recent) S.recent = new Map(Object.entries(S.data.recent || {}));   // in cards.json (build_site recent_texts): at once
   const updated = `<p class="muted">Site updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific), the last build that changed it, from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
   if (tab === "changelog" || tab === "edits") {
     const parts = tab === "edits" ? CL.editsParts(C, r.params) : CL.changelogParts(C, r.params);
