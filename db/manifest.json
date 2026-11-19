@@ -1,17 +1,17 @@
 {
  "builder": {
-  "commit": "8ccc8d7a73ca4096f4ab96f037694b60ff456fdf",
+  "commit": "238ee73722c024f3b876d438d94a3dc18c1e1340",
   "details_version": 10,
   "parser_version": 7
  },
- "built_at": "2026-11-19T11:09:18Z",
- "card_commit": "258ac03ff4cc8cc2f52f730e0df487dbca66c45a",
+ "built_at": "2026-11-19T11:47:36Z",
+ "card_commit": "8ec61019b6a90df44d2a20925c31b3920d075ba4",
  "card_repo": "MichaelJSr/TTSCardMaker",
  "files": {
   "old_stats.json": "30d3053add25d9475acb154c43940a44944a79f569474becef6bb1166f42a3a5",
-  "psd_details.json": "91664125f9c6b24c0ce3fbf989c634db21265b2f4a77aa77f51367c2602ab4ca",
+  "psd_details.json": "99ccb7ee0fa9f302ddf69ddc8667d1c1075d699604e0cbb6acb0afaadb92d6dd",
   "rulebook.json": "13c9986311328d9507b4946fb996b077ce73895e24f86d9fa6f91f77069c538c",
-  "stats.json": "bccf7480d4ac76cc6c95b49bad71f6e3fea917d9c2a6cb863c9374ebfe77b756"
+  "stats.json": "be22cb2428df4bb7183f560b425d9f4808679fb8dc33802ad840edadadd68c5d"
  },
  "fonts": {
   "checked": 768,
@@ -26,6 +26,6 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/44512181217",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/44517902098",
  "schema": 1
 }
