@@ -49,7 +49,7 @@ text or image, links its commit when it is known), and the artwork sources when 
 raw.githubusercontent.com at that branch's commit, as the older versions' copies do from the plates branch, never from
 the site; AutoCroissant `commands/discord_preview.py` builds it, `scripts/history_branch.py` commits it), the versions
 from before this repo follow, newest first: the old pre-wipe repo's (date, author, commit subject, "old repo"; the first
-repo's "first repo"; an owner's undated Meme folder copy "before" its oldest dated picture, listed oldest) and Discord's
+repo's "first repo") and Discord's
 (date and channel, never a poster or message); each compares
 with the current card like the others (its own sure ability as "Text then", a blank ability box as "No ability
 then"), with no link and no Revert, and their changes (and the update changelogs' facts, as data only, each once: a

@@ -1503,8 +1503,6 @@ def history_rows(folder, t):
             row["f"] = fields
         if e.get("minor"):
             row["minor"] = 1
-        if row["ts"] is None and history_ts({"date": e.get("before")}) is not None:
-            row["b"] = history_ts({"date": e["before"]})   # an owner's undated Meme copy: before this (no date of its own)
         rows.append(row)
     return sorted(rows[::-1], key=lambda r: r["ts"] if r["ts"] is not None else float("-inf"), reverse=True)
 
