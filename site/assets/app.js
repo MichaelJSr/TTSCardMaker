@@ -1058,7 +1058,7 @@ function openCard(id, showDetails = false) {
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
-      <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img"${first === null ? "" : ` src="${first || esc(fullUrl(c))}"`} alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : c.pic ? `<img id="detail-img" src="${esc(c.pic)}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}">` : `<div class="empty">No image</div>`}</div></div></div>
+      <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img"${first === null ? "" : ` src="${first || esc(fullUrl(c))}"`} alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : c.pic ? `<img id="detail-img" src="${esc(morgueFirst(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}">` : `<div class="empty">No image</div>`}</div></div></div>
         ${c.morgue ? "" : `<div class="actions card-actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
@@ -1115,10 +1115,10 @@ function openCard(id, showDetails = false) {
   document.title = `${c.name} · Impossibility Simulator`;
   const shown = $("#detail-img"), drawn = shown?.getBoundingClientRect().width * devicePixelRatio;
   const big = c.img && img(c, drawn > 0 && drawn <= 480 ? 480 : 720);   // sharper image once loaded: 480 px if drawn at most 480 device px (1x desktops)
-  if (first === null) shown.src = big === img(c, 480) ? big : thumbUrl(c);   // none loaded: 1x its 480 at once, else the 360 first
-  const from = shown?.getAttribute("src");
-  if (big && from !== big && from !== img(c, 720)) {
-    const im = new Image(); im.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big; }; im.src = big;
+  if (first === null && c.png) shown.src = big === img(c, 480) ? big : thumbUrl(c);   // none loaded: 1x its 480 at once, else the 360 first
+  const from = shown?.getAttribute("src"), sharp = big || !c.png && c.pic;   // a Morgue entry from Discord: its webp
+  if (sharp && from !== sharp && from !== img(c, 720)) {
+    const im = new Image(); im.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = sharp; }; im.src = sharp;
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
   const fillHistory = () => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyOf(c); };
@@ -1188,6 +1188,9 @@ function placeholderOf(c) {
   for (const i of document.images) if (i.complete && i.naturalWidth && mine.has(local(i.currentSrc))) return local(i.currentSrc);
   return null;
 }
+/** A Morgue entry from Discord's dialog picture: its list copy when a tile, row or tip has it loaded (no download; openCard
+ *  swaps the webp in once loaded), else the webp */
+const morgueFirst = c => (c.lpic && [...document.images].some(i => i.complete && i.naturalWidth && i.getAttribute("src") === c.lpic) ? c.lpic : c.pic);
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card; then
 // its versions before this repo (versions.json early, build_site history_rows: the old repo, the first repo's among them,
 // Discord), never with a link or Revert

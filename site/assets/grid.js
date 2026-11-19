@@ -20,10 +20,10 @@ export const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 export const TILE_SIZES = { s: ["130px", 160], m: ["min(168px, calc(50% - 7px))", 200], l: ["230px", 270] };
 
 /** a card picture's URL, 96 / 192 / 240 / 360 / 480 / 720 px wide (thumbs: cards.json's tags of their settings) */
-export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w]}.avif` : c.pic || "");   // pic: a Morgue entry from Discord's webp
+export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w]}.avif` : (w <= 360 && c.lpic) || c.pic || "");   // pic: a Morgue entry from Discord's webp, lpic its 360 px copy
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 96 too at 64 px or less */
 export const imgAttrs = (thumbs, c, css) => { const u = w => thumb(thumbs, c, w);
-  if (!c.img && c.pic) return `src="${esc(c.pic)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
+  if (!c.img && c.pic) return `src="${esc(c.lpic || c.pic)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;   // tiles and rows: 360 px, as the grid's
   return `src="${u(360)}" srcset="${css <= 64 ? `${u(96)} 96w, ` : ""}${u(192)} 192w, ${u(240)} 240w, ${u(360)} 360w" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
 const TILE_ART = 8 / 5;                      // a tile's picture box, height / width (style.css .tile .art); its corners 11 px round (.tile's 12 less its border)
 /** A card whose art hangs out of its see-through edge (cards.json hang: the card's own box in the picture, [left, top,

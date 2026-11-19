@@ -59,8 +59,8 @@ Where the data comes from:
     and Discord after its own in Image versions (versions.json early; webps from raw.githubusercontent.com at the
     history branch's commit, versions.json hb: history_host; a folder that is no checkout: copied to dist/history/),
     their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
-    Morgue's entries from Discord (cards.json morgue, lost: joke or played), the MDW Morgue cards' Discord pictures
-    (after their PNG's newest version here, the current one: history_mdw) and the Created dates they move earlier
+    Morgue's entries from Discord (cards.json morgue, lost: joke or played; lpic: its list copy), the MDW Morgue cards'
+    Discord pictures (after their PNG's newest version here, the current one: history_mdw) and the Created dates they move earlier
     (never later, never over a hand entry). load_history; bad files are skipped, never a failed build.
   * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
     (one more `git log` over Card Edits.json and Card Authors.txt, their versions read in one batch) and the archived
@@ -270,6 +270,7 @@ HISTORY_FROM = {"discord": "discord", "old repo": "old repo", "first repo": "fir
 BEFORE_DAY = "Before 2020"                    # a Created from a physical card photo (owner Q6): HISTORY_DAY, createdBefore 2020
 HISTORY_DAY = "2019-01-01"                    # before every dated card: the team's Discord began in 2019-02
 HISTORY_IMAGE = re.compile(r"[\w.-]+\.webp\Z")
+HISTORY_LIST = "-list.avif"                    # a Morgue entry's list copy of its picture: <webp stem>-list.avif, 360 px
 HISTORY_STATS = ("hp", "def", "atk", "spd")
 HISTORY_REMOVE = ("remove", "drop")           # a type fact's ops taking the type away (AC discord_facts writes remove)
 
@@ -1622,7 +1623,8 @@ def history_day(first):
 
 def history_morgue(hist, slug, old_slugs=()):
     """The Morgue's entries from Discord (owner Q1, Q2: joke cards and cards played but lost before git): name and
-    pictures only, never a live card (cards.json morgue). Each: lost (joke | played), pic (its newest picture), first
+    pictures only, never a live card (cards.json morgue). Each: lost (joke | played), pic (its newest picture; lpic: its
+    360 px list copy, the timeline's 'list' when it is that picture's, for the Morgue list's tiles), first
     (its Pacific day) and firstCh (firstOld: first seen in the old repo; inGit: a file in the old or first repo), or a Created "Before 2020" from a physical card photo (owner Q6: M'uru) as a card's
     (createdFrom photo); their rows: {id: history_rows}. An entry named as a renamed card once was (old_slugs:
     its old page redirects to it) is "<slug>-morgue", as one named as a card of today is."""
@@ -1637,6 +1639,8 @@ def history_morgue(hist, slug, old_slugs=()):
         e = {"id": slug(f"{base}-morgue" if base in old_slugs else base), "name": t["name"], "key": t["name"], "type": "unknown",
              "psd": None, "png": None, "morgue": True, "lost": t.get("kind_of") if t.get("kind_of") in ("joke", "played") else "joke",
              "pic": pics[0]["img"], "tw": pics[0].get("w"), "th": pics[0].get("h"), "ive": len(mine)}
+        if t.get("list") == pics[0]["img"].rsplit("/", 1)[1][:-len(".webp")] + HISTORY_LIST:
+            e["lpic"] = f"history/{folder}/{t['list']}"   # else the tiles show the webp
         if history_day(first):
             e["first"] = history_day(first)
         elif first.get("day") == BEFORE_DAY and first.get("source") in HISTORY_FROM:     # no day: apply_created's form
@@ -1712,9 +1716,9 @@ def history_host(folder):
 
 
 def copy_history(hist, rows, morgue=()):
-    """The rows' webps: each row's img a path under versions.json hb (history_host; the Morgue entries' pic that URL), else
-    copied into dist/history/ (hardlinks); rows whose file is missing lose their img (a Morgue entry's pic too). Returns
-    (how many, hb or None)."""
+    """The rows' webps: each row's img a path under versions.json hb (history_host; the Morgue entries' pic and lpic that
+    URL), else copied into dist/history/ (hardlinks); rows whose file is missing lose their img (a Morgue entry's pic and
+    lpic too). Returns (how many, hb or None)."""
     base, files = history_host(hist["dir"])
     have = (lambda rel: rel in files) if files is not None else (lambda rel: os.path.isfile(os.path.join(hist["dir"], rel)))
     n = 0
@@ -1732,12 +1736,15 @@ def copy_history(hist, rows, morgue=()):
             os.makedirs(os.path.dirname(dst), exist_ok=True)
             link_or_copy(os.path.join(hist["dir"], rel), dst)
         n += 1
-    for e in morgue:
-        rel = e["pic"][len("history/"):] if str(e.get("pic") or "").startswith("history/") else None
-        if rel and not have(rel):
-            e.pop("pic")
+    for e, key in ((e, key) for e in morgue for key in ("pic", "lpic")):
+        rel = e[key][len("history/"):] if str(e.get(key) or "").startswith("history/") else None
+        if rel and (not have(rel) or "pic" not in e):  # no list copy without its picture
+            e.pop(key)
         elif rel and base:
-            e["pic"] = base + quote(rel)
+            e[key] = base + quote(rel)
+        elif rel and key == "lpic":                # pic is a row's img, copied above
+            os.makedirs(os.path.dirname(os.path.join(DIST, e[key])), exist_ok=True)
+            link_or_copy(os.path.join(hist["dir"], rel), os.path.join(DIST, e[key]))
     return n, base
 
 

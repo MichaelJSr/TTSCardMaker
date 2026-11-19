@@ -16,7 +16,8 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   name only, never in the default list, decks, the TTS save, Stats or counts of live cards; with the card timelines
   (below), also the joke cards and the cards played but lost before git (or before this repo, when an older repo had
   their file), from Discord (picture, first post's day and channel); an in-joke on a live card too (Tyler, The Panda
-  Future: named as the card, a `-morgue` page) links to that card ("Live card").
+  Future: named as the card, a `-morgue` page) links to that card ("Live card"). Their tiles, table rows and tips show a
+  360 px copy of the picture (the timelines' list copy, as the grid's own tiles); the card view shows the full picture.
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
   column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
