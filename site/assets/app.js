@@ -189,24 +189,27 @@ const loadAnalytics = (low = false) => {
   return p;
 };
 // Stats right after a card's Balance (the dialog reads its own file): analytics.json once that dialog's pictures near the
-// screen are in and the page is idle; cancelled when another card or page opens first, so it never slows them
+// screen (and a compare's) are in and the page is idle; cancelled when another card or page opens first, or when a
+// version's pictures start loading in the dialog (aheadHold: then it waits for them), so it never slows them
 function analyticsSoon(id) {
   if (soon || S.analytics || analyticsP || navigator.connection?.saveData) return;
   soon = true; soonFor = id;
   const here = () => !modal.hidden && parseHash().arg === id;
-  const shown = () => new Promise(res => {                // pictures on screen still loading (a strip's clipped ones are not)
-    const ims = $$("img", modal), io = new IntersectionObserver(es => { io.disconnect(); res(es.filter(e => e.isIntersecting && !e.target.complete).map(e => e.target)); }, { root: modal });
+  const shown = () => new Promise(res => {                // pictures on screen or in the compare still loading (a strip's clipped ones are not)
+    const ims = $$("img", modal), io = new IntersectionObserver(es => { io.disconnect(); res(es.filter(e => !e.target.complete && (e.isIntersecting || e.target.closest("#ver-compare") && e.target.loading !== "lazy")).map(e => e.target)); }, { root: modal });
     if (!ims.length) res([]); else for (const i of ims) io.observe(i);
   });
   const loaded = i => new Promise(r => { i.addEventListener("load", r, { once: true }); i.addEventListener("error", r, { once: true }); });
-  const tick = () => shown().then(wait => {
-    if (!here()) { soon = false; return; }
-    if (wait.length) { Promise.race([Promise.all(wait.map(loaded)), new Promise(r => setTimeout(r, 1000))]).then(tick); return; }
-    (window.requestIdleCallback || (f => setTimeout(f, 0)))(() => { if (here()) loadAnalytics(true).catch(() => { soon = false; }); else soon = false; }, { timeout: 2000 });
+  const tick = (idle = false) => shown().then(wait => {   // idle: looked again once idle, so a picture asked for meanwhile goes first
+    if (!here() || S.analytics) { soon = false; return; }
+    if (wait.length) { Promise.race([Promise.all(wait.map(loaded)), new Promise(r => setTimeout(r, 1000))]).then(() => tick()); return; }
+    if (!idle) { (window.requestIdleCallback || (f => setTimeout(f, 0)))(() => tick(true), { timeout: 2000 }); return; }
+    loadAnalytics(true).catch(e => { if (e?.name !== "AbortError") soon = false; });   // a cancel resets soon itself
   });
   tick();
 }
 const aheadDrop = () => { if (!ahead) return; ahead.abort(); ahead = null; analyticsP = null; soon = false; };
+const aheadHold = id => { if (ahead && soonFor === id && $$("#ver-compare img", modal).some(i => !i.complete && i.loading !== "lazy")) { aheadDrop(); analyticsSoon(id); } };
 // the Changes page's Changelog, Archive and Database edits tabs, each its own file (NEEDS; build_site changelog_files), with
 // their renderers (changelog.js, loaded on first use beside the file): S.changelog[file] set means CL is in
 const changelogP = {};
@@ -1239,7 +1242,8 @@ function versionsHtml(c, open) {
 }
 // the current picture beside a version: the dialog's own 480 px one (1x screens) when it shows it, else 720 px
 const curImg = c => (local($("#detail-img")?.currentSrc || "") === img(c, 480) ? img(c, 480) : img(c, 720));
-function showVersion(c, i) {
+function showVersion(c, i) { drawVersion(c, i); aheadHold(c.id); }   // the Stats prefetch waits for its pictures
+function drawVersion(c, i) {
   const vs = versionList(c), v = vs[i], box = $("#ver-compare");
   if (!v || !box) return;
   $$(".ver-item", modal).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
