@@ -793,7 +793,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     404); the branch reads go on until result.json lands, which ends `early` without a repaint (the same result; the
     object URLs stay while the page lives, so the image doesn't load again). Any failure (no run in 3 lookups, 401/403/404
     on the list: a token without Actions read, off for the tab; a network or CORS error, an unreadable zip, another
-    request's result) leaves that preview to the branch. Off where the browser may forward Authorization across the
+    request's result) leaves that preview to the branch. A 404 on the zip of a listed hand-over (the run's or the
+    lane's: listed a moment before it's finalized, run 44465554232) is looked at again the next round, `ZIP_404S` (3)
+    times, then is a failure (2026-11-19). Off where the browser may forward Authorization across the
     redirect: the gate is `Set.prototype.union` (Chrome 122, Firefox 127, Safari 17; the redirect rule came in Chrome
     119, Firefox 111, Safari 16.1). Cost: about 7 calls a preview on the person's token (the run, 5-6 lists, the zip).
     Measured (scratch s1110/actbake-r29-1, headless Chrome 156): the real page against a fake GitHub with the Mac's

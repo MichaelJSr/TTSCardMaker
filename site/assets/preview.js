@@ -27,6 +27,7 @@ export const KEEP = 3, MAX_EDIT = 16384;              // MAX_EDIT: card_preview'
 // 10 s until 3, then every 30 s, giving up at 16 (the publish job's timeout is 14); "Check again" waits 10 more
 export const EARLY_MS = 12000, FIRST_MS = 17000, POLL_BRISK = 1000, BRISK_FOR = 60000, BRISK_MAX = 3, POLL_FAST = 3000, FAST_FOR = 2 * 60000, POLL_MID = 10000, MID_FOR = 3 * 60000, POLL_SLOW = 30000;
 export const HANDOVER = "card-preview";               // the preview job's artifact (card-preview.yml "Hand over")
+export const ZIP_404S = 3;                            // a listed hand-over's zip: 404s looked past (listed just before it's finalized)
 // the warm lane (owner D22; AutoCroissant card_preview_lane): the run that handed over this editor's newest result stays up
 // LANE_IDLE_MS after its last press (and ends LANE_CAP_MS after its start at the latest); a press names it (inputs.lane)
 // while it should still be up LANE_SAFE_MS from now, its card and edit in a git blob posted beside the dispatch (laneBlob;
@@ -458,7 +459,7 @@ export function createPreviews(app) {
   // request -> its result, shown in this tab only (the store says "running" until the branch has it, so other tabs and
   // later loads use the branch); local = its images as object URLs, kept while the page lives (no reload when the
   // branch's copy lands); direct = request -> {run, tries}, or false once done or failed (the branch as ever)
-  const early = new Map(), local = new Map(), direct = new Map(), told = new Set(), laneTried = new Set();
+  const early = new Map(), local = new Map(), direct = new Map(), told = new Set(), laneTried = new Set(), zip404 = new Map();
   let lanesOk = true, bellsOk = true;                // a run that never started with a lane named, or a blob not posted: none named again; a status refused: none rung
   const ring = (sha, description) => app.editor.github(`/repos/${repo()}/statuses/${sha}`, { method: "POST", body: { state: "success", context: LANE_CONTEXT, description } })
     .then(() => true, () => { bellsOk = false; return false; });
@@ -557,7 +558,14 @@ export function createPreviews(app) {
     at.step = "zip";
     const url = new URL(a.archive_download_url);
     if (url.origin !== "https://api.github.com") throw new Error("not GitHub's API");
-    const files = await unzip(await app.editor.github(url.pathname + url.search, { zip: true }));
+    let zip;
+    try { zip = await app.editor.github(url.pathname + url.search, { zip: true }); }
+    catch (err) {                                     // a 404 till it's finalized: not handed over yet (ZIP_404S rounds)
+      const k = `${run} ${name}`, n = (zip404.get(k) || 0) + 1;
+      if (err.status !== 404 || n > ZIP_404S) throw err;
+      zip404.set(k, n); return false;
+    }
+    const files = await unzip(zip);
     const r = JSON.parse(new TextDecoder().decode(files["result.json"]));
     if (r?.request !== e.request || !DONE.includes(r.state)) throw new Error("not this request's result");   // the publisher's stand-in then
     const result = readResult(r), urls = {};
