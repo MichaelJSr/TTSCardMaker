@@ -20,6 +20,7 @@ export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigg
   points: "#055e45", bricks: "#4f260f", sp: "#20397f", own: "#0f766e" };                                     // and its costs' pills
 const STATS = ["hp", "def", "atk", "spd"];
 export const LINE = 1.22;                            // line pitch in ems
+const FIT_STEP = 0.94, FIT_MIN = 0.4, LIFT_GAP = 2, BEYOND = 6;   // AutoCroissant psd_edit (canvas px): fit_below's steps, lift's gap, ink_beyond's pad
 // fractions of the image [x0, y0, x1, y1]: where a template prints the name and the text; its stat bars (one row per stat,
 // `step` apart, 10 cells across `box`). Measured on the PSDs' layer boxes (2026-10-23): tall = 1200x2400 creatures and
 // minions (311 of 390 with stat rows sit exactly here), item = 1200x1800 items and field cards (the totems' two rows),
@@ -1002,6 +1003,21 @@ export function partJobs(rec, parts, { colors = null, was = null, statuses = nul
 /** A field's record parts that picture 1 prints: the title's, or the Ability's. */
 const printed = (p, f) => (f === "name" ? p.title || [] : p.ability || []).filter(x => !(Array.isArray(x?.variants) && !x.variants.includes(1)));
 
+/** A stacked Ability box's rows (several Ability layers of one path: Bulborb Larva's three): {own, others} ink boxes
+ *  (record parts' box, x k: image px), the others' grown by their Stroke and shadows' offsets (the bake counts a row's
+ *  effects), or null. */
+export function stackRows(rec, id, k) {
+  const rows = printed(obj(rec?.parts) || {}, "ability"), me = rows.find(p => String(p?.id) === String(id));
+  const others = me && Array.isArray(me.box) && k > 0 ? rows.filter(p => p !== me && p?.layer === me.layer && Array.isArray(p.box)) : [];
+  const grown = p => {
+    const t = Array.isArray(rec?.text) ? rec.text.find(x => String(x?.id) === String(p.id)) : null, s = Array.isArray(t?.stroke) ? +t.stroke[3] || 0 : 0, g = [s, s, s, s];
+    for (const e of Array.isArray(t?.fx) ? t.fx : []) if (e?.k === "shadow") { g[0] = Math.max(g[0], -(e.dx || 0)); g[1] = Math.max(g[1], -(e.dy || 0)); g[2] = Math.max(g[2], e.dx || 0); g[3] = Math.max(g[3], e.dy || 0); }
+    return p.box.map((v, i) => (v + (i < 2 ? -g[i] : g[i])) * k);
+  };
+  return others.length ? { own: me.box.map(v => v * k), others: others.map(grown) } : null;
+}
+const meets = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+
 /** The colours the bake refuses as painted over (AutoCroissant psd_edit plan_colors, _painted_over, _solid_overlay):
  *  [{one, label, why}]. Refused when an enabled Color, Gradient or Pattern Overlay, the part's own or a group's above it,
  *  hides every title or Ability part the colour paints (layerColors). A part's own isn't counted for a whole field's
@@ -1677,7 +1693,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
     else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : 0,
-      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer) : null,
+      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, stack: part && role === "ability" ? stackRows(rec, specs[k].id, kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer) : null,
       bare: plans[k].plated && fxIn(plate, idsOf(specs[k], k), old) ? () => plateCuts(cardPx, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, "", wiping) : null });   // the crop without its FX layers
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
@@ -2144,6 +2160,17 @@ export function steadyPitch(lines) {
   const c = lines.map(l => (l[1] + l[3]) / 2), d = c.slice(1).map((v, i) => v - c[i]), m = median(d), ok = d.filter(x => x >= 0.7 * m && x <= 1.3 * m);
   return ok.length ? ok.reduce((t, x) => t + x, 0) / ok.length : m;
 }
+/** A laid line's ink [above, below] its baseline at z, as paintLines draws it (letters, a badge's pill, an icon). */
+function lineInk(ctx, line, z, fam) {
+  let up = 0, down = 0;
+  for (const p of line.pieces) {
+    if (p.badge) { const cap = capOf(ctx, fam, z), f = badgeFit(z, cap), { h } = pillOf(p, z, cap), t = f.top - (f.h - h) / 2; up = Math.max(up, t); down = Math.max(down, h - t); }
+    else if (p.icon) { const g = iconEm(p), t = (g ? 0.82 - (1 - g.h) / 2 : 0.82 * 1.05) * z; up = Math.max(up, t); down = Math.max(down, (g ? g.h : 1.05) * z - t); }
+  }
+  const t = line.pieces.filter(p => !p.badge && !p.icon && p.text?.trim()).map(p => p.text).join("").trim();
+  if (t) { ctx.font = `${z}px ${fam}`; ctx.textBaseline = "alphabetic"; const m = ctx.measureText(t); up = Math.max(up, m.actualBoundingBoxAscent || 0); down = Math.max(down, m.actualBoundingBoxDescent || 0); }
+  return [up, down];
+}
 /** A laid line's first baseline from its ink top (top: a psd_details box's) at its set size s0, at z: the top plus its
  *  tallest piece above the baseline as paintLines draws it (letters' ink, a badge's pill, an icon's glyph), scaled from
  *  the frame's top when the text shrank; null when nothing on it reaches up. */
@@ -2178,7 +2205,8 @@ function drawText(ctx, job, imgs, W) {
   if (frame && layer.px > 0) size = layer.px * kc;    // at its set size
   const point = role === "ability" && !!kc && !frame && layer?.px > 0;   // point text: its paragraphs never wrap
   if (point) size = layer.px * kc;
-  const grow = was > 0 && was < 1 ? 1 / was : 1;     // a bake set it smaller (its verdict's ability_fit): from the card maker's size, as the next bake
+  const stack = role === "ability" && job.stack && frame && layer.px > 0 ? job.stack : null;   // one of stacked boxes (stackRows)
+  const grow = was > 0 && was < 1 && !stack ? 1 / was : 1;   // a bake set it smaller (its verdict's ability_fit): from the card maker's size, as the next bake
   size *= grow;
   const maxW = point ? Infinity : frame ? (left ? frame[2] - found.box[0] : frame[2] - frame[0]) : left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
   const steady = steadyPitch(found.lines) * grow, top = found.lines[0][1];
@@ -2208,12 +2236,84 @@ function drawText(ctx, job, imgs, W) {
     for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
   }
+  // A stacked box as the bake sets it (psd_edit fit_below, stacked): at its size where it stays on the card, off the
+  // other rows (stackRows) and off the design below (roomBelow); else smaller by FIT_STEP down to FIT_MIN, first in its
+  // row (blank rows above kept: its first baseline rises by the leading it lost), then risen with them from the frame's
+  // top and settled under the text above; ink ending no lower than the old ink's + BEYOND px.
+  function stackFit() {
+    const H = ctx.canvas.height, k = kc, pad = BEYOND * k, lineH = layer.lead > 0 ? layer.lead * k : size * LINE, F = found.lines;
+    const base0 = firstBase(ctx, layout(looked(tokenize(old, icons), old), maxW, size, measure)[0], { top: stack.own[1], s0: size, z: size, frame: null, fam }) ?? top + size * 0.7;
+    const rows = (String(layer.text ?? "").match(/^\s*/)[0].match(/[\r\n\u0003]/g) || []).length;   // blank rows above its line
+    ctx.font = `${size}px ${fam}`; const dUp = ctx.measureText("d").actualBoundingBoxAscent || 0.75 * size;   // a box's first baseline: one 'd' ascent down
+    const shift = rows ? base0 - (frame[1] + dUp + rows * lineH) : 0;   // past where its leading puts it (a baseline shift: Empress Bulblax's 63 px)
+    const fc = (frame[0] + frame[2]) / 2, rest = F.length > 1 ? Math.min(...F.slice(1).map(l => l[0])) : frame[0];
+    const atOf = (ls, s) => (layer.just === 0 ? l => frame[0] + ((l === ls[0] ? F[0][0] : rest) - frame[0]) * s   // as Photoshop sets its frame's lines; a first line's
+      : layer.just === 1 ? l => found.box[2] - l.w : l => fc - l.w / 2 + (l === ls[0] ? ((F[0][0] + F[0][2]) / 2 - fc) * s : 0));   // spaces (Miracle Matter's) scale with it
+    const inks = (ls, s, b, p, at) => ls.flatMap((l, i) => { const ud = l.pieces.length ? lineInk(ctx, l, s, fam) : null; return ud ? [[at(l), b + i * p - ud[0], at(l) + l.w, b + i * p + ud[1]]] : []; });
+    const others = stack.others.filter(o => !F.some(l => meets(l, o)));   // rows the old ink touches: not counted
+    const above = others.filter(o => o[3] <= stack.own[1] && o[2] > stack.own[0] && o[0] < stack.own[2]);
+    const ceiling = above.length ? Math.max(...above.map(o => o[3])) + LIFT_GAP * k : 0, floor = stack.own[3] + pad;
+    const offBefore = found.box[0] < 0 || found.box[2] > W, span = q => [Math.min(...q.map(r => r[1])), Math.max(...q.map(r => r[3]))];
+    const onCard = q => offBefore || q.every(r => r[0] >= 0 && r[2] <= W && r[3] <= H);
+    const clear = q => q.every(r => !others.some(o => meets(r, o)));
+    const ob = [found.box[0] - pad, found.box[1] - pad, found.box[2] + pad, found.box[3] + pad].map(Math.round);
+    let lum = null, med = 0, bar = 0;
+    const design = (ls, zs, b, p, at, q) => {          // new ink off the old ink's box on the design (ink_beyond: an icon beside the row)
+      if (!lum) {                                     // the backdrop under the old text: its median luma and spread
+        const d = ctx.getImageData(0, 0, W, H).data, h = new Array(256).fill(0), dev = new Array(256).fill(0); lum = new Uint8Array(W * H);
+        for (let i = 0; i < W * H; i++) lum[i] = (d[4 * i] * 77 + d[4 * i + 1] * 150 + d[4 * i + 2] * 29) >> 8;
+        let n = 0;
+        for (let y = clamp(ob[1], 0, H); y < clamp(ob[3], 0, H); y++) for (let x = clamp(ob[0], 0, W); x < clamp(ob[2], 0, W); x++, n++) h[lum[y * W + x]]++;
+        const nth = (a, i) => { let v = 0; for (let c = a[0]; c <= i && v < 255; c += a[++v]); return v; };
+        med = n ? nth(h, n >> 1) : 0; h.forEach((c, v) => { dev[Math.abs(v - med)] += c; });
+        bar = Math.max(60, (n ? nth(dev, Math.floor(0.95 * (n - 1))) : 0) + 20);
+      }
+      const [ya, yb] = span(q).map(Math.round), y0 = clamp(ya - 2, 0, H), y1 = clamp(yb + 2, 0, H);
+      if (y1 <= y0) return false;
+      const mask = document.createElement("canvas"); mask.width = W; mask.height = y1 - y0;
+      const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -y0);
+      paintLines(mx, ls, { at, base: b, pitch: p, z: zs, fam, label: measure.label, track: measure.track, hx: measure.hx, fill: [255, 255, 255], stroke: null, imgs, one });
+      const a = mx.getImageData(0, 0, W, y1 - y0).data, out = r => others.every(o => !(r[0] >= o[0] && r[0] < o[2] && r[1] >= o[1] && r[1] < o[3]))
+        && q.some(l => r[1] >= l[1] && r[1] < l[3] && Math.abs(r[0] - (l[0] + l[2]) / 2) < (l[2] - l[0]) * 0.48);   // a line's ends: our widths are estimates
+      let n = 0;
+      for (let y = y0, j = 3; y < y1; y++) for (let x = 0; x < W; x++, j += 4)
+        if (a[j] > 128 && !(x >= ob[0] && x < ob[2] && y >= ob[1] && y < ob[3]) && Math.abs(lum[y * W + x] - med) > bar && out([x, y])) n++;
+      return n >= 100 * k * k;
+    };
+    const at1 = atOf(lines, 1), full = inks(lines, size, base0, pitch0, at1);
+    if (!full.length || onCard(full) && clear(full) && roomBelow()) return true;
+    const liftBy = q => { const [y0, y1] = span(q), dy = y1 - stack.own[3]; return y1 <= H || dy <= 0 || y0 < dy ? 0 : Math.max(0, Math.min(dy, y0 - ceiling)); };   // lift: off the bottom, moved up
+    const moved = (q, u) => q.map(r => [r[0], r[1] - u, r[2], r[3] - u]), off = !onCard(full);
+    let largest = null, lifted = null;
+    for (let s = FIT_STEP; s >= FIT_MIN; s *= FIT_STEP) {
+      const zs = size * s, ls = layout(paras, maxW, zs, measure), p = lineH * s, at = atOf(ls, s);
+      for (const keep of rows ? [true, false] : [true]) {
+        const b = keep && rows ? base0 - (lineH + shift) * (1 - s) : frame[1] + (base0 - frame[1]) * s, q = inks(ls, zs, b, p, at), [y0, y1] = span(q);
+        if (y1 > floor || !onCard(q)) {
+          const u = off && !largest && !lifted ? liftBy(q) : 0;   // none placed: the first on the card once moved up
+          if (off && !largest && !lifted && onCard(moved(q, u))) lifted = { z: zs, lines: ls, base: b - u, pitch: p, at, over: true, ink: [y0 - u, y1 - u] };
+          continue;
+        }
+        if (clear(q) && !design(ls, zs, b, p, at, q)) return { z: zs, lines: ls, base: b, pitch: p, at, ink: [y0, y1] };
+        const d = ceiling - y0, q2 = q.map(r => [r[0], r[1] + d, r[2], r[3] + d]);   // risen onto the text above: back down under it
+        if (d > 0 && y1 + d <= floor && clear(q2) && !design(ls, zs, b + d, p, at, q2)) return { z: zs, lines: ls, base: b + d, pitch: p, at, ink: [y0 + d, y1 + d] };
+        largest = largest || { z: zs, lines: ls, base: b, pitch: p, at, over: true, ink: [y0, y1] };
+      }
+    }
+    if (!off) return false;                           // none fits: at its size, told
+    const u = liftBy(full), [y0, y1] = span(full), up = { z: size, lines, base: base0 - u, pitch: pitch0, at: at1, over: true, ink: [y0 - u, y1 - u] };
+    if (!largest && lifted && !onCard(moved(full, u))) return lifted;   // off the card at its size, even moved up
+    return !largest || u && onCard(moved(full, u)) ? (u ? up : false) : largest;   // off the card: the largest placed
+  }
   const reach = left ? W - found.box[0] : 2 * Math.min(mid, W - mid);   // point text: off the card's sides past this
   const tframe = role === "name" && !split && kc && Array.isArray(layer?.frame) && layer.frame.length === 4 ? layer.frame.map(v => v * kc) : null;   // a box-text title: Photoshop wraps at its frame
   let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tframe ? -1 : tokenize(old).length, found, tframe ? (left ? tframe[2] - found.box[0] : tframe[2] - tframe[0]) : maxW, size, measure, W, left)
     : point ? pointLayout(paras, size, reach, measure) : fit(paras, maxW, Infinity, size, measure);
   if (tframe) over = false;                           // the bake grows its box to hold the lines
-  let roomy = role === "name" || roomBelow();
+  const row = stack ? stackFit() : null;              // true: at its size; false: none fits (left at it, told)
+  if (row === false) over = true;
+  else if (row && row !== true) { ({ z, lines, over } = row); over = !!over; pitch0 = row.pitch * size / z; }
+  let roomy = role === "name" || !!stack || roomBelow();
   if (!roomy && lead) { pitch0 = size * LINE; roomy = roomBelow(); }   // an Ability at its leading only where it keeps its size
   if (!roomy) {                                       // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
@@ -2224,6 +2324,7 @@ function drawText(ctx, job, imgs, W) {
   let base = top + z * (role === "name" ? 0.8 : 0.7);   // an Ability: textBlocks leaves out thin ascender rows, so its top sits low
   if (role === "ability" && !point && !geo && kc && layer?.box?.length === 4 && plain(layer.text) === plain(old))   // no plate layout: its own first baseline
     base = firstBase(ctx, layout(looked(tokenize(old, icons), old), maxW, size / grow, measure)[0], { top: layer.box[1] * kc, s0: size / grow, z, frame, fam }) ?? base;
+  if (row?.base != null) base = row.base;             // a stacked box set smaller: where the bake puts it
   if (role === "name" && old) {                       // a title keeps its baseline: where its old ink's top and bottom put it
     ctx.font = `${size}px ${fam}`; ctx.textBaseline = "alphabetic";
     const m = ctx.measureText(String(old).replace(/\r/g, "").split("\n")[0]), up = m.actualBoundingBoxAscent, tall = up + m.actualBoundingBoxDescent;
@@ -2234,7 +2335,8 @@ function drawText(ctx, job, imgs, W) {
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = ring ? ring.slice(0, 3) : colours?.stroke, strokeW = ring ? 2 * ring[3] * (kc || W / 1200) : 0;
   const stroke0 = own ? own.slice(0, 3) : colours?.stroke, strokeW0 = own ? 2 * own[3] * (kc || W / 1200) : 0;   // a splice's (geoDraw)
   const fk = kc || W / 1200, effects = Array.isArray(layer?.fx) ? layer.fx.map(e => ({ ...e, dx: (e.dx || 0) * fk, dy: (e.dy || 0) * fk, size: (e.size || 0) * fk, ws: (e.ws || 0) * fk })) : null;   // psd_details: its shadows and glows
-  const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
+  let shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
+  if (shades && row?.ink) shades = { ...colours.shades, top: row.ink[0], bottom: row.ink[1] };   // a stacked box set anew: over its new ink (the layer's own Gradient Overlay)
   if (role === "name" && geo && kc && plain(text) === plain(old) && sameWords(geo.c.text, old)) {   // a colour alone on a title (its fill hidden: tintPlan's none): each of its own lines redrawn where it stands
     const Rl = recordLayout(geo.c, lineBreaks(geo.c.text), kc), rows = (Rl ? Rl.lines.filter(l => l.para >= 0 && Rl.was.slice(l.s, l.e).trim()) : []).map(l => {
       const t = Rl.was.slice(l.s, l.e).replace(/\s+$/, ""), body = t.trimStart();
@@ -2255,12 +2357,12 @@ function drawText(ctx, job, imgs, W) {
   if (R && Array.isArray(layer?.fr) && String(geo.c.id) === String(layer.id))   // its letters in another font, on was: [s, e, family, its measure]
     R.fr = layer.fr.map(([s, e, f]) => [R.at(s) + R.shift, R.at(e) + R.shift, fr?.[f], fr?.[f] ? Object.assign(widthIn(ctx, fr[f], measure.track, measure.hx), measure) : null]);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid, unless spliced on the card (the bake shrinks ink off it only)
-  job.lined = plan && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
+  job.lined = plan && grow === 1 && row?.base == null ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies });
+  paintLines(ctx, lines, { at: row?.at || (l => (left ? found.box[0] + dx : mid - l.w / 2 + dx)), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies });
   return over;
 }
 /** The lines of a redrawn Ability the edit leaves as they were (indexes): its leading and trailing lines whose pieces
