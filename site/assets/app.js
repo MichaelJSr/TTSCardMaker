@@ -722,7 +722,7 @@ function renderCards(r) {
   const morgue = !!p.get("morgue"), edits = editing() && !morgue;      // the Morgue's cards: nothing to edit or drag
   const morgueN = !S.morgue.length ? 0 : morgue ? others().length : filterCards(new URLSearchParams([...without(p, "morgue"), ["morgue", "1"]]), { facets: !waiting }).length;
   const active = [];
-  if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
+  if (p.get("q")) active.push(["q", `“${p.get("q")}”`, undefined, false, `<button type="button" class="chip cf-save" id="save-filter" data-action="save-filter" title="Save this search to My filters">Save as filter</button>`]);   // not in the bar: typing never moves the box
   if (morgue) active.push(["morgue", "The Morgue"]);
   for (const v of cfIn) active.push(["cf", v, v, false, cfSave(v)]);
   for (const v of cfOut) active.push(["xcf", `not ${v}`, v, true, cfSave(v)]);
@@ -2381,12 +2381,12 @@ const runSearch = debounce(() => {
   speak();
 }, 160);
 qInput.addEventListener("input", runSearch);
-$("#save-filter")?.addEventListener("click", () => {   // the search box's text as a filter in My filters (CSS shows it while there's text)
+actions["save-filter"] = () => {   // the search box's text as a filter in My filters (#save-filter: Cards, beside the search's chip)
   const q = qInput.value.trim(); if (!q) return;
   const had = CF.add(q); qInput.value = "";
   toast(had ? `Already in My filters as “${had}”` : `Saved “${q}” to My filters`);
-  const r = parseHash(); if (r.name === "cards" || r.name === "rules") setParams({ q: "" });
-});
+  setParams({ q: "" });
+};
 $("#search-form").addEventListener("submit", e => { e.preventDefault(); if (S.ready && ["cards", "rules"].includes(parseHash().name)) runSearch.flush();   // a pending search first: on Cards, S.list is then its list
   const ex = exactOf(qInput.value, S.cards), l = ex.length === 1 ? ex : parseHash().name === "cards" ? S.list : []; if (l.length === 1) { runSearch.cancel(); location.hash = `#/card/${l[0].id}`; }   // elsewhere the pending search would close it
   if (matchMedia("(pointer: coarse)").matches) qInput.blur(); });   // one exact name, else (on Cards) one result; a phone's Search key closes its keyboard

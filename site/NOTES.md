@@ -1704,11 +1704,12 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   missing all the picked ones; an option no card lacks is hidden. Every sort puts cards lacking the sorted value last,
   ascending or descending (grid.js's comparator). AutoCroissant `tests/test_site_missing.py`.
 - **My filters** (cf412892): saved searches, in this browser only (localStorage `custom-filters`, at most 50, 300
-  characters each; `myfilters.js`); never published. "Save as filter" beside the search box saves its text; a "My
-  filters" list heads the sidebar (a checkbox each, its count, ✕ to forget it with Undo). A search is search.js's
-  language (`compile`). Params `cf=` (keep the cards it matches) and `xcf=` (drop them), one param per search, repeated,
-  never a comma list (`MULTI`, app.js `setParams`), so any search round-trips; a link applies them for anyone, and its
-  chips offer Save. AutoCroissant `tests/test_site_custom_filters.py`.
+  characters each; `myfilters.js`); never published. "Save as filter" beside the search's chip (above the cards) saves
+  the search box's text (2026-11-20: no longer in the bar, where typing squeezed the box on desktops and dropped it a
+  row on phones); a "My filters" list heads the sidebar (a checkbox each, its count, ✕ to forget it with Undo). A search
+  is search.js's language (`compile`). Params `cf=` (keep the cards it matches) and `xcf=` (drop them), one param per
+  search, repeated, never a comma list (`MULTI`, app.js `setParams`), so any search round-trips; a link applies them for
+  anyone, and its chips offer Save. AutoCroissant `tests/test_site_custom_filters.py`.
 
 ## 40. Stat notes (2026-10-26, owner: "for tables where appropriate ... a very small footnote ... on hover that explains what the stat is")
 - One short sentence per number or column that needs it, through the site's `data-tip` (tip.js: hover, tap on touch), on

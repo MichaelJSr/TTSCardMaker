@@ -1219,9 +1219,7 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .filters .font-any { font-size: 12px; margin: 4px 0 0; }
 @media (max-width: 860px) { input:not([type=checkbox], [type=radio], [type=range]), select, textarea { font-size: max(16px, 1em); } }   /* no zoom on focus (iOS) */
 .sel-row.x select option { color: var(--ink); text-decoration: none; }
-/* My filters: saved searches (myfilters.js); Save as filter shows while the search box has text */
-#save-filter { flex: none; white-space: nowrap; padding: 6px 10px; border-color: var(--border-strong); }
-#q:placeholder-shown ~ #save-filter { display: none; }
+/* My filters: saved searches (myfilters.js) */
 .cf-row { display: flex; align-items: center; gap: 2px; }
 .cf-row .check { flex: 1; min-width: 0; }
 .cf-q { overflow-wrap: anywhere; }
