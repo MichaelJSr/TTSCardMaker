@@ -231,7 +231,7 @@ export const pollDelay = (store, now = Date.now(), quick = () => true, since = 0
   return Math.min(lane, late);
 };
 /** One tab checks for all (the others see the results through the storage event): this tab (id `tab`) may check when it
- *  holds the lock (stored text) or the lock lapsed. -> the lock to store, or null (another tab has it). */
+ *  holds the lock (stored text) or the lock lapsed (null: a press takes it). -> the lock to store, or null (another tab has it). */
 export function takeLock(lockText, tab, now = Date.now(), ttl = 2 * POLL_SLOW + 15000) {
   let l; try { l = JSON.parse(lockText); } catch { l = null; }
   if (l && typeof l === "object" && l.tab !== tab && Number(l.until) > now) return null;
@@ -514,6 +514,7 @@ export function createPreviews(app) {
     const ed = app.editor;
     if (!Object.keys(edit).length) { app.toast("No changes on the card image to preview"); return; }
     if (editBytes(edit) > MAX_EDIT) { app.toast("This edit is over 16 KB: the preview takes less"); return; }
+    try { localStorage.setItem(LOCK_KEY, JSON.stringify(takeLock(null, TAB))); } catch { /* storage off */ }   // the pressing tab checks: it shows the hand-over
     const request = newRequest(ed.me.login), entry = { card: c.id, name: c.name, request, edit, hash: hashOf(edit), base: { blob: c.blob ?? null, img: c.img ?? null }, at: Date.now(), state: "starting" };
     set(remember(store, entry)); notify(c.id);
     try {
