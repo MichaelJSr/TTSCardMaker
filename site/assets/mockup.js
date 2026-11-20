@@ -1009,12 +1009,21 @@ const printed = (p, f) => (f === "name" ? p.title || [] : p.ability || []).filte
  *  layers are all the field's (ownedGroup); a part's clip (an opaque layer clipped onto it or its group
  *  over it, _clipped_over) counts as its own. The record has no opacity, blend mode or fill. typed: the
  *  fields `edit` retypes; their colours are checked in the new text (a box's own, a one-layer field's), as plan_colors
- *  does. */
-export function paintedOver(rec, colors, typed = [], edit = null) {
+ *  does. mixed(part, field) (draw's): whether the plate's looks draw the part's whole colour (mixPlan); given, the
+ *  ownedGroup counts again on a field retyped, with a phrase colour or with a part under it they don't draw (its plain
+ *  redraw can't draw them: rotated words). */
+export function paintedOver(rec, colors, typed = [], edit = null, mixed = null) {
   const p = obj(rec?.parts), fx = obj(rec?.effects) || {}, out = [];
   if (!p || !Array.isArray(colors)) return out;
   const on = path => (Array.isArray(fx[path]) ? fx[path] : []).filter(n => OVERLAY.test(String(n))).map(n => n.replace("Overlay", " Overlay"));
   const lit = new Set(colors.filter(one => !one?.phrase).map(one => one?.field)), done = new Set();   // done: parts a phrase took whole
+  const drawsAll = new Map(), owned = (path, f, list) => {   // ownedGroup, as mixed allows
+    const g = lit.has(f) ? ownedGroup(rec, path, f) : null, key = `${f}\n${g}`;
+    if (!g || !mixed) return g;
+    if (!drawsAll.has(key)) drawsAll.set(key, !typed.includes(f) && !colors.some(o => o?.field === f && o.phrase)
+      && list.every(x => !String(x?.layer || "").startsWith(`${g}/`) || mixed(x, f)));
+    return drawsAll.get(key) ? g : null;
+  };
   const blank = s => !s.replace(/\u0003/g, " ").trim();
   const whole = (t, c) => (spansOf(String(t ?? ""), c) || []).some(([a, b]) => blank(String(t).slice(0, a)) && blank(String(t).slice(b)));
   const textOf = (x, f, n) => {                       // retyped: its box's new text ("" deleted), a lone layer's the field's
@@ -1029,7 +1038,7 @@ export function paintedOver(rec, colors, typed = [], edit = null) {
     const mine = list.map((x, i) => [x, layerColors(texts, i, [one], f), texts[i]]).filter(([, c]) => c);
     const full = one.phrase ? mine.filter(([, c, t]) => whole(t, c[0])).map(([x]) => x) : [];
     const hid = mine.map(([x]) => {
-      const path = String(x?.layer || "").split("/"), own = on(path.join("/")), g = lit.has(f) ? ownedGroup(rec, path.join("/"), f) : null;
+      const path = String(x?.layer || "").split("/"), own = on(path.join("/")), g = owned(path.join("/"), f, list);
       const mineToo = one.phrase && !lit.has(f) && !done.has(x) && !full.includes(x);
       if (mineToo && x?.clip) return `its clipped layer '${x.clip}'`;
       if (own.length && mineToo && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
@@ -1428,8 +1437,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const ctx = work.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(img, 0, 0);
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
+  let px0 = null;                                     // mixed: the card's pixels, unchanged
+  const mixed = (x, f) => !!(sheet && rec?.canvas?.w > 0 && mixPlan(px0 ||= ctx.getImageData(0, 0, W, H).data, W, H, W / rec.canvas.w, plate, [x?.id], [{ field: f, color: "#808080" }], f, readPlate));
   const own = keptOver(rec, edit.colors, typed, statuses), rest = own.length ? edit.colors.filter(one => !own.some(n => n.one === one)) : edit.colors;
-  const nix = [...own, ...paintedOver(rec, rest, typed, edit)].sort((a, b) => edit.colors.indexOf(a.one) - edit.colors.indexOf(b.one));   // the bake refuses them: not drawn, said
+  const nix = [...own, ...paintedOver(rec, rest, typed, edit, mixed)].sort((a, b) => edit.colors.indexOf(a.one) - edit.colors.indexOf(b.one));   // the bake refuses them, or only a redraw could draw them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
   const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], site: [], starsKept: null, added: null, noGlyph: [] };
   const hand = pics ? [] : handStats(card);           // the bake won't draw them: not drawn, nothing said (owner 11-11); a plate's bars tell value by value
