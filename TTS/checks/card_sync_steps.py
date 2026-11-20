@@ -1675,7 +1675,8 @@ def pdf_start_cases(flow: dict) -> None:
                 return
             if path == "/blob/5":
                 body = blob.getvalue()
-            elif path == "/live/build.txt":             # the website: another deploy at state["deploy"]
+            elif path == "/live/build.txt":             # the website: another deploy 1 s after the step's first look
+                state["deploy"] = state["deploy"] or time.monotonic() + 1
                 body = b"d2 p2\n" if time.monotonic() > state["deploy"] else b"d0 p0\n"
             elif path.endswith("/runs/77/artifacts"):
                 body = json.dumps({"artifacts": [{"id": 5, "name": "github-pages-a1", "expired": False}] if state["listed"] is True else []}).encode()
@@ -1704,7 +1705,7 @@ def pdf_start_cases(flow: dict) -> None:
                 ("deployed first", "push", 3, None, True, 0, ["--wait 0", "--wait"]),
                 ("website up to date", "push", 0, True, True, 0, ["--wait 0"]),
                 ("schedule", "schedule", 0, True, True, 0, [""])):
-            state.update(listed=listed, zip=zipped, deploy=time.monotonic() + (1 if listed is None else 1e9))
+            state.update(listed=listed, zip=zipped, deploy=None if listed is None else float("inf"))
             with tempfile.TemporaryDirectory() as tmp:
                 ws, runner, fake = os.path.join(tmp, "ws"), os.path.join(tmp, "runner"), os.path.join(tmp, "bin")
                 git(tmp, "init", "-q", "ws")
