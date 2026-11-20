@@ -1496,11 +1496,12 @@ function renderRules(r) {
     return;
   }
   if (r.arg === "print") { renderSheets(); return; }
-  const q = bookFold((r.params.get("q") || "").trim());
+  const typed = bookFold((r.params.get("q") || "").trim()), chapters = S.book.chapters, x = typed && bookTag(typed, chapters);
+  const q = x ? x.row : typed;                           // "(2pg)": the book's (XPG) row
   if (document.activeElement !== qInput) qInput.value = "";
-  const hit = q && bookRe(q), chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => hit.test(c.text)) : chapters;
+  const hit = q && bookRe(q), ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => hit.test(c.text)) : chapters;
   const banned = S.data.banlist, can = editing(), top = scrollY === 0 && !S.restoring;   // before the view goes (see renderCards)
-  const label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;
+  const label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`, found = `${shown.length} chapter${shown.length === 1 ? "" : "s"}`;
   view.innerHTML = `<div class="rules${q ? " rb-searching" : ""}">
     <nav class="toc" aria-label="Rulebook chapters"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
       ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
@@ -1508,7 +1509,7 @@ function renderRules(r) {
       <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
         <button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button></div></nav>
     <div class="rb rb-book">
-      ${q ? `<p class="muted">${shown.length} chapter${shown.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
+      ${q ? `<p class="muted">${x ? `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.` : `${found} mention “${esc(r.params.get("q"))}”.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
       ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${chapterHtml(c, ctx)}</article>`).join("")
         || `<div class="empty">No rulebook chapter mentions that.</div>`}
@@ -1618,6 +1619,14 @@ async function renderSheets() {
 const bookFold = s => straight(s.toLowerCase().replace(/\s+/g, " "));
 // a folded search's regex (search.js loose: nme finds N.M.E., cant can't), any spaces between the words
 const bookRe = (q, flags) => new RegExp(loose(q, "\\s+"), flags);
+// a numbered timing tag the printed book (no {.web} chapter) never prints whole ("(2pg)"; "2pg" is not (2PGT)'s): its X
+// row, as the bot's x_row and TTS xTag
+function bookTag(q, chapters) {
+  const m = /^\(?(?:(-?\d+)\/)?(\d+)(cd|gcd|u|pg|pt|pgt)\)?$/.exec(q), tag = m && q.replace(/^\(|\)$/g, "");
+  if (!m || RB.printed(chapters).some(c => new RegExp(`(?<![\\w/-])${tag}(?![a-z])`).test(c.text))) return null;
+  const row = `(${m[1] ? "y/" : ""}x${m[3]})`;
+  return chapters.some(c => bookRe(row).test(c.text)) ? { tag: `(${tag.toUpperCase()})`, row, says: m[1] ? `Y = ${m[1]} and X = ${m[2]}` : `X = ${m[2]}` } : null;
+}
 // a block's words as the chapter list reads them (plainText): badges as typed, icons as [name], card pictures by name
 function bookWords(el) {
   let s = "";
