@@ -1174,7 +1174,12 @@ relies on:
   link to the Rulebook or Stats starts `loadBook` / `loadAnalytics` beside cards.json (app.js, after `wantsEditor`):
   those loaders must not read `S.cards` (loadHistory does, so it isn't started early). For `#/rules…` index.html's head
   script (`grid_preload`) starts rules.json and the rulebook's chunks with app.js, at getJson's URL and the meta chunks'
-  names (slow 4G rulebook -0.44 s, fast -50 ms; app.js and cards.json end ~0.25 s later on slow 4G).
+  names (slow 4G rulebook -0.44 s, fast -50 ms; app.js and cards.json end ~0.25 s later on slow 4G). Since 11-20 the
+  same script (`EARLY_ROUTES`) starts the Changelog, Database edits and Archive tabs', Stats' and People's files and
+  chunks as plain fetches (no loader runs early) at app.js `dataUrl`'s URLs (`data_url`); a tab renderChanges draws from
+  its head (no ?query, not a reload) gets the head file instead of the whole one (the whole, beside cards.json, held it
+  back: slow links lost the gain). u/ pages preload People's after style.css (before it, first paint came 0.13-0.43 s
+  later). 4G phone, 4x CPU: Changelog -19%, Edits -17%, Archive -17%, Stats -8%, People and person pages -27 to -30%.
 - Rulebook cover: `cover_copies` (540 and 800 px AVIF, `COVER_SIZES`, cached in .cache/cover) in rules.json `cover`, the
   book view's srcset (`coverSet`); the TTS pages keep cover.webp. index.html's inlined style.css has its url()s rebased
   from assets/ to the page (`inline_css`: `../rulebook/fonts/...` had left the site, 404s; a quoted url() is read to

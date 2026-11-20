@@ -1960,21 +1960,48 @@ def share_text(c):
 
 
 GRID_PRELOADS = 4                            # the cards grid's first pictures that index.html preloads
+PEOPLE = (("users.json", "contributions.json", "decks.json"), ("profile.js", "decks.js"))   # app.js usersReady: files, chunks
+# a link to a page that loads data: its hash (a JS regex), its files (getJson), its chunks (early()) and its first screen's
+# file (renderChanges HEADS: then instead of the whole, which held cards.json back). Not Recently updated (cards.json),
+# Parser notes, Decks or the profile editor
+EARLY_ROUTES = ((r"/^#\/?changes\/+changelog\/*(\?|$)/", ("changelog.json",), ("changelog.js",), "changelog-head.json"),
+                (r"/^#\/?changes\/+edits\/*(\?|$)/", ("edits.json",), ("changelog.js",), "edits-head.json"),
+                (r"/^#\/?changes\/+archive\/*(\?|$)/", ("archive.json",), ("changelog.js",), None),
+                (r"/^#\/?stats(\/|\?|$)/", ("analytics.json",), ("charts.js", "balance.js"), None),     # loadAnalytics, loadCharts
+                (r"/^#\/?(?!u\/+[^/?]+\/+edit\/*(\?|$))(users|u)(\/|\?|$)/", *PEOPLE, None))
 
 
-def grid_preload(cards, ids=None, version="", lazy=None, sheets=None):
+def data_url(name, version="", own=None):
+    """app.js dataUrl(name): data/<name> at its own stamp (own: data_stamps'), else at the build's (version)."""
+    v = next((s for s in ((own or {}).get(name), version) if re.fullmatch(r"[0-9a-f]+", s or "")), "")
+    return f"data/{name}" + (f"?v={v}" if v else "")
+
+
+def early_hints(files, chunks, version="", own=None, lazy=None):
+    """[rel, href, as] of a page's files (data_url) and its chunks' files (lazy: bundle()'s; no ?v=), each once."""
+    names = dict.fromkeys(n for m in chunks for n in (lazy or {}).get(m, []))
+    return [["preload", data_url(f, version, own), "fetch"] for f in files] + [["modulepreload", f"assets/{n}"] for n in names]
+
+
+def grid_preload(cards, ids=None, version="", lazy=None, sheets=None, own=None):
     """index.html's preload hints for the grid's first pictures (grid.js tileHtml: srcset 192w/240w/360w, sizes = the tile size),
     added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size.
     ids: the grid's first cards in order (first_screen), else Name order. A link to the Rulebook starts app.js loadBook's
-    files instead: rules.json at getJson's URL (version: its stamp) and the rulebook's chunks (lazy: bundle()'s)."""
+    files instead: rules.json at getJson's URL (version: the build's stamp, own: the files') and the rulebook's chunks
+    (lazy: bundle()'s); one to a Changes tab, Stats or People its files and chunks (EARLY_ROUTES), a tab's first screen's
+    file instead of its whole one when renderChanges draws from it (no ?query, not a reload: S.placing)."""
     by_id = {c["id"]: c for c in cards}
     order = [by_id[i] for i in ids] if ids else sorted((c for c in cards if not c.get("hidden")), key=lambda c: re.sub(r"^[\W_]+", "", c["name"].lower()))   # grid.js nameKey
     first = [c["img"] for c in order if c.get("img")][:GRID_PRELOADS]
-    book = [["preload", f"data/rules.json{f'?v={version}' if re.fullmatch(r'[0-9a-f]+', version or '') else ''}", "fetch"]]   # app.js V
+    book = [["preload", data_url("rules.json", version, own), "fetch"]]   # app.js dataUrl
     book += [["preload", sheets["rulebook"], "style"]] if (sheets or {}).get("rulebook") else []   # its sheet (sheet_tags')
     book += [["modulepreload", f"assets/{n}"] for n in (lazy or {}).get("rulebook.js", [])]    # the meta chunks' names, no ?v=
-    return ("<script>(() => { try { if (/^#\\/?rules(\\/|\\?|$)/.test(location.hash)) {\n"
-            f"    for (const [r, h, as] of {json.dumps(book)}) {{ const l = document.createElement(\"link\"); l.rel = r; l.href = h;\n"
+    entry = lambda p, hints, head=None: f"[{p}, {json.dumps(hints)}" + (f", {json.dumps(head)}]" if head else "]")
+    routes = [entry(r"/^#\/?rules(\/|\?|$)/", book)] + [entry(p, early_hints(f, m, version, own, lazy), h and ["preload", data_url(h, version, own), "fetch"])
+                                                        for p, f, m, h in EARLY_ROUTES]
+    return (f"<script>(() => {{ try {{ for (const [p, hints, head] of [{', '.join(routes)}]) if (p.test(location.hash)) {{\n"
+            "    const whole = /\\?./.test(location.hash) || performance.getEntriesByType(\"navigation\")[0]?.type === \"reload\";\n"   # a filter or a reload's place: no head
+            "    for (const [r, h, as] of head && !whole ? [head, ...hints.slice(1)] : hints) { const l = document.createElement(\"link\"); l.rel = r; l.href = h;\n"
             "      if (as) { l.as = as; if (as === \"fetch\") l.crossOrigin = \"\"; } document.head.append(l); }\n"
             "    return; }\n"
             + ("  if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
@@ -5819,7 +5846,7 @@ def main():
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", og_url, (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
         first = first_screen(cards, icons)
-        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1], own.get("rules.json", version), lazy, sheet_urls))
+        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1], version, lazy, sheet_urls, own))
         fh.write(index.replace("</main>\n", f"</main>\n{first[0]}\n", 1) if first else index)
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
@@ -5831,10 +5858,13 @@ def main():
     if EMPTY_MODAL not in share:
         warn("index.html: no empty #modal, so card pages go without their picture (card_frame)")
     card_share = inline_css(share, served["style.css"].decode("utf-8"), "card pages")   # they draw the card before the scripts
+    people = "".join(f'\n<link rel="preload" href="{h}" as="fetch" crossorigin>' if r == "preload" else f'\n<link rel="modulepreload" href="{h}">'
+                     for r, h, *_ in early_hints(*PEOPLE, version, own, lazy))
+    person_share = re.sub(r'<link rel="stylesheet" href="assets/style\.css\?v=\w+">', lambda m: m[0] + people, share, count=1)   # after it: first paint first
     def share_page(parts, head, modal=""):
         """DIST/<parts>/index.html: the app with its own <head> (<base> climbs back to the site root); modal: #modal's markup.
-        A card page (c/) has style.css inline."""
-        page = (card_share if parts[0] == "c" else share).replace("<!--HEAD-->", "\n".join([f'<base href="{"../" * len(parts)}">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
+        A card page (c/) has style.css inline; a person page (u/) preloads People's files and chunks."""
+        page = {"c": card_share, "u": person_share}.get(parts[0], share).replace("<!--HEAD-->", "\n".join([f'<base href="{"../" * len(parts)}">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
         for tag in default_meta:
             page = page.replace(tag, "")
         if modal:
