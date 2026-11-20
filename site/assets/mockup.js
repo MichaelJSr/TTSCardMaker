@@ -1516,7 +1516,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const fxWords = sheet ? plate.crops.flatMap(c => c.fx || []) : [];   // the plate picked follows these (plateCuts)
   const idsOf = (s, k) => { const ids = s.part ? [s.id] : printed(obj(rec?.parts) || {}, s.role).map(p => p?.id); return ids.length ? ids : [fams[k].layer?.id]; };
   const flat = (s, k) => s.role === "name" && titleOff(rec, fams[k].layer?.layer, s.part ? s.colors : todo.colors);   // redrawn flat, not tinted
-  const mixes = specs.map((s, k) => (sheet && kc && !s.added && s.text != null && txt(s.text) === txt(s.old) ? mixPlan(pixels.data, W, H, kc, plate, idsOf(s, k), s.part ? s.colors : todo.colors, s.role, readPlate) : null));   // the bake's looks of it (a part: its share)
+  const mixes = specs.map((s, k) => (sheet && kc && !s.added && s.text != null && txt(s.text) === txt(s.old) ? mixPlan(pixels.data, W, H, kc, plate, idsOf(s, k), todo.colors, s.role, readPlate) : null));   // the bake's looks of it
   const tints = specs.map((s, k) => (!mixes[k] && sheet && !s.added && s.text != null && txt(s.text) === txt(s.old) && !(Array.isArray(psd.colors) && psd.colors.some(o => o.field === s.role)) && !flat(s, k)
     ? tintPlan(pixels.data, W, plate, idsOf(s, k), kc, s.old, fams[k].layer, s.part ? s.colors : todo.colors, s.role, statuses, s.role === "ability" && ownOverlay(rec, fams[k].layer?.layer) ? readPlate : null) : null));   // a colour alone: recoloured in place
   const wiping = sheet ? specs.flatMap((s, k) => (s.added || tints[k] || mixes[k] ? [] : idsOf(s, k))) : [];   // the layers this draw wipes
