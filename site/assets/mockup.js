@@ -1005,7 +1005,8 @@ const printed = (p, f) => (f === "name" ? p.title || [] : p.ability || []).filte
  *  [{one, label, why}]. Refused when an enabled Color, Gradient or Pattern Overlay, the part's own or a group's above it,
  *  hides every title or Ability part the colour paints (layerColors). A part's own isn't counted for a whole field's
  *  colour or a phrase on a field that has one (it goes off), a phrase that is all of the part's text (_whole_span) or
- *  one after it, nor a lone Color Overlay under a phrase; a part's clip (an opaque layer clipped onto it or its group
+ *  one after it, nor a lone Color Overlay under a phrase; nor, on a field with a whole colour, the group whose shown
+ *  layers are all the field's (ownedGroup); a part's clip (an opaque layer clipped onto it or its group
  *  over it, _clipped_over) counts as its own. The record has no opacity, blend mode or fill. typed: the
  *  fields `edit` retypes; their colours are checked in the new text (a box's own, a one-layer field's), as plan_colors
  *  does. */
@@ -1028,11 +1029,11 @@ export function paintedOver(rec, colors, typed = [], edit = null) {
     const mine = list.map((x, i) => [x, layerColors(texts, i, [one], f), texts[i]]).filter(([, c]) => c);
     const full = one.phrase ? mine.filter(([, c, t]) => whole(t, c[0])).map(([x]) => x) : [];
     const hid = mine.map(([x]) => {
-      const path = String(x?.layer || "").split("/"), own = on(path.join("/"));
+      const path = String(x?.layer || "").split("/"), own = on(path.join("/")), g = lit.has(f) ? ownedGroup(rec, path.join("/"), f) : null;
       const mineToo = one.phrase && !lit.has(f) && !done.has(x) && !full.includes(x);
       if (mineToo && x?.clip) return `its clipped layer '${x.clip}'`;
       if (own.length && mineToo && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
-      for (let i = path.length - 1; i > 0; i--) { const e = on(path.slice(0, i).join("/")); if (e.length) return `its group '${path[i - 1]}''s ${e[0]}`; }
+      for (let i = path.length - 1; i > 0; i--) { const at = path.slice(0, i).join("/"), e = on(at); if (e.length && at !== g) return `its group '${path[i - 1]}''s ${e[0]}`; }
       return null;
     });
     if (hid.length && hid.every(Boolean)) out.push({ one, label: one.phrase ? `colour of ${phraseText(one.phrase)}` : `${f === "name" ? "title" : "Ability"}'s colour`,
@@ -2683,12 +2684,33 @@ function ownOverlay(rec, path, t = null) {
   const up = String(path || "").split("/").slice(0, -1).join("/");
   return oneColour(rec, path, /^(Color|Gradient)Overlay$/, t) && !(up && oneColour(rec, up));
 }
-/** Whether colors turn off the own overlay of the title layer at path (psd_edit set_colors' _overlay_off): a whole
- *  title's colour on a layer with ownOverlay. The bake then paints its letters flat in the colour. */
-export const titleOff = (rec, path, colors) => (colors || []).some(o => o?.field === "name" && !o.phrase) && ownOverlay(rec, path);
+/** The group above the field's text layer at path whose overlay a whole colour turns off too (psd_edit _owned_group): the
+ *  nearest with an enabled overlay when every layer it shows (the record's tree) is one of the field's printed parts
+ *  (The Big Yellow Cat's 'Overlay Text/Name'); its path, else null. */
+export function ownedGroup(rec, path, f) {
+  const p = obj(rec?.parts), fx = obj(rec?.effects) || {}, at = String(path || "").split("/");
+  for (let i = at.length - 1; p && i > 0; i--) {
+    const g = at.slice(0, i).join("/");
+    if (!(Array.isArray(fx[g]) && fx[g].some(n => OVERLAY.test(String(n))))) continue;   // the nearest group with one
+    let kids = Array.isArray(rec.tree) ? rec.tree : [];
+    for (const name of at.slice(0, i)) { const n = kids.find(x => x?.[0] === name && x[1] === "group"); kids = n?.[2] && Array.isArray(n[3]) ? n[3] : null; if (!kids) return null; }
+    const leaves = [], walk = (list, q) => { for (const n of list) if (n?.[2]) n[1] === "group" ? walk(Array.isArray(n[3]) ? n[3] : [], `${q}/${n[0]}`) : leaves.push(`${q}/${n[0]}`); };
+    walk(kids, g);
+    const left = printed(p, f).map(x => String(x?.layer || ""));
+    return leaves.length && leaves.every(q => left.includes(q) && left.splice(left.indexOf(q), 1)) ? g : null;
+  }
+  return null;
+}
+/** Whether colors turn off the own overlay of the title layer at path (psd_edit set_colors' _overlay_off), or its
+ *  ownedGroup's with no overlay above it: a whole title's colour. The bake then paints its letters flat in the colour. */
+export const titleOff = (rec, path, colors) => (colors || []).some(o => o?.field === "name" && !o.phrase) && (ownOverlay(rec, path) || groupOff(rec, path));
 /** The same for an Ability layer (t: its record entry): a whole Ability's colour turns its own overlay off (typed icons
  *  show their colours). */
 const abilityOff = (rec, t, colors) => (colors || []).some(o => o?.field === "ability" && !o.phrase) && ownOverlay(rec, t?.layer, t);
+function groupOff(rec, path) {
+  const g = ownedGroup(rec, path, "name"), up = String(g || "").split("/").slice(0, -1).join("/");
+  return !!g && oneColour(rec, g, /^(Color|Gradient)Overlay$/) && !(up && oneColour(rec, up));
+}
 /** Per index of R.was, the colour its letter shows under the layer's own overlay (the bake turns it off and paints the
  *  letters): the median of its ink pixels off the plate's backdrop and off the layer's Stroke colour (without one in the
  *  record: off the colour at its ink's edge, then of two colours left the lighter); null when few. */
