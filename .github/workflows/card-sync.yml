@@ -176,7 +176,8 @@ jobs:
         /commands/psd_glyphs.py
         /commands/card_standards.py
     steps: &data-steps
-      # The site build and the card checks at once (a push's data job, a guards' follow-up and the after job; not a dry
+      # The site build and the card checks at once (a push's data job, a guards' follow-up, the after job and a dispatch
+      # re-parsing named cards: not a full one, its Build would hold pages-build for minutes, nor a restore; not a dry
       # run): they set up beside this job, then wait for its Commit data (their Data wait). In the background; Site build
       # and Card checks below find them by their run-names. A push's data job dispatches no site build while the push's
       # own site run (site.yml's push paths hold the data inputs) is unfinished and under 20 s old: its Early build waits
@@ -184,7 +185,7 @@ jobs:
       # job none while its push's site run is unfinished and an early build (Images start ran): that run's Follow-up build
       # waits for this job's data commit once it has deployed the push's.
       - name: Site build start
-        if: env.DRY_RUN != 'true' && (github.event_name == 'push' || inputs.guards || github.job == 'after')
+        if: env.DRY_RUN != 'true' && (github.event_name == 'push' || inputs.guards || github.job == 'after' || inputs.cards && !inputs.full && !inputs.restore)
         env:
           GH_TOKEN: ${{ github.token }}
           GUARDS: ${{ inputs.guards }}
