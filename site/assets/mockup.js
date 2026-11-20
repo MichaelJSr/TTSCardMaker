@@ -956,6 +956,16 @@ export function statSite(rec, k, to) {
   if (kind === "two-row") return null;                 // several creatures' rows: their stat caps refuse past 10
   return `the card's ${kind === "template" ? "old-style " : ""}bars print up to 10`;
 }
+/** Why the creatures list stays on the website (psd_edit._classify_creatures' first site reason), or null: a list of
+ *  another length (split, + or - Creature), or creature 2+'s stat emptied. Then none of creature 2+'s stats bake. */
+export function creatureSite(edit, psd) {
+  const many = x => (Array.isArray(x) && x.length > 1 ? x : null), now = many(edit.creatures), was = many(psd.creatures);
+  if (edit.creatures === undefined || (!now && !was)) return null;
+  if (now?.length !== was?.length) return "each creature's stats print only on a bar per creature";
+  for (const k of STATS) for (const [n, one] of now.entries())
+    if (n && k in (one || {}) && one[k] == null && was[n]?.[k] != null) return `a bar can't show no value (creature ${n + 1}'s ${k.toUpperCase()})`;
+  return null;
+}
 const HAND_STATS = /\b(Stat|(?:HP|DEF|ATK|SPD)(?: and (?:HP|DEF|ATK|SPD))*) (?:edits need Photoshop|(?:edits|raises) bake but change nothing|bars are on each other's rows)|brighten the cells/g;
 /** The stats whose edits Card checks' real bakes refuse, leave as they are or put on the wrong bar (cards.json
  *  checks.hand: AutoCroissant card_checks _note("stats"), NO_CHANGE_NOTE, SWAP_NOTE, BRIGHT_NOTE; keep in step). */
@@ -1390,6 +1400,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     else if (compBar(rec, k) && Number.isInteger(psd[k]) && psd[k] >= 0 && psd[k] <= 10 && edit[k] > 10 && edit[k] <= 20
       && (psd[k] > 0 || compLit(rec, k))) todo.stats[k] = [psd[k], edit[k]];   // its comps' two half rows
   }                                                   // else not drawn, nothing said (owner 11-11)
+  const listed = creatureSite(edit, psd);             // the bake's website-only creatures: said, as the Rendered tab does
+  if (listed) { out.site.push(["The creature list", listed]); for (const k of Object.keys(todo.stats)) if (k.includes("@")) delete todo.stats[k]; }
   if (todo.name != null && titleInPicture(rec)) { out.site.push(["name", "title"]); todo.name = null; }   // the dialog's note
   const starCut = todo.stars && barCut(spics, "stars", ...todo.stars), starImg = starCut ? await loadImage(spics.img) : null;
   if (stale()) return null;

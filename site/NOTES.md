@@ -617,7 +617,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   only the fields unlike the PSD are redrawn (`changes`): name, text, stats, stars, types (not a reorder); a stat the
   mock-up can't preview is not drawn and nothing is said (owner 2026-11-11); on old bars (`statSite`: no layer-comp
   smart object, `compBar`) "HP 12 shows on the website only: the card's old-style bars print up to 10." (several rows:
-  can't tell). Custom and item bars, the Isaac bars, a stat past 10, a layer-comp bar at 0 (2026-11-13) and template
+  can't tell). Creatures the bake leaves on the website (2026-11-20, `creatureSite`, psd_edit._classify_creatures): a
+  list of another length (Split into creatures, + or − Creature) "The creature list shows on the website only: each
+  creature's stats print only on a bar per creature.", or creature 2+'s stat emptied "...: a bar can't show no value
+  (creature 2's HP)."; then no creature 2+ stat is drawn (none bakes), else they are the plate's `<k>@<n>` pictures.
+  Custom and item bars, the Isaac bars, a stat past 10, a layer-comp bar at 0 (2026-11-13) and template
   bars `isBar` may miss (2026-11-11): the plate's `bars` (AutoCroissant `card_plates.with_bars`: the bake's own picture
   of every value it takes, at the site's view, `vw` px wide, only the pixels it moves) are pasted (`barCut`, `putBar`)
   instead of the cells, on every card shape; a value with none (the bake refuses it) draws nothing. With no plate
