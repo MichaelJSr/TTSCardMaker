@@ -465,6 +465,16 @@ local function unpunct(text, gap, spaces)
     return table.concat(out)
 end
 
+local function unflat(text, k)                         -- text's index of unpunct(text, "", true)'s kth character
+    for i = 1, #text do
+        local b = text:byte(i)
+        if b >= 128 or b >= 97 and b <= 122 or b >= 48 and b <= 57 or b == 32 then
+            k = k - 1
+            if k == 0 then return i end
+        end
+    end
+end
+
 local HEX = {}
 for i = 1, 16 do HEX[("0123456789abcdef"):sub(i, i)] = true end
 local function hexColour(c)                            -- "#rrggbb", else nil
@@ -1348,18 +1358,24 @@ local function listPages(color, query)
         if sp > start then table.insert(words, q:sub(start, sp - 1)) end
         start = sp + 1
     end
+    local bare = {}                                    -- "nme": else the text without its punctuation (N.M.E.), as Find a card
+    for i, w in ipairs(words) do bare[i] = unpunct(w, "") == w end
     local whole, rest = {}, {}                         -- pages whose name starts a word with every word first ("item":
     for _, p in ipairs(bookPages) do                   -- Items), then those with every word whole ("(OS)" not "most"), the rest
         if #words == 0 then
             if p.chapter then table.insert(list, {p.page, (p.num ~= "" and (p.num .. ".  ") or "") .. p.name .. "   p. " .. (p.page + 1)}) end
         else
             local at, named, all, name = nil, true, true, p.name:lower()
-            for _, w in ipairs(words) do
-                local hit = p.low:find(w, 1, true)
-                if not hit then at = nil break end
-                local wh = all and #w > 1 and wholeAt(p.low, w, hit) or nil   -- a lone letter: in too many words to test
+            for i, w in ipairs(words) do
+                local hit, flat = p.low:find(w, 1, true), nil
+                if not hit and bare[i] then
+                    p.flat = p.flat or unpunct(p.low, "", true)   -- once
+                    flat = p.flat:find(w, 1, true)
+                end
+                if not (hit or flat) then at = nil break end
+                local wh = all and #w > 1 and wholeAt(hit and p.low or p.flat, w, hit or flat) or nil   -- a lone letter: in too many words to test
                 all = all and (#w == 1 or wh ~= nil)
-                at = at or wh or hit
+                at = at or hit and (wh or hit) or unflat(p.low, wh or flat)
                 named = named and wholeAt(name, w, name:find(w, 1, true), true) ~= nil
             end
             if at then
