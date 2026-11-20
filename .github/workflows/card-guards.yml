@@ -508,6 +508,8 @@ jobs:
 
       # A push's Check starts here, beside the fonts restore (a dispatch's runs at Check, after its two checks): its first
       # font read waits for Fonts ready's mark (AutoCroissant card_guards.fonts_ready). Output and exit code in RUNNER_TEMP.
+      # With MODE on its pushed PNGs' recompressions go to a process of their own (nice 19: idle cores beside the check,
+      # then after Decided), so Decided does not wait for them; Land joins them.
       - name: Check start
         if: github.event_name == 'push' && env.MODE != 'off'
         working-directory: bot
@@ -521,6 +523,7 @@ jobs:
         run: |
           args=(--clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --after "$GITHUB_SHA" --out "$OUT" --mode "$MODE"
                 --author "$AUTHOR" --before "$BEFORE")
+          [ "$MODE" != on ] || args+=(--recompress later)
           t=$RUNNER_TEMP/check
           nohup bash -c 'python -m commands.card_guards check "$@" > "$0.out" 2> "$0.err"; echo $? > "$0.code"' "$t" "${args[@]}" \
             < /dev/null > /dev/null 2>&1 &
@@ -627,7 +630,8 @@ jobs:
           python -m commands.card_guards check "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
       # Whether there is anything to land or tell (none: no Land, no post job). summary.json's told, writes and card
-      # errors. fixes: a push's writes to land (on); kept: each of them keeps every card picture (summary.json's kept).
+      # errors. fixes: a push's writes to land (on; a pushed PNG still to recompress counts); kept: each of them keeps
+      # every card picture (summary.json's kept).
       # normalise: the PSDs the Normalise step converts (on and dry only; never `all`), counted as writes.
       - name: Plan for the post job
         id: plan
@@ -775,7 +779,8 @@ jobs:
       # first: land never raises). A dispatch with dry_run off lands the same way (No push run in its window refused it
       # while a push run of its commit was unfinished). --rerun (a re-run, a dispatch): an earlier run may have landed the
       # writes, so a branch that cannot be read tells none of them as not made. Only with something to land or tell
-      # (Plan's land) and MODE on, as the post job.
+      # (Plan's land) and MODE on, as the post job. It first joins Check start's recompressions (their process ended, 5
+      # minutes at most; plan.json, summary.json and report.md rewritten with them).
       - name: Land
         id: land
         if: ${{ !cancelled() && steps.plan.outputs.land == 'true' && env.MODE == 'on' }}
