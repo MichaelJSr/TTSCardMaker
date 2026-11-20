@@ -1,12 +1,12 @@
 # The card workflows' one Python setup: Python 3.14 and AutoCroissant requirements-cards.txt (the psd-tools fork's one
 # pin) in a venv cached whole per its requirement lines (comments don't count), runner and Python patch version (its
 # interpreter's path; one entry for every card job): a hit restores it (its packages' metadata checked); a runner image's
-# new patch takes the last patch's entry, its interpreter links made again (cp314 packages fit every 3.14.x). A miss installs
-# it offline with uv from the wheels, cached per Python minor version (a miss builds them with pip: uv has no `pip wheel`), and saves both. The oxipng CLI (the lossless PNG
+# new patch takes the last patch's entry, its interpreter links made again (cp314 packages fit every 3.14.x). A miss builds
+# the wheels with pip (uv has no `pip wheel`), installs them with uv and saves the venv. The oxipng CLI (the lossless PNG
 # recompression, AutoCroissant png_export) is the release binary, its sha256 pinned, kept in the venv (.oxipng/): fetched
 # on a miss whatever the input, which only puts it on PATH. The bot checkout is at bot/.
 name: Card Python
-description: Python 3.14 with the card packages from the shared venv and wheel caches
+description: Python 3.14 with the card packages from the shared venv cache
 
 inputs:
   venv:
@@ -21,7 +21,7 @@ inputs:
 
 outputs:
   wheels:
-    description: "built when the wheel cache missed (a new entry was saved)"
+    description: "built when the venv was installed (a new entry saved)"
     value: ${{ steps.install.outputs.wheels }}
 
 runs:
@@ -75,13 +75,6 @@ runs:
         fi
         echo "ok=false" >> "$GITHUB_OUTPUT"
 
-    - id: wheels
-      if: steps.check.outputs.ok != 'true'
-      uses: actions/cache/restore@v6
-      with:
-        path: ~/.cache/card-wheels
-        key: card-wheels-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.reqs.outputs.minor }}
-
     - if: steps.check.outputs.ok != 'true'
       uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
       with:
@@ -92,25 +85,15 @@ runs:
       if: steps.check.outputs.ok != 'true'
       shell: bash
       env:
-        HIT: ${{ steps.wheels.outputs.cache-hit }}
         VENV: ${{ steps.reqs.outputs.venv }}
         PYTHON: ${{ steps.python.outputs.python-path }}
         UV_COMPILE_BYTECODE: "1"
       run: |
-        if [ "$HIT" != true ]; then
-          mkdir -p ~/.cache/card-wheels
-          env -u GIT_NO_LAZY_FETCH pip wheel -q -f ~/.cache/card-wheels -w ~/.cache/card-wheels -r bot/requirements-cards.txt --uploaded-prior-to 2026-11-07   # PyPI as then, the fork's build packages too: bump it with each fork re-pin. env -u: pip clones the fork blobless, and a job's GIT_NO_LAZY_FETCH=1 (Card checks) fails its checkout
-          echo "wheels=built" >> "$GITHUB_OUTPUT"
-        fi
+        env -u GIT_NO_LAZY_FETCH pip wheel -q -w "$RUNNER_TEMP/card-wheels" -r bot/requirements-cards.txt --uploaded-prior-to 2026-11-07   # PyPI as then, the fork's build packages too: bump it with each fork re-pin. env -u: pip clones the fork blobless, and a job's GIT_NO_LAZY_FETCH=1 (Card checks) fails its checkout
+        echo "wheels=built" >> "$GITHUB_OUTPUT"
         sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
         "$PYTHON" -m venv "$VENV" --without-pip
-        UV_PYTHON=$VENV/bin/python uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
-
-    - if: steps.check.outputs.ok != 'true' && steps.wheels.outputs.cache-hit != 'true'     # only once they installed
-      uses: actions/cache/save@v6
-      with:
-        path: ~/.cache/card-wheels
-        key: ${{ steps.wheels.outputs.cache-primary-key }}
+        UV_PYTHON=$VENV/bin/python uv pip install -q --no-index -f "$RUNNER_TEMP/card-wheels" -r "$RUNNER_TEMP/cards.txt"
 
     # The CLI in the venv entry: a miss fetches it before the save; a hit only checks it (no network), else fetches it
     - id: oxipng     # AutoCroissant docs/Future/SMALLER_PNG_PUSHES.md

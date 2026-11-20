@@ -2467,7 +2467,7 @@ jobs:
     steps:
       - *chain
 
-  # A new wheel, font or history cache (its key changes with requirements-cards.txt, Python, MDW/Fonts, the day): the
+  # A new venv, font or history cache (its key changes with requirements-cards.txt, Python, MDW/Fonts, the day): the
   # older ones go (caches.yml)
   caches:
     needs: [data, main]
@@ -2476,4 +2476,4 @@ jobs:
       actions: write
     uses: ./.github/workflows/caches.yml
     with:
-      prefixes: card-wheels- card-venv- card-fonts- main-history-
+      prefixes: card-venv- card-fonts- main-history-

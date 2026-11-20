@@ -1333,7 +1333,7 @@ jobs:
             | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --input - > /dev/null \
             || echo "::warning::the failure marker could not be left: Card sync may tell this push again"
 
-  # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
+  # A new venv or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
   caches:
     needs: check
     if: ${{ !cancelled() && needs.check.outputs.saved == 'true' }}
@@ -1341,4 +1341,4 @@ jobs:
       actions: write
     uses: ./.github/workflows/caches.yml
     with:
-      prefixes: card-wheels- card-venv- card-fonts-
+      prefixes: card-venv- card-fonts-
