@@ -5819,9 +5819,11 @@ def main():
             fh.write(page)
     def og_image(c):
         """The card's PNG on raw GitHub at its last change (pin), else at the build's commit: a new picture, a new URL.
-        No size: the PNG isn't downloaded (link previews measure it)."""
+        No size: the PNG isn't downloaded (link previews measure it). A Morgue entry from Discord: its pic, with its size."""
         if c.get("png") not in tree:
-            return "", None
+            pic = c.get("pic") or ""
+            pic = pic if "://" in pic else f"{SITE_URL}/{quote(pic)}" if pic and SITE_URL else ""   # else under dist/history
+            return pic, ((c["tw"], c["th"]) if pic and c.get("tw") and c.get("th") else None)
         at = pin(c["png"])
         return (f"https://raw.githubusercontent.com/{CARD_REPO}/{at}/" if at else card_raw()) + quote(c["png"]), None
     for c in cards + morgue:
@@ -5830,7 +5832,8 @@ def main():
         desc, (image, size), frame = share_text(c), og_image(c), card_frame(c)
         share_page(("c", c["id"]), [
             *([f'<link rel="preload" as="image" imagesrcset="{card_view_srcset(c)}" imagesizes="{CARD_VIEW_SIZES}" fetchpriority="high">'] if frame   # card_frame's picture; no href: no wrong guess without imagesrcset
-              else [f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
+              else [f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" fetchpriority="high">'] if c.get("img")   # the dialog's picture (app.js placeholderOf)
+              else [f'<link rel="preload" as="image" href="{html.escape(c["pic"])}" fetchpriority="high">'] if c.get("pic") else []),   # a Morgue entry from Discord's (morgueFirst)
             *([f'<link rel="preload" as="font" type="font/woff2" href="{BADGE_FONT}" crossorigin>'] if has_badges(c.get("ability") or "") else []),   # its badges' labels
             og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
             f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
