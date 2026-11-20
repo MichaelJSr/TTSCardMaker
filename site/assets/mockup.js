@@ -1462,17 +1462,18 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const fxWords = sheet ? plate.crops.flatMap(c => c.fx || []) : [];   // the plate picked follows these (plateCuts)
   const idsOf = (s, k) => { const ids = s.part ? [s.id] : printed(obj(rec?.parts) || {}, s.role).map(p => p?.id); return ids.length ? ids : [fams[k].layer?.id]; };
   const flat = (s, k) => s.role === "name" && titleOff(rec, fams[k].layer?.layer, s.part ? s.colors : todo.colors);   // redrawn flat, not tinted
-  const tints = specs.map((s, k) => (sheet && !s.added && s.text != null && txt(s.text) === txt(s.old) && !(Array.isArray(psd.colors) && psd.colors.some(o => o.field === s.role)) && !flat(s, k)
+  const mixes = specs.map((s, k) => (sheet && kc && !s.added && s.text != null && txt(s.text) === txt(s.old) ? mixPlan(pixels.data, W, H, kc, plate, idsOf(s, k), todo.colors, s.role, readPlate) : null));   // the bake's looks of it
+  const tints = specs.map((s, k) => (!mixes[k] && sheet && !s.added && s.text != null && txt(s.text) === txt(s.old) && !(Array.isArray(psd.colors) && psd.colors.some(o => o.field === s.role)) && !flat(s, k)
     ? tintPlan(pixels.data, W, plate, idsOf(s, k), kc, s.old, fams[k].layer, s.part ? s.colors : todo.colors, s.role, statuses, s.role === "ability" && ownOverlay(rec, fams[k].layer?.layer) ? readPlate : null) : null));   // a colour alone: recoloured in place
-  const wiping = sheet ? specs.flatMap((s, k) => (s.added || tints[k] ? [] : idsOf(s, k))) : [];   // the layers this draw wipes
-  const sig = JSON.stringify([src, W, H, card?.id, bfam, barsBottom, rows.map(r => r.k), seen.length, fams.map(f => f.fam), tints.map(Boolean),
+  const wiping = sheet ? specs.flatMap((s, k) => (s.added || tints[k] || mixes[k] ? [] : idsOf(s, k))) : [];   // the layers this draw wipes
+  const sig = JSON.stringify([src, W, H, card?.id, bfam, barsBottom, rows.map(r => r.k), seen.length, fams.map(f => f.fam), tints.map(Boolean), mixes.map(Boolean),
     specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id, fxWords.map(w => count(text, w))])]);
   const reuse = eraseMemo?.sig === sig && eraseMemo.rec === rec && eraseMemo.icons === icons && eraseMemo.sheet === sheet;
   const plans = reuse ? eraseMemo.plans : [];
   const cardPx = reuse ? eraseMemo.card : specs.length ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines, a title's splice
   if (reuse) pixels.data.set(eraseMemo.data);
   for (const [k, { role, text, old, label, own: partBox, added, part, colors: shared, follow }] of specs.entries()) {
-    if (tints[k]) { out.drawn.push(label); continue; }   // never erased: tinted below
+    if (tints[k] || mixes[k]) { out.drawn.push(label); continue; }   // never erased: tinted or mixed below
     const { fam, layer } = fams[k];
     const set = role === "ability" || role === "name" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems) and letter width (psd_details)
     const width = (t, z) => {
@@ -1552,6 +1553,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   }
   if (!reuse) eraseMemo = { sig, rec, icons, sheet, plans, data: pixels.data.slice(), card: cardPx };
   for (const t of tints) if (t) tintInPlace(pixels.data, W, H, kc, t, readPlate);   // after the memo: it never holds tinted pixels
+  for (const m of mixes) if (m) paintMix(pixels.data, W, m);
   const shown = { ...psd };                            // the values the rows show as they are redrawn
   const cuts = Object.entries(todo.stats).map(([k, [from, to]]) => barCut(pics, k, from, to));
   const picsImg = cuts.some(Boolean) ? await loadImage(pics.img) : null;
@@ -2533,6 +2535,73 @@ export function paintLit(data, W, H, row, lit, to) {
     for (let y = T.y0 + 1; y < T.y1 - 1; y++) for (let x = a + 1; x < b - 1; x++) {
       const i = (y * W + x) * 4, j = ((y + dy) * W + sa + (k || !c ? x - a : Math.max(x - a, (b - a) >> 1))) * 4;
       data[i] = data[j]; data[i + 1] = data[j + 1]; data[i + 2] = data[j + 2];
+    }
+  }
+}
+
+// ---- a whole-field colour on textured or adjusted letters: mixed from the bake's looks (card_plates tints)
+export const PROBES = ["#000000", "#ff0000", "#00ff00", "#0000ff", "#00ffff", "#ff00ff", "#ffff00", "#ffffff", "#808080"];   // AutoCroissant card_plates.PROBES
+const LOOK_MOVED = 8;                                 // levels: a pixel the looks move more than this is the letters'
+const lumaOf = ([r, g, b]) => 0.3 * r + 0.59 * g + 0.11 * b;   // psd-tools' Gradient Map's (blend.py _lum)
+const PROBE_LUMA = PROBES.map(h => lumaOf([1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255)));
+const BY_LUMA = PROBE_LUMA.map((_, n) => n).sort((a, b) => PROBE_LUMA[a] - PROBE_LUMA[b]);
+const MIXES = new WeakMap();                          // a plate's tint -> its looks read at one size (mixLooks)
+/** A tint's looks at w x h (read: the plate's cuts), read once: {key, V (a look's pixels per PROBES), moved, still (the
+ *  box's pixel indices the looks move past LOOK_MOVED, and the rest)}. */
+function mixLooks(t, w, h, read) {
+  const key = `${w}x${h}`, had = MIXES.get(t);
+  if (had?.key === key) return had;
+  const V = t.at.map(at => read({ at }, w, h)), moved = [], still = [];
+  for (let p = 0, j = 0; p < w * h; p++, j += 4) {
+    let mv = false;
+    for (let n = 1; n < V.length && !mv; n++) mv = Math.abs(V[n][j] - V[0][j]) > LOOK_MOVED || Math.abs(V[n][j + 1] - V[0][j + 1]) > LOOK_MOVED || Math.abs(V[n][j + 2] - V[0][j + 2]) > LOOK_MOVED;
+    (mv ? moved : still).push(p);
+  }
+  const bent = new Float32Array(moved.length * 3);    // per moved pixel and channel: the grey look less the corners' mean
+  moved.forEach((p, q) => { for (let e = 0; e < 3; e++) { let sum = 0; for (let n = 0; n < 8; n++) sum += V[n][p * 4 + e]; bent[q * 3 + e] = V[8][p * 4 + e] - sum / 8; } });
+  const got = { key, V, moved: Int32Array.from(moved), still: Int32Array.from(still), bent };
+  MIXES.set(t, got);
+  return got;
+}
+/** {boxes: [{x0, y0, w, ...mixLooks}], rgb (0..1)} for a whole-field colour (colors: the field's have no phrase; the
+ *  last paints) on layers ids whose plate holds the bake's looks of it in the PROBES colours (tints), or null (another
+ *  picture's: their unmoved pixels off the card's, PLATE_OFF). */
+export function mixPlan(data, W, H, k, plate, ids, colors, role, read) {
+  const mine = (Array.isArray(colors) ? colors : []).filter(o => o?.field === role), rgb = mine.length && !mine.some(o => o.phrase) ? hexRgb(mine[mine.length - 1].color) : null;
+  const of = id => (Array.isArray(plate?.tints) ? plate.tints : []).find(t => String(t.id) === String(id) && Array.isArray(t.box) && Array.isArray(t.at) && t.at.length === PROBES.length);
+  if (!rgb || !ids.length || ids.some(id => !of(id))) return null;
+  const boxes = [];
+  for (const id of ids) {
+    const t = of(id), [x0, y0, x1, y1] = px(t.box.map(v => v * k), W, H), w = x1 - x0, h = y1 - y0;
+    if (w < 1 || h < 1) return null;
+    const got = mixLooks(t, w, h, read), V0 = got.V[0];
+    let sum = 0;
+    for (const p of got.still) {
+      const j = p * 4, i = ((y0 + ((p / w) | 0)) * W + x0 + (p % w)) * 4;
+      sum += Math.max(Math.abs(V0[j] - data[i]), Math.abs(V0[j + 1] - data[i + 1]), Math.abs(V0[j + 2] - data[i + 2]));
+    }
+    if (got.still.length >= 50 && sum > PLATE_OFF * got.still.length) return null;
+    boxes.push({ x0, y0, w, luma: !!t.luma, ...got });
+  }
+  return { boxes, rgb: rgb.map(v => v / 255) };
+}
+/** mixPlan's looks mixed at its colour, each pixel they move: trilinear over the RGB cube's corner looks plus the grey
+ *  look's bend per channel ((grey - the corners' mean) x 4c(1 - c)); under a Gradient Map (luma: its output follows the
+ *  luma alone) between the two looks whose probes' lumas hold the colour's. The rest keep the card's pixels. */
+export function paintMix(data, W, { boxes, rgb }) {
+  const [r, g, b] = rgb, [R, G, B] = rgb.map(v => 1 - v), bend = rgb.map(v => 4 * v * (1 - v));
+  const cube = [R * G * B, r * G * B, R * g * B, R * G * b, R * g * b, r * G * b, r * g * B, r * g * b];   // PROBES' corners
+  const L = lumaOf(rgb), f = BY_LUMA.findIndex(n => PROBE_LUMA[n] >= L), s = f < 0 ? BY_LUMA.length - 1 : Math.max(1, f), lo = BY_LUMA[s - 1], hi = BY_LUMA[s];
+  const t = clamp((L - PROBE_LUMA[lo]) / (PROBE_LUMA[hi] - PROBE_LUMA[lo]), 0, 1);
+  for (const { x0, y0, w, V, moved, bent, luma } of boxes) {
+    const [k0, k1, k2, k3, k4, k5, k6, k7] = V, [c0, c1, c2, c3, c4, c5, c6, c7] = cube, A = V[lo], Z = V[hi];
+    for (let q = 0; q < moved.length; q++) {
+      const p = moved[q], j = p * 4, i = ((y0 + ((p / w) | 0)) * W + x0 + (p % w)) * 4;
+      for (let e = 0; e < 3; e++) {
+        const o = j + e;                              // a Uint8ClampedArray rounds and clamps
+        data[i + e] = luma ? A[o] + (Z[o] - A[o]) * t
+          : c0 * k0[o] + c1 * k1[o] + c2 * k2[o] + c3 * k3[o] + c4 * k4[o] + c5 * k5[o] + c6 * k6[o] + c7 * k7[o] + bent[q * 3 + e] * bend[e];
+      }
     }
   }
 }
