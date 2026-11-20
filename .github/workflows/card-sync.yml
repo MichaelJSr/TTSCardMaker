@@ -2332,7 +2332,8 @@ jobs:
   # is left, a lane failed (Discord was told), another live run's lane will read it (unfinished: its own chain looks
   # again), after CHAIN_IDLE runs in a row without a data or main commit or CHAIN_MAX runs (the safety schedule picks it
   # up); never from a dry run. The chain input carries the count. A push's run (its main lane waits for its guards) also
-  # looks once its data lane is done, for the data's leftovers, so a re-parse goes on at once. This run's data commit
+  # looks once its data lane is done, for the data's leftovers, so a re-parse goes on at once (not for this run's own
+  # bake records: its after job merges them, 11-20). This run's data commit
   # moved TTS names its save never read (TTS names; named=old): one plain run instead (no chain input: its main Gate
   # goes, its data job finds nothing new, so it cannot loop), past the idle and run caps.
   chain-data:
@@ -2352,6 +2353,7 @@ jobs:
       contents: read      # the data branch's manifest
     env:
       TITLE: Chain after the data
+      OWN_RECORDS: skip   # this run's bake records: its after job merges them (else Chain counts them)
       LANES: "data=${{ needs.data.result }}"
       PROGRESS: ${{ needs.data.outputs.committed == 'true' && 'true' || 'false' }}
       DUE: ""
@@ -2388,9 +2390,10 @@ jobs:
           merged=$(gh api "${raw[@]}" "repos/$GITHUB_REPOSITORY/contents/db/bake-records.json?ref=data" 2> /dev/null | jq -c '.merged // {}') \
             || merged=""
           if [ -z "$merged" ]; then merged='{}'; fi
+          me=""; if [ "${OWN_RECORDS:-}" = skip ]; then me=$GITHUB_RUN_ID; fi
           if ! records=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=bake-records&per_page=100" \
-              | jq --argjson seen "$merged" '[.artifacts[] | select((.expired | not) and $seen[(.id | tostring)] == null
-                and .workflow_run.head_repository_id == .workflow_run.repository_id)] | length'); then
+              | jq --argjson seen "$merged" --arg me "$me" '[.artifacts[] | select((.expired | not) and $seen[(.id | tostring)] == null
+                and .workflow_run.head_repository_id == .workflow_run.repository_id and (.workflow_run.id | tostring) != $me)] | length'); then
             echo "::warning::the bake records were not listed"
             records=0
           fi
