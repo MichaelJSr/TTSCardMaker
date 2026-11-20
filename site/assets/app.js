@@ -1496,6 +1496,10 @@ function renderRules(r) {
     return;
   }
   if (r.arg === "print") { renderSheets(); return; }
+  const page = bookPage(r.params.get("q") || "", S.book.chapters);
+  if (page && ![qInput, $("#rules-q")].includes(document.activeElement)) {   // an old page's link: its chapter (typed: a search)
+    const h = `#/rules/${page.id}`; rulesAt = ""; history.replaceState(history.state, "", h); renderView(parseHash(), h); return;
+  }
   const typed = bookFold((r.params.get("q") || "").trim()), chapters = S.book.chapters, x = typed && bookTag(typed, chapters);
   const q = x ? x.row : typed;                           // "(2pg)": the book's (XPG) row
   if (document.activeElement !== qInput) qInput.value = "";
@@ -1626,6 +1630,13 @@ function bookTag(q, chapters) {
   if (!m || RB.printed(chapters).some(c => new RegExp(`(?<![\\w/-])${tag}(?![a-z])`).test(c.text))) return null;
   const row = `(${m[1] ? "y/" : ""}x${m[3]})`;
   return chapters.some(c => bookRe(row).test(c.text)) ? { tag: `(${tag.toUpperCase()})`, row, says: m[1] ? `Y = ${m[1]} and X = ${m[2]}` : `X = ${m[2]}` } : null;
+}
+// an old Photoshop page's name ("11 Abilities4", "08 Global Turn": the bot's 10-25 changelog links): the chapter of that
+// number and title (spaces and a first "The" aside), a page number after it
+function bookPage(q, chapters) {
+  const m = /^(\d\d) (\S.*)$/.exec(q.trim()), f = s => s.replace(/^the\s+/i, "").replace(/\s+/g, "").toLowerCase();
+  return m && chapters.find(c => { const t = f(c.title), n = f(m[2]);
+    return t && Number(c.num) === Number(m[1]) && n.startsWith(t) && /^\d*$/.test(n.slice(t.length)); }) || null;
 }
 // a block's words as the chapter list reads them (plainText): badges as typed, icons as [name], card pictures by name
 function bookWords(el) {
