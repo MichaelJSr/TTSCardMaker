@@ -1,7 +1,8 @@
 // The quick image mock-up: the edited name, text, stats, stars and type icons drawn over the card image in a canvas, at
 // once, in the browser (the Edit dialog and the card page, edit mode). Never the real image: the bake draws that (preview.js).
 // Stars: the bake's own picture from the card's plate (card_plates.with_stars), else, as type icons, where the bake would
-// put them (the details record's header: starPlan, typePlan), else in a box.
+// put them (the details record's header: starPlan, typePlan), else in a box. A new type icon's colours: the shown icons'
+// (iconLook), or a look that redraws the bake's own made icons of two hues far better (the plate's typeProbe: probeLook).
 // Layout: the PSD's text boxes when the details record has them (text[].box, canvas px), else the card template's
 // (TEMPLATES, measured on the PSDs, below the stat bars) narrowed to where the image shows text: the block of lines
 // (textBlocks) whose size and line count fit the old text (calibrate). That block is erased with the card's own
@@ -1666,7 +1667,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       for (const b of plan.draw) drawIcon(ctx, look ? recolour(src, look, at(b)) : src, at(b));
     }
     else {
-      const look = plan.draw.length ? await iconLook(img, head?.types?.row, icons, k, true) : null;   // the bake copies a shown icon's look
+      let look = plan.draw.length ? await iconLook(img, head?.types?.row, icons, k, true) : null;   // the bake copies a shown icon's look
+      if (plan.draw.length && ours && plate.typeProbe?.vw > 0 && Array.isArray(plate.typeProbe.probes)) look = await probeLook(plate.typeProbe, icons, k, W, look);
       for (const d of plan.draw) { const im = await iconOf(icons, d.name); drawIcon(ctx, look && im ? recolour(im, look, at(d.core), true) : im, at(d.core), true); }
     }
     out.drawn.push(label);
@@ -1731,11 +1733,38 @@ async function iconLook(img, row, icons, k, solid = false) {
   }
   return fitLook(pairs);
 }
+/** A new type icon's look, checked on the bake's own made icons (p: the plate's typeProbe, a warm and a cool type):
+ *  the shown icons' (shown, else stock colours) unless stock colours or a fit to both probes (fitLook's luma or channel
+ *  map; each probe within 25 levels, so one hue's colours carried to the other fail: Galacta Knight's Ice drawn orange)
+ *  draws them in half its error, fitLook's own rule. */
+async function probeLook(p, icons, k, W, shown) {
+  const v = W / p.vw, sets = [];
+  for (const q of p.probes) {
+    const im = Array.isArray(q.core) && Array.isArray(q.at) ? await iconOf(icons, q.name) : null, pim = im ? await loadImage(q.img) : null;
+    const sw = im?.naturalWidth, sh = im?.naturalHeight;
+    if (!sw || !sh || !pim || !(k > 0)) continue;
+    const o = opaqueBox(im), b = q.core.map(c => c * k), s = Math.min((b[2] - b[0]) / (o[2] - o[0]), (b[3] - b[1]) / (o[3] - o[1]));
+    const w = Math.round(sw * s), h = Math.round(sh * s);   // by its opaque part, as iconLook's solid
+    const x = Math.round(b[0] + (b[2] - b[0] - (o[2] - o[0]) * s) / 2 - o[0] * s), y = Math.round(b[1] + (b[3] - b[1] - (o[3] - o[1]) * s) / 2 - o[1] * s);
+    if (w < 4 || h < 4) continue;
+    sets.push([drawn(im, 0, 0, sw, sh, w, h).getImageData(0, 0, w, h).data, drawn(pim, x / v - q.at[0], y / v - q.at[1], w / v, h / v, w, h).getImageData(0, 0, w, h).data]);
+  }
+  if (!sets.length) return shown;
+  const err = (look, [st, th]) => { let e = 0, n = 0; for (let i = 0; i < st.length; i += 4) if (st[i + 3] >= 245) { const o = look ? lookMap(look, st[i], st[i + 1], st[i + 2]) : st.slice(i, i + 3); e += Math.abs(o[0] - th[i]) + Math.abs(o[1] - th[i + 1]) + Math.abs(o[2] - th[i + 2]); n++; } return n ? e / n / 3 : Infinity; };
+  const mean = es => es.reduce((a, e) => a + e, 0) / es.length, base = mean(sets.map(t => err(shown, t)));
+  const tried = shown ? [[null, mean(sets.map(t => err(null, t)))]] : [];
+  if (sets.length > 1) for (const kind of ["luma", "chan"]) {
+    const look = fitLook(sets, kind), es = look ? sets.map(t => err(look, t)) : [];
+    if (look && Math.max(...es) < 25) tried.push([look, mean(es)]);
+  }
+  const [best] = tried.sort((a, b) => a[1] - b[1]);
+  return best && Number.isFinite(base) && best[1] * 2 <= base ? best[0] : shown;
+}
 /** A recolouring from pairs [[stock, shown]] of RGBA arrays, on the stock's opaque pixels: luma -> colour (a Gradient
  *  Map, a Color Fill) or each channel -> itself (Curves, Levels, Exposure), 16 bins each, the closer one. Only when the
  *  shown pixels are far from the stock's (mean over 36 levels) and the map reads them within half of that and under
  *  25 levels; else null (stock colours, or the icon's own art). */
-export function fitLook(pairs) {
+export function fitLook(pairs, kind = "") {
   const lum = Array.from({ length: 16 }, () => [0, 0, 0, 0]), chan = [0, 1, 2].map(() => Array.from({ length: 16 }, () => [0, 0]));
   const each = fn => { for (const [st, th] of pairs) for (let i = 0; i < st.length; i += 4) if (st[i + 3] >= 245) fn(st, th, i); };
   let off = 0, n = 0;
@@ -1755,6 +1784,7 @@ export function fitLook(pairs) {
   });
   const looks = [{ luma: fill(lum.map(([r, g, b, m]) => (m ? [r / m, g / m, b / m] : null))) },
     { chan: [0, 1, 2].map(ch => fill(chan[ch].map(([t, m]) => (m ? [t / m] : null))).map(v => v[0])) }];
+  if (kind) return looks.find(look => look[kind]);   // that kind, ungated (probeLook gates it)
   const err = look => { let e = 0; each((st, th, i) => { const o = lookMap(look, st[i], st[i + 1], st[i + 2]); e += (Math.abs(o[0] - th[i]) + Math.abs(o[1] - th[i + 1]) + Math.abs(o[2] - th[i + 2])) / 3; }); return e / n; };
   const [best] = looks.map(look => ({ look, e: err(look) })).sort((x, y) => x.e - y.e);
   return off > 36 && best.e * 2 <= off && best.e < 25 ? best.look : null;
