@@ -4,23 +4,21 @@
   "details_version": 11,
   "parser_version": 7
  },
- "built_at": "2026-11-19T22:16:51Z",
- "card_commit": "7b37f7d97e8fcefdabc556b9ab71c77a641d7d3c",
+ "built_at": "2026-11-20T01:34:31Z",
+ "card_commit": "f52f4a539736fb622dd29b4bf6e7c715ed150991",
  "card_repo": "MichaelJSr/TTSCardMaker",
  "files": {
   "old_stats.json": "9ed80cf4d0af1f6b5678375e62870d032f2b16dad61b3292fb1052bfa470017b",
-  "psd_details.json": "a943b007e82a4c18e63406059f0118f5e273b56a02f5d6272ddbf8fc689092b3",
+  "psd_details.json": "d53eb338a4f345ade478447ee226e687d7a7f7841acbd82719f91d1a30d01248",
   "rulebook.json": "13c9986311328d9507b4946fb996b077ce73895e24f86d9fa6f91f77069c538c",
-  "stats.json": "ef89a47b761c94f11de487f388b16b9c89edd26756228aeca85507244d783429"
+  "stats.json": "b893003b6859cb94ed8db066aa3bc3ee2b18896f2360da99711598a09ff79e62"
  },
  "fonts": {
   "checked": 768,
   "errors": [],
   "missing": {}
  },
- "gates": {
-  "G4": "lifted by full"
- },
+ "gates": {},
  "pending": {
   "failed": [],
   "full": null,
@@ -28,6 +26,6 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/44626602848",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/44654574966",
  "schema": 1
 }
