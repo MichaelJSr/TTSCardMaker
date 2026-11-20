@@ -3,6 +3,7 @@
 // while something is being typed or a form is open (drafts stay: drafts.js, the batch). NOTES.md §29.
 const PAGE = globalThis.document?.querySelector('meta[name="page"]')?.content || "";   // none: a dev copy (or node), no checks
 const EVERY = 180e3, FAST = 15e3, FAST_FOR = 15 * 60e3;   // after a publish: every 15 s for 15 min
+const SHOWN_FOR = 5 * 60e3;                                // and for 5 min after the page opens or shows again (a push)
 const TRIED = "fresh-tried";                               // the stamp a reload went for: never twice (a stale CDN copy)
 let fastUntil = 0, timer = 0, keep = () => {};           // keep: app.js saves the reader's place before a reload
 
@@ -48,9 +49,9 @@ function tick() {
 export function watch(save) {
   keep = save;
   if (!PAGE) return;
-  check();
-  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") check(); });
-  tick();
+  const shown = () => { fastUntil = Math.max(fastUntil, Date.now() + SHOWN_FOR); check(); tick(); };
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") shown(); });
+  shown();
 }
 /** Check every 15 s until 15 min after `at` (ms): a publish waiting for its build (edit.js). */
 export function soon(at = Date.now()) {
