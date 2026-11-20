@@ -508,8 +508,8 @@ jobs:
 
       # A push's Check starts here, beside the fonts restore (a dispatch's runs at Check, after its two checks): its first
       # font read waits for Fonts ready's mark (AutoCroissant card_guards.fonts_ready). Output and exit code in RUNNER_TEMP.
-      # With MODE on its pushed PNGs' recompressions go to a process of their own (nice 19: idle cores beside the check,
-      # then after Decided), so Decided does not wait for them; Land joins them.
+      # With MODE on its pushed PNGs' recompressions go to a process of their own that it starts as it ends (nice 19), so
+      # Decided does not wait for them; they run beside Normalise and Land joins them.
       - name: Check start
         if: github.event_name == 'push' && env.MODE != 'off'
         working-directory: bot
