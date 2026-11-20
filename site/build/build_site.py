@@ -5001,11 +5001,46 @@ def inline_css(page, css, what="index.html"):
 FIRST_TILES, FIRST_EAGER = 8, 4               # index.html's pre-written grid: tiles, and of them loaded eagerly
 BLANK_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"   # 1x1, see-through
 FIRST_CHECK = os.path.join(os.path.dirname(os.path.abspath(__file__)), "check_first.mjs")
+MENTIONS_JS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mentions.mjs")
 
 
 def js_esc(s):
     """text.js esc"""
     return re.sub(r"[&<>\"']", lambda m: {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[m.group()], "" if s is None else str(s))
+
+
+def node_assets(script, payload):
+    """node <script> <dir>: dir a copy of site/assets' modules, payload as JSON on its stdin; its stdout as JSON. None
+    without node; raises when the run fails."""
+    exe = os.environ.get("NODE") or shutil.which("node")
+    if not exe:
+        return None
+    src = os.path.join(SITE, "assets")
+    with tempfile.TemporaryDirectory() as tmp:
+        for name in os.listdir(src):
+            if name.endswith(".js"):
+                shutil.copyfile(os.path.join(src, name), os.path.join(tmp, name))
+        with open(os.path.join(tmp, "package.json"), "w") as fh:
+            fh.write('{"type": "module"}')
+        done = subprocess.run([exe, script, tmp], input=json.dumps(payload, ensure_ascii=False), capture_output=True, text=True,
+                              encoding="utf-8", check=True, timeout=300)
+    return json.loads(done.stdout)
+
+
+def mention_lists(cards, icons, variants):
+    """cards.json's mentions: per card the indexes of the cards its ability names, 0 for none (mentions.mjs: text.js in
+    node, as app.js derive() finds them), so a page's boot skips parsing every ability. None without node or when the
+    run fails: app.js parses them then."""
+    try:
+        got = node_assets(MENTIONS_JS, {"cards": cards, "icons": icons, "iconVariants": variants})
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        warn(f"mentions: node run failed, pages find them at boot: {getattr(e, 'stderr', '') or e}")
+        return None
+    if got is None:
+        log("mentions: no node, pages find them at boot")
+        return None
+    log(f"mentions: {sum(map(len, filter(None, got)))} names in {sum(1 for m in got if m)} cards' abilities")
+    return got
 
 
 def first_screen(cards, icons):
@@ -5014,24 +5049,13 @@ def first_screen(cards, icons):
     size; app.js redraws the view when it runs. Lazy tiles below the window get a blank picture there, so theirs don't
     hold up the scripts (app.js draws them). The cards and the markup are the site's own code's (grid.js, run in node
     by check_first.mjs). (html, ids), or None without node."""
-    exe = os.environ.get("NODE") or shutil.which("node")
-    if not exe:
-        log("first screen: no node to draw it with, index.html goes without")
-        return None
-    src = os.path.join(SITE, "assets")
     try:
-        with tempfile.TemporaryDirectory() as tmp:
-            for name in os.listdir(src):
-                if name.endswith(".js"):
-                    shutil.copyfile(os.path.join(src, name), os.path.join(tmp, name))
-            with open(os.path.join(tmp, "package.json"), "w") as fh:
-                fh.write('{"type": "module"}')
-            payload = {"cards": cards, "icons": icons, "thumbs": thumb_tags(), "n": FIRST_TILES, "eager": FIRST_EAGER}
-            done = subprocess.run([exe, FIRST_CHECK, tmp], input=json.dumps(payload, ensure_ascii=False), capture_output=True, text=True,
-                                  encoding="utf-8", check=True, timeout=300)
-        got = json.loads(done.stdout)
+        got = node_assets(FIRST_CHECK, {"cards": cards, "icons": icons, "thumbs": thumb_tags(), "n": FIRST_TILES, "eager": FIRST_EAGER})
     except (OSError, ValueError, subprocess.SubprocessError) as e:
         raise SystemExit(f"error: the first screen's node run failed: {getattr(e, 'stderr', '') or e}")
+    if got is None:
+        log("first screen: no node to draw it with, index.html goes without")
+        return None
     tiles, toolbar, sizes = got["tiles"], got["toolbar"], got["sizes"]   # sizes: grid.js TILE_SIZES, M here, S and L by the script
     page = ('<template id="first"><div class="browse">\n    <aside class="filters" aria-label="Filters"></aside>\n    <section>\n      '
             f'{toolbar}\n      <div id="deck-hits"></div>\n      <div class="grid" style="--tile:{sizes["m"][0]};min-height:200vh;align-content:start">{"".join(tiles)}</div>\n    </section></div></template>\n'
@@ -5679,7 +5703,8 @@ def main():
     cover_sizes, cover_files = cover_copies(rule_images)
     shown, editing = editor_split(cards)
     recent = recent_texts(cards, history)     # Recently updated draws at once (versions: data/versions/ alone since 11-19)
-    files = {"cards.json": {**data, "cards": columns(shown), "recent": recent}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "users.json": {"users": profiles},
+    mentions = mention_lists(shown, data["icons"], data["iconVariants"])   # app.js derive() at boot
+    files = {"cards.json": {**data, "cards": columns(shown), "recent": recent, **({"mentions": mentions} if mentions else {})}, EDITING_JSON: editing, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, **changelog_files(changelog), CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     files.update(changelog_heads(files, {c["id"]: c.get("name") for c in shown}))   # the Changelog's and Database edits' first screens

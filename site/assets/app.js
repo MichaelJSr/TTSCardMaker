@@ -277,7 +277,7 @@ async function init() {
   for (const [old, id] of Object.entries(S.data.moved || {})) if (!S.byId.has(old) && S.byId.has(id)) S.byId.set(old, S.byId.get(id));   // a renamed card's old id: links, picks, share codes
   if (editorP) await editorP.catch(() => {});
   if (editor !== IDLE) { addEditFields(); editor.init(); previews.init(); }  // applies staged edits, then derive()
-  else derive();
+  else derive(true);
   S.ready = true;
   S.decks = D.loadDecks().map(d => D.canon(d, S.byId));
   updateDeckCount();
@@ -296,8 +296,8 @@ async function init() {
   restoreAt(at);
 }
 
-// everything computed from the cards; re-run after an edit
-function derive() {
+// everything computed from the cards; re-run after an edit. boot: the cards as cards.json has them (its mentions hold)
+function derive(boot = false) {
   S.rev++;
   for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; delete c._unusedBy; delete c._hay; delete c._sq; }   // _hay, _sq: search.js haystack, made again from edited text
   S.cards = S.all.filter(c => !c.hidden || S.showHidden);
@@ -312,8 +312,10 @@ function derive() {
   for (const c of S.all) if (c.dup && S.banned.has(c.dup) && !S.banned.has(c.id)) { S.banned.set(c.id, S.banned.get(c.dup)); c._banned = S.banned.get(c.dup); }   // a duplicate picture: its card's ban
   S.renderer = makeRenderer({ cards: S.cards, icons: S.icons, variants: S.data.iconVariants });
   S.mentions = new Map(); S.mentionedBy = new Map();
+  const built = boot && !S.showHidden && S.data.mentions?.length === S.all.length && S.data.mentions;   // build_site mention_lists
+  const at = built && new Map(S.all.map((c, i) => [c, i]));
   for (const c of S.cards) {
-    const m = S.renderer.mentions(c.ability);
+    const m = built ? new Set((built[at.get(c)] || []).map(i => S.all[i].id)) : S.renderer.mentions(c.ability);
     S.mentions.set(c.id, m);
     if (c.dup) continue;                                   // a duplicate counts once
     for (const id of m) { if (!S.mentionedBy.has(id)) S.mentionedBy.set(id, new Set()); S.mentionedBy.get(id).add(c.id); }

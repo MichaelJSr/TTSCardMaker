@@ -1139,6 +1139,10 @@ relies on:
   after, they force a layout of the short page (`innerWidth` too on phones) and the scroll position clamps.
 - Mentions: `mentions()` parses without building the icons' HTML (`parse(text, self, false)`); it must keep finding
   what `render()` links (test_site_speed).
+- Built mentions (11-20): cards.json `mentions` (build_site `mention_lists`: mentions.mjs runs text.js in node over the
+  cards not hidden) is per card the indexes of the cards it names, 0 for none; an editor-less boot (`derive(true)`)
+  takes them instead of parsing every ability (phone 4x: derive 36 -> 11 ms, longest boot task -30%). Every other
+  `derive()` parses; no node or a failed run: no key, the boot parses.
 - index.html preloads every module app.js imports (unbundled builds; with esbuild the one bundle, §31). Type icons and the filter toggles load lazily.
 - A card opened from a link (nothing rendered yet) draws no grid behind it: `S.list` is the grid's list (prev/next),
   the grid comes when the dialog closes, or when something draws the view under the dialog (`rerender` with no card
