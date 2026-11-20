@@ -8941,8 +8941,14 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Heavy_Lobster.psd": {
-  "blob": "4ff32c3e4d5568aaed9ef06c20ab660a62d75795",
+  "blob": "466a3580128e6677f03f9e728485d69abf69abbf",
   "links": [
+   {
+    "drawn": "d5bd6d0d08fda9e64829eb3076b3dd396f261c3d",
+    "name": "Heavy_Lobster - Heavy Lobster.psb",
+    "path": "MDW/Linked/Heavy_Lobster - Heavy Lobster.psb",
+    "size": 29232568
+   },
    {
     "drawn": null,
     "name": "Warpstar.png",
@@ -14032,8 +14038,20 @@
   ]
  },
  "Creatures/Other/5 Stars/Beholster.psd": {
-  "blob": "89cfc7ec61d19390d96723a755597ddb1672ea98",
+  "blob": "8d3a84674ae0d33a8f8abddce8f06bd61078b3b6",
   "links": [
+   {
+    "drawn": "f24f48214e1e906eeb4d7b941ca19a21f3ff00d7",
+    "name": "Beholster - thumb-1920-1076449.png",
+    "path": "MDW/Linked/Beholster - thumb-1920-1076449.png",
+    "size": 2521816
+   },
+   {
+    "drawn": "f3c2ba49d92ad30e508799ec4162c3f16bd1d86e",
+    "name": "Beholster - yIjDEuuWtHgQpnZAfKlOh5cDpWtRHLXN.jpg",
+    "path": "MDW/Linked/Beholster - yIjDEuuWtHgQpnZAfKlOh5cDpWtRHLXN.jpg",
+    "size": 173055
+   },
    {
     "drawn": null,
     "name": "Stuffed_Star.png",
@@ -14907,7 +14925,7 @@
   ]
  },
  "Creatures/Pandas/2 Stars/Peter_Panda.psd": {
-  "blob": "64e1365b8791152a30610f4f3046e7645b920ddb",
+  "blob": "b80903f1d93075e21554253705a9a76745e25096",
   "links": [
    {
     "drawn": null,
@@ -14920,6 +14938,12 @@
     "name": "Peter_Panda - Layer 1.psb",
     "path": "MDW/Linked/Peter_Panda - Layer 1.psb",
     "size": 7604558
+   },
+   {
+    "drawn": "1850cfda6e0d907b9e8b17adaaac6421340a8b30",
+    "name": "Peter_Panda - Layer 0 copy.psb",
+    "path": "MDW/Linked/Peter_Panda - Layer 0 copy.psb",
+    "size": 1131186
    },
    {
     "drawn": null,
@@ -15071,8 +15095,14 @@
   ]
  },
  "Creatures/Pandas/3 Stars/PANDA_Mk_A.psd": {
-  "blob": "9a4579c512ce359b454036c734e5c468c15c7c0a",
+  "blob": "da154fcfbdb20cb33c8580d30b76d2358d5628d0",
   "links": [
+   {
+    "drawn": "163e3ed2eafec548c37a8265ef4dd403dfb2f645",
+    "name": "PANDA_Mk_A - Layer 1.psb",
+    "path": "MDW/Linked/PANDA_Mk_A - Layer 1.psb",
+    "size": 19712494
+   },
    {
     "drawn": null,
     "name": "star.png",
@@ -15100,8 +15130,14 @@
   ]
  },
  "Creatures/Pandas/3 Stars/PANDA_Mk_F.psd": {
-  "blob": "7bed81b11f45b746991838200a64a5afb34898a0",
+  "blob": "d4b4675af8a759053e606d4c272e69032f48ed42",
   "links": [
+   {
+    "drawn": "163e3ed2eafec548c37a8265ef4dd403dfb2f645",
+    "name": "PANDA_Mk_A - Layer 1.psb",
+    "path": "MDW/Linked/PANDA_Mk_A - Layer 1.psb",
+    "size": 19712494
+   },
    {
     "drawn": null,
     "name": "P.A.N.D.A._Mk_F - 3d079f143434d5ef23653e5a33db219b-transformed copy 2.png",
@@ -15141,8 +15177,14 @@
   ]
  },
  "Creatures/Pandas/3 Stars/PANDA_Mk_T.psd": {
-  "blob": "060b1c67e800138984034cd1c81a12918bc360ae",
+  "blob": "ae584a70b8131469ca457a26d2905791d4420c5d",
   "links": [
+   {
+    "drawn": "163e3ed2eafec548c37a8265ef4dd403dfb2f645",
+    "name": "PANDA_Mk_A - Layer 1.psb",
+    "path": "MDW/Linked/PANDA_Mk_A - Layer 1.psb",
+    "size": 19712494
+   },
    {
     "drawn": null,
     "name": "star.png",
@@ -15556,13 +15598,19 @@
   ]
  },
  "Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.psd": {
-  "blob": "134c9efbcae69977ef071b4fec20cf01c786fbd7",
+  "blob": "2a145e80e86e7111f0515277a7e32062c554e7c2",
   "links": [
    {
     "drawn": null,
     "name": "Azamoth_the_Possessed_Vessel - chatchawan-keawtangkhuen-realmofthemadgod-sf-finalrelease.jpg",
     "path": "MDW/Linked/Azamoth_the_Possessed_Vessel - chatchawan-keawtangkhuen-realmofthemadgod-sf-finalrelease.jpg",
     "size": 1164568
+   },
+   {
+    "drawn": "dd702b3e4c6c09af0d9eebcb33200c1cac3c2eb1",
+    "name": "Oryx_the_Exalted_God - Oryx.psb",
+    "path": "MDW/Linked/Oryx_the_Exalted_God - Oryx.psb",
+    "size": 51305516
    },
    {
     "drawn": null,
@@ -24392,6 +24440,10 @@
   "blob": "45642d43667b9b10cee0e282e33ab83e03d69518",
   "links": []
  },
+ "MDW/Linked/Heavy_Lobster - Heavy Lobster.psb": {
+  "blob": "d5bd6d0d08fda9e64829eb3076b3dd396f261c3d",
+  "links": []
+ },
  "MDW/Linked/Helpful_Mannequin - dark.psb": {
   "blob": "d35aec1e7c492a880db0dff17a5bdee33b1df3e7",
   "links": [
@@ -24543,6 +24595,27 @@
   "blob": "8d00331e52c8b9dd89f722e2045e977bdb396890",
   "links": []
  },
+ "MDW/Linked/Oryx_the_Exalted_God - Oryx.psb": {
+  "blob": "dd702b3e4c6c09af0d9eebcb33200c1cac3c2eb1",
+  "links": []
+ },
+ "MDW/Linked/PANDA_Mk_A - Layer 1.psb": {
+  "blob": "163e3ed2eafec548c37a8265ef4dd403dfb2f645",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Pandora - Layer 2.psb",
+    "path": "MDW/Linked/Pandora - Layer 2.psb",
+    "size": 28363212
+   },
+   {
+    "drawn": null,
+    "name": "Pandora - Flublubble-transformed.png",
+    "path": "MDW/Linked/Pandora - Flublubble-transformed.png",
+    "size": 514015
+   }
+  ]
+ },
  "MDW/Linked/Pandora - Layer 2.psb": {
   "blob": "97d9f4072005e55e4b8a584c202bb3b8cb6b62c0",
   "links": []
@@ -24557,6 +24630,10 @@
  },
  "MDW/Linked/Papyrus - Layer 3.psb": {
   "blob": "f0b9185eaecd495b89155685a9c24c564068ef9c",
+  "links": []
+ },
+ "MDW/Linked/Peter_Panda - Layer 0 copy.psb": {
+  "blob": "1850cfda6e0d907b9e8b17adaaac6421340a8b30",
   "links": []
  },
  "MDW/Linked/Peter_Panda - Layer 1.psb": {
@@ -28615,6 +28692,12 @@
   "MDW/Linked/Battle_Spear - battle (1).png": {
    "4850c5905c25ec1014dc6451d8600bb5fa2181e4": 261549
   },
+  "MDW/Linked/Beholster - thumb-1920-1076449.png": {
+   "f24f48214e1e906eeb4d7b941ca19a21f3ff00d7": 2521816
+  },
+  "MDW/Linked/Beholster - yIjDEuuWtHgQpnZAfKlOh5cDpWtRHLXN.jpg": {
+   "f3c2ba49d92ad30e508799ec4162c3f16bd1d86e": 173055
+  },
   "MDW/Linked/Beldam - sample_250fb4f951ae2ca12189146fc8842a6d (1).png": {
    "2aa8bdcb4ab94bb6bb2df6b77ff61d91a06876ec": 1394783
   },
@@ -29449,6 +29532,9 @@
   "MDW/Linked/Heavy_Ion - Heavy_Ion.webp": {
    "65dd8ec69d1b4ca8832d062c02e67b4fa142d576": 594
   },
+  "MDW/Linked/Heavy_Lobster - Heavy Lobster.psb": {
+   "d5bd6d0d08fda9e64829eb3076b3dd396f261c3d": 29232568
+  },
   "MDW/Linked/Hegemol - hegemol card.png": {
    "9ae13e700c4cfd72d588f5b85b541fbe6e4088f3": 2948732
   },
@@ -30122,11 +30208,17 @@
   "MDW/Linked/Oryx_The_Mad_God - chatchawan-keawtangkhuen-realmofthemadgod-sf-finalrelease.jpg": {
    "e38add7cd13321681f037d28abe86b5d6de100e9": 247947
   },
+  "MDW/Linked/Oryx_the_Exalted_God - Oryx.psb": {
+   "dd702b3e4c6c09af0d9eebcb33200c1cac3c2eb1": 51305516
+  },
   "MDW/Linked/P.A.N.D.A._Mk_F - 3d079f143434d5ef23653e5a33db219b-transformed copy 2.png": {
    "33d415fbda41ef1e38e1aa6b80bdb3b9ec85d1a7": 1501887
   },
   "MDW/Linked/P.A.N.D.A._Mk_F - Mk_F-transformed.png": {
    "13c1c4e26297d64084436b6ed032d3e47195e8a4": 3409230
+  },
+  "MDW/Linked/PANDA_Mk_A - Layer 1.psb": {
+   "163e3ed2eafec548c37a8265ef4dd403dfb2f645": 19712494
   },
   "MDW/Linked/Paint_Bomb - Bulky_Bob-omb.webp": {
    "b813ef29ccc775713c928a254ee241725ba2a6db": 28296
@@ -30202,6 +30294,9 @@
   },
   "MDW/Linked/Pep_Drink - tumblr_nguxntKncE1u258ivo1_500.png": {
    "e29629d5bb2d0652b5604dda960a3c7870c5df85": 169390
+  },
+  "MDW/Linked/Peter_Panda - Layer 0 copy.psb": {
+   "1850cfda6e0d907b9e8b17adaaac6421340a8b30": 1131186
   },
   "MDW/Linked/Peter_Panda - Layer 1.psb": {
    "6d6f5659afbfa0d4a932aa24426e0e121a9a3732": 7604558
@@ -31859,6 +31954,7 @@
   "1585bc012a8f4cdca4296b7647069a5138b4679a": "b8b51529a248769ce6234577a155072fc76c6613",
   "1602eb05d97aab83d8695718b83f3729c9855feb": "e38a9b8efb505d1f1d83824da948a25c320bae2e",
   "1611fa24ff34d1847c9377e92ad7ceed7e768de7": "603c107571f1e5fad14d5ad48a7623553054da9a",
+  "163e3ed2eafec548c37a8265ef4dd403dfb2f645": "7411344b50f2d61d349161cbb02e02da59786b17",
   "1666e71c2a47a6944a940666a936f34a34ed4057": "2c516b00d3134a381c4abe6cd78e869bf9505385",
   "17037600deb0a85c726204971439741a7d4d3874": "759fbc17c4b077786efe8756b676f593be6bf456",
   "174c4d910bad1c3754b12592dd635a1501e36b14": "9f8656014a33f90a4794d06e33f2cb2fbf51468e",
@@ -31868,6 +31964,7 @@
   "18217f923770fbfa127afa0bff8ab166fdc9b9ad": "1df88c6446d3c185af903a9e8c483078c5afd54c",
   "18280feee95cc243bc35718b9818c86930e0066a": "94d6fed0be25ed753e55c40063c8c12d7ac1e71a",
   "184c7c980253c08e45f819202870184f4b1f0eea": "8587ed9594fdbad542ba13127e5292152f2f576e",
+  "1850cfda6e0d907b9e8b17adaaac6421340a8b30": "07bbece84d0cb5bdf87f7c6ea62597d4144b6a8d",
   "192799337c6b26e5eaed9f82c05097f109207dcc": "8a77c9e9364dfb599ae242b9427bce3dc4f73a19",
   "19329d59f6443b096141eba7ebc93f0c2a7fd533": "56a3227b8f80ce8828dc040fc66815ce672ba44d",
   "1941d8a633ca7dcd5c5c508e5fbb588d5e2ef445": "c663ec524e4072d603123c3baa137e4fb2e38c44",
@@ -32599,6 +32696,7 @@
   "d530c7b666dbbd0fe132d966bf88ba29fd4f284c": "5612401c695cb8b5cecc24b10a05c61a06d52a1d",
   "d572aaf86a23b4ab668d68bca87cc1e85db7a0a6": "291c315379c944ccb11708ec507386c13b291d41",
   "d5bb629b62d4af428d5b23e5dafff9ec30c4ac5a": "d32b547b299a48b657140aaf898b46e4309fdfb0",
+  "d5bd6d0d08fda9e64829eb3076b3dd396f261c3d": "384d4b07ee607d2814803dd644c3afb97d207c59",
   "d5f2ef47393bedd8da4edc3e9b99f7e9cff16410": "802b0168cfbdc8f66ebc7fd1f4e5e6f1de14fe6d",
   "d73861062fcbba032816b3175b598ce083a31eb6": "6be724a4234f3f3efff79c6b384cbe0c1a222e20",
   "d859a726bfa14fd7aa31091e3cecd01f360ece64": "cf5d9f50e27a9b5efb32c7d6aa3b96764498e356",
@@ -32619,6 +32717,7 @@
   "dba1666fbc0d0d2de9d2a8ce29b69bd9df462b5c": "75abcd00dfe23124f21a0ad82fec2efeefaf960e",
   "dbfff361a754425904028d9b13c38de72467fe15": "5857078ee99140cd700518091d78ef141167d3b4",
   "dd43dc7213eb6fe626b4a551aaef089a3067929f": "db7d7fbf5f4613745d49bc682656ed5c20b1a920",
+  "dd702b3e4c6c09af0d9eebcb33200c1cac3c2eb1": "621bc61f7e5c59b7ba81d52bf4d625e967d3d805",
   "ddbe41a24ec7c04062e1ea7a7daaaf970754656f": "6260e0b099df2979a382810efcc95a6b91e96d12",
   "de107c5a1c035a13c2bcfa4881f3f92f00fd63eb": "3707f8df78728bc0ea26ca372caa14815d9a77d0",
   "de1a2108956135e3846fc53d3e99696c13f5c325": "7c41ddf447e87d9a7392a5dad17e23e4438ca6a3",
@@ -32695,6 +32794,7 @@
   "f21f619a954a891067c0c9e98421d61b1091dbd3": "a610a1b2520e646a8d9af687ee3e849fed6ba045",
   "f2400df9f080c2b7e7801fbff5fb291823fc82f1": "223fd35a78aeea299ff71b0512d2ec137a7c5a8e",
   "f2426c69ee4986929dce5b8ca5afce709bae619b": "05a81de987d80fd4d7bce5f19da2625514b41b81",
+  "f24f48214e1e906eeb4d7b941ca19a21f3ff00d7": "646c05e30cfb9501b5a1be0cd1313170c42d4525",
   "f2c30930023e63583fbef6ec3f4a394798acf624": "193cf0673e9a26f8ba2aedb4b2158df4ee4e8761",
   "f3187a834aa06eb159b7e51e15f201a0a1e8a175": "1cc6089a315254015f66f901adf8fdabded34423",
   "f34deb90eca738e0927e07ba57259dec11f389da": "83e2dd2c27f0430bf51c3b93443c8e01b077dfac",
@@ -32702,6 +32802,7 @@
   "f363fa3f2e582576921410387f402fd065722127": "d43789d00a21b1909107f42a683fe50688f93cc2",
   "f3687f8a7bcd99733f487865e6e49a913104c435": "7be1e605debfb9dd8ad677f21819977f4a8b19a0",
   "f3a8279a012fc65a28049b3e82055703061b9ea2": "ced3c7dcae5fe77b426a034487001a66b4b6a166",
+  "f3c2ba49d92ad30e508799ec4162c3f16bd1d86e": "5049d94f00cbeb07eee18198b497efedb0f4b6d9",
   "f3fe84dffd34449aecdb401982ee42e6d54f4c40": "1aba6c128670f49b1e029f0105be38dec0f26e62",
   "f42ee110f20f60d333363d7f2b522e26e2860cb3": "846dd4156c6cd04f30c625d7a78d380d939a2c1b",
   "f4480cbf40e5a27933b54b020df3f3f76c0b4703": "b1c44882a038f5793403245f138fd87085be37e4",
