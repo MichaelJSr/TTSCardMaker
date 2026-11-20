@@ -184,7 +184,7 @@ export const SEARCH_HELP = [
   ["hollow knight · moms knife", "A series' or subseries' cards; names without punctuation"],
   ["cant · nme", "Also can't, N.M.E.: a word typed without ' or . finds it printed with them"],
   ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
-  ['"draw 2"', "Whole words only"],
+  ['"heal 2"', "Whole words only"],
   ["!die", "Exclude (any term)"],
   ["fire & type==creature", "Both must match"],
   ["fire | ice", "Either (| binds looser than &)"],
