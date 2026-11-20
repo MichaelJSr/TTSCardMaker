@@ -10,7 +10,7 @@
 // text goes in a dark box over the template's area instead ("box"), never over a half-erased old one. Everything above
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
-import { starMove, starsKept, titleInPicture } from "./parts.js";
+import { fxOf, starMove, starsKept, titleInPicture } from "./parts.js";
 import { colorRanges, drawnSpans, inkOf, layerColors, phraseText, spansOf, statusSpans } from "./textcolor.js";
 import { SAME_RUN, taBlocks, taMoves, taParts } from "./textalign.js";
 
@@ -1042,6 +1042,42 @@ export function paintedOver(rec, colors, typed = [], edit = null) {
   return out;
 }
 
+const PLACED = /^Text\/Name(\s*#[\d,\s]+)?$/;         // a Text/Name smart object prints the title (Gust of Wind's)
+/** The colours the bake refuses as keeping their own look (psd_edit plan_colors): [{one, label, why}]. A phrase on an
+ *  Ability not retyped whose letters (layerColors) are only an FX layer's words (_fx_words; with blanks), else only badges
+ *  and icons (drawnSpans) or status words (statusSpans; blanks paint, as _painted's); any colour on a title only a
+ *  Text/Name smart object prints, with no name edit (title_in_picture: PICTURE_TITLE). */
+export function keptOver(rec, colors, typed = [], statuses = null) {
+  const p = obj(rec?.parts), out = [];
+  if (!p || !Array.isArray(colors)) return out;
+  const placed = !printed(p, "name").length && Array.isArray(rec?.smart_objects) && rec.smart_objects.some(s => PLACED.test(String(s)));
+  const parts = printed(p, "ability"), texts = parts.map(x => String(x?.text ?? "")), within = (L, k) => L.some(([a, b]) => a <= k && k < b);
+  const fxWords = (x, t) => fxOf(rec, x).flatMap(path => { const at = path.indexOf(" FX: "), name = path.slice(path.lastIndexOf("/", at) + 1);   // [start, end, its FX layer's name]
+    return path.slice(at + 5).split("|").map(w => w.trim()).filter(Boolean).flatMap(w => (spansOf(t, { phrase: w }) || []).map(([a, b]) => [a, b, name])); });
+  for (const one of colors) {
+    const f = one?.field, w = one?.phrase ? phraseText(one.phrase) : "";
+    if (f === "name" && placed && !typed.includes(f)) out.push({ one, label: w ? `colour of ${w}` : "title's colour", why: "the title is part of the picture" });
+    if (f !== "ability" || !w || typed.includes(f)) continue;
+    let hit = false, mine = false, ink = false, other = false, cut = "";   // mine: letters it paints (ink: not blank); other: not icons
+    parts.forEach((x, i) => {
+      const t = texts[i], c = layerColors(texts, i, [one], f), icons = drawnSpans(t), words = statusSpans(t, statuses), fx = fxWords(x, t);
+      for (const [a, b] of (c && spansOf(t, c[0])) || []) {
+        cut ||= fx.find(([s, e]) => s < b && a < e)?.[2] || "";
+        for (let k = a; k < b; k++) {
+          hit = true;
+          if (within(icons, k)) continue;
+          other = true;
+          if (!within(fx, k) && !within(words, k)) { mine = true; ink ||= /\S/.test(t[k]); }
+        }
+      }
+    });
+    const why = cut && !ink ? `is drawn by its effect layer '${cut}', which keeps its own pixels` : !hit || mine ? ""
+      : other ? "is a status word, which keeps the chart's colour" : "is only badges or icons, which keep their own colours";
+    if (why) out.push({ one, label: `colour of ${w}`, why: `${w} ${why}` });
+  }
+  return out;
+}
+
 // ---- stars and type icons: where the bake would put them (psd_details' header, canvas px; AutoCroissant psd_edit)
 const obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : null);
 const centreOf = b => [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
@@ -1387,7 +1423,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const ctx = work.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(img, 0, 0);
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
-  const nix = paintedOver(rec, edit.colors, typed, edit);   // the bake refuses them: not drawn, said
+  const own = keptOver(rec, edit.colors, typed, statuses), rest = own.length ? edit.colors.filter(one => !own.some(n => n.one === one)) : edit.colors;
+  const nix = [...own, ...paintedOver(rec, rest, typed, edit)].sort((a, b) => edit.colors.indexOf(a.one) - edit.colors.indexOf(b.one));   // the bake refuses them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
   const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], site: [], starsKept: null, added: null, noGlyph: [] };
   const hand = pics ? [] : handStats(card);           // the bake won't draw them: not drawn, nothing said (owner 11-11); a plate's bars tell value by value
