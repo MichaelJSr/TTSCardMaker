@@ -1,5 +1,6 @@
 // Query language: the same syntax as AutoCroissant's /query_ability, plus names/aliases and a few extras.
 //   fire              text in the ability, name or aliases (any case); also a name without its punctuation or a (sub)series
+//   cant  nme         also can't, N.M.E. (a word typed without ' or . finds it printed with them; digits never)
 //   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
 //                     counter damage CDMG; and back), as the bot
 //   "draw 2"          whole-word match
@@ -58,12 +59,23 @@ const SYNONYMS = { damage: "dmg", dmg: "damage", defense: "def", def: "defense",
   "star points": "sp", sp: "star points", "primary field": "pf", pf: "primary field", "counter damage": "cdmg", cdmg: "counter damage" };
 const SYNONYM_WORDS = new RegExp(`\\b(${Object.keys(SYNONYMS).sort((a, b) => b.length - a.length).join("|")})\\b`);   // longest key first
 
-/** A text term's regex as the bot's _text_pattern (query_card.py), each synonym also finding the other; null without one. */
-function synonymRe(t) {
-  const parts = t.split(SYNONYM_WORDS);                  // the words at odd places
-  if (parts.length < 2) return null;
-  return new RegExp(parts.map((p, i) => {
-    if (i % 2 === 0) return escapeRe(p);
+const PUNCT = "[.'\u2019]", ABBR_END = "(?:(?<=\\.[a-z])\\.)?";   // after the last letter: only an abbreviation's '.'
+const LETTER = /\p{L}/u;
+/** text as a regex source (the bot's query_card.loose): a word typed without ' ’ or . also finds one printed after a
+ *  letter followed by a letter or a space (cant: can't, nme shop: N.M.E. shop); digits never (05 is not 0.5); a word
+ *  typed with one is exact. gap: a space run's source (else itself) */
+export function loose(t, gap = null) {
+  const words = t.split(/(\s+)/);
+  return words.map((w, at) => at % 2 ? gap || escapeRe(w) : [...w].map((ch, i, a) => {
+    if (!LETTER.test(ch) || /[.'\u2019]/.test(w)) return escapeRe(ch);
+    return escapeRe(ch) + (a[i + 1] ? (LETTER.test(a[i + 1]) ? `${PUNCT}?` : "") : at + 1 < words.length ? `${PUNCT}?` : ABBR_END);
+  }).join("")).join("");
+}
+
+/** A text term's regex as the bot's _text_pattern (query_card.py): loose, each synonym also finding the other. */
+function textRe(t) {
+  return new RegExp(t.split(SYNONYM_WORDS).map((p, i) => {   // the words at odd places
+    if (i % 2 === 0) return loose(p);
     const o = SYNONYMS[p];
     return `(?:${p}|${o.length < p.length ? `\\b${o}\\b` : o})`;   // dmg as a word, not in "admg"
   }).join(""));
@@ -139,10 +151,9 @@ export function compile(query) {
     const re = new RegExp(`${edge(t[0])}${escapeRe(t)}${edge(t.slice(-1))}`);
     return c => re.test(haystack(c));
   }
-  const re = synonymRe(lower), sq = squash(lower), probe = sq.length > 3 ? sq : `\n${sq}\n`;   // 3 letters or fewer: a whole name
+  const re = textRe(lower), sq = squash(lower), probe = sq.length > 3 ? sq : `\n${sq}\n`;   // 3 letters or fewer: a whole name
   const more = c => !!sq && (squashed(c).names.includes(probe) || squashed(c).ser.has(sq));   // a name without its punctuation, a series
-  if (re) return c => re.test(haystack(c)) || more(c);
-  return c => haystack(c).includes(lower) || more(c);
+  return c => re.test(haystack(c)) || more(c);
 }
 
 /** The cards whose name, an alias or an old name is the query (text.js norm: case, spaces and dots aside; quotes allowed). */
@@ -170,6 +181,7 @@ export function suggest(query, cards) {
 export const SEARCH_HELP = [
   ["fire", "In the ability, name or aliases"],
   ["hollow knight · moms knife", "A series' or subseries' cards; names without punctuation"],
+  ["cant · nme", "Also can't, N.M.E.: a word typed without ' or . finds it printed with them"],
   ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
   ['"draw 2"', "Whole words only"],
   ["!die", "Exclude (any term)"],

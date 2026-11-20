@@ -1,4 +1,4 @@
-import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight } from "./search.js";
+import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight, loose } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
@@ -1498,7 +1498,7 @@ function renderRules(r) {
   if (r.arg === "print") { renderSheets(); return; }
   const q = bookFold((r.params.get("q") || "").trim());
   if (document.activeElement !== qInput) qInput.value = "";
-  const chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
+  const hit = q && bookRe(q), chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => hit.test(c.text)) : chapters;
   const banned = S.data.banlist, can = editing(), top = scrollY === 0 && !S.restoring;   // before the view goes (see renderCards)
   const label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;
   view.innerHTML = `<div class="rules${q ? " rb-searching" : ""}">
@@ -1520,11 +1520,11 @@ function renderRules(r) {
     </div></div>`;
   if (q) {                                               // only the blocks that hold it, highlighted
     for (const ch of $$(".rb-chapter", view)) {
-      const els = $$(":scope > :not(.rb-head):not(.rb-tools)", ch), miss = els.filter(el => !bookWords(el).includes(q));
+      const els = $$(":scope > :not(.rb-head):not(.rb-tools)", ch), miss = els.filter(el => !hit.test(bookWords(el)));
       if (miss.length < els.length) for (const el of miss) el.classList.add("rb-hit-none");   // none holds it (its title): all of it
     }
     highlight($$(".rb-chapter", view), q);
-    for (const b of $$(".rb-chapter .badge[data-tip]", view)) if (badgeWords(b).includes(q) && !bookFold(b.textContent).includes(q)) b.classList.add("rb-hit");
+    for (const b of $$(".rb-chapter .badge[data-tip]", view)) if (hit.test(badgeWords(b)) && !hit.test(bookFold(b.textContent))) b.classList.add("rb-hit");
   }
   // chapters below the first screen drawn once near (style.css) or two at a time while the page is idle; every chapter at
   // once while Back/Forward or a reload restores a place or a redraw starts mid-book (rb-all), so the place lands as before
@@ -1616,6 +1616,8 @@ async function renderSheets() {
 }
 // the rulebook's words as searched: any case, any spaces as one (the bot's \s+), a phone's curly quotes plain
 const bookFold = s => straight(s.toLowerCase().replace(/\s+/g, " "));
+// a folded search's regex (search.js loose: nme finds N.M.E., cant can't), any spaces between the words
+const bookRe = (q, flags) => new RegExp(loose(q, "\\s+"), flags);
 // a block's words as the chapter list reads them (plainText): badges as typed, icons as [name], card pictures by name
 function bookWords(el) {
   let s = "";
@@ -1634,7 +1636,7 @@ function bookWords(el) {
 const badgeWords = b => { const t = b.dataset.tip, m = b.classList.contains("cost") ? /^[^:]+(?=:)/.exec(t) : /^\([^)]*\)/.exec(t);
   return bookFold(m ? (m[0][0] === "(" ? m[0] : `(${m[0]})`) : b.textContent); };
 function highlight(els, q) {
-  const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s+"), "gi");   // any spaces between the words
+  const re = bookRe(q, "gi");
   for (const el of els) {
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
