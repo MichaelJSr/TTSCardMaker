@@ -308,6 +308,19 @@ local function rebuild()
     end
 end
 
+local MINUS = "−"                                      -- the PDF's minus sign (U+2212): typed "-" ("-1/1CD")
+local function typedMinus(s)
+    local out, from = {}, 1
+    while true do
+        local at = s:find(MINUS, from, true)
+        if not at then break end
+        out[#out + 1] = s:sub(from, at - 1) .. "-"
+        from = at + #MINUS
+    end
+    out[#out + 1] = s:sub(from)
+    return table.concat(out)
+end
+
 -- the fetched data, decoded once it is in (prepare) or when first needed
 local detailsRaw, pagesRaw = nil, nil
 local function ensureData()
@@ -328,7 +341,8 @@ local function ensureData()
             local num = tonumber(page.num)
             if num and num == math.floor(num) and chapterPage[num] == nil then chapterPage[num] = i - 1 end
             if page.name and pageOfTitle[page.name] == nil then pageOfTitle[page.name] = i - 1 end
-            table.insert(bookPages, {name = page.name or "", num = page.num or "", page = i - 1, text = page.t or "", low = (page.t or ""):lower(),
+            local text = typedMinus(page.t or "")
+            table.insert(bookPages, {name = page.name or "", num = page.num or "", page = i - 1, text = text, low = text:lower(),
                 chapter = num and num == math.floor(num) or page.name == "Table of Contents"})
         end
     end
@@ -1344,13 +1358,30 @@ local function wholeAt(low, w, at, start)              -- w's first hit from at 
         at = low:find(w, at + 1, true)
     end
 end
+local function digitsTo(w, i)                          -- the index after w's digits from i
+    while inWord(w:byte(i)) and w:byte(i) <= 57 do i = i + 1 end
+    return i
+end
+local TAG_ENDS = {cd = true, gcd = true, u = true, pg = true, pt = true}
+local function xTag(w)                                 -- a numbered timing tag as the book's X row: "3cd" xcd, "-2/3cd" y/xcd
+    local from = w:sub(1, 1) == "-" and 2 or 1
+    local i = digitsTo(w, from)
+    if i == from then return nil end
+    local pair = w:sub(i, i) == "/"
+    if pair then
+        from = i + 1
+        i = digitsTo(w, from)
+        if i == from then return nil end
+    elseif from == 2 then return nil end               -- a minus only starts a pair
+    if TAG_ENDS[w:sub(i)] then return (pair and "y/x" or "x") .. w:sub(i) end
+end
 local function listPages(color, query)
     local id, list, chars = color .. "_rb", {}, {}
     for i = 1, #(query or "") do                       -- "(" and ")" count as spaces: "(1CD)" finds the drawn 1CD
         local ch = query:sub(i, i)
         chars[i] = (ch == "(" or ch == ")") and " " or ch
     end
-    local q = table.concat(chars):lower()
+    local q = typedMinus(table.concat(chars)):lower()
     local words = {}
     local start = 1
     while start <= #q do                               -- the query's words (spaces between them)
@@ -1359,7 +1390,14 @@ local function listPages(color, query)
         start = sp + 1
     end
     local bare = {}                                    -- "nme": else the text without its punctuation (N.M.E.), as Find a card
-    for i, w in ipairs(words) do bare[i] = unpunct(w, "") == w end
+    for i, w in ipairs(words) do
+        local x = xTag(w)                              -- "3cd" in no page: the book's X row ("xcd")
+        for _, p in ipairs(x and bookPages or {}) do
+            if p.low:find(w, 1, true) then x = nil break end
+        end
+        words[i] = x or w
+        bare[i] = unpunct(words[i], "") == words[i]
+    end
     local whole, rest = {}, {}                         -- pages whose name starts a word with every word first ("item":
     for _, p in ipairs(bookPages) do                   -- Items), then those with every word whole ("(OS)" not "most"), the rest
         if #words == 0 then
