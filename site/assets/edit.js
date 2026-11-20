@@ -306,13 +306,15 @@ export function createEditor(app) {
   const find = id => S.byId.get(id);
 
   // ---- GitHub API
-  // anon: no token (signed out); zip: an archive's bytes, the token its one header (its 302's host gets none: preview.js)
-  async function gh(path, { method = "GET", body, raw = false, full = false, anon = false, zip = false } = {}) {
+  // anon: no token (signed out); zip: an archive's bytes, the token its one header (its 302's host gets none: preview.js);
+  // etag: sent as If-None-Match (by hand: no-store), a 304 (unchanged, not counted against the rate limit) gives null data
+  async function gh(path, { method = "GET", body, raw = false, full = false, anon = false, zip = false, etag = null } = {}) {
     const r = await fetch(API + path, {
       method, cache: "no-store", body: body && JSON.stringify(body),
       headers: zip ? { Authorization: `Bearer ${token}` } : { ...(anon ? {} : { Authorization: `Bearer ${token}` }), Accept: raw ? "application/vnd.github.raw+json" : "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28", ...(body ? { "Content-Type": "application/json" } : {}) },
+        "X-GitHub-Api-Version": "2022-11-28", ...(body ? { "Content-Type": "application/json" } : {}), ...(etag ? { "If-None-Match": etag } : {}) },
     });
+    if (etag && r.status === 304) return full ? { data: null, headers: r.headers, status: 304 } : null;
     if (!r.ok) {
       let msg = ""; try { msg = (await r.json()).message || ""; } catch { /* no body */ }
       const e = new Error(`GitHub ${r.status}${msg ? `: ${msg}` : ""}`); e.status = r.status; throw e;
