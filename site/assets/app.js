@@ -70,8 +70,8 @@ const DATA_V = (() => { try { return JSON.parse(document.querySelector('meta[nam
 const dataUrl = name => { const v = DATA_V[/^(details|versions)\//.exec(name)?.[0] || name]; return `data/${name}${/^[0-9a-f]+$/.test(v || "") ? `?v=${v}` : V}`; };
 const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 48 / 64 / 96 / 192 / 240 / 360 / 480 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
-/** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 64 and 96 too at 64 px or less, 48 at 32 */
-const imgAttrs = (c, css) => G.imgAttrs(S.data.thumbs, c, css);
+/** <img> attributes for a card image shown about `css` px wide: the browser picks 192, 240 or 360 px by screen density, 64 and 96 too at 64 px or less, 48 at 32 (coverH: grid.js; rows: style.css table.data .thumb 30x42) */
+const imgAttrs = (c, css, coverH) => G.imgAttrs(S.data.thumbs, c, css, coverH);
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
@@ -1005,7 +1005,7 @@ const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open
   <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
 const kindText = c => [KIND_LABEL[c.type] || c.type, ...G.itemTypes(c).map(cap)].join(" · ");   // "Item · Heal · Infliction"
-const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img || c.pic ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 30)} alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
+const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img || c.pic ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 30, 42)} alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(kindText(c))}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
       <td>${(c.types || []).map(t => iconImg(t, "tok", 18)).join("")}</td><td>${esc(c.author || "")}</td><td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td><td>${date(c.ts)}</td><td class="num size">${psdSize(c)}</td></tr>`;
