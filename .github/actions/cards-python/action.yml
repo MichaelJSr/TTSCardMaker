@@ -1,8 +1,8 @@
 # The card workflows' one Python setup: Python 3.14 and AutoCroissant requirements-cards.txt (the psd-tools fork's one
 # pin) in a venv cached whole per its requirement lines (comments don't count), runner and Python patch version (its
-# interpreter's path; one entry for every card job): a hit restores it (its packages' metadata checked). A miss installs
-# it offline with uv from the wheels, cached per Python minor version (cp314 wheels fit every 3.14.x: a runner image's
-# new patch rebuilds only the venv; a miss builds them with pip: uv has no `pip wheel`), and saves both. The oxipng CLI (the lossless PNG
+# interpreter's path; one entry for every card job): a hit restores it (its packages' metadata checked); a runner image's
+# new patch takes the last patch's entry, its interpreter links made again (cp314 packages fit every 3.14.x). A miss installs
+# it offline with uv from the wheels, cached per Python minor version (a miss builds them with pip: uv has no `pip wheel`), and saves both. The oxipng CLI (the lossless PNG
 # recompression, AutoCroissant png_export) is the release binary, its sha256 pinned, kept in the venv (.oxipng/): fetched
 # on a miss whatever the input, which only puts it on PATH. The bot checkout is at bot/.
 name: Card Python
@@ -42,21 +42,32 @@ runs:
         echo "venv=$VENV" >> "$GITHUB_OUTPUT"
         echo "minor=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')" >> "$GITHUB_OUTPUT"
 
-    - id: env     # the path is part of the entry: card-sync's venv and the default are one
+    # The path is part of the entry: card-sync's venv and the default are one. Else another 3.14 patch's (a new image) or
+    # oxipng's entry: re-pointed at this Python in check and saved under this key (about 5 s, not 51-63 s of wheels)
+    - id: env
       uses: actions/cache/restore@v6
       with:
         path: ${{ steps.reqs.outputs.venv }}
         key: card-venv-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}-ox10.2.1
+        restore-keys: card-venv-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.reqs.outputs.minor }}.
 
     - id: check     # a restored venv missing its packages is installed again
       shell: bash
       env:
         HIT: ${{ steps.env.outputs.cache-hit }}
+        MATCHED: ${{ steps.env.outputs.cache-matched-key }}
+        KEY: ${{ steps.env.outputs.cache-primary-key }}
         VENV: ${{ steps.reqs.outputs.venv }}
+        PYTHON: ${{ steps.python.outputs.python-path }}
       run: |
-        if [ "$HIT" = true ]; then
+        if [ "$HIT" != true ] && [ -n "$MATCHED" ]; then     # venv --upgrade keeps a link, even a dangling one
+          if find "$VENV/bin" -maxdepth 1 -type l -delete && "$PYTHON" -m venv --upgrade --without-pip "$VENV"; then HIT=moved; else rm -rf "$VENV"; fi
+          [ "${MATCHED##*-ox}" = "${KEY##*-ox}" ] || rm -rf "$VENV/.oxipng"     # another oxipng: fetched below
+        fi
+        if [ "$HIT" = true ] || [ "$HIT" = moved ]; then
           if "$VENV/bin/python" -c 'import importlib.metadata as m; [m.version(p) for p in ("psd-tools", "fonttools", "requests")]'; then   # metadata only: a full import cost 3.5 s
             echo "ok=true" >> "$GITHUB_OUTPUT"
+            [ "$HIT" != moved ] || echo "save=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           echo "::warning::the cached venv failed its import check: installed again"
@@ -103,7 +114,7 @@ runs:
 
     # The CLI in the venv entry: a miss fetches it before the save; a hit only checks it (no network), else fetches it
     - id: oxipng     # AutoCroissant docs/Future/SMALLER_PNG_PUSHES.md
-      if: steps.check.outputs.ok != 'true' || inputs.oxipng == 'true'
+      if: steps.check.outputs.ok != 'true' || steps.check.outputs.save == 'true' || inputs.oxipng == 'true'
       shell: bash
       env:
         VERSION: "10.2.1"     # the venv key's -ox tag
@@ -132,7 +143,7 @@ runs:
         fi
         [ "$WANT" != true ] || echo "$BIN" >> "$GITHUB_PATH"
 
-    - if: steps.check.outputs.ok != 'true' && steps.oxipng.outputs.unsaved != 'true'     # only once it installed
+    - if: (steps.check.outputs.ok != 'true' || steps.check.outputs.save == 'true') && steps.oxipng.outputs.unsaved != 'true'     # once it installed
       uses: actions/cache/save@v6
       with:
         path: ${{ steps.reqs.outputs.venv }}
