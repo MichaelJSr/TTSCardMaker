@@ -48,8 +48,10 @@ export function hangVars(c, tall = 0, radius = 12) {
     `;--hc:polygon(0% 0%, ${[...top, "100% 0%", "100% 100%", ...bottom, "0% 100%"].join(", ")})`;
 }
 export const hangs = c => !!(c.hang && c.tw && c.th);
-/** srcset of an icon drawn at px (≤34) CSS px: its 68 px copy (build_site ICON_SMALL) up to 2x, else the 96 px file */
-export const iconSet = (ic, px) => ` srcset="${esc(ic.file.replace(/\.webp$/, ".68.webp"))} 68w, ${esc(ic.file)} 96w" sizes="${px}px"`;
+/** srcset of an icon drawn at px (≤34) CSS px: its 34 and 68 px copies (build_site ICON_SMALL), else the 96 px file. Under
+ * 26 px it picks as the 26 px type toggles do on screens up to 2.4x (1x, 1.25x: 34; 1.5x-2.4x: 68), so a page takes one file */
+export const iconSet = (ic, px) => { const f = n => esc(ic.file.replace(/\.webp$/, `.${n}.webp`));
+  return ` srcset="${f(34)} 34w, ${f(68)} 68w, ${esc(ic.file)} 96w" sizes="${px < 26 ? "(max-resolution: 2.4dppx) 26px, (-webkit-max-device-pixel-ratio: 2.4) 26px, " : ""}${px}px"`; };
 /** "lo-d", "lo-l": the themes whose boxes an icon nearly vanishes on (build_site icon_low), outlined there (style.css) */
 export const loCls = ic => (/^[dl]{1,2}$/.test(ic?.lo || "") ? [...ic.lo].map(k => `lo-${k}`).join(" ") : "");
 export const iconImg = (icons, name, cls = "tok", px = 0) => { const ic = icons[norm(name)], lo = loCls(ic);

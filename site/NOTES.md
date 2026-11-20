@@ -1336,6 +1336,13 @@ relies on:
   grid.js `iconSet` (`68w, 96w`, sizes its px): the 68 px file up to 2x (68 = 2 x 34), the 96 px one above. First visit
   of / 949 -> 902 KB at 1x, 1365 -> 1317 KB at 2x, 547 -> 535 KB on a phone at 3x (icons 142 -> 95 KB); dialogs and
   the table then fetch no icon at 1x or 2x. A cache from before gets the 68 px files once (each from its Types/ PNG).
+- 34 px icons (11-20): `icons/<name>.<stamp>.34.webp` too (`ICON_SMALL` = 68, 34); iconSet lists `34w, 68w, 96w`. An icon
+  under 26 px has `sizes="(max-resolution: 2.4dppx) 26px, (-webkit-max-device-pixel-ratio: 2.4) 26px, Npx"`: up to 2.4x it
+  picks as the 26 px toggles at any width (1x, 1.25x: 34; 1.5x-2.4x: 68), so a page takes one file. A width rule
+  (`min-width: 861px`, round 21) missed 2x phones and upright iPads: 12-23 icons fetched twice. Above 1.3x every icon
+  picks as before. 1x first visit of / 791 -> 740 KB (icons 95 -> 44 KB), table -9%, Stats -14%; 1.25x / -4.4%, where a
+  dialog's 34 px types still take the 68 px files. Non-square icons sit < 0.25 px narrower or wider (the copy's rounded
+  shape). Scratch s1110/x16.
 - Accent colours (`color`: share pages' theme-color, embed bars) come from the PNG's 240 px resize before encoding
   (`accent_color(image)`), not the decoded thumb, so codec settings don't move them; images.json rows of the WebP builds
   (`IMAGE_META_WEBP`) are kept, so no card's colour changes with the switch (a fresh computation would move about 60 of
