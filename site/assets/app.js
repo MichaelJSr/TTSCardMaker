@@ -1557,7 +1557,7 @@ function renderRules(r) {
   if (to) settleAt(to);                                  // #/rules/<chapter>[/<section>]
   rulesAt = location.hash;
   const input = $("#rules-q");
-  input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
+  searchBox(input, debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
 }
 // a deep link's place, again once the book's web fonts are in (they swap in later and move it); not once the reader moves
 function settleAt(el) {
@@ -1995,7 +1995,7 @@ function renderDecks(r) {
   const p = r.params, f = { q: p.get("q") || "", owner: p.get("owner") || "", card: p.get("card") || "", sort: p.get("sort") || "newest", complete: p.get("complete") === "1" };
   view.innerHTML = decks.browserHtml(deckList(), f, { ...deckCtx(), error: S.decksData.error });
   const input = $("#decks-q");
-  input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#decks-q"); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); } }, 200));
+  searchBox(input, debounce(() => { setParams({ q: input.value }); const i2 = $("#decks-q"); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); } }, 200));
 }
 function renderDeckPage(r) {
   const [owner, ...rest] = r.arg.split("/"), slug = rest.join("/");
@@ -2150,6 +2150,13 @@ function toastUndo(msg, undo) {
   b.addEventListener("click", () => { toastEl.hidden = true; undo(); }, { once: true }); toastEl.append(" ", b);
 }
 function debounce(fn, ms) { let t = 0; const d = (...a) => { clearTimeout(t); t = setTimeout(() => { t = 0; fn(...a); }, ms); }; d.flush = () => { if (t) { clearTimeout(t); t = 0; fn(); } }; d.cancel = () => { clearTimeout(t); t = 0; }; return d; }
+// a page's own search box (no form): typing searches; Enter searches now (its redraw focuses the new box) and a phone's
+// Search key then closes its keyboard, as the header's
+function searchBox(box, run) {
+  box.addEventListener("input", run);
+  box.addEventListener("keydown", e => { if (e.key !== "Enter" || e.isComposing || e.keyCode === 229) return;   // 229: an IME's commit (Safari)
+    run.flush(); const at = document.activeElement; if (at?.id === box.id && matchMedia("(pointer: coarse)").matches) at.blur(); });
+}
 async function copy(text, what) { try { await navigator.clipboard.writeText(text); toast(`Copied ${what}`); } catch { prompt("Copy:", text); } }
 // every dialog: focus moves into it, and back to what had it when it closes (a phone's text box excepted: no keyboard pops up)
 let opener = null;
