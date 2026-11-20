@@ -8941,34 +8941,34 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Heavy_Lobster.psd": {
-  "blob": "07a3eadbc08cdf2029fc0c2a53357bd3a6b43e69",
+  "blob": "4ff32c3e4d5568aaed9ef06c20ab660a62d75795",
   "links": [
    {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "drawn": null,
     "name": "Warpstar.png",
     "path": "Types/Stars/Warpstar.png",
     "size": 648064
    },
    {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "drawn": null,
     "name": "Warpstar.png",
     "path": "Types/Stars/Warpstar.png",
     "size": 648064
    },
    {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "drawn": null,
     "name": "Warpstar.png",
     "path": "Types/Stars/Warpstar.png",
     "size": 648064
    },
    {
-    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "drawn": null,
     "name": "fire.png",
     "path": "Types/fire.png",
     "size": 568963
    },
    {
-    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "drawn": null,
     "name": "machine.png",
     "path": "Types/machine.png",
     "size": 303679
@@ -14031,6 +14031,17 @@
    }
   ]
  },
+ "Creatures/Other/5 Stars/Beholster.psd": {
+  "blob": "89cfc7ec61d19390d96723a755597ddb1672ea98",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Stuffed_Star.png",
+    "path": "Types/Stars/Stuffed_Star.png",
+    "size": 710
+   }
+  ]
+ },
  "Creatures/Other/5 Stars/Bobberlington.psd": {
   "blob": "be452770feb7b1bddcb4ce187ad0cc7dea0930e0",
   "links": [
@@ -14896,34 +14907,34 @@
   ]
  },
  "Creatures/Pandas/2 Stars/Peter_Panda.psd": {
-  "blob": "83216280f5bc52b4f0fad7f9e103d82d61524ad2",
+  "blob": "64e1365b8791152a30610f4f3046e7645b920ddb",
   "links": [
    {
-    "drawn": "04e5ff0d24ebdb486a3186bf1f169692c7cd821b",
+    "drawn": null,
     "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
     "size": 394293
    },
    {
-    "drawn": "6d6f5659afbfa0d4a932aa24426e0e121a9a3732",
+    "drawn": null,
     "name": "Peter_Panda - Layer 1.psb",
     "path": "MDW/Linked/Peter_Panda - Layer 1.psb",
     "size": 7604558
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
@@ -15060,14 +15071,8 @@
   ]
  },
  "Creatures/Pandas/3 Stars/PANDA_Mk_A.psd": {
-  "blob": "e7672c4766efce1a849c0dc277cd1e921f96994a",
+  "blob": "9a4579c512ce359b454036c734e5c468c15c7c0a",
   "links": [
-   {
-    "drawn": null,
-    "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
-    "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
-    "size": 394293
-   },
    {
     "drawn": null,
     "name": "star.png",
@@ -15095,14 +15100,8 @@
   ]
  },
  "Creatures/Pandas/3 Stars/PANDA_Mk_F.psd": {
-  "blob": "adac58b33bb953b7c202adc7169eb41565c8613f",
+  "blob": "7bed81b11f45b746991838200a64a5afb34898a0",
   "links": [
-   {
-    "drawn": null,
-    "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
-    "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
-    "size": 394293
-   },
    {
     "drawn": null,
     "name": "P.A.N.D.A._Mk_F - 3d079f143434d5ef23653e5a33db219b-transformed copy 2.png",
@@ -15142,14 +15141,8 @@
   ]
  },
  "Creatures/Pandas/3 Stars/PANDA_Mk_T.psd": {
-  "blob": "8b2695a28662e46f6a2b33a7f50d4a5d03e6425e",
+  "blob": "060b1c67e800138984034cd1c81a12918bc360ae",
   "links": [
-   {
-    "drawn": null,
-    "name": "Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
-    "path": "MDW/Linked/Assault_Panda - 242514477_3019496108300361_8588497494590230934_n-transformed.jpg",
-    "size": 394293
-   },
    {
     "drawn": null,
     "name": "star.png",
@@ -15563,40 +15556,40 @@
   ]
  },
  "Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.psd": {
-  "blob": "25809ac0309e896ca2a02c27ed8f0c1fa9620415",
+  "blob": "134c9efbcae69977ef071b4fec20cf01c786fbd7",
   "links": [
    {
-    "drawn": "108db7fcd4aaf1baea7661ca3f81308763a6300e",
+    "drawn": null,
     "name": "Azamoth_the_Possessed_Vessel - chatchawan-keawtangkhuen-realmofthemadgod-sf-finalrelease.jpg",
     "path": "MDW/Linked/Azamoth_the_Possessed_Vessel - chatchawan-keawtangkhuen-realmofthemadgod-sf-finalrelease.jpg",
     "size": 1164568
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+    "drawn": null,
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
