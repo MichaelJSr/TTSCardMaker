@@ -1330,12 +1330,16 @@ export function layerOf(rec, role) {
 const ICON_FONT = /^stoogedings/i;                    // AutoCroissant ICON_FONT_PREFIX: icons and badges, not letters
 const OVERLAY = /^(Color|Gradient|Pattern)Overlay$/;  // psd_details' effect names; a disabled one ends " (off)"
 /** Whether the text layer at path ("Text/Ability") or a group above it has an enabled Color, Gradient or Pattern Overlay
- *  (the details record's effects): the font then draws its badges and stickers in one colour, Stylistic Alternates
+ *  (the details record's effects; t: the layer's record entry, whose own "effects" win where layers share the path,
+ *  psd_details VERSION 12): the font then draws its badges and stickers in one colour, Stylistic Alternates
  *  (AutoCroissant psd_edit one_colour, 2026-10-25). */
-export function oneColour(rec, path, kind = OVERLAY) {
+export function oneColour(rec, path, kind = OVERLAY, t = null) {
   const fx = rec?.effects && typeof rec.effects === "object" ? rec.effects : {}, parts = String(path || "").split("/");
-  return !!path && parts.some((_, i) => { const e = fx[parts.slice(0, i + 1).join("/")]; return Array.isArray(e) && e.some(n => kind.test(String(n))); });
+  const own = t?.layer === path && Array.isArray(t.effects) ? t.effects : null;
+  return !!path && parts.some((_, i) => { const e = own && i === parts.length - 1 ? own : fx[parts.slice(0, i + 1).join("/")]; return Array.isArray(e) && e.some(n => kind.test(String(n))); });
 }
+/** Whether other text layers share t's path and t's record entry doesn't say its own effects (older than VERSION 12). */
+const unsure = (rec, t) => !Array.isArray(t?.effects) && Array.isArray(rec?.text) && rec.text.filter(x => x?.layer === t?.layer).length > 1;
 /** The same for an enabled Gradient Overlay: the letters are drawn in the old ones' shades (erase's profile). */
 export const gradientOn = (rec, path) => oneColour(rec, path, /^GradientOverlay$/);
 /** The record's Stroke [r, g, b] (psd_details: the layer's or its group's), or null. */
@@ -1538,7 +1542,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W));
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
-    const one = role === "ability" && oneColour(rec, layer?.layer) && (abilityOff(rec, layer?.layer, colors) ? "badges" : true);
+    const one = role === "ability" && oneColour(rec, layer?.layer, OVERLAY, layer) && (abilityOff(rec, layer, colors) || unsure(rec, layer) ? "badges" : true);
     const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null, role === "ability" ? statuses : null, role === "ability" ? layer?.heads : null);    // the card's own colours on what is unchanged
     if (added && layer?.added && own) { jobs.push({ role, text, label, area: { box: own, seed: null }, fam, layer, measure, icons, colors, statuses, kc, look: true }); continue; }   // as the bake sets it
     if (added) {                                      // top: at the top of the bake's area, as tall as its lines
@@ -1899,8 +1903,8 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
 }
 /** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills (a cooldown's ring its
  *  left end). one (an overlay on the ability): badges as outlined pills, rings and icons in one colour and stickers as
- *  an outline round the one-colour icon, in the text's fill ("badges": the overlay goes off, abilityOff: icons in their
- *  own colours). shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
+ *  an outline round the one-colour icon, in the text's fill ("badges": the overlay goes off, abilityOff, or may not be
+ *  the layer's, unsure: icons in their own colours). shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
  *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. tex:
  *  letterLook's, over the letters of its colour. */
 export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null }) {
@@ -2675,15 +2679,16 @@ export function tintPlan(data, W, plate, ids, k, old, layer, colors, role, statu
 }
 /** Whether the text layer at path has its own enabled Color or Gradient Overlay and no group above it has one (the bake
  *  refuses a group's: paintedOver). */
-function ownOverlay(rec, path) {
+function ownOverlay(rec, path, t = null) {
   const up = String(path || "").split("/").slice(0, -1).join("/");
-  return oneColour(rec, path, /^(Color|Gradient)Overlay$/) && !(up && oneColour(rec, up));
+  return oneColour(rec, path, /^(Color|Gradient)Overlay$/, t) && !(up && oneColour(rec, up));
 }
 /** Whether colors turn off the own overlay of the title layer at path (psd_edit set_colors' _overlay_off): a whole
  *  title's colour on a layer with ownOverlay. The bake then paints its letters flat in the colour. */
 export const titleOff = (rec, path, colors) => (colors || []).some(o => o?.field === "name" && !o.phrase) && ownOverlay(rec, path);
-/** The same for an Ability layer: a whole Ability's colour turns its own overlay off (typed icons show their colours). */
-const abilityOff = (rec, path, colors) => (colors || []).some(o => o?.field === "ability" && !o.phrase) && ownOverlay(rec, path);
+/** The same for an Ability layer (t: its record entry): a whole Ability's colour turns its own overlay off (typed icons
+ *  show their colours). */
+const abilityOff = (rec, t, colors) => (colors || []).some(o => o?.field === "ability" && !o.phrase) && ownOverlay(rec, t?.layer, t);
 /** Per index of R.was, the colour its letter shows under the layer's own overlay (the bake turns it off and paints the
  *  letters): the median of its ink pixels off the plate's backdrop and off the layer's Stroke colour (without one in the
  *  record: off the colour at its ink's edge, then of two colours left the lighter); null when few. */
