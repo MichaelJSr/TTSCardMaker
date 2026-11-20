@@ -132,16 +132,18 @@ export function mergeParts(cur, set = {}, unset = []) {
 // ---- notes
 const STAR_FOLDER = /^((?:[^/]+\/)*)(\d+) Stars\/[^/]+$/i;      // a card in an "N Stars" folder (debuffs too)
 const STARS_FROM_PSD = ["Auxiliary/Items", "Auxiliary/Minions", "Auxiliary/Creatures", "N.M.E"];   // AutoCroissant psd_parser
-/** A stars edit on a card whose stars come from its folder moves it (owner 10-25): {to (the folder), created} or null. */
+/** A stars edit on a card whose stars come from its folder moves it (owner 10-25): {to (the folder), created} or null
+ *  (under 1: the bake refuses it). */
 export function starMove(path, stars, paths = []) {
   const p = String(path || ""), m = STARS_FROM_PSD.some(f => p.includes(f)) ? null : STAR_FOLDER.exec(p);
-  if (!m || stars == null || +m[2] === +stars) return null;
+  if (!m || stars == null || +stars < 1 || +m[2] === +stars) return null;
   const to = `${m[1]}${stars} Stars/`, low = to.toLowerCase();
   return { to, created: !paths.some(p => String(p || "").toLowerCase().startsWith(low)) };
 }
-/** Why a bake keeps the printed stars at n (header.stars' refusal, "*" every count; psd_details._star_header), or null:
- *  it redraws them, or the record can't tell. */
+/** Why a bake keeps the printed stars at n (header.stars' refusal, "*" every count; psd_details._star_header; under 1
+ *  psd_edit's own), or null: it redraws them, or the record can't tell. */
 export function starsKept(stars, n) {
+  if (n != null && +n < 1) return "a card shows at least one";
   const r = stars && typeof stars === "object" && stars.refused && typeof stars.refused === "object" ? stars.refused[n] ?? stars.refused["*"] : null;
   return r ? String(r) : null;
 }
