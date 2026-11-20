@@ -1338,6 +1338,7 @@ export function layerOf(rec, role) {
   const other = Object.entries(rec?.fonts && typeof rec.fonts === "object" ? rec.fonts : {}).find(([n, v]) => !ICON_FONT.test(n) && Array.isArray(v?.layers) && v.layers.includes(t.layer));
   return { ...t, font: other ? other[0] : "" };
 }
+const FAUX_BOLD = 0.027;                               // the fork's FAUX_BOLD_EM: a faux bold letter's extra advance and dilation, in ems
 const ICON_FONT = /^stoogedings/i;                    // AutoCroissant ICON_FONT_PREFIX: icons and badges, not letters
 const OVERLAY = /^(Color|Gradient|Pattern)Overlay$/;  // psd_details' effect names; a disabled one ends " (off)"
 /** Whether the text layer at path ("Text/Ability") or a group above it has an enabled Color, Gradient or Pattern Overlay
@@ -1541,7 +1542,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   for (const [k, { role, text, old, label, own: partBox, added, part, colors: shared, follow }] of specs.entries()) {
     if (tints[k] || mixes[k]) { out.drawn.push(label); continue; }   // never erased: tinted or mixed below
     const { fam, layer } = fams[k];
-    const set = role === "ability" || role === "name" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems) and letter width (psd_details)
+    const set = role === "ability" || role === "name" ? layer : null, fb = set?.fb ? FAUX_BOLD : 0, track = (Number.isFinite(set?.track) ? set.track / 1000 : 0) + fb, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems; faux bold adds its own), letter width (psd_details)
     const width = (t, z) => {
       ctx.font = `${z}px ${fam}`;
       if (!track) return ctx.measureText(t).width * hx;
@@ -1549,7 +1550,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     };
     const nd = NOTDEFS.get(fam), measure = (t, z) => (nd && STOOD.test(t)   // glyphPlan's stand-ins: as glyphText draws them
       ? glyphRuns(t).reduce((w, r) => w + (typeof r === "number" ? r * (nd.adv + track) * z * hx : width(r, z)), 0) : width(t, z));
-    measure.track = track; measure.hx = hx;
+    measure.track = track; measure.hx = hx; measure.fb = fb;
     measure.cap = z => capOf(ctx, fam, z);
     measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W));
@@ -1948,17 +1949,20 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
  *  an outline round the one-colour icon, in the text's fill ("badges": the overlay goes off, abilityOff, or may not be
  *  the layer's, unsure: icons in their own colours). shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
  *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. tex:
- *  letterLook's, over the letters of its colour. */
-export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null }) {
+ *  letterLook's, over the letters of its colour. fb: faux bold, letters dilated by fb ems. Every outline is drawn before
+ *  any fill (one Stroke round the layer, as Photoshop's): a wide one never covers the letters beside it. */
+export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null, fb = 0 }) {
   ctx.textBaseline = "alphabetic";
   if (effects?.length) paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx });
   const copy = (c, how) => paintCopy(ctx, lines, { at, base, pitch, z, fam, track, hx, fill, stroke, strokeW, shades }, c, how);
   if (stroke) for (const c of copies || []) copy(c, "strokeText");   // one outline round them all (the group's Stroke)
   for (const c of copies || []) if (!c.above) copy(c, "fillText");
-  lines.forEach((line, n) => {
+  const bold = how => { if (fb) { ctx.lineJoin = "round"; ctx.strokeStyle = how; ctx.lineWidth = fb * z; } return fb; };   // faux bold: the fill dilated
+  for (const rim of stroke ? [true, false] : [false]) lines.forEach((line, n) => {   // rim: the outlines, then the fills
     let x = at(line), y = base + n * pitch;
     for (const p of line.pieces) {
       if (p.icon && one && p.sticker && imgs.get(p.sticker.tint) && imgs.get(p.sticker.outline)) {
+        if (rim) { x += p.w; continue; }
         const s = z * 1.05, r = s * STICKER_REACH, bx = x + (p.w - s) / 2, by = y - s * 0.82;
         paintMask(ctx, imgs.get(p.sticker.outline), [bx - r, by - r, s + 2 * r, s + 2 * r], fill, STICKER_LINE / (1 + 2 * STICKER_REACH));
         paintMask(ctx, imgs.get(p.sticker.tint), [bx, by, s, s], fill);
@@ -1968,29 +1972,31 @@ export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, 
         const near = line.pieces.slice(0, line.pieces.indexOf(p)).reverse().find(q => q.text?.trim()) || line.pieces.slice(line.pieces.indexOf(p) + 1).find(q => q.text?.trim());
         const tc = (p.ink && hexRgb(p.ink)) || (near?.color && hexRgb(near.color)) || fill;   // a variant in the text colour: its letters'
         const vim = p.vary && imgs.get(p.vfile), sq = (r) => { const side = Math.max(box[2], box[3]) * (1 + 2 * r); return [box[0] + box[2] / 2 - side / 2, box[1] + box[3] / 2 - side / 2, side, side]; };
-        const rim = stroke && strokeW > 0 ? (pic, b, solid) => outlineIcon(ctx, pic, b, stroke, strokeW / 2, solid) : () => {};   // the bake's Stroke round the glyph's ink
+        const ring = rim && strokeW > 0 ? (pic, b, solid) => outlineIcon(ctx, pic, b, stroke, strokeW / 2, solid) : () => {};   // the bake's Stroke round the glyph's ink
         const sign = (colour, extra) => {             // build_stoogedings prohibition: a ring and a bar on the icon box's middle
           const cx = g ? box[0] + box[2] / 2 : x + p.w / 2, cy = y - 0.32 * ez, r = 0.53 * ez, lw = 0.14 * r, k = Math.SQRT1_2 * (r - lw / 2);
           ctx.save(); ctx.strokeStyle = rgb(colour); ctx.lineWidth = lw + extra; ctx.beginPath(); ctx.arc(cx, cy, r - lw / 2, 0, 2 * Math.PI); ctx.stroke();
           ctx.beginPath(); ctx.moveTo(cx - k, cy - k); ctx.lineTo(cx + k, cy + k); ctx.stroke(); ctx.restore();
         };
-        if (vim && p.vary === "tint") { rim(vim, box); paintMask(ctx, vim, box, tc); }   // one colour: the text's
-        else if (vim && (p.vary === "glow" || p.vary === "darkglow")) { const q = sq(VARIANT_REACH[p.vary]); rim(vim, q, true); ctx.drawImage(vim, ...q); }   // the halo with the icon on it (a Stroke makes the halo a disc)
+        if (vim && p.vary === "tint") { ring(vim, box); if (!rim) paintMask(ctx, vim, box, tc); }   // one colour: the text's
+        else if (vim && (p.vary === "glow" || p.vary === "darkglow")) { const q = sq(VARIANT_REACH[p.vary]); ring(vim, q, true); if (!rim) ctx.drawImage(vim, ...q); }   // the halo with the icon on it (a Stroke makes the halo a disc)
         else {
-          if (vim && p.vary === "sticker") { const q = sq(VARIANT_REACH.sticker); rim(vim, q); paintMask(ctx, vim, q, tc); }   // the outline in the text colour
-          else if (im && g) rim(im, box);
-          if (p.no && stroke && strokeW > 0) sign(stroke, strokeW);
-          if (im && one === true) paintMask(ctx, im, box, fill);   // under the Ability's overlay: in its colour, as the bake
-          else if (im) ctx.drawImage(im, ...box);
+          if (vim && p.vary === "sticker") { const q = sq(VARIANT_REACH.sticker); ring(vim, q); if (!rim) paintMask(ctx, vim, q, tc); }   // the outline in the text colour
+          else if (im && g) ring(im, box);
+          if (p.no && rim && strokeW > 0) sign(stroke, strokeW);
+          if (!rim) { if (im && one === true) paintMask(ctx, im, box, fill); else if (im) ctx.drawImage(im, ...box); }   // under the Ability's overlay: in its colour, as the bake
         }
-        if (p.no) sign([0xe0, 0x1b, 0x22], 0);
+        if (p.no && !rim) sign([0xe0, 0x1b, 0x22], 0);
       } else if (p.badge) {
         const cap = capOf(ctx, fam, z), fitted = badgeFit(z, cap), { h, k } = pillOf(p, z, cap), top = y - fitted.top + (fitted.h - h) / 2, r = h / 2, em = h / PILL_EM;   // on the capitals' middle
         const lab = label ? label(em) : null, set = p.cost ? null : lab, side = lab ? 0.04 * em : z * 0.06 * k;
         const x0 = x + side, x1 = x + p.w - (p.tk || 0) / 1000 * em - side;     // a cooldown's ring: the pill's left end, its label after it; its tracking after
         const pill = (d = 0) => { ctx.beginPath(); ctx.moveTo(x0 + r, top + d); ctx.arcTo(x1 - d, top + d, x1 - d, top + h - d, r - d); ctx.arcTo(x1 - d, top + h - d, x0 + d, top + h - d, r - d); ctx.arcTo(x0 + d, top + h - d, x0 + d, top + d, r - d); ctx.arcTo(x0 + d, top + d, x1 - d, top + d, r - d); ctx.closePath(); };   // d: inset
+        if (rim) {                                    // the layer's Stroke round the pill
+          if (!one && strokeW > 0) { ctx.save(); pill(); ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = strokeW; ctx.stroke(); ctx.restore(); }
+          x += p.w; continue;
+        }
         ctx.save(); pill();
-        if (!one && stroke && strokeW > 0) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = strokeW; ctx.stroke(); }   // the layer's Stroke round the pill
         ctx.font = lab ? lab.font(z * BADGE_EM * k) : `800 ${z * BADGE_EM * k}px ${fam}`; ctx.textAlign = "center";
         let lx = (x0 + (p.ring ? RING_W * h : 0) + x1) / 2, ly = top + h * 0.5 + z * BADGE_EM * k * 0.36;
         const letters = how => {                      // the label, centred by its ink as the font centres it
@@ -2018,10 +2024,13 @@ export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, 
         if (p.ring && one) drawRing(ctx, p.ring, p.group, x0 + r, top + r, h / 22, { fill, stroke, width: Math.max(1.5, z * 0.16) });
       } else if (p.text.trim()) {
         ctx.save(); ctx.font = `${z}px ${fam}`; if (track) ctx.letterSpacing = `${track * z}px`; ctx.translate(x, y); ctx.scale(hx, 1);
-        if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = strokeW || Math.max(1.5, z * 0.16); glyphText(ctx, p.text, fam, z, track, "strokeText"); }
-        ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); glyphText(ctx, p.text, fam, z, track, "fillText");
-        const look = texture(ctx, tex, p.color);       // over the flat fill: past its band, the flat colour
-        if (look) { ctx.fillStyle = look; glyphText(ctx, p.text, fam, z, track, "fillText"); }
+        if (rim) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = (strokeW || Math.max(1.5, z * 0.16)) + fb * z; glyphText(ctx, p.text, fam, z, track, "strokeText"); }   // round the dilated letters
+        else {
+          ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); glyphText(ctx, p.text, fam, z, track, "fillText");
+          if (bold(ctx.fillStyle)) glyphText(ctx, p.text, fam, z, track, "strokeText");
+          const look = texture(ctx, tex, p.color);     // over the flat fill: past its band, the flat colour
+          if (look) { ctx.fillStyle = look; glyphText(ctx, p.text, fam, z, track, "fillText"); if (bold(look)) glyphText(ctx, p.text, fam, z, track, "strokeText"); }
+        }
         ctx.restore();
       }
       x += p.w;
@@ -2129,7 +2138,7 @@ function drawText(ctx, job, imgs, W) {
     const bar = Math.max(60, (seen ? nth(dev, Math.floor(0.95 * (seen - 1))) : 0) + 20);
     const mask = document.createElement("canvas"); mask.width = W; mask.height = Math.max(1, H - from);
     const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -from);
-    paintLines(mx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base: top + z * 0.8, pitch: pitch0 * (z / size), z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill: [255, 255, 255], stroke: null, imgs, one });
+    paintLines(mx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base: top + z * 0.8, pitch: pitch0 * (z / size), z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill: [255, 255, 255], stroke: null, imgs, one });
     const a = mx.getImageData(0, 0, W, mask.height).data; let n = 0;
     for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
@@ -2156,7 +2165,9 @@ function drawText(ctx, job, imgs, W) {
     if (Number.isFinite(tall) && tall > 0) base = top + (found.lines[0][3] - top) * up / tall;
   }
   const own = Array.isArray(layer?.stroke) && layer.stroke.length === 4 ? layer.stroke : null;   // psd_details: the layer's or its group's Stroke
-  const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = own ? own.slice(0, 3) : colours?.stroke, strokeW = own ? 2 * own[3] * (kc || W / 1200) : 0;
+  const ring = Array.isArray(layer?.outline) && layer.outline.length === 4 ? layer.outline : own;   // its groups' Strokes stacked on its own
+  const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = ring ? ring.slice(0, 3) : colours?.stroke, strokeW = ring ? 2 * ring[3] * (kc || W / 1200) : 0;
+  const stroke0 = own ? own.slice(0, 3) : colours?.stroke, strokeW0 = own ? 2 * own[3] * (kc || W / 1200) : 0;   // a splice's (geoDraw)
   const fk = kc || W / 1200, effects = Array.isArray(layer?.fx) ? layer.fx.map(e => ({ ...e, dx: (e.dx || 0) * fk, dy: (e.dy || 0) * fk, size: (e.size || 0) * fk, ws: (e.ws || 0) * fk })) : null;   // psd_details: its shadows and glows
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
   if (role === "name" && geo && kc && plain(text) === plain(old) && sameWords(geo.c.text, old)) {   // a colour alone on a title (its fill hidden: tintPlan's none): each of its own lines redrawn where it stands
@@ -2170,19 +2181,19 @@ function drawText(ctx, job, imgs, W) {
         const m = ctx.measureText(body), inkW = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) * measure.hx; ctx.letterSpacing = "0px";
         const zl = inkW > 0 && b[1] > a[0] ? size * (b[1] - a[0]) / inkW : size;   // its own ink width
         const line = fit(colourize(tokenize(body, icons), body, colors, role, statuses, null, null, fills), Infinity, Infinity, zl, measure).lines.slice(0, 1);
-        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, effects, copies });
+        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, imgs, one, effects, copies });
       }
       job.lined = "own"; return false;
     }
   }
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid, unless spliced on the card (the bake shrinks ink off it only)
-  job.lined = plan && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
+  job.lined = plan && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies });
   return over;
 }
 /** The lines of a redrawn Ability the edit leaves as they were (indexes): its leading and trailing lines whose pieces
@@ -2550,7 +2561,8 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
     for (const [rect, dx, dy] of drawn.moves) moveInk(img.data, wiped, card, W, [ya, yb], rect, dx, dy);
     ctx.putImageData(img, 0, ya);
   }
-  for (const [lines, o] of drawn.paints) paintLines(ctx, lines, { ...look, ...o, pitch: step });
+  const spliced = sps && look.stroke0 !== undefined ? { stroke: look.stroke0, strokeW: look.strokeW0 } : {};   // the layer's own Stroke (stacked, it covered the card's letters beside it)
+  for (const [lines, o] of drawn.paints) paintLines(ctx, lines, { ...look, ...spliced, ...o, pitch: step });
   return sps ? (sps.length > 1 ? "splices" : "splice") : "lines";
 }
 /** An added ability as the bake sets it (the details' addLook: card_checks' plan font, px and leading, the template
@@ -2564,7 +2576,7 @@ function drawAdded(ctx, { text, area, fam, layer: look, measure, icons, colors, 
   while (tall(lines, z) > room + 0.5 && z > z0 * 0.4) { z *= 0.94; lines = layout(paras, b[2] - b[0], z, measure); }
   const stroke = Array.isArray(look.stroke) && look.stroke.length === 4 ? look.stroke : null;
   paintLines(ctx, lines, { at: l => (look.just === 0 ? b[0] : (b[0] + b[2] - l.w) / 2), base: b[1] + measure.cap(z)[0], pitch: z * lead, z, fam,
-    label: measure.label, track: measure.track, hx: measure.hx, fill: hexRgb(look.color) || [255, 255, 255], stroke: stroke?.slice(0, 3),
+    label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill: hexRgb(look.color) || [255, 255, 255], stroke: stroke?.slice(0, 3),
     strokeW: stroke ? 2 * stroke[3] * kc : 0, imgs });
   return tall(lines, z) > room + 0.5;
 }
@@ -2583,7 +2595,7 @@ function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, stat
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();
   ctx.fillStyle = rgb(BOX_FILL); ctx.fill(); ctx.lineWidth = Math.max(1.5, W * 0.003); ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.setLineDash([W * 0.012, W * 0.008]); ctx.stroke(); ctx.restore();
   const pitch = z * LINE, base = (b[1] + b[3]) / 2 - (lines.length * pitch) / 2 + z * 0.9, mid = (b[0] + b[2]) / 2;
-  paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill: [255, 255, 255], stroke: [0, 0, 0], imgs, one });
+  paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill: [255, 255, 255], stroke: [0, 0, 0], imgs, one });
   return over;
 }
 function paintCells(data, W, H, row, from, to) {

@@ -693,6 +693,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     the darkest as the outline when darker than it), else the record's colour; one colour (the card's coloured words
     aren't kept). A record's `stroke` (psd_details VERSION 7: the layer's or its nearest group's solid, Normal, 100%,
     outside Stroke) sets the letters' outline colour and width (2 x its size) instead; badges keep their own widths.
+    VERSION 12: `outline`, its own and its groups' Strokes stacked (Retro Kirby's 2 px under the Text group's 7 px: 9),
+    on lines laid whole (a splice keeps `stroke`: stacked, it covered the card's letters beside it); `paintLines` draws
+    every outline before any fill, as Photoshop strokes the layer once (a wide one never covers the letters beside it);
+    `fb` (faux bold): advances 0.027 em wider and letters dilated by 0.027 em (the fork's FAUX_BOLD_EM).
     A record's `fx` (VERSION 8: the layer's and its groups' Drop Shadows and Outer Glows, when one shows: a glow with
     one colour or a shadow 8 px past its level's Stroke, at 15% or more; 74 cards) is cast under the typed letters
     (`paintEffects`: the letters, plus a Stroke set deeper, grown by the spread, blurred at sigma size / sqrt 6, moved,
