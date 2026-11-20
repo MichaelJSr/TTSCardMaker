@@ -1437,8 +1437,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const ctx = work.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(img, 0, 0);
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
-  let px0 = null;                                     // mixed: the card's pixels, unchanged
-  const mixed = (x, f) => !!(sheet && rec?.canvas?.w > 0 && mixPlan(px0 ||= ctx.getImageData(0, 0, W, H).data, W, H, W / rec.canvas.w, plate, [x?.id], [{ field: f, color: "#808080" }], f, readPlate));
+  let px0 = null;                                     // the card's pixels: mixed's, then the draw's
+  const mixed = (x, f) => !!(sheet && rec?.canvas?.w > 0 && mixPlan((px0 ||= ctx.getImageData(0, 0, W, H)).data, W, H, W / rec.canvas.w, plate, [x?.id], [{ field: f, color: "#808080" }], f, readPlate));
   const own = keptOver(rec, edit.colors, typed, statuses), rest = own.length ? edit.colors.filter(one => !own.some(n => n.one === one)) : edit.colors;
   const nix = [...own, ...paintedOver(rec, rest, typed, edit, mixed)].sort((a, b) => edit.colors.indexOf(a.one) - edit.colors.indexOf(b.one));   // the bake refuses them, or only a redraw could draw them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
@@ -1475,7 +1475,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", todo.stars && "stars", todo.types && "types"].filter(Boolean));   // stats: nothing said (owner 11-11)
     return blit();
   }
-  const pixels = ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
+  const pixels = px0 || ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
   const family = async (role, label, path = "", id = "", look = null) => {   // path, id: a part's own layer (a split title's share a path); look: an added ability's
     const mine = t => t && (id && t.id != null ? String(t.id) === id : t.layer === path) && (t.lf || !ICON_FONT.test(String(t.font || "")));
     const own = path && Array.isArray(rec?.text) ? rec.text.find(mine) : null;
