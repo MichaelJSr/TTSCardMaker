@@ -674,10 +674,10 @@ ol.bal-changes { list-style: none; padding: 0; margin: 6px 0; }
 
 /* ---- changes / compare ---- */
 .feed .item { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--grid); }
-.feed img { width: 64px; border-radius: 6px; cursor: pointer; }
+.feed .item > img { width: 64px; border-radius: 6px; cursor: pointer; }
 .compare { display: grid; grid-template-columns: repeat(var(--n, 2), minmax(min(220px, calc((100% - 14px) / 2)), 1fr)); gap: 14px; overflow-x: auto; }   /* phones: two cards side by side */
 .compare .col { overflow-wrap: anywhere; }   /* long names, a/b/c chains */
-.compare .col img { width: 100%; border-radius: 10px; }
+.compare .col > img { width: 100%; border-radius: 10px; }
 .diff-up { color: var(--good); } .diff-down { color: var(--danger); }
 /* the Changes page's category tabs: a row across its top, the chosen one underlined */
 .change-tabs { display: flex; flex-wrap: wrap; gap: 2px; margin: 0 0 14px; border-bottom: 1px solid var(--border-strong); }
@@ -721,7 +721,7 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .ver-ch-k { font-weight: 600; }
 .ver-minor > summary { cursor: pointer; width: fit-content; padding: 2px; font-size: 12.5px; color: var(--muted); }
 .ver-minor[open] > summary { margin-bottom: 6px; }
-.ver-compare figure { margin: 0; } .ver-compare img { width: 100%; height: auto; border-radius: 10px; background: var(--surface-2); display: block; }
+.ver-compare figure { margin: 0; } .ver-compare figure > img { width: 100%; height: auto; border-radius: 10px; background: var(--surface-2); display: block; }
 .ver-compare figcaption { font-size: 12.5px; margin-top: 6px; line-height: 1.35; }
 .ver-src { font-size: 11px; font-weight: 500; padding: 0 6px; }   /* a version or change from before this repo: where from */
 .ver-compare .empty { aspect-ratio: 1 / 2; display: grid; place-items: center; padding: 10px; text-align: center; }
@@ -739,7 +739,7 @@ label.ver-hint { display: flex; align-items: center; gap: 8px; color: var(--ink-
 .ver-pics { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
 .ver-pic { aspect-ratio: var(--ar); border-radius: 10px; background: var(--surface-2); overflow: hidden; }
 .ver-pic > a { display: block; height: 100%; }
-.ver-compare .ver-pic img { width: 100%; height: 100%; object-fit: contain; border-radius: 0; background: none; }
+.ver-compare .ver-pic img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .ver-compare .ver-pic .empty { aspect-ratio: auto; height: 100%; }
 .ver-caps { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 6px; font-size: 12.5px; line-height: 1.35; }
 .ver-caps .fact { font-size: 11px; padding: 0 6px; } .ver-size { display: block; min-height: 1.35em; color: var(--muted); }
