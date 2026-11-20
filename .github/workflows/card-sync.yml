@@ -34,8 +34,10 @@
 # newer run replaced is started again by Follow up), else their Follow up starts it once they land (or land nothing), so
 # its one main lane bakes and saves the fixed PNGs. When every fix keeps each card picture (the check job's "Pictures
 # kept": lossless recompressions, PSD writes and conversions, linked files) the push's lane still saves the TTS save at
-# their Decided, alone (no bake, rulebook PDF or redraw), and that run re-pins after the landing. The schedule's, a
-# chained run's and a site lane's skip theirs while any guards run with fixes is unfinished.
+# their Decided, alone (no bake, rulebook PDF or redraw), and that run re-pins after the landing. A push's lane whose own
+# data commit comes before that Decided saves the TTS save alone at once (its names are that commit's), fixes or not:
+# with fixes it stops there, as above. The schedule's, a chained run's and a site lane's skip theirs while any guards run
+# with fixes is unfinished.
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) from the card workflows' venv cache.
 name: Card sync
@@ -469,7 +471,10 @@ jobs:
       # unfinished one (two hours back). One found: this run's main lane is skipped (its data lane ran; a push's lane
       # skips its Gate and the rest), but a push's whose fixes keep every card picture (the check job's "Pictures kept",
       # with Fixes to land) goes on for the save alone (kept: no bake, rulebook PDF or redraw; the guards' run re-pins after
-      # Landed). Runs that cannot be read count as none (the main lane goes on). A follow-up (guards:
+      # Landed). A push's lane whose data watcher (Push save start's) finds this run's data commit before Decided commits
+      # that save alone onto main then (early(), once; main moved: dropped) and waits on; with fixes, kept or not, it then
+      # stops (its Follow up's run re-pins or bakes and saves after Landed). Runs that cannot be read count as none (the
+      # main lane goes on). A follow-up (guards:
       # the run whose check job started this one, before Land) waits in both lanes after their setup until that check
       # job reaches Landed (Land and its guard-events and guard-records uploads done) or ends: 3 s looks for 2 minutes,
       # then 15 s, 60 at most (the check job's own cap); it holds nothing. With a first attempt's push P (the first
@@ -545,6 +550,31 @@ jobs:
               | [.jobs[].steps // [] | .[]] as \$s | \"\(\$c.id // 0) \(if \$c != null and (\$c | $decided) then 1 else 0 end) \((\$s | $fixes)
                 and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\")))) \(\$s | $kept)\"" || echo "0 0 false false"
           }
+          e=''
+          early() {        # this run's data commit in before Decided: Push save start's save (names from it) alone on main, once
+            local bg=$RUNNER_TEMP/save save="TTS/Impossibility Simulator.json" h s mode tree now
+            e=tried
+            for _ in $(seq 600); do [ -s "$bg/code" ] && [ -s "$RUNNER_TEMP/history.code" ] && break; sleep 0.05; done
+            [ "$(cat "$bg/code" 2> /dev/null)" = 0 ] && h=$(git rev-parse HEAD) && [ "$(cat "$bg/at")" = "$h" ] || return 0
+            ! git diff --quiet -- "$save" || return 0
+            mode=$(git ls-tree "$h" -- "$save" | cut -d' ' -f1) || mode=''
+            tree=$(export GIT_INDEX_FILE=$RUNNER_TEMP/early.index && git read-tree "$h" \
+              && git update-index --add --cacheinfo "${mode:-100644},$(git hash-object -w -- "$save"),$save" && git write-tree --missing-ok) || return 0
+            { echo "Card sync: TTS save updated"; echo; head -1 "${save%.json}.message.txt" 2> /dev/null || true; } \
+              | git stripspace > "$RUNNER_TEMP/early-message.txt" || return 0
+            s=$(GIT_AUTHOR_NAME=AutoCroissant GIT_AUTHOR_EMAIL=autocroissant@gmail.com GIT_COMMITTER_NAME=AutoCroissant \
+              GIT_COMMITTER_EMAIL=autocroissant@gmail.com git commit-tree "$tree" -p "$h" -F "$RUNNER_TEMP/early-message.txt") || return 0
+            for lazy in 1 0; do   # as Commit main's: once more while main is unmoved
+              if GIT_NO_LAZY_FETCH=$lazy git -c pack.window=0 push -q --no-thin origin "$s:refs/heads/main"; then now=$s; break; fi
+              now=$(git ls-remote origin refs/heads/main | cut -f1) || now=''
+              [ "$now" = "$h" ] || break
+            done
+            if [ "$now" != "$s" ]; then echo "::warning::the early save was not pushed (main ${now:0:8}): the lane saves as ever"; return 0; fi
+            git reset -q --hard "$s" && echo "$s" > "$bg/at" || true       # the lane goes on from it (Early save keeps the save)
+            e=$s
+            echo "This run's data commit came before the guards' Decided: the TTS save alone is on main as ${s:0:8} ($SECONDS s into the wait)." \
+              | tee -a "$GITHUB_STEP_SUMMARY"
+          }
           body=$RUNNER_TEMP/guards-check.json
           while read -r id status; do
             [ -n "$id" ] || continue
@@ -576,9 +606,16 @@ jobs:
                   fi
                 fi
                 [ "$dec" != 1 ] || break
+                if [ -z "$e" ] && [ -e "$RUNNER_TEMP/names/mine" ]; then early || true; fi     # Push save start's watcher's
               done
               [ "$dec" = 1 ] || read -r cid dec hold keep <<< "$(check_job)"      # ended or cut: the run's jobs once more
               [ -z "$u0" ] || echo "Check job: $k looks, $c changed; rate limit used $u0 -> $used (a 304 is free when it moved less than the looks)"
+            fi
+            if [ "$hold" = true ] && [ -n "$e" ] && [ "$e" != tried ]; then
+              echo "run=$id" >> "$GITHUB_OUTPUT"
+              echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id lands fixes: the save went first (${e:0:8}); the Card sync run it starts bakes and re-pins after the landing (this run's main lane stops)." \
+                | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
             fi
             if [ "$hold" = true ] && [ -n "$SHA" ] && [ "$keep" = true ]; then
               echo "kept=$id" >> "$GITHUB_OUTPUT"
@@ -603,13 +640,14 @@ jobs:
         uses: ./.github/actions/history
 
       # After a wait that held nothing (a push's main lane, a follow-up's two): main's head and the data's as they are
-      # now (one not fetched stays as checked out)
+      # now (one not fetched stays as checked out); main unmoved: no reset (Push save start's save is in the checkout)
       - &newest
         name: Newest
         if: steps.guards.outcome != 'skipped' && !steps.guards.outputs.run
         timeout-minutes: 5
         run: |
-          if git fetch -q --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
+          if ! git fetch -q --filter=blob:none origin main; then echo "::warning::main not fetched again"
+          elif [ "$(git rev-parse HEAD)" != "$(git rev-parse FETCH_HEAD)" ]; then git reset -q --hard FETCH_HEAD; fi
           if git -C carddata fetch -q --depth 1 origin data; then git -C carddata reset -q --hard FETCH_HEAD; else echo "::warning::data not fetched again"; fi
 
       # The guards' commits since the last build (AutoCroissant, "Card guards: ..."): each one's guard-events.json from the
@@ -1470,6 +1508,117 @@ jobs:
             fi
             echo "$code" > "$bg/code" ) < /dev/null > "$bg/log" 2>&1 &
 
+      # A push's lane: Early save's save and data watcher from here, on the checkout's head, beside the guards' wait (no
+      # count: Early save's, after History wait); Early save keeps them while HEAD stays. This run's data commit in before
+      # the guards' Decided: Guards' fixes commits the save alone.
+      - name: Push save start
+        id: push-save
+        if: github.event_name == 'push' && steps.venv.outcome == 'success'
+        continue-on-error: true   # Early save starts what this did not
+        timeout-minutes: 1
+        working-directory: bot
+        env:
+          AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/history.git   # History start's: refresh tops up main
+          NAMES_PY: *names-py
+          ONLY_SAVE: "true"
+        run: &save-sh |
+          save="TTS/Impossibility Simulator.json" bg=$RUNNER_TEMP/save ws=$GITHUB_WORKSPACE nb=$RUNNER_TEMP/names
+          head=$(git -C "$ws" rev-parse HEAD)
+          mkdir -p "$nb"
+          names_from() {                        # the data checkout's names: a copy (Newest resets it under a push lane's save)
+            cp "$ws/carddata/db/stats.json" "$nb/start.json" || true
+            echo "$nb/start.json" > "$nb/use"
+            git -C "$ws/carddata" rev-parse HEAD >> "$nb/taken" 2> /dev/null || true    # the data commits its names cover
+            rm -f "$nb/seen"
+          }
+          [ -s "$nb/use" ] || names_from
+          save_stop() {                         # stopped or done, its outputs gone, the save as checked out
+            until [ -s "$bg/pid" ] || [ -s "$bg/code" ]; do sleep 0.05; done
+            [ -s "$bg/code" ] || kill "$(cat "$bg/pid")" 2> /dev/null || true
+            until [ -s "$bg/code" ]; do sleep 0.05; done
+            git -C "$ws" show "HEAD:$save" > "$ws/$save.was" && mv "$ws/$save.was" "$ws/$save"    # no index lock: the Bake's
+            rm -rf "$bg" "$ws/${save%.json}.report.md" "$ws/${save%.json}.message.txt" "$ws/$save.tmp"
+          }
+          save_start() {                        # on HEAD with $nb/use's names (bg/names: Re-pin's)
+            local at names
+            at=$(git -C "$ws" rev-parse HEAD) names=$(cat "$nb/use")
+            mkdir -p "$bg"
+            echo "$names" > "$bg/names"
+            ( code=0
+              until [ -s "$RUNNER_TEMP/history-fetch.code" ]; do sleep 0.05; done   # history.git in (the copy may have won)
+              timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$ws/$save" --names "$names" --baked "$MAIN" \
+                > "$RUNNER_TEMP/save.md" 2> "$bg/err" &
+              echo "$!" > "$bg/pid"
+              wait "$!" || code=$?
+              echo "$code" > "$bg/code" ) < /dev/null > /dev/null 2>&1 &
+            echo "$at" > "$bg/at"
+          }
+          look_data() {                         # busy: a new head in hand (TTS save waits for it, else stops this at once)
+            local seen new at run moved nap=0.1
+            [ -e "$ws/carddata/.git" ] && seen=$(cat "$nb/seen" 2> /dev/null || git -C "$ws/carddata" rev-parse HEAD) || return 0
+            run=$(jq -r '.run // ""' "$ws/carddata/db/manifest.json" 2> /dev/null) || run=""
+            if [ -n "$run" ] && [ "$run" = "$RUN_URL" ]; then : > "$nb/mine"; return 0; fi    # read after this run's build
+            while :; do
+              [ "$SECONDS" -lt 300 ] || nap=0.3                 # ~1 s apart for 5 minutes, then ~3 s
+              for _ in 1 2 3 4 5 6 7 8 9 10; do [ ! -e "$nb/stop" ] || return 0; sleep "$nap"; done
+              new=$(timeout 5 git -C "$ws/carddata" ls-remote origin refs/heads/data) || continue
+              new=${new%%[[:space:]]*}
+              [ -n "$new" ] && [ "$new" != "$seen" ] || continue
+              : > "$nb/busy"
+              [ ! -e "$nb/stop" ] || { rm -f "$nb/busy"; return 0; }
+              if timeout 30 git -C "$ws/carddata" fetch -q --depth 1 --no-tags origin data \
+                  && at=$(git -C "$ws/carddata" rev-parse FETCH_HEAD) && git -C "$ws/carddata" show "$at:db/stats.json" > "$nb/$at.json"; then
+                seen=$at
+                echo "$at" > "$nb/seen"
+                echo "$at" >> "$nb/taken"
+                run=$(git -C "$ws/carddata" show "$at:db/manifest.json" | jq -r '.run // ""') || run=""
+                moved=$(timeout 60 "$RUNNER_TEMP/venv/bin/python" -c "$NAMES_PY" "$(cat "$nb/use")" "$nb/$at.json" "$ws" 2> "$nb/err") \
+                  || moved="names not compared: $(tail -1 "$nb/err")"
+                if [ -n "$moved" ]; then
+                  echo "$nb/$at.json" > "$nb/use"
+                  save_stop
+                  save_start
+                  echo "$(date -u +%T) data ${at:0:8} moves $(head -3 <<< "$moved" | paste -sd, -): the save made again on it" >> "$nb/log"
+                else
+                  echo "$(date -u +%T) data ${at:0:8}: the same names" >> "$nb/log"
+                fi
+                if [ -n "$run" ] && [ "$run" = "$RUN_URL" ]; then : > "$nb/mine"; rm -f "$nb/busy"; return 0; fi    # this run's data build
+              fi
+              rm -f "$nb/busy"
+            done
+          }
+          d=$(git -C "$ws/carddata" rev-parse HEAD 2> /dev/null) || d=""
+          fresh=""                              # Newest's data, its names not read yet (the watcher may lag): made again
+          if [ -n "$d" ] && [ ! -e "$nb/mine" ] && ! grep -qx "$d" "$nb/taken" 2> /dev/null; then fresh=true; fi
+          if [ -s "$bg/at" ] && [ "$(cat "$bg/at")" = "$head" ] && [ -z "$fresh" ]; then
+            echo "The save started on ${head:0:8}: kept."
+          else
+            if [ -s "$bg/at" ]; then            # B, Newest's head or data: that save stopped (its watcher first), made again here
+              : > "$nb/stop"
+              if [ -s "$nb/pid" ] && [ -e "$nb/busy" ]; then while kill -0 "$(cat "$nb/pid")" 2> /dev/null; do sleep 0.05; done
+              elif [ -s "$nb/pid" ]; then kill "$(cat "$nb/pid")" 2> /dev/null || true; fi
+              rm -f "$nb/pid" "$nb/stop"
+              save_stop
+              [ -z "$fresh" ] || names_from
+              echo "HEAD ${head:0:8}, data ${d:0:8}: the save made again on them."
+            fi
+            save_start
+          fi
+          if [ ! -s "$nb/pid" ] && [ ! -e "$nb/mine" ]; then
+            ( look_data ) < /dev/null > /dev/null 2>&1 &
+            echo "$!" > "$nb/pid"
+          fi
+          due=$RUNNER_TEMP/due/$head
+          [ -z "$ONLY_SAVE" ] && [ ! -d "$due" ] || exit 0
+          if [ -f commands/psd_links.py ] && [ -f "$ws/carddata/db/links.json" ]; then     # Linked redraw's, at this head
+            mkdir -p "$due"
+            ( code=0
+              GIT_NO_LAZY_FETCH=1 timeout 300 "$RUNNER_TEMP/venv/bin/python" -m commands.psd_links due --clone "$ws" \
+                --db "$ws/carddata/db" --head "$head" > "$due/n" 2> "$due/err" || code=$?
+              echo "$code" > "$due/code" ) < /dev/null > /dev/null 2>&1 &
+          fi
+
       # A push's guards or a follow-up's (above), then main's history (joined), its head and the data's as they are now
       # (not when held)
       - *guards
@@ -1552,7 +1701,8 @@ jobs:
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
       # A lane the Gate lets go: TTS save start's save and the Linked redraw's count (psd_links due) start here, on main's
-      # head, beside the bake records, the Bake and the fonts; TTS save start keeps them unless the Bake committed B.
+      # head, beside the bake records, the Bake and the fonts (a push's save: Push save start's, kept unless Newest moved
+      # main or brought data its names did not read); TTS save start keeps them unless the Bake committed B.
       # Names: the data as read, until the watcher (look_data) finds a newer data commit moving any (NAMES_PY): the save
       # made again on it. It looks ~1 s apart until this run's data build (its manifest's run) or TTS save stops it.
       - name: Early save
@@ -1566,93 +1716,7 @@ jobs:
           AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/history.git   # History start's: refresh tops up main
           NAMES_PY: *names-py
           MAIN: ${{ steps.gate.outputs.main }}   # --baked: a name the Bake took out of Card Edits.json names its card
-        run: &save-sh |
-          save="TTS/Impossibility Simulator.json" bg=$RUNNER_TEMP/save ws=$GITHUB_WORKSPACE nb=$RUNNER_TEMP/names
-          head=$(git -C "$ws" rev-parse HEAD)
-          mkdir -p "$nb"
-          [ -s "$nb/use" ] || echo "$ws/carddata/db/stats.json" > "$nb/use"
-          save_stop() {                         # stopped or done, its outputs gone, the save as checked out
-            until [ -s "$bg/pid" ] || [ -s "$bg/code" ]; do sleep 0.05; done
-            [ -s "$bg/code" ] || kill "$(cat "$bg/pid")" 2> /dev/null || true
-            until [ -s "$bg/code" ]; do sleep 0.05; done
-            git -C "$ws" show "HEAD:$save" > "$ws/$save.was" && mv "$ws/$save.was" "$ws/$save"    # no index lock: the Bake's
-            rm -rf "$bg" "$ws/${save%.json}.report.md" "$ws/${save%.json}.message.txt" "$ws/$save.tmp"
-          }
-          save_start() {                        # on HEAD with $nb/use's names (bg/names: Re-pin's)
-            local at names
-            at=$(git -C "$ws" rev-parse HEAD) names=$(cat "$nb/use")
-            mkdir -p "$bg"
-            echo "$names" > "$bg/names"
-            ( code=0
-              until [ -s "$RUNNER_TEMP/history-fetch.code" ]; do sleep 0.05; done   # history.git in (the copy may have won)
-              timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$ws/$save" --names "$names" --baked "$MAIN" \
-                > "$RUNNER_TEMP/save.md" 2> "$bg/err" &
-              echo "$!" > "$bg/pid"
-              wait "$!" || code=$?
-              echo "$code" > "$bg/code" ) < /dev/null > /dev/null 2>&1 &
-            echo "$at" > "$bg/at"
-          }
-          look_data() {                         # busy: a new head in hand (TTS save waits for it, else stops this at once)
-            local seen new at run moved nap=0.1
-            [ -e "$ws/carddata/.git" ] && seen=$(cat "$nb/seen" 2> /dev/null || git -C "$ws/carddata" rev-parse HEAD) || return 0
-            run=$(jq -r '.run // ""' "$ws/carddata/db/manifest.json" 2> /dev/null) || run=""
-            if [ -n "$run" ] && [ "$run" = "$RUN_URL" ]; then : > "$nb/mine"; return 0; fi    # read after this run's build
-            while :; do
-              [ "$SECONDS" -lt 300 ] || nap=0.3                 # ~1 s apart for 5 minutes, then ~3 s
-              for _ in 1 2 3 4 5 6 7 8 9 10; do [ ! -e "$nb/stop" ] || return 0; sleep "$nap"; done
-              new=$(timeout 5 git -C "$ws/carddata" ls-remote origin refs/heads/data) || continue
-              new=${new%%[[:space:]]*}
-              [ -n "$new" ] && [ "$new" != "$seen" ] || continue
-              : > "$nb/busy"
-              [ ! -e "$nb/stop" ] || { rm -f "$nb/busy"; return 0; }
-              if timeout 30 git -C "$ws/carddata" fetch -q --depth 1 --no-tags origin data \
-                  && at=$(git -C "$ws/carddata" rev-parse FETCH_HEAD) && git -C "$ws/carddata" show "$at:db/stats.json" > "$nb/$at.json"; then
-                seen=$at
-                echo "$at" > "$nb/seen"
-                run=$(git -C "$ws/carddata" show "$at:db/manifest.json" | jq -r '.run // ""') || run=""
-                moved=$(timeout 60 "$RUNNER_TEMP/venv/bin/python" -c "$NAMES_PY" "$(cat "$nb/use")" "$nb/$at.json" "$ws" 2> "$nb/err") \
-                  || moved="names not compared: $(tail -1 "$nb/err")"
-                if [ -n "$moved" ]; then
-                  echo "$nb/$at.json" > "$nb/use"
-                  save_stop
-                  save_start
-                  echo "$(date -u +%T) data ${at:0:8} moves $(head -3 <<< "$moved" | paste -sd, -): the save made again on it" >> "$nb/log"
-                else
-                  echo "$(date -u +%T) data ${at:0:8}: the same names" >> "$nb/log"
-                fi
-                if [ -n "$run" ] && [ "$run" = "$RUN_URL" ]; then : > "$nb/mine"; rm -f "$nb/busy"; return 0; fi    # this run's data build
-              fi
-              rm -f "$nb/busy"
-            done
-          }
-          made=""
-          if [ -s "$bg/at" ] && [ "$(cat "$bg/at")" = "$head" ]; then
-            echo "The save and the count started after the Gate on ${head:0:8}: kept."
-          else
-            made=true
-            if [ -s "$bg/at" ]; then            # B: that save stopped (its watcher first), both made again on B
-              : > "$nb/stop"
-              if [ -s "$nb/pid" ] && [ -e "$nb/busy" ]; then while kill -0 "$(cat "$nb/pid")" 2> /dev/null; do sleep 0.05; done
-              elif [ -s "$nb/pid" ]; then kill "$(cat "$nb/pid")" 2> /dev/null || true; fi
-              rm -f "$nb/pid" "$nb/stop"
-              save_stop
-              echo "The Bake committed ${head:0:8}: the save and the count made again on it."
-            fi
-            save_start
-          fi
-          if [ ! -s "$nb/pid" ] && [ ! -e "$nb/mine" ]; then
-            ( look_data ) < /dev/null > /dev/null 2>&1 &
-            echo "$!" > "$nb/pid"
-          fi
-          [ -n "$made" ] || exit 0
-          if [ -f commands/psd_links.py ] && [ -f "$ws/carddata/db/links.json" ]; then     # Linked redraw's, at this head
-            due=$RUNNER_TEMP/due/$head
-            mkdir -p "$due"
-            ( code=0
-              GIT_NO_LAZY_FETCH=1 timeout 300 "$RUNNER_TEMP/venv/bin/python" -m commands.psd_links due --clone "$ws" \
-                --db "$ws/carddata/db" --head "$head" > "$due/n" 2> "$due/err" || code=$?
-              echo "$code" > "$due/code" ) < /dev/null > /dev/null 2>&1 &
-          fi
+        run: *save-sh
 
       # The data checkout plus the bake records no data job merged yet (an earlier run's after job still pending, or
       # lost): Pending edits and the bake read these verdicts, so a card refused a run ago is not baked and told again.
