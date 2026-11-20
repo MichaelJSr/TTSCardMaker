@@ -1535,9 +1535,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     measure.track = track; measure.hx = hx;
     measure.cap = z => capOf(ctx, fam, z);
     measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
-    const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
+    const own = partBox || (part ? null : recordBox(rec, layer?.layer, W));
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
+    const one = role === "ability" && oneColour(rec, layer?.layer) && (abilityOff(rec, layer?.layer, colors) ? "badges" : true);
     const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null, role === "ability" ? statuses : null, role === "ability" ? layer?.heads : null);    // the card's own colours on what is unchanged
     if (added && layer?.added && own) { jobs.push({ role, text, label, area: { box: own, seed: null }, fam, layer, measure, icons, colors, statuses, kc, look: true }); continue; }   // as the bake sets it
     if (added) {                                      // top: at the top of the bake's area, as tall as its lines
@@ -1897,8 +1898,9 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
   }
 }
 /** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills (a cooldown's ring its
- *  left end). one (an overlay on the ability): badges as outlined pills, rings in one colour and stickers as an outline
- *  round the one-colour icon, in the text's fill. shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
+ *  left end). one (an overlay on the ability): badges as outlined pills, rings and icons in one colour and stickers as
+ *  an outline round the one-colour icon, in the text's fill ("badges": the overlay goes off, abilityOff: icons in their
+ *  own colours). shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
  *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. tex:
  *  letterLook's, over the letters of its colour. */
 export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null }) {
@@ -1932,7 +1934,8 @@ export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, 
           if (vim && p.vary === "sticker") { const q = sq(VARIANT_REACH.sticker); rim(vim, q); paintMask(ctx, vim, q, tc); }   // the outline in the text colour
           else if (im && g) rim(im, box);
           if (p.no && stroke && strokeW > 0) sign(stroke, strokeW);
-          if (im) ctx.drawImage(im, ...box);
+          if (im && one === true) paintMask(ctx, im, box, fill);   // under the Ability's overlay: in its colour, as the bake
+          else if (im) ctx.drawImage(im, ...box);
         }
         if (p.no) sign([0xe0, 0x1b, 0x22], 0);
       } else if (p.badge) {
@@ -2679,6 +2682,8 @@ function ownOverlay(rec, path) {
 /** Whether colors turn off the own overlay of the title layer at path (psd_edit set_colors' _overlay_off): a whole
  *  title's colour on a layer with ownOverlay. The bake then paints its letters flat in the colour. */
 export const titleOff = (rec, path, colors) => (colors || []).some(o => o?.field === "name" && !o.phrase) && ownOverlay(rec, path);
+/** The same for an Ability layer: a whole Ability's colour turns its own overlay off (typed icons show their colours). */
+const abilityOff = (rec, path, colors) => (colors || []).some(o => o?.field === "ability" && !o.phrase) && ownOverlay(rec, path);
 /** Per index of R.was, the colour its letter shows under the layer's own overlay (the bake turns it off and paints the
  *  letters): the median of its ink pixels off the plate's backdrop and off the layer's Stroke colour (without one in the
  *  record: off the colour at its ink's edge, then of two colours left the lighter); null when few. */
