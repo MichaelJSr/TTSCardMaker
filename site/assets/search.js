@@ -60,15 +60,16 @@ const SYNONYMS = { damage: "dmg", dmg: "damage", defense: "def", def: "defense",
 const SYNONYM_WORDS = new RegExp(`\\b(${Object.keys(SYNONYMS).sort((a, b) => b.length - a.length).join("|")})\\b`);   // longest key first
 
 const PUNCT = "[.'\u2019]", ABBR_END = "(?:(?<=\\.[a-z])\\.)?";   // after the last letter: only an abbreviation's '.'
+const WORD_END = "(?:['\u2019]|(?<=\\.[a-z])\\.)?";   // before the next word: a ' or ABBR_END, never a sentence's end
 const LETTER = /\p{L}/u;
-/** text as a regex source (the bot's query_card.loose): a word typed without ' ’ or . also finds one printed after a
- *  letter followed by a letter or a space (cant: can't, nme shop: N.M.E. shop); digits never (05 is not 0.5); a word
- *  typed with one is exact. gap: a space run's source (else itself) */
+/** text as a regex source (the bot's query_card.loose): a word typed without ' ’ or . also finds one printed between
+ *  its letters (cant: can't), a ' or an abbreviation's . at its end (nme shop: N.M.E. shop; never 'other. creature');
+ *  digits never (05 is not 0.5); a word typed with one is exact. gap: a space run's source (else itself) */
 export function loose(t, gap = null) {
   const words = t.split(/(\s+)/);
   return words.map((w, at) => at % 2 ? gap || escapeRe(w) : [...w].map((ch, i, a) => {
     if (!LETTER.test(ch) || /[.'\u2019]/.test(w)) return escapeRe(ch);
-    return escapeRe(ch) + (a[i + 1] ? (LETTER.test(a[i + 1]) ? `${PUNCT}?` : "") : at + 1 < words.length ? `${PUNCT}?` : ABBR_END);
+    return escapeRe(ch) + (a[i + 1] ? (LETTER.test(a[i + 1]) ? `${PUNCT}?` : "") : at + 1 < words.length ? WORD_END : ABBR_END);
   }).join("")).join("");
 }
 
