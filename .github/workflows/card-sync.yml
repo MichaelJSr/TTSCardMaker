@@ -25,19 +25,21 @@
 # cards). Leftover work chains (owner, 2026-10-25): a live run that ends with work left dispatches the next run itself
 # (job chain): at once for a re-parse in progress, unmerged bake records and edits over the bake's cap. The hourly
 # safety cron (GitHub starts it late or not at all: every 4-10 h)
-# catches what the chain leaves: unposted events, a lane that failed, a chain that stopped.
+# catches what the chain leaves: unposted events, a lane that failed, a chain that stopped. Site code pushed alone
+# (site/assets/, site/build/: no run here) moves the rulebook PDF's pre-key: once deployed, Card browser's look job starts
+# a site lane (input site: the main lane alone, gated as the schedule's), so the next card lane finds its look kept.
 # One main lane per guarded push (owner, 2026-10-25, P-2): a push's main lane skips itself when that push's guards have
 # fixes to land (card-guards.yml's "Fixes to land"); with 25 PSDs or fewer to convert their check job starts Card sync
 # right after that mark (input guards: both lanes set up while the guards land, then wait for its Landed; a lane of it a
 # newer run replaced is started again by Follow up), else their Follow up starts it once they land (or land nothing), so
 # its one main lane bakes and saves the fixed PNGs. When every fix keeps each card picture (the check job's "Pictures
 # kept": lossless recompressions, PSD writes and conversions, linked files) the push's lane still saves the TTS save at
-# their Decided, alone (no bake, rulebook PDF or redraw), and that run re-pins after the landing. The schedule's and a
-# chained run's skip theirs while any guards run with fixes is unfinished.
+# their Decided, alone (no bake, rulebook PDF or redraw), and that run re-pins after the landing. The schedule's, a
+# chained run's and a site lane's skip theirs while any guards run with fixes is unfinished.
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) from the card workflows' venv cache.
 name: Card sync
-run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || inputs.retry && 'Card sync (retry)' || 'Card sync' }}
+run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || inputs.retry && 'Card sync (retry)' || inputs.site && 'Card sync (rulebook look)' || 'Card sync' }}
 
 on:
   # The gate's card inputs and the hand-edited TTS save. GITHUB_TOKEN pushes (Card sync's M, the guards' commits) start no
@@ -106,6 +108,10 @@ on:
         description: "Set by Card guards with fixes: its run id (both lanes wait for its Land after their setup)"
         type: string
         default: ""
+      site:
+        description: "Set by Card browser once it deployed site code no Card sync run came for: its run id (the main lane alone, gated as the schedule's)"
+        type: string
+        default: ""
 
 permissions:
   contents: write     # push M to main and the data commits to data
@@ -125,7 +131,7 @@ jobs:
   # is posted twice.
   data:
     name: Card data
-    if: ${{ !inputs.retry }}
+    if: ${{ !inputs.retry && !inputs.site }}
     concurrency:
       group: ${{ inputs.dry_run && format('card-data-dry-{0}', github.run_id) || 'card-data' }}   # a dry run: a lock of its own
       cancel-in-progress: false   # a running build is never cut off
@@ -1186,15 +1192,15 @@ jobs:
               || echo "::warning::the told mark was not commented on ${sha:0:8}"
           fi
 
-  # The main lane goes at once (owner, 2026-11-03: the 30-minute window of 2026-10-24 is gone). The schedule's run and
-  # a chained one first look for a push run whose Bake and save is queued or still in its Guards' fixes (one pushed
-  # over 40 minutes ago is stuck and holds nothing). One there syncs main's head after that wait, so this run's main
-  # lane rides along (skipped; its data lane ran at once). Else the main lane goes. Runs that cannot be read count as
-  # none (this run goes on). A push's run, other dispatches and retries skip it: a push's lane starts with its data job
-  # (2026-11-14: about 5 s sooner than after this job). A push's lane holds card-main while it waits for its guards:
-  # another lane queues behind it (one whose push that lane synced finds nothing to commit).
+  # The main lane goes at once (owner, 2026-11-03: the 30-minute window of 2026-10-24 is gone). The schedule's run, a
+  # chained one and a site lane first look for a push run whose Bake and save is queued or still in its Guards' fixes
+  # (one pushed over 40 minutes ago is stuck and holds nothing). One there syncs main's head after that wait, so this
+  # run's main lane rides along (skipped; its data lane ran at once). Else the main lane goes. Runs that cannot be read
+  # count as none (this run goes on). A push's run, other dispatches and retries skip it: a push's lane starts with its
+  # data job (2026-11-14: about 5 s sooner than after this job). A push's lane holds card-main while it waits for its
+  # guards: another lane queues behind it (one whose push that lane synced finds nothing to commit).
   timer:
-    if: github.event_name == 'schedule' || inputs.chain
+    if: github.event_name == 'schedule' || inputs.chain || inputs.site
     runs-on: ubuntu-latest
     timeout-minutes: 5
     defaults:
@@ -1487,6 +1493,7 @@ jobs:
           UNDRAWN: Rulebook PDF not drawn   # its step after the PDF's look
           RETRY: ${{ inputs.retry }}
           CHAIN: ${{ inputs.chain }}
+          SITE: ${{ inputs.site }}    # Card browser's look job
         run: |
           main=$(git rev-parse HEAD)
           { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
@@ -1496,7 +1503,7 @@ jobs:
                   'site/assets/' 'site/build/' 'MDW/Linked/')    # the site code and the rulebook's pictures draw its PDF
           why=()
           event=$GITHUB_EVENT_NAME
-          if [ -n "$CHAIN" ]; then event=schedule; fi      # a chained run gates as the schedule
+          if [ -n "$CHAIN$SITE" ]; then event=schedule; fi      # a chained run and a site lane gate as the schedule
           case $event in
             push) why+=("a push") ;;
             schedule)

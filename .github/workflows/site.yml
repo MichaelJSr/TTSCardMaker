@@ -253,6 +253,7 @@ jobs:
     outputs:
       saved: ${{ steps.og-save.outcome == 'success' || steps.cache-save.outcome == 'success' }}
       copies: ${{ steps.copies.outputs.artifact-id }}
+      look: ${{ steps.early.outputs.look == 'true' && steps.artifact.outcome == 'success' }}   # the look job's
     steps:
       # A push that changed Card sync's data inputs (card-sync.yml's push paths but TTS/Global.lua, Global.xml and the
       # save: no data commit) is Card sync's early build itself (after: that push run) once its data job has started (it
@@ -260,7 +261,8 @@ jobs:
       # code goes live with the new data. No such job in 30 s: it builds as today. The push's files: the payload's lists,
       # else the compare API; neither (a big push: 422) counts as a data change while Card sync has a run for it. The
       # data job dispatches no early build when it finds this run (Site build start), and its Site build none while this
-      # run waits for its data (past Images start, or not started).
+      # run waits for its data (past Images start, or not started). look: site code (site/assets/, site/build/) with no
+      # file of card-sync.yml's push paths (the look job).
       - name: Early build
         id: early
         if: github.event_name == 'push' && github.run_attempt == '1'    # a re-run builds
@@ -274,15 +276,18 @@ jobs:
           why=
           [ -n "$files" ] || files=$(timeout 20 gh api "repos/$GITHUB_REPOSITORY/compare/$(jq -r .before "$GITHUB_EVENT_PATH")...$GITHUB_SHA" \
             --jq '.files[] | .filename, .previous_filename // empty') || why="GitHub listed no files"
-          data=
+          data='' tts='' site=''
           while IFS= read -r f; do
             case $f in   # card-sync.yml's push paths but the three
               *.[pP][sS][dD]|*.[pP][nN][gG]|Types/*|MDW/Linked/*|MDW/Fonts/stoogedings-src/stoogedings.json|site/rulebook/*|TTS/decks.json|\
-              "site/Card Edits.json"|"site/Card Authors.txt"|"site/Card Creation Dates.json") data=$f; break ;;
+              "site/Card Edits.json"|"site/Card Authors.txt"|"site/Card Creation Dates.json") data=${data:-$f} ;;
               MDW/Fonts/*/*) ;;
-              MDW/Fonts/*) data=$f; break ;;
+              MDW/Fonts/*) data=${data:-$f} ;;
+              TTS/Global.lua|"TTS/Impossibility Simulator.json") tts=$f ;;     # a Card sync run too (no data)
+              site/assets/*|site/build/*) site=$f ;;
             esac
           done <<< "$files"
+          [ -n "$data$tts" ] || [ -z "$site" ] || echo "look=true" >> "$GITHUB_OUTPUT"
           [ -z "$data" ] || why="$data changed"
           [ -n "$why" ] || exit 0
           api=repos/$GITHUB_REPOSITORY/actions
@@ -968,3 +973,24 @@ jobs:
     uses: ./.github/workflows/caches.yml
     with:
       prefixes: card-images-v2- deck-previews-v2-
+
+  # Site code deployed (build's look: a push of site/assets/ or site/build/ that started no Card sync run) moves the
+  # rulebook PDF's pre-key (the stamped asset URLs, the inline style.css): Card sync's main lane looks at it now (input
+  # site: gated as the schedule's, bake pending), so the next card lane finds the look kept and starts no Chrome.
+  look:
+    needs: build
+    if: needs.build.outputs.look == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write      # gh workflow run
+    steps:
+      - name: Rulebook look
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for wait in 0 10 30; do               # tried 3 times
+            sleep "$wait"
+            if gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" -f "site=$GITHUB_RUN_ID" -f bake=pending; then exit 0; fi
+          done
+          echo "::warning::Card sync was not dispatched: the next card lane looks at the rulebook PDF"
