@@ -1312,6 +1312,12 @@ def main():
             w.log.clear()
             w.call("rulebookGo", red, None, "Red_rb_g1")
             check([e[1] for e in w.log if e[0] == "page"] == [hits[0]], f"a found page turns the PDF there ({hits[0]})")
+    syntax = next(i for i, p in enumerate(pages) if p.get("name") == "Status Effects 2")   # its "[X]T[Y]" row
+    for query in ("2T1", "2T", "5T1", "1T1 Restrained", "2T1 Poison", "5T", "5t", "5T Poison"):   # as cards print it; "5T" starts "5T1"
+        w.call("rulebookSearch", red, query)
+        listed = [int(ui.text(f"Red_rb_g{i}").split()[1]) - 1 for i in range(1, slots + 1) if ui.on(f"Red_rb_g{i}")]
+        others = [i for i in search(query.partition(" ")[2]) if i != syntax] if " " in query else []
+        check(listed == [syntax] + others[:slots - 1], f"search {query!r}: Status Effects 2 first, then its other words' pages {[i + 1 for i in listed]}")
     w.call("closeRulebook", red)
     check(not ui.on("Red_rb"), "X closes the rulebook panel")
 

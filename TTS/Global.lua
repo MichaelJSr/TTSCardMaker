@@ -1383,6 +1383,10 @@ local function xTag(w)                                 -- a numbered timing tag 
     elseif from == 2 then return nil end               -- a minus only starts a pair
     if TAG_ENDS[w:sub(i)] then return (pair and "y/x" or "x") .. w:sub(i) end
 end
+local function duration(w)                             -- a status duration as cards print it: "2t", "2t1"
+    local i = digitsTo(w, 1)
+    return i > 1 and w:sub(i, i) == "t" and digitsTo(w, i + 1) == #w + 1
+end
 local function listPages(color, query)
     local id, list, chars = color .. "_rb", {}, {}
     for i = 1, #(query or "") do                       -- "(" and ")" count as spaces: "(1CD)" finds the drawn 1CD
@@ -1397,45 +1401,58 @@ local function listPages(color, query)
         if sp > start then table.insert(words, q:sub(start, sp - 1)) end
         start = sp + 1
     end
-    local bare = {}                                    -- "nme": else the text without its punctuation (N.M.E.), as Find a card
+    local bare, rows = {}, {}                          -- "nme": else the text without its punctuation (N.M.E.), as Find a card
     for i, w in ipairs(words) do
         local x = xTag(w)                              -- "3cd" in no page: the book's X row ("xcd")
         for _, p in ipairs(x and bookPages or {}) do
             if p.low:find(w, 1, true) then x = nil break end
         end
+        rows[i] = duration(w)
+        if rows[i] then                                -- "2t1" whole in no page ("5T1" is): the "[X]T[Y]" row ("xty")
+            x = "xty"
+            for _, p in ipairs(bookPages) do
+                if wholeAt(p.low, w, (p.low:find(w, 1, true))) then x = nil break end   -- (): find's end index isn't start
+            end
+        end
         words[i] = x or w
         bare[i] = unpunct(words[i], "") == words[i]
     end
-    local whole, rest = {}, {}                         -- pages whose name starts a word with every word first ("item":
-    for _, p in ipairs(bookPages) do                   -- Items), then those with every word whole ("(OS)" not "most"), the rest
-        if #words == 0 then
+    local first, named, whole, rest = {}, {}, {}, {}   -- a duration's pages first (the other words needn't be there: few
+    for _, p in ipairs(bookPages) do                   -- statuses are), then pages whose name starts a word with every other
+        if #words == 0 then                            -- word ("item": Items), those with them all whole ("(OS)" not "most"), the rest
             if p.chapter then table.insert(list, {p.page, (p.num ~= "" and (p.num .. ".  ") or "") .. p.name .. "   p. " .. (p.page + 1)}) end
         else
-            local at, named, all, name = nil, true, true, p.name:lower()
+            local row, at, isNamed, all, name = nil, nil, true, true, p.name:lower()
             for i, w in ipairs(words) do
                 local hit, flat = p.low:find(w, 1, true), nil
                 if not hit and bare[i] then
                     p.flat = p.flat or unpunct(p.low, "", true)   -- once
                     flat = p.flat:find(w, 1, true)
                 end
-                if not (hit or flat) then at = nil break end
-                local wh = all and #w > 1 and wholeAt(hit and p.low or p.flat, w, hit or flat) or nil   -- a lone letter: in too many words to test
-                all = all and (#w == 1 or wh ~= nil)
-                at = at or hit and (wh or hit) or unflat(p.low, wh or flat)
-                named = named and wholeAt(name, w, name:find(w, 1, true), true) ~= nil
+                local wh = (hit or flat) and #w > 1 and wholeAt(hit and p.low or p.flat, w, hit or flat) or nil   -- a lone letter: in too many words to test
+                local pos = (hit or flat) and (hit and (wh or hit) or unflat(p.low, wh or flat))
+                if rows[i] then                        -- whole only: "2t" is in E2T
+                    row = row ~= false and wh and (row or pos) or false
+                else
+                    at = at ~= false and pos and (at or pos) or false
+                    all = all and (#w == 1 or wh ~= nil)
+                    isNamed = isNamed and wholeAt(name, w, name:find(w, 1, true), true) ~= nil
+                end
             end
+            at = row or at
             if at then
                 local from, to = math.max(1, at - 28), at + 44     -- the snippet on whole words
                 local sp = from > 1 and p.text:find(" ", from, true)
                 if sp and sp < at then from = sp + 1 end
                 local stop = p.text:find(" ", to, true)
                 local snippet = p.text:sub(from, stop and stop - 1 or #p.text)
-                table.insert(named and list or (all and whole or rest), {p.page, "p. " .. (p.page + 1) .. "  " .. p.name .. ":  " .. (from > 1 and "..." or "") .. snippet .. (stop and "..." or "")})
+                table.insert(row and first or (isNamed and named or (all and whole or rest)), {p.page, "p. " .. (p.page + 1) .. "  " .. p.name .. ":  " .. (from > 1 and "..." or "") .. snippet .. (stop and "..." or "")})
             end
         end
     end
-    for _, item in ipairs(whole) do table.insert(list, item) end
-    for _, item in ipairs(rest) do table.insert(list, item) end
+    for _, tier in ipairs({first, named, whole, rest}) do
+        for _, item in ipairs(tier) do table.insert(list, item) end
+    end
     for i = #list, RESULTS + 1, -1 do list[i] = nil end
     found[color] = list
     for i = 1, RESULTS do
