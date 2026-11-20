@@ -17,7 +17,9 @@ python3 -m venv ~/.venvs/tts-checks                             # once
 Each check takes the save as its first argument (default: the repo's save) and exits 1 on a failure. `run_all.py`
 runs them 4 at a time, the slow ones first, prints one line per check (in its list's order) plus the end of a failing
 check's output, and keeps every output in `/tmp/tts-checks/out/`. It runs `card_sync_steps.py` as 3 parts of its
-groups (`GROUPS`: two listed in `run_all.py`, then the rest), about 15 s each, so 13 lines.
+groups (`GROUPS`: two listed in `run_all.py`, then the rest), about 15 s each, so 13 lines. A part that fails printing
+macOS bash 3.2's `write error: Interrupted system call` (a pipe write cut by a signal; the runners' bash 5 never prints
+it) runs once more: its line says `run again: bash EINTR` and its output file keeps both runs.
 
 Interpreter: any Python 3 with `requests` and `Pillow`. The Lua checks also need `lupa`. A
 check that needs lupa and runs without it starts again under `$LUA_PYTHON` or `~/.venvs/tts-checks/bin/python`.
