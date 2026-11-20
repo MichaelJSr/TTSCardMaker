@@ -25,6 +25,11 @@ export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w
 export const imgAttrs = (thumbs, c, css) => { const u = w => thumb(thumbs, c, w);
   if (!c.img && c.pic) return `src="${esc(c.lpic || c.pic)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;   // tiles and rows: 360 px, as the grid's
   return `src="${u(360)}" srcset="${css <= 64 ? `${u(96)} 96w, ` : ""}${u(192)} 192w, ${u(240)} 240w, ${u(360)} 360w" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
+/** A card picture in Compare's n columns (app.js renderCompare): 360 px up to the card view's 720, sizes = its column
+ *  (style.css .compare: main's 16 px padding, 14 px gaps, the panel's 15 px a side; columns min(220px, half) at least) */
+export const compareAttrs = (thumbs, c, n) => { const u = w => thumb(thumbs, c, w), fr = `calc((100vw - ${18 + 14 * n}px) / ${n} - 30px)`;
+  const sizes = n < 3 ? fr : `(max-width: 485px) calc(50vw - 53px), (max-width: ${234 * n + 17}px) 190px, ${fr}`;
+  return `src="${u(360)}" srcset="${[360, 480, 720].map(w => `${u(w)} ${w}w`).join(", ")}" sizes="${sizes}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
 const TILE_ART = 8 / 5;                      // a tile's picture box, height / width (style.css .tile .art); its corners 11 px round (.tile's 12 less its border)
 /** A card whose art hangs out of its see-through edge (cards.json hang: the card's own box in the picture, [left, top,
  *  right, bottom] in fractions; build_site OVERHANG): style.css's --hw, --hm, --ha, --hc, the picture's width, margins,
