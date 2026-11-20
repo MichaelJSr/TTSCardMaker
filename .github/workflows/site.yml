@@ -258,8 +258,9 @@ jobs:
       # A push that changed Card sync's data inputs (card-sync.yml's push paths but TTS/Global.lua, Global.xml and the
       # save: no data commit) is Card sync's early build itself (after: that push run) once its data job has started (it
       # holds card-data, so the next "Card data" commit is its own): Images start and Data wait run, and this push's site
-      # code goes live with the new data. No such job in 30 s: it builds as today. The push's files: the payload's lists,
-      # else the compare API; neither (a big push: 422) counts as a data change while Card sync has a run for it. The
+      # code goes live with the new data. No such job in 30 s: it builds as today. The push's files: git, from the before
+      # and pushed commits' trees (depth 1, no blobs) in a throwaway repo (the compare API: 0.6-4 s, 7 s to refuse a big
+      # push); none (a failed fetch) counts as a data change while Card sync has a run for it. The
       # data job dispatches no early build when it finds this run (Site build start), and its Site build none while this
       # run waits for its data (past Images start, or not started). look: site code (site/assets/, site/build/) with no
       # file of card-sync.yml's push paths (the look job).
@@ -270,14 +271,19 @@ jobs:
         timeout-minutes: 2
         env:
           GH_TOKEN: ${{ github.token }}
+          BEFORE: ${{ github.event.before }}
+          GIT_NO_LAZY_FETCH: "1"
         run: |
-          files=$(jq -r '[.commits[] | .added, .modified, .removed] | if length > 0 and all(type == "array") then flatten[] else empty end' \
-            "$GITHUB_EVENT_PATH") || files=
-          why=
-          [ -n "$files" ] || files=$(timeout 20 gh api "repos/$GITHUB_REPOSITORY/compare/$(jq -r .before "$GITHUB_EVENT_PATH")...$GITHUB_SHA" \
-            --jq '.files[] | .filename, .previous_filename // empty') || why="GitHub listed no files"
+          g=$RUNNER_TEMP/early.git list=$RUNNER_TEMP/early.files why=
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$auth"
+          { git init -q --bare "$g" && GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+              timeout 20 git -C "$g" -c protocol.version=2 fetch -q --depth=1 --filter=blob:none --no-tags --no-write-fetch-head \
+                "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$BEFORE" "$GITHUB_SHA" \
+              && git -C "$g" diff-tree -r -z --name-only --no-renames "$BEFORE" "$GITHUB_SHA" > "$list"; } \
+            || { why="git listed no files"; : > "$list"; }
           data='' tts='' site=''
-          while IFS= read -r f; do
+          while IFS= read -r -d '' f; do
             case $f in   # card-sync.yml's push paths but the three
               *.[pP][sS][dD]|*.[pP][nN][gG]|Types/*|MDW/Linked/*|MDW/Fonts/stoogedings-src/stoogedings.json|site/rulebook/*|TTS/decks.json|\
               "site/Card Edits.json"|"site/Card Authors.txt"|"site/Card Creation Dates.json") data=${data:-$f} ;;
@@ -286,7 +292,7 @@ jobs:
               TTS/Global.lua|"TTS/Impossibility Simulator.json") tts=$f ;;     # a Card sync run too (no data)
               site/assets/*|site/build/*) site=$f ;;
             esac
-          done <<< "$files"
+          done < "$list"
           [ -n "$data$tts" ] || [ -z "$site" ] || echo "look=true" >> "$GITHUB_OUTPUT"
           [ -z "$data" ] || why="$data changed"
           [ -n "$why" ] || exit 0
