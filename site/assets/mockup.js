@@ -1461,7 +1461,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   // changed only those (typing) starts from the last one's pixels
   const fxWords = sheet ? plate.crops.flatMap(c => c.fx || []) : [];   // the plate picked follows these (plateCuts)
   const idsOf = (s, k) => { const ids = s.part ? [s.id] : printed(obj(rec?.parts) || {}, s.role).map(p => p?.id); return ids.length ? ids : [fams[k].layer?.id]; };
-  const tints = specs.map((s, k) => (sheet && !s.added && s.text != null && txt(s.text) === txt(s.old) && !(Array.isArray(psd.colors) && psd.colors.some(o => o.field === s.role))
+  const flat = (s, k) => s.role === "name" && titleOff(rec, fams[k].layer?.layer, s.part ? s.colors : todo.colors);   // redrawn flat, not tinted
+  const tints = specs.map((s, k) => (sheet && !s.added && s.text != null && txt(s.text) === txt(s.old) && !(Array.isArray(psd.colors) && psd.colors.some(o => o.field === s.role)) && !flat(s, k)
     ? tintPlan(pixels.data, W, plate, idsOf(s, k), kc, s.old, fams[k].layer, s.part ? s.colors : todo.colors, s.role, statuses, s.role === "ability" && ownOverlay(rec, fams[k].layer?.layer) ? readPlate : null) : null));   // a colour alone: recoloured in place
   const wiping = sheet ? specs.flatMap((s, k) => (s.added || tints[k] ? [] : idsOf(s, k))) : [];   // the layers this draw wipes
   const sig = JSON.stringify([src, W, H, card?.id, bfam, barsBottom, rows.map(r => r.k), seen.length, fams.map(f => f.fam), tints.map(Boolean),
@@ -2557,6 +2558,9 @@ function ownOverlay(rec, path) {
   const up = String(path || "").split("/").slice(0, -1).join("/");
   return oneColour(rec, path, /^(Color|Gradient)Overlay$/) && !(up && oneColour(rec, up));
 }
+/** Whether colors turn off the own overlay of the title layer at path (psd_edit set_colors' _overlay_off): a whole
+ *  title's colour on a layer with ownOverlay. The bake then paints its letters flat in the colour. */
+export const titleOff = (rec, path, colors) => (colors || []).some(o => o?.field === "name" && !o.phrase) && ownOverlay(rec, path);
 /** Per index of R.was, the colour its letter shows under the layer's own overlay (the bake turns it off and paints the
  *  letters): the median of its ink pixels off the plate's backdrop and off the layer's Stroke colour (without one in the
  *  record: off the colour at its ink's edge, then of two colours left the lighter); null when few. */
