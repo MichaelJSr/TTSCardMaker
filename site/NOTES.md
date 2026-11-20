@@ -1354,6 +1354,11 @@ relies on:
   shows a "The site was updated. Refresh" bar instead; its button reloads (edit.js's beforeunload still asks for a dirty
   form, drafts flush on pagehide). sessionStorage `fresh-tried`: one automatic reload per stamp (a stale CDN copy
   gets the bar, not a loop).
+- After a load or a tab return (2026-11-20): every 15 s for 5 minutes too (`SHOWN_FOR`; a publish's 15 minutes are
+  kept), so a push someone waits for shows ~15 s after it goes live, not up to 3 minutes later. Measured (scratch
+  s1110/research4/actbake-r59-0: the live page and data on a Pages-like localhost server, the bundle with each fresh.js,
+  headless Chrome, a deploy at 7 pushes' real live times, +36 to +272 s): seen 74-146 s after it -> 0.6-14 s; a tab shown
+  again 35 s before a deploy: 177 -> 10.5 s. Cost: up to ~20 more build.txt fetches (no-store, 76 bytes) per load or return.
 - After a publish (edit.js `soon()`, and on load while a sent record waits): every 15 s for 15 minutes from `sent.at`.
   The reloaded page's `sentRecord` clears with a "Live now" toast once cards.json's `source` (the built commit's
   committer date, `git show -s --format=%cI HEAD`; VOLATILE, so a code-only commit keeps the digest) reaches
