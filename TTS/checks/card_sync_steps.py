@@ -50,7 +50,8 @@
    a chained one); none when nothing is left, a lane failed, another live run's lane reads it (queued, waiting), after
    CHAIN_IDLE runs without progress or CHAIN_MAX runs (said in the summary), or on a dry run; a fork's run's bake
    records are passed over; the dispatch is tried 3 times. A push's run also looks after its data lane (Chain after the
-   data, the same step), so a re-parse goes on at once. TTS names this run's data commit moved after its save read the
+   data, the same step), so a re-parse goes on at once; it passes over this run's own bake records (its after job
+   merges them), Chain does not. TTS names this run's data commit moved after its save read the
    data: one plain run (no chain input), past the caps; none while another run's lane reads it.
 10. One main lane per guarded push (P-2; faked gh and curl): Guards' fixes (in the push's Bake and save, after its setup)
    waits for the push's own guards' check job (conditional reads 1 s apart, 3 s after 2 minutes or 15 changed in a row),
@@ -1827,6 +1828,9 @@ def chain_cases(flow: dict) -> None:
         art = lambda *ids, fork=(): json.dumps({"artifacts": [{"id": i, "expired": False} for i in ids] + [  # noqa: E731
             {"id": i, "expired": False, "workflow_run": {"repository_id": 1, "head_repository_id": 2}} for i in fork]})
         stale = lambda n: json.dumps({"pending": {"stale": [f"c{i}.psd" for i in range(n)]}})  # noqa: E731
+        run_art = lambda rid: json.dumps({"artifacts": [{"id": 9, "expired": False,  # noqa: E731
+                                                         "workflow_run": {"id": rid, "repository_id": 1, "head_repository_id": 1}}]})
+        own = {k: flow["jobs"][k]["env"].get("OWN_RECORDS", "") for k in ("chain-data", "chain")}
         other = lambda rid, status="in_progress", title="Card sync": json.dumps(  # noqa: E731
             [{"databaseId": rid, "status": status, "displayTitle": title}])
         base = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "GITHUB_RUN_ID": "99", "FAKE_JOBS": jobs, "CHAIN": "",
@@ -1849,6 +1853,12 @@ def chain_cases(flow: dict) -> None:
             ({}, None, "Nothing left: no chain.", "nothing left: none"),
             ({"LAG": "true"}, "now 1 0", "the rulebook PDF the website lagged", "a rulebook PDF the website lagged: at once"),
             ({"FAKE_ARTIFACTS": art(7, fork=(8,))}, None, "Nothing left: no chain.", "a fork's run's bake records: passed over"),
+            ({"FAKE_ARTIFACTS": run_art(99), "OWN_RECORDS": own["chain-data"]}, None, "Nothing left: no chain.",
+             "after the data: this run's own bake records passed over (its after job merges them)"),
+            ({"FAKE_ARTIFACTS": run_art(98), "OWN_RECORDS": own["chain-data"]}, "now 1 0", "1 bake records not merged",
+             "after the data: another run's bake records: at once"),
+            ({"FAKE_ARTIFACTS": run_art(99), "OWN_RECORDS": own["chain"]}, "now 1 0", "1 bake records not merged",
+             "Chain: this run's own bake records its after job left: at once"),
             ({"FAKE_MANIFEST": stale(5), "LANES": "data=failure main=success after=skipped"}, None, "data failed",
              "a lane failed: none"),
             ({"FAKE_MANIFEST": stale(5), "LANES": "data=success main=success after=cancelled"}, "now 1 0", "Next run dispatched",
