@@ -3,7 +3,7 @@
 //   cant  nme         also can't, N.M.E. (a word typed without ' or . finds it printed with them; digits never)
 //   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
 //                     counter damage CDMG; and back), as the bot
-//   "draw 2"          whole-word match
+//   "draw 2" 'draw 2' whole-word match ('draw 2' also a series or name, as draw 2)
 //   !die              exclude (works on any term here, e.g. !type==creature)
 //   a & b   a | b     both / either  (| binds looser than &, as in the bot; inside "quotes" they are text)
 //   hp>5  def<=3  atk==2  spd>=7  stars<4  total>=24        numbers
@@ -147,12 +147,15 @@ export function compile(query) {
     const ok = m[2] === "~" ? x => x.includes(v) : x => x === v;
     return c => gets.flatMap(get => get(c)).some(x => ok((x || "").toString().toLowerCase()));
   }
+  const edge = ch => (ch && /\w/.test(ch) ? "\\b" : "");   // a word's edge; a tag's ( and ) are their own
+  const whole = t => `${edge(t[0])}${escapeRe(t)}${edge(t.slice(-1))}`;
   if (q.length > 1 && q.startsWith('"') && q.endsWith('"')) {
-    const t = lower.slice(1, -1), edge = ch => (ch && /\w/.test(ch) ? "\\b" : "");   // a word's edge; a tag's ( and ) are their own
-    const re = new RegExp(`${edge(t[0])}${escapeRe(t)}${edge(t.slice(-1))}`);
+    const re = new RegExp(whole(lower.slice(1, -1)));
     return c => re.test(haystack(c));
   }
-  const re = textRe(lower), sq = squash(lower), probe = sq.length > 3 ? sq : `\n${sq}\n`;   // 3 letters or fewer: a whole name
+  let re = textRe(lower);
+  if (q.length > 2 && q[0] === "'" && q.endsWith("'")) re = new RegExp(`(?:${whole(lower.slice(1, -1))})|(?:${re.source})`);   // also whole words (the bot)
+  const sq = squash(lower), probe = sq.length > 3 ? sq : `\n${sq}\n`;   // 3 letters or fewer: a whole name
   const more = c => !!sq && (squashed(c).names.includes(probe) || squashed(c).ser.has(sq));   // a name without its punctuation, a series
   return c => re.test(haystack(c)) || more(c);
 }
@@ -185,6 +188,7 @@ export const SEARCH_HELP = [
   ["cant · nme", "Also can't, N.M.E.: a word typed without ' or . finds it printed with them"],
   ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
   ['"heal 2"', "Whole words only"],
+  ["'heal 2'", "Whole words, and a series' or name's cards"],
   ["!die", "Exclude (any term)"],
   ["fire & type==creature", "Both must match"],
   ["fire | ice", "Either (| binds looser than &)"],
