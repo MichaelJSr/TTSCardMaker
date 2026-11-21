@@ -141,6 +141,8 @@ const notesOf = ps => ps.flatMap(p => p.notes || []);
 /** a series fallback's note: No card's text has “x”: the series A and B */
 export const seriesNote = ([q, ser, sub]) => { const and = xs => (xs.length < 2 ? xs[0] : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
   return `No card's text has “${q}”: ${[ser.length && `the series ${and(ser)}`, sub.length && `the subseries ${and(sub)}`].filter(Boolean).join(" and ")}`; };
+/** the cards q's & or | parts search: none (no fallback) when q itself names one of them ("mario & luigi") */
+const partsOf = (q, cards) => (cards && cards.some(named(q, () => false)) ? null : cards);
 
 /** Compile a query into a predicate (card) => boolean, or null for an empty query. cards: the cards searched, so a
  *  plain term none of them has falls back to series' words (bySeries; the predicate's notes say so) */
@@ -149,12 +151,14 @@ export function compile(query, cards = null) {
   if (!q) return null;
   let parts = splitOut(q, "|");
   if (parts.length > 1) {
-    parts = parts.map(x => compile(x, cards)).filter(Boolean);
+    const of = partsOf(q, cards);
+    parts = parts.map(x => compile(x, of)).filter(Boolean);
     return Object.assign(named(q, c => parts.some(p => p(c))), { notes: notesOf(parts) });
   }
   parts = splitOut(q, "&");
   if (parts.length > 1) {
-    parts = parts.map(x => compile(x, cards)).filter(Boolean);
+    const of = partsOf(q, cards);
+    parts = parts.map(x => compile(x, of)).filter(Boolean);
     return Object.assign(named(q, c => parts.every(p => p(c))), { notes: notesOf(parts) });
   }
   if (q.startsWith("!")) {
