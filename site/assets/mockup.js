@@ -2389,11 +2389,12 @@ function tagSwap(R, sp, now, icons) {
 /** A splice (geoPlan's) set as the bake would: the run's width from the line's own letters (their pen steps), else this
  *  font's scaled to the card's line; a badge for another (tagSwap) the old pill's width times the new one's over
  *  it in this font, an icon for another the old step and the glyphs' difference at the old icon's size (ez; left:
- *  tracked, set from its pen); the line moved as its alignment moves it. {xa, cutA, cutB, dp, ds, hx, z, tag: {at, w, ez, left} | null,
- *  width, k, space} (image px: the old run's pen start and the cuts between its letters' ink and its neighbours', prefix
- *  and suffix shifts, its letters' width scale, their size; the line's new width, card over this font, a space) or null
- *  when it would wrap otherwise (past the frame, a word pulled up), is not letters only, moves an FX layer's word, or the
- *  font is far off. */
+ *  tracked, set from its pen); whole timing tags in or out (segs) pills at the card's pill ratio; the line moved as its
+ *  alignment moves it. {xa, cutA, cutB, dp, ds, hx, z, tag: {at, w, ez, left} | null, width, k, space, segs: [[s, e,
+ *  isTag, w]] | null} (image px: the old run's pen start and the cuts between its letters' ink and its neighbours', prefix
+ *  and suffix shifts, its letters' width scale, their size; the line's new width, card over this font, a space; the run's
+ *  pieces) or null when it would wrap otherwise (past the frame, a word pulled up), is not letters and timing tags only,
+ *  moves an FX layer's word, or the font is far off. */
 export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity, font = null }) {
   const { was, lines: L, x: X } = R, l = L[sp.i], { run } = sp, now = was.slice(0, sp.a) + run + was.slice(sp.b);
   const mOf = j => R.fr?.find(([s, e, , m]) => m && s <= j && j < e)?.[3] || null, m2 = font?.[3] || measure;   // R.fr: letters in another font; font: the run's (R.fr's entry)
@@ -2401,10 +2402,10 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
   const wNow = (s, e) => { let t = 0; for (let i = s, j; i < e; i = j) { const m = mNow(i); for (j = i + 1; j < e && mNow(j) === m;) j++; t += m(now.slice(i, j), z); } return t; };   // each letter in its own font
   const word = (t, i, j) => { while (i > 0 && !/\s/.test(t[i - 1])) i--; while (j < t.length && !/\s/.test(t[j])) j++; return t.slice(i, j); };
   if (/\n/.test(run)) return null;
-  let { a, b } = sp, tag = null;
+  let { a, b } = sp, tag = null, segs = null;
   if (LETTERS_ONLY.test(word(was, a, b)) || LETTERS_ONLY.test(word(now, a, a + run.length))) {
-    if (!(tag = tagSwap(R, sp, now, icons))) return null;
-    ({ a, b } = tag);
+    if ((tag = tagSwap(R, sp, now, icons))) ({ a, b } = tag);
+    else if (cutsPiece(was, a, b) || cutsPiece(now, a, a + run.length) || !tagSegs(was.slice(a, b), icons) || !(segs = tagSegs(run, icons))) return null;   // whole timing tags in or out
   }
   if (l.just >= 3 && (l.just === 6 || L[sp.i + 1]?.para === l.para)) return null;   // justified: its spaces would stretch
   const xOf = j => (j >= l.e ? l.right : X.get(j)), xa = xOf(a), xb = xOf(b);
@@ -2428,7 +2429,17 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
   const [g0, g1] = ic[0]?.w && ic[1] ? ic : [], inkW = g0 && R.ink.has(a) ? R.ink.get(a)[1] - R.ink.get(a)[0] : 0, ez0 = g0 ? (xb - xa) / g0.adv : 0;
   const vy = R.vary?.has(a), left = !!g0 && zl < 0.9 * ez0 && (vy || (inkW > 0 && inkW / g0.w < 0.9 * ez0)), ez = !left ? ez0 : vy ? zl : inkW / g0.w;   // the old icon's size: its pen step, where tracking spaces it out its ink (a variant's: the line's size)
   const flat = g0 && LAYERED.has(to.no ? "no" : to.vary);   // psd_edit sets a layered variant at tracking 0
-  const w = g0 ? (flat ? g1.adv * ez : xb - xa + (g1.adv - g0.adv) * ez) : tag ? (xb - xa) * pillW(tag.run) / pillW(tag.was) : [...run].every(ch => step.has(ch)) ? [...run].reduce((t, ch) => t + step.get(ch), 0) : m2(run, z) * kr;
+  const letW = s => ([...s].every(ch => step.has(ch)) ? [...s].reduce((t, ch) => t + step.get(ch), 0) : m2(s, z) * kr);
+  let kt = 1;                                         // the card's pills over this font's
+  if (segs?.some(g => g[2])) { const ks = [];
+    for (const m of was.matchAll(new RegExp(TAG.source, "g"))) {
+      const s = m.index, e = s + m[0].length, ln = L.find(q => q.s <= s && e <= q.e), pw = tagInfo(m[1]) ? pillW(m[0]) : 0;
+      const x0 = X.get(s), x1 = ln && (e >= ln.e ? ln.right : X.get(e));
+      if (ln && pw > 0 && x0 != null && x1 != null && x1 > x0) ks.push((x1 - x0) / pw);
+    }
+    if (ks.length) kt = median(ks); }
+  if (segs) segs = segs.map(([s, e, isTag]) => [s, e, isTag, isTag ? pillW(run.slice(s, e)) * kt : letW(run.slice(s, e))]);
+  const w = g0 ? (flat ? g1.adv * ez : xb - xa + (g1.adv - g0.adv) * ez) : tag ? (xb - xa) * pillW(tag.run) / pillW(tag.was) : segs ? segs.reduce((t, g) => t + g[3], 0) : letW(run);
   if (!Number.isFinite(w)) return null;
   const dw = w - (xb - xa), width = l.right - l.left + dw, space = pens.get(" ") ?? measure(" ", z) * k;
   const [dp, ds] = l.just === 1 || l.just === 4 ? [-dw, 0] : l.just === 2 || l.just === 5 ? [-dw / 2, dw / 2] : [0, dw];
@@ -2448,13 +2459,35 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
   } else if (l.left + dp < 0 || l.right + ds > W) return null;   // point text off the card
   const moved = [...(dp ? [[l.s, a]] : []), ...(ds ? [[b, l.e]] : [])];
   if (fxSpans(was, fx).some(([s, e]) => (s < b && a < e) || moved.some(([m, n]) => s < n && m < e))) return null;   // an FX layer stays put
-  const own = run && !tag ? m2(run, zr) : 0, hx = own > 0 ? w / own : 1;
-  if (run && !(hx >= 0.8 && hx <= 1.25)) return null;
+  const lets = segs ? segs.filter(g => !g[2]) : null, own = segs ? lets.reduce((t, g) => t + m2(run.slice(g[0], g[1]), zr), 0) : run && !tag ? m2(run, zr) : 0;
+  const hx = own > 0 ? (segs ? lets.reduce((t, g) => t + g[3], 0) : w) / own : 1;
+  if (own > 0 && !(hx >= 0.8 && hx <= 1.25)) return null;
   const inked = starts.filter(j => R.ink.has(j)), edge = (j, side) => R.ink.get(j)[side];   // cut between letters' ink, not pens: strokes past a pen stay with their letter
   const before = inked.filter(j => j < a).pop(), first = inked.find(j => j >= a && j < b), last = inked.filter(j => j >= a && j < b).pop(), next = inked.find(j => j >= b);
   const cut = (p, q, x) => (p != null && q != null ? (edge(p, 1) + edge(q, 0)) / 2 : x);
-  const cutA = first != null ? cut(before, first, xa) : cut(before, next, xa), cutB = last != null ? cut(last, next, xb) : cutA;
-  return { xa, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, hx, z: tag ? zl : zr, tag: tag && { at: tag.at, w, ...(g0 ? { ez, left } : {}) }, width, k, space };
+  const OFF = 1e6;                                    // nothing of the line before (after) the change: no part there to move
+  let cutA = first != null ? cut(before, first, xa) : cut(before, next, xa), cutB = last != null ? cut(last, next, xb) : cutA;
+  if (segs && before == null) { cutA = -OFF; if (first == null) cutB = -OFF; }
+  if (segs && next == null) { cutB = OFF; if (first == null) cutA = OFF; }
+  return { xa, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, hx, z: tag ? zl : zr, tag: tag && { at: tag.at, w, ...(g0 ? { ez, left } : {}) }, width, k, space, segs };
+}
+/** t's pieces when it is letters, spaces and whole timing tags only: [[start, end, isTag]]; null with an icon, a cost
+ *  (a card's own souls or counters too) or a bracket. */
+function tagSegs(t, icons) {
+  if (/[[\]{}\u0001\u0002]/.test(t) || tokenize(t, icons).flat(2).some(p => p.icon || p.cost || p.group === "own")) return null;
+  const out = []; let at = 0;
+  for (const m of t.matchAll(new RegExp(TAG.source, "g"))) {
+    if (!tagInfo(m[1])) continue;
+    if (m.index > at) out.push([at, m.index, false]);
+    out.push([m.index, m.index + m[0].length, true]); at = m.index + m[0].length;
+  }
+  if (at < t.length) out.push([at, t.length, false]);
+  return out;
+}
+/** Whether an end of [i, j) falls inside a timing tag, cost or icon of t. */
+function cutsPiece(t, i, j) {
+  const res = [new RegExp(TAG.source, "g"), new RegExp(COST.source, "gi"), /\[[^[\]\n]{1,52}\]/g];
+  return res.some((re, n) => [...t.matchAll(re)].some(m => (n || tagInfo(m[1])) && [i, j].some(x => m.index < x && x < m.index + m[0].length)));
 }
 /** lineSplices' sps (now: the edited text) with their spliceFits fits, framed text: no line spliced right after the
  *  line before (one paragraph) has a new first word that fits up there at that line's new width. */
@@ -2559,6 +2592,7 @@ const OPAQUE = [8, 64];                                // |card - wiped| (max ch
  *  0): the card's pixels. */
 function moveInk(out, wiped, card, W, [ya, yb], [x0, y0, x1, y1], dx, dy) {
   x0 = clamp(Math.floor(x0), 0, W); x1 = clamp(Math.ceil(x1), 0, W); y0 = clamp(Math.floor(y0), ya, yb); y1 = clamp(Math.ceil(y1), ya, yb);
+  if (x1 <= x0 || y1 <= y0) return;
   if (!dx && !dy) { for (let y = y0; y < y1; y++) out.set(card.subarray((y * W + x0) * 4, (y * W + x1) * 4), ((y - ya) * W + x0) * 4); return; }
   const w = x1 - x0, h = y1 - y0, P = new Float32Array(w * h * 3), Q = new Float32Array(w * h).fill(1);   // out = P + Q * backdrop
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
@@ -2629,10 +2663,13 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
     fit = spliceFit(R, plan.splice, { measure, z, icons, fx: [], W, font: runOf(plan.splice) }); useBare = !!fit; }
   const pill = fit?.tag && pillAt(paras, now, fit.tag.at, fit.tag);   // a badge's new pill alone, or an icon
   if (pill && !pill.length) fit = null;
+  const segPieces = (f, at, o = null) => { const ps = f.segs.map(([s, e, isTag, w]) => (isTag ? pillAt(paras, now, at + s, { w }) : runPieces(paras, now, at + s, at + e, o?.[3] || measure, f.z, f.hx).map(p => (o ? { ...p, fam: o[2] } : p))));
+    return f.segs.every((g, n) => !g[2] || ps[n].length) ? ps.flat() : null; };   // a tag's pill found, else no splice
+  if (fit?.segs && !segPieces(fit, plan.splice.at)) fit = null;
   let sps = fit ? [plan.splice] : null, fits = [fit], pills = [pill];
   if (!fit && plan.splices) {                         // several lines changed: each spliced on its own when all fit
     const fs = plan.splices.map(sp => spliceFit(R, sp, { measure, z, icons, fx, W, font: runOf(sp) })), ps = fs.map(f => f?.tag && pillAt(paras, now, f.tag.at, f.tag));
-    if (fs.every((f, n) => f && !(ps[n] && !ps[n].length)) && (!R.frame || staysDown(R, plan.splices, fs, now, measure, z))) [sps, fits, pills] = [plan.splices, fs, ps];
+    if (fs.every((f, n) => f && !(ps[n] && !ps[n].length) && !(f.segs && !segPieces(f, plan.splices[n].at))) && (!R.frame || staysDown(R, plan.splices, fs, now, measure, z))) [sps, fits, pills] = [plan.splices, fs, ps];
   }
   if (!sps && only) return "";
   let drawn = null, ow = null, x0 = box[0], x1 = box[2];
@@ -2640,7 +2677,7 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
     const pad = Math.max(...fits.map(f => Math.abs(f.dp) + Math.abs(f.ds))), own = new Set(sps.map(sp => sp.i));
     x0 -= pad; x1 += pad;
     drawn = { paints: sps.map(({ i, at, run }, n) => { const f = fits[n], o = runOf(sps[n]);
-        return [pills[n] ? [{ pieces: pills[n] }] : run ? [{ pieces: runPieces(paras, now, at, at + run.length, o?.[3] || measure, f.z, f.hx).map(p => (o ? { ...p, fam: o[2] } : p)) }] : [], { at: () => f.xa + f.dp, base: L[i].base, hx: look.hx * f.hx, z: f.z }]; }),
+        return [pills[n] ? [{ pieces: pills[n] }] : f.segs ? (run ? [{ pieces: segPieces(f, at, o) }] : []) : run ? [{ pieces: runPieces(paras, now, at, at + run.length, o?.[3] || measure, f.z, f.hx).map(p => (o ? { ...p, fam: o[2] } : p)) }] : [], { at: () => f.xa + f.dp, base: L[i].base, hx: look.hx * f.hx, z: f.z }]; }),
       moves: [...L.flatMap((_, j) => (own.has(j) ? [] : [[[x0, B[j][0], x1, B[j][1]], 0, 0]])),
         ...sps.flatMap(({ i }, n) => [[[x0, B[i][0], fits[n].cutA, B[i][1]], fits[n].dp, 0], [[fits[n].cutB, B[i][0], x1, B[i][1]], fits[n].ds, 0]])] };
   } else if ((ow = ownWrap(R, plan, now, paras, { measure, z, fx, icons, step, B, x0, x1 }))) {   // the bake's wrap: the card's own words moved
