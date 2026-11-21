@@ -39,7 +39,7 @@ updater's inputs (decks.json, Card Edits.json, Global.lua, pages.json); it needs
 
 Network: the website's `cards.json` and `tts.json` (`lua_mock.py`), GitHub raw (`links_http.py`) and
 `git fetch` of the history clone and of AutoCroissant main (`updater_idempotent.py` without `AUTOCROISSANT`). Keep `TTS_HISTORY` out of `/tmp` on a Mac that reboots (e.g.
-`~/Documents/Tools/wt/scratch/tts/history.git`): a new clone is a full-history download. `card_sync_steps.py` needs git 2.37+, bash and `jq`.
+`~/Documents/Tools/wt/scratch/tts/history.git`): a new clone is a full-history download. `card_sync_steps.py` needs git 2.37+, bash and `jq` (`flock`: a stand-in where the host has none).
 Its sandbox git reads your global git config but runs no hooks and no auto maintenance, as on a runner.
 
 ## The checks

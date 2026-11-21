@@ -1,6 +1,7 @@
 """card-sync.yml's lanes and step scripts, offline: which jobs and steps run, both gates, the fonts, the commits.
 
-    python3 card_sync_steps.py [group ...]    (default every group in GROUPS; needs git 2.37+, bash and jq; no network)
+    python3 card_sync_steps.py [group ...]    (default every group in GROUPS; needs git 2.37+, bash and jq (flock: a stand-in
+    where the host has none); no network)
 1. The step plans: every step's `if:` evaluated as GitHub does (&&, ||, !, ==, the status functions, the implicit
    success()), per lane. Data (Card data, and after the bake): a dry run commits, posts and dispatches nothing; switched
    it posts, commits data and dispatches the site and the checks (after the bake, whatever the data did; a push's
@@ -558,6 +559,28 @@ def runner_git() -> None:
         fh.write("[core]\n\thooksPath = /dev/null\n[maintenance]\n\tauto = false\n")
     atexit.register(os.remove, cfg)
     os.environ["GIT_CONFIG_GLOBAL"] = BASE_ENV["GIT_CONFIG_GLOBAL"] = cfg
+
+
+def runner_flock() -> None:
+    """util-linux's flock (every runner has it: Newest and the save's data watcher take carddata.lock): where the host has
+    none (a Mac), a stand-in for its `flock [-w seconds] fd` form."""
+    if shutil.which("flock"):
+        return
+    d = tempfile.mkdtemp(prefix="css_flock_")
+    atexit.register(shutil.rmtree, d, ignore_errors=True)
+    write(os.path.join(d, "flock"), f"#!{sys.executable}\n" + """import fcntl, sys, time
+a = sys.argv[1:]
+end = time.monotonic() + float(a[a.index("-w") + 1]) if "-w" in a else None
+while True:
+    try:
+        sys.exit(fcntl.flock(int(a[-1]), fcntl.LOCK_EX | fcntl.LOCK_NB))
+    except BlockingIOError:
+        if end is not None and time.monotonic() >= end:
+            sys.exit(1)
+        time.sleep(0.01)
+""")
+    os.chmod(os.path.join(d, "flock"), 0o755)
+    os.environ["PATH"] = BASE_ENV["PATH"] = d + os.pathsep + os.environ["PATH"]
 
 
 def git(cwd: str, *args, env: dict = None, check_: bool = True) -> str:
@@ -1608,7 +1631,7 @@ def names_cases(flow: dict) -> None:
                     ok = False
                 except ProcessLookupError:
                     pass
-                ok = (ok and code == 0 and "The Bake committed" in text and lines(log, 2)
+                ok = (ok and code == 0 and "the save made again on them" in text and lines(log, 2)
                       and int(open(os.path.join(nb, "pid")).read()) != was
                       and open(os.path.join(runner, "save", "at")).read().strip() == git(ws, "rev-parse", "HEAD")
                       and git(ws, "status", "--porcelain", "--", "TTS") == "")
@@ -1631,7 +1654,7 @@ def names_cases(flow: dict) -> None:
                 gone = True
             used = open(os.path.join(runner, "save", "names")).read().strip()
             newer = bool(stats) and saves == 2
-            want = os.path.join(nb, f"{head}.json") if newer else os.path.join(ws, "carddata", "db", "stats.json")
+            want = os.path.join(nb, f"{head}.json") if newer else os.path.join(nb, "start.json")     # the data's names, copied
             ok = (ok and code2 == 0 and out.get("named") == named and used == want and gone and joined < 3
                   and len(open(log).read().splitlines()) == saves
                   and set(open(log + ".args").read().splitlines()) == {f"--baked {main}"}
@@ -2098,6 +2121,44 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
         _, code, text, out, asked, naps = lane([run(60, "in_progress")], FAKE_USED="7", FAKE_LOOKS="2")
         check(code == 0 and out.get("kept") == "60" and "run" not in out and asked.count("/jobs") == 1,
               "Guards' fixes: Pictures kept read with Decided by the conditional reads -> the save alone" + ("" if code == 0 else f"\n{text}"))
+        # A push's early save (Push save start's watcher saw this run's data commit: names/mine): once its save is done,
+        # the save alone on main between two looks, then the lane stops; a save still running never pauses the looks;
+        # main moved: dropped, the warning naming who saves it
+        write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" >> "{calls}.naps"; SECONDS=$((SECONDS + ${{1%.*}}))\n')
+        for i, (what, done, moved, rid, said) in enumerate((
+                ("the save done: on main first, the lane stops", True, False, 58, "the save went first"),
+                ("the save still running: the looks go on, nothing early", False, False, 58, "this run's main lane is skipped"),
+                ("main moved: dropped, the guards' run saves it", True, True, 58, "the Card sync run the guards start saves it"),
+                ("main moved, every picture kept: dropped, this lane saves it", True, True, 60, "this lane saves it as ever"))):
+            case = os.path.join(tmp, f"early{i}")
+            work, bare = origin(case)
+            ws = checkout(case, bare)
+            head = git(ws, "rev-parse", "HEAD")
+            runner = os.path.join(case, "runner")
+            for path, text in (("names/mine", ""), ("history.code", "0\n"), ("save/at", head + "\n"), ("save/code", "0\n")):
+                if done or path != "save/code":
+                    write(os.path.join(runner, path), text)
+            write(os.path.join(ws, "TTS/Impossibility Simulator.json"), '{"saved": 1}')
+            if moved:
+                commit(work, {"Cards/One.png": "png 2"}, "another push")
+                git(work, "push", "-q", "origin", "main")
+            was = git(bare, "rev-parse", "main")
+            for f in (calls, calls + ".naps"):
+                os.remove(f) if os.path.exists(f) else None
+            e = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": sha, "FAKE_JOBS": jobs_dir, "FAKE_USED": "7",
+                 "FAKE_LOOKS": "2", "FAKE_GUARDS": json.dumps({"workflow_runs": [run(rid, "in_progress")]}),
+                 "GITHUB_SERVER_URL": "https://github.com", "GITHUB_API_URL": "https://api.github.com",
+                 **{k: mark["env"][k] for k in ("FIXES", "DECIDED", "FOLLOW", "KEPT")}}
+            code, text, out = run_step(main, "guards", ws, {**e, **as_functions(fake, "sleep", "curl")}, case)
+            naps = open(calls + ".naps").read().split() if os.path.exists(calls + ".naps") else []
+            top = git(bare, "rev-parse", "main")
+            early = top != was and git(bare, "log", "-1", "--format=%an %P %s", top) == f"AutoCroissant {head} Card sync: TTS save updated" \
+                and git(bare, "show", f"{top}:TTS/Impossibility Simulator.json") == '{"saved": 1}' and git(ws, "rev-parse", "HEAD") == top
+            ok = code == 0 and said in text and early == (done and not moved) and (top == was) == (not early)
+            ok = ok and out.get("run" if rid == 58 else "kept") == str(rid) and text.count("::warning::") == moved
+            ok = ok and (naps == ["1", "1"] if done else naps == ["0.05"] * 60)       # 3 looks; never a wait in between
+            check(ok, f"Guards' fixes, a push's early save: {what}" + ("" if ok else f"\n{text}\n{naps}"))
+        write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" >> "{calls}.naps"; SECONDS=$((SECONDS + $1))\n')
         os.remove(calls + ".naps")
         code, text, out = run_step(timer, "guards", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Guards' fixes: runs not read -> none (the main lane goes on)")
@@ -2235,6 +2296,7 @@ def main():
     if set(groups) - set(GROUPS):
         sys.exit(f"groups: {' '.join(GROUPS)}")
     runner_git()
+    runner_flock()
     flow = load()
     for g in groups:
         GROUPS[g](flow)
