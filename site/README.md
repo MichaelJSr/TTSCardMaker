@@ -509,5 +509,5 @@ editor's and the Stats page's modules (loaded on first use),
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, `tokens.js` the
 icon and timing-tag picker in card text, drag-to-assign and
 the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `signin.js` the password sign-in, `login.js` this browser's sealed token and deck passphrases, `changelog.js` the Changes tabs, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
-published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
+published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py`, `site/build/analytics.py` (the balance analytics) and `site/favicon/` (the tab and home-screen icons: the game's logo, ringless at 16 px; the build copies them to the site root).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

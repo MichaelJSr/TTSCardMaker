@@ -5198,6 +5198,7 @@ def version_files(versions, sections=lambda cid: {}):
 
 
 BUILD_TXT = "build.txt"                       # in DIST: dist_digest() (which build is live), then the page stamp
+FAVICONS = os.path.join(SITE, "favicon")      # the tab and home-screen icons (the game's logo): DIST's root, stamped
 
 
 def dist_digest(data):
@@ -5808,6 +5809,13 @@ def main():
     for name, blob in served.items():           # stamps hash the source (the bundle: its code and map): same source, same URL
         with open(os.path.join(DIST, "assets", name), "wb") as fh:
             fh.write(blob)
+    favicons = {}
+    for name in sorted(os.listdir(FAVICONS)) if os.path.isdir(FAVICONS) else ():
+        with open(os.path.join(FAVICONS, name), "rb") as fh:
+            blob = fh.read()
+        with open(os.path.join(DIST, name), "wb") as fh:
+            fh.write(blob)
+        favicons[name] = stamp_of(blob)
     def url(m):                               # index.html's asset and data URLs
         name = m.group(1).removeprefix("assets/")
         return f'{m.group(1)}?v={stamps[name] if name in stamps else version}"'
@@ -5816,6 +5824,7 @@ def main():
     if packed:                                # the bundle holds every module: no hints for them
         template = re.sub(r'<link rel="modulepreload" href="assets/(?!' + re.escape(BUNDLE) + r'")[\w-]+\.js">\n', "", template)
     template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, template).replace("<!--BUILD-->", version)
+    template = re.sub(r'href="([\w-]+\.png)"', lambda m: f'href="{m[1]}?v={favicons[m[1]]}"' if m[1] in favicons else m[0], template)   # every page's <base>: the root
     template = template.replace("<!--DATA-->", html.escape(json.dumps(own, separators=(",", ":"))))
     if packed:                                # the lazy chunks' list, after the bundle's hint
         tag = f'<link rel="modulepreload" href="assets/{BUNDLE}?v={stamps[BUNDLE]}">'
