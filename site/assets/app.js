@@ -2185,16 +2185,28 @@ async function copy(text, what) { try { await navigator.clipboard.writeText(text
 // every dialog: focus moves into it, and back to what had it when it closes (a phone's text box excepted: no keyboard pops up)
 let opener = null;
 modal.addEventListener("focusin", e => { if (e.relatedTarget && !modal.contains(e.relatedTarget)) opener = e.relatedTarget; });   // from outside; kept through the dialog's redraws
-// the page under an open dialog takes no focus (its backdrop already takes the clicks): Tab stays in the dialog
-function shut() { for (const el of [$(".skip"), $("header.top"), view]) if (el) el.inert = !modal.hidden; }   // #toast, #tooltip stay out
+// the page under an open dialog takes no focus (its backdrop already takes the clicks): Tab stays in the dialog.
+// #view's inert waits until the dialog has painted, or a key, a tap or a focus under it (restyling all of it slowed
+// each open and close); screen readers skip it at once (aria-hidden: no restyle)
+let sealing = false, back = null;   // back: who gets focus once a closed dialog's view is live again
+function seal() {
+  sealing = false; const open = !modal.hidden, o = back, at = document.activeElement; back = null;
+  if (view.inert !== open) view.inert = open;
+  if (open || !o || (at && at !== document.body)) return;
+  const b = o.isConnected ? o : (o.dataset?.open && $(`[data-open="${CSS.escape(o.dataset.open)}"]`, view)) || null;   // a redrawn grid: the card's new tile
+  if (b && !(b.matches("input, textarea") && matchMedia("(pointer: coarse)").matches)) b.focus({ preventScroll: true });
+}
+function shut() { const open = !modal.hidden;
+  for (const el of [$(".skip"), $("header.top")]) if (el) el.inert = open;   // #toast, #tooltip stay out
+  view.ariaHidden = open ? "true" : null;
+  if (!sealing) { sealing = true; requestAnimationFrame(() => setTimeout(() => sealing && seal())); } }   // after the paint
 shut();                                                   // a card page opens with its dialog up
+for (const t of ["keydown", "pointerdown"]) document.addEventListener(t, () => sealing && seal(), true);   // a key (Tab, Cmd+A, Cmd+F...) or a tap: before the browser acts
+view.addEventListener("focusin", e => { if (!modal.hidden) { seal(); e.target.blur(); $(".dialog", modal)?.focus({ preventScroll: true }); } });   // e.g. a screen reader's move
 new MutationObserver(() => {
   const d = $(".dialog", modal), at = document.activeElement;
-  if (!modal.hidden) { if (d && !modal.contains(at)) { if (!d.hasAttribute("tabindex")) d.tabIndex = -1; d.focus({ preventScroll: true }); } shut(); return; }   // after: the opener is known
-  shut();
-  const o = opener; opener = null;
-  const back = o?.isConnected ? o : (o?.dataset?.open && $(`[data-open="${CSS.escape(o.dataset.open)}"]`, view)) || null;   // a redrawn grid: the card's new tile
-  if ((!at || at === document.body) && back && !(back.matches("input, textarea") && matchMedia("(pointer: coarse)").matches)) back.focus({ preventScroll: true });
+  if (!modal.hidden) { back = null; if (d && !modal.contains(at)) { if (!d.hasAttribute("tabindex")) d.tabIndex = -1; d.focus({ preventScroll: true }); } shut(); return; }   // after: the opener is known
+  back = !at || at === document.body ? opener : null; opener = null; shut();
 }).observe(modal, { attributes: true, attributeFilter: ["hidden"], childList: true });   // childList: one dialog swapped for another
 function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`;
   const h = $(".dialog > :is(h2, h3)", modal); if (h) h.id = "dialog-title";   // its heading names it (screen readers)
