@@ -61,16 +61,24 @@ const SYNONYM_WORDS = new RegExp(`\\b(${Object.keys(SYNONYMS).sort((a, b) => b.l
 
 const PUNCT = "[.'\u2019]", ABBR_END = "(?:(?<=\\.[a-z])\\.)?";   // after the last letter: only an abbreviation's '.'
 const WORD_END = "(?:['\u2019]|(?<=\\.[a-z])\\.)?";   // before the next word: a ' or ABBR_END, never a sentence's end
-const LETTER = /\p{L}/u;
+const JOIN = "[.'\u2019-]", HYPHEN = "(?<![.'\u2019])-";   // the rulebook's PUNCT: a '-' too; a lone '-' as a gap, just after a letter
+const LETTER = /\p{L}/u, isLetter = ch => !!ch && LETTER.test(ch);
 /** text as a regex source (the bot's query_card.loose): a word typed without ' ’ or . also finds one printed between
  *  its letters (cant: can't), a ' or an abbreviation's . at its end (nme shop: N.M.E. shop; never 'other. creature');
- *  digits never (05 is not 0.5); a word typed with one is exact. gap: a space run's source (else itself) */
-export function loose(t, gap = null) {
-  const words = t.split(/(\s+)/);
-  return words.map((w, at) => at % 2 ? gap || escapeRe(w) : [...w].map((ch, i, a) => {
-    if (!LETTER.test(ch) || /[.'\u2019]/.test(w)) return escapeRe(ch);
-    return escapeRe(ch) + (a[i + 1] ? (LETTER.test(a[i + 1]) ? `${PUNCT}?` : "") : at + 1 < words.length ? WORD_END : ABBR_END);
-  }).join("")).join("");
+ *  digits never (05 is not 0.5); a word typed with one is exact. gap: a space run's source (else itself); hyphen (the
+ *  rulebook's): - too, and a lone - between two words' letters (multihit, multi hit: multi-hit) */
+export function loose(t, gap = null, hyphen = false) {
+  const words = t.split(/(\s+)/), punct = hyphen ? JOIN : PUNCT, typed = new RegExp(punct);
+  return words.map((w, at) => {
+    if (at % 2) {
+      const space = gap || escapeRe(w);
+      return hyphen && isLetter([...words[at - 1]].pop()) && isLetter([...words[at + 1]][0]) ? `(?:${space}|${HYPHEN})` : space;
+    }
+    return [...w].map((ch, i, a) => {
+      if (!LETTER.test(ch) || typed.test(w)) return escapeRe(ch);
+      return escapeRe(ch) + (a[i + 1] ? (LETTER.test(a[i + 1]) ? `${punct}?` : "") : at + 1 < words.length ? WORD_END : ABBR_END);
+    }).join("");
+  }).join("");
 }
 
 /** A text term's regex as the bot's _text_pattern (query_card.py): loose, each synonym also finding the other. */

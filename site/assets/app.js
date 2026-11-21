@@ -1640,8 +1640,9 @@ async function renderSheets() {
 }
 // the rulebook's words as searched: any case, any spaces as one (the bot's \s+), a phone's curly quotes plain
 const bookFold = s => straight(s.toLowerCase().replace(/\s+/g, " "));
-// a folded search's regex (search.js loose: nme finds N.M.E., cant can't), any spaces between the words; an array: any
-const bookRe = (q, flags) => new RegExp([].concat(q).map(t => loose(t, "\\s+")).join("|"), flags);
+// a folded search's regex (search.js loose: nme finds N.M.E., cant can't, multi hit multi-hit), any spaces between the
+// words; an array: any
+const bookRe = (q, flags) => new RegExp([].concat(q).map(t => loose(t, "\\s+", true)).join("|"), flags);
 // a numbered timing tag's X row, and whether the printed book (no {.web} chapter) prints the tag whole ("(2pg)" never;
 // "2pg" is not (2PGT)'s), as the bot's x_row and TTS xTag
 function bookTag(q, chapters) {
