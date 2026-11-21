@@ -1222,11 +1222,12 @@ def web_loadable(fonts):
 
 def record_fonts(records):
     """The font names the text layers of the details records ask for (font, and lf: mockup.js draws a layer in it; fr:
-    its letters in another font), an added ability's (addLook) too, and MGP_FONT (a typed letter its font lacks:
-    psd_edit.missing_glyphs)."""
+    its letters in another font; the fonts of its faces: a letter its font can't draw), an added ability's (addLook)
+    too, and MGP_FONT (glyph_fonts' last pick: psd_edit.glyph_fonts)."""
     return {MGP_FONT} | {n for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
                          + [rec.get("addLook")] if isinstance(t, dict)
-                         for n in [t.get("font"), t.get("lf"), *(r[-1] for r in t.get("fr") or () if isinstance(r, list) and r)]
+                         for n in [t.get("font"), t.get("lf"), *(r[-1] for r in t.get("fr") or () if isinstance(r, list) and r),
+                                   *(f[0] for f in t.get("faces") or () if isinstance(f, list) and f)]
                          if isinstance(n, str)}
 
 

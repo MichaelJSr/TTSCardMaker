@@ -749,11 +749,14 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     icons and badges never): a D13 mark the font lacks is drawn plain (plain_typed), any other the font's own .notdef at
     its advance (no_glyph: a box, or a gap when empty), said in the caption ("The ability's font has no '+': the bake
     prints a box there."); a letter typed into another font's run (the replaced letter, else the one before, is one the
-    font lacks yet the card prints: The Structure's digits) is drawn as before. Since r51 the bake sets a typed letter
-    its font lacks in Myriad Pro (psd_edit.missing_glyphs, as Photoshop 2023 does): `record_fonts` always offers
-    MyriadPro-Regular, the family lists it after the card's font for a font with `lacks`, and glyphPlan (`mgp`: its
-    lacks) leaves such a letter (a D13 mark's plain one too) to that fallback; only one Myriad lacks too is a .notdef
-    and a caption. The text keeps its length (stand-in
+    font lacks yet the card prints: The Structure's digits) is drawn as before. The bake sets a typed letter
+    its font can't draw (no glyph, or an empty one: `empty`, GAPS_VERSION 2) in the font the layer prints it in, else
+    another shown layer's, else Myriad Pro (psd_edit.glyph_fonts, owner D15): `record_fonts` offers MyriadPro-Regular and
+    the fonts of each layer's `faces` (psd_details VERSION 14), glyphFont picks as the bake does (the run it is typed
+    into first: The Structure's IRONMAN digits), and glyphPlan returns `fonts` (letter -> font) that `measure` and
+    `glyphText` draw in their own family (PICKED, keyed by the layer's family list), kept letters too (Battle Spear's
+    Chiller '%'); the text itself is unchanged, so a colour alone still tints in place; only one no font draws is a
+    .notdef and a caption. The text keeps its length (stand-in
     noncharacters U+FDD0-FDD4 that `measure` and `glyphText` expand). The Rendered preview's note "font: name: '.' has
     no glyph in its font (drawn as a box)" reads "The title's font has no '.': it prints as a box or a gap.". Measured
     on 22 website-shaped edits (18 boxes or gaps, 4 typed dashes; plates on): wrong px against the bake 178,816 -> 62,659,
