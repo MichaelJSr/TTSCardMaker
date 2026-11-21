@@ -487,7 +487,8 @@ function syncUrl(r) {
 }
 let popped = null;                                       // a hash navigation fires popstate, then hashchange: route once
 const DOC = Math.random().toString(36).slice(2);         // this page load: the card entries it pushed (a reload starts afresh)
-let dlgDepth = 0, backing = false;                       // the card entry's entries since its view; close's Back under way
+const NAV = window.navigation;                           // none (an older browser): close adds a page, as before
+let dlgFrom = null, backing = false;                     // the card entry's view (its history key; -1: none); close's Back under way
 function route(e) {
   backing = false;
   if (e?.type === "hashchange") { const dup = e.newURL === popped; popped = null; if (dup) return; }
@@ -497,8 +498,8 @@ function route(e) {
   const r = parseHash(), fresh = !history.state?.drawn;
   if (r.name === "card" && S.data?.moved?.[r.arg] && S.byId.has(r.arg)) r.arg = S.byId.get(r.arg).id;   // a renamed card: its new page
   syncUrl(r);
-  if (r.name === "card" && fresh && S.renderedHash && dlgDepth >= 0) history.replaceState({ ...history.state, depth: dlgDepth + 1, doc: DOC }, "");   // opened over a view: close goes Back
-  dlgDepth = r.name !== "card" ? 0 : history.state?.doc === DOC && history.state.depth || -1;   // -1: a card close can't go Back from (a link, a reload)
+  if (r.name === "card" && fresh && S.renderedHash && NAV && dlgFrom !== -1) history.replaceState({ ...history.state, from: dlgFrom || NAV.entries()[NAV.currentEntry?.index - 1]?.key, doc: DOC }, "");   // opened over a view: close goes Back to it
+  dlgFrom = r.name !== "card" ? null : history.state?.doc === DOC && history.state.from || -1;   // -1: a card close can't go Back from (a link, a reload)
   hideTip();
   if (r.name === "card") {
     if (!S.renderedHash && !cardOf(r.arg)) renderView(parseHash(S.listHash), S.listHash);   // a dead link: the grid, then the toast
@@ -2260,8 +2261,11 @@ const actions = {
   "close": () => {
     if ($("#edit-form", modal)) { actions["edit-cancel"](); return; }
     if (parseHash().name !== "card") { closeModal(); return; }
-    const d = history.state?.doc === DOC && history.state.depth;   // Back to the view it was opened from (a twice-pressed Esc: once)
-    if (!d) location.hash = S.listHash; else if (!backing) { backing = true; history.go(-d); }
+    if (backing) return;                                 // a twice-pressed Esc: once
+    const s = history.state, to = s?.doc === DOC && NAV.entries().find(x => x.key === s.from);   // Back to the view it was opened from, while the history still has it
+    if (!to) { location.hash = S.listHash; return; }
+    const here = NAV.currentEntry.key; backing = true;
+    NAV.traverseTo(to.key).committed.catch(() => { backing = false; if (NAV.currentEntry?.key === here) location.hash = S.listHash; });   // refused: still here, so as before
   },
   "toggle-param": (el, exclude = false) => { const p = parseHash().params, k = el.dataset.key, cur = vals(p, k), v = el.dataset.value;
     if (!XABLE.has(k) || !el.closest(".browse .filters")) { setParams({ [k]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); return; }
