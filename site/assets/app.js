@@ -531,6 +531,7 @@ function route(e) {
   if (listAt) { const g = listAt; listAt = null; if (hash === g.list) settle(g); }   // a reloaded card dialog's first close (Back too): the list's place
 }
 function renderView(r, hash) {
+  if (sealing) inertNow();                               // a pending seal's inert now: a drawn view's focus lands (focus back still after the paint)
   S.renderedHash = hash; S.listHash = hash;
   if (r.name !== "cards") { S.selected.clear(); S.selecting = false; if (srStatus) srStatus.textContent = ""; }   // a count again later: spoken again
   if (!(r.name === "u" && r.edit)) editor.leave();
@@ -2189,9 +2190,9 @@ modal.addEventListener("focusin", e => { if (e.relatedTarget && !modal.contains(
 // #view's inert waits until the dialog has painted, or a key, a tap or a focus under it (restyling all of it slowed
 // each open and close); screen readers skip it at once (aria-hidden: no restyle)
 let sealing = false, back = null;   // back: who gets focus once a closed dialog's view is live again
+function inertNow() { const open = !modal.hidden; if (view.inert !== open) view.inert = open; return open; }
 function seal() {
-  sealing = false; const open = !modal.hidden, o = back, at = document.activeElement; back = null;
-  if (view.inert !== open) view.inert = open;
+  sealing = false; const o = back, at = document.activeElement, open = inertNow(); back = null;
   if (open || !o || (at && at !== document.body)) return;
   const b = o.isConnected ? o : (o.dataset?.open && $(`[data-open="${CSS.escape(o.dataset.open)}"]`, view)) || null;   // a redrawn grid: the card's new tile
   if (b && !(b.matches("input, textarea") && matchMedia("(pointer: coarse)").matches)) b.focus({ preventScroll: true });
