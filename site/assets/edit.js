@@ -1193,7 +1193,7 @@ export function createEditor(app) {
       const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");   // a stars edit moves the card (the bake's plan_move)
       const mv = sn && st && !siteOn("stars") ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
       if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${!partForm?.view.rec.header?.stars ? "" : P.starsKept(partForm.view.rec.header.stars, +st.value) ? "; the printed stars stay as they are" : " and redraws the printed stars"}. Tick Website only to keep the card where it is.`
-        : st && siteOn("stars") && P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) ? "Website only: the card stays in its folder." : "";
+        : st && siteOn("stars") && P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd), true) ? "Website only: the card stays in its folder." : "";
       if (partForm) {
         const join = document.getElementById("ef-name-join"), made = lastRead?.derived.name || "";   // the boxes joined: the site's name once a title edit is published
         if (join) join.textContent = `These boxes make: “${made}”${made && made !== c.name ? " (the name on the site once a title edit is published)" : ""}`;

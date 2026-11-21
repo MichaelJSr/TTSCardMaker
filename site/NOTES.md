@@ -925,7 +925,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Stars the bake keeps (2026-11-07; parts.js `starsKept`: a refusal for the count; psd_details gives a card with no Stars group the bake's refusals and no units): not drawn, no box; a
   folder card says "The printed stars stay as they are (<why>): the card only moves to the 4 Stars folder.", others
   "The bake would refuse the stars: <why>."; the dialog's move note says the printed stars stay. Under 1 star
-  (2026-11-19): always refused, "a card shows at least one" (psd_edit), and no move note.
+  (2026-11-19): refused, "a card shows at least one" (psd_edit), and no move note (Website only keeps its note); a
+  card with no stars keeps its own "parser reads no stars" ("this card has none"), checked first as `_plan_stars` does.
   New or moved type icons in the card's own colours (2026-11-09; the bake copies the shown icon's effects, blend and
   clip chain onto them, psd_edit `_make_icon`/`_copy_chain`): `iconLook` fits each shown icon's stock picture into its
   core (its part on the card) and `fitLook` reads the image there on the stock's opaque pixels, two maps of 16 bins:
