@@ -471,10 +471,10 @@ jobs:
       # unfinished one (two hours back). One found: this run's main lane is skipped (its data lane ran; a push's lane
       # skips its Gate and the rest), but a push's whose fixes keep every card picture (the check job's "Pictures kept",
       # with Fixes to land) goes on for the save alone (kept: no bake, rulebook PDF or redraw; the guards' run re-pins after
-      # Landed). A push's lane whose data watcher (Push save start's) finds this run's data commit before Decided commits
-      # that save alone onto main then (early(), once; main moved: dropped) and waits on; with fixes, kept or not, it then
-      # stops (its Follow up's run re-pins or bakes and saves after Landed). Runs that cannot be read count as none (the
-      # main lane goes on). A follow-up (guards:
+      # Landed). A push's lane whose data watcher (Push save start's) finds this run's data commit, its save done, before
+      # Decided commits that save alone onto main then (early(), once, between two looks; main moved: dropped) and waits
+      # on; with fixes, kept or not, it then stops (its Follow up's run re-pins or bakes and saves after Landed). Runs that
+      # cannot be read count as none (the main lane goes on). A follow-up (guards:
       # the run whose check job started this one, before Land) waits in both lanes after their setup until that check
       # job reaches Landed (Land and its guard-events and guard-records uploads done) or ends: 3 s looks for 2 minutes,
       # then 15 s, 60 at most (the check job's own cap); it holds nothing. With a first attempt's push P (the first
@@ -550,11 +550,13 @@ jobs:
               | [.jobs[].steps // [] | .[]] as \$s | \"\(\$c.id // 0) \(if \$c != null and (\$c | $decided) then 1 else 0 end) \((\$s | $fixes)
                 and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\")))) \(\$s | $kept)\"" || echo "0 0 false false"
           }
-          e=''
-          early() {        # this run's data commit in before Decided: Push save start's save (names from it) alone on main, once
+          e='' late=''
+          ready() {        # this run's data commit seen (Push save start's watcher), its save done, main's history joined
+            [ -z "$e" ] && [ -e "$RUNNER_TEMP/names/mine" ] && [ -s "$RUNNER_TEMP/save/code" ] && [ -s "$RUNNER_TEMP/history.code" ]
+          }
+          early() {        # ready before Decided: Push save start's save (names from this run's data) alone on main, once
             local bg=$RUNNER_TEMP/save save="TTS/Impossibility Simulator.json" h s mode tree now
             e=tried
-            for _ in $(seq 600); do [ -s "$bg/code" ] && [ -s "$RUNNER_TEMP/history.code" ] && break; sleep 0.05; done
             [ "$(cat "$bg/code" 2> /dev/null)" = 0 ] && h=$(git rev-parse HEAD) && [ "$(cat "$bg/at")" = "$h" ] || return 0
             ! git diff --quiet -- "$save" || return 0
             mode=$(git ls-tree "$h" -- "$save" | cut -d' ' -f1) || mode=''
@@ -569,7 +571,7 @@ jobs:
               now=$(git ls-remote origin refs/heads/main | cut -f1) || now=''
               [ "$now" = "$h" ] || break
             done
-            if [ "$now" != "$s" ]; then echo "::warning::the early save was not pushed (main ${now:0:8}): the lane saves as ever"; return 0; fi
+            if [ "$now" != "$s" ]; then late="the early save was not pushed (main ${now:0:8})"; return 0; fi     # said at the verdict
             git reset -q --hard "$s" && echo "$s" > "$bg/at" || true       # the lane goes on from it (Early save keeps the save)
             e=$s
             echo "This run's data commit came before the guards' Decided: the TTS save alone is on main as ${s:0:8} ($SECONDS s into the wait)." \
@@ -586,7 +588,10 @@ jobs:
               # then 3 s; the run every 15 s: ended with no check job?
               tag='' n=0 ran=$SECONDS k=0 c=0 u0=''
               while [ "$SECONDS" -lt 720 ]; do
-                sleep "$([ "$SECONDS" -lt 120 ] && [ "$n" -lt 15 ] && echo 1 || echo 3)"
+                nap=$([ "$SECONDS" -lt 120 ] && [ "$n" -lt 15 ] && echo 1 || echo 3)
+                if [ -z "$e" ] && [ -e "$RUNNER_TEMP/names/mine" ]; then      # an early save due: its look once ready
+                  for _ in $(seq $((nap * 20))); do ready && break; sleep 0.05; done
+                else sleep "$nap"; fi
                 if [ $((SECONDS - ran)) -ge 15 ]; then
                   ran=$SECONDS
                   status=$(gh api "$q" --jq ".workflow_runs[] | select(.id == $id) | .status") || status=""
@@ -606,10 +611,15 @@ jobs:
                   fi
                 fi
                 [ "$dec" != 1 ] || break
-                if [ -z "$e" ] && [ -e "$RUNNER_TEMP/names/mine" ]; then early || true; fi     # Push save start's watcher's
+                if ready; then early || true; fi      # never waits: the looks go on while the save is made
               done
               [ "$dec" = 1 ] || read -r cid dec hold keep <<< "$(check_job)"      # ended or cut: the run's jobs once more
               [ -z "$u0" ] || echo "Check job: $k looks, $c changed; rate limit used $u0 -> $used (a 304 is free when it moved less than the looks)"
+            fi
+            if [ -n "$late" ]; then
+              if [ "$hold" = true ] && [ "$keep" != true ]; then echo "::warning::$late: the Card sync run the guards start saves it after the landing"
+              else echo "::warning::$late: this lane saves it as ever"; fi
+              late=''
             fi
             if [ "$hold" = true ] && [ -n "$e" ] && [ "$e" != tried ]; then
               echo "run=$id" >> "$GITHUB_OUTPUT"
@@ -640,7 +650,8 @@ jobs:
         uses: ./.github/actions/history
 
       # After a wait that held nothing (a push's main lane, a follow-up's two): main's head and the data's as they are
-      # now (one not fetched stays as checked out); main unmoved: no reset (Push save start's save is in the checkout)
+      # now (one not fetched stays as checked out); main unmoved: no reset (Push save start's save is in the checkout). The
+      # data's under carddata.lock (flock), which its watcher's fetches take too: one shallow fetch there at a time
       - &newest
         name: Newest
         if: steps.guards.outcome != 'skipped' && !steps.guards.outputs.run
@@ -648,6 +659,8 @@ jobs:
         run: |
           if ! git fetch -q --filter=blob:none origin main; then echo "::warning::main not fetched again"
           elif [ "$(git rev-parse HEAD)" != "$(git rev-parse FETCH_HEAD)" ]; then git reset -q --hard FETCH_HEAD; fi
+          exec 9> "$RUNNER_TEMP/carddata.lock"
+          flock -w 60 9 || echo "::warning::carddata.lock not taken in 60 s"
           if git -C carddata fetch -q --depth 1 origin data; then git -C carddata reset -q --hard FETCH_HEAD; else echo "::warning::data not fetched again"; fi
 
       # The guards' commits since the last build (AutoCroissant, "Card guards: ..."): each one's guard-events.json from the
@@ -1567,8 +1580,9 @@ jobs:
               [ -n "$new" ] && [ "$new" != "$seen" ] || continue
               : > "$nb/busy"
               [ ! -e "$nb/stop" ] || { rm -f "$nb/busy"; return 0; }
-              if timeout 30 git -C "$ws/carddata" fetch -q --depth 1 --no-tags origin data \
-                  && at=$(git -C "$ws/carddata" rev-parse FETCH_HEAD) && git -C "$ws/carddata" show "$at:db/stats.json" > "$nb/$at.json"; then
+              if at=$(exec 9> "$RUNNER_TEMP/carddata.lock" && flock -w 35 9 && timeout 30 git -C "$ws/carddata" fetch -q --depth 1 \
+                    --no-tags origin data && git -C "$ws/carddata" rev-parse FETCH_HEAD) \
+                  && git -C "$ws/carddata" show "$at:db/stats.json" > "$nb/$at.json"; then     # Newest's lock (one fetch at a time)
                 seen=$at
                 echo "$at" > "$nb/seen"
                 echo "$at" >> "$nb/taken"
