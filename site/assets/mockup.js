@@ -544,38 +544,77 @@ export function typedAt(was, now) {
   return out;
 }
 const PLAIN_MARKS = { "\u2014": "-", "\u2013": "-", "\u2026": "...", "\u201c": '"', "\u201d": '"' };   // psd_edit.PLAIN_MARKS (owner D13)
-const MGP_FONT = "MyriadPro-Regular";               // psd_edit.MGP_FONT: a typed letter its font lacks, as Photoshop sets it
+const MGP_FONT = "MyriadPro-Regular";               // psd_edit.MGP_FONT: glyph_fonts' last pick (Photoshop's stand-in)
 const AS = { "\ufdd0": 1, "\ufdd1": 3, "\ufdd2": "-", "\ufdd3": "...", "\ufdd4": '"' }, STAND = { 1: "\ufdd0", 3: "\ufdd1", "-": "\ufdd2", "...": "\ufdd3", '"': "\ufdd4" };   // glyphPlan's
 const STOOD = /[\ufdd0-\ufdd4]/;                     // stand-ins (noncharacters): that many .notdefs, or a mark plain
-/** text as the bake sets the typed letters its font can't draw (lacks: data/fonts.json's): a D13 mark plain
- *  (psd_edit.plain_typed), any other, or a plain one it lacks too, in Myriad Pro (mgp: MGP_FONT's lacks, null: no
- *  such web font; psd_edit.missing_glyphs: draw's family falls back to it), else as its .notdef (no_glyph); kept
- *  letters, icons and badges as they are, and letters typed into another font's run (one the font lacks, yet printed:
- *  The Structure's digits). {text: the same length, with stand-ins glyphRuns reads, boxes: the letters set as .notdef}. */
-export function glyphPlan(text, old, lacks, mgp = null) {
-  text = String(text ?? ""); old = String(old ?? "");
-  if (!lacks || !text) return { text, boxes: "" };
-  const typed = typedAt(old, text), drawn = drawnSpans(old);
-  for (const [a, b] of drawnSpans(text)) typed.fill(null, a, b);
-  const other = j => j >= 0 && j < old.length && !/\s/.test(old[j]) && lacks.includes(old[j]) && !drawn.some(([a, b]) => a <= j && j < b);
+/** text as the bake sets the typed letters its font can't draw (lacks, empty: data/fonts.json's, no glyph or an empty
+ *  one): a D13 mark plain where the font draws the plain one (psd_edit.plain_typed), else in the font the bake picks
+ *  (pick(s, from): a font name or "", psd_edit.glyph_fonts; from: the letter of the run it is typed into, when the font
+ *  lacks that one too: The Structure's digits), else as its .notdef (no_glyph; an empty glyph as it is); a kept one the
+ *  font can't draw in the font its layer prints it in (keep(c), Battle Spear's Chiller '%'), icons and badges as they
+ *  are. {text: the same length, with stand-ins glyphRuns reads, boxes: the letters set as .notdef, fonts: Map(letter ->
+ *  font name) draw sets each such letter in, the text left as typed}. */
+export function glyphPlan(text, old, lacks, pick = null, empty = "", keep = null) {
+  text = String(text ?? ""); old = String(old ?? ""); lacks = String(lacks ?? ""); empty = String(empty ?? "");
+  const fonts = new Map();
+  if (!(lacks || empty) || !text) return { text, boxes: "", fonts };
+  const typed = typedAt(old, text), drawn = drawnSpans(old), no = c => lacks.includes(c) || empty.includes(c);
+  const shown = Array(text.length).fill(false);       // icons and badges
+  for (const [a, b] of drawnSpans(text)) { typed.fill(null, a, b); shown.fill(true, a, b); }
+  const other = j => j >= 0 && j < old.length && !/\s/.test(old[j]) && no(old[j]) && !drawn.some(([a, b]) => a <= j && j < b);
+  const kept = new Map(), picked = new Map();
   let out = "", boxes = "";
   for (let i = 0; i < text.length; i++) {
-    const c = text[i], plain = PLAIN_MARKS[c];
-    if (typed[i] == null || !lacks.includes(c) || other(typed[i])) out += c;
-    else if (plain && !lacks.includes(plain[0])) out += STAND[plain];
-    else if (typeof mgp === "string" && !mgp.includes(plain?.[0] || c)) out += plain ? STAND[plain] : c;
-    else { out += STAND[plain?.length || 1]; boxes += plain?.[0] || c; }
+    const c = text[i], plain = no(c) ? PLAIN_MARKS[c] : null, s = plain || c;
+    if (!no(c) || /\s/.test(c)) { out += c; continue; }
+    if (typed[i] == null) { if (!shown[i] && keep && !kept.has(c)) kept.set(c, keep(c) || ""); out += c; continue; }
+    if (plain && !no(plain[0])) { out += STAND[plain]; continue; }
+    const by = pick?.(s, other(typed[i]) ? old[typed[i]] : "") || "";
+    if (by) { out += plain ? STAND[plain] : c; for (const x of s) if (!picked.has(x)) picked.set(x, by); }
+    else if (!lacks.includes(s[0])) out += plain ? STAND[plain] : c;   // an empty glyph: drawn so (nothing)
+    else if (other(typed[i])) out += c;
+    else { out += STAND[plain?.length || 1]; boxes += s[0]; }
   }
-  return { text: out, boxes: [...new Set(boxes)].join("") };
+  for (const [c, f] of [...picked, ...kept]) if (f) fonts.set(c, f);   // a kept letter's own font first
+  return { text: out, boxes: [...new Set(boxes)].join(""), fonts };
 }
-/** A text's runs as drawn: strings (a stand-in mark plain) and numbers (that many .notdefs). */
-export function glyphRuns(t) {
-  const out = [];
+/** The font the bake sets a typed c its font can't draw in (psd_edit.glyph_fonts): the one the run it is typed into
+ *  prints from in (from: that run's letter), else the one the layer prints it in, else (not own) the one another shown
+ *  type layer of the card prints it in (details' faces, else its font; most letters first), else Myriad Pro; one map
+ *  (data/fonts.json's) offers that draws c, never the icon font; else "". */
+export function glyphFont(rec, layer, c, map, own = false, from = "") {
+  const draws = f => typeof f === "string" && !ICON_FONT.test(f) && typeof map?.[f]?.file === "string"
+    && !String(map[f].lacks ?? "").includes(c) && !String(map[f].empty ?? "").includes(c);
+  const letters = t => { let s = String(t ?? ""); for (const [a, b] of drawnSpans(s).reverse()) s = s.slice(0, a) + s.slice(b); return s; };
+  const faces = t => (Array.isArray(t?.faces) ? t.faces : [[t?.lf || t?.font, letters(t?.text)]]);
+  const hit = (t, x = c) => faces(t).find(([f, cs]) => String(cs ?? "").includes(x) && draws(f))?.[0];
+  const mine = t => t === layer || (t?.layer === layer?.layer && t?.id === layer?.id);
+  const found = (from && hit(layer, from)) || hit(layer);
+  if (found || own) return found || "";
+  const theirs = (Array.isArray(rec?.text) ? rec.text : []).filter(t => t && !mine(t) && t.visible !== false).map(t => hit(t)).find(Boolean);
+  return theirs || (draws(MGP_FONT) ? MGP_FONT : "");
+}
+const PICKED = new Map();                             // family (draw's fam) -> Map(letter -> CSS family): glyphPlan's fonts
+/** A text's runs as drawn: strings (a stand-in mark plain), numbers (that many .notdefs) and {s, fam} (letters picks
+ *  sets in another family: glyphPlan's fonts). */
+export function glyphRuns(t, picks = null) {
+  const out = [], add = x => {
+    const last = out[out.length - 1];
+    if (typeof x === "string" && typeof last === "string") out[out.length - 1] += x;
+    else if (typeof x === "object" && typeof last === "object" && last.fam === x.fam) last.s += x.s;
+    else out.push(x);
+  };
   for (const c of t) {
-    const x = AS[c] ?? c, last = out.length - 1;
-    if (typeof x === "string" && typeof out[last] === "string") out[last] += x; else out.push(x);
+    const x = AS[c] ?? c;
+    if (typeof x !== "string" || !picks?.size) add(x);
+    else for (const d of x) add(picks.has(d) ? { s: d, fam: picks.get(d) } : d);
   }
   return out;
+}
+/** Whether t holds what glyphRuns splits (a stand-in, with fam's .notdef; or a letter its picks set). */
+function glyphy(t, fam) {
+  const pk = PICKED.get(fam);
+  return (NOTDEFS.has(fam) && STOOD.test(t)) || (!!pk?.size && [...String(t)].some(c => pk.has(c) || (typeof AS[c] === "string" && [...AS[c]].some(d => pk.has(d)))));
 }
 /** The card's own colours on a redrawn text, as the bake gives them (bakeInk; statuses: the status names, heads: the
  *  header lines, an Ability's):
@@ -1556,19 +1595,15 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const fam = (name && await raced(name)) || "";
     if (name) out.fonts[name] = fam; else out.standIn.push(label);
     const gaps = fam ? fontMap?.[name] : null;
-    let mfam = "", mgp = null;
-    if (gaps?.lacks && fontMap?.[MGP_FONT]) {         // the letters it lacks fall back to Myriad Pro (glyphPlan's mgp)
-      const got = await raced(MGP_FONT);
-      mfam = got || "";
-      if (got !== "") mgp = fontMap[MGP_FONT].lacks || "";
-    }
+    let mfam = "";
+    if (gaps?.lacks && fontMap?.[MGP_FONT]) mfam = (await raced(MGP_FONT)) || "";   // the letters it lacks fall back to Myriad Pro, as the bake's last pick
     const fr = {};
     for (const f of new Set((Array.isArray(layer?.fr) ? layer.fr : []).map(r => r?.[2]))) {   // letters set in another font (psd_details fr)
       const got = typeof f === "string" && f !== name ? await raced(f) : "";
       const m = got && fontMap?.[f]?.lacks && fontMap?.[MGP_FONT] ? mfam || (await raced(MGP_FONT)) || "" : mfam;   // the letters it lacks: Myriad Pro
       if (got) fr[f] = `"${got}", ${m ? `"${m}", ` : ""}${STAND_IN}`;
     }
-    return { fam: fam ? `"${fam}", ${mfam ? `"${mfam}", ` : ""}${STAND_IN}` : STAND_IN, layer, gaps, mgp, fr };
+    return { fam: fam ? `"${fam}", ${mfam ? `"${mfam}", ` : ""}${STAND_IN}` : STAND_IN, layer, gaps, fr };
   };
   const badgeFont = labelFont();
   let bfam = await Promise.race([badgeFont, new Promise(r => setTimeout(() => r(null), 60))]);
@@ -1599,12 +1634,21 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     }
   }
   for (const [k, s] of specs.entries()) {             // typed letters its font can't draw: as the bake sets them
-    const { fam, gaps, mgp } = fams[k];
+    const { fam, gaps, layer } = fams[k];
     if (s.text == null || typeof gaps?.lacks !== "string" || !Array.isArray(gaps.notdef)) continue;
-    const plan = glyphPlan(s.text, s.added ? "" : s.old, gaps.lacks, mgp), [adv, d] = gaps.notdef;
+    const plan = glyphPlan(s.text, s.added ? "" : s.old, gaps.lacks, (x, from) => glyphFont(rec, layer, x[0], fontMap, false, from),
+      typeof gaps.empty === "string" ? gaps.empty : "", c => glyphFont(rec, layer, c, fontMap, true)), [adv, d] = gaps.notdef;
+    if (plan.fonts.size) {                            // each picked font's family, once loaded (else the stand-in's)
+      const names = [...new Set(plan.fonts.values())], loaded = new Map();
+      for (const name of names) { const f = await raced(name); loaded.set(name, f ? `"${f}", ${STAND_IN}` : STAND_IN); }
+      const tag = `g-${[...plan.fonts].map(([c, f]) => `${c.codePointAt(0).toString(16)}.${names.indexOf(f)}`).join("-")}`;
+      fams[k] = { ...fams[k], fam: `${fam}, "${tag}"` };   // its own family list (the tag never matches): PICKED's key
+      PICKED.set(fams[k].fam, new Map([...plan.fonts].map(([c, f]) => [c, loaded.get(f)])));
+    }
     if (plan.text === s.text) continue;
     s.text = plan.text;
-    if (!NOTDEFS.has(fam)) NOTDEFS.set(fam, { adv: (+adv || 0) / 1000, path: d && typeof Path2D !== "undefined" ? new Path2D(d) : null });
+    const f2 = fams[k].fam;
+    if (!NOTDEFS.has(f2)) NOTDEFS.set(f2, { adv: (+adv || 0) / 1000, path: d && typeof Path2D !== "undefined" ? new Path2D(d) : null });
     if (plan.boxes && !s.follow) out.noGlyph.push([s.label, plan.boxes, !d]);   // mockNote: a box, or a gap (an empty .notdef)
   }
   // the erase pass (where each old text is, erased) depends on none of the new text, colours or statuses: a redraw that
@@ -1627,8 +1671,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const { fam, layer, fr } = fams[k];
     const set = role === "ability" || role === "name" ? layer : null, fb = set?.fb ? FAUX_BOLD : 0, track = (Number.isFinite(set?.track) ? set.track / 1000 : 0) + fb, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems; faux bold adds its own), letter width (psd_details)
     const width = widthIn(ctx, fam, track, hx);
-    const nd = NOTDEFS.get(fam), measure = (t, z) => (nd && STOOD.test(t)   // glyphPlan's stand-ins: as glyphText draws them
-      ? glyphRuns(t).reduce((w, r) => w + (typeof r === "number" ? r * (nd.adv + track) * z * hx : width(r, z)), 0) : width(t, z));
+    const nd = NOTDEFS.get(fam), pk = PICKED.get(fam), measure = (t, z) => (glyphy(t, fam)   // glyphPlan's stand-ins and picks: as glyphText draws them
+      ? glyphRuns(t, pk).reduce((w, r) => w + (typeof r === "number" ? r * ((nd?.adv || 0) + track) * z * hx : typeof r === "object" ? widthIn(ctx, r.fam, track, hx)(r.s, z) : width(r, z)), 0) : width(t, z));
     measure.track = track; measure.hx = hx; measure.fb = fb;
     measure.cap = z => capOf(ctx, fam, z);
     measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
@@ -1953,15 +1997,17 @@ function shaded(ctx, { stops, top, bottom }, y) {
   for (const [t, c] of stops) g.addColorStop(t, rgb(c));
   return g;
 }
-/** ctx[how] ("fillText" | "strokeText") of t at 0, 0, glyphPlan's stand-ins as the bake draws them: a mark plain, a
- *  .notdef as the font's own (NOTDEFS: its outline, empty: a gap) at its advance, tracked. */
+/** ctx[how] ("fillText" | "strokeText") of t at 0, 0, glyphPlan's stand-ins and picks as the bake draws them: a mark
+ *  plain, a picked letter in its font, a .notdef as the font's own (NOTDEFS: its outline, empty: a gap) at its advance,
+ *  tracked. */
 function glyphText(ctx, t, fam, z, track, how) {
   const nd = NOTDEFS.get(fam);
-  if (!nd || !STOOD.test(t)) return ctx[how](t, 0, 0);
+  if (!glyphy(t, fam)) return ctx[how](t, 0, 0);
   let x = 0;
-  for (const r of glyphRuns(t)) {
+  for (const r of glyphRuns(t, PICKED.get(fam))) {
     if (typeof r === "string") { ctx[how](r, x, 0); x += ctx.measureText(r).width; continue; }
-    for (let n = 0; n < r; n++, x += (nd.adv + track) * z) if (nd.path) {
+    if (typeof r === "object") { const was = ctx.font; ctx.font = `${z}px ${r.fam}`; ctx[how](r.s, x, 0); x += ctx.measureText(r.s).width; ctx.font = was; continue; }
+    for (let n = 0; n < r; n++, x += ((nd?.adv || 0) + track) * z) if (nd?.path) {
       const path = new Path2D(); path.addPath(nd.path, new DOMMatrix([z / 1000, 0, 0, -z / 1000, x, 0]));   // font units, y up
       if (how === "fillText") ctx.fill(path); else ctx.stroke(path);
     }
