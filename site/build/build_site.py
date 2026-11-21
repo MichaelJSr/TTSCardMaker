@@ -1212,10 +1212,13 @@ def web_loadable(fonts):
 
 
 def record_fonts(records):
-    """The font names the text layers of the details records ask for (font, and lf: mockup.js draws a layer in it), an
-    added ability's (addLook) too, and MGP_FONT (a typed letter its font lacks: psd_edit.missing_glyphs)."""
-    return {MGP_FONT} | {t[k] for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
-            + [rec.get("addLook")] if isinstance(t, dict) for k in ("font", "lf") if isinstance(t.get(k), str)}
+    """The font names the text layers of the details records ask for (font, and lf: mockup.js draws a layer in it; fr:
+    its letters in another font), an added ability's (addLook) too, and MGP_FONT (a typed letter its font lacks:
+    psd_edit.missing_glyphs)."""
+    return {MGP_FONT} | {n for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
+                         + [rec.get("addLook")] if isinstance(t, dict)
+                         for n in [t.get("font"), t.get("lf"), *(r[-1] for r in t.get("fr") or () if isinstance(r, list) and r)]
+                         if isinstance(n, str)}
 
 
 CARD_FONTS = "cardfonts.json"                # data/: the grid's Font filter, loaded on its first use
