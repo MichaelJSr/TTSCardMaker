@@ -2212,12 +2212,26 @@ function drawText(ctx, job, imgs, W) {
   const steady = steadyPitch(found.lines) * grow, top = found.lines[0][1];
   const lead = !steady && kc && layer?.lead > 0 && (role === "name" || frame) ? layer.lead * kc * grow : 0;   // one line: its layer's own leading (psd_details lead), as the bake sets the next
   let pitch0 = steady || lead || size * LINE;
+  const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
   // Room for an Ability at its size, as the bake leaves it (psd_edit fit_below, ink_beyond): its new ink ends no lower
-  // than the old text's, or lower but on the card and off the design below (the backdrop under the old text, BEYOND)
+  // than the old text's, or lower but on the card and off the design below (the backdrop under the old text, BEYOND).
+  // With the card's own lines (its plate): the new ink where geoDraw sets it, the floor its inked lines'
   function roomBelow() {
     const H = ctx.canvas.height, k = kc || W / 1200, pad = 6 * k;
-    const h1 = Math.max(size * 0.5, (found.box[3] - top) * grow - (found.lines.length - 1) * pitch0), floor = found.box[3] + pad;
-    const end = top + ((lines.length - 1) * pitch0 + h1) * (z / size);
+    const G = plan && !point && z === size && grow === 1 ? geoRoom(R, plan, paras, text, size, measure, pitch0, icons) : null;
+    const h1 = Math.max(size * 0.5, (found.box[3] - top) * grow - (found.lines.length - 1) * pitch0), floor = (G ? G.floor : found.box[3]) + pad;
+    let end = top + ((lines.length - 1) * pitch0 + h1) * (z / size), a = null, fl = 0;
+    const ink = { z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill: [255, 255, 255], stroke: null, imgs, one };
+    if (G) {                                          // its lowest ink row: by its lowest baseline, else drawn from the floor down
+      if (G.low + z / 2 <= floor) return true;
+      if (G.low - z > Math.max(H, floor)) return false;
+      fl = Math.floor(floor);
+      const m = document.createElement("canvas"); m.width = W; m.height = Math.max(1, Math.ceil(Math.max(H, G.deep + z)) - fl);
+      const g = m.getContext("2d", { willReadFrequently: true }); g.translate(0, -fl);
+      for (const p of G.paint) { const i = Math.max(0, Math.ceil((fl - z - p.base) / G.step)); if (i < p.lines.length) paintLines(g, p.lines.slice(i), { ...ink, at: p.at, base: p.base + i * G.step, pitch: G.step }); }
+      a = g.getImageData(0, 0, W, m.height).data; end = 0;
+      for (let y = m.height - 1; y >= 0 && !end; y--) for (let x = 0, j = y * W * 4 + 3; x < W; x++, j += 4) if (a[j] > 128) { end = fl + y + 1; break; }
+    }
     if (end <= floor) return true;
     if (end > H) return false;
     const y0 = clamp(Math.round(found.box[1] - pad), 0, H - 1), from = Math.ceil(floor), img = ctx.getImageData(0, y0, W, H - y0).data;
@@ -2229,11 +2243,14 @@ function drawText(ctx, job, imgs, W) {
     const med = seen ? nth(under, seen >> 1) : 0;
     under.forEach((c, v) => { dev[Math.abs(v - med)] += c; });
     const bar = Math.max(60, (seen ? nth(dev, Math.floor(0.95 * (seen - 1))) : 0) + 20);
-    const mask = document.createElement("canvas"); mask.width = W; mask.height = Math.max(1, H - from);
-    const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -from);
-    paintLines(mx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base: top + z * 0.8, pitch: pitch0 * (z / size), z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill: [255, 255, 255], stroke: null, imgs, one });
-    const a = mx.getImageData(0, 0, W, mask.height).data; let n = 0;
-    for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
+    if (!a) {
+      const mask = document.createElement("canvas"); mask.width = W; mask.height = Math.max(1, H - from); fl = from;
+      const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -from);
+      paintLines(mx, lines, { ...ink, at: l => (left ? found.box[0] : mid - l.w / 2), base: top + z * 0.8, pitch: pitch0 * (z / size) });
+      a = mx.getImageData(0, 0, W, mask.height).data;
+    }
+    let n = 0;
+    for (let y = from, j = (from - fl) * W * 4 + 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
   }
   // A stacked box as the bake sets it (psd_edit fit_below, stacked): at its size where it stays on the card, off the
@@ -2367,7 +2384,6 @@ function drawText(ctx, job, imgs, W) {
       job.lined = "own"; return false;
     }
   }
-  const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
   if (R && Array.isArray(layer?.fr) && String(geo.c.id) === String(layer.id))   // its letters in another font, on was: [s, e, family, its measure]
     R.fr = layer.fr.map(([s, e, f]) => [R.at(s) + R.shift, R.at(e) + R.shift, fr?.[f], fr?.[f] ? Object.assign(widthIn(ctx, fr[f], measure.track, measure.hx), measure) : null]);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid, unless spliced on the card (the bake shrinks ink off it only)
@@ -2816,6 +2832,32 @@ function pillAt(paras, text, at, { w, ez, left }) {
   }
   return [];
 }
+/** The card's line step (R's lines): their baselines' median gap, else pitch. */
+const lineStep = (L, pitch) => { const gaps = L.slice(1).map((l, j) => l.base - L[j].base).filter(g => g > 0); return gaps.length ? median(gaps) : pitch; };
+/** x of a new line set as the card's line l sets its own (its just: right, centred or left). */
+const justAt = l => (l.just === 1 || l.just === 4 ? n => l.right - n.w : l.just === 2 || l.just === 5 ? n => (l.left + l.right) / 2 - n.w / 2 : () => l.left);
+/** geoPlan's changed paragraphs (paras: colourize's of now) wrapped at R's frame at z from plan.from: their lines, the
+ *  first one's baseline (the first gone line's, else a step past the last kept one), the line set as theirs (ref) and
+ *  how far the lines after move (dy). */
+function geoLines(R, plan, paras, now, z, measure, step) {
+  const [qa, qb] = plan.paras, spans = chunkSpans(paras, now), sel = [], L = R.lines, G = plan.gone;
+  for (let q = qa; q < qb; q++) sel.push((paras[q] || []).filter((_, c) => { const s = spans.find(([p, k]) => p === q && k === c); return s && (q > qa || s[2] >= plan.from); }));
+  const lines = layout(sel, R.frame ? R.frame[1] - R.frame[0] : Infinity, z, measure), ref = L[G[0] ?? plan.keep[plan.keep.length - 1] ?? plan.after[0]];
+  return { lines, ref, base: G.length || !plan.keep.length ? ref.base : ref.base + step, dy: (lines.length - G.length) * step };
+}
+/** Where an Ability that grows on the card's own lines (geoDraw's lines path) puts its ink: {floor: the card's inked
+ *  lines' lowest bottom (a blank line's is its baseline), step, paint: [{lines, at, base}]: the new lines, then the lines
+ *  after, moved, low / deep: the lowest baseline of a line with ink / of any}; null when no line has ink. */
+export function geoRoom(R, plan, paras, text, z, measure, pitch, icons) {
+  const L = R.lines, inked = L.filter(l => l.bottom > l.top), step = lineStep(L, pitch);
+  if (!inked.length) return null;
+  const { lines, ref, base, dy } = geoLines(R, plan, paras, String(text ?? "").replace(/\r/g, ""), z, measure, step);
+  const after = plan.after.map(j => ({ lines: layout(tokenize(R.was.slice(L[j].s, L[j].e), icons), Infinity, z, measure), at: justAt(L[j]), base: L[j].base + dy }));
+  const paint = [{ lines, at: justAt(ref), base }, ...after];
+  let low = -Infinity, deep = -Infinity;
+  for (const p of paint) p.lines.forEach((l, i) => { const y = p.base + i * step; deep = Math.max(deep, y); if (l.pieces.some(q => q.icon || q.badge || q.text?.trim())) low = Math.max(low, y); });
+  return { floor: Math.max(...inked.map(l => l.bottom)), step, low, deep, paint };
+}
 /** An Ability on the card's own lines (recordLayout R, geoPlan's plan): spliced (spliceFit: its one changed line, or
  *  each of several when all fit and staysDown), else re-wrapped as the bake wraps them (ownWrap), else its unchanged
  *  paragraphs' lines kept and the rest wrapped at the frame from where the change starts (wrapped lines that read as
@@ -2826,7 +2868,7 @@ function pillAt(paras, text, at, { w, ez, left }) {
  *  layers, pasted when an FX layer's word moves or is redrawn (the bake moves the layer with it). */
 export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, grow, only = false, icons, paras, text, look, pitch, W }) {
   const H = ctx.canvas.height, L = R.lines, now = String(text ?? "").replace(/\r/g, ""), B = bands(L, box);
-  const gaps = L.slice(1).map((l, j) => l.base - L[j].base).filter(g => g > 0), step = gaps.length ? median(gaps) : pitch;
+  const step = lineStep(L, pitch);
   const runOf = sp => { const j = sp.b > sp.a ? sp.a : Math.max(0, sp.a - 1); return R.fr?.find(([s, e, , m]) => m && s <= j && j < e) || null; };   // the bake: the replaced text's font, an insertion the one before's
   let fit = plan.splice && spliceFit(R, plan.splice, { measure, z, icons, fx, W, font: runOf(plan.splice) }), useBare = false;
   if (!fit && plan.splice && bare && fx?.length && !fxSpans(R.was, fx).some(([s, e]) => s < plan.splice.b && plan.splice.a < e)) {   // FX words shift, unedited
@@ -2855,15 +2897,10 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
     drawn = { paints: ow.paints.map(([lines, o]) => [lines, { ...o, hx: look.hx * o.hx }]),
       moves: [...plan.keep.map(j => [[x0, B[j][0], x1, B[j][1]], 0, 0]), ...ow.moves, ...plan.after.map(j => [[x0, B[j][0], x1, B[j][1]], 0, ow.dy])] };
   } else {
-    const [qa, qb] = plan.paras, spans = chunkSpans(paras, now), sel = [];
-    for (let q = qa; q < qb; q++) sel.push((paras[q] || []).filter((_, c) => { const s = spans.find(([p, k]) => p === q && k === c); return s && (q > qa || s[2] >= plan.from); }));
-    const lines = layout(sel, R.frame ? R.frame[1] - R.frame[0] : Infinity, z, measure), dy = (lines.length - plan.gone.length) * step;
+    const { lines, ref, base, dy } = geoLines(R, plan, paras, now, z, measure, step), G = plan.gone, at = justAt(ref);
     if (dy > 0 && !grow) return "";                 // more lines where the bake would shrink the text
     const fxs = fxSpans(R.was, fx), moving = j => fxs.some(([s, e]) => L[j].s < e && s < L[j].e);   // a line with an FX layer's word
     if (dy && !bare && plan.after.some(moving)) return "";   // that word would move: no plate without its layer
-    const ref = L[plan.gone[0] ?? plan.keep[plan.keep.length - 1] ?? plan.after[0]], G = plan.gone;
-    const base = G.length ? ref.base : plan.keep.length ? ref.base + step : ref.base;
-    const at = ref.just === 1 || ref.just === 4 ? l => ref.right - l.w : ref.just === 2 || ref.just === 5 ? l => (ref.left + ref.right) / 2 - l.w / 2 : () => ref.left;
     const flat = s => s.replace(/\s+/g, " ").trim(), was = G.map(j => flat(R.was.slice(L[j].s, L[j].e))), got = lines.map(l => flat(l.pieces.map(p => p.text ?? p.src ?? "").join("")));
     let h = 0; while (h < G.length && h < lines.length && was[h] && got[h] === was[h]) h++;   // wrapped as the card's: its own lines
     let k = 0; while (k < G.length - h && k < lines.length - h && was[G.length - 1 - k] && got[lines.length - 1 - k] === was[G.length - 1 - k] && !(dy && !bare && moving(G[G.length - 1 - k]))) k++;
