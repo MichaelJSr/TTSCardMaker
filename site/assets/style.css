@@ -43,7 +43,8 @@ img { max-width: 100%; }
 .top { position: sticky; top: calc(0px - var(--top-skip, 0px)); z-index: 20; display: flex; align-items: center; gap: 14px; padding: 8px 16px;
   background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
 .brand { display: flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 650; white-space: nowrap; }
-.brand:hover { text-decoration: none; } .brand svg { width: 26px; height: 26px; }
+.brand:hover { text-decoration: none; }
+.brand .logo { flex: none; width: 26px; height: 26px; background-color: currentColor; -webkit-mask-size: contain; mask-size: contain; }   /* the logo in the text colour; its mask's URL in index.html (the page's <base>) */
 .tabs { display: flex; gap: 2px; }
 .tabs a { color: var(--ink-2); padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
 .tabs a:hover { background: var(--surface-2); color: var(--ink); text-decoration: none; }
@@ -1272,4 +1273,5 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
   :is(.chip.on, .seg button.on, .tabs a.active, .icon-toggle.on, .sel-row .not[aria-pressed="true"], .ver-item[aria-pressed="true"],
     .deck-list button.on, .pv-older .chip[aria-pressed="true"], .tok-picker li.on, .part-variant button.on) * { color: inherit; background-color: transparent; }
   .seg button.on:focus-visible { outline-color: HighlightText; }   /* its inset ring on Highlight */
+  .brand .logo { background-color: LinkText; }   /* the brand's forced text colour (a background is forced to Canvas) */
 }
