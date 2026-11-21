@@ -59,7 +59,7 @@ Where the data comes from:
     and Discord after its own in Image versions (versions early; webps from raw.githubusercontent.com at the
     history branch's commit, versions hb: history_host; a folder that is no checkout: copied to dist/history/),
     their changes and changelog facts under Recorded changes and in the balance charts (analytics.py early), the
-    Morgue's entries from Discord (cards.json morgue, lost: joke or played; lpic: its list copy), the MDW Morgue cards'
+    Morgue's entries from Discord (cards.json morgue, lost: joke, played or idea; lpic: its list copy), the MDW Morgue cards'
     Discord pictures (after their PNG's newest version here, the current one: history_mdw) and the Created dates they move earlier
     (never later, never over a hand entry). load_history; bad files are skipped, never a failed build.
   * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
@@ -1628,7 +1628,7 @@ def history_day(first):
 
 def history_morgue(hist, slug, old_slugs=()):
     """The Morgue's entries from Discord (owner Q1, Q2: joke cards and cards played but lost before git): name and
-    pictures only, never a live card (cards.json morgue). Each: lost (joke | played), pic (its newest picture; lpic: its
+    pictures only, never a live card (cards.json morgue). Each: lost (joke | played | idea), pic (its newest picture; lpic: its
     360 px list copy, the timeline's 'list' when it is that picture's, for the Morgue list's tiles), first
     (its Pacific day) and firstCh (firstOld: first seen in the old repo; inGit: a file in the old or first repo), or a Created "Before 2020" from a physical card photo (owner Q6: M'uru) as a card's
     (createdFrom photo); their rows: {id: history_rows}. An entry named as a renamed card once was (old_slugs:
@@ -1642,7 +1642,7 @@ def history_morgue(hist, slug, old_slugs=()):
         first = t.get("first") if isinstance(t.get("first"), dict) else {}
         base = slugify(str(t.get("card") or t["name"]))
         e = {"id": slug(f"{base}-morgue" if base in old_slugs else base), "name": t["name"], "key": t["name"], "type": "unknown",
-             "psd": None, "png": None, "morgue": True, "lost": t.get("kind_of") if t.get("kind_of") in ("joke", "played") else "joke",
+             "psd": None, "png": None, "morgue": True, "lost": t.get("kind_of") if t.get("kind_of") in ("joke", "played", "idea") else "joke",
              "pic": pics[0]["img"], "tw": pics[0].get("w"), "th": pics[0].get("h"), "ive": len(mine)}
         if t.get("list") == pics[0]["img"].rsplit("/", 1)[1][:-len(".webp")] + HISTORY_LIST:
             e["lpic"] = f"history/{folder}/{t['list']}"   # else the tiles show the webp

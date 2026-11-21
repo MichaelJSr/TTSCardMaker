@@ -15,7 +15,8 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   **The Morgue** (under Retired; `morgue=1`): the retired cards in `MDW/The Morgue` (a PSD with its PNG), picture and
   name only, never in the default list, decks, the TTS save, Stats or counts of live cards; with the card timelines
   (below), also the joke cards and the cards played but lost before git (or before this repo, when an older repo had
-  their file), from Discord (picture, first post's day and channel); an in-joke on a live card too (Tyler, The Panda
+  their file), and the ideas the owner put on it ("Idea, never played"), from Discord (picture, first post's day and
+  channel); an in-joke on a live card too (Tyler, The Panda
   Future: named as the card, a `-morgue` page) links to that card ("Live card"). Their tiles, table rows and tips show a
   360 px copy of the picture (the timelines' list copy, as the grid's own tiles); the card view shows the full picture.
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created

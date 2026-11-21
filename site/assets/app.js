@@ -83,7 +83,7 @@ const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded t
 const createdText = c => (c.createdBefore ? `before ${c.createdBefore}` : day(c.created));
 const createdTip = c => (CREATED_TIP[c.createdFrom] || "Created") + (c.createdWas ? ` (the card timelines moved it from ${day(c.createdWas)})` : "");
 const isStatus = c => c.type === "debuff" || c.type === "buff";
-const LOST_TIP = { joke: "A joke card", played: "Played, then lost before the card repo" };     // cards.json morgue lost (build_site history_morgue)
+const LOST_TIP = { joke: "A joke card", played: "Played, then lost before the card repo", idea: "An idea, never played" };     // cards.json morgue lost (build_site history_morgue)
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
 const cardOf = id => S.byId.get(id) || S.morgueById.get(id);              // a Morgue card opens too, never in a live list
@@ -1085,7 +1085,7 @@ function openCard(id, showDetails = false) {
         <h2>${esc(c.name)}</h2>
         <div class="facts">
           ${c.morgue ? `<a class="fact" href="#/cards?morgue=1" data-tip="${esc(c.lost ? `${LOST_TIP[c.lost] || LOST_TIP.joke}: from Discord, never in the card repo` : `Retired: in MDW/The Morgue${c.retired ? ` since ${date(c.retired)}` : ""}, out of play`)}">The Morgue</a>` : ""}
-          ${c.lost ? `<span class="fact" data-tip="${c.firstOld ? "Its first record in the old repo" : "Its first post on Discord"}">${c.lost === "played" ? (c.inGit ? "Played, lost before this repo" : "Played, lost before git") : "Joke card"}${c.first ? (c.firstOld ? ` · in the old repo ${day(c.first)}` : ` · first posted ${day(c.first)}`) : ""}${c.firstCh ? ` in #${esc(c.firstCh)}` : ""}</span>` : ""}
+          ${c.lost ? `<span class="fact" data-tip="${c.firstOld ? "Its first record in the old repo" : "Its first post on Discord"}">${c.lost === "played" ? (c.inGit ? "Played, lost before this repo" : "Played, lost before git") : c.lost === "idea" ? "Idea, never played" : "Joke card"}${c.first ? (c.firstOld ? ` · in the old repo ${day(c.first)}` : ` · first posted ${day(c.first)}`) : ""}${c.firstCh ? ` in #${esc(c.firstCh)}` : ""}</span>` : ""}
           ${c.live && S.byId.has(c.live) ? `<a class="fact" href="#/card/${esc(c.live)}" data-tip="The same picture is this card's oldest version">Live card: ${esc(S.byId.get(c.live).name)}</a>` : ""}
           ${c.morgue && c.type === "unknown" ? "" : `<a class="fact" href="#/cards?${scope}kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>`}
           ${G.itemTypes(c).map(t => `<a class="fact" href="#/cards?sub=${encodeURIComponent(t)}">${esc(cap(t))}</a>`).join("")}
