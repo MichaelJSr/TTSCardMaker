@@ -320,7 +320,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     branch (about 0.6 s less since 2026-11-14: the publish job takes the hand-over itself, AutoCroissant `--take`). Since
     2026-11-16 the preview job hands over from a process of its own (AutoCroissant `--hand`, its zip stored), the moment
     result.json is written; upload-artifact only when that fails. A client may read it itself: `GET .../actions/runs/<id>/artifacts?name=card-preview` (Actions: Read; a
-    classic token's repo scope), then its `archive_download_url` with the Authorization header alone (no
+    classic token's repo scope; If-None-Match with the last ETag, which CORS exposes: a 304 while nothing changed, not
+    counted against the rate limit), then its `archive_download_url` with the Authorization header alone (no
     X-GitHub-Api-Version: the 302 goes to GitHub's blob store, `Access-Control-Allow-Origin: *`; the browser drops
     Authorization on that cross-origin redirect, so the token reaches api.github.com only). The zip's result.json is
     the one Publish puts on the branch, but for `files`, which Publish cuts to the images it has, and a result whose
@@ -782,7 +783,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - Background check: while any entry is running and someone is signed in, from any page, at the contract's pace
     (`pollDelay`: the first check when the oldest started `EARLY_MS` (12 s) ago, a younger one skipped; then every second
     while one started under a minute ago and at most 3 wait, every 3 s under 2 minutes, every 10 s under 3, then every
-    30 s), from `FIRST_MS` (17 s) `GET .../contents/previews/
+    30 s; every 250 ms from a round's start while one waits alone with its run known and nothing handed over:
+    `POLL_QUICK`, `QUICK_MAX`, the branch still once a second, `branchAt`), from `FIRST_MS` (17 s) `GET .../contents/previews/
     <request>/result.json?ref=previews` (raw, through the editor's `gh`: never raw.githubusercontent, which caches a 404);
     404 = not yet. Also the run, by `display_title` containing the request (the workflow's run-name "Card preview
     <request>"), for a link, and an error when it ended without a result (seen twice). Only a check that finds nothing
@@ -796,7 +798,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     storage events). Signed out, no timer runs; signing in starts it. Several cards run side by side.
   - The hand-over, sooner (2026-11-13; section 19's "Sooner"): from `EARLY_MS` the checking tab also finds the run
     (`findRun`, once) and lists its `card-preview` artifact each round beside the branch read (`handOver`, up to 3
-    minutes after the press); once it is
+    minutes after the press; If-None-Match the last ETag, `gh` `etag`, `tags`: a 304 is "not yet"; none once it's
+    listed, so a zip 404 lists it in full again); once it is
     listed it fetches the zip (`gh` `zip`: the Authorization header alone, the bytes), reads it (`unzip`: the central
     directory, `DecompressionStream("deflate-raw")`) and shows its result.json (`readResult`, the request checked) with
     its AVIFs as object URLs (`local`), in this tab only (`early`, `withEarly`: the viewer, the badges, one toast). The
@@ -804,17 +807,24 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     404); the branch reads go on until result.json lands, which ends `early` without a repaint (the same result; the
     object URLs stay while the page lives, so the image doesn't load again). Any failure (no run in 3 lookups, 401/403/404
     on the list: a token without Actions read, off for the tab; a network or CORS error, an unreadable zip, another
-    request's result) leaves that preview to the branch. A 404 on the zip of a listed hand-over (the run's or the
+    request's result) leaves that preview to the branch; a hand-over read after the branch's result came is dropped
+    (`waiting`: one toast, no image swap). A 404 on the zip of a listed hand-over (the run's or the
     lane's: listed a moment before it's finalized, run 44465554232) is looked at again the next round, `ZIP_404S` (3)
     times, then is a failure (2026-11-19). Off where the browser may forward Authorization across the
     redirect: the gate is `Set.prototype.union` (Chrome 122, Firefox 127, Safari 17; the redirect rule came in Chrome
-    119, Firefox 111, Safari 16.1). Cost: about 7 calls a preview on the person's token (the run, 5-6 lists, the zip).
+    119, Firefox 111, Safari 16.1). Cost on the person's token: the run, 2 counted lists and the zip (5-6 lists before
+    2026-11-20), plus 2-17 free 304s.
     Measured (scratch s1110/actbake-r29-1, headless Chrome 156): the real page against a fake GitHub with the Mac's
     latencies and the publish gaps of 11-12 and 11-08 (2.86, 1.90 s), 5 runs each: seen 3.51 and 2.76 s after the
     artifact's finalize before, 1.52 and 1.51 after (press to seen 22.0 -> 20.0 s, 21.5 -> 20.2); a 403 on the list
     falls back to the branch (3.89, 2.89); the blob store never got Authorization, other tabs saw "running" until
     the branch had it, one toast. On real GitHub (run 43521254443's upload-artifact@v7 zip, 5 tries): the list
-    255-388 ms, the zip through the 302 411-690 ms (CORS, no Authorization at the blob), unzip 1-2 ms.
+    255-388 ms, the zip through the 302 411-690 ms (CORS, no Authorization at the blob), unzip 1-2 ms. The 250 ms
+    rounds (2026-11-20, scratch s1110/x20: the real page in headless Chrome, a stand-in GitHub, the hand-over 12.2-14.2 s
+    after the dispatch as the 11-18/19 probes, 12 runs each): seen 1.59 -> 0.89 s after it is finalized (press to seen
+    14.81 -> 14.11 s); finalized at 17-19 s: 1.24 -> 0.86; the branch read as often as before. One toast and no image
+    swap in every run, also with the branch landing during a 1.95 s zip, where r32's separate fast loop (rejected
+    2026-11-14) said "Previews ready" for one preview in 2 of 5.
   - Expiry: the previews branch keeps a preview about a week (rewritten past 200 previews or 7 days). `expire` makes a
     result or timeout older than 6 days "expired" (no image, no badge: "Its image is gone: previews are kept about a
     week." with Preview again) and drops entries older than 30 days; the preview image's 404 more than a day after the
