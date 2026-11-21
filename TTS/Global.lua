@@ -465,17 +465,25 @@ local function plain(text)
     return table.concat(out)
 end
 
--- lowercase text's punctuation (and its spaces, unless spaces) as gap: "mom's" -> "moms" (gap ""), "a/b" -> "a b" (gap " ")
-local function unpunct(text, gap, spaces)
-    local out, from = {}, 1
+-- lowercase text's punctuation (and its spaces, unless spaces) as gap: "mom's" -> "moms" (gap ""), "a/b" -> "a b" (gap " ");
+-- gap2: also the text with that gap, from the same pass
+local function unpunct(text, gap, spaces, gap2)
+    local out, out2, from = {}, gap2 and {}, 1
     for i = 1, #text do
         local b = text:byte(i)
         if b < 128 and not (b >= 97 and b <= 122 or b >= 48 and b <= 57 or spaces and b == 32) then
-            out[#out + 1] = text:sub(from, i - 1) .. gap
+            local part = text:sub(from, i - 1)
+            out[#out + 1] = part .. gap
+            if out2 then out2[#out2 + 1] = part .. gap2 end
             from = i + 1
         end
     end
-    out[#out + 1] = text:sub(from)
+    local rest = text:sub(from)
+    out[#out + 1] = rest
+    if out2 then
+        out2[#out2 + 1] = rest
+        return table.concat(out), table.concat(out2)
+    end
     return table.concat(out)
 end
 
@@ -1462,9 +1470,15 @@ end
 -- the card finder: every word must be in a card's name, kind, types (or their keys: "food"), timing tags or aliases (a plural: or
 -- its singular; a word without punctuation: or there with punctuation dropped, "moms"), or start a word of its series
 -- ("undertale"); a digit 1-9 or "5★" (a "star(s)" after it dropped) is the card's stars; the typed name itself first
--- (punctuation aside), then names that start with it, then with its first word; a click spawns the card where the table was
--- right-clicked (several: side by side)
+-- (punctuation aside), then names that start with it, then with its first word, then cards where every word starts one of
+-- theirs ("buff", not "debuff"); a click spawns the card where the table was right-clicked (several: side by side)
 local fcOpen, fcFound, searchList = {}, {}, nil
+local function startKey(word)                          -- " od " for "(od)": the start of a word in a card's spaced text
+    local sp = unpunct(word, " ")
+    local i = 1
+    while sp:byte(i) == 32 do i = i + 1 end
+    return " " .. sp:sub(i)
+end
 local function listCards(color, query)
     if not searchList then                             -- each card's words, once, in name order (no sort per keystroke)
         searchList = {}
@@ -1481,7 +1495,9 @@ local function listCards(color, query)
                 local sp, sq = unpunct(s, " ", true), unpunct(s, "", true)
                 seen[se] = " " .. sp .. (sq ~= sp and " " .. sq .. " " .. s or "")
             end
-            table.insert(searchList, {path = path, name = name, all = all, flat = unpunct(all, "", true), flatName = unpunct(name, ""),
+            local flat, spaced = unpunct(all, "", true, " ")
+            table.insert(searchList, {path = path, name = name, all = all, flat = flat, flatName = unpunct(name, ""),
+                starts = " " .. spaced .. " | " .. flat .. " |" .. seen[se],   -- a word starts after a space: " buff"
                 series = seen[se], st = c.st and math.floor(c.st)})
         end
         table.sort(searchList, function(a, b) return a.name < b.name end)
@@ -1503,13 +1519,16 @@ local function listCards(color, query)
             table.remove(words, i)
         end
     end
-    local tiers, one, bare, lead, leadOne = {{}, {}, {}, {}}, {}, {}, {}, {}
+    local tiers, one, bare, lead, leadOne, key, keyOne, split = {{}, {}, {}, {}, {}}, {}, {}, {}, {}, {}, {}, false
     for i, word in ipairs(words) do
         one[i] = #word > 4 and word:sub(-1) == "s" and word:sub(1, -2)    -- "5 stars", "creatures": the singular too
         local letters = unpunct(word, "")
         bare[i] = letters == word                              -- "moms": the card's text without punctuation too; "(os)": not
         lead[i] = letters == "" and word or " " .. unpunct(word, " ")   -- a series word's start (" don t"); "&", "//": as typed
         leadOne[i] = one[i] and " " .. unpunct(one[i], " ")
+        key[i] = #letters > 1 and startKey(word)               -- a lone letter: in too many words to test
+        keyOne[i] = key[i] and one[i] and startKey(one[i])
+        split = split or key[i]
     end
     local whole = unpunct(table.concat(words), "")
     if #words > 0 or stars then
@@ -1525,13 +1544,21 @@ local function listCards(color, query)
                 local tier = 4
                 if whole ~= "" and w.flatName == whole then tier = 1
                 elseif whole ~= "" and w.flatName:find(whole, 1, true) == 1 then tier = 2
-                elseif words[1] and w.name:find(words[1], 1, true) == 1 then tier = 3 end
+                elseif words[1] and w.name:find(words[1], 1, true) == 1 then tier = 3
+                elseif split and #tiers[4] < RESULTS then     -- (past the rows shown: as found)
+                    for i, k in ipairs(key) do                 -- a word only inside a longer one ("debuff", "food"): last
+                        if k and not (w.starts:find(k, 1, true) or keyOne[i] and w.starts:find(keyOne[i], 1, true)) then
+                            tier = 5
+                            break
+                        end
+                    end
+                end
                 table.insert(tiers[tier], w.path)
             end
         end
     end
     local first = tiers[1]
-    for t = 2, 4 do for _, p in ipairs(tiers[t]) do table.insert(first, p) end end
+    for t = 2, 5 do for _, p in ipairs(tiers[t]) do table.insert(first, p) end end
     fcFound[color] = first
     for i = 1, RESULTS do
         local path = first[i]

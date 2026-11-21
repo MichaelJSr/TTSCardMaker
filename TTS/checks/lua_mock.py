@@ -12,7 +12,8 @@ cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on
 rulebook panel (a search lists the pages its words name first, then those with them as whole words, then the rest; a word
 without punctuation also in the text without it: "nme" finds N.M.E.; a timing tag as typed: "(-1/1CD)" finds the book's
 −1/1CD, a numbered one no page holds its X row: "(3CD)" XCD) and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food", a series
-word's start, every name typed with or without its punctuation listed first) on the
+word's start, every name typed with or without its punctuation listed first, cards where a word starts one of theirs before
+those holding it inside a longer word: "buff" before "debuff") on the
 website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or pinned to the commit of the Rulebooks bag's
 PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
@@ -1347,6 +1348,18 @@ def main():
     w.call("finderSearch", red, "status effects")
     statuses, title = sum(c.get("k") in ("Buff", "Debuff") for c in details["cards"].values()), ui.values.get("Red_fc_title")
     check(statuses and title.split()[0] == str(statuses), f"'status effects' finds every buff and debuff ({title!r}, {statuses})")
+    named, series = {}, details.get("series") or []
+    for c in details["cards"].values():
+        named.setdefault(plain(c["n"]), []).append(c)
+
+    def starts(c, q):                                   # Global.lua: q starts a word of the card's (no letter or digit before)
+        se = c.get("se") or 0
+        text = " ".join([words(c), *(c.get("t") or []), *(f"({g})" for g in c.get("g") or []), series[se - 1] if 0 < se <= len(series) else ""]).lower()
+        return any(re.search(rf"(?<![a-z0-9\x80-\U0010ffff]){q}", t) for t in (text, re.sub(r"[^ a-z0-9\x80-\U0010ffff]", "", text)))
+    for q in ("buff", "od"):                            # "debuff", "food": after
+        w.call("finderSearch", red, q)
+        top = [any(starts(c, q) for c in named.get(ui.text(f"Red_fc_g{i}").split("   ")[0], [])) for i in range(1, 25) if ui.on(f"Red_fc_g{i}")]
+        check(top == sorted(top, reverse=True), f"{q!r}: cards where it starts a word first {top}")
     flat = lambda t: "".join(ch for ch in t.lower() if ch.isalnum() or not ch.isascii())    # Global.lua unpunct(t, "")
     late = []                                           # a name, typed as written or without punctuation: that name first
     for n in sorted({c["n"] for c in details["cards"].values()}):
