@@ -348,6 +348,7 @@ const pref = k => { try { return localStorage.getItem(k); } catch { return null;
 const holds = s => { try { const v = JSON.parse(s); return !!v && Object.values(v).some(x => x && (typeof x !== "object" || Object.keys(x).length)); } catch { return !!s; } };
 const wantsEditor = () => !!(kept(SEALED) || kept("edit-sent") || kept("edit-show-hidden")) || holds(kept("edit-stage")) || holds(kept("card-previews"));
 function loadEditor(say = false) {                       // say: "Loading…" while it comes (a click)
+  if (appReadOnly()) return Promise.reject(new Error("read-only"));
   const note = "Loading the editor…";
   if (!editorP && say) toast(note);
   return (editorP ||= Promise.all([(early("editing.js"), import("./editing.js")), getJson("editing.json"), sheet("editing")]).then(([M, f]) => {
@@ -449,6 +450,7 @@ function toggleSelect(id, range) {
 // top right: "Sign in", or the login; both open the editor hub
 function renderAccount() {
   const b = $("#account"), me = editor.me;
+  if (!b) return;                                        // the desktop app (appReadOnly) has none
   b.textContent = me ? me.login : "Sign in";
   b.title = me ? `${me.login}: edit cards, your profile, sign out` : "Sign in to edit cards and make a profile";
 }
@@ -1061,8 +1063,9 @@ function openCard(id, showDetails = false) {
         ${c.morgue ? "" : `<div class="actions card-actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
-          <button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>
+          ${appReadOnly() ? "" : `<button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>`}
         </div>`}
+        ${c.psd || c.png ? `<div class="actions card-app" data-id="${esc(c.id)}" data-file-psd="${esc(c.psd || "")}" data-file-png="${esc(c.png || "")}"></div>` : ""}
         <div class="actions" style="justify-content:space-between">
           <a class="fact" data-nav="prev" href="#/card/${prev.id}" title="Previous (←)">← ${esc(prev.name)}</a>
           <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div>
@@ -1157,7 +1160,15 @@ function openCard(id, showDetails = false) {
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
   if (editing() && !c.morgue) inline.mountCard(modal, c);
   if (editing() && !c.morgue) previews.mountCard(modal, c);
+  appHook(c);
 }
+// the desktop card app's hook: its buttons go in .card-app (empty, so hidden, in a browser)
+function appHook(c) {
+  const slot = $(".card-app", modal);
+  if (slot) document.dispatchEvent(new CustomEvent("card-dialog", { detail: { id: c.id, psd: c.psd || null, png: c.png || null, slot } }));
+}
+// the desktop card app is read-only (it sets window.cardApp before this runs): no Sign in, Edit or editor there
+function appReadOnly() { return !!globalThis.cardApp?.readOnly; }
 
 // the card dialog's loads that wait until their slot is within a screen of the view (the dialog scrolls: root modal)
 const nearby = (() => {
@@ -1511,13 +1522,13 @@ function renderRules(r) {
       ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
       <a href="#/rules" data-scroll="banlist" data-toc="banlist">Constructed ban list</a>
       <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
-        <button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button></div></nav>
+        ${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button>`}</div></nav>
     <div class="rb rb-book">
       ${q ? `<p class="muted">${!x ? `${found} mention “${esc(r.params.get("q"))}”.` : x.printed ? `${found} mention “${esc(x.tag)}” (its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}).` : `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
-      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${chapterHtml(c, ctx)}</article>`).join("")
+      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${chapterHtml(c, ctx)}</article>`).join("")
         || `<div class="empty">No rulebook chapter mentions that.</div>`}
-      ${!q ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="${esc(S.data.files.banlist)}" data-title="Constructed ban list" title="Every change to the ban list, as a diff">History</button></div><header class="rb-head"><h2>Constructed ban list</h2></header>
+      ${!q ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="${esc(S.data.files.banlist)}" data-title="Constructed ban list" title="Every change to the ban list, as a diff">History</button></div><header class="rb-head"><h2>Constructed ban list</h2></header>
         <div class="rb-panel rb-solo">${banned.notes.map(n => `<p>${esc(n)}</p>`).join("")}</div>
         ${banned.groups.map(g => `<section class="rb-sec"><h3 class="rb-tab">${esc(g.title)}</h3><div class="rb-panel"><div class="rb-bans">${g.entries.map(e => { const c = e.id && S.byId.get(e.id);
           return `<div class="rb-ban">${c ? `<a class="rb-card" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(img(c, 240))}" alt="${esc(c.name)}" loading="lazy" decoding="async"></a>` : ""}
@@ -1733,7 +1744,7 @@ function renderDeck(r) {
         <div class="actions"><button type="button" data-action="deck-import">Import as new deck</button></div></div>
       <div class="panel"><h3>My decks</h3><div class="deck-list">${S.decks.map(x => { const n = x.cards.length + (x.field ? 1 : 0);
         return `<div class="deck-row"><button type="button" class="${x.id === d.id ? "on" : ""}" data-action="deck-select" data-id="${x.id}" aria-pressed="${x.id === d.id}">${esc(x.name)} <span class="muted">${n}</span></button>
-          <button type="button" class="ghost" data-action="deck-publish" data-id="${x.id}"${n ? "" : " disabled"} title="${editing() ? "Publish this hand as a deck, public or private" : "Sign in to publish this hand"}">${editing() ? "Publish…" : "Sign in to publish"}</button></div>`; }).join("")}</div>
+          ${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="deck-publish" data-id="${x.id}"${n ? "" : " disabled"} title="${editing() ? "Publish this hand as a deck, public or private" : "Sign in to publish this hand"}">${editing() ? "Publish…" : "Sign in to publish"}</button>`}</div>`; }).join("")}</div>
         <div class="actions"><button type="button" data-action="deck-new">New</button><button type="button" data-action="deck-dup">Duplicate</button>
         <button type="button" class="danger" data-action="deck-delete" ${S.decks.length < 2 ? "disabled" : ""}>Delete</button></div></div>`}
       <p class="muted">Published decks${publishedCount()} · <a href="#/decks">Browse</a></p>
@@ -1994,7 +2005,7 @@ function renderDecks(r) {
   if (r.arg) { renderDeckPage(r); return; }
   if (!decksReady()) return;
   const p = r.params, f = { q: p.get("q") || "", owner: p.get("owner") || "", card: p.get("card") || "", sort: p.get("sort") || "newest", complete: p.get("complete") === "1" };
-  view.innerHTML = decks.browserHtml(deckList(), f, { ...deckCtx(), error: S.decksData.error });
+  view.innerHTML = decks.browserHtml(deckList(), f, { ...deckCtx(), error: S.decksData.error, readOnly: appReadOnly() });
   const input = $("#decks-q");
   searchBox(input, debounce(() => { setParams({ q: input.value }); const i2 = $("#decks-q"); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); } }, 200));
 }
@@ -2015,12 +2026,12 @@ function renderDeckPage(r) {
   S.deckTitle = "Private deck";
   const deckKey = decks.keyOf(d.owner, d.slug), cacheKey = `${deckKey}:${String(d.data).slice(0, 24)}`, stored = passes.has(deckKey);
   if (opened.has(cacheKey)) { const pl = opened.get(cacheKey); show({ ...d, ...pl, n: decks.countOf(pl), remembered: stored }); return; }
-  const subtle = globalThis.crypto?.subtle, passCtx = { canEdit: ctx.canEdit, hands: ctx.hands };   // the Owner panel sits under the form too: no passphrase needed to unpublish or replace
+  const subtle = globalThis.crypto?.subtle, passCtx = { canEdit: ctx.canEdit, hands: ctx.hands, noRemember: appReadOnly() };   // the Owner panel sits under the form too: no passphrase needed to unpublish or replace
   if (!subtle) { view.innerHTML = decks.passFormHtml(d, { ...passCtx, noCrypto: true }); return; }
   const form = () => {
     view.innerHTML = decks.passFormHtml(d, passCtx);
     $("#deck-pass").addEventListener("submit", e => { e.preventDefault(); const pass = $("#deck-pass-in").value; if (!pass) return;
-      $("#deck-pass button").disabled = true; $("#deck-pass-err").textContent = "Opening…"; tryOpen(pass, $("#deck-pass-remember").checked, false); });
+      $("#deck-pass button").disabled = true; $("#deck-pass-err").textContent = "Opening…"; tryOpen(pass, !!$("#deck-pass-remember")?.checked, false); });
     $("#deck-pass-in").focus();
   };
   const tryOpen = async (pass, remember, auto) => {
@@ -2056,6 +2067,7 @@ function usersReady(name, again) {
 }
 function renderUser(r) {
   if (!r.arg) { location.replace("#/users"); return; }                                  // #/u alone is the list
+  if (r.edit && appReadOnly()) { location.replace(`#/u/${encodeURIComponent(r.arg)}`); return; }
   if (r.edit) {                                                                         // #/u/<login>/edit: the profile editor
     if (editor === IDLE) { view.innerHTML = `<div class="loading">Loading the editor…</div>`; whenLoaded(loadEditor(), "the editor", () => { const h = parseHash(); if (h.name === "u" && h.edit) renderView(h, location.hash || hashOf(h)); }); }
     else editor.profilePage(r.arg);
@@ -2094,7 +2106,7 @@ function renderUsers() {
   if (!usersReady("users", renderUsers)) return;
   const me = editor.me, rows = Pf.peopleRows(S.contrib.people || [], Pf.mergeUsers(S.users, editor.pendingProfiles()));
   view.innerHTML = Pf.peopleHtml(rows, { me, hasOwn: !!me && rows.some(r => r.profile && r.profile.login.toLowerCase() === me.login.toLowerCase()),
-    since: S.contrib.since, titles: S.titles, date, decks: deckList() });
+    since: S.contrib.since, titles: S.titles, date, decks: deckList(), readOnly: appReadOnly() });
   updatePeopleCount(rows.length);
 }
 // the People tab's counter: the build's count until the table has been made here (pending profiles included)
@@ -2344,7 +2356,7 @@ const actions = {
 /** An action by name; one only edit mode has (edit.js, tray.js) loads it first. */
 function act(name, el) {
   if (actions[name]) actions[name](el);
-  else if (editor === IDLE && !signInFirst(name, el)) withEditor(() => actions[name]?.(el));
+  else if (editor === IDLE && !appReadOnly() && !signInFirst(name, el)) withEditor(() => actions[name]?.(el));
 }
 document.addEventListener("click", e => {
   if (e.target.closest("a.details-link")) return;     // the browser follows it
@@ -2407,14 +2419,15 @@ const keyTips = [["#q", "placeholder"], ["#random", "title"], ["#keys", "title"]
 const keysHints = () => { document.documentElement.classList.toggle("no-keys", !charKeys);   // their hints on buttons too
   for (const [el, at, text] of keyTips) el.setAttribute(at, charKeys ? text : text.replace(/\s*\((?:press )?.\)$/, "")); };
 keysHints();
-const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><label class="check"><input type="checkbox" data-action="char-keys"${charKeys ? " checked" : ""}> Single-key shortcuts (/ ? r d c x e 1–6)</label>
+const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><label class="check"><input type="checkbox" data-action="char-keys"${charKeys ? " checked" : ""}> Single-key shortcuts (/ ? r d c x ${appReadOnly() ? "" : "e "}1–6)</label>
   <p class="muted keys-off"${charKeys ? " hidden" : ""}>Off: of these, only Esc and the arrows work.</p><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
+  ["c", "Copy card link"], ["x", "Add to comparison"], ...(appReadOnly() ? [] : [["e", editing() ? "Edit the card (all fields)" : "Edit the card"]]), ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
   ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box (the first nine)"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 actions["char-keys"] = el => { charKeys = el.checked; try { localStorage.setItem("keys", charKeys ? "on" : "off"); } catch { /* storage blocked: this page only */ }
   keysHints(); const n = $(".keys-off", modal); if (n) n.hidden = charKeys; };
 $("#account").addEventListener("click", () => act("edit-hub"));
+if (appReadOnly()) $("#account").remove();               // the desktop app: no Sign in
 
 // Esc in a dialog's field with typed text leaves the field first (a search clears, the rest keep their text)
 const typedIn = new WeakSet();

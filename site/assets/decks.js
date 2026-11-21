@@ -207,7 +207,7 @@ export function browserHtml(list, p = {}, ctx = {}) {
       <a class="fact" href="#/deck">Deck builder</a></div>
     ${p.card ? `<div class="active-filters"><button type="button" class="chip" data-action="remove-param" data-key="card">Using ${esc(cardOf(ctx, str(p.card))?.name || p.card)} ✕</button></div>` : ""}
     ${ctx.error ? `<p class="muted load-error">${esc(ctx.error)} <a href="javascript:location.reload()">Reload</a></p>` : ""}
-    ${!list.length ? `<div class="empty">No deck is published yet. Build a hand in the <a href="#/deck">deck builder</a> and press Publish.</div>`
+    ${!list.length ? `<div class="empty">No deck is published yet.${ctx.readOnly ? "" : ` Build a hand in the <a href="#/deck">deck builder</a> and press Publish.`}</div>`
       : !shown.length ? `<div class="empty">No deck matches.</div>`
       : tilesHtml(shown, ctx)}
   </div>`;
@@ -279,7 +279,7 @@ export function deckPageHtml(d, ctx = {}) {
       <p><a href="#/decks">All decks</a></p>
     </aside></div>`;
 }
-/** The private deck's passphrase form; x = {error, noCrypto, canEdit, hands}: the owner or an admin gets the Owner panel here too. */
+/** The private deck's passphrase form; x = {error, noCrypto, canEdit, hands, noRemember (the read-only app)}: the owner or an admin gets the Owner panel here too. */
 export function passFormHtml(d, x) {
   d = obj(d); x = obj(x); const { error = "", noCrypto = false } = x;
   return `<div class="profile"><div class="panel deck-pass">
@@ -289,7 +289,7 @@ export function passFormHtml(d, x) {
       : `<form id="deck-pass" autocomplete="off"><label for="deck-pass-in">This deck is private. Passphrase:</label>
         <input id="deck-pass-in" type="password" autocomplete="current-password" required aria-label="Passphrase">
         <button type="submit" class="primary">Open</button>
-        <label class="check"><input type="checkbox" id="deck-pass-remember"> Remember on this device</label></form>
+        ${x.noRemember ? "" : `<label class="check"><input type="checkbox" id="deck-pass-remember"> Remember on this device</label>`}</form>
         <p class="err" id="deck-pass-err" aria-live="polite">${esc(error)}</p>`}
     <p><a href="#/decks">All decks</a></p></div>${ownerPanelHtml({ ...d, private: true }, x)}</div>`;
 }

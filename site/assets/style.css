@@ -943,6 +943,7 @@ body.dragging-cards .drop-list { display: flex; }
 
 /* ---- profiles ---- */
 #account { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+[data-app="read-only"] #account { display: none; }   /* the read-only desktop app (index.html) */
 .profile { max-width: 980px; margin: auto; }
 .profile h2 { margin: 0 34px 6px 0; font-size: 26px; line-height: 1.15; }
 .profile .motto { font-size: 17px; color: var(--ink-2); margin: 0 0 14px; }
@@ -1105,6 +1106,7 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 
 /* round 3: card page */
 .detail .image-wrap .card-actions { margin: 10px 0 4px; }
+.detail .card-app:empty { display: none; }   /* the desktop app's slot (app.js appHook) */
 .iv-tabs { display: flex; gap: 2px; margin: 0 0 8px; border-bottom: 1px solid var(--border-strong); }
 .iv-tabs button { flex: 1 1 auto; padding: 5px 8px; margin-bottom: -1px; font-size: 13px; color: var(--ink-2); white-space: nowrap;
   background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: 6px 6px 0 0; }

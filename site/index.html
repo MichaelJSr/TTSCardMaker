@@ -26,7 +26,8 @@
 <link rel="modulepreload" href="assets/myfilters.js">
 <link rel="stylesheet" href="assets/style.css">
 <script>document.documentElement.dataset.theme = (() => { try { return localStorage.getItem("theme"); } catch { return null; } })() || "dark";   // storage blocked: dark
-if (document.documentElement.dataset.theme === "light") document.querySelector('meta[name="theme-color"][content="#0d0d0d"]')?.setAttribute("content", "#f9f9f7");</script>
+if (document.documentElement.dataset.theme === "light") document.querySelector('meta[name="theme-color"][content="#0d0d0d"]')?.setAttribute("content", "#f9f9f7");
+if (window.cardApp?.readOnly) document.documentElement.dataset.app = "read-only";   // the desktop app (app.js appReadOnly): no Sign in from the first paint</script>
 <script type="module" src="assets/app.js"></script>
 </head>
 <body>

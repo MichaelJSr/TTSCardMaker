@@ -512,7 +512,7 @@ export function deckCount(r, decks) {
   return decks.filter(d => !d.private && owners.has(lc(d.owner))).length;
 }
 
-/** rows = peopleRows(...); x = {me, hasOwn, since, titles (Map), date(ts), decks (decks.js entries; public ones count)} */
+/** rows = peopleRows(...); x = {me, hasOwn, since, titles (Map), date(ts), decks (decks.js entries; public ones count), readOnly (the app)} */
 export function peopleHtml(rows, x) {
   const n = rows.length, link = r => (r.profile ? r.profile.login : r.key), decks = x.decks || [];
   const face = r => { const gh = githubOf(r); return gh && githubUrl(gh) ? `<a class="face" href="${githubUrl(gh)}" target="_blank" rel="noopener" title="${esc(gh)} on GitHub">${avatarHtml(gh, 20)}</a>` : `<span class="face"></span>`; };
@@ -522,7 +522,7 @@ export function peopleHtml(rows, x) {
   const scope = x.since ? ` · ${noted(`since ${x.date(x.since)}`, "Date of the earliest card commit or edit batch in the card repo's history")}` : "";
   return `<div class="profile">
     <div class="toolbar"><span class="result-count">${n} ${n === 1 ? "person" : "people"}${scope}</span>
-      ${x.me ? (x.hasOwn ? "" : `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>`) : `<span class="muted">Sign in (top right) to make your profile.</span>`}</div>
+      ${x.readOnly ? "" : x.me ? (x.hasOwn ? "" : `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>`) : `<span class="muted">Sign in (top right) to make your profile.</span>`}</div>
     ${n ? `<div class="scroll-x"><table class="data people"><thead><tr><th>Person</th><th class="num">Cards</th><th class="num">${noted("Edits", "Commits to Card Edits.json: batches published on the website, or by hand")}</th><th class="num">${noted("Card commits", "Commits that added or changed a card's PSD or PNG; moves and rulebook pages don't count")}</th><th class="num">${noted("Decks", "Their public decks in the deck browser; private ones aren't counted")}</th><th>Titles</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table></div>`
       : `<div class="empty">Nobody yet.</div>`}
     <p class="muted">Cards credited · edits: Card Edits batches · card commits: PSD/PNG changes · decks: public ones.</p></div>`;
