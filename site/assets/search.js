@@ -1,6 +1,7 @@
 // Query language: the same syntax as AutoCroissant's /query_ability, plus names/aliases and a few extras.
 //   fire              text in the ability, name or aliases (any case); also a name without its punctuation or a (sub)series
 //   cant  nme         also can't, N.M.E. (a word typed without ' or . finds it printed with them; digits never)
+//   spongebob         text no card has: the (sub)series whose name has it as whole words (bySeries)
 //   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
 //                     counter damage CDMG; and back), as the bot
 //   "draw 2" 'draw 2' whole-word match ('draw 2' also a series or name, as draw 2)
@@ -112,23 +113,53 @@ function named(q, pred) {
 /** curly quotes as plain ones (phones type them), one character each */
 export const straight = s => s.replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"');
 
-/** Compile a query into a predicate (card) => boolean, or null for an empty query. */
-export function compile(query) {
+const STOP = new Set(["the", "of", "and", "at", "a", "an", "in", "to", "vs", "series"]);
+const NUMBER = /^[0-9]+$/;
+/** words as the series fallback compares them: case and accents aside, apostrophes kept ("dont" is not Don't Starve),
+ *  stopwords and words under 3 letters left out, numbers kept ("freddy's 2") (the bot's series_words) */
+export const seriesWords = s => straight(String(s || "")).normalize("NFD").toLowerCase().replace(/\p{M}+/gu, "")
+  .split(/[^\p{L}\p{N}']+/u).map(w => w.replace(/^'+|'+$/g, "")).filter(w => (w.length > 2 || NUMBER.test(w)) && !STOP.has(w));
+const WORDS = new Map();                                 // a series name's words
+const holds = (name, run) => { let w = WORDS.get(name);
+  if (!w) WORDS.set(name, w = seriesWords(name));
+  return w.some((_, i) => run.every((x, j) => w[i + j] === x)); };
+/** A plain term no card's text has, as whole words of series' or subseries' names ("spongebob", "five nights"): a
+ *  predicate for their cards, its note [term, series, subseries]; else null */
+function bySeries(q, cards) {
+  const run = seriesWords(q);
+  if (run.every(w => NUMBER.test(w))) return null;      // a word, not only numbers
+  const found = k => [...new Set(cards.map(c => c[k]).filter(n => n && holds(n, run)))].sort();
+  const ser = found("series"), names = new Set(ser);
+  const sub = found("subseries").filter(n => !names.has(n) && cards.some(c => c.subseries === n && !names.has(c.series)));   // none a found series holds
+  for (const n of sub) names.add(n);
+  if (!names.size) return null;
+  const pred = c => names.has(c.series) || names.has(c.subseries);
+  pred.notes = [[q, ser, sub]];
+  return pred;
+}
+const notesOf = ps => ps.flatMap(p => p.notes || []);
+/** a series fallback's note: No card's text has “x”: the series A and B */
+export const seriesNote = ([q, ser, sub]) => { const and = xs => (xs.length < 2 ? xs[0] : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
+  return `No card's text has “${q}”: ${[ser.length && `the series ${and(ser)}`, sub.length && `the subseries ${and(sub)}`].filter(Boolean).join(" and ")}`; };
+
+/** Compile a query into a predicate (card) => boolean, or null for an empty query. cards: the cards searched, so a
+ *  plain term none of them has falls back to series' words (bySeries; the predicate's notes say so) */
+export function compile(query, cards = null) {
   const q = straight(query || "").replace(/\s+/g, " ").trim();   // a space finds a line break
   if (!q) return null;
   let parts = splitOut(q, "|");
   if (parts.length > 1) {
-    parts = parts.map(compile).filter(Boolean);
-    return named(q, c => parts.some(p => p(c)));
+    parts = parts.map(x => compile(x, cards)).filter(Boolean);
+    return Object.assign(named(q, c => parts.some(p => p(c))), { notes: notesOf(parts) });
   }
   parts = splitOut(q, "&");
   if (parts.length > 1) {
-    parts = parts.map(compile).filter(Boolean);
-    return named(q, c => parts.every(p => p(c)));
+    parts = parts.map(x => compile(x, cards)).filter(Boolean);
+    return Object.assign(named(q, c => parts.every(p => p(c))), { notes: notesOf(parts) });
   }
   if (q.startsWith("!")) {
-    const inner = compile(q.slice(1));
-    return inner ? c => !inner(c) : null;
+    const inner = compile(q.slice(1), cards);
+    return inner ? Object.assign(c => !inner(c), { notes: notesOf([inner]) }) : null;
   }
   const lower = q.toLowerCase();
   if (FLAGS[lower]) return FLAGS[lower];
@@ -165,7 +196,8 @@ export function compile(query) {
   if (q.length > 2 && q[0] === "'" && q.endsWith("'")) re = new RegExp(`(?:${whole(lower.slice(1, -1))})|(?:${re.source})`);   // also whole words (the bot)
   const sq = squash(lower), probe = sq.length > 3 ? sq : `\n${sq}\n`;   // 3 letters or fewer: a whole name
   const more = c => !!sq && (squashed(c).names.includes(probe) || squashed(c).ser.has(sq));   // a name without its punctuation, a series
-  return c => re.test(haystack(c)) || more(c);
+  const plain = c => re.test(haystack(c)) || more(c);
+  return (cards && !cards.some(plain) && bySeries(q, cards)) || plain;
 }
 
 /** The cards whose name, an alias or an old name is the query (text.js norm: case, spaces and dots aside; quotes allowed). */
@@ -194,6 +226,7 @@ export const SEARCH_HELP = [
   ["fire", "In the ability, name or aliases"],
   ["hollow knight · moms knife", "A series' or subseries' cards; names without punctuation"],
   ["cant · nme", "Also can't, N.M.E.: a word typed without ' or . finds it printed with them"],
+  ["spongebob · five nights", "A series by words of its name, when no card's text has them"],
   ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
   ['"heal 2"', "Whole words only"],
   ["'heal 2'", "Whole words, and a series' or name's cards"],

@@ -10,7 +10,7 @@ export const CAP = 240;                                                   // til
 /** The cards to show: those passing `filter` and the query, on the chosen kinds and stars, by name, capped.
  *  -> {list, total}; kindOf(card) groups status effects (app.js kindOf). */
 export function pickList(cards, { query = "", kinds = [], stars = [], filter = null, kindOf = c => c.type } = {}) {
-  const pred = compile(query);
+  const pred = compile(query, cards);
   const list = cards.filter(c => (!filter || filter(c)) && (!pred || pred(c)) && (!kinds.length || kinds.includes(kindOf(c)))
     && (!stars.length || stars.includes(c.stars))).sort(byName);   // as app.js sortCards
   return { list: list.slice(0, CAP), total: list.length };

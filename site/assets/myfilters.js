@@ -30,12 +30,14 @@ export function remove(q) { const list = saved(), i = list.indexOf(q); if (i >= 
 
 /** a cf / xcf param's searches: trimmed, non-empty, once each */
 export const vals = (p, k) => [...new Set(p.getAll(k).map(s => s.trim()).filter(Boolean))];
-const preds = new Map();
-/** the search's test (search.js compile), null for one that matches everything */
-export const pred = q => { if (!preds.has(q)) preds.set(q, compile(q)); return preds.get(q); };
-/** list narrowed by the params: every cf search must match, no xcf one may */
-export function apply(list, p) {
-  for (const q of vals(p, "cf")) { const f = pred(q); if (f) list = list.filter(f); }
-  for (const q of vals(p, "xcf")) { const f = pred(q); if (f) list = list.filter(c => !f(c)); }
+const preds = new WeakMap(), ANY = {};                    // per card list: search -> test
+/** the search's test (search.js compile, cards: the cards searched, as the search box), null for one that matches everything */
+export const pred = (q, cards = null) => { let m = preds.get(cards || ANY);
+  if (!m) preds.set(cards || ANY, m = new Map());
+  if (!m.has(q)) m.set(q, compile(q, cards)); return m.get(q); };
+/** list (of cards) narrowed by the params: every cf search must match, no xcf one may */
+export function apply(list, p, cards = null) {
+  for (const q of vals(p, "cf")) { const f = pred(q, cards); if (f) list = list.filter(f); }
+  for (const q of vals(p, "xcf")) { const f = pred(q, cards); if (f) list = list.filter(c => !f(c)); }
   return list;
 }

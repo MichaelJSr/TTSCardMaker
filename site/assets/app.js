@@ -1,4 +1,4 @@
-import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight, loose } from "./search.js";
+import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight, loose, seriesNote } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
@@ -604,7 +604,7 @@ function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi]
 // migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
 const webEdited = c => changes.fieldEditors(c).length > 0;
 function filterCards(p, { facets = true } = {}) {
-  const pred = compile(p.get("q") || ""), from = p.get("morgue") ? S.morgue : S.cards;   // the Morgue: its cards alone
+  const from = p.get("morgue") ? S.morgue : S.cards, pred = compile(p.get("q") || "", from);   // the Morgue: its cards alone
   let list = pred ? from.filter(pred) : from.slice();
   if (!facets) return list;
   const kinds = csv(p, "kind"), st = csv(p, "stars").map(Number), subs = csv(p, "sub"), types = csv(p, "types"), flags = csv(p, "flags");
@@ -625,7 +625,7 @@ function filterCards(p, { facets = true } = {}) {
   const missing = G.MISSING.filter(([k]) => csv(p, "missing").includes(k));   // cards missing all of them
   if (missing.length) list = list.filter(c => missing.every(x => x[3](c)));
   list = G.dropExcluded(list, p, flagFns);                                     // xkind=…, xtypes=…: the sidebar's exclusions
-  list = CF.apply(list, p);                                                    // cf=…, xcf=…: My filters
+  list = CF.apply(list, p, from);                                              // cf=…, xcf=…: My filters
   const fin = vals(p, "font"), fout = vals(p, "xfont");                        // font=…: any of them; xfont=…: none (renderCards loads the data)
   if (fin.length || fout.length) list = !S.fontUse ? [] : list.filter(c => { const f = fontsOf(c); return (!fin.length || f.some(x => fin.includes(x))) && !f.some(x => fout.includes(x)); });
   for (const [k, , test] of LINKED) { const v = p.get(k); if (v) list = list.filter(test(v)); }
@@ -757,13 +757,14 @@ function renderCards(r) {
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
+  const notes = compile(p.get("q") || "", morgue ? S.morgue : S.cards)?.notes || [];   // a term found as series' words
   if (waiting) (changed ? loadAnalytics() : fontWait ? loadFonts() : loadCharts()).then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
     () => { const el = $(".browse .loading", view); if (el) el.textContent = changed ? "Couldn't load the recorded changes." : "Couldn't load the filter."; });
 
   const browse = `<div class="browse">
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
       <button type="button" class="skip-cards" data-action="to-cards">Skip to cards</button>
-      ${mine.length ? `<h3>My filters</h3>${mine.map(v => { const x = cfOut.includes(v), f = CF.pred(v), n = x ? cfRemoves(v) : f ? list.filter(f).length : list.length;
+      ${mine.length ? `<h3>My filters</h3>${mine.map(v => { const x = cfOut.includes(v), f = CF.pred(v, morgue ? S.morgue : S.cards), n = x ? cfRemoves(v) : f ? list.filter(f).length : list.length;
         return `<div class="cf-row"><label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="cf" data-value="${esc(v)}"${!x && cfIn.includes(v) ? " checked" : ""}${x ? ` aria-label="${esc(v)}: excluded"` : ""}> <span class="cf-q">${esc(v)}</span><span class="n">${x ? `−${n}` : n}</span></label><button type="button" class="ghost cf-del" data-action="cf-delete" data-value="${esc(v)}" title="Remove this filter" aria-label="Remove the filter ${esc(v)}">✕</button></div>`; }).join("")}` : ""}
       <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindSeen.get(k)), csv(p, "kind"), kindCounts, xs("kind"), removes, null, kindSeen)}
       ${S.morgue.length || morgue ? `<h3>Retired</h3>${chipList("morgue", [["1", "The Morgue"]], csv(p, "morgue"), new Map([["1", morgueN]]))}` : ""}
@@ -793,6 +794,7 @@ function renderCards(r) {
           <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x, more = ""]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>${more}`).join("")}</div>` : ""}
+      ${notes.length ? `<p class="muted search-note">${notes.map(n => esc(seriesNote(n))).join(". ")}.</p>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : handling ? needsHtml(list)
