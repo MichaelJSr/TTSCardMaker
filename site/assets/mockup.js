@@ -806,15 +806,15 @@ export function drawRing(ctx, ring, group, cx, cy, u, one = null) {
   ctx.restore();
 }
 /** Lines of paragraphs at font size `size` within maxW: [{pieces: [{text | icon, w}], w}] (a space between chunks);
- *  measure(text, size) -> px. An empty paragraph is an empty line. */
-export function layout(paras, maxW, size, measure) {
+ *  measure(text, size) -> px. An empty paragraph is an empty line. indent: px the first line's leading spaces take. */
+export function layout(paras, maxW, size, measure, indent = 0) {
   const space = measure(" ", size), lines = [];
   for (const para of paras) {
     let line = { pieces: [], w: 0 };
     if (!para.length) { lines.push(line); continue; }
     for (const chunk of para) {
       const pieces = chunk.map(p => ({ ...p, w: pieceW(p, size, measure) })), w = pieces.reduce((t, p) => t + p.w, 0);
-      if (line.pieces.length && line.w + space + w > maxW) { lines.push(line); line = { pieces: [], w: 0 }; }
+      if (line.pieces.length && line.w + space + w > maxW - (lines.length ? 0 : indent)) { lines.push(line); line = { pieces: [], w: 0 }; }
       if (line.pieces.length) { line.pieces.push({ text: " ", w: space }); line.w += space; }
       line.pieces.push(...pieces); line.w += w;
     }
@@ -2249,6 +2249,7 @@ function drawText(ctx, job, imgs, W) {
     const fc = (frame[0] + frame[2]) / 2, rest = F.length > 1 ? Math.min(...F.slice(1).map(l => l[0])) : frame[0];
     const atOf = (ls, s) => (layer.just === 0 ? l => frame[0] + ((l === ls[0] ? F[0][0] : rest) - frame[0]) * s   // as Photoshop sets its frame's lines; a first line's
       : layer.just === 1 ? l => found.box[2] - l.w : l => fc - l.w / 2 + (l === ls[0] ? ((F[0][0] + F[0][2]) / 2 - fc) * s : 0));   // spaces (Miracle Matter's) scale with it
+    const lay = s => layout(paras, maxW, size * s, measure, layer.just === 0 ? Math.max(0, frame[0] + (F[0][0] - frame[0]) * s - (frame[2] - maxW)) : 0);   // those spaces take the first line's room
     const inks = (ls, s, b, p, at) => ls.flatMap((l, i) => { const ud = l.pieces.length ? lineInk(ctx, l, s, fam) : null; return ud ? [[at(l), b + i * p - ud[0], at(l) + l.w, b + i * p + ud[1]]] : []; });
     const others = stack.others.filter(o => !F.some(l => meets(l, o)));   // rows the old ink touches: not counted
     const above = others.filter(o => o[3] <= stack.own[1] && o[2] > stack.own[0] && o[0] < stack.own[2]);
@@ -2257,6 +2258,14 @@ function drawText(ctx, job, imgs, W) {
     const onCard = q => offBefore || q.every(r => r[0] >= 0 && r[2] <= W && r[3] <= H);
     const clear = q => q.every(r => !others.some(o => meets(r, o)));
     const ob = [found.box[0] - pad, found.box[1] - pad, found.box[2] + pad, found.box[3] + pad].map(Math.round);
+    const letters = (ls, zs, b, p, at, q) => {        // the lines' letters alone (alpha), rows y0..y1
+      const [ya, yb] = span(q).map(Math.round), y0 = clamp(ya - 2, 0, H), y1 = clamp(yb + 2, 0, H);
+      if (y1 <= y0) return null;
+      const mask = document.createElement("canvas"); mask.width = W; mask.height = y1 - y0;
+      const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -y0);
+      paintLines(mx, ls, { at, base: b, pitch: p, z: zs, fam, label: measure.label, track: measure.track, hx: measure.hx, fill: [255, 255, 255], stroke: null, imgs, one });
+      return { a: mx.getImageData(0, 0, W, y1 - y0).data, y0, y1 };
+    };
     let lum = null, med = 0, bar = 0;
     const design = (ls, zs, b, p, at, q) => {          // new ink off the old ink's box on the design (ink_beyond: an icon beside the row)
       if (!lum) {                                     // the backdrop under the old text: its median luma and spread
@@ -2268,42 +2277,47 @@ function drawText(ctx, job, imgs, W) {
         med = n ? nth(h, n >> 1) : 0; h.forEach((c, v) => { dev[Math.abs(v - med)] += c; });
         bar = Math.max(60, (n ? nth(dev, Math.floor(0.95 * (n - 1))) : 0) + 20);
       }
-      const [ya, yb] = span(q).map(Math.round), y0 = clamp(ya - 2, 0, H), y1 = clamp(yb + 2, 0, H);
-      if (y1 <= y0) return false;
-      const mask = document.createElement("canvas"); mask.width = W; mask.height = y1 - y0;
-      const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -y0);
-      paintLines(mx, ls, { at, base: b, pitch: p, z: zs, fam, label: measure.label, track: measure.track, hx: measure.hx, fill: [255, 255, 255], stroke: null, imgs, one });
-      const a = mx.getImageData(0, 0, W, y1 - y0).data, out = r => others.every(o => !(r[0] >= o[0] && r[0] < o[2] && r[1] >= o[1] && r[1] < o[3]))
+      const m = letters(ls, zs, b, p, at, q);
+      if (!m) return false;
+      const { a, y0, y1 } = m, out = r => others.every(o => !(r[0] >= o[0] && r[0] < o[2] && r[1] >= o[1] && r[1] < o[3]))
         && q.some(l => r[1] >= l[1] && r[1] < l[3] && Math.abs(r[0] - (l[0] + l[2]) / 2) < (l[2] - l[0]) * 0.48);   // a line's ends: our widths are estimates
       let n = 0;
       for (let y = y0, j = 3; y < y1; y++) for (let x = 0; x < W; x++, j += 4)
         if (a[j] > 128 && !(x >= ob[0] && x < ob[2] && y >= ob[1] && y < ob[3]) && Math.abs(lum[y * W + x] - med) > bar && out([x, y])) n++;
       return n >= 100 * k * k;
     };
-    const at1 = atOf(lines, 1), full = inks(lines, size, base0, pitch0, at1);
+    const onRows = c => {                             // a fallback's letters on another row's words (its box's ink, not only near it)
+      const m = others.length && letters(c.lines, c.z, c.base, c.pitch, c.at, c.q);
+      let n = 0;
+      if (m) for (const o of others) for (let y = Math.max(m.y0, Math.floor(o[1])); y < Math.min(m.y1, Math.ceil(o[3])); y++)
+        for (let x = Math.max(0, Math.floor(o[0])); x < Math.min(W, Math.ceil(o[2])); x++) if (m.a[((y - m.y0) * W + x) * 4 + 3] > 128) n++;
+      return n >= 100 * k * k;
+    };
+    const ls1 = lay(1), at1 = atOf(ls1, 1), full = inks(ls1, size, base0, pitch0, at1);
     if (!full.length || onCard(full) && clear(full) && roomBelow()) return true;
     const liftBy = q => { const [y0, y1] = span(q), dy = y1 - stack.own[3]; return y1 <= H || dy <= 0 || y0 < dy ? 0 : Math.max(0, Math.min(dy, y0 - ceiling)); };   // lift: off the bottom, moved up
     const moved = (q, u) => q.map(r => [r[0], r[1] - u, r[2], r[3] - u]), off = !onCard(full);
     let largest = null, lifted = null;
     for (let s = FIT_STEP; s >= FIT_MIN; s *= FIT_STEP) {
-      const zs = size * s, ls = layout(paras, maxW, zs, measure), p = lineH * s, at = atOf(ls, s);
+      const zs = size * s, ls = lay(s), p = lineH * s, at = atOf(ls, s);
       for (const keep of rows ? [true, false] : [true]) {
         const b = keep && rows ? base0 - (lineH + shift) * (1 - s) : frame[1] + (base0 - frame[1]) * s, q = inks(ls, zs, b, p, at), [y0, y1] = span(q);
         if (y1 > floor || !onCard(q)) {
           const u = off && !largest && !lifted ? liftBy(q) : 0;   // none placed: the first on the card once moved up
-          if (off && !largest && !lifted && onCard(moved(q, u))) lifted = { z: zs, lines: ls, base: b - u, pitch: p, at, over: true, ink: [y0 - u, y1 - u] };
+          if (off && !largest && !lifted && onCard(moved(q, u))) lifted = { z: zs, lines: ls, base: b - u, pitch: p, at, over: true, ink: [y0 - u, y1 - u], q: moved(q, u) };
           continue;
         }
         if (clear(q) && !design(ls, zs, b, p, at, q)) return { z: zs, lines: ls, base: b, pitch: p, at, ink: [y0, y1] };
         const d = ceiling - y0, q2 = q.map(r => [r[0], r[1] + d, r[2], r[3] + d]);   // risen onto the text above: back down under it
         if (d > 0 && y1 + d <= floor && clear(q2) && !design(ls, zs, b + d, p, at, q2)) return { z: zs, lines: ls, base: b + d, pitch: p, at, ink: [y0 + d, y1 + d] };
-        largest = largest || { z: zs, lines: ls, base: b, pitch: p, at, over: true, ink: [y0, y1] };
+        largest = largest || { z: zs, lines: ls, base: b, pitch: p, at, over: true, ink: [y0, y1], q };
       }
     }
     if (!off) return false;                           // none fits: at its size, told
-    const u = liftBy(full), [y0, y1] = span(full), up = { z: size, lines, base: base0 - u, pitch: pitch0, at: at1, over: true, ink: [y0 - u, y1 - u] };
-    if (!largest && lifted && !onCard(moved(full, u))) return lifted;   // off the card at its size, even moved up
-    return !largest || u && onCard(moved(full, u)) ? (u ? up : false) : largest;   // off the card: the largest placed
+    const u = liftBy(full), [y0, y1] = span(full), up = { z: size, lines: ls1, base: base0 - u, pitch: pitch0, at: at1, over: true, ink: [y0 - u, y1 - u] };
+    const pick = largest || (lifted && !onCard(moved(full, u)) ? lifted : null);   // off the card at its size, even moved up: lifted's
+    if (pick && !onRows(pick) && !(largest && u && onCard(moved(full, u)))) return pick;   // off the card: the largest placed
+    return u ? up : false;                            // or at its size (moved up), told: never over another row's words
   }
   const reach = left ? W - found.box[0] : 2 * Math.min(mid, W - mid);   // point text: off the card's sides past this
   const tframe = role === "name" && !split && kc && Array.isArray(layer?.frame) && layer.frame.length === 4 ? layer.frame.map(v => v * kc) : null;   // a box-text title: Photoshop wraps at its frame
