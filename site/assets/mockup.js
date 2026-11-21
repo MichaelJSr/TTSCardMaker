@@ -1413,6 +1413,12 @@ function loadImage(src) {
   return p;
 }
 const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
+/** measure(t, z): t's width at size z in fam, tracked (ems) and widened (hx) as the layer's letters. */
+const widthIn = (ctx, fam, track, hx) => (t, z) => {
+  ctx.font = `${z}px ${fam}`;
+  if (!track) return ctx.measureText(t).width * hx;
+  ctx.letterSpacing = `${track * z}px`; const w = ctx.measureText(t).width * hx; ctx.letterSpacing = "0px"; return w;
+};
 
 /** Draw the mock-up into canvas: the card image (src, same origin) with `edit`'s PSD fields over it. opts: {card, src, rec
  *  (details record or null), edit, psd (the image's values), icons, getFonts, raw, onFont (a font has loaded: draw
@@ -1478,23 +1484,31 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     return blit();
   }
   const pixels = px0 || ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
+  const raced = async name => {                     // a loaded font at once; null: still loading (onFont draws again)
+    const p = loadFont(name, { getFonts, raw }), got = await Promise.race([p, new Promise(r => setTimeout(() => r(null), 60))]);
+    if (got === null) p.then(f => { if (f) onFont?.(); });
+    return got;
+  };
   const family = async (role, label, path = "", id = "", look = null) => {   // path, id: a part's own layer (a split title's share a path); look: an added ability's
     const mine = t => t && (id && t.id != null ? String(t.id) === id : t.layer === path) && (t.lf || !ICON_FONT.test(String(t.font || "")));
     const own = path && Array.isArray(rec?.text) ? rec.text.find(mine) : null;
     const layer = look || own || layerOf(rec, role), name = layer?.lf || layer?.font || "";   // lf: the font most of its letters use
-    const pending = name ? loadFont(name, { getFonts, raw }) : Promise.resolve("");
-    let fam = "";
-    const ready = await Promise.race([pending, new Promise(r => setTimeout(() => r(null), 60))]);   // a loaded font draws at once
-    if (ready === null) pending.then(f => { if (f) onFont?.(); }); else fam = ready;
+    const fam = (name && await raced(name)) || "";
     if (name) out.fonts[name] = fam; else out.standIn.push(label);
     const gaps = fam ? fontMap?.[name] : null;
     let mfam = "", mgp = null;
     if (gaps?.lacks && fontMap?.[MGP_FONT]) {         // the letters it lacks fall back to Myriad Pro (glyphPlan's mgp)
-      const p = loadFont(MGP_FONT, { getFonts, raw }), got = await Promise.race([p, new Promise(r => setTimeout(() => r(null), 60))]);
-      if (got === null) p.then(f => { if (f) onFont?.(); }); else mfam = got;
+      const got = await raced(MGP_FONT);
+      mfam = got || "";
       if (got !== "") mgp = fontMap[MGP_FONT].lacks || "";
     }
-    return { fam: fam ? `"${fam}", ${mfam ? `"${mfam}", ` : ""}${STAND_IN}` : STAND_IN, layer, gaps, mgp };
+    const fr = {};
+    for (const f of new Set((Array.isArray(layer?.fr) ? layer.fr : []).map(r => r?.[2]))) {   // letters set in another font (psd_details fr)
+      const got = typeof f === "string" && f !== name ? await raced(f) : "";
+      const m = got && fontMap?.[f]?.lacks && fontMap?.[MGP_FONT] ? mfam || (await raced(MGP_FONT)) || "" : mfam;   // the letters it lacks: Myriad Pro
+      if (got) fr[f] = `"${got}", ${m ? `"${m}", ` : ""}${STAND_IN}`;
+    }
+    return { fam: fam ? `"${fam}", ${mfam ? `"${mfam}", ` : ""}${STAND_IN}` : STAND_IN, layer, gaps, mgp, fr };
   };
   const badgeFont = labelFont();
   let bfam = await Promise.race([badgeFont, new Promise(r => setTimeout(() => r(null), 60))]);
@@ -1541,13 +1555,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (reuse) pixels.data.set(eraseMemo.data);
   for (const [k, { role, text, old, label, own: partBox, added, part, colors: shared, follow }] of specs.entries()) {
     if (tints[k] || mixes[k]) { out.drawn.push(label); continue; }   // never erased: tinted or mixed below
-    const { fam, layer } = fams[k];
+    const { fam, layer, fr } = fams[k];
     const set = role === "ability" || role === "name" ? layer : null, fb = set?.fb ? FAUX_BOLD : 0, track = (Number.isFinite(set?.track) ? set.track / 1000 : 0) + fb, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems; faux bold adds its own), letter width (psd_details)
-    const width = (t, z) => {
-      ctx.font = `${z}px ${fam}`;
-      if (!track) return ctx.measureText(t).width * hx;
-      ctx.letterSpacing = `${track * z}px`; const w = ctx.measureText(t).width * hx; ctx.letterSpacing = "0px"; return w;
-    };
+    const width = widthIn(ctx, fam, track, hx);
     const nd = NOTDEFS.get(fam), measure = (t, z) => (nd && STOOD.test(t)   // glyphPlan's stand-ins: as glyphText draws them
       ? glyphRuns(t).reduce((w, r) => w + (typeof r === "number" ? r * (nd.adv + track) * z * hx : width(r, z)), 0) : width(t, z));
     measure.track = track; measure.hx = hx; measure.fb = fb;
@@ -1574,7 +1584,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
           colours: { fill: follow.fill || mainInk(rec, layer) || hexRgb(layer.color), stroke: null } }) : {};
       }
       const { found, size: z, colours, above } = plans[k];
-      if (found && text != null) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors: null, statuses, ink, kc, card: cardPx, split: false, fit: 0, geo: geoOf(plate, [specs[k].id], kc), above, quiet: true });
+      if (found && text != null) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, fr, measure, icons, one, colors: null, statuses, ink, kc, card: cardPx, split: false, fit: 0, geo: geoOf(plate, [specs[k].id], kc), above, quiet: true });
       continue;
     }
     let plated = false;
@@ -1614,7 +1624,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const { found, size: z, colours, deleted, skipped } = plans[k];
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
-    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : 0,
+    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : 0,
       geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer) : null,
       bare: plans[k].plated && fxIn(plate, idsOf(specs[k], k), old) ? () => plateCuts(cardPx, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, "", wiping) : null });   // the crop without its FX layers
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
@@ -1929,10 +1939,11 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
       let x = at(line); const y = base + n * pitch;
       for (const p of line.pieces) {
         if (!p.icon && !p.badge && p.text?.trim()) {
-          g.save(); g.font = `${z}px ${fam}`; if (track) g.letterSpacing = `${track * z}px`; g.translate(x, y); g.scale(hx, 1);
-          if (e.ws > 0) { g.globalAlpha = (e.wo ?? 100) / 100; g.lineWidth = 2 * (e.ws + grow); glyphText(g, p.text, fam, z, track, "strokeText"); g.globalAlpha = 1; }   // the deeper Stroke
-          if (grow > 0) { g.lineWidth = 2 * grow; glyphText(g, p.text, fam, z, track, "strokeText"); }
-          glyphText(g, p.text, fam, z, track, "fillText"); g.restore();
+          const pf = p.fam || fam;
+          g.save(); g.font = `${z}px ${pf}`; if (track) g.letterSpacing = `${track * z}px`; g.translate(x, y); g.scale(hx, 1);
+          if (e.ws > 0) { g.globalAlpha = (e.wo ?? 100) / 100; g.lineWidth = 2 * (e.ws + grow); glyphText(g, p.text, pf, z, track, "strokeText"); g.globalAlpha = 1; }   // the deeper Stroke
+          if (grow > 0) { g.lineWidth = 2 * grow; glyphText(g, p.text, pf, z, track, "strokeText"); }
+          glyphText(g, p.text, pf, z, track, "fillText"); g.restore();
         }
         x += p.w;
       }
@@ -2023,13 +2034,14 @@ export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, 
         ctx.restore();
         if (p.ring && one) drawRing(ctx, p.ring, p.group, x0 + r, top + r, h / 22, { fill, stroke, width: Math.max(1.5, z * 0.16) });
       } else if (p.text.trim()) {
-        ctx.save(); ctx.font = `${z}px ${fam}`; if (track) ctx.letterSpacing = `${track * z}px`; ctx.translate(x, y); ctx.scale(hx, 1);
-        if (rim) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = (strokeW || Math.max(1.5, z * 0.16)) + fb * z; glyphText(ctx, p.text, fam, z, track, "strokeText"); }   // round the dilated letters
+        const pf = p.fam || fam;                      // a spliced run in another font (psd_details fr)
+        ctx.save(); ctx.font = `${z}px ${pf}`; if (track) ctx.letterSpacing = `${track * z}px`; ctx.translate(x, y); ctx.scale(hx, 1);
+        if (rim) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = (strokeW || Math.max(1.5, z * 0.16)) + fb * z; glyphText(ctx, p.text, pf, z, track, "strokeText"); }   // round the dilated letters
         else {
-          ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); glyphText(ctx, p.text, fam, z, track, "fillText");
-          if (bold(ctx.fillStyle)) glyphText(ctx, p.text, fam, z, track, "strokeText");
+          ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); glyphText(ctx, p.text, pf, z, track, "fillText");
+          if (bold(ctx.fillStyle)) glyphText(ctx, p.text, pf, z, track, "strokeText");
           const look = texture(ctx, tex, p.color);     // over the flat fill: past its band, the flat colour
-          if (look) { ctx.fillStyle = look; glyphText(ctx, p.text, fam, z, track, "fillText"); if (bold(look)) glyphText(ctx, p.text, fam, z, track, "strokeText"); }
+          if (look) { ctx.fillStyle = look; glyphText(ctx, p.text, pf, z, track, "fillText"); if (bold(look)) glyphText(ctx, p.text, pf, z, track, "strokeText"); }
         }
         ctx.restore();
       }
@@ -2060,10 +2072,11 @@ function paintCopy(ctx, lines, { at, base, pitch, z, fam, track, hx, fill, strok
     let x = at(line); const y = base + n * pitch;
     for (const p of line.pieces) {
       if (!p.icon && !p.badge && p.text?.trim()) {
-        g.save(); g.font = `${z}px ${fam}`; if (track) g.letterSpacing = `${track * z}px`; g.translate(x + c.dx, y + c.dy); g.scale(hx, 1);
+        const pf = p.fam || fam;
+        g.save(); g.font = `${z}px ${pf}`; if (track) g.letterSpacing = `${track * z}px`; g.translate(x + c.dx, y + c.dy); g.scale(hx, 1);
         if (how === "strokeText") { g.lineJoin = "round"; g.strokeStyle = rgb(stroke); g.lineWidth = strokeW || Math.max(1.5, z * 0.16); }
         else g.fillStyle = c.fill ? rgb(c.fill) : p.color || (shades ? shaded(g, shades, y) : rgb(fill));
-        glyphText(g, p.text, fam, z, track, how); g.restore();
+        glyphText(g, p.text, pf, z, track, how); g.restore();
       }
       x += p.w;
     }
@@ -2098,7 +2111,7 @@ export function firstBase(ctx, line, { top, s0, z, frame, fam }) {
  *  text) each paragraph is one line (pointLayout), re-laid at a size it shrank to past the old text's (fit_below). An
  *  Ability a bake set smaller (the card's abilityFit) starts from the card maker's size, as the next bake. */
 function drawText(ctx, job, imgs, W) {
-  let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was, tex, copies = null } = job;
+  let { role, text, old, area, found, size, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was, tex, copies = null } = job;
   const looked = (ps, s) => {                         // kept badges at their own size and tracking, typed ones tracked as the card's
     if (role === "ability" && Array.isArray(layer?.badges)) {
       const looks = badgeLooks(s, old, layer.badges); let i = 0;
@@ -2187,6 +2200,8 @@ function drawText(ctx, job, imgs, W) {
     }
   }
   const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
+  if (R && Array.isArray(layer?.fr) && String(geo.c.id) === String(layer.id))   // its letters in another font, on was: [s, e, family, its measure]
+    R.fr = layer.fr.map(([s, e, f]) => [R.at(s) + R.shift, R.at(e) + R.shift, fr?.[f], fr?.[f] ? Object.assign(widthIn(ctx, fr[f], measure.track, measure.hx), measure) : null]);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid, unless spliced on the card (the bake shrinks ink off it only)
   job.lined = plan && grow === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
@@ -2253,7 +2268,7 @@ export function recordLayout(c, old, k) {
     if (!x.has(j)) x.set(j, g[1] * k);
     if (g.length >= 4 && !ink.has(j)) ink.set(j, [g[2] * k, g[3] * k]);
   }
-  return { was, lines, x, ink, vary: new Map(heads.map(([i, v]) => [at(i) + shift, v])), frame: Array.isArray(c.frame) ? c.frame.map(v => v * k) : null };
+  return { was, lines, x, ink, vary: new Map(heads.map(([i, v]) => [at(i) + shift, v])), frame: Array.isArray(c.frame) ? c.frame.map(v => v * k) : null, shift, at };
 }
 /** t without its icon variants ([dark:sticker] -> [dark]), at(i): t's index i there, heads: [t's index, variant] of the
  *  tokens that had one; null when it has none. */
@@ -2379,8 +2394,11 @@ function tagSwap(R, sp, now, icons) {
  *  and suffix shifts, its letters' width scale, their size; the line's new width, card over this font, a space) or null
  *  when it would wrap otherwise (past the frame, a word pulled up), is not letters only, moves an FX layer's word, or the
  *  font is far off. */
-export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity }) {
+export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity, font = null }) {
   const { was, lines: L, x: X } = R, l = L[sp.i], { run } = sp, now = was.slice(0, sp.a) + run + was.slice(sp.b);
+  const mOf = j => R.fr?.find(([s, e, , m]) => m && s <= j && j < e)?.[3] || null, m2 = font?.[3] || measure;   // R.fr: letters in another font; font: the run's (R.fr's entry)
+  const mNow = j => (j < sp.a ? mOf(j) : j < sp.a + run.length ? font?.[3] : mOf(j - run.length + sp.b - sp.a)) || measure;
+  const wNow = (s, e) => { let t = 0; for (let i = s, j; i < e; i = j) { const m = mNow(i); for (j = i + 1; j < e && mNow(j) === m;) j++; t += m(now.slice(i, j), z); } return t; };   // each letter in its own font
   const word = (t, i, j) => { while (i > 0 && !/\s/.test(t[i - 1])) i--; while (j < t.length && !/\s/.test(t[j])) j++; return t.slice(i, j); };
   if (/\n/.test(run)) return null;
   let { a, b } = sp, tag = null;
@@ -2391,19 +2409,28 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
   if (l.just >= 3 && (l.just === 6 || L[sp.i + 1]?.para === l.para)) return null;   // justified: its spaces would stretch
   const xOf = j => (j >= l.e ? l.right : X.get(j)), xa = xOf(a), xb = xOf(b);
   if (xa == null || xb == null) return null;
-  const line = layout(tokenize(was.slice(l.s, l.e), icons), Infinity, z, measure)[0], k = line?.w > 0 ? (l.right - l.left) / line.w : 0;
+  const kOf = l => {                                  // the card's line over ours, each letter in its own font
+    const mixed = (R.fr || []).reduce((t, [s, e, , m]) => {
+      const q = m ? was.slice(Math.max(s, l.s), Math.min(e, l.e)) : "", r = e >= l.e ? q.trimEnd() : q;
+      return r.trim() ? t + m(r, z) - measure(r, z) : t; }, 0);
+    const line = layout(tokenize(was.slice(l.s, l.e), icons), Infinity, z, measure)[0];
+    return line?.w > 0 ? (l.right - l.left) / (line.w + mixed) : 0;
+  };
+  const k = kOf(l);
   if (!(k >= 0.5 && k <= 2)) return null;           // this font far off the card's
   const zl = Math.abs(k - 1) <= 0.15 ? z : z * k;   // a line set larger or smaller than the layer's size
-  const starts = [...X.keys()].filter(j => j >= l.s && j < l.e).sort((m, n) => m - n), step = new Map();
-  starts.forEach((j, n) => { const e = starts[n + 1] ?? l.e; if (e - j === 1 && !step.has(was[j])) step.set(was[j], xOf(e) - X.get(j)); });
+  const kp = font && sp.b <= sp.a && sp.a === l.s && L[sp.i - 1] ? kOf(L[sp.i - 1]) : k, kr = kp >= 0.5 && kp <= 2 ? kp : k;   // typed at a line's start: the line before's style (its size)
+  const zr = Math.abs(kr - 1) <= 0.15 ? z : z * kr;
+  const starts = [...X.keys()].filter(j => j >= l.s && j < l.e).sort((m, n) => m - n), step = new Map(), pens = new Map(), fo = font?.[3] || null;
+  starts.forEach((j, n) => { const e = starts[n + 1] ?? l.e; if (e - j === 1) for (const g of mOf(j) === fo ? [step, pens] : [pens]) if (!g.has(was[j])) g.set(was[j], xOf(e) - X.get(j)); });   // step: the run's font's
   const pillW = t => layout(tokenize(t, icons), Infinity, zl, measure)[0]?.w || 0;
   const one = t => tokenize(t, icons)[0]?.[0]?.[0], to = tag && one(tag.run), ic = to?.icon ? [iconEm((o => o && { ...o, vary: R.vary?.get(a) ?? o.vary })(one(tag.was))), iconEm(to)] : [];   // the old as the plate spells it
   const [g0, g1] = ic[0]?.w && ic[1] ? ic : [], inkW = g0 && R.ink.has(a) ? R.ink.get(a)[1] - R.ink.get(a)[0] : 0, ez0 = g0 ? (xb - xa) / g0.adv : 0;
   const vy = R.vary?.has(a), left = !!g0 && zl < 0.9 * ez0 && (vy || (inkW > 0 && inkW / g0.w < 0.9 * ez0)), ez = !left ? ez0 : vy ? zl : inkW / g0.w;   // the old icon's size: its pen step, where tracking spaces it out its ink (a variant's: the line's size)
   const flat = g0 && LAYERED.has(to.no ? "no" : to.vary);   // psd_edit sets a layered variant at tracking 0
-  const w = g0 ? (flat ? g1.adv * ez : xb - xa + (g1.adv - g0.adv) * ez) : tag ? (xb - xa) * pillW(tag.run) / pillW(tag.was) : [...run].every(ch => step.has(ch)) ? [...run].reduce((t, ch) => t + step.get(ch), 0) : measure(run, z) * k;
+  const w = g0 ? (flat ? g1.adv * ez : xb - xa + (g1.adv - g0.adv) * ez) : tag ? (xb - xa) * pillW(tag.run) / pillW(tag.was) : [...run].every(ch => step.has(ch)) ? [...run].reduce((t, ch) => t + step.get(ch), 0) : m2(run, z) * kr;
   if (!Number.isFinite(w)) return null;
-  const dw = w - (xb - xa), width = l.right - l.left + dw, space = step.get(" ") ?? measure(" ", z) * k;
+  const dw = w - (xb - xa), width = l.right - l.left + dw, space = pens.get(" ") ?? measure(" ", z) * k;
   const [dp, ds] = l.just === 1 || l.just === 4 ? [-dw, 0] : l.just === 2 || l.just === 5 ? [-dw / 2, dw / 2] : [0, dw];
   if (R.frame) {
     const room = R.frame[1] - R.frame[0], prev = L[sp.i - 1], next = L[sp.i + 1];
@@ -2415,19 +2442,19 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
     const firstEnd = (() => { const i = was.indexOf(" ", l.s); return i >= 0 && i < l.e ? i : l.e; })();
     if (prev?.para === l.para && a <= firstEnd) {    // the first word changed: up onto the line before?
       const i = now.indexOf(" ", l.s), e = i >= 0 && i < l.e + run.length - (b - a) ? i : l.e + run.length - (b - a);
-      const fw = tag ? (xOf(firstEnd) ?? l.right) - l.left + dw : measure(now.slice(l.s, e), z) * k;   // a pill: the card's own pens
+      const fw = tag ? (xOf(firstEnd) ?? l.right) - l.left + dw : wNow(l.s, e) * k;   // a pill: the card's own pens
       if (prev.right - prev.left + space + fw <= room + FIT_PAD) return null;
     }
   } else if (l.left + dp < 0 || l.right + ds > W) return null;   // point text off the card
   const moved = [...(dp ? [[l.s, a]] : []), ...(ds ? [[b, l.e]] : [])];
   if (fxSpans(was, fx).some(([s, e]) => (s < b && a < e) || moved.some(([m, n]) => s < n && m < e))) return null;   // an FX layer stays put
-  const own = run && !tag ? measure(run, zl) : 0, hx = own > 0 ? w / own : 1;
+  const own = run && !tag ? m2(run, zr) : 0, hx = own > 0 ? w / own : 1;
   if (run && !(hx >= 0.8 && hx <= 1.25)) return null;
   const inked = starts.filter(j => R.ink.has(j)), edge = (j, side) => R.ink.get(j)[side];   // cut between letters' ink, not pens: strokes past a pen stay with their letter
   const before = inked.filter(j => j < a).pop(), first = inked.find(j => j >= a && j < b), last = inked.filter(j => j >= a && j < b).pop(), next = inked.find(j => j >= b);
   const cut = (p, q, x) => (p != null && q != null ? (edge(p, 1) + edge(q, 0)) / 2 : x);
   const cutA = first != null ? cut(before, first, xa) : cut(before, next, xa), cutB = last != null ? cut(last, next, xb) : cutA;
-  return { xa, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, hx, z: zl, tag: tag && { at: tag.at, w, ...(g0 ? { ez, left } : {}) }, width, k, space };
+  return { xa, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, hx, z: tag ? zl : zr, tag: tag && { at: tag.at, w, ...(g0 ? { ez, left } : {}) }, width, k, space };
 }
 /** lineSplices' sps (now: the edited text) with their spliceFits fits, framed text: no line spliced right after the
  *  line before (one paragraph) has a new first word that fits up there at that line's new width. */
@@ -2517,14 +2544,15 @@ function pillAt(paras, text, at, { w, ez, left }) {
 export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, grow, only = false, icons, paras, text, look, pitch, W }) {
   const H = ctx.canvas.height, L = R.lines, now = String(text ?? "").replace(/\r/g, ""), B = bands(L, box);
   const gaps = L.slice(1).map((l, j) => l.base - L[j].base).filter(g => g > 0), step = gaps.length ? median(gaps) : pitch;
-  let fit = plan.splice && spliceFit(R, plan.splice, { measure, z, icons, fx, W }), useBare = false;
+  const runOf = sp => { const j = sp.b > sp.a ? sp.a : Math.max(0, sp.a - 1); return R.fr?.find(([s, e, , m]) => m && s <= j && j < e) || null; };   // the bake: the replaced text's font, an insertion the one before's
+  let fit = plan.splice && spliceFit(R, plan.splice, { measure, z, icons, fx, W, font: runOf(plan.splice) }), useBare = false;
   if (!fit && plan.splice && bare && fx?.length && !fxSpans(R.was, fx).some(([s, e]) => s < plan.splice.b && plan.splice.a < e)) {   // FX words shift, unedited
-    fit = spliceFit(R, plan.splice, { measure, z, icons, fx: [], W }); useBare = !!fit; }
+    fit = spliceFit(R, plan.splice, { measure, z, icons, fx: [], W, font: runOf(plan.splice) }); useBare = !!fit; }
   const pill = fit?.tag && pillAt(paras, now, fit.tag.at, fit.tag);   // a badge's new pill alone, or an icon
   if (pill && !pill.length) fit = null;
   let sps = fit ? [plan.splice] : null, fits = [fit], pills = [pill];
   if (!fit && plan.splices) {                         // several lines changed: each spliced on its own when all fit
-    const fs = plan.splices.map(sp => spliceFit(R, sp, { measure, z, icons, fx, W })), ps = fs.map(f => f?.tag && pillAt(paras, now, f.tag.at, f.tag));
+    const fs = plan.splices.map(sp => spliceFit(R, sp, { measure, z, icons, fx, W, font: runOf(sp) })), ps = fs.map(f => f?.tag && pillAt(paras, now, f.tag.at, f.tag));
     if (fs.every((f, n) => f && !(ps[n] && !ps[n].length)) && (!R.frame || staysDown(R, plan.splices, fs, now, measure, z))) [sps, fits, pills] = [plan.splices, fs, ps];
   }
   if (!sps && only) return "";
@@ -2532,8 +2560,8 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
   if (sps) {
     const pad = Math.max(...fits.map(f => Math.abs(f.dp) + Math.abs(f.ds))), own = new Set(sps.map(sp => sp.i));
     x0 -= pad; x1 += pad;
-    drawn = { paints: sps.map(({ i, at, run }, n) => { const f = fits[n];
-        return [pills[n] ? [{ pieces: pills[n] }] : run ? [{ pieces: runPieces(paras, now, at, at + run.length, measure, f.z, f.hx) }] : [], { at: () => f.xa + f.dp, base: L[i].base, hx: look.hx * f.hx, z: f.z }]; }),
+    drawn = { paints: sps.map(({ i, at, run }, n) => { const f = fits[n], o = runOf(sps[n]);
+        return [pills[n] ? [{ pieces: pills[n] }] : run ? [{ pieces: runPieces(paras, now, at, at + run.length, o?.[3] || measure, f.z, f.hx).map(p => (o ? { ...p, fam: o[2] } : p)) }] : [], { at: () => f.xa + f.dp, base: L[i].base, hx: look.hx * f.hx, z: f.z }]; }),
       moves: [...L.flatMap((_, j) => (own.has(j) ? [] : [[[x0, B[j][0], x1, B[j][1]], 0, 0]])),
         ...sps.flatMap(({ i }, n) => [[[x0, B[i][0], fits[n].cutA, B[i][1]], fits[n].dp, 0], [[fits[n].cutB, B[i][0], x1, B[i][1]], fits[n].ds, 0]])] };
   } else {
