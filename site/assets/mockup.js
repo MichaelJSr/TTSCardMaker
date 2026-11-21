@@ -2263,7 +2263,7 @@ function drawText(ctx, job, imgs, W) {
       if (y1 <= y0) return null;
       const mask = document.createElement("canvas"); mask.width = W; mask.height = y1 - y0;
       const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -y0);
-      paintLines(mx, ls, { at, base: b, pitch: p, z: zs, fam, label: measure.label, track: measure.track, hx: measure.hx, fill: [255, 255, 255], stroke: null, imgs, one });
+      paintLines(mx, ls, { at, base: b, pitch: p, z: zs, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill: [255, 255, 255], stroke: null, imgs, one });
       return { a: mx.getImageData(0, 0, W, y1 - y0).data, y0, y1 };
     };
     let lum = null, med = 0, bar = 0;
