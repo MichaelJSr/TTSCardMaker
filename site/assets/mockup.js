@@ -2478,6 +2478,7 @@ export function ownWrap(R, plan, now, paras, { measure, z, fx, icons, step, B, x
   if (!G.length || qb <= qa || G.some((j, n) => (n && j !== G[n - 1] + 1) || L[j].para < 0 || L[j].just >= 3 || L[j].just !== L[G[0]].just)) return null;
   if (fx?.length && fxSpans(was, fx).length) return null;
   const P1 = now.split("\n"), S1 = []; P1.reduce((s, p) => (S1.push(s), s + p.length + 1), 0);
+  if (P1.slice(qa, qb).some(p => !p.trim())) return null;   // a blank paragraph: wrap() drops it at the range's ends
   const oa = L[G[0]].s, ob = L[G[G.length - 1]].e, na = plan.from, nb = S1[qb - 1] + P1[qb - 1].length;
   if (!(na <= nb) || /[^\S \n]/.test(was.slice(oa, ob) + now.slice(na, nb))) return null;   // tabs, no-break spaces
   const toks = (t, a, b) => [...t.slice(a, b).matchAll(/\n|[^\s]+/g)].map(m => ({ s: a + m.index, e: a + m.index + m[0].length, t: m[0] }));
