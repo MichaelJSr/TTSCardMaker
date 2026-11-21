@@ -1255,18 +1255,21 @@ export function followSpecs(rec, plate, specs, k) {
   }
   return out;
 }
+const SPLIT_LINE = 0.25, SPLIT_INTO = 0.3;           // ems of its size a retyped part's estimate must pass its frame, or into another part, by
 /** Why the bake refuses a split title's box edits (AutoCroissant psd_edit.split_title_check), or "": among the title
  *  parts one picture shows, a retyped part (its old ink box scaled by this font's widths, set by its layer's just, moved
- *  back onto the card as back_on does) may not break onto another line, run off the card or meet another part more. */
+ *  back onto the card as back_on does) may not break onto another line, run off the card or run into a part on its line.
+ *  Said only when clear-cut (past the limit by a margin): near it, the bake's ink decides. */
 export function splitWhy(ctx, rec, specs, fams, kc, W) {
-  const typed = new Map(specs.map((s, k) => [s, k]).filter(([s]) => s.role === "name" && s.part && !s.added && !s.follow && s.id).map(([s, k]) => [String(s.id), k]));
+  const typed = new Map(specs.map((s, k) => [s, k]).filter(([s]) => s.role === "name" && s.part && !s.added && !s.follow && s.id && s.text !== s.old).map(([s, k]) => [String(s.id), k]));
   const spec = p => specs[typed.get(String(p.id))];
   if (!(kc > 0) || ![...typed.values()].some(k => specs[k].text != null)) return "";
   const parts = (obj(rec?.parts)?.title || []).filter(p => Array.isArray(p?.box) && p.box.length === 4 && !(typed.has(String(p.id)) && spec(p).text == null));
   const lines = t => String(t ?? "").replace(/\r/g, "\n").split("\n").map(l => l.trim()).filter(Boolean);
   const say = t => { const x = lines(t).join(" ").slice(0, 30); return x.includes("'") && !x.includes('"') ? `"${x}"` : `'${x}'`; };   // quoted as the bake's repr
-  const cut = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
-  const was = new Map(parts.map(p => [p, p.box.map(v => v * kc)])), now = new Map(was), shape = new Map();
+  const across = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0]));
+  const level = (a, b) => Math.min(a[3], b[3]) - Math.max(a[1], b[1]) >= Math.min(a[3] - a[1], b[3] - b[1]) / 2;   // half the shorter's height shared
+  const was = new Map(parts.map(p => [p, p.box.map(v => v * kc)])), now = new Map(was), shape = new Map(), em = new Map();
   for (const p of parts.filter(p => typed.has(String(p.id)))) {
     const k = typed.get(String(p.id)), layer = fams[k]?.layer, box = was.get(p);
     if (!(layer?.px > 0)) continue;
@@ -1276,7 +1279,8 @@ export function splitWhy(ctx, rec, specs, fams, kc, W) {
     ctx.letterSpacing = "0px";
     if (!(w > 0)) continue;
     const frame = Array.isArray(layer.frame) && layer.frame.length === 4 ? (layer.frame[2] - layer.frame[0]) * kc : 0;
-    if (frame && w > frame + 1) shape.set(p, "would break onto another line");
+    em.set(p, z);
+    if (frame && w > frame + Math.max(SPLIT_LINE * z, 0.03 * frame)) shape.set(p, "would break onto another line");
     else if (w > W) shape.set(p, "would run off the card");
     const x0 = clamp(layer.just === 0 ? box[0] : layer.just === 1 ? box[2] - w : (box[0] + box[2] - w) / 2, 0, Math.max(0, W - w));
     now.set(p, [x0, box[1], x0 + w, box[3]]);
@@ -1288,7 +1292,8 @@ export function splitWhy(ctx, rec, specs, fams, kc, W) {
     const why = (p, w) => `title part ${group.indexOf(p) + 1}/${group.length} (${say(spec(p).text)}) ${w}: shorten it, or change the title in Photoshop`;
     for (const p of edited) if (shape.has(p)) return why(p, shape.get(p));
     for (const p of edited) for (const q of group) {
-      if (q !== p && cut(now.get(p), now.get(q)) > cut(was.get(p), was.get(q)) + 1) return why(p, `would run into ${say(typed.has(String(q.id)) ? spec(q).text : q.text)}, another part of the title`);
+      if (q !== p && em.has(p) && level(was.get(p), was.get(q)) && across(now.get(p), now.get(q)) > across(was.get(p), was.get(q)) + SPLIT_INTO * em.get(p))
+        return why(p, `would run into ${say(typed.has(String(q.id)) ? spec(q).text : q.text)}, another part of the title`);
     }
   }
   return "";
@@ -1568,7 +1573,14 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const look = Array.isArray(rec?.addRoom) && obj(rec?.addLook) && rec.addLook.px > 0 ? { ...rec.addLook, added: true } : null;   // how the bake sets an added ability
   for (const { role, label, path, id, added } of specs) fams.push(await family(role, label, path, id, added ? look : null));
   const split = splitWhy(ctx, rec, specs, fams, kc, W);   // the bake refuses every box edit then (field parts): said, none drawn
-  if (split) { out.refused.push(["name", split]); for (let k = specs.length - 1; k >= 0; k--) if (specs[k].part) { specs.splice(k, 1); fams.splice(k, 1); } }
+  if (split) {
+    out.refused.push(["name", split]);
+    for (let k = specs.length - 1; k >= 0; k--) if (specs[k].part) { specs.splice(k, 1); fams.splice(k, 1); }
+    for (const j of partJobs(rec, {}, { colors: todo.colors, was: todo.colors && psd.colors, statuses })) {   // its colours still bake (field colors), on the card's own text
+      specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, part: true, path: j.layer, id: j.id, colors: j.colors });
+      fams.push(await family(j.role, specs[specs.length - 1].label, j.layer, j.id));
+    }
+  }
   for (const [k, s] of specs.entries()) {             // typed letters its font can't draw: as the bake sets them
     const { fam, gaps, mgp } = fams[k];
     if (s.text == null || typeof gaps?.lacks !== "string" || !Array.isArray(gaps.notdef)) continue;
