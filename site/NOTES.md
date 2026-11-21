@@ -801,9 +801,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     10 more minutes, and Preview again; past a day it never comes: expired), so a result that came while the site was
     closed is found on the next load (the review's case: press, close the laptop, come back 25 minutes later); the
     first round after a load or a sign-in also looks once at the timed-out ones (`due`). One tab checks for all
-    (`takeLock`: localStorage `card-previews-poll` = `{tab, until}`, 75 s, given up on `pagehide`; a press takes it, so
-    the pressing tab reads its own hand-over: 2026-11-19, else a warm press waited ~17 s for the branch); the others see the
-    results through the `storage` event. A round's results make one toast, in the tab you're looking at ("Preview
+    (`takeLock`: localStorage `card-previews-poll` = `{tab, until}`, 75 s, given up on `pagehide`); the tab in front takes
+    it (`claim`: a press; a page shown, a window focused, a load or sign-in in front while any is running, then a check at
+    once) and reads the hand-over itself (the run's or the lane's, again if another tab had it), so the early result shows
+    where the person looks (2026-11-20; before, any tab could hold it and the others waited ~17 s for the branch); the
+    others see the results through the `storage` event. A round's results make one toast, in the tab you're looking at ("Preview
     ready: Abbi", "Previews finished: Abbi, Acro and Poison"; `finished`, `finishedToast`, 400 ms to gather the
     storage events). Signed out, no timer runs; signing in starts it. Several cards run side by side.
   - The hand-over, sooner (2026-11-13; section 19's "Sooner"): from `EARLY_MS` the checking tab also finds the run
