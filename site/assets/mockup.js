@@ -2424,15 +2424,17 @@ export function recordLayout(c, old, k) {
   const was = String(old ?? "").replace(/\r/g, ""), core = was.trim();
   if (!core) return null;
   if (T.trim() !== core) { const v = noVariants(T); if (!v || v.T.trim() !== core) return null; ({ T, at, heads } = v); }   // the record has [dark], the plate [dark:sticker]
+  let cp = at;                                        // the plate's indexes are code points: an emoji is 2 here
+  if (/[\ud800-\udfff]/.test(c.text)) { const u = [0]; for (const ch of c.text) u.push(u[u.length - 1] + ch.length); cp = i => at(u[i] ?? i); }
   const shift = was.indexOf(core) - T.indexOf(core), paraAt = [];   // T index + shift: was's
   for (let i = 0, p = 0; i <= was.length; i++) { paraAt.push(p); if (was[i] === "\n") p++; }
   const lines = c.lines.map(([s, e, base, left, right, top, bottom, just]) => {
-    const a = at(s) + shift, z = at(e) + shift, inside = a === z ? a >= 0 && a <= was.length : z > 0 && a < was.length, s0 = clamp(a, 0, was.length);   // a leading space trimmed: from 0
+    const a = cp(s) + shift, z = cp(e) + shift, inside = a === z ? a >= 0 && a <= was.length : z > 0 && a < was.length, s0 = clamp(a, 0, was.length);   // a leading space trimmed: from 0
     return { s: inside ? s0 : a, e: inside ? clamp(z, 0, was.length) : z, base: base * k, left: left * k, right: right * k, top: top * k, bottom: bottom * k, just: just | 0, para: inside ? paraAt[s0] : -1 };
   });
   const x = new Map(), ink = new Map();               // a cluster's first glyph (a sticker draws 3)
   for (const g of c.glyphs) {
-    const j = at(g[0]) + shift;
+    const j = cp(g[0]) + shift;
     if (!x.has(j)) x.set(j, g[1] * k);
     if (g.length >= 4 && !ink.has(j)) ink.set(j, [g[2] * k, g[3] * k]);
   }
