@@ -10,14 +10,14 @@ the rules or a checkout (the updater checks run on copies in a temp dir).
 ```sh
 python3 -m venv ~/.venvs/tts-checks                             # once
 ~/.venvs/tts-checks/bin/pip install requests Pillow lupa
-~/.venvs/tts-checks/bin/python TTS/checks/run_all.py            # all checks on the repo's save, about 40 s
+~/.venvs/tts-checks/bin/python TTS/checks/run_all.py            # all checks on the repo's save, about 30-35 s
 ~/.venvs/tts-checks/bin/python TTS/checks/structure.py [save]   # one check
 ```
 
 Each check takes the save as its first argument (default: the repo's save) and exits 1 on a failure. `run_all.py`
 runs them 4 at a time, the slow ones first, prints one line per check (in its list's order) plus the end of a failing
 check's output, and keeps every output in `/tmp/tts-checks/out/`. It runs `card_sync_steps.py` as 3 parts of its
-groups (`GROUPS`: two listed in `run_all.py`, then the rest), about 15 s each, so 13 lines. A part that fails printing
+groups (`GROUPS`: two listed in `run_all.py`, then the rest), about 25-30 s each, so 13 lines. A part that fails printing
 macOS bash 3.2's `write error: Interrupted system call` (a pipe write cut by a signal; the runners' bash 5 never prints
 it) runs once more: its line says `run again: bash EINTR` and its output file keeps both runs.
 

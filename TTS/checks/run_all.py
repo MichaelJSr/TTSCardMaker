@@ -1,6 +1,6 @@
 """Runs every check on a save, 4 at a time: one line each, the tail of a failing one, exit 1 if any fails.
 
-    python run_all.py [save.json]       (default the repo's save; outputs in /tmp/tts-checks/out/; about 40 s)
+    python run_all.py [save.json]       (default the repo's save; outputs in /tmp/tts-checks/out/; about 30-35 s)
 """
 import os
 import re
@@ -21,12 +21,12 @@ CHECKS = [   # file and its extra arguments
     ("links_pins.py",), ("links_http.py",),
     ("updater_idempotent.py",),
 ]
-# card_sync_steps.py in 3 parts of about 15 s: these two and the rest of its GROUPS
-CSS_PARTS = (("main", "save", "bake"), ("plans", "timer", "gate", "history", "build", "tell"))
+# card_sync_steps.py in 3 parts of about 25-30 s: these two and the rest of its GROUPS
+CSS_PARTS = (("main", "save", "bake", "names"), ("plans", "timer", "gate", "history", "build", "tell"))
 CHECKS += [("card_sync_steps.py", *p) for p in (*CSS_PARTS, tuple(g for g in GROUPS if g not in sum(CSS_PARTS, ())))]
 OUT = "/tmp/tts-checks/out"
 TIMEOUT = 600                                               # seconds per check: one that hangs fails, the rest still run
-SLOW = ("card_sync_steps.py", "links_http.py", "updater_idempotent.py")   # started first
+SLOW = ("card_sync_steps.py", "updater_idempotent.py", "lua_mock.py", "links_http.py")   # started first
 # macOS bash 3.2: a builtin's pipe write cut by SIGCHLD (never bash 5 on runners); each part makes its own sandboxes
 EINTR = re.compile(r"\S+: line \d+: \w+: write error: Interrupted system call")   # $0 is the name after bash -c
 
