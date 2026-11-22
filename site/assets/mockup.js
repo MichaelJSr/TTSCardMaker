@@ -875,13 +875,34 @@ export function pointLayout(paras, size, reach, measure) {
   while (Math.max(...lines.map(l => l.w)) > reach && s > size * 0.4) { s *= 0.94; lines = layout(paras, Infinity, s, measure); }
   return { size: s, lines };
 }
-/** A title as the bake sets it (psd_edit set_text_layer): never shrunk; point text keeps its lines, a box's (more lines
+/** A title as the bake sets it (psd_edit set_text_layer): at its size (titleFit: smaller off icons); point text keeps its lines, a box's (more lines
  *  found than the old text's n0 paragraphs) wraps at maxW. over: more lines than it has; dx: back on the card (back_on),
  *  from its left edge when left set, else centred. */
 export function titleLayout(paras, n0, found, maxW, size, measure, W, left = false) {
   const lines = layout(paras, found.lines.length > n0 ? maxW : Infinity, size, measure);
   const w = Math.max(0, ...lines.map(l => l.w)), x0 = left ? found.box[0] : (found.box[0] + found.box[2] - w) / 2;
   return { size, lines, over: lines.length > Math.max(1, found.lines.length, paras.length), dx: w > W ? 0 : clamp(x0, 0, W - w) - x0 };
+}
+export const TITLE_MIN = 0.7, TOUCH_PAD = 10;         // psd_edit fit_title: its floor; px round the old title an icon is left out
+/** The record's shown stars and header type icons ([name, core], image px at k per canvas px) a title may not newly
+ *  print over (psd_edit _clear_icons): none within TOUCH_PAD of any of its old boxes (image px). */
+export function titleIcons(head, k, boxes) {
+  const pad = TOUCH_PAD * k, near = (c, b) => Math.min(c[2], b[2] + pad) > Math.max(c[0], b[0] - pad) && Math.min(c[3], b[3] + pad) > Math.max(c[1], b[1] - pad);
+  const all = [...(Array.isArray(head?.stars?.units) ? head.stars.units : []).map(u => ["star", u?.core]), ...(Array.isArray(head?.types?.row) ? head.types.row : []).map(u => [u?.name, u?.core])];
+  return all.filter(([, c]) => Array.isArray(c) && c.length === 4).map(([n, c]) => [n, c.map(v => v * k)]).filter(([, c]) => !boxes.some(b => near(c, b)));
+}
+/** psd_edit fit_title: the largest scale, by 0.94 down to TITLE_MIN, at which a title prints on none of its icons and
+ *  stays on the card (reaches(s, sides): true while it doesn't); 1 when it reaches none at its size or none clears. */
+export function titleFit(reaches) {
+  if (!reaches(1, false)) return 1;
+  for (let s = 1; s > TITLE_MIN;) { s = Math.max(TITLE_MIN, s * 0.94); if (!reaches(s, true)) return s; }
+  return 1;
+}
+/** The card maker's title boxes (canvas px) an earlier fit kept: the card's titleWas, with its titleFit (psd_edit
+ *  set_text_layer's was; titleIcons leaves icons near them out, never near its text's at the card maker's size); else null. */
+export function keptTitle(card) {
+  const kept = card?.titleFit > 0 && card.titleFit < 1 && Array.isArray(card.titleWas) ? card.titleWas.filter(b => Array.isArray(b) && b.length === 4 && b.every(Number.isFinite)) : [];
+  return kept.length ? kept : null;
 }
 
 /** The stat rows a template draws, in px: [{k, box, cells: 10}] for the stats a card has (hp, def, atk, spd in order);
@@ -1737,7 +1758,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const { found, size: z, colours, deleted, skipped } = plans[k];
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
-    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : 0,
+    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : card?.titleFit,
+      head: role === "name" && !(obj(rec?.parts)?.follow || []).some(f => f?.how === "copy" && idsOf(specs[k], k).some(id => (f.of || []).includes(id))) ? obj(rec?.header) : null,   // a title with copies keeps its size
+      titleWas: role === "name" ? keptTitle(card) : null,
       geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, stack: part && role === "ability" ? stackRows(rec, specs[k].id, kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer) : null,
       bare: plans[k].plated && fxIn(plate, idsOf(specs[k], k), old) ? () => plateCuts(cardPx, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, "", wiping) : null });   // the crop without its FX layers
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
@@ -2232,10 +2255,11 @@ export function firstBase(ctx, line, { top, s0, z, frame, fam }) {
   return frame ? frame[1] + (top + up - frame[1]) * z / s0 : top + up * z / s0;
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
- *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
+ *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout), smaller where it newly
+ *  prints over a star or type icon (titleFit). An Ability with the
  *  record's frame and px (box text) wraps at the frame at its set size, as the bake; with px and no frame (point
  *  text) each paragraph is one line (pointLayout), re-laid at a size it shrank to past the old text's (fit_below). An
- *  Ability a bake set smaller (the card's abilityFit) starts from the card maker's size, as the next bake. */
+ *  Ability or title a bake set smaller (the card's abilityFit, titleFit) starts from the card maker's size, as the next bake. */
 function drawText(ctx, job, imgs, W) {
   let { role, text, old, area, found, size, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was, tex, copies = null } = job;
   const looked = (ps, s) => {                         // kept badges at their own size and tracking, typed ones tracked as the card's
@@ -2398,7 +2422,7 @@ function drawText(ctx, job, imgs, W) {
     while (need(z) > room2 && z > size * 0.4) { z *= 0.94; lines = layout(paras, maxW, z, measure); }
     over = need(z) > room2 + 1;
   }
-  const pitch = pitch0 * (z / size);
+  let pitch = pitch0 * (z / size);
   let base = top + z * (role === "name" ? 0.8 : 0.7);   // an Ability: textBlocks leaves out thin ascender rows, so its top sits low
   if (role === "ability" && !point && !geo && kc && layer?.box?.length === 4 && plain(layer.text) === plain(old))   // no plate layout: its own first baseline
     base = firstBase(ctx, layout(looked(tokenize(old, icons), old), maxW, size / grow, measure)[0], { top: layer.box[1] * kc, s0: size / grow, z, frame, fam }) ?? base;
@@ -2413,6 +2437,30 @@ function drawText(ctx, job, imgs, W) {
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = ring ? ring.slice(0, 3) : colours?.stroke, strokeW = ring ? 2 * ring[3] * (kc || W / 1200) : 0;
   const stroke0 = own ? own.slice(0, 3) : colours?.stroke, strokeW0 = own ? 2 * own[3] * (kc || W / 1200) : 0;   // a splice's (geoDraw)
   const fk = kc || W / 1200, effects = Array.isArray(layer?.fx) ? layer.fx.map(e => ({ ...e, dx: (e.dx || 0) * fk, dy: (e.dy || 0) * fk, size: (e.size || 0) * fk, ws: (e.ws || 0) * fk })) : null;   // psd_details: its shadows and glows
+  let fitted = 1;                                     // a point-text title newly over a star or type icon: smaller about its anchor (psd_edit fit_title)
+  if (role === "name" && job.head && kc && !tframe && !split && old != null) {
+    const R0 = geo ? recordLayout(geo.c, old, kc) : null, l0 = R0?.lines.find(l => l.para >= 0 && R0.was.slice(l.s, l.e).trim());   // the card's own first line: its baseline and ends
+    const ox = l0 ? (left ? l0.left - found.box[0] : (l0.left + l0.right) / 2 - mid) : 0, pb = l0 ? l0.base : base, pt = l0 ? l0.top : found.lines[0][1];
+    const baseAt = s => pt + (pb - pt) * s;                 // its first baseline at scale s: the bake's point text shrinks towards its top
+    const boxes = job.titleWas ? job.titleWas.map(b => b.map(v => v * kc))   // the card maker's (an earlier fit's), else the old text's
+      : [Array.isArray(layer?.box) && layer.box.length === 4 ? layer.box.map(v => v * kc) : found.box];
+    const g = ring ? ring[3] * fk : 0, cores = titleIcons(job.head, kc, boxes).map(([, c]) => [c[0] - g, c[1] - g, c[2] + g, c[3] + g]), H = ctx.canvas.height;
+    const relay = zs => titleLayout(paras, tokenize(old).length, found, maxW, zs, measure, W, left);
+    if (cores.length) {
+      const y0 = clamp(Math.floor(Math.min(...cores.map(c => c[1]))), 0, H - 1), y1 = clamp(Math.ceil(Math.max(...cores.map(c => c[3]))), y0 + 1, H);
+      const mask = document.createElement("canvas"); mask.width = W; mask.height = y1 - y0;
+      const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -y0);
+      fitted = titleFit((s, sides) => {                 // its ink in a core (grown by its outline), or off the card's sides
+        const t = relay(z * s), w = Math.max(0, ...t.lines.map(l => l.w)), x0 = (left ? found.box[0] : mid - w / 2) + ox;
+        mx.clearRect(0, y0, W, y1 - y0);
+        paintLines(mx, t.lines, { at: l => (left ? found.box[0] : mid - l.w / 2) + ox, base: baseAt(s), pitch: pitch * s, z: z * s, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill: [255, 255, 255], stroke: null, imgs, one });
+        const a = mx.getImageData(0, 0, W, y1 - y0).data;
+        const inked = c => { for (let y = Math.max(y0, Math.round(c[1])); y < Math.min(y1, Math.round(c[3])); y++) for (let x = Math.max(0, Math.round(c[0])); x < Math.min(W, Math.round(c[2])); x++) if (a[((y - y0) * W + x) * 4 + 3] > 128) return true; return false; };
+        return cores.some(inked) || (sides && (x0 < 0 || x0 + w > W));
+      });
+    }
+    if (fitted < 1) { ({ size: z, lines } = relay(z * fitted)); pitch *= fitted; dx = ox; base = baseAt(fitted); }   // re-laid where the card's line stands
+  }
   let shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
   if (shades && row?.ink) shades = { ...colours.shades, top: row.ink[0], bottom: row.ink[1] };   // a stacked box set anew: over its new ink (the layer's own Gradient Overlay)
   if (role === "name" && geo && kc && plain(text) === plain(old) && sameWords(geo.c.text, old)) {   // a colour alone on a title (its fill hidden: tintPlan's none): each of its own lines redrawn where it stands
@@ -2434,7 +2482,7 @@ function drawText(ctx, job, imgs, W) {
   if (R && Array.isArray(layer?.fr) && String(geo.c.id) === String(layer.id))   // its letters in another font, on was: [s, e, family, its measure]
     R.fr = layer.fr.map(([s, e, f]) => [R.at(s) + R.shift, R.at(e) + R.shift, fr?.[f], fr?.[f] ? Object.assign(widthIn(ctx, fr[f], measure.track, measure.hx), measure) : null]);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid, unless spliced on the card (the bake shrinks ink off it only)
-  job.lined = plan && grow === 1 && row?.base == null ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
+  job.lined = plan && grow === 1 && row?.base == null && fitted === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
