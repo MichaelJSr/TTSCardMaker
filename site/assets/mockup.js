@@ -551,7 +551,7 @@ const STOOD = /[\ufdd0-\ufdd4]/;                     // stand-ins (noncharacters
  *  one): a D13 mark plain where the font draws the plain one (psd_edit.plain_typed), else in the font the bake picks
  *  (pick(s, from): a font name or "", psd_edit.glyph_fonts; from: the letter of the run it is typed into, when the font
  *  lacks that one too: The Structure's digits), else as its .notdef (no_glyph; an empty glyph as it is); a kept one the
- *  font can't draw in the font its layer prints it in (keep(c), Battle Spear's Chiller '%'), icons and badges as they
+ *  font can't draw in the font its layer prints it in (keep(c), Crock Pot's Arial ':'), icons and badges as they
  *  are. {text: the same length, with stand-ins glyphRuns reads, boxes: the letters set as .notdef, fonts: Map(letter ->
  *  font name) draw sets each such letter in, the text left as typed}. */
 export function glyphPlan(text, old, lacks, pick = null, empty = "", keep = null) {

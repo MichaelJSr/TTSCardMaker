@@ -759,9 +759,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     the fonts of each layer's `faces` (psd_details VERSION 14: plain letters only, a styled stand-in such as Minecraft
     Panda's shifted '∞' passes no font on: psd_edit.plain_sigs), glyphFont picks as the bake does (the run it is typed
     into first: The Structure's IRONMAN digits), and glyphPlan returns `fonts` (letter -> font) that `measure` and
-    `glyphText` draw in their own family (PICKED, keyed by the layer's family list), kept letters too (Battle Spear's
-    Chiller '%'); the text itself is unchanged, so a colour alone still tints in place; only one no font draws is a
-    .notdef and a caption. The text keeps its length (stand-in
+    `glyphText` draw in their own family (PICKED, keyed by the layer's family list), kept letters too, in the font their
+    layer prints them in (Crock Pot's ':' in Arial; a styled stand-in is not in faces, so once a '%' is typed Battle
+    Spear's kept Chiller '%' draws in the typed one's Myriad); the text itself is unchanged, so a colour alone still
+    tints in place; only one no font draws is a .notdef and a caption. The text keeps its length (stand-in
     noncharacters U+FDD0-FDD4 that `measure` and `glyphText` expand). The Rendered preview's note "font: name: '.' has
     no glyph in its font (drawn as a box)" reads "The title's font has no '.': it prints as a box or a gap.". Measured
     on 22 website-shaped edits (18 boxes or gaps, 4 typed dashes; plates on): wrong px against the bake 178,816 -> 62,659,
