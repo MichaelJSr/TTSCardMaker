@@ -1380,14 +1380,15 @@ export function splitWhy(ctx, rec, specs, fams, kc, W) {
   return "";
 }
 /** The copies stacked on the one layer ids names (its plate crop's "stacked", AutoCroissant card_plates._stacked) in its
- *  font and size (layer: its text record): [{dx, dy (image px), above, ch, fill}] or null. */
-function stackedOf(rec, plate, ids, k, layer) {
+ *  font and size (layer: its text record): [{dx, dy (image px), above, ch, fill}] or null. off: a whole colour turns
+ *  their overlays off too (psd_edit set_colors): no fill of their own. */
+function stackedOf(rec, plate, ids, k, layer, off = false) {
   const c = ids.length === 1 && k > 0 ? (plate?.crops || []).find(x => String(x.id) === String(ids[0]) && !Array.isArray(x.fx)) : null;
   const texts = Array.isArray(rec?.text) ? rec.text : [];
   const out = (Array.isArray(c?.stacked) ? c.stacked : []).filter(x => {
     const t = texts.find(y => String(y?.id) === String(x?.id));
     return t && layer && t.font === layer.font && t.size === layer.size && Array.isArray(x.at);
-  }).map(x => ({ dx: x.at[0] * k, dy: x.at[1] * k, above: !!x.above, ch: Array.isArray(x.ch) ? x.ch : null, fill: Array.isArray(x.fill) ? x.fill : null }));
+  }).map(x => ({ dx: x.at[0] * k, dy: x.at[1] * k, above: !!x.above, ch: Array.isArray(x.ch) ? x.ch : null, fill: !off && Array.isArray(x.fill) ? x.fill : null }));
   return out.length ? out : null;
 }
 /** The layers over a follow layer back on top of its new letters (cuts: their plates, the card without each): the card's
@@ -1816,7 +1817,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : keptFit(card, layer?.id),
       head: role === "name" && !(obj(rec?.parts)?.follow || []).some(f => f?.how === "copy" && idsOf(specs[k], k).some(id => (f.of || []).includes(id))) ? obj(rec?.header) : null,   // a title with copies keeps its size
       titleWas: role === "name" ? keptTitle(card, layer?.id) : null,
-      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, cover: plans[k].cover || null, stack: part && role === "ability" ? stackRows(rec, specs[k].id, kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer) : null,
+      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, cover: plans[k].cover || null, stack: part && role === "ability" ? stackRows(rec, specs[k].id, kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer, (colors || []).some(o => o?.field === role && !o.phrase)) : null,
       bare: plans[k].plated && fxIn(plate, idsOf(specs[k], k), old) ? () => plateCuts(cardPx, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, "", wiping) : null });   // the crop without its FX layers
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
