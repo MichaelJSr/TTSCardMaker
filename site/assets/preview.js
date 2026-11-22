@@ -528,7 +528,7 @@ export function createPreviews(app) {
       const posted = blob && ed.github(`/repos/${repo()}/git/blobs`, { method: "POST", body: { content: blob.base64, encoding: "base64" } })
         .then(b => { if (b?.sha !== blob.sha) lanesOk = false; }, () => { lanesOk = false; });   // beside the dispatch
       const head = blob && bellsOk && laneHead(store, lane);
-      if (head) posted.then(() => lanesOk && ring(head, laneBell(lane, request, blob.sha)));   // then the doorbell: the lane takes the press at once
+      if (head) ring(head, laneBell(lane, request, blob.sha));   // the doorbell beside them: the lane takes the press at once (its blob's 404 tried again)
       try { await send(); } catch (e) { if (!inputs.lane || e.status !== 422) throw e; delete inputs.lane; lanesOk = false; await send(); }   // a workflow without lanes
       await posted;
       const named = !!inputs.lane && lanesOk;
