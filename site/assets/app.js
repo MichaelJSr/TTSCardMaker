@@ -1525,7 +1525,8 @@ function renderRules(r) {
     const h = `#/rules/${page.id}`; rulesAt = ""; history.replaceState(history.state, "", h); renderView(parseHash(), h); return;
   }
   const typed = bookFold((r.params.get("q") || "").trim()), chapters = S.book.chapters, x = typed && bookTag(typed, chapters);
-  const q = !x ? typed : x.printed ? [x.tag.toLowerCase(), x.row] : x.row;   // "(1gcd)": it or (XGCD); "(2pg)": (XPG)
+  const d = !x && typed && bookDuration(typed, (r.params.get("q") || "").trim(), chapters);   // "2t1 stuffed": [x]t[y] or stuffed
+  const q = d ? (d.found ? [d.row, d.rest] : d.row) : !x ? typed : x.printed ? [x.tag.toLowerCase(), x.row] : x.row;   // "(1gcd)": it or (XGCD); "(2pg)": (XPG)
   if (document.activeElement !== qInput) qInput.value = "";
   const hit = q && bookRe(q), ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => hit.test(c.text)) : chapters;
   const banned = S.data.banlist, can = editing(), top = scrollY === 0 && !S.restoring;   // before the view goes (see renderCards)
@@ -1537,7 +1538,7 @@ function renderRules(r) {
       <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
         ${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button>`}</div></nav>
     <div class="rb rb-book">
-      ${q ? `<p class="muted">${!x ? `${found} mention “${esc(r.params.get("q"))}”.` : x.printed ? `${found} mention “${esc(x.tag)}” (its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}).` : `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
+      ${q ? `<p class="muted">${d ? `“${esc(d.word)}” is not printed in the rulebook; its rule [X]T[Y] (${esc(d.says)})${d.found ? ` and “${esc(d.said)}” are` : " is"} in ${found}${d.said && !d.found ? ` (no chapter mentions “${esc(d.said)}”)` : ""}.` : !x ? `${found} mention “${esc(r.params.get("q"))}”.` : x.printed ? `${found} mention “${esc(x.tag)}” (its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}).` : `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
       ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${chapterHtml(c, ctx)}</article>`).join("")
         || `<div class="empty">No rulebook chapter mentions that.</div>`}
@@ -1657,6 +1658,18 @@ function bookTag(q, chapters) {
   if (!m || !chapters.some(c => bookRe(row).test(c.text))) return null;
   const printed = RB.printed(chapters).some(c => new RegExp(`(?<![\\w/-])${tag}(?![a-z])`).test(c.text));
   return { tag: `(${tag.toUpperCase()})`, row, says: m[1] ? `Y = ${m[1]} and X = ${m[2]}` : `X = ${m[2]}`, printed };
+}
+// a status duration as cards print it ("2t1") that the printed book never prints as a whole word ("5t1" it does; the 2t
+// in e2t is no word): the Status Effects rule [X]T[Y] instead, the other words (as typed: raw) a phrase beside it, as the
+// bot's duration_rule and TTS listPages
+function bookDuration(q, raw, chapters) {
+  const words = q.split(" "), book = RB.printed(chapters), row = "[x]t[y]";
+  const at = words.flatMap((w, i) => /^\d+t\d*$/.test(w) && !book.some(c => new RegExp(`(?<![a-z0-9])${w}(?![a-z0-9])`).test(c.text)) ? [i] : []);
+  if (!at.length || !chapters.some(c => bookRe(row).test(c.text))) return null;
+  const [x, y] = words[at[0]].split("t"), n = (k, s) => `${k} ${s}${Number(k) === 1 ? "" : "s"}`;
+  const rest = words.filter((_, i) => !at.includes(i)).join(" "), said = raw.split(/\s+/).filter((_, i) => !at.includes(i)).join(" ");
+  return { word: words[at[0]].toUpperCase(), row, says: `X = ${n(x, "turn")}${y ? `, Y = ${n(y, "stack")}` : ""}`, rest, said,
+    found: !!rest && chapters.some(c => bookRe(rest).test(c.text)) };
 }
 // an old Photoshop page's name ("11 Abilities4", "08 Global Turn": the bot's 10-25 changelog links): the chapter of that
 // number and title (spaces and a first "The" aside), a page number after it

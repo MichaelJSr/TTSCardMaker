@@ -1184,6 +1184,10 @@ relies on:
 - A deep link on a page load can jump before the bar's ResizeObserver first runs (at the first frame): `settleAt`
   measures the bar first (`barSize`), else windows up to 980 px aimed at the 57 px default and the target sat under
   the bar (2026-11-22, 390 px phone, cold loads of the bot's 148 rulebook links: 23 -> 0).
+- Rulebook search: a status duration typed as cards print it (`2T1`, `2T`, `1T1 Restrained`) that no printed chapter
+  has as a whole word (`5T1` one has; the 2t in E2T is no word) searches Status Effects' `[X]T[Y]` instead, the other
+  words beside it (app.js `bookDuration`, 2026-11-22; as AutoCroissant /query_rulebook `duration_rule` and TTS
+  listPages). The 21 forms on 178 cards and the 40 commonest duration + status pairs: no chapter for 57 of 61 -> 0.
 - Read `scrollY` and the window size before replacing the view (renderCards `win`, renderStatsView `top`, `vh`): read
   after, they force a layout of the short page (`innerWidth` too on phones) and the scroll position clamps.
 - Mentions: `mentions()` parses without building the icons' HTML (`parse(text, self, false)`); it must keep finding
