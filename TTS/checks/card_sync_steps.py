@@ -680,18 +680,25 @@ def served(url: str) -> dict:
 
 def checkout_data(tmp: str, bare: str, name: str, job: dict = None, url: str = "") -> str:
     """The data lane's checkout: Cards start's and Cards' (job's; url its origin; failed: AssertionError), else a clone as
-    actions/checkout's (site.yml's): blobless, depth 1, sparse (no TTS/)."""
-    ws = os.path.join(tmp, name)
+    actions/checkout's (site.yml's): blobless, depth 1, sparse (no TTS/). Cards waits for Cards start's fetch (a loaded
+    Mac outlasts its 25 s); the sandbox's fetch cut by its own timeout (124) runs once more."""
+    ws, runner = os.path.join(tmp, name), os.path.join(tmp, "runner")
     if job:
-        os.makedirs(ws)
-        for f in ("cards.code", "reqs.done", "bot.reqs"):                      # a fresh RUNNER_TEMP's
-            if os.path.exists(os.path.join(tmp, "runner", f)):
-                os.remove(os.path.join(tmp, "runner", f))
         env = {**served(url or f"file://{bare}"), "GITHUB_API_URL": f"file://{tmp}/no-api", "TOKEN": "", "BOT_REPO": "b/b",
                "BUILDER_REF": "main", "CARD_FILES": step(job, "Cards start")["env"]["CARD_FILES"]}
-        run_step(job, "Cards start", ws, env, tmp)
+        for again in (False, True):
+            if again:
+                shutil.rmtree(ws)
+            os.makedirs(ws)
+            for f in ("cards.code", "reqs.done", "bot.reqs"):                  # a fresh RUNNER_TEMP's
+                if os.path.exists(os.path.join(runner, f)):
+                    os.remove(os.path.join(runner, f))
+            run_step(job, "Cards start", ws, env, tmp)
+            _written(os.path.join(runner, "cards.code"), 120)
+            if url or again or _read(os.path.join(runner, "cards.code")) != "124":
+                break
         code, text, out = run_step(job, "Cards", ws, {"HIT": "", "KEY": ""}, tmp)
-        assert code == 0 and out.get("ok") == "true", text
+        assert code == 0 and out.get("ok") == "true", f"{text.rstrip()}\ncards.code {_read(os.path.join(runner, 'cards.code')) or '-'}"
         return ws
     subprocess.run(["git", "clone", "-q", "--filter=blob:none", "--depth=1", "--no-checkout", f"file://{bare}", ws], check=True)
     git(ws, "sparse-checkout", "set", "--no-cone", "/.github/actions/history/", "/site/Card Edits.json",
@@ -705,6 +712,10 @@ def _written(path: str, seconds: float = 60) -> bool:
     while (not os.path.exists(path) or not open(path).read().strip()) and time.monotonic() < end:
         time.sleep(0.05)
     return os.path.exists(path) and bool(open(path).read().strip())
+
+
+def _read(path: str) -> str:
+    return open(path).read().strip() if os.path.exists(path) else ""
 
 
 def history(job: dict, ws: str, tmp: str, start: str = "", wait: str = "", fetch: str = "", copy: str = None,
