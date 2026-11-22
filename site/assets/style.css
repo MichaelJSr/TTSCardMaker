@@ -44,7 +44,7 @@ img { max-width: 100%; }
   background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
 .brand { display: flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 650; white-space: nowrap; }
 .brand:hover { text-decoration: none; }
-.brand .logo { flex: none; width: 26px; height: 26px; background-color: currentColor; -webkit-mask-size: contain; mask-size: contain; }   /* the logo in the text colour; its mask's URL in index.html (the page's <base>) */
+.brand .logo { flex: none; width: 26px; height: 26px; background-color: currentColor; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; }   /* the logo in the text colour; its mask's URL in index.html (the page's <base>) */
 .tabs { display: flex; gap: 2px; }
 .tabs a { color: var(--ink-2); padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
 .tabs a:hover { background: var(--surface-2); color: var(--ink); text-decoration: none; }
