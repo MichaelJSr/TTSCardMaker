@@ -44,6 +44,7 @@ AUX = "creatures"                          # auxiliary creatures: compared with 
 MIN_COHORT = 5                             # a smaller star level is compared with its kind's "all stars" cohort
 OFF_SCALE = 40                             # a total above this is off the scale (stats.js offChart): Tainted Lazarus' old 110s
 STATS_UNKNOWN = ("NO STATS FOUND", "OUT OF RANGE: stats")   # a reading's problems that leave its stats unknown
+STARS_UNKNOWN = "NO STARS FOUND"           # its stars (AutoCroissant card_history.UNKNOWN_IF)
 STAT_MAX, RAID_STARS, RANGE_PARSER = 20, 6, 2   # AutoCroissant card_history: from parser 2, over 20 needs an allowance
 TOP, BOTTOM = 90, 10                       # flags: the top and bottom 10% of a cohort's totals
 STATS = (("hp", "hp"), ("def", "defense"), ("atk", "attack"), ("spd", "speed"))
@@ -396,6 +397,8 @@ def change(a, b, texts):
             row["bal"] = "buff" if sum(lb) > sum(la) else "nerf" if sum(lb) < sum(la) else "shift"
     for field, key in (("stars", "stars"), ("card_type", "kind"), ("subtype", "sub"), ("series", "series")):
         va, vb = getattr(a, field, None), getattr(b, field, None)
+        if field == "stars" and any(str(p).startswith(STARS_UNKNOWN) for v in (a, b) for p in getattr(v, "problems", None) or []):
+            continue                                                  # not found: unknown
         if va != vb and None not in (va, vb) and "unknown" not in (va, vb):   # never recorded: unknown
             row[key] = [va, vb]
     ta, tb = Counter(getattr(a, "types", None) or []), Counter(getattr(b, "types", None) or [])
