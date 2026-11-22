@@ -343,7 +343,7 @@ local function ensureData()
             if page.name and pageOfTitle[page.name] == nil then pageOfTitle[page.name] = i - 1 end
             local text = typedMinus(page.t or "")
             table.insert(bookPages, {name = page.name or "", num = page.num or "", page = i - 1, text = text, low = text:lower(),
-                chapter = num and num == math.floor(num) or page.name == "Table of Contents"})
+                chapter = num and num == math.floor(num) or page.name == "Table of Contents", h = type(page.h) == "table" and page.h or {}})
         end
     end
 end
@@ -1355,7 +1355,8 @@ function spawnDeck(player, _, id)                      -- beside the card, clear
     end
 end
 
--- the rulebook panel: its chapters, or the pages holding every word searched (a snippet of each); a click turns the PDF there
+-- the rulebook panel: its chapters, or the pages holding every word searched (a snippet of each); a click turns the PDF there.
+-- pages.json "h": each page's section headings (AutoCroissant rulebook_pages)
 local found = {}                                       -- color -> the pages its buttons go to
 local function inWord(b)                               -- a-z or 0-9 (text lowercased)
     return b ~= nil and (b >= 97 and b <= 122 or b >= 48 and b <= 57)
@@ -1387,6 +1388,20 @@ local function duration(w)                             -- a status duration as c
     local i = digitsTo(w, 1)
     return i > 1 and w:sub(i, i) == "t" and digitsTo(w, i + 1) == #w + 1
 end
+local function spaced(s)                               -- s's words, one space between
+    local out, start = {}, 1
+    while start <= #s do
+        local sp = s:find(" ", start, true) or #s + 1
+        if sp > start then out[#out + 1] = s:sub(start, sp - 1) end
+        start = sp + 1
+    end
+    return table.concat(out, " ")
+end
+local function headKeys(s)                             -- a heading as typed: as it is, its punctuation dropped ("nme shop") or a space ("multi hit")
+    local low = typedMinus(s):lower()
+    local a, b = unpunct(low, "", true, " ")
+    return spaced(low), spaced(a), spaced(b)
+end
 local function listPages(color, query)
     local id, list, chars = color .. "_rb", {}, {}
     for i = 1, #(query or "") do                       -- "(" and ")" count as spaces: "(1CD)" finds the drawn 1CD
@@ -1394,6 +1409,7 @@ local function listPages(color, query)
         chars[i] = (ch == "(" or ch == ")") and " " or ch
     end
     local q = typedMinus(table.concat(chars)):lower()
+    local typed = spaced(q)
     local words = {}
     local start = 1
     while start <= #q do                               -- the query's words (spaces between them)
@@ -1417,9 +1433,10 @@ local function listPages(color, query)
         words[i] = x or w
         bare[i] = unpunct(words[i], "") == words[i]
     end
-    local first, named, whole, rest = {}, {}, {}, {}   -- a duration's pages first (the other words needn't be there: few
-    for _, p in ipairs(bookPages) do                   -- statuses are), then pages whose name starts a word with every other
-        if #words == 0 then                            -- word ("item": Items), those with them all whole ("(OS)" not "most"), the rest
+    local first, named, headed, whole, rest = {}, {}, {}, {}, {}   -- a duration's pages first (the other words needn't be
+    for _, p in ipairs(bookPages) do                   -- there: few statuses are), then pages whose name starts a word with
+        if #words == 0 then                            -- every other word ("item": Items), those with a heading as typed
+                                                       -- ("item shop": Shops), those with them all whole ("(OS)" not "most"), the rest
             if p.chapter then table.insert(list, {p.page, (p.num ~= "" and (p.num .. ".  ") or "") .. p.name .. "   p. " .. (p.page + 1)}) end
         else
             local row, at, isNamed, all, name = nil, nil, true, true, p.name:lower()
@@ -1440,17 +1457,28 @@ local function listPages(color, query)
                 end
             end
             at = row or at
+            if not p.keys then                         -- its headings as compared, once
+                p.keys = {}
+                for _, h in ipairs(p.h) do
+                    if type(h) == "string" then
+                        local k1, k2, k3 = headKeys(h)
+                        p.keys[k1], p.keys[k2], p.keys[k3] = h, h, h
+                    end
+                end
+            end
+            local head = not row and p.keys[typed]
+            if head then at = p.low:find(head:lower(), 1, true) or at or 1 end   -- the snippet at the heading
             if at then
                 local from, to = math.max(1, at - 28), at + 44     -- the snippet on whole words
                 local sp = from > 1 and p.text:find(" ", from, true)
                 if sp and sp < at then from = sp + 1 end
                 local stop = p.text:find(" ", to, true)
                 local snippet = p.text:sub(from, stop and stop - 1 or #p.text)
-                table.insert(row and first or (isNamed and named or (all and whole or rest)), {p.page, "p. " .. (p.page + 1) .. "  " .. p.name .. ":  " .. (from > 1 and "..." or "") .. snippet .. (stop and "..." or "")})
+                table.insert(row and first or (isNamed and named or (head and headed or (all and whole or rest))), {p.page, "p. " .. (p.page + 1) .. "  " .. p.name .. ":  " .. (from > 1 and "..." or "") .. snippet .. (stop and "..." or "")})
             end
         end
     end
-    for _, tier in ipairs({first, named, whole, rest}) do
+    for _, tier in ipairs({first, named, headed, whole, rest}) do
         for _, item in ipairs(tier) do table.insert(list, item) end
     end
     for i = #list, RESULTS + 1, -1 do list[i] = nil end

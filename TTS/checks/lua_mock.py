@@ -9,7 +9,8 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel (a search lists the pages its words name first, then those with them as whole words, then the rest; a word
+rulebook panel (a search lists the pages its words name first, then those with a section heading as typed (pages.json "h":
+"item shop" Shops), then those with them as whole words, then the rest; a word
 without punctuation also in the text without it: "nme" finds N.M.E.; a timing tag as typed: "(-1/1CD)" finds the book's
 −1/1CD, a numbered one no page holds its X row: "(3CD)" XCD) and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food", a series
 word's start, every name typed with or without its punctuation listed first, cards where a word starts one of theirs before
@@ -1278,17 +1279,22 @@ def main():
           f"Contents: {len(listed)} of {len(chapters)} chapters listed ({slots} slots)")
     whole = lambda x, t: len(x) == 1 or re.search(rf"(?<![a-z0-9]){re.escape(x)}(?![a-z0-9])", t)   # no letter or digit beside it
     flat = lambda t: re.sub(r"[^a-z0-9 \x80-\U0010ffff]", "", t)              # unpunct(t, "", true): "n.m.e." -> "nme"
+    def keys(t):                                                             # headKeys: "N.M.E SHOP" -> "n.m.e shop", "nme shop", "n m e shop"
+        low = t.replace("\u2212", "-").lower()
+        return {" ".join(w for w in x.split(" ") if w) for x in (low, *(re.sub(r"[^a-z0-9 \x80-\U0010ffff]", g, low) for g in ("", " ")))}
     def search(query):
         words = query.replace("\u2212", "-").lower().replace("(", " ").replace(")", " ").split()   # "(1CD)" finds the drawn 1CD
+        typed = " ".join(words)
+        headed = lambda i: any(typed in keys(h) for h in pages[i].get("h") or [])   # a heading as typed
         low = [(p.get("t") or "").replace("\u2212", "-").lower() for p in pages]                # the PDF's minus typed "-"
         for k, x in enumerate(words):                                           # "3cd" in no page: the X row ("xcd")
             m = re.fullmatch(r"(-?\d+/)?\d+(gcd|cd|u|pg|pt)", x)
             if m and not any(x in t for t in low):
                 words[k] = ("y/x" if m[1] else "x") + m[2]
         text = lambda x, t: t if x in t or flat(x) != x else flat(t)            # a word without punctuation not in t: t flat
-        hits = [i for i, t in enumerate(low) if words and all(x in text(x, t) for x in words)]
+        hits = [i for i, t in enumerate(low) if words and (all(x in text(x, t) for x in words) or headed(i))]
         named = lambda i: all(re.search(rf"(?<![a-z0-9]){re.escape(x)}", (pages[i].get("name") or "").lower()) for x in words)
-        return sorted(hits, key=lambda i: (not named(i), not all(whole(x, text(x, low[i])) for x in words)))
+        return sorted(hits, key=lambda i: (not named(i), not headed(i), not all(whole(x, text(x, low[i])) for x in words)))
     for query in ("stall", "true damage", "(1CD)", "(1cd) 50%", "zzqqxx", "items", "Status Effects", "(OS)", "(Action)", "nme",
                   "nme shop", "(-1/1CD)", "(3CD)"):
         w.call("rulebookSearch", red, query)
@@ -1312,6 +1318,17 @@ def main():
             w.log.clear()
             w.call("rulebookGo", red, None, "Red_rb_g1")
             check([e[1] for e in w.log if e[0] == "page"] == [hits[0]], f"a found page turns the PDF there ({hits[0]})")
+    heads = sorted({h for p in pages for h in p.get("h") or []})             # pages.json "h": the section headings
+    wrong = []
+    for h in heads:                                                          # each lists a page with it first, else its chapter's
+        w.call("rulebookSearch", red, h)
+        listed = [int(ui.text(f"Red_rb_g{i}").split()[1]) - 1 for i in range(1, slots + 1) if ui.on(f"Red_rb_g{i}")]
+        words = h.lower().split()
+        top = listed and (h in (pages[listed[0]].get("h") or []) or all(re.search(rf"(?<![a-z0-9]){re.escape(x)}", pages[listed[0]]["name"].lower()) for x in words))
+        if listed != search(h)[:slots] or not top:
+            wrong.append((h, [i + 1 for i in listed[:3]]))
+    if heads:
+        check(not wrong, f"each of {len(heads)} section headings ('item shop', 'specifics') lists a page with it first, else its chapter: {wrong[:5]}")
     syntax = next(i for i, p in enumerate(pages) if p.get("name") == "Status Effects 2")   # its "[X]T[Y]" row
     for query in ("2T1", "2T", "5T1", "1T1 Restrained", "2T1 Poison", "5T", "5t", "5T Poison"):   # as cards print it; "5T" starts "5T1"
         w.call("rulebookSearch", red, query)
