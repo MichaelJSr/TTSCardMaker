@@ -1472,6 +1472,21 @@ relies on:
   in all 18 close cases (Esc, Back), the filters too (`?kind=creature&sort=hp` came back as `#/cards`), and the
   dialog's scrollTop exactly in 17 of 20; the others: 21 and 82 px short (strip tiles above it loaded at another
   height), +43 px on a phone's hand reload (pagehide). A wheel 300 ms after the load stops it.
+- A width change (2026-11-22, app.js `turnPlace`: a turned phone, a resized window): what sits just under the bar in
+  #view (a tile, row, paragraph, list line, Stats chart; not a sticky one, not a content-visibility placeholder: its
+  size is a guess, noted a frame later) is noted as the page scrolls, and a resize that changes the width puts the
+  same part of it back at the same height, corrected each frame for 1 s while what's above redraws. Short windows
+  unpin the bar (style.css `max-height: 450px`), and Android Chrome's own turn anchored on it: every turned phone
+  went to scrollY 33. The turn holds the element until a wheel, touch, key or pointer (or it is half a window away),
+  so turning back lands on it; a view drawn notes anew; pinched in, the browser's. A card dialog closed after a turn
+  under it holds it 1 s more (Back puts back the scroll from before the turn: the grid 4-5 rows off). Its resize
+  listener runs after the grid's `--tile-h` reset and before the Stats redraw (which keeps the chart this put back).
+  Measured on today's site served locally (scratch s1122/research5/cards-1122-r5-0 js/turn3.mjs; 6 routes on 390,
+  430 and 360 px phones, an iPad, a desktop 1400 -> 900, a phone starting in landscape, 390 px without phone
+  emulation): turned to the top 18 -> 0, turned back to the same place 13 -> 42 of 42 (the block mid-screen within
+  1 px); grid #174 -> #0 now #172, iPad #232 -> #252 now #232, desktop #235 -> #162 -> #160 now #231 -> #235; a
+  dialog closed after a turn: the grid's tile -1429 -> 322 px (where it was). Safari untested (no WebKit here).
+  AutoCroissant `tests/test_site_turn.py`.
 
 ## 30. Stats pruned, subseries in the series chart, charts link to the grid (2026-10-25, owner's rulings)
 - Removed (UI, data, code): Constructed ban reasons, Last change by month, Top subseries / "<series> by subseries"

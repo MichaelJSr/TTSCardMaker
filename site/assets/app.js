@@ -514,7 +514,7 @@ function route(e) {
     return;
   }
   const hash = location.hash || hashOf(r);
-  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading, .load-error", view)) { closeModal(); setTitle(r); return; }   // nothing changed (and nothing still loading or failed): the view under it stays
+  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading, .load-error", view)) { closeModal(); setTitle(r); turnPlace.closed(); return; }   // nothing changed (and nothing still loading or failed): the view under it stays
   const was = S.renderedHash ? parseHash(S.renderedHash) : null, q = p => p.get("q") || "";
   if (r.name === "rules" && r.arg !== "print" && was?.name === "rules" && was.arg !== "print" && q(was.params) === q(r.params) && viewSig() === S.viewSig
     && view.firstElementChild?.matches(".rules") && !$(".loading", view) && (!r.arg || S.book.chapters.some(c => c.id === r.arg.split("/")[0]))) {
@@ -543,6 +543,7 @@ function renderView(r, hash) {
   (views[r.name] || renderCards)(r);
   setTitle(r); tint();
   S.viewSig = viewSig();
+  turnPlace.soon();
 }
 // the section's tab: marked, and aria-current on it alone; a new one out of the phone's scrolled strip: centred in it
 // (scrollLeft: the page never moves)
@@ -1827,6 +1828,59 @@ function renderStatsView(r) {
     loadAnalytics().then(() => fillSoon(), e => { const slot = $("#stats-balance", view); if (slot && onStats()) slot.innerHTML = `<p class="muted load-error">${esc(failText("the balance section", e))}</p>`; fill(null); });
   }
 }
+// The reader's place across a width change (a turned phone, a resized window): what sits just under the bar in #view (a
+// tile, a row, a paragraph, a Stats chart), noted as the page scrolls, put back at the same spot. Short windows unpin
+// the bar (style.css), so a phone's own turn anchored on the bar: every page went to its top. A turn holds the element
+// until the reader moves, so turning back lands on it too. After the grid's --tile-h reset; before the Stats redraw
+// (next: it keeps the place this puts back).
+const turnPlace = (() => {
+  const PLACE = ".grid > .tile, tr, section.chart, li, p, h2, h3, h4, figure";
+  let w = innerWidth, at = null, raf = 0, held = false, until = 0, tries = 0, under = false;   // under: turned under a card dialog
+  const zoomed = () => (window.visualViewport?.scale ?? 1) > 1.01;   // pinched in: the browser's
+  const pinned = e => { for (; e && e !== view; e = e.parentElement) if (/^(sticky|fixed)$/.test(getComputedStyle(e).position)) return true; return false; };
+  const off = () => { const r = at.el.getBoundingClientRect(); return r.top + at.f * r.height - at.y; };   // from its noted spot
+  const soon = () => { raf ||= requestAnimationFrame(note); };
+  function note() {
+    raf = 0;
+    if (innerWidth !== w || zoomed()) return;           // a turn not handled yet
+    if (held && at?.el.isConnected) {
+      const d = off();
+      if (performance.now() < until) { if (Math.abs(d) >= 1) scrollBy(0, d); soon(); return; }   // 1 s: kept there while what's above redraws
+      if (Math.abs(d) < innerHeight / 2) return;        // then held until the reader moves
+    }
+    held = false;
+    if (scrollY < 1) { at = null; return; }
+    const y0 = Math.max(0, $("header.top").getBoundingClientRect().bottom) + 8;
+    let tall = null, guess = false;
+    for (const dy of [0, 48, 96]) for (const [fx, dx] of [[0.3, 0], [0.5, 0], [0.5, 16], [0.7, 0]]) {   // below pinned rows (a table's head), past a grid's gaps
+      const y = y0 + dy, hit = document.elementFromPoint(innerWidth * fx + dx, y);
+      if (!hit || hit === view || !view.contains(hit) || pinned(hit)) continue;
+      if (getComputedStyle(hit).contentVisibility === "auto" && hit.firstElementChild?.checkVisibility?.({ contentVisibilityAuto: true }) === false) { guess = true; continue; }   // not drawn yet: its size a guess
+      let el = hit.closest(PLACE);
+      if (!el || !view.contains(el)) for (el = hit; el.parentElement !== view && getComputedStyle(el).display.startsWith("inline");) el = el.parentElement;
+      const r = el.getBoundingClientRect(), p = { el, y, f: r.height ? (y - r.top) / r.height : 0 };
+      if (r.height <= innerHeight) { at = p; tries = 0; return; }
+      tall ||= p;                                        // a grid's gap, a long section: only if nothing smaller
+    }
+    if (guess && ++tries < 5) { soon(); return; }       // drawn by the next frame
+    tries = 0;
+    if (tall) at = tall;
+  }
+  addEventListener("scroll", soon, { passive: true });
+  for (const k of ["wheel", "touchstart", "keydown", "pointerdown"]) addEventListener(k, () => { held = false; }, { capture: true, passive: true });
+  addEventListener("resize", () => {
+    if (innerWidth === w) return;
+    w = innerWidth;
+    if (!at?.el.isConnected || zoomed()) return;
+    const d = off();
+    if (Math.abs(d) >= 1) scrollBy(0, d);
+    held = true; until = performance.now() + 1000; under ||= !modal.hidden; soon();
+  });
+  return {
+    soon: () => { held = false; under = false; soon(); },   // a view drawn: its place
+    closed: () => { if (under) { under = false; held = true; until = performance.now() + 1000; soon(); } },   // Back's scroll: from before the turn
+  };
+})();
 // a turned phone (across 600 px): each chart drawn again in place for the new width; open tables and the place stay
 addEventListener("resize", () => {
   if (!St || innerWidth === statsW) return;
