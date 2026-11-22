@@ -1454,6 +1454,12 @@ export function barCut(bars, k, from, to) {
   const cut = bars.cuts[s.to?.[String(to)]];
   return Array.isArray(cut) && cut.length === 6 ? cut : null;
 }
+/** The plate's stars pictures for picture n (card_plates.with_stars): picture 1's "icons", another's "icons@<n>"; null
+ *  without (an older plate: starPlan). */
+export function starSheet(plate, n) {
+  const s = plate?.[n === 1 ? "icons" : `icons@${n}`];
+  return s?.vw > 0 && Array.isArray(s.cuts) ? s : null;
+}
 /** A bar cut's pixels from its sheet at k image px per view px: [x, y, w, h, rgba] (image px). */
 function barPixels(img, [x, y, w, h, sx, sy], k) {
   const X = Math.round(x * k), Y = Math.round(y * k), w2 = Math.max(1, Math.round((x + w) * k) - X), h2 = Math.max(1, Math.round((y + h) * k) - Y);
@@ -1596,7 +1602,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const mine = plate?.v === 1 && plate.w === rec?.canvas?.w, ours = mine && (card?.variant || 1) === 1;   // ours: picture 1's
   const sheet = mine && Array.isArray(plate.crops) && plate.crops.length ? await loadImage(plate.img) : null;   // any picture: plateCuts checks each crop
   const pics = ours && plate.bars?.vw > 0 && Array.isArray(plate.bars.cuts) ? plate.bars : null;   // the bake's stat pictures
-  const spics = ours && plate.icons?.vw > 0 && Array.isArray(plate.icons.cuts) ? plate.icons : null;   // its stars pictures
+  const spics = mine ? starSheet(plate, card?.variant || 1) : null;   // its stars pictures, this picture's
   const readPlate = (c, w, h) => { const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
     const g = cv.getContext("2d", { willReadFrequently: true }); g.drawImage(sheet, ...c.at, 0, 0, w, h); return g.getImageData(0, 0, w, h).data; };
   const coverImgs = sheet && Array.isArray(plate.covers) ? await Promise.all(plate.covers.map(c => (typeof c?.img === "string" ? loadImage(c.img) : null))) : [];   // pictures over a layer (coverCuts)
