@@ -9,15 +9,15 @@
 
 ::: panel
 ::: row 4 3
-![Panda with 2 turns of Softened and 2 turns of Smouldering: its counters and markers](status-panda.webp)
+![Panda with 2 turns of Softened and 2 turns of Smoldering: its counters and markers](status-panda.webp)
 
-This [[Panda]] was just inflicted with both 2 turns of [[Softened]] (-0.5 DEF), and 2 turns of [[Smoldering|Smouldering]] (2 DMG). Instantly, the DEF reduction takes effect. When Panda ends its next turn, it takes 2 damage from smouldering, and the duration for both of the debuffs goes from 2 to 1.
+This [[Panda]] was just inflicted with both 2 turns of [[Softened]] (-0.5 DEF), and 2 turns of [[Smoldering]] (2 DMG). Instantly, the DEF reduction takes effect. When Panda ends its next turn, it takes 2 damage from smoldering, and the duration for both of the debuffs goes from 2 to 1.
 :::
 :::
 
 ## SPECIFICS
 - DMG dealing status effects count as one instance of damage per unique stack. (5 stacks of [[Poison]] is one instance of 5 damage.)
-- Per unique status effect in phase 4, the owner of the creature chooses the order in which to resolve these effects. (May choose if Regeneration heals before Smouldering does damage first)
+- Per unique status effect in phase 4, the owner of the creature chooses the order in which to resolve these effects. (May choose if Regeneration heals before Smoldering does damage first)
 - If a status effect deals DMG it is piercing, and doesn't count as an attack.
 - If multiple debuffs have conflicting effects, the effect of the debuff with the highest star level takes precedence.
 - If a creature started the global turn with a status effect and the global turn ends without the creature having ended its turn, then the effect ticks at the end of the global turn, even if the creature is in hand.
@@ -52,8 +52,8 @@ When a status effect is stacked/upgraded/reapplied, set the duration to the long
 
 ## UPGRADABLE [debuffupgrade]
 Certain status effects upgrade themselves when applied, Ex:
-Smouldering + Smouldering -> Burning
-Smouldering/Burning + Burning -> Blazing
+Smoldering + Smoldering -> Burning
+Smoldering/Burning + Burning -> Blazing
 Chilled + Chilled -> Frostbite
 Chilled/Frostbite + Frostbite -> 1 turn of Frozen
 Sickness + Sickness -> Plague
