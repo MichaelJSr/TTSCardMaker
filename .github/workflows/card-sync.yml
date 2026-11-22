@@ -1425,8 +1425,8 @@ jobs:
             [ "$1" != fetch ] || exit 0
             [ "$(cat "$k.code")" = 0 ] && [ -s "$k.json" ] && echo "$k.json"
           # The push's site run (site.yml's push run at GITHUB_SHA, else the data job's early build: EARLY) and its Pages
-          # artifact of the run's attempt once listed (pages_wait.py; none when the build uploads none): downloaded,
-          # extracted into $1 and served on 127.0.0.1:$2 (python3's http.server, its pid in $1.pid). Exit 1 without one,
+          # artifact of the run's attempt once listed (pages_wait.py; none when the build uploads none): downloaded (4 tries in
+          # 6 s), extracted into $1 and served on 127.0.0.1:$2 (python3's http.server, its pid in $1.pid). Exit 1 without one,
           # or when the website deploys another build before it is listed (build.txt, every 2 s: the website's look then).
           SERVE_SH: |
             set -eo pipefail
@@ -1455,8 +1455,14 @@ jobs:
             [ "$code" = 0 ] || exit 1
             art=$(sed -n 's/^artifact=//p' "$dir.out")
             [ -n "$art" ] || exit 1
-            printf 'Authorization: Bearer %s\n' "$GH_TOKEN" | curl -sSfL --max-time 60 -H @- -o "$dir.zip" \
-              "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/artifacts/$art/zip"
+            for t in 0 1 2 3; do            # an HTTP error (a 404 just after it is listed) asked again; the header on stdin
+              sleep "$t"
+              c=0
+              printf 'Authorization: Bearer %s\n' "$GH_TOKEN" | curl -sSfL --max-time 60 -H @- -o "$dir.zip" \
+                "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/artifacts/$art/zip" || c=$?
+              [ "$c" = 22 ] && [ "$t" != 3 ] || break
+            done
+            [ "$c" = 0 ] || exit 1
             mkdir -p "$dir"
             unzip -p "$dir.zip" artifact.tar | tar -x -C "$dir"
             rm -f "$dir.zip"

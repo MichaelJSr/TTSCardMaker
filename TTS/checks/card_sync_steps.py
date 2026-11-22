@@ -67,7 +67,8 @@
    landed or ran (tried 3 times) unless that start did and neither lane of its run was cancelled; a follow-up's data job
    gets the main lane's extra time for the wait.
 11. Rulebook PDF start (faked look and GitHub): a push's lane whose website lags has its Pages build served on localhost
-   to decide (--local); its exit 4, no artifact or a failed download: the website's look; the server stopped after.
+   to decide (--local; a 404 just after it is listed asked again); its exit 4, no artifact or a failed download: the
+   website's look; the server stopped after.
 12. The save's data watcher (a sandbox data branch): a data commit moving names makes the save again on it (this run's
    build: named run); the same names keep it; idle, TTS save stops the watcher at once; Re-pin takes the save's names;
    every save and Re-pin pass --baked with the Gate's main.
@@ -1689,9 +1690,9 @@ def names_cases(flow: dict) -> None:
 def pdf_start_cases(flow: dict) -> None:
     """Rulebook PDF start, on a fake look and fake GitHub (run lists by gh; the site run's jobs, artifacts and zip by
     pages_wait.py and curl; the website's build.txt): a push's lane looks at once; the website lagging, the push's Pages
-    build is served on localhost and decides (kept: the website not looked at), its exit 4, no artifact, a failed
-    download or another build deployed before it is listed: the website's look; the website up to date or another
-    event: one look as ever. The server is stopped and its build removed."""
+    build is served on localhost and decides (kept: the website not looked at; its zip's first 404 asked again), its exit
+    4, no artifact, a failed download (4 tries) or another build deployed before it is listed: the website's look; the
+    website up to date or another event: one look as ever. The server is stopped and its build removed."""
     import http.server
     import io
     import socket
@@ -1713,8 +1714,9 @@ def pdf_start_cases(flow: dict) -> None:
     class Api(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
             path = self.path.split("?")[0]
-            if path.endswith("/artifacts/5/zip"):
-                self.send_response(302 if state["zip"] else 404)
+            if path.endswith("/artifacts/5/zip"):          # 404 for its first `misses` asks
+                state["asked"] += 1
+                self.send_response(302 if state["asked"] > state["misses"] else 404)
                 self.send_header("Location", "/blob/5")
                 self.send_header("Content-Length", "0")
                 self.end_headers()
@@ -1743,15 +1745,16 @@ def pdf_start_cases(flow: dict) -> None:
     api = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Api)
     threading.Thread(target=api.serve_forever, daemon=True).start()
     try:
-        for name, event, wait0, listed, zipped, local, want in (
-                ("kept", "push", 3, True, True, 0, ["--wait 0", "--local"]),
-                ("exit 4", "push", 3, True, True, 4, ["--wait 0", "--local", "--wait"]),
-                ("no artifact", "push", 3, False, True, 0, ["--wait 0", "--wait"]),
-                ("download failed", "push", 3, True, False, 0, ["--wait 0", "--wait"]),
-                ("deployed first", "push", 3, None, True, 0, ["--wait 0", "--wait"]),
-                ("website up to date", "push", 0, True, True, 0, ["--wait 0"]),
-                ("schedule", "schedule", 0, True, True, 0, [""])):
-            state.update(listed=listed, zip=zipped, deploy=None if listed is None else float("inf"))
+        for name, event, wait0, listed, misses, local, want, asks in (
+                ("kept", "push", 3, True, 0, 0, ["--wait 0", "--local"], 1),
+                ("a 404 first", "push", 3, True, 1, 0, ["--wait 0", "--local"], 2),
+                ("exit 4", "push", 3, True, 0, 4, ["--wait 0", "--local", "--wait"], 1),
+                ("no artifact", "push", 3, False, 0, 0, ["--wait 0", "--wait"], 0),
+                ("download failed", "push", 3, True, 99, 0, ["--wait 0", "--wait"], 4),
+                ("deployed first", "push", 3, None, 0, 0, ["--wait 0", "--wait"], 0),
+                ("website up to date", "push", 0, True, 0, 0, ["--wait 0"], 0),
+                ("schedule", "schedule", 0, True, 0, 0, [""], 0)):
+            state.update(listed=listed, misses=misses, asked=0, deploy=None if listed is None else float("inf"))
             with tempfile.TemporaryDirectory() as tmp:
                 ws, runner, fake = os.path.join(tmp, "ws"), os.path.join(tmp, "runner"), os.path.join(tmp, "bin")
                 git(tmp, "init", "-q", "ws")
@@ -1791,10 +1794,10 @@ def pdf_start_cases(flow: dict) -> None:
                 ended = open(done).read().strip() if os.path.exists(done) else None
                 ok = (code == 0 and ended == "0" and got == want and stopped and time.monotonic() - began < 15
                       and not os.path.exists(os.path.join(runner, "pages")) and served is ("--local" in want or None)
-                      and ("site.yml" in asked) == (wait0 == 3))
+                      and ("site.yml" in asked) == (wait0 == 3) and state["asked"] == asks)
                 log = os.path.join(runner, "pdf", "log")
                 check(ok, f"Rulebook PDF start, {name}: looks {got}, the build served to --local {served}, the server stopped "
-                          f"{stopped}, exit {ended} in {time.monotonic() - began:.1f} s"
+                          f"{stopped}, its zip asked {state['asked']} times, exit {ended} in {time.monotonic() - began:.1f} s"
                       + ("" if ok else f"\n{text}\n{open(log).read() if os.path.exists(log) else ''}"))
                 if ended is None:                   # a case that did not end: stopped as Rulebook PDF stop does
                     write(os.path.join(runner, "pdf", "stop"), "")
