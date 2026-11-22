@@ -719,12 +719,14 @@ def _read(path: str) -> str:
 
 
 def history(job: dict, ws: str, tmp: str, start: str = "", wait: str = "", fetch: str = "", copy: str = None,
-            slow: float = 0) -> tuple:
+            late: str = "") -> tuple:
     """History start (from fetch, else start, into history.git; History join adds it, else origin), then History wait
     (origin at start, wait while each fetches). copy: History wait's cache restore (a bare repo; "" a miss), right after
-    History join, History start's fetch `slow` s late; else History wait once history.code is in: (exit code, output)."""
+    History join, History start's fetch held until runner/<late> is in (20 s at most); else History wait once
+    history.code is in: (exit code, output)."""
     runner = os.path.join(tmp, "runner")
-    for name in ("history.code", "history-fetch.code", "history-copy.code", "history-copy.started"):
+    for name in ("history.code", "history.log", "history-fetch.code", "history-copy.code", "history-copy.started",
+                 "history-copy.looked"):
         if os.path.exists(os.path.join(runner, name)):
             os.remove(os.path.join(runner, name))
     for name in ("history.git", "history-copy.git"):
@@ -732,8 +734,9 @@ def history(job: dict, ws: str, tmp: str, start: str = "", wait: str = "", fetch
     was = git(ws, "remote", "get-url", "origin")
     git(ws, "remote", "set-url", "origin", start or was)
     env = served(fetch or start or was)
-    fake = os.path.join(tmp, "slow-bin")                    # History start's fetch alone waits `slow` s
-    write(os.path.join(fake, "timeout"), f'#!/bin/bash\ncase "$*" in *"/history.git "*) sleep {slow};; esac\n'
+    fake = os.path.join(tmp, "slow-bin")                    # History start's fetch alone waits for runner/<late>
+    hold = f'until [ -s "{runner}/{late}" ] || [ $SECONDS -ge 20 ]; do sleep 0.05; done' if late else ":"
+    write(os.path.join(fake, "timeout"), f'#!/bin/bash\ncase "$*" in *"/history.git "*) {hold};; esac\n'
                                          f'exec {shutil.which("timeout")} "$@"\n')
     os.chmod(os.path.join(fake, "timeout"), 0o755)
     run_step(job, "History start", ws, {**env, "PATH": f"{fake}:{os.environ['PATH']}"}, tmp)
@@ -763,6 +766,7 @@ def history_wait(ws: str, tmp: str, copy: str = "") -> tuple:
         if s.get("if") and not evaluate(s["if"], ctx):
             pass
         elif s.get("uses", "").startswith("actions/cache/restore@"):
+            write(os.path.join(runner, "history-copy.looked"), "1")                 # the no-copy hold ends
             if copy:
                 shutil.copytree(copy, s["with"]["path"].replace("${{ runner.temp }}", runner))
                 outputs = {"cache-matched-key": "main-history-2026-01-01"}
@@ -1085,7 +1089,9 @@ def history_cases(flow: dict) -> None:
                     git(copy, "update-ref", "refs/heads/main", git(copy, "rev-parse", "main~2"))
                 commit(work, {"Cards/Three.psd": f"psd {time.monotonic_ns()}"}, "another card")
                 git(work, "push", "-q", "origin", "main")
-                code, text = history(job, ws, tmp, start, wait, fetch, copy, 3 if copy is not None else 0)
+                # held until the copy joined, join.sh read a broken one's code (history.log) or History wait looked
+                late = {None: "", "": "history-copy.looked", broken: "history.log"}.get(copy, "history.code")
+                code, text = history(job, ws, tmp, start, wait, fetch, copy, late)
                 shallow = git(ws, "rev-parse", "--is-shallow-repository")
                 ok = (code == 0) == (want == 0) and shallow == ("false" if want == 0 else "true") and ("once more" in text) == bool(start)
                 ok = ok and ("History join: joined" in text) == (not (fetch or start))
