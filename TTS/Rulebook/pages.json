@@ -1,8 +1,8 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "64db6252481547cac2d5d54040885cc10e54616dfab6e4b3e255272c639365db",
- "pre": "fe8d9e929d2c087871540b85d38b67129b6980f475ce4d78b73b7146f96085ad",
+ "key": "b1ce50daabbbedb2dab9586cd2872a7f18e615e70af59d72df40ea0576184d5e",
+ "pre": "9fbbb93684a7c5f0bd2db006a34c4e1e5356730702760520f4ad948020222faf",
  "pages": [
   {
    "name": "Cover",
@@ -374,8 +374,8 @@
   {
    "name": "Status Effects",
    "num": "19",
-   "sha": "6402be944afdf7f62ec486e6af65b0530c71654981e970ebc17157bdce64fd73",
-   "t": "STATUS EFFECTS STATUS EFFECTS A status effect, is either a buff or debuff that has an effect on a creature, represented by Mr. Krabs either suffering or thriving. If a status effect deals DMG or Heals, then by default it procs in phase 4, after ENDT effects. Otherwise, the status effect takes effect immediately. The duration of any status effect counts down in phase 4. This Panda was just inflicted with both 2 turns of Softened (-0.5 DEF), and 2 turns of Smouldering (2 DMG). Instantly, the DEF reduction takes effect. When Panda ends its next turn, it takes 2 damage from smouldering, and the duration for both of the debuffs goes from 2 to 1. SPECIFICS DMG dealing status effects count as one instance of damage per unique stack. (5 stacks of Poison is one instance of 5 damage.) Per unique status effect in phase 4, the owner of the creature chooses the order in which to resolve these effects. (May choose if Regeneration heals before Smouldering does damage first) If a status effect deals DMG it is piercing, and doesn't count as an attack. If multiple debuffs have conflicting effects, the effect of the debuff with the highest star level takes precedence. If a creature started the global turn with a status effect and the global turn ends without the creature having ended its turn, then the effect ticks at the end of the global turn, even if the creature is in hand. 19",
+   "sha": "abed4b1285da5ff40eb8108b17268e731aae4ebbbb71584ee8250fdf0131c098",
+   "t": "STATUS EFFECTS STATUS EFFECTS A status effect, is either a buff or debuff that has an effect on a creature, represented by Mr. Krabs either suffering or thriving. If a status effect deals DMG or Heals, then by default it procs in phase 4, after ENDT effects. Otherwise, the status effect takes effect immediately. The duration of any status effect counts down in phase 4. This Panda was just inflicted with both 2 turns of Softened (-0.5 DEF), and 2 turns of Smoldering (2 DMG). Instantly, the DEF reduction takes effect. When Panda ends its next turn, it takes 2 damage from smoldering, and the duration for both of the debuffs goes from 2 to 1. SPECIFICS DMG dealing status effects count as one instance of damage per unique stack. (5 stacks of Poison is one instance of 5 damage.) Per unique status effect in phase 4, the owner of the creature chooses the order in which to resolve these effects. (May choose if Regeneration heals before Smoldering does damage first) If a status effect deals DMG it is piercing, and doesn't count as an attack. If multiple debuffs have conflicting effects, the effect of the debuff with the highest star level takes precedence. If a creature started the global turn with a status effect and the global turn ends without the creature having ended its turn, then the effect ticks at the end of the global turn, even if the creature is in hand. 19",
    "h": [
     "STATUS EFFECTS",
     "SPECIFICS"
@@ -384,8 +384,8 @@
   {
    "name": "Status Effects 2",
    "num": "19.2",
-   "sha": "ddeb32ca422b443ec8a2244f0d45202ac39a16005aeb1deddfd8703f67e4d6c9",
-   "t": "STATUS EFFECTS 2 SYNTAX Statuses are formatted like \"[X]T[Y] [Status]\", where X is duration and Y is stacks. For example, \"5T1 Poison\" means 5 turns of 1 stack of Poison. TYPES Standard status effects can only have one instance of themselves applied to a single creature. [buff] [debuff] Stacking status effects can have any number of themselves applied. [buffstack] [debuffstack] Peppy This buff can be applied many times to gain as many stacks of it to gain alot of speed. 10 stacks = +10 SPD. Withering This debuff cannot be applied more than once. DURATION When a status effect is stacked/upgraded/reapplied, set the duration to the longest lasting of the applications. UPGRADABLE [DEBUFFUPGRADE] Certain status effects upgrade themselves when applied, Ex: Smouldering + Smouldering -> Burning Smouldering/Burning + Burning -> Blazing Chilled + Chilled -> Frostbite Chilled/Frostbite + Frostbite -> 1 turn of Frozen Sickness + Sickness -> Plague A creature already inflicted by Frozen/Blazing/Plague can't have the prior debuffs reapplied onto them, except to refresh the duration (need to upgrade to refresh duration). Smoldering → Burning → Blazing Chilled → Frostbite → Frozen Sickness → Plague 19.2",
+   "sha": "e8e1bbddbfa6371cf230d5f26d3a69203a85e99133bef499fe6ef44ae5972e08",
+   "t": "STATUS EFFECTS 2 SYNTAX Statuses are formatted like \"[X]T[Y] [Status]\", where X is duration and Y is stacks. For example, \"5T1 Poison\" means 5 turns of 1 stack of Poison. TYPES Standard status effects can only have one instance of themselves applied to a single creature. [buff] [debuff] Stacking status effects can have any number of themselves applied. [buffstack] [debuffstack] Peppy This buff can be applied many times to gain as many stacks of it to gain alot of speed. 10 stacks = +10 SPD. Withering This debuff cannot be applied more than once. DURATION When a status effect is stacked/upgraded/reapplied, set the duration to the longest lasting of the applications. UPGRADABLE [DEBUFFUPGRADE] Certain status effects upgrade themselves when applied, Ex: Smoldering + Smoldering -> Burning Smoldering/Burning + Burning -> Blazing Chilled + Chilled -> Frostbite Chilled/Frostbite + Frostbite -> 1 turn of Frozen Sickness + Sickness -> Plague A creature already inflicted by Frozen/Blazing/Plague can't have the prior debuffs reapplied onto them, except to refresh the duration (need to upgrade to refresh duration). Smoldering → Burning → Blazing Chilled → Frostbite → Frozen Sickness → Plague 19.2",
    "h": [
     "SYNTAX",
     "TYPES",
