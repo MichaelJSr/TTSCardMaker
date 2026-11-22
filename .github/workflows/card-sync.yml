@@ -492,7 +492,7 @@ jobs:
           SHA: ${{ github.event_name == 'push' && github.sha || '' }}
           FIXES: Fixes to land        # card-guards.yml's check-job step
           DECIDED: Decided            # its check-job step after Fixes to land
-          FOLLOW: Follow up           # card-guards.yml's post-job step that dispatches Card sync
+          FOLLOW: Follow up           # card-guards.yml's check-job step that dispatches Card sync
           KEPT: Pictures kept         # its check-job step before Decided: every fix keeps each card picture
           LANDED: Landed              # its check-job step after Land and its uploads
           RUN: ${{ inputs.guards }}   # a follow-up's guards run

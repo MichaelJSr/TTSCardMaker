@@ -2031,13 +2031,15 @@ def lane_cases(flow: dict) -> None:
 
     guards = load(GUARDS)
     check(any(s.get("name") == mark["env"]["FIXES"] and s.get("if") == "always() && steps.plan.outputs.fixes == 'true'" for s in guards["jobs"]["check"]["steps"])
-          and step(guards["jobs"]["post"], "follow").get("name") == mark["env"]["FOLLOW"]
+          and step(guards["jobs"]["check"], "follow").get("name") == mark["env"]["FOLLOW"]
           and step(guards["jobs"]["check"], mark["env"]["LANDED"]).get("if") == "always()"
-          and guards["jobs"]["check"]["outputs"].get("fixes") == "${{ steps.plan.outputs.fixes }}"
+          and step(guards["jobs"]["check"], "follow")["env"].get("FIXES") == "${{ steps.plan.outputs.fixes }}"
+          and [s.get("name") for s in guards["jobs"]["check"]["steps"]].index(mark["env"]["LANDED"])
+          < [s.get("name") for s in guards["jobs"]["check"]["steps"]].index(mark["env"]["FOLLOW"])
           and step(guards["jobs"]["check"], mark["env"]["KEPT"]).get("if") == "always() && steps.plan.outputs.kept == 'true'"
           and [s.get("name") for s in guards["jobs"]["check"]["steps"]].index(mark["env"]["KEPT"])
           < [s.get("name") for s in guards["jobs"]["check"]["steps"]].index(mark["env"]["DECIDED"]),
-          "card-guards.yml: the check job's marks (Pictures kept before Decided) and the post job's Follow up carry the names Card sync reads")
+          "card-guards.yml: the check job's marks (Pictures kept before Decided) and its Follow up (after Landed) carry the names Card sync reads")
 
     with tempfile.TemporaryDirectory() as tmp:
         fake = os.path.join(tmp, "bin")
@@ -2218,7 +2220,7 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
               f"guards' wait ({mark['timeout-minutes']}), as the main lane's ({main['timeout']})")
 
         # card-guards.yml: Plan's fixes and Follow up's dispatch
-        gplan, follow = step(guards["jobs"]["check"], "plan"), step(guards["jobs"]["post"], "follow")
+        gplan, follow = step(guards["jobs"]["check"], "plan"), step(guards["jobs"]["check"], "follow")
         out_dir = os.path.join(tmp, "guards")
         for event, mode, summ, want, what in (
                 ("push", "on", {"told": 0, "writes": 2}, ("true", "true"), "a push with writes (on): fixes"),
@@ -2234,9 +2236,8 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
             code, text, out = run_step(guards["jobs"]["check"], "plan", tmp, {"OUT": out_dir, "MODE": "on", "GITHUB_EVENT_NAME": event}, tmp)
             check(code == 0 and out.get("kept") == want, f"guards Plan: a {event}'s fixes, every picture kept {kept} -> kept={out.get('kept')}")
         cond = lambda ran, fixes: bool(evaluate(follow["if"], {  # noqa: E731
-            "steps": {}, "needs": {"check": {"outputs": {"fixes": fixes, "land_ran": ran}}},
-            "functions": {"always": lambda: True}}))
-        check([cond("true", ""), cond("", "true"), cond("", "")] == [True, True, False] and "steps.plan.outputs.fixes" in gplan["run"] + str(guards["jobs"]["check"]["outputs"]),
+            "steps": {"plan": {"outputs": {"fixes": fixes}}, "land": {"outputs": {"ran": ran}}}, "functions": {"cancelled": lambda: False}}))
+        check([cond("true", ""), cond("", "true"), cond("", "")] == [True, True, False] and "fixes=true" in gplan["run"],
               "guards Follow up: after Land, or with fixes even when Land never ran")
         lane = lambda name, conclusion: {"name": name, "status": "completed" if conclusion else "queued", "conclusion": conclusion}  # noqa: E731
         for rid, doc in ((71, [lane("Card data", None), lane("Bake and save", None)]),
@@ -2262,7 +2263,7 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
             e = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "OUT": out_dir, "MODE": "on", "SHA": "", "ALREADY": "0",
                  "COMMENT": "7", "TOLD_BEFORE": "", "FIXES": "", "LAND_RAN": "", "FAKE_FAILS": str(fails), "GITHUB_RUN_ATTEMPT": "1",
                  "FAKE_JOBS": jobs_dir, **env_}
-            code, text, out = run_step(guards["jobs"]["post"], "follow", tmp, e, tmp)
+            code, text, out = run_step(guards["jobs"]["check"], "follow", tmp, e, tmp)
             asked = open(calls).read().splitlines() if os.path.exists(calls) else []
             starts_ = [a for a in asked if a.startswith("workflow run card-sync.yml") and "bake=pending" in a]
             ok = code == want_code and len(starts_) == want_runs and not any("PATCH" in a for a in asked)
@@ -2291,9 +2292,7 @@ printf '%s,%s,%s' "$code" "$FAKE_USED" "$tag"
               and [check_steps[i].get("name") for i in (at - 1, at + 1, at + 2)] == [mark["env"][k] for k in ("FIXES", "KEPT", "DECIDED")]
               and start["if"] == "${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise <= 25 }}"
               and start.get("continue-on-error") == "true" and early["name"] == mark["env"]["LANDED"]
-              and guards["jobs"]["check"]["outputs"]["early"] == "${{ steps.early.outputs.started }}"
-              and guards["jobs"]["check"]["outputs"]["early_run"] == "${{ steps.early.outputs.run }}"
-              and follow["env"]["EARLY"] == "${{ needs.check.outputs.early }}" and follow["env"]["EARLY_RUN"] == "${{ needs.check.outputs.early_run }}",
+              and follow["env"]["EARLY"] == "${{ steps.early.outputs.started }}" and follow["env"]["EARLY_RUN"] == "${{ steps.early.outputs.run }}",
               f"guards Start Card sync: the check job's, right after Fixes to land (then Pictures kept, Decided) with fixes and 25 PSDs or fewer to convert, this run's id as guards, "
               f"in the background; Landed joins it: its run id by the API; failed or not started, Follow up starts it ({got})")
 

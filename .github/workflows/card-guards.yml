@@ -21,7 +21,7 @@
 # right after the check (owner, 2026-11-03; a 30-minute quiet window before): a PNG the author pushed meanwhile withdraws
 # its refusal, a card pushed again is left to that push's run, a write that did not land is told. It never reverts or
 # rejects a push.
-# ONE Discord post per push to the standards channel (owner 2026-11-11; the tell job, AutoCroissant standards_post.py):
+# ONE Discord post per push to the standards channel (owner 2026-11-11; Tell Discord, AutoCroissant standards_post.py):
 # the guards' lines and the two checks' notes, "<login> pushed <card>: <notes>. [<sha8>](<commit>)" a line per card,
 # only what the push made new on a card (old notes stay in the comments and job summaries), a note two checks tell
 # once, the card makers' role pinged only for a missing font, no link previews. A broken push run tells the standards
@@ -31,14 +31,14 @@
 # ("Fixes to land"); that push's Card sync run skips its main lane, or keeps it to the TTS save alone when every fix
 # keeps each card picture ("Pictures kept"). With 25 PSDs or fewer to convert the check job starts
 # Card sync right after the mark (that run sets up, then waits for Landed; Follow up starts another if a newer run took a
-# lane's place), else the post job's Follow up starts it, landed or not.
+# lane's place), else Follow up starts it, landed or not.
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
 # venv cache (.github/actions/cards-venv); the fonts from the card-fonts- cache, as Card sync's.
 #
-# Jobs: `check` runs the guards' check, lands and comments; `post` settles the comment right after it (the 30-minute
-# quiet window and its environment card-guards-quiet went on 2026-11-03). `checks` runs a push's two checks beside
-# them, so Card sync and the post wait for neither (2026-11-07); a dispatch runs them in `check`. `tell` posts once all
-# three are done; `finish` turns the run red where it should be and tells a broken push.
+# Jobs: `check` runs the guards' check, lands, comments, settles the comment (Follow up) and posts (Tell Discord; the
+# post and tell jobs until 2026-11-22, 12-25 s later). `checks` runs a push's two checks beside it, so Card sync waits
+# for neither (2026-11-07); `check` fetches their reports once that job ends. A dispatch runs them in `check`. `finish`
+# turns the run red where it should be and tells a broken push.
 #
 # Switches: the repo variable CARD_GUARDS (Settings > Variables; on = check, land, comment and post; unset, off or any
 # other value = the guards skipped, the two checks still run; any letter case). A dispatch defaults to a dry
@@ -76,9 +76,7 @@ on:
         type: boolean
         default: false
 
-permissions:          # the post job's; the others have their own
-  contents: write     # the commit comment
-  actions: write      # Follow up's gh workflow run card-sync.yml (a GITHUB_TOKEN push triggers no workflow)
+permissions: {}       # each job sets its own
 
 # Each push keeps its own run (a shared group keeps one pending run, so a burst of pushes would lose the middle ones'
 # reports); a dispatch gets a group of its own. Parallel landings are safe: each rests on its blobs and retries a moved head.
@@ -94,9 +92,9 @@ jobs:
     timeout-minutes: ${{ inputs.all && 150 || 60 }}    # Normalise's 36 and Land's 20; finish's alert reads 60
     permissions:
       contents: write     # the commit comment and Land's commit
-      actions: write      # gh run list; Start Card sync
+      actions: write      # gh run list; Start Card sync, Follow up; the checks' reports
     env:
-      # the comment's mark that this push's one Discord post went out (a re-run checks it; the tell job sets it)
+      # the comment's mark that this push's one Discord post went out (a re-run checks it; Tell Discord sets it)
       TOLD: "<!-- card-guards: told on Discord -->"
       # off | on for a push; dry | on for a dispatch (an `all` dispatch never posts or commits); Start lowercases it
       MODE: ${{ github.event_name == 'push' && (vars.CARD_GUARDS || 'off') || ((inputs.dry_run || inputs.all) && 'dry' || 'on') }}
@@ -131,25 +129,18 @@ jobs:
         /commands/psd_details.py
         /commands/png_changes.py
         /commands/standards_post.py
-    outputs:
+    outputs:      # finish's
       mode: ${{ steps.start.outputs.mode }}
       started: ${{ steps.start.outputs.started }}
       checked: ${{ steps.check.outcome }}
-      comment: ${{ steps.comment.outputs.id }}
-      told: ${{ steps.comment.outputs.told }}
-      land: ${{ steps.plan.outputs.land }}
-      fixes: ${{ steps.plan.outputs.fixes }}
+      told: ${{ steps.tell.outputs.told || steps.told.outputs.told }}
+      follow: ${{ steps.follow.outcome }}
       card_errors: ${{ steps.plan.outputs.card_errors }}
-      early: ${{ steps.early.outputs.started }}
-      early_run: ${{ steps.early.outputs.run }}
-      land_ran: ${{ steps.land.outputs.ran }}
-      land_sha: ${{ steps.land.outputs.sha }}
-      land_already: ${{ steps.land.outputs.already }}
       saved: ${{ steps.setup.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
     steps:
       # OUT is set here: a job's env may not read the runner context. MODE lowercased: the job's `if` takes "On", the
       # shell does not; a push's MODE other than on becomes off. STARTED: the failure alert tells a cancel by hand from a
-      # job's timeout. The post job reads them.
+      # job's timeout. Finish reads them.
       - name: Start
         id: start
         shell: bash
@@ -629,11 +620,11 @@ jobs:
           [ "$ALL" = "true" ] && args+=(--whole-tree)
           python -m commands.card_guards check "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # Whether there is anything to land or tell (none: no Land, no post job). summary.json's told, writes and card
+      # Whether there is anything to land or tell (none: no Land, no Follow up). summary.json's told, writes and card
       # errors. fixes: a push's writes to land (on; a pushed PNG still to recompress counts); kept: each of them keeps
       # every card picture (summary.json's kept).
       # normalise: the PSDs the Normalise step converts (on and dry only; never `all`), counted as writes.
-      - name: Plan for the post job
+      - name: Plan
         id: plan
         if: always() && steps.check.outcome == 'success'
         shell: bash
@@ -667,7 +658,7 @@ jobs:
           echo $! > "$t.pid"
 
       # The mark Card sync reads (its step "Guards' fixes", by this name): this push's main lane leaves it to the run
-      # Start Card sync starts (else the post job's Follow up; landed or not).
+      # Start Card sync starts (else Follow up's; landed or not).
       - name: Fixes to land
         if: always() && steps.plan.outputs.fixes == 'true'
         shell: bash
@@ -774,12 +765,12 @@ jobs:
           fi
 
       # At once (CARD_GUARDS=on): leave out every write whose blobs moved and commit the rest once (git_commit: the API
-      # with GITHUB_TOKEN, retried on a moved head), and settle the guards' lines of the post (landed.json's told; the
-      # tell job's) and the comment's new body (report-landed.md). Exit 1: the commit failed (both files are written
+      # with GITHUB_TOKEN, retried on a moved head), and settle the guards' lines of the post (landed.json's told; Tell
+      # Discord's) and the comment's new body (report-landed.md). Exit 1: the commit failed (both files are written
       # first: land never raises). A dispatch with dry_run off lands the same way (No push run in its window refused it
       # while a push run of its commit was unfinished). --rerun (a re-run, a dispatch): an earlier run may have landed the
       # writes, so a branch that cannot be read tells none of them as not made. Only with something to land or tell
-      # (Plan's land) and MODE on, as the post job. It first joins Check start's recompressions (their process ended, 5
+      # (Plan's land) and MODE on. It first joins Check start's recompressions (their process ended, 5
       # minutes at most; plan.json, summary.json and report.md rewritten with them).
       - name: Land
         id: land
@@ -842,11 +833,43 @@ jobs:
           if [ -s "$e.out" ]; then cat "$e.out" >> "$GITHUB_OUTPUT"
           else echo "::warning::Card sync was not started here: Follow up starts it"; cat "$e.log" 2> /dev/null || true; fi
 
+      # A push's two checks' reports (the checks job's card-checks artifact) for Tell Discord, in the background from here
+      # (after Landed: Card sync's waits stay as they were): that job's end looked up every 2 s (10 s after 2 minutes;
+      # minute 50 of this job at most), then its artifact (none when it broke first). Its result in checks.result; Tell
+      # Discord joins it.
+      - name: Checks' reports start
+        if: ${{ !cancelled() && github.event_name == 'push' }}
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STARTED: ${{ steps.start.outputs.started }}
+        run: |
+          c=$RUNNER_TEMP/checks api=repos/$GITHUB_REPOSITORY/actions
+          ( result='' n=0
+            while [ "$(date +%s)" -lt $((${STARTED:-$(date +%s)} + 50 * 60)) ]; do
+              result=$(gh api "$api/runs/$GITHUB_RUN_ID/jobs?filter=all&per_page=100" --jq '[.jobs[] | select(.name == "checks")]
+                | max_by(.run_attempt) | select(. != null and .status == "completed") | .conclusion // "none"') || result=''
+              [ -z "$result" ] || break
+              n=$((n + 1))
+              sleep "$([ "$n" -lt 60 ] && echo 2 || echo 10)"
+            done
+            for try in 1 2 3; do
+              [ -n "$result" ] || break
+              if id=$(gh api "$api/runs/$GITHUB_RUN_ID/artifacts?name=card-checks" --jq '.artifacts[0].id // ""'); then
+                [ -n "$id" ] || break
+                gh api "$api/artifacts/$id/zip" > "$c.zip" && mkdir -p "$c" && unzip -q -o "$c.zip" -d "$c" && break
+              fi
+              sleep "$try"
+            done
+            echo "${result:-none}" > "$c.result" ) < /dev/null > "$c.log" 2>&1 &
+          echo $! > "$c.pid"
+
       # The report as a comment on the pushed commit, when it says more than "nothing to do" (summary.json's "comment":
       # told, written, a card's error, or comment-only lines such as R10). A re-run edits the oldest guards comment, and
       # once any of them carries the TOLD mark it does not post again. The lookup is tried 3 times; a re-run or a dispatch
-      # that still cannot read it counts as told (an earlier run may have posted). After Land, whatever it did (the post
-      # job rewrites this comment with what Land settled); a failed call fails the run.
+      # that still cannot read it counts as told (an earlier run may have posted). After Land, whatever it did (Follow up
+      # rewrites this comment with what Land settled); a failed call fails the run.
       - name: Comment on the commit
         id: comment
         if: ${{ !cancelled() && steps.check.outcome == 'success' && env.MODE == 'on' }}
@@ -893,8 +916,166 @@ jobs:
             echo "id=$id" >> "$GITHUB_OUTPUT"
           fi
 
-      # overwrite: a re-run replaces its earlier attempt's (one name per run); with what Land settled (landed.json,
-      # report-landed.md) for the post and tell jobs. Never files/ (Land read it from disk; the root stays guards/).
+      # Right after the comment (the post job's until 2026-11-22), after Land or with fixes (both: MODE on, checked). A
+      # GITHUB_TOKEN push triggers no workflow: the card sync is run here, its bake only for pending edits (its data commit
+      # dispatches the site build; when it does not start, the comment says so and the run fails: the alert), and again by
+      # a re-run that finds the writes already landed (its earlier attempt's may not have started; both queue, so a second
+      # start is harmless). With fixes it always starts one, landed or not, Land broken or not: this push's own Card sync
+      # run skipped its main lane for it (Card sync's "Guards' fixes"); none when Start Card sync did (that run waits for
+      # Landed), unless its jobs are not read or a lane of it was cancelled: a newer run took its place in the queue, maybe
+      # before Landed, and synced main without the fixes. The comment is rewritten with what landed, what did not and why
+      # (a broken Land still says so).
+      - name: Follow up
+        id: follow
+        if: ${{ !cancelled() && (steps.land.outputs.ran == 'true' || steps.plan.outputs.fixes == 'true') }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          SHA: ${{ steps.land.outputs.sha }}
+          ALREADY: ${{ steps.land.outputs.already }}
+          COMMENT: ${{ steps.comment.outputs.id }}
+          TOLD_BEFORE: ${{ steps.comment.outputs.told }}
+          FIXES: ${{ steps.plan.outputs.fixes }}
+          LAND_RAN: ${{ steps.land.outputs.ran }}
+          EARLY: ${{ steps.early.outputs.started }}
+          EARLY_RUN: ${{ steps.early.outputs.run }}
+        run: |
+          refresh=ok start=""
+          [ -n "$SHA" ] && start=true
+          [ "$FIXES" = true ] && start=true
+          if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
+          if [ "$EARLY" = true ]; then
+            lost=1
+            [ -z "$EARLY_RUN" ] || lost=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$EARLY_RUN/jobs" \
+              --jq '[.jobs[] | select((.name == "Card data" or .name == "Bake and save") and .conclusion == "cancelled")] | length') || lost=1
+            if [ "${lost:-1}" = 0 ]; then start=""; else echo "Card sync run ${EARLY_RUN:-?}: a lane cancelled or not read: one more."; fi
+          fi
+          started=""
+          if [ -n "$start" ]; then
+            for wait in 0 10 30; do               # tried 3 times: with fixes no other run bakes this push
+              sleep "$wait"
+              if gh workflow run card-sync.yml -f dry_run=false -f bake=pending; then started=true; break; fi
+            done
+          fi
+          if [ -n "$start" ] && [ -z "$started" ]; then
+            refresh=failed
+            echo "refresh=failed" >> "$GITHUB_OUTPUT"
+            printf '\n**The card sync did not start after this commit: its next run catches up.**\n' \
+              >> "$OUT/report-landed.md"
+          fi
+          if [ -n "$COMMENT" ] && [ "$LAND_RAN" = true ]; then
+            body="$OUT/report-landed.md"
+            if [ ! -f "$body" ]; then
+              { cat "$OUT/report.md"; printf '\n**The bot could not finish this push (see the run): nothing above was committed.**\n'; } \
+                > "$OUT/report-broken.md"
+              body="$OUT/report-broken.md"
+            fi
+            [ "$TOLD_BEFORE" = true ] && printf '\n%s\n' "$TOLD" >> "$body"
+            jq -n --rawfile body "$body" '{body: $body}' \
+              | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null \
+              || echo "::warning::the commit comment could not be edited"
+          fi
+          if [ "$refresh" = failed ]; then echo "::error::the card sync did not start: run it by hand"; exit 1; fi
+
+      # A push's post (the tell job's until 2026-11-22), whatever CARD_GUARDS says. A re-run: the TOLD mark on any of the
+      # bot's comments on the pushed commit (the Comment step's answer first); unreadable counts as told, as an earlier
+      # attempt may have posted. A first attempt cannot have told.
+      - name: Told already
+        id: told
+        if: ${{ !cancelled() && github.event_name == 'push' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHECK_TOLD: ${{ steps.comment.outputs.told }}
+        run: |
+          if [ "$CHECK_TOLD" = true ]; then echo "told=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] || exit 0
+          for wait in 0 10 30; do
+            sleep "$wait"
+            raw=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --paginate) || continue
+            if jq -s -e --arg told "$TOLD" 'add // [] | any(.[]; .user.login == "github-actions[bot]" and (.body | contains($told)))' \
+                <<< "$raw" > /dev/null; then echo "told=true" >> "$GITHUB_OUTPUT"; fi
+            exit 0
+          done
+          echo "::warning::the commit's comments could not be read: no post, as an earlier attempt may have told Discord"
+          echo "told=true" >> "$GITHUB_OUTPUT"
+
+      # The post (standards.json), once Checks' reports start is done: the guards' part when they had lines to settle
+      # (plan.json and landed.json; a Land that settled nothing leaves it out), the checks' reports. told=true (no failure alert for it) only when it went out
+      # whole: the guards' part settled or not needed and the card check's report in. The URL is never printed; a failed
+      # call warns. Then the comments: the TOLD mark on the guards' comment, the two checks' (each with notes; the mark on
+      # the first when the guards' could not take it), else a comment of its own carries it.
+      - name: Tell Discord
+        id: tell
+        if: ${{ !cancelled() && github.event_name == 'push' && steps.told.outputs.told != 'true' }}
+        working-directory: bot
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHECKED: ${{ steps.check.outcome }}
+          LAND: ${{ steps.plan.outputs.land }}
+          COMMENT: ${{ steps.comment.outputs.id }}
+        run: |
+          checks=$RUNNER_TEMP/checks whole=true args=()
+          [ ! -s "$checks.pid" ] || while [ ! -s "$checks.result" ] && kill -0 "$(cat "$checks.pid")" 2> /dev/null; do sleep 0.05; done
+          cat "$checks.log" 2> /dev/null || true
+          CHECKS=$(cat "$checks.result" 2> /dev/null) || CHECKS=none
+          if [ "$MODE" = on ]; then
+            if [ "$CHECKED" != success ]; then
+              whole=""
+            elif [ "$LAND" = true ]; then
+              if [ -f "$OUT/landed.json" ]; then args+=(--plan "$OUT/plan.json" --landed "$OUT/landed.json"); else whole=""; fi
+            fi
+          fi
+          for name in card-check font-check; do
+            if [ -f "$checks/$name/report.json" ]; then args+=("--$name" "$checks/$name/report.json"); fi
+          done
+          if [ "$CHECKS" != success ] || [ ! -f "$checks/card-check/report.json" ]; then whole=""; fi
+          mkdir -p "$OUT"
+          python3 -m commands.standards_post --repo "$GITHUB_REPOSITORY" --after "$GITHUB_SHA" "${args[@]}" --out "$OUT/standards.json"
+          mark=""
+          if ! jq -e '.content // "" | length > 0' "$OUT/standards.json" > /dev/null; then
+            echo "Nothing to tell."
+          elif [ -z "$WEBHOOK" ]; then
+            echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"
+          elif curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @"$OUT/standards.json" "$WEBHOOK"; then
+            mark=$TOLD
+            if [ -n "$whole" ]; then echo "told=true" >> "$GITHUB_OUTPUT"; fi
+          else
+            echo "::warning::the Discord webhook call failed; the commit comments stand"
+          fi
+          comment() {   # $1: the body file, $2: the mark or ""; a comment on the pushed commit
+            { cat "$1"; if [ -n "$2" ]; then printf '\n%s\n' "$2"; fi; } > "$1.sent"
+            jq -n --rawfile body "$1.sent" '{body: $body}' \
+              | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --input - > /dev/null
+          }
+          if [ -n "$mark" ] && [ -n "$COMMENT" ]; then
+            if { gh api "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --jq .body && printf '\n%s\n' "$TOLD"; } > "$OUT/comment-told.md" \
+                && jq -n --rawfile body "$OUT/comment-told.md" '{body: $body}' \
+                  | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null; then
+              mark=""
+            else
+              echo "::warning::the guards' comment could not take the told mark"
+            fi
+          fi
+          for name in card-check font-check; do
+            if [ ! -f "$checks/$name/report.json" ] || ! jq -e '.cards | length > 0' "$checks/$name/report.json" > /dev/null; then
+              echo "$name: nothing to report."
+              continue
+            fi
+            if comment "$checks/$name/report.md" "$mark"; then mark=""; else echo "::warning::$name: the commit comment failed"; fi
+          done
+          if [ -n "$mark" ]; then
+            body="$OUT/report-landed.md"
+            [ -f "$body" ] || body="$OUT/report.md"
+            [ -f "$body" ] || { echo "Told in the standards channel." > "$OUT/told.md"; body="$OUT/told.md"; }
+            comment "$body" "$mark" || echo "::warning::no commit comment carries the told mark: a re-run would post again"
+          fi
+
+      # overwrite: a re-run replaces its earlier attempt's (one name per run): what Land settled (landed.json,
+      # report-landed.md) and the post (standards.json). Never files/ (Land read it from disk; the root stays guards/).
       - uses: actions/upload-artifact@v7
         if: always() && env.MODE != 'off'
         with:
@@ -915,15 +1096,15 @@ jobs:
           overwrite: true
           retention-days: 14
 
-  # A push's card check and font check, beside `check`: Card sync's guards wait and the post job wait for that one alone.
-  # Never a gate, whatever CARD_GUARDS says. `check` saves the font cache; the tell job posts their reports, finish's
-  # alert reads this job's result too.
+  # A push's card check and font check, beside `check`: Card sync's guards wait for that one alone. Never a gate,
+  # whatever CARD_GUARDS says. `check` saves the font cache and posts their reports (Tell Discord); finish's alert reads
+  # this job's result too.
   checks:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 40    # finish's alert reads 40
     permissions:
-      contents: read      # the tell job comments
+      contents: read      # check's Tell Discord comments
     env:
       BOT_FILES: *bot-files
     steps:
@@ -983,8 +1164,8 @@ jobs:
 
       - *pushed-blobs
 
-      # The two checks' reports (report.md, report.json; card-check/ and font-check/) for the tell job: their comments and
-      # their part of the post
+      # The two checks' reports (report.md, report.json; card-check/ and font-check/) for check's Tell Discord: their
+      # comments and their part of the post
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -996,254 +1177,10 @@ jobs:
           overwrite: true
           retention-days: 14
 
-  # Right after the check (owner, 2026-11-03: the 30-minute quiet window and its environment card-guards-quiet are gone):
-  # Follow up (the comment with what Land settled; Card sync when Start Card sync did not). Only when the check found
-  # something to land or tell, with MODE on. Land is the check job's; the post is the tell job's.
-  post:
-    needs: check
-    if: >-
-      !cancelled() && needs.check.outputs.checked == 'success' && needs.check.outputs.land == 'true' &&
-      needs.check.outputs.mode == 'on'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10     # the comment and a start
-    env:
-      TOLD: "<!-- card-guards: told on Discord -->"
-      GH_REPO: ${{ github.repository }}     # gh workflow run with no checkout
-    steps:
-      - name: Work dir
-        shell: bash
-        run: echo "OUT=$RUNNER_TEMP/guards" >> "$GITHUB_ENV"
-
-      # The check job's plan.json, report.md, summary.json and what Land settled (never files/).
-      - uses: actions/download-artifact@v8
-        with:
-          name: card-guards
-          path: ${{ runner.temp }}/guards
-
-      # Whether this push was told already (Follow up keeps the mark): the Comment step's answer, and when this job is
-      # re-run alone (the check job's outputs are then its first attempt's) the commit comment's TOLD mark looked up again
-      # (the Comment step's lookup; unreadable counts as told).
-      - name: Told before
-        id: told
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CHECK_TOLD: ${{ needs.check.outputs.told }}
-        run: |
-          if [ "$CHECK_TOLD" = true ]; then echo "told=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] || exit 0
-          after=$(jq -r .after "$OUT/plan.json")
-          for wait in 0 10 30; do
-            sleep "$wait"
-            raw=$(gh api "repos/$GITHUB_REPOSITORY/commits/$after/comments" --paginate) || continue
-            jq -s -e --arg told "$TOLD" 'add // [] | any(.[]; .user.login == "github-actions[bot]"
-              and (.body | startswith("## Card guards")) and (.body | contains($told)))' <<< "$raw" > /dev/null \
-              && echo "told=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          done
-          echo "::warning::the commit's comments could not be read: no post, as an earlier attempt may have told Discord"
-          echo "told=true" >> "$GITHUB_OUTPUT"
-
-      # A GITHUB_TOKEN push triggers no workflow: the card sync is run here, its bake only for pending edits (its data
-      # commit dispatches the site build; when it does not start, the comment says so and the run fails: the alert),
-      # and again by a re-run that finds the writes already landed (its earlier attempt's may not have started; both
-      # queue, so a second start is harmless). With fixes it always starts one, landed or not, Land broken or not: this
-      # push's own Card sync run skipped its main lane for it (Card sync's "Guards' fixes"); none when the check job's
-      # Start Card sync did (that run waits for Landed), unless its jobs are not read or a lane of it was cancelled: a
-      # newer run took its place in the queue, maybe before Landed, and synced main without the fixes. The comment is
-      # rewritten with what landed, what did not and why (a broken Land still says so).
-      - name: Follow up
-        id: follow
-        if: always() && (needs.check.outputs.land_ran == 'true' || needs.check.outputs.fixes == 'true')
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHA: ${{ needs.check.outputs.land_sha }}
-          ALREADY: ${{ needs.check.outputs.land_already }}
-          COMMENT: ${{ needs.check.outputs.comment }}
-          TOLD_BEFORE: ${{ steps.told.outputs.told }}
-          FIXES: ${{ needs.check.outputs.fixes }}
-          LAND_RAN: ${{ needs.check.outputs.land_ran }}
-          EARLY: ${{ needs.check.outputs.early }}
-          EARLY_RUN: ${{ needs.check.outputs.early_run }}
-        run: |
-          refresh=ok start=""
-          [ -n "$SHA" ] && start=true
-          [ "$FIXES" = true ] && start=true
-          if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
-          if [ "$EARLY" = true ]; then
-            lost=1
-            [ -z "$EARLY_RUN" ] || lost=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$EARLY_RUN/jobs" \
-              --jq '[.jobs[] | select((.name == "Card data" or .name == "Bake and save") and .conclusion == "cancelled")] | length') || lost=1
-            if [ "${lost:-1}" = 0 ]; then start=""; else echo "Card sync run ${EARLY_RUN:-?}: a lane cancelled or not read: one more."; fi
-          fi
-          started=""
-          if [ -n "$start" ]; then
-            for wait in 0 10 30; do               # tried 3 times: with fixes no other run bakes this push
-              sleep "$wait"
-              if gh workflow run card-sync.yml -f dry_run=false -f bake=pending; then started=true; break; fi
-            done
-          fi
-          if [ -n "$start" ] && [ -z "$started" ]; then
-            refresh=failed
-            echo "refresh=failed" >> "$GITHUB_OUTPUT"
-            printf '\n**The card sync did not start after this commit: its next run catches up.**\n' \
-              >> "$OUT/report-landed.md"
-          fi
-          if [ -n "$COMMENT" ] && [ "$LAND_RAN" = true ]; then
-            body="$OUT/report-landed.md"
-            if [ ! -f "$body" ]; then
-              { cat "$OUT/report.md"; printf '\n**The bot could not finish this push (see the run): nothing above was committed.**\n'; } \
-                > "$OUT/report-broken.md"
-              body="$OUT/report-broken.md"
-            fi
-            [ "$TOLD_BEFORE" = true ] && printf '\n%s\n' "$TOLD" >> "$body"
-            jq -n --rawfile body "$body" '{body: $body}' \
-              | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null \
-              || echo "::warning::the commit comment could not be edited"
-          fi
-          if [ "$refresh" = failed ]; then echo "::error::the card sync did not start: run it by hand"; exit 1; fi
-
-  # The standards channel's one post per push (owner 2026-11-11), whatever CARD_GUARDS says, once check, checks and post
-  # are done (post's Follow up rewrites the guards' comment first): AutoCroissant commands/standards_post.py, on the
-  # runner's own python3, merges the guards' lines as Land settled them with the two checks' notes. Once per push: the
-  # TOLD mark on a commit comment covers the whole post (a re-run looks it up; unreadable counts as told). The two checks'
-  # commit comments come from here too.
-  tell:
-    needs: [check, checks, post]
-    if: ${{ !cancelled() && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10     # the post and the comments; finish's alert reads 10
-    permissions:
-      contents: write     # the commit comments
-      actions: read       # the run's artifacts
-    env:
-      TOLD: "<!-- card-guards: told on Discord -->"
-      BOT_FILES: *bot-files
-    outputs:
-      told: ${{ steps.tell.outputs.told || steps.told.outputs.told }}
-    steps:
-      - *bot-start
-
-      - name: Work dir
-        shell: bash
-        run: echo "OUT=$RUNNER_TEMP/guards" >> "$GITHUB_ENV"
-
-      # The guards' plan.json, report.md and what Land settled (none with CARD_GUARDS off, or a check that broke first)
-      - uses: actions/download-artifact@v8
-        if: needs.check.outputs.mode == 'on'
-        continue-on-error: true
-        with:
-          name: card-guards
-          path: ${{ runner.temp }}/guards
-
-      # The two checks' report.md and report.json (none when the checks job broke first)
-      - uses: actions/download-artifact@v8
-        continue-on-error: true
-        with:
-          name: card-checks
-          path: ${{ runner.temp }}/checks
-
-      - *bot
-      - *bot-repo
-
-      # A re-run: the TOLD mark on any of the bot's comments on the pushed commit (the Comment step's answer first);
-      # unreadable counts as told, as an earlier attempt may have posted. A first attempt cannot have told.
-      - name: Told already
-        id: told
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CHECK_TOLD: ${{ needs.check.outputs.told }}
-        run: |
-          if [ "$CHECK_TOLD" = true ]; then echo "told=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] || exit 0
-          for wait in 0 10 30; do
-            sleep "$wait"
-            raw=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --paginate) || continue
-            if jq -s -e --arg told "$TOLD" 'add // [] | any(.[]; .user.login == "github-actions[bot]" and (.body | contains($told)))' \
-                <<< "$raw" > /dev/null; then echo "told=true" >> "$GITHUB_OUTPUT"; fi
-            exit 0
-          done
-          echo "::warning::the commit's comments could not be read: no post, as an earlier attempt may have told Discord"
-          echo "told=true" >> "$GITHUB_OUTPUT"
-
-      # The post (standards.json): the guards' part when they had lines to settle (plan.json and landed.json; a Land that
-      # settled nothing leaves it out), the checks' reports. told=true (no failure alert for it) only when it went out
-      # whole: the guards' part settled or not needed and the card check's report in. The URL is never printed; a failed
-      # call warns. Then the comments: the TOLD mark on the guards' comment, the two checks' (each with notes; the mark on
-      # the first when the guards' could not take it), else a comment of its own carries it.
-      - name: Tell Discord
-        id: tell
-        if: steps.told.outputs.told != 'true'
-        working-directory: bot
-        shell: bash
-        env:
-          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODE: ${{ needs.check.outputs.mode }}
-          CHECKED: ${{ needs.check.outputs.checked }}
-          LAND: ${{ needs.check.outputs.land }}
-          CHECKS: ${{ needs.checks.result }}
-          COMMENT: ${{ needs.check.outputs.comment }}
-        run: |
-          checks=$RUNNER_TEMP/checks whole=true args=()
-          if [ "$MODE" = on ]; then
-            if [ "$CHECKED" != success ]; then
-              whole=""
-            elif [ "$LAND" = true ]; then
-              if [ -f "$OUT/landed.json" ]; then args+=(--plan "$OUT/plan.json" --landed "$OUT/landed.json"); else whole=""; fi
-            fi
-          fi
-          for name in card-check font-check; do
-            if [ -f "$checks/$name/report.json" ]; then args+=("--$name" "$checks/$name/report.json"); fi
-          done
-          if [ "$CHECKS" != success ] || [ ! -f "$checks/card-check/report.json" ]; then whole=""; fi
-          mkdir -p "$OUT"
-          python3 -m commands.standards_post --repo "$GITHUB_REPOSITORY" --after "$GITHUB_SHA" "${args[@]}" --out "$OUT/standards.json"
-          mark=""
-          if ! jq -e '.content // "" | length > 0' "$OUT/standards.json" > /dev/null; then
-            echo "Nothing to tell."
-          elif [ -z "$WEBHOOK" ]; then
-            echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"
-          elif curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @"$OUT/standards.json" "$WEBHOOK"; then
-            mark=$TOLD
-            if [ -n "$whole" ]; then echo "told=true" >> "$GITHUB_OUTPUT"; fi
-          else
-            echo "::warning::the Discord webhook call failed; the commit comments stand"
-          fi
-          comment() {   # $1: the body file, $2: the mark or ""; a comment on the pushed commit
-            { cat "$1"; if [ -n "$2" ]; then printf '\n%s\n' "$2"; fi; } > "$1.sent"
-            jq -n --rawfile body "$1.sent" '{body: $body}' \
-              | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --input - > /dev/null
-          }
-          if [ -n "$mark" ] && [ -n "$COMMENT" ]; then
-            if { gh api "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --jq .body && printf '\n%s\n' "$TOLD"; } > "$OUT/comment-told.md" \
-                && jq -n --rawfile body "$OUT/comment-told.md" '{body: $body}' \
-                  | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null; then
-              mark=""
-            else
-              echo "::warning::the guards' comment could not take the told mark"
-            fi
-          fi
-          for name in card-check font-check; do
-            if [ ! -f "$checks/$name/report.json" ] || ! jq -e '.cards | length > 0' "$checks/$name/report.json" > /dev/null; then
-              echo "$name: nothing to report."
-              continue
-            fi
-            if comment "$checks/$name/report.md" "$mark"; then mark=""; else echo "::warning::$name: the commit comment failed"; fi
-          done
-          if [ -n "$mark" ]; then
-            body="$OUT/report-landed.md"
-            [ -f "$body" ] || body="$OUT/report.md"
-            [ -f "$body" ] || { echo "Told in the standards channel." > "$OUT/told.md"; body="$OUT/told.md"; }
-            comment "$body" "$mark" || echo "::warning::no commit comment carries the told mark: a re-run would post again"
-          fi
-
   # A red run where it should be one, and a broken push told in the standards channel: once per push (owner
   # 2026-11-11), across this workflow and Card sync by the failure marker.
   finish:
-    needs: [check, checks, post, tell]
+    needs: [check, checks]
     if: always() && (github.event_name == 'push' || needs.check.outputs.mode != 'off')
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -1266,10 +1203,9 @@ jobs:
 
       # A failed push run: one message, "Card guards failed on <login>'s push <sha8>: <failed steps> <run>", no ping, no
       # preview, unless the push's post went out whole and told it (a card error, a write that did not land) with the
-      # checks job, post's Follow up and the tell job sound; or the failure marker is on the pushed commit already (an
-      # earlier attempt, or Card sync, told it; unreadable comments: it posts anyway). Quiet too for a cancel by hand (no
-      # cancelled job ran to its timeout, check 60 minutes, checks 40, post and tell 10, by the attempt's job list;
-      # whoever cancelled it knows). The failed steps from that list (a timed-out one so marked; cards-venv named
+      # checks job and Follow up sound; or the failure marker is on the pushed commit already (an earlier attempt, or Card
+      # sync, told it; unreadable comments: it posts anyway). Quiet too for a cancel by hand (no cancelled job ran to its
+      # timeout, check 60 minutes, checks 40, by the attempt's job list; whoever cancelled it knows). The failed steps from that list (a timed-out one so marked; cards-venv named
       # Python environment, as in Card sync), else the jobs. Any job's failure counts: a step's failure() and
       # cancelled() see only this job, so the needed jobs' results are read too.
       # Then the marker: a commit comment ending in FAILURE_TOLD.
@@ -1278,21 +1214,20 @@ jobs:
         if: >-
           (failure() || contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) &&
           github.event_name == 'push' &&
-          (needs.checks.result != 'success' || needs.post.result == 'failure' || needs.post.result == 'cancelled' ||
-          needs.tell.outputs.told != 'true')
+          (needs.checks.result != 'success' || needs.check.outputs.follow == 'failure' || needs.check.outputs.told != 'true')
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
           RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          RESULTS: check=${{ needs.check.result }} checks=${{ needs.checks.result }} post=${{ needs.post.result }} tell=${{ needs.tell.result }}
+          RESULTS: check=${{ needs.check.result }} checks=${{ needs.checks.result }}
           STARTED: ${{ needs.check.outputs.started }}
           OWN: ${{ steps.errors.outcome == 'failure' && 'Fail on card errors' || '' }}
         run: |
           jobs=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/${GITHUB_RUN_ATTEMPT:-1}/jobs") || jobs=""
           if [[ " $RESULTS " == *"=cancelled "* ]]; then    # a job's timeout reads as cancelled too: it ran its whole time
             if [ -n "$jobs" ]; then
-              timed_out=$(jq -r --argjson limit '{"check": 60, "checks": 40, "post": 10, "tell": 10}' \
+              timed_out=$(jq -r --argjson limit '{"check": 60, "checks": 40}' \
                 '[.jobs[] | select(.conclusion == "cancelled" and .started_at and .completed_at)
                   | select((.completed_at | fromdate) - (.started_at | fromdate) >= ($limit[.name] // 0) * 60 - 120)] | length' <<< "$jobs")
             else                                # no job list: the old rule, from the check's Start
