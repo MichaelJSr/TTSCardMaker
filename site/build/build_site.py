@@ -3319,8 +3319,8 @@ def image_versions(paths, commits, renamed=None, pairs=None):
     """{current path: [(commit, path then), ...] newest first, one per content change}, commits as
     (sha, committer time, author, subject). Renames are followed, so folder moves keep their history: exact ones (same blob
     deleted and added in one commit), a move that also changed the image when that commit deleted exactly one PNG
-    of the same file name (alnum, any case) and added only this one, and a rename the bake told (renamed: parse_history's,
-    a card renamed and redrawn in one commit). pairs (a dict): filled with {(current path, sha): (blob before or None,
+    of the same file name (alnum, any case) and added only this one, and a told rename (renamed: parse_history's or
+    tag_renames', a card renamed and redrawn in one commit). pairs (a dict): filled with {(current path, sha): (blob before or None,
     blob after)}."""
     tracked = {p: p for p in paths}               # path at the commit being read -> current path
     versions = {p: [] for p in paths}
@@ -3371,6 +3371,26 @@ def image_versions(paths, commits, renamed=None, pairs=None):
                     tracked[gone[name][0]] = key  # moved and changed: older versions under its old name
                     pairs[(key, sha)] = (gone_blob.get(gone[name][0]), blob_of[path])
     return versions
+
+
+def tag_renames(old_stats, into, commits, renamed=None):
+    """image_versions' renamed: the bake's Renamed trailers (renamed) and the card data's archive tags, a person's rename that
+    also redrew the picture under another file name (c05e5d4a: Man_Serpent_Shield.png -> Man-Serpent's_Shield.png). At the
+    tag's commit the one added PNG named for the card (into: renamed_into's) -> its old PSD's PNG; the trailers win."""
+    end = {n: card for card, names in into.items() for n in names}
+    adds = {c[0]: [p for s, _, _, p in c[5] if s == "A" and p.lower().endswith(".png")] for c in commits}
+    told = {sha: dict(m) for sha, m in (renamed or {}).items()}
+    file_name = lambda p: alnum(os.path.splitext(os.path.basename(p))[0])
+    for name, versions in old_stats.items():
+        tag = getattr(versions[len(versions) - 1], "archived", None) if versions else None
+        if name not in end or not isinstance(tag, dict) or tag.get("commit") not in adds or not isinstance(tag.get("path"), str):
+            continue
+        names = {alnum(n) for n in (end[name], *into[end[name]])}
+        old = os.path.splitext(tag["path"])[0] + ".png"
+        found = [p for p in adds[tag["commit"]] if p != old and file_name(p) in names]
+        if len(found) == 1:
+            told.setdefault(tag["commit"], {}).setdefault(found[0], old)
+    return told
 
 
 def version_copies(blobs, budget):
@@ -5549,7 +5569,7 @@ def main():
     for e in cards:                               # deck.js: the TTS save's pinned links (AutoCroissant tts_save _pin_links)
         if e.get("png") and pin(e["png"]):
             e["pin"] = pin(e["png"])
-    found = image_versions(list(by_png), commits, renamed, pairs)
+    found = image_versions(list(by_png), commits, tag_renames(old_stats, into, commits, renamed), pairs)
     versions = {"repo": CARD_REPO, "commits": [], "cards": {}, "minor": {}, "visible": PNG_VISIBLE}
     changes = load_png_changes(data_dir)
     data_key = lambda e: by_id[e["dup"]]["key"] if e.get("dup") in by_id and not e.get("variantOf") else e["key"]   # a copy: its original's

@@ -1639,7 +1639,9 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
   nothing a file can hold, a name another card of the run takes. A printed name still renames (numbered PNGs too). The same commit moves the card's keys in Card Edits.json (the old name an alias, `_rename`
   gone), Card Authors.txt, Card Creation Dates.json, Card Ratings.json and TTS/decks.json.
 - Followers of the trailers: the data build (one card: `renamed_to`, its author, series and dates kept), the TTS save,
-  and this build: image versions go on under the old path (`image_versions(..., renamed)`), the text history includes
+  and this build: image versions go on under the old path (`image_versions(..., renamed)`; since 2026-11-22 also a
+  person's rename that redrew under another file name, by the data's archive tags: `tag_renames`, 11 cards +25 rows,
+  Man-Serpent's Shield 1 -> 9), the text history includes
   the old names' versions (`renamed_into`), and `c/<old slug>/` redirects to the new page (`redirects`, `redirect_page`). The old id also
   follows in profile picks and published hands (`read_profiles`, `read_decks`) and in the app (cards.json `moved`:
   `#/card/<old id>`, share codes, saved hands).
