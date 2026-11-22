@@ -9,28 +9,6 @@
  },
  "entries": [
   {
-   "id": "F-f470a1e8788",
-   "kind": "text",
-   "date": "2020-08-06T07:07:43+00:00",
-   "day": "2020-08-06",
-   "badge": "changelog",
-   "channel": "update-02",
-   "change": {
-    "ability": "changed"
-   }
-  },
-  {
-   "id": "F-fe4d59b6387",
-   "kind": "text",
-   "date": "2020-08-17T10:55:14+00:00",
-   "day": "2020-08-17",
-   "badge": "changelog",
-   "channel": "update-02",
-   "change": {
-    "ability": "changed"
-   }
-  },
-  {
    "id": "D-P-e971629b2981",
    "kind": "discord",
    "date": "2022-01-16T07:09:36+00:00",
@@ -238,8 +216,8 @@
   }
  ],
  "created": {
-  "date": "2020-07-22",
-  "sort": "2020-07-22",
+  "date": "2022-01-15",
+  "sort": "2022-01-15",
   "source": "discord",
   "status": "owner"
  }

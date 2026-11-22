@@ -137,7 +137,7 @@
     },
     "ability": {
      "value": "(MAX 3) Each time, this loses 3 HP, gain 1 ATK. When above 50% HP, (EOT) inflict a creature with enfeebled. When below 50% HP, this creature may inflict blindness on itself and reduce ATK by 1 this turn to attack 3 times per action.",
-     "method": "triage",
+     "method": "owner",
      "confidence": "sure"
     },
     "types": {
@@ -763,6 +763,6 @@
   "date": "2021-12-13",
   "sort": "2021-12-13",
   "source": "discord",
-  "status": "pacific"
+  "status": "same"
  }
 }

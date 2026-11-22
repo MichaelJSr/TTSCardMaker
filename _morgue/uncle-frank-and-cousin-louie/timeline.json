@@ -1,0 +1,44 @@
+{
+ "card": "uncle-frank-and-cousin-louie",
+ "key": "Uncle Frank and Cousin Louie",
+ "name": "Uncle Frank and Cousin Louie",
+ "morgue": "candidate",
+ "first": {
+  "date": "2025-03-08T11:40:28.943000+00:00",
+  "day": "2025-03-08",
+  "channel": "joke-ideas",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-cc6584be83cc",
+   "kind": "discord",
+   "date": "2025-03-08T11:40:28.943000+00:00",
+   "day": "2025-03-08",
+   "badge": "Discord",
+   "image": "P-cc6584be83cc.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "joke-ideas",
+   "w": 720,
+   "h": 1440
+  },
+  {
+   "id": "P-affc81ea6740",
+   "kind": "discord",
+   "date": "2025-03-08T11:42:31.347000+00:00",
+   "day": "2025-03-08",
+   "badge": "Discord",
+   "image": "P-affc81ea6740.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "joke-ideas",
+   "w": 720,
+   "h": 1440
+  }
+ ],
+ "kind_of": "joke",
+ "list": "P-affc81ea6740-list.avif"
+}

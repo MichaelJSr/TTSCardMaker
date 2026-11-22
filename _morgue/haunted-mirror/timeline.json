@@ -1,0 +1,47 @@
+{
+ "card": "haunted-mirror",
+ "key": "Haunted Mirror",
+ "name": "Haunted Mirror",
+ "morgue": "candidate",
+ "first": {
+  "date": "2021-08-07T10:47:01.036000+00:00",
+  "day": "2021-08-07",
+  "channel": "ideas-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-da3d75c61d2a",
+   "kind": "discord",
+   "date": "2021-08-07T10:47:01.036000+00:00",
+   "day": "2021-08-07",
+   "badge": "Discord",
+   "image": "P-da3d75c61d2a.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 390,
+   "h": 608
+  },
+  {
+   "id": "O-a094b5bc5ed2:Items/Meme/4 Stars/Haunted_Mirror.png",
+   "kind": "old repo",
+   "date": "2022-08-24T11:49:36+00:00",
+   "day": "2022-08-24",
+   "badge": "first repo",
+   "author": "MichaelJSr",
+   "subject": "Initial commit",
+   "image": "O-0b82716fdb60.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "repo": "first",
+   "w": 390,
+   "h": 608
+  }
+ ],
+ "kind_of": "joke",
+ "git_file": "first repo",
+ "list": "O-0b82716fdb60-list.avif"
+}

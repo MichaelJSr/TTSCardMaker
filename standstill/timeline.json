@@ -165,6 +165,17 @@
    "h": 616
   },
   {
+   "id": "F-f398195c76e",
+   "kind": "text",
+   "date": "2020-08-06T07:07:43+00:00",
+   "day": "2020-08-06",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
+  },
+  {
    "id": "D-P-f8f8197cb4d0",
    "kind": "discord",
    "date": "2020-08-09T07:41:27+00:00",
@@ -202,6 +213,17 @@
    "era": "A-item",
    "w": 389,
    "h": 616
+  },
+  {
+   "id": "F-fc5924a1c8a",
+   "kind": "text",
+   "date": "2020-08-17T10:55:14+00:00",
+   "day": "2020-08-17",
+   "badge": "changelog",
+   "channel": "update-02",
+   "change": {
+    "ability": "changed"
+   }
   },
   {
    "id": "D-P-3f7094c60052",
@@ -559,6 +581,6 @@
   "date": "2019-03-30",
   "sort": "2019-03-30",
   "source": "discord",
-  "status": "pacific"
+  "status": "same"
  }
 }

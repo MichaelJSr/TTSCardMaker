@@ -29,7 +29,7 @@
     },
     "ability": {
      "value": "negate a creature until this is destroyed. Upon destruction, the creature that dealt the killing blow is afflicted with afraid.",
-     "method": "triage",
+     "method": "owner",
      "confidence": "sure"
     },
     "stats": {
@@ -632,6 +632,6 @@
   "date": "2022-02-25",
   "sort": "2022-02-25",
   "source": "discord",
-  "status": "pacific"
+  "status": "same"
  }
 }

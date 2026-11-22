@@ -31,7 +31,7 @@
      "value": [
       "defensive_minion"
      ],
-     "method": "triage",
+     "method": "owner",
      "confidence": "sure"
     },
     "ability": {

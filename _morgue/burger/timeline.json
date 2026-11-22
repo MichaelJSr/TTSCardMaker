@@ -1,0 +1,30 @@
+{
+ "card": "burger",
+ "key": "Burger",
+ "name": "Burger",
+ "morgue": "candidate",
+ "first": {
+  "date": "2022-02-04T00:18:37.972000+00:00",
+  "day": "2022-02-04",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-a9919c4e8729",
+   "kind": "discord",
+   "date": "2022-02-04T00:18:37.972000+00:00",
+   "day": "2022-02-04",
+   "badge": "Discord",
+   "image": "P-a9919c4e8729.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "w": 385,
+   "h": 608
+  }
+ ],
+ "kind_of": "joke",
+ "list": "P-a9919c4e8729-list.avif"
+}

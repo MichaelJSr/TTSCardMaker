@@ -73,7 +73,7 @@
     },
     "ability": {
      "value": "Negate equipped creature but give it +4 ATK. If equipped creature does not destroy an enemy creature, this item is destroyed.",
-     "method": "triage",
+     "method": "owner",
      "confidence": "sure"
     }
    },

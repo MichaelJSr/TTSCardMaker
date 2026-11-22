@@ -1,0 +1,30 @@
+{
+ "card": "corrupted-ring",
+ "key": "Corrupted Ring",
+ "name": "Corrupted Ring",
+ "morgue": "candidate",
+ "first": {
+  "date": "2020-07-13T09:33:56.285000+00:00",
+  "day": "2020-07-13",
+  "channel": "cursed",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-b95e6cc92f64-c1",
+   "kind": "discord",
+   "date": "2020-07-13T09:33:56.285000+00:00",
+   "day": "2020-07-13",
+   "badge": "Discord",
+   "image": "P-b95e6cc92f64-c1.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "cursed",
+   "w": 390,
+   "h": 610
+  }
+ ],
+ "kind_of": "joke",
+ "list": "P-b95e6cc92f64-c1-list.avif"
+}

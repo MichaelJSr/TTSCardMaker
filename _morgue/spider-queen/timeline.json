@@ -1,0 +1,72 @@
+{
+ "card": "spider-queen",
+ "key": "Spider Queen",
+ "name": "Spider Queen",
+ "morgue": "candidate",
+ "first": {
+  "date": "2019-05-11T09:55:45.255000+00:00",
+  "day": "2019-05-11",
+  "channel": "general-discussion",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-d355552d5eff",
+   "kind": "discord",
+   "date": "2019-05-11T09:55:45.255000+00:00",
+   "day": "2019-05-11",
+   "badge": "Discord",
+   "image": "P-d355552d5eff.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 603,
+   "h": 956
+  },
+  {
+   "id": "P-78574a2a4b8b",
+   "kind": "discord",
+   "date": "2019-05-11T10:00:09.855000+00:00",
+   "day": "2019-05-11",
+   "badge": "Discord",
+   "image": "P-78574a2a4b8b.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "P-e9efeb466faf",
+   "kind": "discord",
+   "date": "2019-05-11T23:09:22.843000+00:00",
+   "day": "2019-05-11",
+   "badge": "Discord",
+   "image": "P-e9efeb466faf.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "general-discussion",
+   "w": 616,
+   "h": 956
+  },
+  {
+   "id": "P-ed33e91c4347",
+   "kind": "discord",
+   "date": "2020-07-25T06:32:19.660000+00:00",
+   "day": "2020-07-25",
+   "badge": "Discord",
+   "image": "P-ed33e91c4347.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "ideas-discussion",
+   "w": 434,
+   "h": 673
+  }
+ ],
+ "kind_of": "idea",
+ "list": "P-ed33e91c4347-list.avif"
+}

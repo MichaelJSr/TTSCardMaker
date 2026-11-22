@@ -1,0 +1,37 @@
+{
+ "card": "fireball-mario",
+ "key": "Fireball (Mario)",
+ "name": "Fireball (Mario)",
+ "morgue": "candidate",
+ "first": {
+  "date": "2023-04-05T03:38:26.982000+00:00",
+  "day": "2023-04-05",
+  "channel": "new-cards",
+  "source": "discord"
+ },
+ "entries": [
+  {
+   "id": "P-3ce14044b80c",
+   "kind": "discord",
+   "date": "2023-04-05T03:38:26.982000+00:00",
+   "day": "2023-04-05",
+   "badge": "Discord",
+   "image": "P-3ce14044b80c.webp",
+   "fields": {},
+   "changes": {},
+   "minor": false,
+   "channel": "new-cards",
+   "also": [
+    {
+     "date": "2023-04-05T03:40:19.463000+00:00",
+     "day": "2023-04-05",
+     "channel": "meme-cards"
+    }
+   ],
+   "w": 720,
+   "h": 1080
+  }
+ ],
+ "kind_of": "joke",
+ "list": "P-3ce14044b80c-list.avif"
+}
