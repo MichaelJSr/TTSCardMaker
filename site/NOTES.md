@@ -702,7 +702,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     VERSION 12: `outline`, its own and its groups' Strokes stacked (Retro Kirby's 2 px under the Text group's 7 px: 9),
     on lines laid whole (a splice and ownWrap's typed words keep `stroke`: stacked, it covered the card's letters beside
     it); `paintLines` draws every outline before any fill, as Photoshop strokes the layer once (a wide one never covers
-    the letters beside it);
+    the letters beside it); VERSION 15: `rim` and `rims`, the same two [r, g, b, reach, opacity %] where `stroke` and
+    `outline` can't say them (under 100%, centred: half its size, a linear gradient: its stops' mean when none is 60
+    levels off it; Stranger's 64% title, Spicy Spray's gradient): a see-through one's outlines drawn on a layer of
+    their own and put on at its opacity (where letters' outlines meet they don't add up), a see-through own one under
+    an opaque stack spliced as the stack's (it doesn't show), an opaque one's colour read as `stroke`'s (`textColours`);
     `fb` (faux bold): advances 0.027 em wider and letters dilated by 0.027 em (the fork's FAUX_BOLD_EM).
     A record's `fx` (VERSION 8: the layer's and its groups' Drop Shadows and Outer Glows, when one shows: a glow with
     one colour or a shadow 8 px past its level's Stroke, at 15% or more; 74 cards) is cast under the typed letters
