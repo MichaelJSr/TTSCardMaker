@@ -113,12 +113,16 @@ function table(head, rows, numericFrom = 1) {
     <tbody>${rows.map(r => `<tr>${r.map((v, i) => `<td class="${i >= numericFrom ? "num" : ""}">${typeof v === "number" ? esc(fmt(v)) : esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
-/** A chart card, open on its chart (the Table button shows the table); tip: the title's note */
+const tables = new Map();   // chart id -> its table's HTML, drawn on the first Table press (app.js toggle-table)
+const chartTable = id => tables.get(id) || "";
+/** A chart card, open on its chart; tip: the title's note. Its table is drawn on the first Table press, not built hidden:
+ *  the hidden tables were most of Stats' elements. The newest card of an id holds its table. */
 function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", tip = "" } = {}) {
+  if (tableHtml) tables.set(id, tableHtml); else tables.delete(id);
   return `<section class="chart${wide ? " wide" : ""}" id="chart-${id}">
     <header><h3>${noted(title, tip)}</h3>${tableHtml ? `<button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="false">Table</button>` : ""}</header>
     ${sub ? `<p class="sub">${esc(sub)}</p>` : ""}${legend}
-    <div class="view-chart">${chartHtml}</div>${tableHtml ? `<div class="view-table" hidden>${tableHtml}</div>` : ""}</section>`;
+    <div class="view-chart">${chartHtml}</div>${tableHtml ? `<div class="view-table" hidden></div>` : ""}</section>`;
 }
 
-export { fmt, cardsHref, go, svgRole, roundedTop, niceMax, narrowOf, thin, hbar, trunc, columns, stacked, table, card as chartCard };
+export { fmt, cardsHref, go, svgRole, roundedTop, niceMax, narrowOf, thin, hbar, trunc, columns, stacked, table, card as chartCard, chartTable };

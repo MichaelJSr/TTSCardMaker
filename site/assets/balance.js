@@ -428,3 +428,4 @@ export function statsHtml(A, { cards, byId, narrow = false }, params) {
 }
 
 export { legend };   // insights.js
+export { chartTable } from "./chartkit.js";   // app.js toggle-table

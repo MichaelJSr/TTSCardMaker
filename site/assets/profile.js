@@ -6,6 +6,7 @@ import { esc, tagInfo, tagHtml, TAG, dateFmt, LOGIN_RE, noted } from "./text.js"
 import { editorFields, archiveTag, archiveTagHtml, fieldName, keptName } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./chartkit.js";
+export { chartTable } from "./chartkit.js";   // app.js toggle-table (person pages)
 import { byName } from "./grid.js";
 
 export const RECENT_CARDS = 24;                                             // the person page's newest cards

@@ -2260,6 +2260,8 @@ function banList(text) {
   }
   return out;
 }
+// the series chart's views (chart and table) for mode m: stats.js data-show
+const showMode = (box, m) => { for (const v of $$("[data-show]", box)) v.hidden = v.dataset.show !== m; };
 const actions = {
   "rb-edit": el => openBookEditor(el.dataset.id, el.dataset.line != null ? +el.dataset.line : null),
   "rb-new": () => openBookEditor(""),
@@ -2346,13 +2348,17 @@ const actions = {
   "compare-remove": el => { S.compare = compareIds().filter(x => x !== el.dataset.id); location.hash = `#/compare/${S.compare.join(",")}`; },
   "compare-clear": () => { S.compare = []; location.hash = "#/cards"; },
   "share-compare": () => copy(new URL(`#/compare/${parseHash().arg || S.compare.join(",")}`, document.baseURI).href, "comparison link"),
-  "toggle-table": el => { const box = $(`#chart-${el.dataset.target}`); const on = el.getAttribute("aria-pressed") !== "true"; el.setAttribute("aria-pressed", on);
-    el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; },
+  "toggle-table": el => { const box = $(`#chart-${el.dataset.target}`), t = $(".view-table", box), on = el.getAttribute("aria-pressed") !== "true"; el.setAttribute("aria-pressed", on);
+    if (on && !t.hasChildNodes()) {             // drawn on the first press (chartkit.js chartTable), in the series mode pressed since
+      t.innerHTML = (Bal || Pf).chartTable(el.dataset.target);
+      const m = $("[data-action=series-mode][aria-pressed=true]", box)?.dataset.mode; if (m) showMode(box, m);
+    }
+    el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; t.hidden = !on; },
   "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
   "dist-page": el => distPage(el.closest(".dist-panel"), +el.dataset.step),
   "series-mode": el => { const box = el.closest(".chart"), m = S.seriesMode = el.dataset.mode;    // stats.js series chart
     for (const b of $$("[data-action=series-mode]", box)) { const on = b.dataset.mode === m; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); }
-    for (const v of $$("[data-show]", box)) v.hidden = v.dataset.show !== m; },
+    showMode(box, m); },
   season: el => { const box = el.closest(".chart"), s = S.season = el.dataset.season;     // its episodes (stats.js seasonsCard)
     for (const a of $$("a.season", box)) { const on = a.dataset.season === s; a.classList.toggle("on", on); a.setAttribute("aria-pressed", on); }
     for (const p of $$(".ep-panel", box)) p.hidden = p.dataset.season !== s; },
