@@ -11,6 +11,7 @@
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
 //                   (series== and series~ match a subseries too; a known field's lone = reads as ==)
 //   alias==zote  alias~clot                                 any one alias (as the bot)
+//   types==fire  types==defensive minion                    any one type, or the whole list (_ as a space; as the bot)
 //   subtype==infliction                                     any one item type (Salt: heal, infliction; as the bot)
 //   created>=2025  created==2023-10  created<2021-06-01                   dates at the precision given (as the bot)
 //   has:alias  flag:hand  flag:bars  flag:name  flag:any
@@ -29,7 +30,7 @@ const DATE = { created: c => c.created };                // "YYYY-MM-DD"
 const OPS = { "<": (a, b) => a < b, "<=": (a, b) => a <= b, "==": (a, b) => a === b, ">=": (a, b) => a >= b, ">": (a, b) => a > b };
 const STR = {
   type: c => c.type, subtype: itemTypes, series: c => c.series, subseries: c => c.subseries, author: c => c.author,
-  path: c => c.psd || c.png, ability: c => c.ability, types: c => (c.types || []).join(" "),
+  path: c => c.psd || c.png, ability: c => c.ability, types: c => { const ts = (c.types || []).map(t => t.replace(/_/g, " ")); return [ts.join(" "), ...ts]; },
   name: c => c.name, alias: c => c.aliases || [], aliases: c => c.aliases || [], created: c => (c.createdBefore ? `before ${c.createdBefore}` : c.created),   // aliases, item types: each its own
 };
 export const FLAGS = {
@@ -185,7 +186,8 @@ export function compile(query, cards = null) {
   }
   m = q.match(/^(\w+)\s*(==?|~)\s*(.+)$/);
   if (m && STR[m[1].toLowerCase()]) {
-    const k = m[1].toLowerCase(), v = m[3].trim().toLowerCase().replace(/^"(.*)"$/, "$1");
+    const k = m[1].toLowerCase(), typed = m[3].trim().toLowerCase().replace(/^"(.*)"$/, "$1");
+    const v = k === "types" ? typed.replace(/_/g, " ") : typed;   // a type's _ reads as a space (the bot too)
     const gets = k === "series" ? [STR.series, STR.subseries] : [STR[k]];   // a subseries counts as a series
     const ok = m[2] === "~" ? x => x.includes(v) : x => x === v;
     return c => gets.flatMap(get => get(c)).some(x => ok((x || "").toString().toLowerCase()));
@@ -241,6 +243,7 @@ export const SEARCH_HELP = [
   ["stars<=3 · total>=25", "Stars and total stats"],
   ["type==creature · subtype=equip", "Exact value (= or ==)"],
   ["series~kirby · author~chestnut · types~undead", "Contains"],
+  ["types==fire", "Any one type"],
   ["series==mario & subseries~door", "Series and subseries (series== and series~ find a subseries too)"],
   ["created>=2025 · created==2023-10", "Creation date (first Discord post or upload)"],
   ["has:alias", "Cards with aliases"],
