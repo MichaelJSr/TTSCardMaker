@@ -752,7 +752,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     font lacks yet the card prints: The Structure's digits) is drawn as before. The bake sets a typed letter
     its font can't draw (no glyph, or an empty one: `empty`, GAPS_VERSION 2) in the font the layer prints it in, else
     another shown layer's, else Myriad Pro (psd_edit.glyph_fonts, owner D15): `record_fonts` offers MyriadPro-Regular and
-    the fonts of each layer's `faces` (psd_details VERSION 14), glyphFont picks as the bake does (the run it is typed
+    the fonts of each layer's `faces` (psd_details VERSION 14: plain letters only, a styled stand-in such as Minecraft
+    Panda's shifted '∞' passes no font on: psd_edit.plain_sigs), glyphFont picks as the bake does (the run it is typed
     into first: The Structure's IRONMAN digits), and glyphPlan returns `fonts` (letter -> font) that `measure` and
     `glyphText` draw in their own family (PICKED, keyed by the layer's family list), kept letters too (Battle Spear's
     Chiller '%'); the text itself is unchanged, so a colour alone still tints in place; only one no font draws is a
