@@ -552,10 +552,10 @@ export function createPreviews(app) {
     timer = setTimeout(() => { timer = null; poll().finally(() => schedule()); }, wait);
   }
   /** The tab in front checks, so it reads the hand-over itself and the early result shows where the person looks: a
-   *  press takes the lock; so do a page shown, a window focused and a load or sign-in in front while any is running,
+   *  press takes the lock; so do a page shown, a window focused and a load or sign-in in front while any is starting or running,
    *  checking at once. The old holder stops at its next round (takeLock: null). */
   function claim(press = false) {
-    if (!app.editor.me || !(press || (visible() && waiting(store).length)) || lockMine()) return;
+    if (!app.editor.me || !(press || (visible() && Object.values(store).flat().some(e => e.state === "starting" || e.state === "running"))) || lockMine()) return;   // starting: a move before the dispatch answers
     try { localStorage.setItem(LOCK_KEY, JSON.stringify(takeLock(null, TAB))); } catch { return; }   // storage off
     if (!press) { clearTimeout(timer); timer = null; schedule(0); }   // a press schedules once it runs
   }
@@ -596,7 +596,8 @@ export function createPreviews(app) {
     for (const [k, f] of Object.entries(result.files)) if (files[f]) urls[k] = URL.createObjectURL(new Blob([files[f]], { type: /\.webp$/i.test(f) ? "image/webp" : "image/avif" }));
     result.files = Object.fromEntries(Object.keys(urls).map(k => [k, result.files[k]]));   // what the publisher keeps
     local.set(e.request, urls); early.set(e.request, result);
-    set(patch(store, e.request, { from: run, fromAt: Date.now(), fromHead: name === HANDOVER ? result.base.commit || null : laneHead(store, run) }));   // the next press's lane (laneOf, laneHead)
+    const was = Object.values(store).flat().find(x => x.request === e.request);   // read again after a lock move: the lane's clock stays
+    set(patch(store, e.request, { from: run, fromAt: was?.from === run && was.fromAt || Date.now(), fromHead: name === HANDOVER ? result.base.commit || null : laneHead(store, run) }));   // the next press's lane (laneOf, laneHead)
     return true;
   }
   async function fromLane(e) {                        // the named lane's hand-over: true when early has e's result
