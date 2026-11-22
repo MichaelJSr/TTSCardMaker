@@ -1630,7 +1630,8 @@ def history_morgue(hist, slug, old_slugs=()):
     """The Morgue's entries from Discord (owner Q1, Q2: joke cards and cards played but lost before git): name and
     pictures only, never a live card (cards.json morgue). Each: lost (joke | played | idea), pic (its newest picture; lpic: its
     360 px list copy, the timeline's 'list' when it is that picture's, for the Morgue list's tiles), first
-    (its Pacific day) and firstCh (firstOld: first seen in the old repo; inGit: a file in the old or first repo), or a Created "Before 2020" from a physical card photo (owner Q6: M'uru) as a card's
+    (its Pacific day) and firstCh (also: [day, channel] of that picture's later posts, the owner's one picture; firstOld:
+    first seen in the old repo; inGit: a file in the old or first repo), or a Created "Before 2020" from a physical card photo (owner Q6: M'uru) as a card's
     (createdFrom photo); their rows: {id: history_rows}. An entry named as a renamed card once was (old_slugs:
     its old page redirects to it) is "<slug>-morgue", as one named as a card of today is."""
     out, rows = [], {}
@@ -1652,6 +1653,10 @@ def history_morgue(hist, slug, old_slugs=()):
             e.update(created=HISTORY_DAY, createdFrom=HISTORY_FROM[first["source"]], createdBefore=2020)
         if isinstance(first.get("channel"), str):
             e["firstCh"] = first["channel"]
+            post = next((x for x in t["entries"] if x.get("date") == first.get("date") and isinstance(x.get("also"), list)), {})
+            also = [[history_day(a), a.get("channel")] for a in post.get("also") or () if isinstance(a, dict) and history_day(a)]
+            if also:
+                e["also"] = also                           # the same picture posted again (owner 11-21): its days
         elif first.get("source") == "old repo" and e.get("first"):
             e["firstOld"] = True                       # first seen in the old repo, not on Discord
         if t.get("git_file") or e.get("firstOld"):
