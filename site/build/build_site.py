@@ -2752,6 +2752,12 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
         entry["titleWas"] = was
     else:
         entry.pop("titleFit", None)
+    parts = verdict.get("title_fits") if current else None     # a split title's parts' (card_bake.TITLE_FITS): {layer id: [fit, boxes]}
+    parts = {str(k): v for k, v in (parts.items() if isinstance(parts, dict) else ())
+             if isinstance(v, list) and len(v) == 2 and isinstance(v[0], (int, float)) and 0.7 <= v[0] < 1
+             and isinstance(v[1], list) and v[1] and all(isinstance(b, list) and len(b) == 4 for b in v[1])}
+    if parts:
+        entry["titleFits"] = parts
     if meta.get(RENAME_KEY) and "name" in fields:
         entry["renameFiles"] = True               # the bake renames its files to the name (the bot's CardEdits.renames)
     site = meta.get(SITE_KEY) or []
