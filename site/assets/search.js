@@ -2,6 +2,7 @@
 //   fire              text in the ability, name or aliases (any case); also a name without its punctuation or a (sub)series
 //   cant  nme         also can't, N.M.E. (a word typed without ' or . finds it printed with them; digits never)
 //   spongebob         text no card has: the (sub)series whose name has it as whole words (bySeries)
+//   defensive minion  text no card has, a type's name (letters and digits only: N.M.E.): that type's cards (byType)
 //   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
 //                     counter damage CDMG; and back), as the bot
 //   "draw 2" 'draw 2' whole-word match ('draw 2' also a series or name, as draw 2)
@@ -138,15 +139,26 @@ function bySeries(q, cards) {
   pred.notes = [[q, ser, sub]];
   return pred;
 }
+/** A plain term no card's text has that is a type's name, squashed ("defensive minion", "N.M.E.", "debuff stack": the
+ *  font's aliases too): a predicate for that type's cards, its note [term, [], [], types]; else null (the bot's _by_type) */
+function byType(q, cards) {
+  const sq = squash(q), names = new Set(sq ? cards.flatMap(c => (c.types || []).filter(t => squash(t) === sq)) : []);
+  if (!names.size) return null;
+  const pred = c => (c.types || []).some(t => names.has(t));
+  pred.notes = [[q, [], [], [...new Set([...names].map(t => t.replace(/_/g, " ")))].sort()]];
+  return pred;
+}
 const notesOf = ps => ps.flatMap(p => p.notes || []);
-/** a series fallback's note: No card's text has “x”: the series A and B */
-export const seriesNote = ([q, ser, sub]) => { const and = xs => (xs.length < 2 ? xs[0] : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
-  return `No card's text has “${q}”: ${[ser.length && `the series ${and(ser)}`, sub.length && `the subseries ${and(sub)}`].filter(Boolean).join(" and ")}`; };
+/** a fallback's note: No card's text has “x”: the series A and B; the type nme (types==nme) */
+export const seriesNote = ([q, ser, sub, kinds = []]) => { const and = xs => (xs.length < 2 ? xs[0] : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
+  const ts = kinds.map(t => `${t} (types==${t})`);
+  return `No card's text has “${q}”: ${[ser.length && `the series ${and(ser)}`, sub.length && `the subseries ${and(sub)}`,
+    ts.length && `the type${ts.length > 1 ? "s" : ""} ${and(ts)}`].filter(Boolean).join(" and ")}`; };
 /** the cards q's & or | parts search: none (no fallback) when q itself names one of them ("mario & luigi") */
 const partsOf = (q, cards) => (cards && cards.some(named(q, () => false)) ? null : cards);
 
 /** Compile a query into a predicate (card) => boolean, or null for an empty query. cards: the cards searched, so a
- *  plain term none of them has falls back to series' words (bySeries; the predicate's notes say so) */
+ *  plain term none of them has falls back to series' words, else a type's name (bySeries, byType; the notes say so) */
 export function compile(query, cards = null) {
   const q = straight(query || "").replace(/\s+/g, " ").trim();   // a space finds a line break
   if (!q) return null;
@@ -203,7 +215,7 @@ export function compile(query, cards = null) {
   const sq = squash(lower), probe = sq.length > 3 ? sq : `\n${sq}\n`;   // 3 letters or fewer: a whole name
   const more = c => !!sq && (squashed(c).names.includes(probe) || squashed(c).ser.has(sq));   // a name without its punctuation, a series
   const plain = c => re.test(haystack(c)) || more(c);
-  return (cards && !cards.some(plain) && bySeries(q, cards)) || plain;
+  return (cards && !cards.some(plain) && (bySeries(q, cards) || byType(q, cards))) || plain;
 }
 
 /** The cards whose name, an alias or an old name is the query (text.js norm: case, spaces and dots aside; quotes allowed). */
@@ -233,6 +245,7 @@ export const SEARCH_HELP = [
   ["hollow knight · moms knife", "A series' or subseries' cards; names without punctuation"],
   ["cant · nme", "Also can't, N.M.E.: a word typed without ' or . finds it printed with them"],
   ["spongebob · five nights", "A series by words of its name, when no card's text has them"],
+  ["defensive minion · N.M.E.", "A type's cards by its name, when no card's text has it"],
   ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
   ['"heal 2"', "Whole words only"],
   ["'heal 2'", "Whole words, and a series' or name's cards"],
