@@ -34,10 +34,10 @@ export const ZIP_404S = 3;                            // a listed hand-over's zi
 // the warm lane (owner D22; AutoCroissant card_preview_lane): the run that handed over this editor's newest result stays up
 // LANE_IDLE_MS after its last press (and ends LANE_CAP_MS after its start at the latest); a press names it (inputs.lane)
 // while it should still be up LANE_SAFE_MS from now, its card and edit in a git blob posted beside the dispatch (laneBlob;
-// run titles stop at 512 characters), and once that is posted rings its doorbell (laneBell: a commit status, context
+// run titles stop at 512 characters), and rings its doorbell beside them (laneBell: a commit status, context
 // LANE_CONTEXT, that the lane lists in about a second, a new run 2-6 s). Its hand-over, LANE_ARTIFACT + request in that
-// run, is looked for from LANE_FIRST_MS every LANE_POLL until LANE_FOR.
-export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 1080000, LANE_SAFE_MS = 20000, LANE_FIRST_MS = 2000, LANE_POLL = 500, LANE_FOR = 15000;
+// run, is looked for from LANE_FIRST_MS every LANE_POLL from a round's start until LANE_FOR (a 304 isn't counted).
+export const LANE_IDLE_MS = 240000, LANE_CAP_MS = 1080000, LANE_SAFE_MS = 20000, LANE_FIRST_MS = 2000, LANE_POLL = 250, LANE_FOR = 15000;
 export const LANE_ARTIFACT = "card-preview-", LANE_CONTEXT = "preview lane";
 export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
@@ -220,11 +220,11 @@ export function missed(e, now = Date.now()) {
  *  under BRISK_FOR ago and at most BRISK_MAX wait, POLL_FAST under FAST_FOR, POLL_MID under MID_FOR, else POLL_SLOW;
  *  POLL_QUICK from the last round's start (since: ms ago) while QUICK_MAX wait, one under BRISK_FOR with its run known,
  *  nothing handed over and quick(e) (read directly); a press named to a lane with nothing handed over yet: from
- *  LANE_FIRST_MS every LANE_POLL until LANE_FOR. */
+ *  LANE_FIRST_MS every LANE_POLL from a round's start until LANE_FOR. */
 export const pollDelay = (store, now = Date.now(), quick = () => true, since = 0) => {
   const ages = waiting(store).map(e => now - e.at);
   if (!ages.length) return null;
-  const lane = Math.min(...waiting(store).filter(e => e.lane && !e.fromAt && now - e.at < LANE_FOR).map(e => Math.max(LANE_FIRST_MS - (now - e.at), LANE_POLL)));
+  const lane = Math.min(...waiting(store).filter(e => e.lane && !e.fromAt && now - e.at < LANE_FOR).map(e => Math.max(LANE_FIRST_MS - (now - e.at), LANE_POLL - since, 0)));
   const fast = ages.length <= QUICK_MAX && waiting(store).some(e => e.run && !e.fromAt && now - e.at < BRISK_FOR && quick(e));
   const late = ages.every(a => a < EARLY_MS) ? EARLY_MS - Math.max(...ages) : fast ? Math.max(0, POLL_QUICK - since) : ages.length <= BRISK_MAX && ages.some(a => a < BRISK_FOR) ? POLL_BRISK
     : ages.some(a => a < FAST_FOR) ? POLL_FAST : ages.some(a => a < MID_FOR) ? POLL_MID : POLL_SLOW;
