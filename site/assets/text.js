@@ -469,14 +469,42 @@ function diffOnce(before, after) {
   const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
   for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
     dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
-  const out = [];
+  const runs = [];                                   // kept { e } and changed { d, i } runs, in turn
+  const put = (k, t) => {
+    const l = runs[runs.length - 1];
+    if (k === "e") { if (l?.e != null) l.e += t; else runs.push({ e: t }); }
+    else (l && l.e == null ? l : runs[runs.push({ d: "", i: "" }) - 1])[k] += t;
+  };
   let i = 0, j = 0;
   while (i < n && j < m) {
-    if (a[i] === b[j]) { out.push(esc(a[i])); i++; j++; }
-    else if (dp[i + 1][j] >= dp[i][j + 1]) out.push(`<del>${esc(a[i++])}</del>`);
-    else out.push(`<ins>${esc(b[j++])}</ins>`);
+    if (a[i] === b[j]) { put("e", a[i]); i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) put("d", a[i++]);
+    else put("i", b[j++]);
   }
-  while (i < n) out.push(`<del>${esc(a[i++])}</del>`);
-  while (j < m) out.push(`<ins>${esc(b[j++])}</ins>`);
-  return out.join("").replace(/\n/g, "<br>");
+  while (i < n) put("d", a[i++]);
+  while (j < m) put("i", b[j++]);
+  // a kept run on one line, no longer than the change on each side (on its line), joins them (diff-match-patch's
+  // semantic cleanup): "Inflict ~~3 Peppy for 1 turn.~~ a friendly creature with..." instead of word by word
+  const last = t => t.length - t.lastIndexOf("\n") - 1, first = t => (t + "\n").indexOf("\n");
+  for (let k = 1; k < runs.length - 1; k++) {
+    const l = runs[k - 1], e = runs[k], r = runs[k + 1];
+    if (e.e == null || e.e.includes("\n") || e.e.length > Math.min(Math.max(last(l.d), last(l.i)), Math.max(first(r.d), first(r.i)))) continue;
+    l.d += e.e + r.d; l.i += e.e + r.i; runs.splice(k, 2); k = Math.max(0, k - 3);   // the kept run before is checked again
+  }
+  for (let k = 0; k < runs.length; k++) {           // whitespace both sides share at a change's ends stays plain
+    const c = runs[k];
+    if (c.e != null || !c.d || !c.i) continue;
+    const ws = re => { const x = re.exec(c.d)[0], y = re.exec(c.i)[0]; return x.length < y.length ? x : y; };
+    const end = ws(/\s*$/), start = ws(/^\s*/);
+    if (end && c.d.endsWith(end) && c.i.endsWith(end) && end.length < Math.min(c.d.length, c.i.length)) {
+      c.d = c.d.slice(0, -end.length); c.i = c.i.slice(0, -end.length);
+      if (runs[k + 1]) runs[k + 1].e = end + runs[k + 1].e; else runs.push({ e: end });
+    }
+    if (start && c.d.startsWith(start) && c.i.startsWith(start) && start.length < Math.min(c.d.length, c.i.length)) {
+      c.d = c.d.slice(start.length); c.i = c.i.slice(start.length);
+      if (k) runs[k - 1].e += start; else { runs.unshift({ e: start }); k++; }
+    }
+  }
+  return runs.map(r => (r.e != null ? esc(r.e) : (r.d && `<del>${esc(r.d)}</del>`) + (r.i && `<ins>${esc(r.i)}</ins>`)))
+    .join("").replace(/\n/g, "<br>");
 }

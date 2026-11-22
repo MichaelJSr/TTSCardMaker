@@ -1276,6 +1276,10 @@ relies on:
   screen at 0.68 s.
 - `diffWords` keeps its HTML (2026-11-04: a Map by before + "\0" + after, the oldest dropped past 2000; ~1,000 pairs
   exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
+- `diffWords` shows a rewritten phrase as its old words, then its new ones (2026-11-22, `diffOnce`): the same LCS,
+  then a kept run on one line, no longer than the change on each side, joins them (diff-match-patch's semantic
+  cleanup), and whitespace both sides share at a change's ends stays plain. Word-by-word diffs on the live data:
+  History 444 of 1,170 -> 0, Changelog 61 of 254 -> 0. AutoCroissant `tests/test_site_history.py`.
 - Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; the 96 px file at 1x since 2026-11-10, 64 px since 2026-11-20, the 192 px one at 2-3x since 2026-11-13, §28): a 1400 px first
   screen loads ~26 of the 60 (was all), CLS 0.15 -> 0.
 - The Morgue list's small copies (2026-11-19, owner: "make small copies", the full picture still opens on tap): each
