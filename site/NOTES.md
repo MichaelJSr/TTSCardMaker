@@ -1167,6 +1167,9 @@ relies on:
   estimated heights change as they render on the way). Since 2026-11-18 its chapters have it, as Stats' charts (below):
   every chapter is drawn before a contents jump, a same-book scroll, Back/Forward, a reload's place or a redraw
   mid-book (`rb-all`), and a deep link draws every chapter down to its target first (`drawn`).
+- A deep link on a page load can jump before the bar's ResizeObserver first runs (at the first frame): `settleAt`
+  measures the bar first (`barSize`), else windows up to 980 px aimed at the 57 px default and the target sat under
+  the bar (2026-11-22, 390 px phone, cold loads of the bot's 148 rulebook links: 23 -> 0).
 - Read `scrollY` and the window size before replacing the view (renderCards `win`, renderStatsView `top`, `vh`): read
   after, they force a layout of the short page (`innerWidth` too on phones) and the scroll position clamps.
 - Mentions: `mentions()` parses without building the icons' HTML (`parse(text, self, false)`); it must keep finding

@@ -23,11 +23,12 @@ const local = u => (u.startsWith(ROOT) ? u.slice(ROOT.length) : u);   // a URL u
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q"), pageH1 = $("#page-h1"), srStatus = $("#sr-status");
-{ const bar = $("header.top"), acts = $(".top-actions", bar), q = $(".search", bar), root = document.documentElement.style;
-  new ResizeObserver(() => {   // style.css --bar; a buttons row above the search row (phones) scrolls away
-    root.setProperty("--top-h", `${bar.offsetHeight}px`);
-    root.setProperty("--top-skip", `${acts.offsetTop + acts.offsetHeight <= q.offsetTop ? q.offsetTop - acts.offsetTop : 0}px`);
-  }).observe(bar); }
+function barSize() {   // style.css --bar; a buttons row above the search row (phones) scrolls away
+  const bar = $("header.top"), acts = $(".top-actions", bar), q = $(".search", bar), root = document.documentElement.style;
+  root.setProperty("--top-h", `${bar.offsetHeight}px`);
+  root.setProperty("--top-skip", `${acts.offsetTop + acts.offsetHeight <= q.offsetTop ? q.offsetTop - acts.offsetTop : 0}px`);
+}
+new ResizeObserver(barSize).observe($("header.top"));
 const store = (() => { try { return sessionStorage; } catch { return null; } })();   // storage blocked: the Details dropdown just forgets its state
 
 const S = {
@@ -1583,6 +1584,7 @@ function renderRules(r) {
 }
 // a deep link's place, again once the book's web fonts are in (they swap in later and move it); not once the reader moves
 function settleAt(el) {
+  if (el && !document.documentElement.style.getPropertyValue("--top-h")) barSize();   // a page load's jump: the observer's first call comes later
   el?.scrollIntoView();
   if (!el || document.fonts.status === "loaded") return;
   const at = location.hash, moves = ["wheel", "touchstart", "keydown", "pointerdown"];
