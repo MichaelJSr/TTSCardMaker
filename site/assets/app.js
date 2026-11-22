@@ -2203,6 +2203,7 @@ function shut() { const open = !modal.hidden;
   if (!sealing) { sealing = true; requestAnimationFrame(() => setTimeout(() => sealing && seal())); } }   // after the paint
 shut();                                                   // a card page opens with its dialog up
 for (const t of ["keydown", "pointerdown"]) document.addEventListener(t, () => sealing && seal(), true);   // a key (Tab, Cmd+A, Cmd+F...) or a tap: before the browser acts
+document.addEventListener("pointermove", () => { if (sealing && modal.hidden) seal(); }, true);   // closed: live before a press (an inert view lets it through)
 view.addEventListener("focusin", e => { if (!modal.hidden) { seal(); e.target.blur(); $(".dialog", modal)?.focus({ preventScroll: true }); } });   // e.g. a screen reader's move
 new MutationObserver(() => {
   const d = $(".dialog", modal), at = document.activeElement;
