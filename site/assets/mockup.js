@@ -1522,8 +1522,9 @@ export function oneColour(rec, path, kind = OVERLAY, t = null) {
 const unsure = (rec, t) => !Array.isArray(t?.effects) && Array.isArray(rec?.text) && rec.text.filter(x => x?.layer === t?.layer).length > 1;
 /** The same for an enabled Gradient Overlay: the letters are drawn in the old ones' shades (erase's profile). */
 export const gradientOn = (rec, path) => oneColour(rec, path, /^GradientOverlay$/);
-/** The record's Stroke [r, g, b] (psd_details: the layer's or its group's), or null. */
-const strokeOf = t => (Array.isArray(t?.stroke) && t.stroke.length === 4 && t.stroke[3] > 0 ? t.stroke.slice(0, 3) : null);
+/** The record's Stroke [r, g, b] (psd_details: the layer's or its group's; an opaque rim's: centred or a gradient's), or null. */
+const strokeOf = t => (Array.isArray(t?.stroke) && t.stroke.length === 4 && t.stroke[3] > 0 ? t.stroke.slice(0, 3)
+  : Array.isArray(t?.rim) && t.rim.length === 5 && t.rim[3] > 0 && t.rim[4] === 100 ? t.rim.slice(0, 3) : null);
 const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 const hexRgb = h => (/^#[0-9a-f]{6}$/i.test(h || "") ? [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)) : null);
 /** A record text layer's main fill [r, g, b]: the colour most of its letters are in (build_site layer_inks' main ink,
@@ -2152,17 +2153,18 @@ function paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx 
  *  left end). one (an overlay on the ability): badges as outlined pills, rings and icons in one colour and stickers as
  *  an outline round the one-colour icon, in the text's fill ("badges": the overlay goes off, abilityOff, or may not be
  *  the layer's, unsure: icons in their own colours). shades (a Gradient Overlay's, shadesOf): letters without a colour in them.
- *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16. effects: paintEffects' under them. tex:
- *  letterLook's, over the letters of its colour. fb: faux bold, letters dilated by fb ems. Every outline is drawn before
- *  any fill (one Stroke round the layer, as Photoshop's): a wide one never covers the letters beside it. */
-export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null, fb = 0 }) {
+ *  strokeW: the letters' outline width (the record's Stroke), else z * 0.16; strokeA: its opacity (0-1). effects:
+ *  paintEffects' under them. tex: letterLook's, over the letters of its colour. fb: faux bold, letters dilated by fb
+ *  ems. Every outline is drawn before any fill (one Stroke round the layer, as Photoshop's): a wide one never covers
+ *  the letters beside it. */
+export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, strokeW = 0, strokeA = 1, imgs, one = false, track = 0, hx = 1, shades = null, effects = null, tex = null, copies = null, fb = 0 }) {
   ctx.textBaseline = "alphabetic";
   if (effects?.length) paintEffects(ctx, lines, effects, { at, base, pitch, z, fam, track, hx });
-  const copy = (c, how) => paintCopy(ctx, lines, { at, base, pitch, z, fam, track, hx, fill, stroke, strokeW, shades }, c, how);
-  if (stroke) for (const c of copies || []) copy(c, "strokeText");   // one outline round them all (the group's Stroke)
+  const copy = (c, how, g = ctx) => paintCopy(g, lines, { at, base, pitch, z, fam, track, hx, fill, stroke, strokeW, shades }, c, how);
+  if (stroke && copies?.length) seeThrough(ctx, strokeA, g => { for (const c of copies) copy(c, "strokeText", g); });   // one outline round them all (the group's Stroke)
   for (const c of copies || []) if (!c.above) copy(c, "fillText");
   const bold = how => { if (fb) { ctx.lineJoin = "round"; ctx.strokeStyle = how; ctx.lineWidth = fb * z; } return fb; };   // faux bold: the fill dilated
-  for (const rim of stroke ? [true, false] : [false]) lines.forEach((line, n) => {   // rim: the outlines, then the fills
+  const pass = (ctx, rim) => lines.forEach((line, n) => {   // rim: the outlines, else the fills
     let x = at(line), y = base + n * pitch;
     for (const p of line.pieces) {
       if (p.icon && one && p.sticker && imgs.get(p.sticker.tint) && imgs.get(p.sticker.outline)) {
@@ -2241,7 +2243,18 @@ export function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, 
       x += p.w;
     }
   });
+  if (stroke) seeThrough(ctx, strokeA, g => pass(g, true));
+  pass(ctx, false);
   for (const c of copies || []) if (c.above) copy(c, "fillText");
+}
+/** draw(g) at opacity a (0-1): a see-through Stroke's outlines on a layer of their own, then onto ctx, so where they
+ *  meet they don't add up; at 1 straight onto ctx. */
+function seeThrough(ctx, a, draw) {
+  if (!(a < 1)) return draw(ctx);
+  const c = document.createElement("canvas"); c.width = ctx.canvas.width; c.height = ctx.canvas.height;
+  const g = c.getContext("2d"); g.setTransform(ctx.getTransform()); g.textBaseline = ctx.textBaseline;
+  draw(g);
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha *= a; ctx.drawImage(c, 0, 0); ctx.restore();
 }
 /** A copy stacked on the lines (stackedOf's c): their letters moved by (dx, dy), outlined (how "strokeText") or filled in
  *  its fill, else each piece's colour; one that paints some channels only (Tainted Eden's: its blending restrictions)
@@ -2488,10 +2501,13 @@ function drawText(ctx, job, imgs, W) {
     const m = ctx.measureText(String(old).replace(/\r/g, "").split("\n")[0]), up = m.actualBoundingBoxAscent, tall = up + m.actualBoundingBoxDescent;
     if (Number.isFinite(tall) && tall > 0) base = top + (found.lines[0][3] - top) * up / tall;
   }
-  const own = Array.isArray(layer?.stroke) && layer.stroke.length === 4 ? layer.stroke : null;   // psd_details: the layer's or its group's Stroke
-  const ring = Array.isArray(layer?.outline) && layer.outline.length === 4 ? layer.outline : own;   // its groups' Strokes stacked on its own
+  const solid = (a, b) => (Array.isArray(a) && a.length === 4 ? [...a, 100] : Array.isArray(b) && b.length === 5 ? b : null);   // [r, g, b, reach, opacity %]
+  const own = solid(layer?.stroke, layer?.rim);       // psd_details: the layer's or its group's Stroke (rim: see-through, centred or a gradient's)
+  const ring = solid(layer?.outline, layer?.rims) || own;   // its groups' Strokes stacked on its own
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = ring ? ring.slice(0, 3) : colours?.stroke, strokeW = ring ? 2 * ring[3] * (kc || W / 1200) : 0;
-  const stroke0 = own ? own.slice(0, 3) : colours?.stroke, strokeW0 = own ? 2 * own[3] * (kc || W / 1200) : 0;   // a splice's (geoDraw)
+  const o0 = own && own[4] < 100 && ring !== own ? ring : own;   // a see-through one of its own shows as the stack's
+  const stroke0 = o0 ? o0.slice(0, 3) : colours?.stroke, strokeW0 = o0 ? 2 * o0[3] * (kc || W / 1200) : 0;   // a splice's (geoDraw)
+  const strokeA = ring ? ring[4] / 100 : 1, strokeA0 = o0 ? o0[4] / 100 : 1;
   const fk = kc || W / 1200, effects = Array.isArray(layer?.fx) ? layer.fx.map(e => ({ ...e, dx: (e.dx || 0) * fk, dy: (e.dy || 0) * fk, size: (e.size || 0) * fk, ws: (e.ws || 0) * fk })) : null;   // psd_details: its shadows and glows
   let fitted = 1, moving = false, mdx = 0;            // a title (box, split part) newly over a star or type icon: smaller about its anchor (psd_edit fit_title); moving: where R4 moves it
   if (role === "name" && job.head && kc && old != null) {
@@ -2533,7 +2549,7 @@ function drawText(ctx, job, imgs, W) {
         const m = ctx.measureText(body), inkW = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) * measure.hx; ctx.letterSpacing = "0px";
         const zl = inkW > 0 && b[1] > a[0] ? size * (b[1] - a[0]) / inkW : size;   // its own ink width
         const line = fit(colourize(tokenize(body, icons), body, colors, role, statuses, null, null, fills), Infinity, Infinity, zl, measure).lines.slice(0, 1);
-        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, imgs, one, effects, copies });
+        paintLines(ctx, line, { at: () => a[0] + m.actualBoundingBoxLeft * measure.hx * (zl / size), base: l.base, pitch: 0, z: zl, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, strokeA, imgs, one, effects, copies });
       }
       job.lined = "own"; return false;
     }
@@ -2541,12 +2557,12 @@ function drawText(ctx, job, imgs, W) {
   if (R && Array.isArray(layer?.fr) && String(geo.c.id) === String(layer.id))   // its letters in another font, on was: [s, e, family, its measure]
     R.fr = layer.fr.map(([s, e, f]) => [R.at(s) + R.shift, R.at(e) + R.shift, fr?.[f], fr?.[f] ? Object.assign(widthIn(ctx, fr[f], measure.track, measure.hx), measure) : null]);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid, unless spliced on the card (the bake shrinks ink off it only)
-  job.lined = plan && grow === 1 && row?.base == null && fitted === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, cover, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
+  job.lined = plan && grow === 1 && row?.base == null && fitted === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, cover, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, strokeA, stroke0, strokeW0, strokeA0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
-  paintLines(ctx, lines, { at: row?.at || (l => (left ? found.box[0] + dx : mid - l.w / 2 + dx)), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, imgs, one, shades, effects, tex, copies });
+  paintLines(ctx, lines, { at: row?.at || (l => (left ? found.box[0] + dx : mid - l.w / 2 + dx)), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, strokeA, imgs, one, shades, effects, tex, copies });
   return over;
 }
 /** The lines of a redrawn Ability the edit leaves as they were (indexes): its leading and trailing lines whose pieces
@@ -3071,7 +3087,7 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, cover = null
     for (const [rect, dx, dy] of drawn.moves) moveInk(img.data, wiped, card, W, [ya, yb], rect, dx, dy, cover);
     ctx.putImageData(img, 0, ya);
   }
-  const spliced = (sps || ow) && look.stroke0 !== undefined ? { stroke: look.stroke0, strokeW: look.strokeW0 } : {};   // the layer's own Stroke (stacked, it covered the card's letters beside it)
+  const spliced = (sps || ow) && look.stroke0 !== undefined ? { stroke: look.stroke0, strokeW: look.strokeW0, strokeA: look.strokeA0 } : {};   // the layer's own Stroke (stacked, it covered the card's letters beside it)
   for (const [lines, o] of drawn.paints) paintLines(ctx, lines, { ...look, ...spliced, ...o, pitch: step });
   return sps ? (sps.length > 1 ? "splices" : "splice") : ow ? "wrap" : "lines";
 }
