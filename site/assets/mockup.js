@@ -1400,6 +1400,44 @@ function putOver(ctx, W, cuts, card) {
     ctx.putImageData(im, x0, y0);
   }
 }
+const NEW_INK = 64, HID_MIN = 24;                   // |new - plate| of a new letter; px of them under a cover, at 720 wide
+/** The pictures over layers ids (the plate's covers: AutoCroissant card_plates.cover_alpha) cut to the image (W x H, k px
+ *  per canvas px; read: plateCuts'; alpha(cover, w, h): its alpha's RGBA at that size, or null): [[x, y, w, h, plate rgba
+ *  (the layer's crop: the card without it), alpha rgba]], or null (none). */
+export function coverCuts(plate, read, alpha, ids, k, W, H) {
+  const out = [];
+  for (const id of ids) {
+    const s = (plate?.covers || []).find(x => String(x.id) === String(id)), c = s && plate.crops.find(x => String(x.id) === String(id) && !Array.isArray(x.fx));
+    if (!c || !Array.isArray(s.box) || String(s.box) !== String(c.box) || !(k > 0)) continue;
+    const [x0, y0, x1, y1] = px(c.box.map(v => v * k), W, H), w = x1 - x0, h = y1 - y0, a = w > 0 && h > 0 ? alpha(s, w, h) : null;
+    if (a) out.push([x0, y0, w, h, read(c, w, h), a]);
+  }
+  return out.length ? out : null;
+}
+/** A cover's share at image pixel (x, y) (cover: coverCuts), 0 off them. */
+const coverAt = (cover, x, y) => { let a = 0; for (const [x0, y0, w, h, , al] of cover) if (x >= x0 && x < x0 + w && y >= y0 && y < y0 + h) a = Math.max(a, al[((y - y0) * w + x - x0) * 4] / 255); return a; };
+/** The pictures over a layer back on top of its new letters, as the bake leaves them (cover: coverCuts): each pixel
+ *  that is no longer the card's mixed towards the plate by the cover's share. -> whether new letters went under them
+ *  past the old lines' ink (lines: [x0, y0, x1, y1] image px, grown by grow). */
+export function putCover(ctx, W, cover, card, lines, grow) {
+  let hid = 0;
+  const off = (x, y) => !lines.some(l => x >= l[0] - grow && x < l[2] + grow && y >= l[1] - grow && y < l[3] + grow);
+  for (const [x0, y0, w, h, p, a] of cover) {
+    const im = ctx.getImageData(x0, y0, w, h), d = im.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const j = (y * w + x) * 4, i = ((y0 + y) * W + x0 + x) * 4, s = a[j] / 255;
+      if (!s) continue;
+      let e = 0, n = 0; for (let c = 0; c < 3; c++) { e = Math.max(e, Math.abs(d[j + c] - card[i + c])); n = Math.max(n, Math.abs(d[j + c] - p[j + c])); }
+      if (e <= 2) continue;                           // the card's own pixel
+      if (s >= 0.5 && n > NEW_INK && off(x0 + x, y0 + y)) hid++;
+      for (let c = 0; c < 3; c++) d[j + c] = Math.round(d[j + c] + s * (p[j + c] - d[j + c]));
+    }
+    ctx.putImageData(im, x0, y0);
+  }
+  return hid >= HID_MIN * (W / 720) ** 2;
+}
+/** A text job's old lines' ink (image px): its plate layout's (card_plates.layout), else the lines found on the image. */
+const oldInk = j => (Array.isArray(j.geo?.c?.lines) && j.kc > 0 ? j.geo.c.lines.map(l => [l[3] * j.kc, l[5] * j.kc, l[4] * j.kc, l[6] * j.kc]) : j.found?.lines || []);
 /** Whether old holds a word of the FX layers on layers ids (the plate's crops without them). */
 const fxIn = (plate, ids, old) => plate.crops.some(c => Array.isArray(c.fx) && ids.some(id => String(c.id) === String(id)) && c.fx.some(w => count(old, w)));
 /** A stat's label: "HP", or "HP (creature 2)" for "hp@2". */
@@ -1543,7 +1581,8 @@ const widthIn = (ctx, fam, track, hx) => (t, z) => {
 /** Draw the mock-up into canvas: the card image (src, same origin) with `edit`'s PSD fields over it. opts: {card, src, rec
  *  (details record or null), edit, psd (the image's values), icons, getFonts, raw, onFont (a font has loaded: draw
  *  again), stale (a newer draw started: drop this one), fills (colourize's)}. Drawn off-screen, then copied. Returns
- *  {drawn: [labels], skipped, boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused:
+ *  {drawn: [labels], skipped, boxed: [labels drawn in a box], over: [labels too long for their place, at 40%, or whose
+ *  new words went under a picture over them: putCover], refused:
  *  [[label, why]] (stars, types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without
  *  a font name], added: an added ability's box from "room" (the bake's, addRoom) or "template", else null (none, or
  *  drawn as the bake sets it: addLook)} or null
@@ -1560,6 +1599,11 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const spics = ours && plate.icons?.vw > 0 && Array.isArray(plate.icons.cuts) ? plate.icons : null;   // its stars pictures
   const readPlate = (c, w, h) => { const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
     const g = cv.getContext("2d", { willReadFrequently: true }); g.drawImage(sheet, ...c.at, 0, 0, w, h); return g.getImageData(0, 0, w, h).data; };
+  const coverImgs = sheet && Array.isArray(plate.covers) ? await Promise.all(plate.covers.map(c => (typeof c?.img === "string" ? loadImage(c.img) : null))) : [];   // pictures over a layer (coverCuts)
+  if (stale()) return null;
+  const readCover = (c, w, h) => { const im = coverImgs[plate.covers.indexOf(c)]; if (!im?.naturalWidth) return null;
+    const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+    const g = cv.getContext("2d", { willReadFrequently: true }); g.drawImage(im, 0, 0, w, h); return g.getImageData(0, 0, w, h).data; };
   const W = img.naturalWidth, H = img.naturalHeight, shape = shapeOf(W, H), tpl = TEMPLATES[shape];
   const work = document.createElement("canvas"); work.width = W; work.height = H;
   const ctx = work.getContext("2d", { willReadFrequently: true });
@@ -1721,14 +1765,14 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       if (found && text != null) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, fr, measure, icons, one, colors: null, statuses, ink, kc, card: cardPx, split: false, fit: 0, geo: geoOf(plate, [specs[k].id], kc), above, quiet: true });
       continue;
     }
-    let plated = false;
+    let plated = false, cover = null;
     const wipe = (box, opts) => {                     // erase's colours; with the card's plate, its pixels in place of erase's
-      const cuts = sheet && plateCuts(pixels.data, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, text, wiping);
+      const ids = idsOf(specs[k], k), cuts = sheet && plateCuts(pixels.data, W, H, kc, plate, readPlate, ids, old, text, wiping);
       if (!cuts) return erase(pixels.data, W, H, box, opts);
       const [x0, y0, x1, y1] = px(box, W, H), keep = pixels.data.slice(y0 * W * 4, y1 * W * 4);
       const colours = erase(pixels.data, W, H, box, opts);
       for (let y = y0; y < y1; y++) pixels.data.set(keep.subarray(((y - y0) * W + x0) * 4, ((y - y0) * W + x1) * 4), (y * W + x0) * 4);
-      putCuts(pixels.data, W, cuts); plated = true;
+      putCuts(pixels.data, W, cuts); plated = true; cover = coverCuts(plate, readPlate, readCover, ids, kc, W, H);   // pictures over it: back on top
       return colours;
     };
     const findAndErase = () => {                      // -> {found, size, colours} | {deleted} | {skipped} | {} (boxed)
@@ -1754,14 +1798,14 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       }
       return {};
     };
-    if (!reuse) plans[k] = Object.assign(findAndErase(), plated ? { plated } : {});
+    if (!reuse) plans[k] = Object.assign(findAndErase(), plated ? { plated, cover } : {});
     const { found, size: z, colours, deleted, skipped } = plans[k];
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
     else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, card: cardPx, split: role === "name" && printed(obj(rec?.parts) || {}, "name").length > 1, fit: role === "ability" ? card?.abilityFit : card?.titleFit,
       head: role === "name" && !(obj(rec?.parts)?.follow || []).some(f => f?.how === "copy" && idsOf(specs[k], k).some(id => (f.of || []).includes(id))) ? obj(rec?.header) : null,   // a title with copies keeps its size
       titleWas: role === "name" ? keptTitle(card) : null,
-      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, stack: part && role === "ability" ? stackRows(rec, specs[k].id, kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer) : null,
+      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null, cover: plans[k].cover || null, stack: part && role === "ability" ? stackRows(rec, specs[k].id, kc) : null, copies: sheet ? stackedOf(rec, plate, idsOf(specs[k], k), kc, layer) : null,
       bare: plans[k].plated && fxIn(plate, idsOf(specs[k], k), old) ? () => plateCuts(cardPx, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, "", wiping) : null });   // the crop without its FX layers
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
@@ -1827,6 +1871,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const j = { ...job, fills: job.one ? null : fills, tex: lookImg && letterLook(lookImg, looks, job.layer?.id, kc) };   // under an overlay: painted over, as the bake's
     if ((j.look ? drawAdded(ctx, j, imgs) : j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) && !j.quiet) out.over.push(j.label);
     if (j.above?.length) putOver(ctx, W, j.above, cardPx);
+    if (j.cover && putCover(ctx, W, j.cover, cardPx, oldInk(j), j.size * 0.15) && !j.quiet && !out.over.includes(j.label)) out.over.push(j.label);   // its words under them: said
     if (!j.quiet) out.drawn.push(job.label);
   }
   return blit();
@@ -2261,7 +2306,7 @@ export function firstBase(ctx, line, { top, s0, z, frame, fam }) {
  *  text) each paragraph is one line (pointLayout), re-laid at a size it shrank to past the old text's (fit_below). An
  *  Ability or title a bake set smaller (the card's abilityFit, titleFit) starts from the card maker's size, as the next bake. */
 function drawText(ctx, job, imgs, W) {
-  let { role, text, old, area, found, size, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was, tex, copies = null } = job;
+  let { role, text, old, area, found, size, colours, fam, layer, fr, measure, icons, one, colors, statuses, ink, kc, fills, card, geo, split, fit: was, tex, copies = null, cover = null } = job;
   const looked = (ps, s) => {                         // kept badges at their own size and tracking, typed ones tracked as the card's
     if (role === "ability" && Array.isArray(layer?.badges)) {
       const looks = badgeLooks(s, old, layer.badges); let i = 0;
@@ -2482,7 +2527,7 @@ function drawText(ctx, job, imgs, W) {
   if (R && Array.isArray(layer?.fr) && String(geo.c.id) === String(layer.id))   // its letters in another font, on was: [s, e, family, its measure]
     R.fr = layer.fr.map(([s, e, f]) => [R.at(s) + R.shift, R.at(e) + R.shift, fr?.[f], fr?.[f] ? Object.assign(widthIn(ctx, fr[f], measure.track, measure.hx), measure) : null]);
   const shrunk = point && z < size && z < pointLayout(looked(tokenize(old, icons), old), size, reach, measure).size;   // smaller than the old text: re-laid, unless spliced on the card (the bake shrinks ink off it only)
-  job.lined = plan && grow === 1 && row?.base == null && fitted === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
+  job.lined = plan && grow === 1 && row?.base == null && fitted === 1 ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, bare: job.bare, cover, measure, z: size, grow: !over && z === size, only: shrunk || (role === "name" && !(R.frame && !split)), icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fb: measure.fb, fill, stroke, strokeW, stroke0, strokeW0, imgs, one, shades, effects, tex, copies }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
   if (job.bare && geo) pasteCuts(ctx, W, job.bare());   // re-laid: no FX word left behind (not without the card's layout: Computer Virus measured worse)
   const kept = card && role === "ability" && !point && !over && z === size && grow === 1 ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
@@ -2870,8 +2915,8 @@ const OPAQUE = [8, 64];                                // |card - wiped| (max ch
 /** The card's letters moved onto the wiped pixels (out, a copy of wiped: rows [ya, yb) of the image, W wide; card the
  *  whole image): src rect [x0, y0, x1, y1] shifted (dx, dy), bilinear for fractions; each pixel's letter share (by how
  *  far the card is from the wiped backdrop: OPAQUE) keeps its colour, the rest takes the backdrop where it lands. (0,
- *  0): the card's pixels. */
-function moveInk(out, wiped, card, W, [ya, yb], [x0, y0, x1, y1], dx, dy) {
+ *  0): the card's pixels. cover (coverCuts): pictures over the letters, never moved with them. */
+export function moveInk(out, wiped, card, W, [ya, yb], [x0, y0, x1, y1], dx, dy, cover = null) {
   x0 = clamp(Math.floor(x0), 0, W); x1 = clamp(Math.ceil(x1), 0, W); y0 = clamp(Math.floor(y0), ya, yb); y1 = clamp(Math.ceil(y1), ya, yb);
   if (x1 <= x0 || y1 <= y0) return;
   if (!dx && !dy) { for (let y = y0; y < y1; y++) out.set(card.subarray((y * W + x0) * 4, (y * W + x1) * 4), ((y - ya) * W + x0) * 4); return; }
@@ -2879,7 +2924,8 @@ function moveInk(out, wiped, card, W, [ya, yb], [x0, y0, x1, y1], dx, dy) {
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const i = ((y + y0) * W + x + x0) * 4, iw = i - ya * W * 4, n = y * w + x;
     let d = 0; for (let c = 0; c < 3; c++) d = Math.max(d, Math.abs(card[i + c] - wiped[iw + c]));
-    const q = 1 - clamp((d - OPAQUE[0]) / (OPAQUE[1] - OPAQUE[0]), 0, 1);
+    let q = 1 - clamp((d - OPAQUE[0]) / (OPAQUE[1] - OPAQUE[0]), 0, 1);
+    if (cover) q += (1 - q) * coverAt(cover, x + x0, y + y0);   // a picture over the letters stays (putCover)
     Q[n] = q; for (let c = 0; c < 3; c++) P[n * 3 + c] = card[i + c] - q * wiped[iw + c];
   }
   const fx = Math.floor(dx), tx = dx - fx, fy = Math.floor(dy), ty = dy - fy;
@@ -2960,8 +3006,8 @@ export function geoRoom(R, plan, paras, text, z, measure, pitch, icons) {
  *  ones: moved as the bake moves them). "splice" | "splices" | "wrap" | "lines", or "" when none holds (drawText's way
  *  then). box: the layer's plate crop (image px); z: its set size; grow: room for more lines at it (drawText's
  *  roomBelow); only: spliced or "" (a title); look: paintLines' options. bare: () => the crop's cuts without its FX
- *  layers, pasted when an FX layer's word moves or is redrawn (the bake moves the layer with it). */
-export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, grow, only = false, icons, paras, text, look, pitch, W }) {
+ *  layers, pasted when an FX layer's word moves or is redrawn (the bake moves the layer with it). cover: moveInk's. */
+export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, cover = null, measure, z, grow, only = false, icons, paras, text, look, pitch, W }) {
   const H = ctx.canvas.height, L = R.lines, now = String(text ?? "").replace(/\r/g, ""), B = bands(L, box);
   const step = lineStep(L, pitch);
   const runOf = sp => { const j = sp.b > sp.a ? sp.a : Math.max(0, sp.a - 1); return R.fr?.find(([s, e, , m]) => m && s <= j && j < e) || null; };   // the bake: the replaced text's font, an insertion the one before's
@@ -3008,7 +3054,7 @@ export function geoDraw(ctx, { R, plan, card, box, fx, bare = null, measure, z, 
   const ya = clamp(Math.floor(Math.min(...drawn.moves.map(([r, , d]) => r[1] + Math.min(0, d)))), 0, H), yb = clamp(Math.ceil(Math.max(...drawn.moves.map(([r, , d]) => r[3] + Math.max(0, d)))) + 1, ya, H);
   if (yb > ya) {                                     // the rows the moves touch
     const img = ctx.getImageData(0, ya, W, yb - ya), wiped = img.data.slice();
-    for (const [rect, dx, dy] of drawn.moves) moveInk(img.data, wiped, card, W, [ya, yb], rect, dx, dy);
+    for (const [rect, dx, dy] of drawn.moves) moveInk(img.data, wiped, card, W, [ya, yb], rect, dx, dy, cover);
     ctx.putImageData(img, 0, ya);
   }
   const spliced = (sps || ow) && look.stroke0 !== undefined ? { stroke: look.stroke0, strokeW: look.strokeW0 } : {};   // the layer's own Stroke (stacked, it covered the card's letters beside it)

@@ -637,6 +637,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   its groups, drawn as an opaque band of its colour `fill`, the card's width by its box and a quarter of its height
   past it) fill the typed letters of that colour over the flat one (`letterLook`, `texture`, paintLines' `tex`):
   Earth Totem's stone, Yin Yarn's knit; past the band, or in another colour, the flat colour stays.
+  Pictures over the text (2026-11-21): the plate's `covers` (`card_plates.cover_alpha`: the alpha of the pictures drawn
+  over a title or Ability layer, a PNG per layer: Papyrus's spaghetti, Warcraftian Druid's form icons, Leshy's antlers)
+  go back over the new letters as the bake leaves them (`putCover`), and moved words never take them along (`moveInk`);
+  new letters under one past the old lines' ink say "runs past its place on the card".
   A title in the picture (parts.js `titleInPicture`, the dialog's note) isn't drawn either. Stars and types: section 23.
   An added ability ("+ Add an ability", 2026-11-13): the details' `addRoom` (build_site from AutoCroissant card_checks'
   `room`, ability_place's room rule on a card with no ability) is the box the bake puts it in (`partJobs` draws it
