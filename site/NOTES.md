@@ -334,7 +334,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     up (preview.js `laneOf`). The press itself (`request\ncard\nedit`, the input strings, UTF-8) goes as a git blob
     the client posts beside the dispatch (`POST .../git/blobs`, base64; `laneBlob` computes its sha first): GitHub
     cuts run titles at 512 characters, so only the sha rides in the run-name (`Card preview <request> lane <lane>`,
-    under 150). Once the blob is posted the client rings the lane's doorbell (2026-11-18): a commit status, `POST
+    under 150). Beside the blob and the dispatch the client rings the lane's doorbell (2026-11-18; beside them since
+    2026-11-22, before once the blob was posted): a commit status, `POST
     .../statuses/<laneHead>` with state success, context `preview lane` (`LANE_CONTEXT`) and the description
     `<lane> <request> <blob sha>` (`laneBell`, at most 126 of 140 characters), at the lane's commit (`laneHead`: the
     `base.commit` of the result that run handed over itself, its `GITHUB_SHA`, kept as the entry's `fromHead` and
@@ -348,11 +349,19 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     keeps 1000 per commit and context, then refuses). A refused status (a fine-grained token without Commit statuses:
     write) rings no more on that page; the run-name still names the lane and the runs list brings it. A press on a
     newer commit of the card repo (a push since the lane's) is baked there: the lane fetches that commit's
-    trees and follows it when `MDW/Fonts`, `card-preview.yml` and `.github/actions` are the same there. The lane reads the blob (a 404 tried for 5 s), checks its sha and request, and takes the press; a blob that
-    never comes ends it, and the press stays cold. A blob post that fails names no lane again on that page. Its
+    trees and follows it when `MDW/Fonts`, `card-preview.yml` and `.github/actions` are the same there. The lane reads the blob (a 404 tried every 0.25 s for 5 s: a doorbell heard before
+    its blob costs one more read) beside the data's records, the bot's main and a rung press's card repo main (each on
+    its own kept connection, 2026-11-22), checks its sha and request, reads the card's files and takes the press; a
+    blob that never comes ends it (rung or listed), and the press stays cold. A blob post that fails names no lane again on that page. Its
     hand-over is `card-preview-<request>` in the lane's run, the same zip as `card-preview`, with `run` the press's own
     run (none for a rung press: its run isn't listed yet). Every press is still dispatched, baked cold and published as
-    ever. The client shows whichever hand-over comes first, looking for the lane's from 2 s after the press. A 422 with
+    ever. The client shows whichever hand-over comes first, looking for the lane's from 2 s after the press, every 250 ms
+    from a round's start (`LANE_POLL`; 500 ms after a round's end before 2026-11-22; a conditional list, a 304 isn't
+    counted). Those three (2026-11-22, scratch s1122/research5/actbake-1122-r5-1: this preview.js in node and the
+    lane's own listen/take/reads against a stand-in GitHub; posts 0.4 s, GETs 0.104 s runner, 0.175 s Mac, the 4 real
+    runs-list lags, bake 0.84 s, zip 0.5 s; 16 presses each): press to picture 5.04 -> 4.24 s at a 1 s status lag,
+    5.84 -> 5.14 s at 1.38-2.18 s (48 of 48 sooner; a 0.2 s blob post: -0.62 to -0.84 s); the ring -0.4 s, the lane's
+    time before its bake 0.45 -> 0.28 s, the page's wait once listed 0.44 -> 0.19 s (7-11 looks a press, 4-5 before). A 422 with
     `lane` dispatches again without it. A press's run starts no lane of its own when its named lane handed it over; a
     rung press's run, listed later, is served. A lane ends at a newer press of its editor it doesn't take; that press's
     run is the next lane.
@@ -361,7 +370,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     hex digits) at `laneHead`, once per card and lane on that page, none for a card that lane handed over. The lane, listing
     its doorbell anyway, reads that PSD, its PNG and the status chart into its clone on a background thread (one card at
     a time, none started while it takes a press; a press joins a read still going), so the press's reads are the
-    records alone (about 0.2 s, where a 3-59 MB PSD took 1-5 s).
+    records alone (about 0.2 s, where a 3-59 MB PSD took 1-5 s; beside its blob since 2026-11-22).
   - The image, once result.json says `image` (`files.webp`; `files.before`: the card before the edit, for the Diff):
     `https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/previews/previews/<request>/preview.webp` (public, CORS
     `*`; the path is new per request, so the cache never serves an older one; raw serves PNGs as `image/png`, WebP's
