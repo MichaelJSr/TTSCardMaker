@@ -1530,7 +1530,9 @@ function renderRules(r) {
   if (document.activeElement !== qInput) qInput.value = "";
   const hit = q && bookRe(q), ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => hit.test(c.text)) : chapters;
   const banned = S.data.banlist, can = editing(), top = scrollY === 0 && !S.restoring;   // before the view goes (see renderCards)
-  const label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`, found = `${shown.length} chapter${shown.length === 1 ? "" : "s"}`;
+  const bans = !q || banHit(q, hit, banned), label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;   // the ban list: in the results too
+  const found = [shown.length || !bans ? `${shown.length} chapter${shown.length === 1 ? "" : "s"}` : "", q && bans ? "the Constructed ban list" : ""].filter(Boolean).join(" and ");
+  const mention = `${found[0].toUpperCase()}${found.slice(1)} mention${shown.length + (q && bans ? 1 : 0) === 1 ? "s" : ""}`;
   view.innerHTML = `<div class="rules${q ? " rb-searching" : ""}">
     <nav class="toc" aria-label="Rulebook chapters"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
       ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
@@ -1538,11 +1540,11 @@ function renderRules(r) {
       <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
         ${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button>`}</div></nav>
     <div class="rb rb-book">
-      ${q ? `<p class="muted">${d ? `“${esc(d.word)}” is not printed in the rulebook; its rule [X]T[Y] (${esc(d.says)})${d.found ? ` and “${esc(d.said)}” are` : " is"} in ${found}${d.said && !d.found ? ` (no chapter mentions “${esc(d.said)}”)` : ""}.` : !x ? `${found} mention “${esc(r.params.get("q"))}”.` : x.printed ? `${found} mention “${esc(x.tag)}” (its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}).` : `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
+      ${q ? `<p class="muted">${d ? `“${esc(d.word)}” is not printed in the rulebook; its rule [X]T[Y] (${esc(d.says)})${d.found ? ` and “${esc(d.said)}” are` : " is"} in ${found}${d.said && !d.found ? ` (no chapter mentions “${esc(d.said)}”)` : ""}.` : !x ? `${mention} “${esc(r.params.get("q"))}”.` : x.printed ? `${mention} “${esc(x.tag)}” (its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}).` : `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
       ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${chapterHtml(c, ctx)}</article>`).join("")
-        || `<div class="empty">No rulebook chapter mentions that.</div>`}
-      ${!q ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="${esc(S.data.files.banlist)}" data-title="Constructed ban list" title="Every change to the ban list, as a diff">History</button></div><header class="rb-head"><h2>Constructed ban list</h2></header>
+        || (bans ? "" : `<div class="empty">No rulebook chapter mentions that.</div>`)}
+      ${bans ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="${esc(S.data.files.banlist)}" data-title="Constructed ban list" title="Every change to the ban list, as a diff">History</button></div><header class="rb-head"><h2>Constructed ban list</h2></header>
         <div class="rb-panel rb-solo">${banned.notes.map(n => `<p>${esc(n)}</p>`).join("")}</div>
         ${banned.groups.map(g => `<section class="rb-sec"><h3 class="rb-tab">${esc(g.title)}</h3><div class="rb-panel"><div class="rb-bans">${g.entries.map(e => { const c = e.id && S.byId.get(e.id);
           return `<div class="rb-ban">${c ? `<a class="rb-card" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(img(c, 240))}" alt="${esc(c.name)}" loading="lazy" decoding="async"></a>` : ""}
@@ -1550,6 +1552,7 @@ function renderRules(r) {
     </div></div>`;
   if (q) {                                               // only the blocks that hold it, highlighted
     for (const ch of $$(".rb-chapter", view)) {
+      if (ch.id === "banlist" && banName(q)) continue;      // its name: all of it
       const els = $$(":scope > :not(.rb-head):not(.rb-tools)", ch), miss = els.filter(el => !hit.test(bookWords(el)));
       if (miss.length < els.length) for (const el of miss) el.classList.add("rb-hit-none");   // none holds it (its title): all of it
     }
@@ -1647,6 +1650,11 @@ async function renderSheets() {
 }
 // the rulebook's words as searched: any case, any spaces as one (the bot's \s+), a phone's curly quotes plain
 const bookFold = s => straight(s.toLowerCase().replace(/\s+/g, " "));
+// the ban list's own names (the bot's BAN_NAMES): all of it, as its title
+const banName = q => typeof q === "string" && /^(constructed)?banlist$/.test(q.replace(/[^a-z0-9]/g, ""));
+// the ban list in a search: one of its names, or its title, notes, groups, cards or reasons hold the text
+const banHit = (q, hit, b) => banName(q)
+  || hit.test(bookFold(["Constructed ban list", ...b.notes, ...b.groups.flatMap(g => [g.title, ...g.entries.flatMap(e => [e.name, e.reason || ""])])].join("\n")));
 // a folded search's regex (search.js loose: nme finds N.M.E., cant can't, multi hit multi-hit), any spaces between the
 // words; an array: any
 const bookRe = (q, flags) => new RegExp([].concat(q).map(t => loose(t, "\\s+", true)).join("|"), flags);

@@ -1188,6 +1188,10 @@ relies on:
   has as a whole word (`5T1` one has; the 2t in E2T is no word) searches Status Effects' `[X]T[Y]` instead, the other
   words beside it (app.js `bookDuration`, 2026-11-22; as AutoCroissant /query_rulebook `duration_rule` and TTS
   listPages). The 21 forms on 178 cards and the 40 commonest duration + status pairs: no chapter for 57 of 61 -> 0.
+- Rulebook search: the Constructed ban list stays in the results (counted, highlighted, the rb-hit-none pass) when its
+  title, a note, a group's heading, a card or a reason holds the text, all of it for `banlist`/`ban list`/`constructed
+  ban list` (app.js `banHit`, `banName`, 2026-11-22; as AutoCroissant /query, /query_rulebook BAN_NAMES). Before: drawn
+  only with nothing typed (`marx`, `antifun`, `4 star creatures`: 0 results).
 - Read `scrollY` and the window size before replacing the view (renderCards `win`, renderStatsView `top`, `vh`): read
   after, they force a layout of the short page (`innerWidth` too on phones) and the scroll position clamps.
 - Mentions: `mentions()` parses without building the icons' HTML (`parse(text, self, false)`); it must keep finding
