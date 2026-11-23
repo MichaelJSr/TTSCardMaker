@@ -46,13 +46,16 @@ const ICON = /\[([0-9a-z_ ]+)(?::(?:no|tint|sticker|glow|darkglow))?\]/gi;
 const ICON_SPELLED = new Map([["darkmatter", "dark matter"], ["buffstack", "buff stack"], ["debuffstack", "debuff stack"],
   ["debuffupgrade", "debuff upgrade"]]);
 /** text with each icon token as its word ([machine] machine, [offensive_minion] offensive minion, [fire:no] fire); a
- *  joined type name both ways, a line each ([darkmatter] darkmatter, dark matter); "" when it has none (the bot's icon_words) */
-export function iconWords(text) {
+ *  joined type name both ways, a reading each ([darkmatter] darkmatter, dark matter); [] when it has none (the bot's
+ *  icon_words). joined: [fire] as printed, only the others as words (the rulebook's: the bot's _book_at) */
+export function iconReadings(text, joined = false) {
   const t = String(text || ""), word = w => w.replace(/_/g, " ");
-  if (!t.match(ICON)) return "";
-  const words = t.replace(ICON, (_, w) => word(w)), spelled = t.replace(ICON, (_, w) => ICON_SPELLED.get(w.toLowerCase()) ?? word(w));
-  return spelled === words ? words : `${words}\n${spelled}`;
+  const read = spell => t.replace(ICON, (m, w) => (joined && spell(w) === w ? m : spell(w)));
+  const words = read(word), spelled = read(w => ICON_SPELLED.get(w.toLowerCase()) ?? word(w));
+  return [...new Set([words, spelled])].filter(r => r !== t);
 }
+/** iconReadings a line each; "" when it has none (the bot's icon_words) */
+export const iconWords = text => iconReadings(text).join("\n");
 
 /** [what a text term searches, the same with abilities as printed only], lowercased: names, aliases, old names, the
  *  ability (space runs as one space), then on a line of its own the ability with its icons as words (iconWords), so no

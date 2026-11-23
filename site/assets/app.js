@@ -1,4 +1,4 @@
-import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight, loose, seriesNote } from "./search.js";
+import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight, loose, seriesNote, iconReadings } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
@@ -1528,7 +1528,7 @@ function renderRules(r) {
   const d = !x && typed && bookDuration(typed, (r.params.get("q") || "").trim(), chapters);   // "2t1 stuffed": [x]t[y] or stuffed
   const q = d ? (d.found ? [d.row, d.rest] : d.row) : !x ? typed : x.printed ? [x.tag.toLowerCase(), x.row] : x.row;   // "(1gcd)": it or (XGCD); "(2pg)": (XPG)
   if (document.activeElement !== qInput) qInput.value = "";
-  const hit = q && bookRe(q), ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => hit.test(c.text)) : chapters;
+  const hit = q && bookRe(q), ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => bookHit(hit, c.text)) : chapters;
   const banned = S.data.banlist, can = editing(), top = scrollY === 0 && !S.restoring;   // before the view goes (see renderCards)
   const bans = !q || banHit(q, hit, banned), label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;   // the ban list: in the results too
   const found = [shown.length || !bans ? `${shown.length} chapter${shown.length === 1 ? "" : "s"}` : "", q && bans ? "the Constructed ban list" : ""].filter(Boolean).join(" and ");
@@ -1553,11 +1553,12 @@ function renderRules(r) {
   if (q) {                                               // only the blocks that hold it, highlighted
     for (const ch of $$(".rb-chapter", view)) {
       if (ch.id === "banlist" && banName(q)) continue;      // its name: all of it
-      const els = $$(":scope > :not(.rb-head):not(.rb-tools)", ch), miss = els.filter(el => !hit.test(bookWords(el)));
+      const els = $$(":scope > :not(.rb-head):not(.rb-tools)", ch), miss = els.filter(el => !bookHit(hit, bookWords(el)));
       if (miss.length < els.length) for (const el of miss) el.classList.add("rb-hit-none");   // none holds it (its title): all of it
     }
     highlight($$(".rb-chapter", view), q);
     for (const b of $$(".rb-chapter .badge[data-tip]", view)) if (hit.test(badgeWords(b)) && !hit.test(bookFold(b.textContent))) b.classList.add("rb-hit");
+    for (const i of $$(".rb-chapter img.tok[alt]", view)) { const w = `[${bookFold(i.alt)}]`; if (!hit.test(w) && bookHit(hit, w)) i.classList.add("rb-hit"); }   // "buff stack": [buffstack]
   }
   // chapters below the first screen drawn once near (style.css) or two at a time while the page is idle; every chapter at
   // once while Back/Forward or a reload restores a place or a redraw starts mid-book (rb-all), so the place lands as before
@@ -1658,6 +1659,9 @@ const banHit = (q, hit, b) => banName(q)
 // a folded search's regex (search.js loose: nme finds N.M.E., cant can't, multi hit multi-hit), any spaces between the
 // words; an array: any
 const bookRe = (q, flags) => new RegExp([].concat(q).map(t => loose(t, "\\s+", true)).join("|"), flags);
+// a folded text holds it: as printed, or with its joined icons as words ([defensive_minion] defensive minion, [buffstack]
+// buff stack: iconReadings), as the bot's _book_at
+const bookHit = (hit, s) => hit.test(s) || iconReadings(s, true).some(r => hit.test(r));
 // a numbered timing tag's X row, and whether the printed book (no {.web} chapter) prints the tag whole ("(2pg)" never;
 // "2pg" is not (2PGT)'s), as the bot's x_row and TTS xTag
 function bookTag(q, chapters) {
@@ -1677,7 +1681,7 @@ function bookDuration(q, raw, chapters) {
   const [x, y] = words[at[0]].split("t"), n = (k, s) => `${k} ${s}${Number(k) === 1 ? "" : "s"}`;
   const rest = words.filter((_, i) => !at.includes(i)).join(" "), said = raw.split(/\s+/).filter((_, i) => !at.includes(i)).join(" ");
   return { word: words[at[0]].toUpperCase(), row, says: `X = ${n(x, "turn")}${y ? `, Y = ${n(y, "stack")}` : ""}`, rest, said,
-    found: !!rest && chapters.some(c => bookRe(rest).test(c.text)) };
+    found: !!rest && chapters.some(c => bookHit(bookRe(rest), c.text)) };
 }
 // an old Photoshop page's name ("11 Abilities4", "08 Global Turn": the bot's 10-25 changelog links): the chapter of that
 // number and title (spaces and a first "The" aside), a page number after it
