@@ -1192,6 +1192,12 @@ relies on:
   title, a note, a group's heading, a card or a reason holds the text, all of it for `banlist`/`ban list`/`constructed
   ban list` (app.js `banHit`, `banName`, 2026-11-22; as AutoCroissant /query, /query_rulebook BAN_NAMES). Before: drawn
   only with nothing typed (`marx`, `antifun`, `4 star creatures`: 0 results).
+- A search that finds nothing (Cards; Rulebook, the ban list missing too) asks "Did you mean piercing (78 cards)?",
+  a link to that search: each 4+ letter word nothing holds swapped for the printed word 1 edit away (Damerau; 2 at 7+
+  letters), ties to the one on the most cards / printed most (search.js `respell`, app.js `respelled`, `bookRespell`,
+  2026-11-22; as AutoCroissant `respelled`, `book_respelled`). Nothing replaced by itself. The Rulebook's link takes
+  `--accent` (`.rb .empty a`: `.rb a`'s #2738a8 is for the light panels, 2.05:1 on the dark page). 96 real
+  misspellings on the bot: all 94 misses suggest the intended word.
 - Read `scrollY` and the window size before replacing the view (renderCards `win`, renderStatsView `top`, `vh`): read
   after, they force a layout of the short page (`innerWidth` too on phones) and the scroll position clamps.
 - Mentions: `mentions()` parses without building the icons' HTML (`parse(text, self, false)`); it must keep finding
