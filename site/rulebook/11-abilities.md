@@ -2,7 +2,7 @@
 
 ## INTRODUCTION
 - A card's ability is the main chunk of text at the bottom half of a creature that describes the unique function of the card past its basic actions.
-- Most abilities are unique, but how and when they can be activated are held together and defined by abbrviations. (See: [“Abbrviations”](#/rules/abbreviations))
+- Most abilities are unique, but how and when they can be activated are held together and defined by abbreviations. (See: [“Abbreviations”](#/rules/abbreviations))
 - A creature's ability is only active while on the field.
 
 ## WHEN ABILITIES CAN BE USED
@@ -13,7 +13,7 @@
 
 Although (OYT) and (AAT) do not often appear on their own, they are the basis of when an ability can activate.
 1. This ability can activate “on your turn” (OYT). Meaning you have to wait until the creature with this ability's turn to use it.
-2. This ability can be used “at any time” meaning at any point you may use this. These are able to be use reactivley (See: [REACTIONS](#/rules/reactions)). This ability can be used to heal a creature that is about to die from an attack reactively .
+2. This ability can be used “at any time” meaning at any point you may use this. These are able to be use reactively (See: [REACTIONS](#/rules/reactions)). This ability can be used to heal a creature that is about to die from an attack reactively .
 
 ![A fox pointing with its sword](fox-pointing.webp){.end width=20}
 
