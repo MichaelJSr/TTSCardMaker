@@ -1202,6 +1202,10 @@ relies on:
   case, finds it as a word or its meaning's word it starts (DEF: defense), never inside others (os: most, cost), and
   says its meaning (app.js `bookAbbr`, 2026-11-22; as AutoCroissant /query_rulebook `book_abbreviation`). OS 22 -> 3
   chapters, SP 19 -> 11, OD 12 -> 5, BOT 12 -> 5, DEF 17 -> 11. No such chapter or line: as before.
+- Rulebook search: a block's headings, lines and cells read apart when it is checked for the text (app.js `bookWords`,
+  as plainText's lines, 2026-11-22). Before, `LIFE STEAL` + `DMG dealt` read `stealdmg`: DMG as a word hid that section
+  and SP showed all 8 Abbreviations blocks. 795 searches: no block holding a hit hidden; 8 blocks showing none now
+  hidden (`fields`, `get`, `so`); a phrase across a heading and its first line (`life steal dmg`) shows that block alone.
 - Read `scrollY` and the window size before replacing the view (renderCards `win`, renderStatsView `top`, `vh`): read
   after, they force a layout of the short page (`innerWidth` too on phones) and the scroll position clamps.
 - Mentions: `mentions()` parses without building the icons' HTML (`parse(text, self, false)`); it must keep finding

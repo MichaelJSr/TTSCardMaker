@@ -1728,7 +1728,9 @@ function bookPage(q, chapters) {
   return m && chapters.find(c => { const t = f(c.title), n = f(m[2]);
     return t && Number(c.num) === Number(m[1]) && n.startsWith(t) && /^\d*$/.test(n.slice(t.length)); }) || null;
 }
-// a block's words as the chapter list reads them (plainText): badges as typed, icons as [name], card pictures by name
+// a block's words as the chapter list reads them (plainText): badges as typed, icons as [name], card pictures by name,
+// each heading, line or cell apart (plainText's lines: "life steal" "dmg dealt", not "stealdmg")
+const BOOK_BLOCK = /^(?:P|DIV|H[1-6]|LI|UL|OL|TABLE|TR|TD|TH|SECTION|HEADER|ASIDE|FIGURE|FIGCAPTION|BLOCKQUOTE)$/;
 function bookWords(el) {
   let s = "";
   const walk = n => { for (let c = n.firstChild; c; c = c.nextSibling) {
@@ -1737,6 +1739,7 @@ function bookWords(el) {
     else if (c.matches(".badge[data-tip]")) s += badgeWords(c);
     else if (c.tagName === "IMG") s += !c.alt ? "" : c.matches(".tok, .tokv") ? `[${c.alt}]` : c.closest(".rb-card") ? c.alt : "";
     else if (c.tagName === "BR") s += " ";
+    else if (BOOK_BLOCK.test(c.tagName)) { s += " "; walk(c); s += " "; }
     else walk(c);
   } };
   walk(el);
