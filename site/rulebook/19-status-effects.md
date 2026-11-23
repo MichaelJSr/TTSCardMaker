@@ -37,7 +37,7 @@ Stacking status effects can have any number of themselves applied. [buffstack] [
 ![[Peppy]]
 
 ::: small
-This buff can be applied many times to gain as many stacks of it to gain alot of speed. 10 stacks = +10 SPD.
+This buff can be applied many times to gain as many stacks of it to gain a lot of speed. 10 stacks = +10 SPD.
 :::
 
 ![[Withering]]

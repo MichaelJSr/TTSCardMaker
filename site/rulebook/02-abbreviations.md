@@ -57,7 +57,7 @@ PF = Primary field. CDMG = Counter damage.
 
 ::: small {.center}
 ⏳ (XCD), (Y/XCD), (XGCD) and (Y/XGCD) abilities with ***X*** of 2 or more are considered "multi turn" abilities.
-Abilites marked with 🕐 are considered "time based".
+Abilities marked with 🕐 are considered "time based".
 Time based abilities with a cooldown become usable again once they are fully charged.
 :::
 

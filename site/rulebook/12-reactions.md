@@ -3,7 +3,7 @@
 ::: panel
 ![The enemy throws Mighty Pebble at Toy Bonnie, who reacts: its stats before and after, numbered](reactions-1.webp)
 
-When a play occours, a player may choose to react to it with one of their items or abilities. When you react to something, the reaction happens before whatever you reacted to. Here, is a simple reaction that is played in this order:
+When a play occurs, a player may choose to react to it with one of their items or abilities. When you react to something, the reaction happens before whatever you reacted to. Here, is a simple reaction that is played in this order:
 1. The [[Mighty Pebble]] is thrown by the enemy (5 DMG).
 2. [[Toy Bonnie]] uses it's ability to give itself 6 stacks of [[Hardened|hardened]], giving it 3 defense.
 

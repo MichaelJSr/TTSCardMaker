@@ -72,8 +72,8 @@ Each coloured strip is a player's hand.
 ::: row 1 4
 ![The dice, the 0.5 chip, a counter and the stat markers, numbered](table-markers.webp)
 ::: panel
-1. Auxillary items deck. Items summoned by specific abilities. These items are not in the main item pool, but a few items from the main pool are in this deck as they are summoned by specific creatures.
-2. Auxillary Minions deck. Where all the minions summoned by specific abilities are drawn from. (See: [Minions](#/rules/minions))
+1. Auxiliary items deck. Items summoned by specific abilities. These items are not in the main item pool, but a few items from the main pool are in this deck as they are summoned by specific creatures.
+2. Auxiliary Minions deck. Where all the minions summoned by specific abilities are drawn from. (See: [Minions](#/rules/minions))
 3. The Minion card holder. Bring this over to the playing field and put your minion on it to keep track of summoned minion stats.
 4. The Redirection cube. Use this to determine RNG.
 5. The Order Determinator. Use this to determine RNG if the odds are 1 in 2.

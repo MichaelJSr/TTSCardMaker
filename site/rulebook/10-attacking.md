@@ -3,7 +3,7 @@
 ## ATTACKS
 - Attacks occur when creatures use an action to perform an attack, when an attack item is used, or an ability deals damage (DMG) separate from the ATK stat of a creature.
 - Attacks deal ATK - DEF in damage.
-- Attacks can only hit the PRIMARY FIELD by defualt. (See: [FIELDS](#/rules/the-field))
+- Attacks can only hit the PRIMARY FIELD by default. (See: [FIELDS](#/rules/the-field))
 - Damage from abilities and item effects cannot trigger counter damage as retaliation. Attacks from abilities cannot trigger counter items.
 - Creatures with 0 ATK cannot declare an attack (of any type).
 

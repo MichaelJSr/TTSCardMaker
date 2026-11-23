@@ -5,7 +5,7 @@
 - Most abilities are unique, but how and when they can be activated are held together and defined by abbrviations. (See: [“Abbrviations”](#/rules/abbreviations))
 - A creature's ability is only active while on the field.
 
-## WHEN ABILITES CAN BE USED
+## WHEN ABILITIES CAN BE USED
 ::: ability
 1. (OYT) Spend 3 points to cure a tier 2 debuff.
 2. [(AAT) Spend a point to heal this creature by]{.yellow} [1 HP.]{.green}
@@ -17,7 +17,7 @@ Although (OYT) and (AAT) do not often appear on their own, they are the basis of
 
 ![A fox pointing with its sword](fox-pointing.webp){.end width=20}
 
-## BASIC ABILITES
+## BASIC ABILITIES
 ::: ability
 1. (1CD) Summon a Mini Bee.
 2. [(1GCD)(2U) Heal a creature by]{.yellow} [2 HP]{.green}[.]{.yellow}
@@ -120,7 +120,7 @@ These abilities are non-optional and assumed to happen automatically.
 - If two simultaneous effects have directly conflicting effects, such as reviving in your base form or a distinct revive form at the same time, the player can choose.
   Example: Azamoth with lifeshroom can revive as [[Azamoth the Possessed Vessel|Azamoth The Possessed]], or in it's base form as [[Azamoth the Forgotten King|The Forgotten king]], but it it chooses it's baseform the life shroom will be wasted.
 
-> [!kirby-sleepy] Here are some specfic common abilities in the game and some specifics about them.
+> [!kirby-sleepy] Here are some specific common abilities in the game and some specifics about them.
 
 ## ABILITY COPYING/STEALING/SWAPPING
 - Stolen/Swapped abilities start as brand new per creature, if the creature loses that ability then gains it back, it's not reset but instead gains 1 turn of charge.
@@ -146,5 +146,5 @@ This creature has 2 innate actions.
 :::
 :::
 
-Passive abilities are abilites that happen automatically, without the player actively choosing to use it.
-Most of these are in constant effect (WOF) “while the creature is on the field”. “(WOF)” is often only included when the ability effects other creatures as to signfy that it goes away when the creature exits the field.
+Passive abilities are abilities that happen automatically, without the player actively choosing to use it.
+Most of these are in constant effect (WOF) “while the creature is on the field”. “(WOF)” is often only included when the ability affects other creatures as to signify that it goes away when the creature exits the field.

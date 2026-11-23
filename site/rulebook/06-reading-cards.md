@@ -2,7 +2,7 @@
 
 ## READING CREATURES
 ![A creature card and its counters, numbered](reading-creatures.webp)
-1. TYPES: Special markers that give creatures certian effects. (See: [Creature Types](#/rules/creature-types))
+1. TYPES: Special markers that give creatures certain effects. (See: [Creature Types](#/rules/creature-types))
 2. STAR LEVEL: A creature's star level. A higher star level means the creature is more powerful.
 3. From top to bottom: HEALTH, DEFENSE, ATTACK, and SPEED counters. These counters are responsible for showing the current value of a creature's stats.
 4. Max Health, Defense, Attack, and Speed bars.
