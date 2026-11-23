@@ -434,6 +434,7 @@ export function colourize(paras, text, colors, field, statuses = null, base = nu
   })));
 }
 const INK_CELLS = 600000;                            // typedAt's alignment at most this many cells
+const LINE_INK = [15, 0.75];                          // psd_edit.LINE_INK: a line's own colour, this many of its letters and share
 /** The longest common letters of was and now as [[a0, a1, b0, b1, kept]] (typedAt's); null past INK_CELLS. */
 function align(was, now) {
   const n = was.length, m = now.length;
@@ -453,11 +454,11 @@ function align(was, now) {
  *  the main ink), lined up as the bake does (textalign.js: paragraphs, then words): kept letters keep theirs (a kept
  *  stretch under SAME_RUN letters without a break joins its paragraph's change); a changed stretch takes the commonest
  *  of the letters it replaces (no blanks, icons, badges or status words: statuses, the status names); typed-in text the
- *  nearest letter's before it on its line, else after, or the body's (the commonest outside status words) between two
- *  colours of a line of several; a paragraph the edit moved its own, letter for letter where kept, else its commonest;
- *  a kept status word's letters the nearest letter's on their line (the chart's goes on after); whole lines typed right
- *  under a header (heads: psd_details' header lines' text, psd_edit header_looks) the next line's first letter's. Its
- *  runs ([] none). */
+ *  nearest letter's before it on its line, else after; between two colours of a line of several the line's own where
+ *  it holds LINE_INK of its letters, else the body's (the commonest outside status words); a paragraph the edit moved
+ *  its own, letter for letter where kept, else its commonest; a kept status word's letters the nearest letter's on
+ *  their line (the chart's goes on after); whole lines typed right under a header (heads: psd_details' header lines'
+ *  text, psd_edit header_looks) the next line's first letter's. Its runs ([] none). */
 export function bakeInk(was, list, now, statuses = null, heads = null) {
   was = String(was ?? ""); now = String(now ?? "");
   const n = was.length, m = now.length;
@@ -471,9 +472,12 @@ export function bakeInk(was, list, now, statuses = null, heads = null) {
   const body = commonest(0, n, k => !status[k])?.[0] ?? null;   // body_fill
   const lineOf = (lo, hi) => [was.lastIndexOf("\n", lo - 1) + 1, (k => (k < 0 ? n : k))(was.indexOf("\n", hi))];
   const near = (lo, hi) => {
-    const [top, bottom] = lineOf(lo, hi), seen = new Set();
-    for (let k = top; k < bottom; k++) if (letter(k)) seen.add(col[k]);
-    if (seen.size > 1 && !(lo > top && hi < bottom && col[lo - 1] === col[hi])) return body;   // typed between two colours
+    const [top, bottom] = lineOf(lo, hi), seen = new Map();
+    for (let k = top; k < bottom; k++) if (letter(k)) seen.set(col[k], (seen.get(col[k]) || 0) + 1);
+    if (seen.size > 1 && !(lo > top && hi < bottom && col[lo - 1] === col[hi])) {   // typed between two colours
+      const [c, k] = [...seen].reduce((x, y) => (y[1] > x[1] ? y : x)), all = [...seen.values()].reduce((x, y) => x + y);
+      return k >= LINE_INK[0] && k >= LINE_INK[1] * all ? c : body;   // the line's own, else the body's
+    }
     for (let k = lo - 1; k >= top; k--) if (letter(k)) return col[k];
     for (let k = hi; k < bottom; k++) if (letter(k)) return col[k];
     return null;
