@@ -236,7 +236,7 @@ local function rulebookPanel(c)
             horizontalScrollbarVisibility = "AutoHideAndExpandViewport", verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {list}}}}
 end
 
--- one seat's card finder: a search box (name, kind, type, timing tag), then the cards found as buttons
+-- one seat's card finder: a search box (name, kind, type, timing tag, ability word), then the cards found as buttons
 local function finderPanel(c)
     local id = c .. "_fc"
     local list = {tag = "VerticalLayout", attributes = {id = id .. "_list", height = 100, spacing = 3, padding = "6 10 4 4",
@@ -252,7 +252,7 @@ local function finderPanel(c)
                 fontSize = 17, fontStyle = "Bold", color = "#ffffff", alignment = "MiddleLeft"}, value = "Find a card"},
             button(id .. "_close", "X", "closeFinder", {rectAlignment = "MiddleRight", offsetXY = "-4 0", width = 36, height = 28})}},
         {tag = "InputField", attributes = {id = id .. "_q", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 8), width = 436,
-            height = 34, fontSize = 15, placeholder = "Name, kind, stars, type or tag...", onValueChanged = "finderSearch"}},
+            height = 34, fontSize = 15, placeholder = "Name, kind, stars, type, tag or ability word...", onValueChanged = "finderSearch"}},
         {tag = "VerticalScrollView", attributes = {id = id .. "_scroll", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 50),
             width = 452, height = 640 - TITLE_H - 58, color = "#00000000", scrollSensitivity = 30,
             horizontalScrollbarVisibility = "AutoHideAndExpandViewport", verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {list}}}}
@@ -1515,9 +1515,10 @@ end
 
 -- the card finder: every word must be in a card's name, kind, types (or their keys: "food"), timing tags or aliases (a plural: or
 -- its singular; a word without punctuation: or there with punctuation dropped, "moms"), or start a word of its series
--- ("undertale"); a digit 1-9 or "5★" (a "star(s)" after it dropped) is the card's stars; the typed name itself first
--- (punctuation aside), then names that start with it, then with its first word, then cards where every word starts one of
--- theirs ("buff", not "debuff"); a click spawns the card where the table was right-clicked (several: side by side)
+-- ("undertale"); a word no card holds there: the cards whose ability holds it ("piercing", as on the website); a digit
+-- 1-9 or "5★" (a "star(s)" after it dropped) is the card's stars; the typed name itself first (punctuation aside), then
+-- names that start with it, then with its first word, then cards where every word starts one of theirs ("buff", not
+-- "debuff"); a click spawns the card where the table was right-clicked (several: side by side)
 local fcOpen, fcFound, searchList = {}, {}, nil
 local function startKey(word)                          -- " od " for "(od)": the start of a word in a card's spaced text
     local sp = unpunct(word, " ")
@@ -1542,9 +1543,11 @@ local function listCards(color, query)
                 seen[se] = " " .. sp .. (sq ~= sp and " " .. sq .. " " .. s or "")
             end
             local flat, spaced = unpunct(all, "", true, " ")
+            local ab = ((c.a or ""):lower():gsub("\n", " "))   -- a line break: a space, as on the website
             table.insert(searchList, {path = path, name = name, all = all, flat = flat, flatName = unpunct(name, ""),
                 starts = " " .. spaced .. " | " .. flat .. " |" .. seen[se],   -- a word starts after a space: " buff"
-                series = seen[se], st = c.st and math.floor(c.st)})
+                series = seen[se], st = c.st and math.floor(c.st), ab = ab,
+                abFlat = (ab:gsub("'", ""))})                  -- "cant": can't; "use/equip" stays two words
         end
         table.sort(searchList, function(a, b) return a.name < b.name end)
     end
@@ -1577,13 +1580,25 @@ local function listCards(color, query)
         split = split or key[i]
     end
     local whole = unpunct(table.concat(words), "")
+    local function named(w, i, word)                   -- in its name, kind, stars, types, tags, aliases or series
+        return w.all:find(word, 1, true) or one[i] and w.all:find(one[i], 1, true)
+            or bare[i] and w.flat:find(word, 1, true) or w.series:find(lead[i], 1, true)
+            or leadOne[i] and w.series:find(leadOne[i], 1, true)
+    end
+    local inAbility = {}                               -- a word no card is named by: the abilities that hold it
+    for i, word in ipairs(words) do
+        inAbility[i] = true
+        for _, w in ipairs(searchList) do if named(w, i, word) then inAbility[i] = false break end end
+    end
     if #words > 0 or stars then
         for _, w in ipairs(searchList) do
             local ok = not stars or w.st == stars
             for i, word in ipairs(ok and words or {}) do
-                local hit = w.all:find(word, 1, true) or one[i] and w.all:find(one[i], 1, true)
-                    or bare[i] and w.flat:find(word, 1, true) or w.series:find(lead[i], 1, true)
-                    or leadOne[i] and w.series:find(leadOne[i], 1, true)
+                local hit
+                if inAbility[i] then
+                    hit = w.ab:find(word, 1, true) or one[i] and w.ab:find(one[i], 1, true)
+                        or bare[i] and w.abFlat:find(word, 1, true)
+                else hit = named(w, i, word) end
                 if not hit then ok = false break end
             end
             if ok then

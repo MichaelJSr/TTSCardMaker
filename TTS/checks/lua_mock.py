@@ -14,7 +14,8 @@ rulebook panel (a search lists the pages its words name first, then those with a
 without punctuation also in the text without it: "nme" finds N.M.E.; a timing tag as typed: "(-1/1CD)" finds the book's
 −1/1CD, a numbered one no page holds its X row: "(3CD)" XCD) and the card finder (aliases, plurals, "status effects", "1 star" the 1★ cards only, "food", a series
 word's start, every name typed with or without its punctuation listed first, cards where a word starts one of theirs before
-those holding it inside a longer word: "buff" before "debuff") on the
+those holding it inside a longer word: "buff" before "debuff"; a word no card's name, kind, type, tag or series holds: the
+cards whose ability holds it, "piercing", never a word only across a line break; "burn" names only) on the
 website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or pinned to the commit of the Rulebooks bag's
 PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
@@ -1390,6 +1391,28 @@ def main():
         w.call("finderSearch", red, q)
         top = [any(starts(c, q) for c in named.get(ui.text(f"Red_fc_g{i}").split("   ")[0], [])) for i in range(1, 25) if ui.on(f"Red_fc_g{i}")]
         check(top == sorted(top, reverse=True), f"{q!r}: cards where it starts a word first {top}")
+    told = lambda c: " ".join([words(c), *(c.get("t") or []), *(f"({g})" for g in c.get("g") or []),
+                               series[c["se"] - 1] if 0 < (c.get("se") or 0) <= len(series) else ""]).lower()
+    ability, every = lambda c: (c.get("a") or "").lower(), list(details["cards"].values())
+    q = next((q for q in ("piercing", "summon", "negate") if not any(q in told(c) for c in every)), "")
+    w.call("finderSearch", red, q)
+    title, rows = finder_rows()
+    held = [any(q in ability(c) for c in named.get(r.split("   ")[0], [])) for r in rows]
+    w.call("finderSearch", red, "burn")
+    burn = [any("burn" in told(c) for c in named.get(r.split("   ")[0], [])) for r in finder_rows()[1]]
+    check(q and held and all(held) and title.split()[0] == str(sum(q in ability(c) for c in every)) and burn and all(burn),
+          f"a word no card's name, kind, type, tag or series holds: the cards whose ability holds it ({q!r}: {title!r}); "
+          f"'burn', in names: those only {burn}")
+    held_by = lambda c: [told(c), re.sub(r"[^ a-z0-9\x80-\U0010ffff]", "", told(c)), ability(c).replace("\n", " ").replace("'", "")]
+    hay = " | ".join(t for c in every for t in held_by(c))
+    lines = lambda c: ability(c).split("\n")            # a line's last letters and the next line's first, held by no card
+    glued = sorted({g for c in every for a, b in zip(lines(c), lines(c)[1:]) if (g := a[-3:] + b[:3]).isascii() and g.isalpha()
+                    and all(x not in hay and x not in "status effect" for x in (g, g.removesuffix("s")))})
+    found = []
+    for g in glued:
+        w.call("finderSearch", red, g)
+        found += [g] if ui.values.get("Red_fc_title") != "No card found" else []
+    check(glued and not found, f"a word only across an ability's line break: no card found ({len(glued)}) {found[:5]}")
     flat = lambda t: "".join(ch for ch in t.lower() if ch.isalnum() or not ch.isascii())    # Global.lua unpunct(t, "")
     late = []                                           # a name, typed as written or without punctuation: that name first
     for n in sorted({c["n"] for c in details["cards"].values()}):
