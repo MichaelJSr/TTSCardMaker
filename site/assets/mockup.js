@@ -1096,7 +1096,7 @@ const meets = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3]
 export function paintedOver(rec, colors, typed = [], edit = null, mixed = null) {
   const p = obj(rec?.parts), fx = obj(rec?.effects) || {}, out = [];
   if (!p || !Array.isArray(colors)) return out;
-  const on = path => (Array.isArray(fx[path]) ? fx[path] : []).filter(n => OVERLAY.test(String(n))).map(n => n.replace("Overlay", " Overlay"));
+  const on = (path, t = null) => (Array.isArray(t?.effects) ? t.effects : Array.isArray(fx[path]) ? fx[path] : []).filter(n => OVERLAY.test(String(n))).map(n => n.replace("Overlay", " Overlay"));   // t: its own where layers share the path
   const lit = new Set(colors.filter(one => !one?.phrase).map(one => one?.field)), done = new Set();   // done: parts a phrase took whole
   const drawsAll = new Map(), owned = (path, f, list) => {   // ownedGroup, as mixed allows
     const g = lit.has(f) ? ownedGroup(rec, path, f) : null, key = `${f}\n${g}`;
@@ -1119,7 +1119,8 @@ export function paintedOver(rec, colors, typed = [], edit = null, mixed = null) 
     const mine = list.map((x, i) => [x, layerColors(texts, i, [one], f), texts[i]]).filter(([, c]) => c);
     const full = one.phrase ? mine.filter(([, c, t]) => whole(t, c[0])).map(([x]) => x) : [];
     const hid = mine.map(([x]) => {
-      const path = String(x?.layer || "").split("/"), own = on(path.join("/")), g = owned(path.join("/"), f, list);
+      const path = String(x?.layer || "").split("/"), t = Array.isArray(rec?.text) ? rec.text.find(e => e?.id === x?.id && e?.layer === x?.layer) : null;
+      const own = on(path.join("/"), t), g = owned(path.join("/"), f, list);
       const mineToo = one.phrase && !lit.has(f) && !done.has(x) && !full.includes(x);
       if (mineToo && x?.clip) return `its clipped layer '${x.clip}'`;
       if (own.length && mineToo && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
@@ -1522,7 +1523,7 @@ export function oneColour(rec, path, kind = OVERLAY, t = null) {
 /** Whether other text layers share t's path and t's record entry doesn't say its own effects (older than VERSION 12). */
 const unsure = (rec, t) => !Array.isArray(t?.effects) && Array.isArray(rec?.text) && rec.text.filter(x => x?.layer === t?.layer).length > 1;
 /** The same for an enabled Gradient Overlay: the letters are drawn in the old ones' shades (erase's profile). */
-export const gradientOn = (rec, path) => oneColour(rec, path, /^GradientOverlay$/);
+export const gradientOn = (rec, path, t = null) => oneColour(rec, path, /^GradientOverlay$/, t);
 /** The record's Stroke [r, g, b] (psd_details: the layer's or its group's; an opaque rim's: centred or a gradient's), or null. */
 const strokeOf = t => (Array.isArray(t?.stroke) && t.stroke.length === 4 && t.stroke[3] > 0 ? t.stroke.slice(0, 3)
   : Array.isArray(t?.rim) && t.rim.length === 5 && t.rim[3] > 0 && t.rim[4] === 100 ? t.rim.slice(0, 3) : null);
@@ -1531,7 +1532,7 @@ const hexRgb = h => (/^#[0-9a-f]{6}$/i.test(h || "") ? [1, 3, 5].map(i => parseI
 /** A record text layer's main fill [r, g, b]: the colour most of its letters are in (build_site layer_inks' main ink,
  *  which cards.json `ink` leaves out), however few; null without one, or under an enabled overlay (oneColour). */
 export function mainInk(rec, t) {
-  if (!t?.layer || oneColour(rec, t.layer)) return null;
+  if (!t?.layer || oneColour(rec, t.layer, OVERLAY, t)) return null;
   const cs = Array.isArray(t.colors) && t.colors.length ? t.colors : [t.color], text = String(t.text ?? "");
   if (!Array.isArray(t.runs) || !t.runs.length) return cs.length === 1 ? hexRgb(cs[0]) : null;
   const n = new Map();
@@ -1735,7 +1736,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const flat = (s, k) => s.role === "name" && titleOff(rec, fams[k].layer?.layer, s.part ? s.colors : todo.colors);   // redrawn flat, not tinted
   const mixes = specs.map((s, k) => (sheet && kc && !s.added && s.text != null && txt(s.text) === txt(s.old) ? mixPlan(pixels.data, W, H, kc, plate, idsOf(s, k), todo.colors, s.role, readPlate) : null));   // the bake's looks of it
   const tints = specs.map((s, k) => (!mixes[k] && sheet && !s.added && s.text != null && txt(s.text) === txt(s.old) && !(Array.isArray(psd.colors) && psd.colors.some(o => o.field === s.role)) && !flat(s, k)
-    ? tintPlan(pixels.data, W, plate, idsOf(s, k), kc, s.old, fams[k].layer, s.part ? s.colors : todo.colors, s.role, statuses, s.role === "ability" && ownOverlay(rec, fams[k].layer?.layer) ? readPlate : null) : null));   // a colour alone: recoloured in place
+    ? tintPlan(pixels.data, W, plate, idsOf(s, k), kc, s.old, fams[k].layer, s.part ? s.colors : todo.colors, s.role, statuses, s.role === "ability" && ownOverlay(rec, fams[k].layer?.layer, fams[k].layer) ? readPlate : null) : null));   // a colour alone: recoloured in place
   const wiping = sheet ? specs.flatMap((s, k) => (s.added || tints[k] || mixes[k] ? [] : idsOf(s, k))) : [];   // the layers this draw wipes
   const sig = JSON.stringify([src, W, H, card?.id, bfam, barsBottom, rows.map(r => r.k), seen.length, fams.map(f => f.fam), tints.map(Boolean), mixes.map(Boolean),
     specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id, fxWords.map(w => count(text, w))])]);
@@ -1799,13 +1800,13 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
         const { found, strays } = part && own && role === "ability" ? layerBlock(L, W, H, b, own, z, rows) : { found: b, strays: [] };   // one layer: its lines in its own box
         const gone = role === "name" ? hit.b.lines : part ? [...eraseLines(b), ...strays] : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
         const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
-        const colours = wipe(all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer), stroke: strokeOf(layer) });   // in the lines only: dim words too
+        const colours = wipe(all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer, layer), stroke: strokeOf(layer) });   // in the lines only: dim words too
         return text == null ? { deleted: true } : { found, size: z, colours };
       }
       if (text == null) return { skipped: true };
       if (own && kc && layer?.px > 0 && (part || printed(obj(rec.parts) || {}, role).some(p => p?.layer === layer.layer))) {   // not found: at the record's box, size and frame (a whole field's: its printed layer)
         const z = layer.px * kc, found = recordBlock(own, paras, measure, z, wrap, wrap ? layer.frame.map(v => v * kc) : null);
-        const colours = wipe([own[0] - z, own[1] - z * 0.5, own[2] + z, own[3] + z * 0.5], { lines: found.lines, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer), stroke: strokeOf(layer) });
+        const colours = wipe([own[0] - z, own[1] - z * 0.5, own[2] + z, own[3] + z * 0.5], { lines: found.lines, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer, layer), stroke: strokeOf(layer) });
         return { found, size: z, colours };
       }
       return {};
