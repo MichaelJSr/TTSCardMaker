@@ -1,4 +1,4 @@
-import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight, loose, seriesNote, iconReadings } from "./search.js";
+import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP, straight, loose, seriesNote, iconReadings, haystack, respell, spellCounts } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
@@ -651,6 +651,18 @@ const LINKED = [
 ];
 const needsAnalytics = p => ["bal", "cohort", "month", "change"].some(k => p.get(k));
 const needsCharts = p => ["shape", "cd", "tag", "fresh"].some(k => p.get(k));   // charts.js: the other Stats links
+// a search no card meets (with the other filters), its misspelled words swapped for the cards' (search.js respell; ties: on
+// the most cards, duplicates aside): { q, n: the cards it shows, href }, or null (the bot's respelled)
+const spellOf = new WeakMap();
+function respelled(p) {
+  const from = p.get("morgue") ? S.morgue : S.cards;
+  if (!spellOf.has(from)) spellOf.set(from, spellCounts(from.filter(c => !c.dup).map(haystack)));
+  const q = respell(straight(p.get("q") || ""), spellOf.get(from), w => { const f = compile(w, from); return !!f && from.some(f); });
+  const to = new URLSearchParams(p);
+  if (q) to.set("q", q);
+  const n = q ? filterCards(to).length : 0;
+  return n ? { q, n, href: `#/cards?${to}` } : null;
+}
 const listOf = p => exactFirst(sortCards(filterCards(p), sortOf(p), p.get("dir") || ""), p.get("q"));   // the cards the grid shows, in order (search.js exactFirst)
 function sortCards(list, sort = "name", dir = "") {
   const own = k => c => c[k] ?? null, low = v => v?.toLowerCase() || null;   // null: the card lacks it (last either way, G.byKey)
@@ -760,6 +772,7 @@ function renderCards(r) {
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
+  const fix = !waiting && !list.length && p.get("q") ? respelled(p) : null;   // "peircing": piercing's cards
   const notes = compile(p.get("q") || "", morgue ? S.morgue : S.cards)?.notes || [];   // a term found as series' words
   if (waiting) (changed ? loadAnalytics() : fontWait ? loadFonts() : loadCharts()).then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
     () => { const el = $(".browse .loading", view); if (el) el.textContent = changed ? "Couldn't load the recorded changes." : "Couldn't load the filter."; });
@@ -799,7 +812,7 @@ function renderCards(r) {
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x, more = ""]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>${more}`).join("")}</div>` : ""}
       ${notes.length ? `<p class="muted search-note">${notes.map(n => esc(seriesNote(n))).join(". ")}.</p>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
-      ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
+      ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${fix ? ` Did you mean <a href="${esc(fix.href)}">${esc(fix.q)}</a> (${fix.n} card${fix.n === 1 ? "" : "s"})?` : ""}${suggestions.length ? ` ${fix ? "Or one of these cards:" : "Did you mean"} ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : handling ? needsHtml(list)
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
@@ -1533,6 +1546,7 @@ function renderRules(r) {
   const bans = !q || banHit(q, hit, banned), label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;   // the ban list: in the results too
   const found = [shown.length || !bans ? `${shown.length} chapter${shown.length === 1 ? "" : "s"}` : "", q && bans ? "the Constructed ban list" : ""].filter(Boolean).join(" and ");
   const mention = `${found[0].toUpperCase()}${found.slice(1)} mention${shown.length + (q && bans ? 1 : 0) === 1 ? "s" : ""}`;
+  const fix = q && !x && !d && !shown.length && !bans ? bookRespell(typed, chapters, banned) : null;   // "defence": defense's chapters
   view.innerHTML = `<div class="rules${q ? " rb-searching" : ""}">
     <nav class="toc" aria-label="Rulebook chapters"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
       ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
@@ -1543,7 +1557,7 @@ function renderRules(r) {
       ${q ? `<p class="muted">${d ? `“${esc(d.word)}” is not printed in the rulebook; its rule [X]T[Y] (${esc(d.says)})${d.found ? ` and “${esc(d.said)}” are` : " is"} in ${found}${d.said && !d.found ? ` (no chapter mentions “${esc(d.said)}”)` : ""}.` : !x ? `${mention} “${esc(r.params.get("q"))}”.` : x.printed ? `${mention} “${esc(x.tag)}” (its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}).` : `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
       ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${chapterHtml(c, ctx)}</article>`).join("")
-        || (bans ? "" : `<div class="empty">No rulebook chapter mentions that.</div>`)}
+        || (bans ? "" : `<div class="empty">No rulebook chapter mentions that.${fix ? ` Did you mean <a href="#/rules?q=${encodeURIComponent(fix.q)}">${esc(fix.q)}</a> (${fix.n} chapter${fix.n === 1 ? "" : "s"})?` : ""}</div>`)}
       ${bans ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="${esc(S.data.files.banlist)}" data-title="Constructed ban list" title="Every change to the ban list, as a diff">History</button></div><header class="rb-head"><h2>Constructed ban list</h2></header>
         <div class="rb-panel rb-solo">${banned.notes.map(n => `<p>${esc(n)}</p>`).join("")}</div>
         ${banned.groups.map(g => `<section class="rb-sec"><h3 class="rb-tab">${esc(g.title)}</h3><div class="rb-panel"><div class="rb-bans">${g.entries.map(e => { const c = e.id && S.byId.get(e.id);
@@ -1682,6 +1696,16 @@ function bookDuration(q, raw, chapters) {
   const rest = words.filter((_, i) => !at.includes(i)).join(" "), said = raw.split(/\s+/).filter((_, i) => !at.includes(i)).join(" ");
   return { word: words[at[0]].toUpperCase(), row, says: `X = ${n(x, "turn")}${y ? `, Y = ${n(y, "stack")}` : ""}`, rest, said,
     found: !!rest && chapters.some(c => bookHit(bookRe(rest), c.text)) };
+}
+// a search no chapter mentions, its misspelled words swapped for the printed book's (search.js respell; ties: the most
+// printed; a word the ban list holds stays): { q, n: its chapters }, or null (the bot's book_respelled)
+const bookSpell = new WeakMap();
+function bookRespell(q, chapters, banned) {
+  if (!bookSpell.has(chapters)) bookSpell.set(chapters, spellCounts(RB.printed(chapters).map(c => c.text), false));
+  const held = w => { const h = bookRe(w); return chapters.some(c => bookHit(h, c.text)) || !!banned && banHit("", h, banned); };
+  const fixed = respell(q, bookSpell.get(chapters), held), hit = fixed && bookRe(fixed);
+  const n = fixed ? chapters.filter(c => bookHit(hit, c.text)).length : 0;
+  return n ? { q: fixed, n } : null;
 }
 // an old Photoshop page's name ("11 Abilities4", "08 Global Turn": the bot's 10-25 changelog links): the chapter of that
 // number and title (spaces and a first "The" aside), a page number after it

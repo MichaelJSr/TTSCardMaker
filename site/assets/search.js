@@ -284,12 +284,60 @@ export function suggest(query, cards) {
   }).filter(([s]) => s > 0.35).sort((a, b) => b[0] - a[0]).slice(0, 5).map(([, c]) => c);
 }
 
+// respell: a search nothing meets, its misspelled words swapped for printed ones (the bot's spell_counts, edits, respell)
+const SPELL_WORD = /[a-z]+/g, SPELL_FIELD = /^\s*[<>=~]/;    // a-z runs of 4+ letters; after a condition's field name
+/** Each 4+ letter word of texts: how many texts hold it (each), else how often it is printed. */
+export function spellCounts(texts, each = true) {
+  const n = new Map();
+  for (const t of texts) {
+    const ws = (String(t).toLowerCase().match(SPELL_WORD) || []).filter(w => w.length > 3);
+    for (const w of each ? new Set(ws) : ws) n.set(w, (n.get(w) || 0) + 1);
+  }
+  return n;
+}
+/** a to b's Damerau distance (two letters swapped: one edit), cap + 1 once past cap. */
+export function edits(a, b, cap) {
+  if (Math.abs(a.length - b.length) > cap) return cap + 1;
+  let before = null, row = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(row[j] + 1, cur[j - 1] + 1, row[j - 1] + (a[i - 1] !== b[j - 1] ? 1 : 0));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) cur[j] = Math.min(cur[j], before[j - 2] + 1);
+    }
+    if (Math.min(...cur) > cap) return cap + 1;
+    before = row; row = cur;
+  }
+  return Math.min(row[b.length], cap + 1);
+}
+/** text, lowercased, with each 4+ letter word that held(word) refuses swapped for the counted word one edit away (two at
+ *  7+ letters), the most counted first, then A-Z; a field's name (hp>, has:) stays. null if none is. */
+export function respell(text, counts, held) {
+  text = text.toLowerCase();
+  let out = "", at = 0, swapped = false;
+  for (const m of text.matchAll(SPELL_WORD)) {
+    const w = m[0], end = m.index + w.length;
+    if (w.length < 4 || text[m.index - 1] === ":" || SPELL_FIELD.test(text.slice(end)) || held(w)) continue;
+    const cap = w.length < 7 ? 1 : 2;
+    let best = null;
+    for (const [v, n] of counts) {
+      if (Math.abs(v.length - w.length) > cap) continue;
+      const d = edits(w, v, cap);
+      if (d <= cap && (!best || d < best[0] || (d === best[0] && (n > best[1] || (n === best[1] && v < best[2]))))) best = [d, n, v];
+    }
+    if (!best) continue;
+    out += text.slice(at, m.index) + best[2]; at = end; swapped = true;
+  }
+  return swapped ? out + text.slice(at) : null;
+}
+
 export const SEARCH_HELP = [
   ["fire", "In the ability, name or aliases"],
   ["hollow knight · moms knife", "A series' or subseries' cards; names without punctuation"],
   ["cant · nme", "Also can't, N.M.E.: a word typed without ' or . finds it printed with them"],
   ["spongebob · five nights", "A series by words of its name, when no card's text has them"],
   ["defensive minion · N.M.E.", "A type's cards by its name, when no card's text has it"],
+  ["peircing", "Nothing found: did you mean piercing (a printed word a letter off)"],
   ["damage · star points · +1 attack", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other; after a number, attack/ATK too"],
   ['"heal 2"', "Whole words only"],
   ["'heal 2'", "Whole words, and a series' or name's cards"],
