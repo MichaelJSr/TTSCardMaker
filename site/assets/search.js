@@ -12,7 +12,8 @@
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
 //                   (series== and series~ match a subseries too; a known field's lone = reads as ==)
 //   alias==zote  alias~clot                                 any one alias (as the bot)
-//   types==fire  types==defensive minion                    any one type, or the whole list (_ as a space; as the bot)
+//   types==fire  types==defensive minion                    any one type, or the whole list (letters and digits: dark matter)
+//   type==field cards  type==status effect                  a Kind label too (dots and a closing s aside; as the bot)
 //   subtype==infliction                                     any one item type (Salt: heal, infliction; as the bot)
 //   created>=2025  created==2023-10  created<2021-06-01                   dates at the precision given (as the bot)
 //   has:alias  flag:hand  flag:bars  flag:name  flag:any
@@ -57,6 +58,13 @@ function squashed(c) {
   return c._sq;
 }
 
+// type==: the website's Kind labels too, dots and a closing s aside (the bot's KIND_NAMES); creatures stays as stored
+const KIND_NAMES = new Map([["field card", ["field"]], ["minion", ["minion"]], ["item", ["item"]], ["auxiliary item", ["aux item"]],
+  ["auxiliary creature", ["creatures"]], ["nme item", ["nme"]], ["nme", ["nme"]], ["buff", ["buff"]], ["debuff", ["debuff"]],
+  ["status", ["buff", "debuff"]], ["status effect", ["buff", "debuff"]]]);
+/** the type values type==v finds: a Kind label's (field cards: field; status effect: buff, debuff), else v (the bot's kind_values) */
+const kindValues = v => { const k = v.replace(/\./g, "").split(/\s+/).filter(Boolean).join(" ");
+  return KIND_NAMES.get(k) || (k.endsWith("s") && KIND_NAMES.get(k.slice(0, -1))) || [v]; };
 const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const SYNONYMS = { damage: "dmg", dmg: "damage", defense: "def", def: "defense", speed: "spd", spd: "speed", health: "hp", hp: "health",
   "star points": "sp", sp: "star points", "primary field": "pf", pf: "primary field", "counter damage": "cdmg", cdmg: "counter damage" };
@@ -199,10 +207,12 @@ export function compile(query, cards = null) {
   m = q.match(/^(\w+)\s*(==?|~)\s*(.+)$/);
   if (m && STR[m[1].toLowerCase()]) {
     const k = m[1].toLowerCase(), typed = m[3].trim().toLowerCase().replace(/^"(.*)"$/, "$1");
-    const v = k === "types" ? typed.replace(/_/g, " ") : typed;   // a type's _ reads as a space (the bot too)
+    const fold = k === "types" && squash(typed) ? squash : x => x;   // a type: letters and digits (dark matter, n.m.e.; the bot too)
+    const v = fold(k === "types" ? typed.replace(/_/g, " ") : typed);
     const gets = k === "series" ? [STR.series, STR.subseries] : [STR[k]];   // a subseries counts as a series
-    const ok = m[2] === "~" ? x => x.includes(v) : x => x === v;
-    return c => gets.flatMap(get => get(c)).some(x => ok((x || "").toString().toLowerCase()));
+    const kinds = k === "type" ? kindValues(v) : [v];   // type==field card, ==status effect
+    const ok = m[2] === "~" ? x => x.includes(v) : x => kinds.includes(x);
+    return c => gets.flatMap(get => get(c)).some(x => ok(fold((x || "").toString().toLowerCase())));
   }
   const edge = ch => (ch && /\w/.test(ch) ? "\\b" : "");   // a word's edge; a tag's ( and ) are their own
   const whole = t => `${edge(t[0])}${escapeRe(t)}${edge(t.slice(-1))}`;
@@ -256,7 +266,7 @@ export const SEARCH_HELP = [
   ["stars<=3 · total>=25", "Stars and total stats"],
   ["type==creature · subtype=equip", "Exact value (= or ==)"],
   ["series~kirby · author~chestnut · types~undead", "Contains"],
-  ["types==fire", "Any one type"],
+  ["types==fire · type==status effects", "Any one type; a kind by its label too (Field cards, Minions...)"],
   ["series==mario & subseries~door", "Series and subseries (series== and series~ find a subseries too)"],
   ["created>=2025 · created==2023-10", "Creation date (first Discord post or upload)"],
   ["has:alias", "Cards with aliases"],
