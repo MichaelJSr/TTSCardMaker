@@ -5,7 +5,7 @@
 //   spongebob         text no card has: the (sub)series whose name has it as whole words (bySeries)
 //   defensive minion  text no card has, a type's name (letters and digits only: N.M.E.): that type's cards (byType)
 //   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
-//                     counter damage CDMG; and back), as the bot
+//                     counter damage CDMG; and back), as the bot; after a number attack ATK too (+1 attack)
 //   "draw 2" 'draw 2' whole-word match ('draw 2' also a series or name, as draw 2)
 //   !die              exclude (works on any term here, e.g. !type==creature)
 //   a & b   a | b     both / either  (| binds looser than &, as in the bot; inside "quotes" they are text)
@@ -90,7 +90,9 @@ const kindValues = v => { const k = v.replace(/\./g, "").split(/\s+/).filter(Boo
 const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const SYNONYMS = { damage: "dmg", dmg: "damage", defense: "def", def: "defense", speed: "spd", spd: "speed", health: "hp", hp: "health",
   "star points": "sp", sp: "star points", "primary field": "pf", pf: "primary field", "counter damage": "cdmg", cdmg: "counter damage" };
-const SYNONYM_WORDS = new RegExp(`\\b(${Object.keys(SYNONYMS).sort((a, b) => b.length - a.length).join("|")})\\b`);   // longest key first
+const AFTER_NUMBER = { attack: "atk", atk: "attack" };   // only after a number (+1 attack: +1 ATK); attack alone stays a word
+const SYNONYM_WORDS = new RegExp(`\\b(${[...Object.keys(SYNONYMS).sort((a, b) => b.length - a.length),   // longest key first
+  ...Object.keys(AFTER_NUMBER).map(w => `(?<=[\\d%] )${w}`)].join("|")})\\b`);
 
 const PUNCT = "[.'\u2019]", ABBR_END = "(?:(?<=\\.[a-z])\\.)?";   // after the last letter: only an abbreviation's '.'
 const WORD_END = "(?:['\u2019]|(?<=\\.[a-z])\\.)?";   // before the next word: a ' or ABBR_END, never a sentence's end
@@ -114,11 +116,12 @@ export function loose(t, gap = null, hyphen = false) {
   }).join("");
 }
 
-/** A text term's regex as the bot's _text_pattern (query_card.py): loose, each synonym also finding the other. */
+/** A text term's regex as the bot's _text_pattern (query_card.py): loose, each synonym also finding the other (attack
+ *  ATK after a number). */
 function textRe(t) {
   return new RegExp(t.split(SYNONYM_WORDS).map((p, i) => {   // the words at odd places
     if (i % 2 === 0) return loose(p);
-    const o = SYNONYMS[p];
+    const o = SYNONYMS[p] || AFTER_NUMBER[p];
     return `(?:${p}|${o.length < p.length ? `\\b${o}\\b` : o})`;   // dmg as a word, not in "admg"
   }).join(""));
 }
@@ -284,7 +287,7 @@ export const SEARCH_HELP = [
   ["cant · nme", "Also can't, N.M.E.: a word typed without ' or . finds it printed with them"],
   ["spongebob · five nights", "A series by words of its name, when no card's text has them"],
   ["defensive minion · N.M.E.", "A type's cards by its name, when no card's text has it"],
-  ["damage · star points", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other"],
+  ["damage · star points · +1 attack", "Damage/DMG, defense/DEF, speed/SPD, health/HP, star points/SP, primary field/PF, counter damage/CDMG find each other; after a number, attack/ATK too"],
   ['"heal 2"', "Whole words only"],
   ["'heal 2'", "Whole words, and a series' or name's cards"],
   ["!die", "Exclude (any term)"],
