@@ -317,7 +317,7 @@ export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines 
     have.set(next);
   }
   const at = (cx, cy, k) => grid[(clamp(cy, 0, gy - 1) * gx + clamp(cx, 0, gx - 1)) * 3 + k];
-  const tc = textColours(masked, bg, fill, stroke), shades = profile ? shadesOf(masked, lines, y0, cw, at, tc.stroke) : null;
+  const tc = textColours(masked, bg, fill, stroke), shades = profile ? shadesOf(masked, lines, y0, cw, at, tc.stroke || stroke) : null;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     if (!mask[y * w + x]) continue;
     const fx = (x + 0.5) / cw - 0.5, fy = (y + 0.5) / cw - 0.5, cx = Math.floor(fx), cy = Math.floor(fy), tx = fx - cx, ty = fy - cy;
@@ -329,8 +329,8 @@ export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines 
   return { ...tc, shades };
 }
 /** A Gradient Overlay's colours over the old lines (px), top to bottom: in 8 bands, the median colour of the text's
- *  pixels (erase's masked, x and y in its box from y0) that are neither the background (at: its cells) nor the outline.
- *  -> {stops: [[t, [r, g, b]]], top, bottom} | null */
+ *  pixels (erase's masked, x and y in its box from y0) that are neither the background (at: its cells) nor the outline
+ *  (stroke: the one read, else the record's; a black one on a dark backdrop isn't read). -> {stops: [[t, [r, g, b]]], top, bottom} | null */
 function shadesOf(masked, lines, y0, cw, at, stroke) {
   if (!lines?.length) return null;
   const top = Math.min(...lines.map(l => l[1])), bottom = Math.max(...lines.map(l => l[3])), B = 8, bands = Array.from({ length: B }, () => [[], [], []]);
