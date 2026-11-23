@@ -4788,7 +4788,10 @@ def name_links(cards, icons, tag_table):
 
 
 RULE_WORDS = (("damage-types", r"piercing|true (?:damage|dmg)|life ?steal|shockwave|overkill|counter (?:damage|dmg)|cdmg"),   # a card's text -> a chapter
-              ("negation", r"negat(?:e|es|ed|ing|ions?)"), ("reactions", r"react(?:s|ions?|ive|ively)?"), ("shops", r"shops?"))
+              ("negation", r"negat(?:e|es|ed|ing|ions?)"), ("reactions", r"react(?:s|ions?|ive|ively)?"), ("shops", r"shops?"),
+              ("minions", r"minions?"), ("death", r"reviv(?:e[sd]?|ing|al)|graveyard|resurrect(?:s|ed|ing)?"),   # not "summon": "On first summon"
+              ("attacking", r"combo (?:damage|dmg|attack(?:s|ed|ing)?)|sneak attacks?|multi-?hit|redirect(?:s|ed|ing|ions?)?"),
+              ("the-field", r"(?:primary|secondary) field|(?-i:PF|SF)"))
 KIND_RULES = (("field", "field-cards"), ("nme", "shops"))   # types the rulebook gives no meaning -> their chapter
 
 
@@ -4796,7 +4799,8 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
     stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
     it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions,
-    shops; a [field] card's Field Cards, an [nme] card's Shops first), its aliases not part of its name (al: Find a
+    shops, minions (a minion card it names too), death, attacking, the field; none its types reach; a [field] card's
+    Field Cards, an [nme] card's Shops first), its aliases not part of its name (al: Find a
     card's words), its series (se: its 1-based place in series, each the series then its subseries where that differs:
     Find a card's words too) and its ability's word colours (ac: tts_words, palette: text_palette's, the site's); with
     the types', tags' and statuses' meanings (a status's path: p, its colour: c, the rule its Card details line shows,
@@ -4838,8 +4842,8 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
                 tags.append(info[0])
                 used_tags[info[0]] = {"g": info[1], "m": info[2]}
         hits = [] if not named else [lower[m[1].lower()] for m in named.finditer(text)]
-        named_cards = [(originals.get(q["dup"], q) if q.get("dup") else q).get("png") for q in links(text)   # itself too (owner 10-30)
-                       if q["name"] not in statuses]
+        refs = [(q, originals.get(q["dup"], q) if q.get("dup") else q) for q in links(text)]   # itself too (owner 10-30)
+        named_cards = [o.get("png") for q, o in refs if q["name"] not in statuses]
         named_cards = [q for q in named_cards if q]
         mentioned = [q for i, q in enumerate(named_cards) if q not in named_cards[:i]][:6]
         bars = [" ".join(f"{k.upper()} {s[k]}" for k in STAT_KEYS if s.get(k) is not None) for s in c.get("creatures") or [c]
@@ -4849,6 +4853,7 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
         except Exception as error:                # an odd card never fails the build
             warn(f"{c['png']}: no TTS colours ({type(error).__name__}: {error})")
             colours = []
+        own = {(types.get(t) or {}).get("c") for t in map(norm, c.get("types") or [])}   # its types' chapters
         name = str(c["name"]).lower()
         aliases = {a.lower(): a for a in (c.get("aliases") or []) + (c.get("webAliases") or []) + (c.get("was") or []) if a.strip() and a.lower() not in name}
         out_cards[c["png"]] = {k: v for k, v in {
@@ -4857,7 +4862,8 @@ def tts_details(cards, chapters, icons, tag_table, palette=None):
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
             "r": list(dict.fromkeys([kinds[t] for t in map(norm, c.get("types") or []) if t in kinds] +
-                                    [cid for cid, words in rule_words if words.search(text)])) or None,
+                                    [cid for cid, words in rule_words if cid not in own and (words.search(text) or
+                                     cid == "minions" and any(o.get("type") == "minion" for _, o in refs))])) or None,
             "al": list(aliases.values()), "se": place.get(series_of(c)), "by": c.get("author"), "ac": colours}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
             "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards, "series": series}
