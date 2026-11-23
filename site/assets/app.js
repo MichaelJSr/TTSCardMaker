@@ -479,17 +479,17 @@ const personQuery = p => (p?.get("stars") ? `?stars=${encodeURIComponent(p.get("
 const staticDeck = arg => { const [o, ...rest] = String(arg || "").split("/"), s = rest.join("/"); const d = S.decksData?.decks.find(x => x.slug === s && x.owner.toLowerCase() === o.toLowerCase()); return d && !editor.deckOf(o, s) ? d : null; };
 // address bar shows the shareable URL: c/<id>/ for cards, u/<login>/ for profiles, decks/<owner>/<slug>/ for published decks, d/#/deck/… for shared hands;
 // the profile editor stays a hash route
-function syncUrl(r) {
+function syncUrl(r, dlg = null) {
   const sd = r.name === "decks" && r.arg ? staticDeck(r.arg) : null;
   const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg && !r.edit ? userUrl(r.arg) + personQuery(r.params) : sd ? deckPageUrl(sd.owner, sd.slug)
     : r.name === "decks" && r.arg && !location.hash ? location.href                  // a deck's static path before decks.json is loaded (or a private, staged or missing deck): stay, never the bare root
     : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
-  if (location.href !== want || !history.state?.drawn) history.replaceState({ ...history.state, drawn: true }, "", want);   // drawn: Back or Forward to it restores its scroll
+  if (location.href !== want || !history.state?.drawn || dlg) history.replaceState({ ...history.state, ...dlg, drawn: true }, "", want);   // drawn: Back or Forward to it restores its scroll; dlg: a card's entry (one call: Safari allows 100 per 10 s)
 }
 let popped = null;                                       // a hash navigation fires popstate, then hashchange: route once
 const DOC = Math.random().toString(36).slice(2);         // this page load: the card entries it pushed (a reload starts afresh)
-const NAV = window.navigation;                           // none (an older browser): close adds a page, as before
-let dlgFrom = null, backing = false;                     // the card entry's view (its history key; -1: none); close's Back under way
+const NAV = window.navigation;                           // none (an older browser): close counts the entries back
+let dlgFrom = null, dlgBack = 0, backing = false;        // the card entry's view (its history key, 1 without NAV; -1: none), entries back to it; close's Back under way
 function route(e) {
   backing = false;
   if (e?.type === "hashchange") { const dup = e.newURL === popped; popped = null; if (dup) return; }
@@ -498,9 +498,9 @@ function route(e) {
   queueMicrotask(() => { S.restoring = false; });
   const r = parseHash(), fresh = !history.state?.drawn;
   if (r.name === "card" && S.data?.moved?.[r.arg] && S.byId.has(r.arg)) r.arg = S.byId.get(r.arg).id;   // a renamed card: its new page
-  syncUrl(r);
-  if (r.name === "card" && fresh && S.renderedHash && NAV && dlgFrom !== -1) history.replaceState({ ...history.state, from: dlgFrom || NAV.entries()[NAV.currentEntry?.index - 1]?.key, doc: DOC }, "");   // opened over a view: close goes Back to it
+  syncUrl(r, r.name === "card" && fresh && S.renderedHash && dlgFrom !== -1 ? { from: dlgFrom || (NAV ? NAV.entries()[NAV.currentEntry?.index - 1]?.key : 1), back: dlgBack + 1, doc: DOC } : null);   // opened over a view: close goes Back to it
   dlgFrom = r.name !== "card" ? null : history.state?.doc === DOC && history.state.from || -1;   // -1: a card close can't go Back from (a link, a reload)
+  dlgBack = dlgFrom && dlgFrom !== -1 ? history.state.back || 0 : 0;
   hideTip();
   if (r.name === "card") {
     if (!S.renderedHash && !cardOf(r.arg)) renderView(parseHash(S.listHash), S.listHash);   // a dead link: the grid, then the toast
@@ -2386,7 +2386,13 @@ const actions = {
     if ($("#edit-form", modal)) { actions["edit-cancel"](); return; }
     if (parseHash().name !== "card") { closeModal(); return; }
     if (backing) return;                                 // a twice-pressed Esc: once
-    const s = history.state, to = s?.doc === DOC && NAV.entries().find(x => x.key === s.from);   // Back to the view it was opened from, while the history still has it
+    const s = history.state;
+    if (!NAV && s?.doc === DOC && s.back > 0 && s.back < history.length) {   // no Navigation API: as many entries back
+      const go = backing = {}; history.go(-s.back);
+      setTimeout(() => { if (backing === go) { backing = false; location.hash = S.listHash; } }, 1000);   // still here (cut from the history): as before
+      return;
+    }
+    const to = s?.doc === DOC && NAV?.entries().find(x => x.key === s.from);   // Back to the view it was opened from, while the history still has it
     if (!to) { location.hash = S.listHash; return; }
     const here = NAV.currentEntry.key; backing = true;
     NAV.traverseTo(to.key).committed.catch(() => { backing = false; if (NAV.currentEntry?.key === here) location.hash = S.listHash; });   // refused: still here, so as before
