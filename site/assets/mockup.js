@@ -2775,8 +2775,8 @@ export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity
     const line = layout(tokenize(was.slice(l.s, l.e), icons), Infinity, z, measure)[0];
     return line?.w > 0 ? (l.right - l.left) / (line.w + mixed) : 0;
   };
-  const k = kOf(l);
-  if (!(k >= 0.5 && k <= 2)) return null;           // this font far off the card's
+  const k = kOf(l), sized = () => { const o = L.filter(m => m !== l && m.para >= 0 && was.slice(m.s, m.e).trim()).map(kOf); return o.length > 0 && o.every(v => v >= 0.85 && v <= 1.15); };   // the layer's other lines match: only this line's size differs
+  if (!(k >= 0.5 && k <= 2) && !(k >= 0.33 && k <= 3 && sized())) return null;   // this font far off the card's
   const zl = Math.abs(k - 1) <= 0.15 ? z : z * k;   // a line set larger or smaller than the layer's size
   const kp = font && sp.b <= sp.a && sp.a === l.s && L[sp.i - 1] ? kOf(L[sp.i - 1]) : k, kr = kp >= 0.5 && kp <= 2 ? kp : k;   // typed at a line's start: the line before's style (its size)
   const zr = Math.abs(kr - 1) <= 0.15 ? z : z * kr;
