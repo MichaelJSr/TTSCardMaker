@@ -1539,7 +1539,8 @@ function renderRules(r) {
   }
   const typed = bookFold((r.params.get("q") || "").trim()), chapters = S.book.chapters, x = typed && bookTag(typed, chapters);
   const d = !x && typed && bookDuration(typed, (r.params.get("q") || "").trim(), chapters);   // "2t1 stuffed": [x]t[y] or stuffed
-  const q = d ? (d.found ? [d.row, d.rest] : d.row) : !x ? typed : x.printed ? [x.tag.toLowerCase(), x.row] : x.row;   // "(1gcd)": it or (XGCD); "(2pg)": (XPG)
+  const a = !x && !d && typed && bookAbbr(typed, chapters);   // "os": as a word, not in "most"
+  const q = d ? (d.found ? [d.row, d.rest] : d.row) : !x ? a || typed : x.printed ? [x.tag.toLowerCase(), x.row] : x.row;   // "(1gcd)": it or (XGCD); "(2pg)": (XPG)
   if (document.activeElement !== qInput) qInput.value = "";
   const hit = q && bookRe(q), ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => bookHit(hit, c.text)) : chapters;
   const banned = S.data.banlist, can = editing(), top = scrollY === 0 && !S.restoring;   // before the view goes (see renderCards)
@@ -1554,7 +1555,7 @@ function renderRules(r) {
       <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
         ${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button>`}</div></nav>
     <div class="rb rb-book">
-      ${q ? `<p class="muted">${d ? `“${esc(d.word)}” is not printed in the rulebook; its rule [X]T[Y] (${esc(d.says)})${d.found ? ` and “${esc(d.said)}” are` : " is"} in ${found}${d.said && !d.found ? ` (no chapter mentions “${esc(d.said)}”)` : ""}.` : !x ? `${mention} “${esc(r.params.get("q"))}”.` : x.printed ? `${mention} “${esc(x.tag)}” (its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}).` : `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
+      ${q ? `<p class="muted">${d ? `“${esc(d.word)}” is not printed in the rulebook; its rule [X]T[Y] (${esc(d.says)})${d.found ? ` and “${esc(d.said)}” are` : " is"} in ${found}${d.said && !d.found ? ` (no chapter mentions “${esc(d.said)}”)` : ""}.` : !x ? `${mention} “${esc(r.params.get("q"))}”${a ? ` (${esc(a.meaning)})` : ""}.` : x.printed ? `${mention} “${esc(x.tag)}” (its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}).` : `“${esc(x.tag)}” is not printed in the rulebook; its row ${esc(x.row.toUpperCase())}, with ${esc(x.says)}, is in ${found}.`}</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
       ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools">${appReadOnly() ? "" : `<button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button>`}<button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${chapterHtml(c, ctx)}</article>`).join("")
         || (bans ? "" : `<div class="empty">No rulebook chapter mentions that.${fix ? ` Did you mean <a href="#/rules?q=${encodeURIComponent(fix.q)}">${esc(fix.q)}</a> (${fix.n} chapter${fix.n === 1 ? "" : "s"})?` : ""}</div>`)}
@@ -1671,8 +1672,8 @@ const banName = q => typeof q === "string" && /^(constructed)?banlist$/.test(q.r
 const banHit = (q, hit, b) => banName(q)
   || hit.test(bookFold(["Constructed ban list", ...b.notes, ...b.groups.flatMap(g => [g.title, ...g.entries.flatMap(e => [e.name, e.reason || ""])])].join("\n")));
 // a folded search's regex (search.js loose: nme finds N.M.E., cant can't, multi hit multi-hit), any spaces between the
-// words; an array: any
-const bookRe = (q, flags) => new RegExp([].concat(q).map(t => loose(t, "\\s+", true)).join("|"), flags);
+// words; an array: any; a bookAbbr: its regex
+const bookRe = (q, flags) => new RegExp([].concat(q).map(t => t.re || loose(t, "\\s+", true)).join("|"), flags);
 // a folded text holds it: as printed, or with its joined icons as words ([defensive_minion] defensive minion, [buffstack]
 // buff stack: iconReadings), as the bot's _book_at
 const bookHit = (hit, s) => hit.test(s) || iconReadings(s, true).some(r => hit.test(r));
@@ -1706,6 +1707,19 @@ function bookRespell(q, chapters, banned) {
   const fixed = respell(q, bookSpell.get(chapters), held), hit = fixed && bookRe(fixed);
   const n = fixed ? chapters.filter(c => bookHit(hit, c.text)).length : 0;
   return n ? { q: fixed, n } : null;
+}
+// an abbreviation the Abbreviations chapter defines ("SP = Star Points.", "(OS) = On summon."), typed alone (folded): its
+// meaning, and a regex for it whole or its meaning's word it starts ("def": defense), no letter beside; none: null (as
+// before), as the bot's book_abbreviation
+function bookAbbr(q, chapters) {
+  const c = chapters.find(c => (c.title || "").toLowerCase().replace(/[^a-z0-9]/g, "") === "abbreviations");
+  for (const [, abbr, meaning] of c ? RB.plainText(c.ast).matchAll(/(?:^|(?<=\. ))\(?([A-Z]+(?:\/[A-Z]+)*)\)?\s*=\s*([^.\n]+)/gm) : []) {
+    const low = abbr.toLowerCase();
+    if (abbr.length < 2 || low !== q) continue;
+    const words = [low, ...meaning.toLowerCase().split(/[^a-z]+/).filter(w => w.startsWith(low) && w !== low)];
+    return { meaning: meaning.trim(), re: `(?<![a-z])(?:${words.join("|")})(?![a-z])` };
+  }
+  return null;
 }
 // an old Photoshop page's name ("11 Abilities4", "08 Global Turn": the bot's 10-25 changelog links): the chapter of that
 // number and title (spaces and a first "The" aside), a page number after it
