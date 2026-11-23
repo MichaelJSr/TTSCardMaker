@@ -454,26 +454,28 @@ function align(was, now) {
  *  the main ink), lined up as the bake does (textalign.js: paragraphs, then words): kept letters keep theirs (a kept
  *  stretch under SAME_RUN letters without a break joins its paragraph's change); a changed stretch takes the commonest
  *  of the letters it replaces (no blanks, icons, badges or status words: statuses, the status names); typed-in text the
- *  nearest letter's before it on its line, else after; between two colours of a line of several the line's own where
- *  it holds LINE_INK of its letters, else the body's (the commonest outside status words); a paragraph the edit moved
- *  its own, letter for letter where kept, else its commonest; a kept status word's letters the nearest letter's on
- *  their line (the chart's goes on after); whole lines typed right under a header (heads: psd_details' header lines'
- *  text, psd_edit header_looks) the next line's first letter's. Its runs ([] none). */
+ *  nearest letter's before it on its line, else after; between two colours of a line of several (its letters outside
+ *  status words in any case, typed()'s) the line's own where it holds LINE_INK of them, else the body's (the commonest
+ *  outside status words); a paragraph the edit moved its own, letter for letter where kept, else its commonest; a kept
+ *  status word's letters the nearest letter's on their line (the chart's goes on after); whole lines typed right under
+ *  a header (heads: psd_details' header lines' text, psd_edit header_looks) the next line's first letter's. Its runs
+ *  ([] none). */
 export function bakeInk(was, list, now, statuses = null, heads = null) {
   was = String(was ?? ""); now = String(now ?? "");
   const n = was.length, m = now.length;
   if (!list?.length) return [];
-  const col = Array(n).fill(null), drawn = Array(n).fill(false), status = Array(n).fill(false);
+  const col = Array(n).fill(null), drawn = Array(n).fill(false), status = Array(n).fill(false), quiet = Array(n).fill(false);
   for (const r of list) for (let i = Math.max(0, r.start); i < Math.min(n, r.end); i++) col[i] = r.color;
   for (const [s, e] of drawnSpans(was)) for (let i = s; i < e; i++) drawn[i] = true;
   for (const [s, e] of statusSpans(was, statuses)) for (let i = s; i < e; i++) status[i] = true;
+  for (const [s, e] of statusSpans(was, statuses, true)) for (let i = s; i < e; i++) quiet[i] = true;   // typed()'s: any case
   const letter = i => !/\s/.test(was[i]) && !drawn[i] && !status[i];
   const commonest = (lo, hi, ok) => { const count = new Map(); for (let k = lo; k < hi; k++) if (ok(k)) count.set(col[k], (count.get(col[k]) || 0) + 1); return count.size ? [[...count].reduce((x, y) => (y[1] > x[1] ? y : x))[0]] : null; };
   const body = commonest(0, n, k => !status[k])?.[0] ?? null;   // body_fill
   const lineOf = (lo, hi) => [was.lastIndexOf("\n", lo - 1) + 1, (k => (k < 0 ? n : k))(was.indexOf("\n", hi))];
   const near = (lo, hi) => {
     const [top, bottom] = lineOf(lo, hi), seen = new Map();
-    for (let k = top; k < bottom; k++) if (letter(k)) seen.set(col[k], (seen.get(col[k]) || 0) + 1);
+    for (let k = top; k < bottom; k++) if (letter(k) && !quiet[k]) seen.set(col[k], (seen.get(col[k]) || 0) + 1);
     if (seen.size > 1 && !(lo > top && hi < bottom && col[lo - 1] === col[hi])) {   // typed between two colours
       const [c, k] = [...seen].reduce((x, y) => (y[1] > x[1] ? y : x)), all = [...seen.values()].reduce((x, y) => x + y);
       return k >= LINE_INK[0] && k >= LINE_INK[1] * all ? c : body;   // the line's own, else the body's

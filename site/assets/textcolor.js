@@ -89,8 +89,8 @@ export const statusNames = cards => [...new Set((cards || []).filter(c => c && (
 const TOKEN = /\[[^\[\]\n]{1,52}\]/g, ESC = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), STATUS_RE = new WeakMap();
 /** [[start, end]] of the status words in text, sorted (psd_edit.status_spans, the guards' rule): names longest first,
  *  any case, whole words, blanks or forced breaks between; none over an earlier one or a [token]; then only those
- *  starting with a capital (the guards give those the chart's colour). */
-export function statusSpans(text, names) {
+ *  starting with a capital (the guards give those the chart's colour), every one with lower (status_spans'). */
+export function statusSpans(text, names, lower = false) {
   text = String(text ?? "");
   if (!names?.length) return [];
   let res = STATUS_RE.get(names);
@@ -104,7 +104,7 @@ export function statusSpans(text, names) {
     const a = m.index, b = a + m[0].length;
     if (b > a && !taken.some(([s, e]) => a < e && s < b)) taken.push([a, b, true]);
   }
-  return taken.filter(([a, , word]) => word && /[A-Z]/.test(text[a])).map(([a, b]) => [a, b]).sort((x, y) => x[0] - y[0]);
+  return taken.filter(([a, , word]) => word && (lower || /[A-Z]/.test(text[a]))).map(([a, b]) => [a, b]).sort((x, y) => x[0] - y[0]);
 }
 /** The colour runs of field's text: [{start, end, color}], in order, apart; base (inkOf: the card's own colours) first,
  *  then whole fields, then phrases as listed. statuses: the status names; the ability's status words (statusSpans) are
