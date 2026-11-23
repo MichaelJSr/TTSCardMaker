@@ -532,7 +532,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   the right column (300-400 px), sticky at the top of the scroll. Narrow screens: the form is one column and the pane is a
   "Preview" bar pinned at the top of the dialog (a button, `aria-expanded`), closed by default, remembered while the page
   is open; opened it shows up to 36vh of preview (no image, to save room) and `scroll-padding-top` keeps the field being
-  typed in below it; the pane scrolls to the block of the field being typed in (`reveal`, `blockOf`). Rulebook pages keep
+  typed in below it; the pane scrolls to the block of the field being typed in (`reveal`, `blockOf`). On phones (640 px
+  and under) its title is 18 px (5.2vw under 346 px) and breaks a word wider than its column (2026-11-22: 15 titles
+  were cut at 390 px). Rulebook pages keep
   their form without the pane (their text preview under the textarea stays).
 - **Drafts** (`assets/drafts.js`): what is typed in the Edit dialog or an inline editor, before it goes into the batch, is
   saved 400 ms after the last key (and at once on `pagehide` or a hidden tab) to localStorage `edit-drafts`:

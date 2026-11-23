@@ -942,6 +942,7 @@ body.dragging-cards .drop-list { display: flex; }
   .modal:has(.lp-pane.open) { scroll-padding-top: calc(36vh + 24px); }   /* a field scrolled into view stays below the open preview */
   .modal:has(.lp-pane:not(.open)) { scroll-padding-top: 48px; }
 }
+@media (max-width: 640px) { .lp-pane.open .lp-card h2 { font-size: min(18px, 5.2vw); overflow-wrap: anywhere; } }   /* long titles fit beside the picture */
 /* @sheet end */
 
 /* ---- profiles ---- */
