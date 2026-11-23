@@ -836,13 +836,14 @@ end
 -- the decks a card's text draws from, by card name (owner 2026-11-06; they replace the Specific Item Decks bag), one
 -- button each: {label, {folder, stars, item type}, ...}, every card of tts.json in those folders at its count in the
 -- save's piles (several: one merged deck); with an item type, every item with its icon instead (Cake Mix is a 2★
--- attack item too)
+-- attack item too); a card with a listed card's ability gets its row (lua_mock checks)
 local function items(n) return {n .. "★ Items", {"Items/", n}} end
 local function equips(n) return {n .. "★ Equips", {"Items/Equip/", n, "equip"}} end
 local function attacks(n) return {n .. "★ Attack Items", {"Items/Attack/", n, "attack"}} end
 local DECKS = {
     ["Butterfly"] = {{"5★ Creatures", {"Creatures/", 5}}},
     ["The Puppet"] = {items(1), items(2), items(3)},
+    ["The Beholster"] = {items(1), items(2), items(3)},
     ["Gandhi"] = {attacks(4), attacks(2)},
     ["Tainted Isaac"] = {{"1-3★ Items", {"Items/", 1}, {"Items/", 2}, {"Items/", 3}}},
     ["Nuclear Proliferation"] = {attacks(2), attacks(3)},
