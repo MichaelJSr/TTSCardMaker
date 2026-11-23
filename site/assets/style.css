@@ -436,6 +436,7 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-stars { color: #e3a21a; letter-spacing: .02em; }
 .rb a { color: #2738a8; text-decoration: underline dotted; text-underline-offset: .15em; }
 .rb a.card-ref { color: inherit; }
+.rb .empty a { color: var(--accent); }   /* on the page, not a panel: the site's link colour */
 .rb .badge { font-size: .85em; }
 .rb img.tok { vertical-align: -.3em; }
 .rb-break { display: none; }
