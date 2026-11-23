@@ -1179,6 +1179,13 @@ def main():
     listed = re.findall(r'^\s*\["((?:[^"\\]|\\.)*)"\]\s*=', block.group(1), re.MULTILINE) if block else []
     by_name = {c["n"]: p for p, c in details["cards"].items()}
     check(listed and all(n in by_name for n in listed), f"DECKS: every card named is in tts.json {[n for n in listed if n not in by_name]}")
+    row = dict(re.findall(r'^\s*\["((?:[^"\\]|\\.)*)"\]\s*=\s*(.*?),?\s*$', block.group(1), re.MULTILINE)) if block else {}
+    same = lambda a: " ".join(re.sub(r"[.,;:!?]", " ", (a or "").lower()).split())   # case and punctuation aside, signs kept
+    abil = {same(details["cards"][by_name[n]].get("a")): n for n in row if n in by_name}
+    abil.pop("", None)
+    twins = sorted(f"{c['n']} (as {abil[same(c.get('a'))]})" for c in details["cards"].values()
+                   if same(c.get("a")) in abil and row.get(c["n"]) != row[abil[same(c.get("a"))]])
+    check(not twins, f"DECKS: a card with a listed card's ability has its row {twins}")
     eden = by_name.get("Tainted Eden")
     if eden:
         teal = w.players["Teal"]
