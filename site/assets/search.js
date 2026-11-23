@@ -1,6 +1,7 @@
 // Query language: the same syntax as AutoCroissant's /query_ability, plus names/aliases and a few extras.
 //   fire              text in the ability, name or aliases (any case); also a name without its punctuation or a (sub)series
 //   cant  nme         also can't, N.M.E. (a word typed without ' or . finds it printed with them; digits never)
+//   heal a machine    an icon as its word too: heal a [machine] (dark matter, darkmatter: [darkmatter]; the bot too)
 //   spongebob         text no card has: the (sub)series whose name has it as whole words (bySeries)
 //   defensive minion  text no card has, a type's name (letters and digits only: N.M.E.): that type's cards (byType)
 //   damage            also finds DMG (defense DEF, speed SPD, health HP, star points SP, primary field PF,
@@ -40,10 +41,31 @@ export const FLAGS = {
   "flag:hand": c => hasFlag(c, "hand"), "flag:bars": c => hasFlag(c, "bars"), "flag:name": c => hasFlag(c, "name"), "flag:any": flagged,
 };
 
-export function haystack(c) {
-  if (c._hay === undefined) c._hay = [c.name, ...(c.aliases || []), ...(c.was || []), (c.ability || "").replace(/\s+/g, " ")].join("\n").toLowerCase();
+// an icon token ([fire], [fire:no]; text.js), and joined type names as words (the bot's query_card ICON, ICON_SPELLED)
+const ICON = /\[([0-9a-z_ ]+)(?::(?:no|tint|sticker|glow|darkglow))?\]/gi;
+const ICON_SPELLED = new Map([["darkmatter", "dark matter"], ["buffstack", "buff stack"], ["debuffstack", "debuff stack"],
+  ["debuffupgrade", "debuff upgrade"]]);
+/** text with each icon token as its word ([machine] machine, [offensive_minion] offensive minion, [fire:no] fire); a
+ *  joined type name both ways, a line each ([darkmatter] darkmatter, dark matter); "" when it has none (the bot's icon_words) */
+export function iconWords(text) {
+  const t = String(text || ""), word = w => w.replace(/_/g, " ");
+  if (!t.match(ICON)) return "";
+  const words = t.replace(ICON, (_, w) => word(w)), spelled = t.replace(ICON, (_, w) => ICON_SPELLED.get(w.toLowerCase()) ?? word(w));
+  return spelled === words ? words : `${words}\n${spelled}`;
+}
+
+/** [what a text term searches, the same with abilities as printed only], lowercased: names, aliases, old names, the
+ *  ability (space runs as one space), then on a line of its own the ability with its icons as words (iconWords), so no
+ *  phrase spans the two (the bot's _haystack) */
+function hays(c) {
+  if (c._hay === undefined) {
+    const text = (c.ability || "").replace(/\s+/g, " "), words = iconWords(text);
+    const printed = [c.name, ...(c.aliases || []), ...(c.was || []), text].join("\n").toLowerCase();
+    c._hay = [words ? `${printed}\n${words.toLowerCase()}` : printed, printed];
+  }
   return c._hay;
 }
+export const haystack = c => hays(c)[0];
 
 const squash = s => String(s || "").normalize("NFD").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");   // letters and digits: "Mom's Knife" momsknife
 /** Names, aliases and old names squashed, one per line, and the names a typed series or subseries may be: whole, without
@@ -147,10 +169,14 @@ function bySeries(q, cards) {
   pred.notes = [[q, ser, sub]];
   return pred;
 }
-/** A plain term no card's text has that is a type's name, squashed ("defensive minion", "N.M.E.", "debuff stack": the
- *  font's aliases too): a predicate for that type's cards, its note [term, [], [], types]; else null (the bot's _by_type) */
+/** the types q is the name of, squashed ("defensive minion", "N.M.E.", "debuff stack": the font's aliases too) (the
+ *  bot's _type_names) */
+const typeNames = (q, cards) => { const sq = squash(q);
+  return new Set(sq ? [...new Set(cards.flatMap(c => c.types || []))].filter(t => squash(t) === sq) : []); };
+/** A plain term no card's text has that is a type's name (typeNames): a predicate for that type's cards, its note
+ *  [term, [], [], types]; else null (the bot's _by_type) */
 function byType(q, cards) {
-  const sq = squash(q), names = new Set(sq ? cards.flatMap(c => (c.types || []).filter(t => squash(t) === sq)) : []);
+  const names = typeNames(q, cards);
   if (!names.size) return null;
   const pred = c => (c.types || []).some(t => names.has(t));
   pred.notes = [[q, [], [], [...new Set([...names].map(t => t.replace(/_/g, " ")))].sort()]];
@@ -162,28 +188,29 @@ export const seriesNote = ([q, ser, sub, kinds = []]) => { const and = xs => (xs
   const ts = kinds.map(t => `${t} (types==${t})`);
   return `No card's text has “${q}”: ${[ser.length && `the series ${and(ser)}`, sub.length && `the subseries ${and(sub)}`,
     ts.length && `the type${ts.length > 1 ? "s" : ""} ${and(ts)}`].filter(Boolean).join(" and ")}`; };
-/** the cards q's & or | parts search: none (no fallback) when q itself names one of them ("mario & luigi") */
-const partsOf = (q, cards) => (cards && cards.some(named(q, () => false)) ? null : cards);
+/** whether q's & or | parts may fall back: not when q itself names one of the cards ("mario & luigi") */
+const partsFall = (q, cards) => !(cards && cards.some(named(q, () => false)));
 
 /** Compile a query into a predicate (card) => boolean, or null for an empty query. cards: the cards searched, so a
- *  plain term none of them has falls back to series' words, else a type's name (bySeries, byType; the notes say so) */
-export function compile(query, cards = null) {
+ *  plain term none of them has falls back to series' words, else a type's name (bySeries, byType; the notes say so);
+ *  fall: false, never (the bot's by_series) */
+export function compile(query, cards = null, fall = true) {
   const q = straight(query || "").replace(/\s+/g, " ").trim();   // a space finds a line break
   if (!q) return null;
   let parts = splitOut(q, "|");
   if (parts.length > 1) {
-    const of = partsOf(q, cards);
-    parts = parts.map(x => compile(x, of)).filter(Boolean);
+    const of = fall && partsFall(q, cards);
+    parts = parts.map(x => compile(x, cards, of)).filter(Boolean);
     return Object.assign(named(q, c => parts.some(p => p(c))), { notes: notesOf(parts) });
   }
   parts = splitOut(q, "&");
   if (parts.length > 1) {
-    const of = partsOf(q, cards);
-    parts = parts.map(x => compile(x, of)).filter(Boolean);
+    const of = fall && partsFall(q, cards);
+    parts = parts.map(x => compile(x, cards, of)).filter(Boolean);
     return Object.assign(named(q, c => parts.every(p => p(c))), { notes: notesOf(parts) });
   }
   if (q.startsWith("!")) {
-    const inner = compile(q.slice(1), cards);
+    const inner = compile(q.slice(1), cards, fall);
     return inner ? Object.assign(c => !inner(c), { notes: notesOf([inner]) }) : null;
   }
   const lower = q.toLowerCase();
@@ -224,8 +251,9 @@ export function compile(query, cards = null) {
   if (q.length > 2 && q[0] === "'" && q.endsWith("'")) re = new RegExp(`(?:${whole(lower.slice(1, -1))})|(?:${re.source})`);   // also whole words (the bot)
   const sq = squash(lower), probe = sq.length > 3 ? sq : `\n${sq}\n`;   // 3 letters or fewer: a whole name
   const more = c => !!sq && (squashed(c).names.includes(probe) || squashed(c).ser.has(sq));   // a name without its punctuation, a series
-  const plain = c => re.test(haystack(c)) || more(c);
-  return (cards && !cards.some(plain) && (bySeries(q, cards) || byType(q, cards))) || plain;
+  const at = cards && typeNames(q, cards).size ? 1 : 0;   // a type's name: abilities as printed (else its type's cards)
+  const plain = c => re.test(hays(c)[at]) || more(c);
+  return (cards && fall && !cards.some(plain) && (bySeries(q, cards) || byType(q, cards))) || plain;
 }
 
 /** The cards whose name, an alias or an old name is the query (text.js norm: case, spaces and dots aside; quotes allowed). */
