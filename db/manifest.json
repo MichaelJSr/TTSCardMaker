@@ -4,25 +4,19 @@
   "details_version": 15,
   "parser_version": 7
  },
- "built_at": "2026-11-24T23:39:10Z",
- "card_commit": "ab0ae687c5178e2f6cfe8ca4a9ef968652686cf9",
+ "built_at": "2026-11-24T23:45:03Z",
+ "card_commit": "c48669686b3eb208eff29d689ed70104ea725ed7",
  "card_repo": "MichaelJSr/TTSCardMaker",
  "files": {
   "old_stats.json": "611d3cd447b81242ff538b50295d6a320514753f50771c45484e3b2ebce8f05e",
-  "psd_details.json": "4099c9bb0f45fe8f7ad4c4494e577686c68a393b5c83cb994e4b570d3210cbc7",
+  "psd_details.json": "f08a8070df6b9d9f64e05fb3965d2fef2eadb61aa0f69c97ba1f650c5d76b1ac",
   "rulebook.json": "06566d67c0caa81a536cfe81067af41e79103e5ca51f7979e807069a1289822c",
   "stats.json": "143dfb6b31a8bab4e0c9b88aa692322d01013cf609428006d57b7daf0f735853"
  },
  "fonts": {
   "checked": 770,
   "errors": [],
-  "missing": {
-   "HelpMe": {
-    "Items/Infliction/2 Stars/Bag_of_Evil.psd": [
-     "Name"
-    ]
-   }
-  }
+  "missing": {}
  },
  "gates": {},
  "pending": {
@@ -32,6 +26,6 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/45511699997",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/45512514181",
  "schema": 1
 }
