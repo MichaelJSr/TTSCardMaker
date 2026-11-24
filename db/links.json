@@ -707,16 +707,16 @@
   ]
  },
  "Auxiliary/Items/Indoctrination.psd": {
-  "blob": "23623d9aff660ca9aacc5ca5f07a973366348092",
+  "blob": "e2ded2d5bb83afc2e457fdf61c8f1c3462211480",
   "links": [
    {
-    "drawn": "6029c9b0ff9b8b2666bb599dee8d1e2b8287ef0c",
+    "drawn": null,
     "name": "Indoctrination - dogma_by_chopangigante_deida83-fullview.jpg",
     "path": "MDW/Linked/Indoctrination - dogma_by_chopangigante_deida83-fullview.jpg",
     "size": 213733
    },
    {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "drawn": null,
     "name": "Fragile Equip.png",
     "path": "Types/Fragile Equip.png",
     "size": 23023
@@ -8189,6 +8189,29 @@
    }
   ]
  },
+ "Creatures/Isaac/3 Stars/Dead_Tainted_Lazarus.psd": {
+  "blob": "20bab4506ddbab7ea1ee6fd59f3c71c6fc88e471",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Star of beth.png",
+    "path": "Types/Stars/Star of beth.png",
+    "size": 2247
+   },
+   {
+    "drawn": null,
+    "name": "light.png",
+    "path": "Types/light.png",
+    "size": 474151
+   },
+   {
+    "drawn": null,
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   }
+  ]
+ },
  "Creatures/Isaac/3 Stars/Tainted_Isaac.psd": {
   "blob": "50a0c46fc5f9dc384642f0ff94be3779acb966af",
   "links": [
@@ -8236,37 +8259,25 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Lazarus.psd": {
-  "blob": "dd4ed80cdef0858f6352c5c6dc77ee449dd2725f",
+  "blob": "c31bdeff714fb6f2da80e12ec1e946388fe81a21",
   "links": [
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
+    "drawn": null,
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
    },
    {
-    "drawn": "2e72ac90cab2285fb6fafd909e1a5aec92956439",
-    "name": "Clot_Black - 0.webp",
-    "path": "MDW/Linked/Clot_Black - 0.webp",
-    "size": 126
-   },
-   {
-    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
+    "drawn": null,
     "name": "Star of beth.png",
     "path": "Types/Stars/Star of beth.png",
     "size": 2247
    },
    {
-    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+    "drawn": null,
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
-   },
-   {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
-    "name": "undead.png",
-    "path": "Types/undead.png",
-    "size": 195840
    }
   ]
  },
@@ -21604,16 +21615,16 @@
   ]
  },
  "Items/Infliction/2 Stars/Bag_of_Evil.psd": {
-  "blob": "6cccdda5b2181fc486a23dfb85c13ceccef9526e",
+  "blob": "99fd9601e86a11bbfe17d1f61c262977ad603e3a",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "drawn": null,
     "name": "Infliction.png",
     "path": "Types/Infliction.png",
     "size": 78460
@@ -21977,22 +21988,22 @@
   ]
  },
  "Items/Support/2 Stars/Bag_of_Good.psd": {
-  "blob": "d1273c6ac713cf0870e202bf910057d8e987b3ba",
+  "blob": "5516a12d70dae98f39242e4651735ad4c563796b",
   "links": [
    {
-    "drawn": "f13c213b57d6ac913296c127ab43abbe41a06403",
+    "drawn": null,
     "name": "Bag_of_Good - Layer 1.psb",
     "path": "MDW/Linked/Bag_of_Good - Layer 1.psb",
     "size": 1048576
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
@@ -27751,7 +27762,7 @@
   ]
  },
  "N.M.E/Double_Pain.psd": {
-  "blob": "8b45b639780cf7431af9f4ddd0dfd9c0f6b91de3",
+  "blob": "bea0448fce9aaa7f7185b1129e0c7c1fa921ab04",
   "links": [
    {
     "drawn": null,
