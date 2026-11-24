@@ -707,13 +707,19 @@
   ]
  },
  "Auxiliary/Items/Indoctrination.psd": {
-  "blob": "e2ded2d5bb83afc2e457fdf61c8f1c3462211480",
+  "blob": "fab8e90cf2a858dc0ccdd4f3fc0121594728aa58",
   "links": [
    {
     "drawn": null,
     "name": "Indoctrination - dogma_by_chopangigante_deida83-fullview.jpg",
     "path": "MDW/Linked/Indoctrination - dogma_by_chopangigante_deida83-fullview.jpg",
     "size": 213733
+   },
+   {
+    "drawn": "a6fece6050e3553162dafa2712e0587926c1b64d",
+    "name": "Indoctrination - Generative Fill.psb",
+    "path": "MDW/Linked/Indoctrination - Generative Fill.psb",
+    "size": 6079254
    },
    {
     "drawn": null,
@@ -8190,7 +8196,7 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Dead_Tainted_Lazarus.psd": {
-  "blob": "20bab4506ddbab7ea1ee6fd59f3c71c6fc88e471",
+  "blob": "2a87ff7d1d8f8533e1c2a23747461a2683901dd9",
   "links": [
    {
     "drawn": null,
@@ -8259,7 +8265,7 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Lazarus.psd": {
-  "blob": "c31bdeff714fb6f2da80e12ec1e946388fe81a21",
+  "blob": "342568a02f2eac53918e5a8e36c8eadf58592cce",
   "links": [
    {
     "drawn": null,
@@ -21615,7 +21621,7 @@
   ]
  },
  "Items/Infliction/2 Stars/Bag_of_Evil.psd": {
-  "blob": "99fd9601e86a11bbfe17d1f61c262977ad603e3a",
+  "blob": "ff792f1b6ab7b460e0fa959c4725c9be0b1d3f00",
   "links": [
    {
     "drawn": null,
@@ -21988,8 +21994,20 @@
   ]
  },
  "Items/Support/2 Stars/Bag_of_Good.psd": {
-  "blob": "5516a12d70dae98f39242e4651735ad4c563796b",
+  "blob": "b78d39a6cf8d20df90f31f18d058232f4f63f2ea",
   "links": [
+   {
+    "drawn": "dda54f1f07f4842a381433e7de0a0ca166646d86",
+    "name": "Bag_of_Good - Layer 1 copy 2.psb",
+    "path": "MDW/Linked/Bag_of_Good - Layer 1 copy 2.psb",
+    "size": 8597286
+   },
+   {
+    "drawn": "4187a02b4ae9ec2d810fe00ee392ff591f16b697",
+    "name": "Bag_of_Good - Layer 5 copy.psb",
+    "path": "MDW/Linked/Bag_of_Good - Layer 5 copy.psb",
+    "size": 1308176
+   },
    {
     "drawn": null,
     "name": "Bag_of_Good - Layer 1.psb",
@@ -24256,8 +24274,16 @@
   "blob": "cd41f0a08a193117b70f0abbdc815fef01ed4231",
   "links": []
  },
+ "MDW/Linked/Bag_of_Good - Layer 1 copy 2.psb": {
+  "blob": "dda54f1f07f4842a381433e7de0a0ca166646d86",
+  "links": []
+ },
  "MDW/Linked/Bag_of_Good - Layer 1.psb": {
   "blob": "f13c213b57d6ac913296c127ab43abbe41a06403",
+  "links": []
+ },
+ "MDW/Linked/Bag_of_Good - Layer 5 copy.psb": {
+  "blob": "4187a02b4ae9ec2d810fe00ee392ff591f16b697",
   "links": []
  },
  "MDW/Linked/Balloon_Boy - fnaf 2.psb": {
@@ -24484,6 +24510,10 @@
  },
  "MDW/Linked/Ice_Bomb - Ice Bomb.psb": {
   "blob": "9ddcc0c6a1ccb04379e4d6c910e625c46d6876e5",
+  "links": []
+ },
+ "MDW/Linked/Indoctrination - Generative Fill.psb": {
+  "blob": "a6fece6050e3553162dafa2712e0587926c1b64d",
   "links": []
  },
  "MDW/Linked/Infected - Layer 22.psb": {
@@ -27762,7 +27792,7 @@
   ]
  },
  "N.M.E/Double_Pain.psd": {
-  "blob": "bea0448fce9aaa7f7185b1129e0c7c1fa921ab04",
+  "blob": "ea270c3aaab143016da8afd99da5b8046a9818dc",
   "links": [
    {
     "drawn": null,
@@ -28688,8 +28718,14 @@
   "MDW/Linked/Baba - hexadoodle-baba-is-you.png": {
    "1afe9077dc3d219a556e403ee124d558b7e21faf": 462010
   },
+  "MDW/Linked/Bag_of_Good - Layer 1 copy 2.psb": {
+   "dda54f1f07f4842a381433e7de0a0ca166646d86": 8597286
+  },
   "MDW/Linked/Bag_of_Good - Layer 1.psb": {
    "f13c213b57d6ac913296c127ab43abbe41a06403": 1048576
+  },
+  "MDW/Linked/Bag_of_Good - Layer 5 copy.psb": {
+   "4187a02b4ae9ec2d810fe00ee392ff591f16b697": 1308176
   },
   "MDW/Linked/Balloon_Boy - D57oQd7UUAEO6V9.jpg": {
    "f6e5108ae2d9f96b41d78de66b570fab1a12daa6": 330589
@@ -29659,6 +29695,9 @@
   },
   "MDW/Linked/Inconspicuous_Cake - Cake_TTYD_poisoned.png": {
    "b84a8eacbea01a1fedf352b85e66256f5b4234b6": 1319
+  },
+  "MDW/Linked/Indoctrination - Generative Fill.psb": {
+   "a6fece6050e3553162dafa2712e0587926c1b64d": 6079254
   },
   "MDW/Linked/Indoctrination - dogma_by_chopangigante_deida83-fullview.jpg": {
    "6029c9b0ff9b8b2666bb599dee8d1e2b8287ef0c": 213733
@@ -32114,6 +32153,7 @@
   "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5": "6421e4493bd37fa08fa3d79262e04c8ec7f72f3c",
   "413c75e19910afe65bf5b491f4124ee7431111f8": "90405df0493a8ad611c376a635394e71107062ae",
   "4141ad844be468ecdded0abf2dd62ac0d7627bfe": "1ab57defec44a1da7ce7704f70946de12660d79e",
+  "4187a02b4ae9ec2d810fe00ee392ff591f16b697": "e89ea5eef16b57b59c7364517ef5673c3699b0b3",
   "41bcfb3d6a0e69f328b5e76b1e7157897365ed5e": "69046060e9468d3cb1dd5990e9d1c6e129dcdaf3",
   "41c3d06631dbb2832b3f56145b5c3ac4648487db": "123a83a6ca523f1a8d851163107c826384e07bdb",
   "42202bbec256fcd7533b9262b980906a0c142b27": "fe7c2c517e7d0b720d9cd4c864b96f8cd4cd1ed0",
@@ -32514,6 +32554,7 @@
   "a6a8833fafe1539cee024a364a3fa78195424355": "73a58c808c93ebc70b20f6d058dc1c9b2d6f9963",
   "a6ca2fdb436d458249957fc855681500825bfe92": "84e1ce8ab6db35fe7a6d8dbd2ce8b63af9b416ef",
   "a6dfaa63017446c87785ab0d7c39298b91eadba0": "320fdff2ccccc1855ecee614f735b62c97a473ae",
+  "a6fece6050e3553162dafa2712e0587926c1b64d": "ec47886e4f526479824b92ccfe9050f6e5953861",
   "a72ddeadf0a245e80511726ca4d0bed63c789c50": "d94dc9cc3e0ef998f20244aaa87e8bf9a0693f72",
   "a7b1057fc382039cb3efa16c5ee3270de8f66c4f": "3fdec728807d56bbfae62b66845371ed43e27bec",
   "a7e4db19a955c9acba5f33d7237f0d7c2c876605": "4da959df045d5a123aa02ca1341bc80e59362f2f",
@@ -32729,6 +32770,7 @@
   "dbfff361a754425904028d9b13c38de72467fe15": "5857078ee99140cd700518091d78ef141167d3b4",
   "dd43dc7213eb6fe626b4a551aaef089a3067929f": "db7d7fbf5f4613745d49bc682656ed5c20b1a920",
   "dd702b3e4c6c09af0d9eebcb33200c1cac3c2eb1": "621bc61f7e5c59b7ba81d52bf4d625e967d3d805",
+  "dda54f1f07f4842a381433e7de0a0ca166646d86": "0f7f0175e8c1c926a6376efbb312473a3ddaca16",
   "ddbe41a24ec7c04062e1ea7a7daaaf970754656f": "6260e0b099df2979a382810efcc95a6b91e96d12",
   "de107c5a1c035a13c2bcfa4881f3f92f00fd63eb": "3707f8df78728bc0ea26ca372caa14815d9a77d0",
   "de1a2108956135e3846fc53d3e99696c13f5c325": "7c41ddf447e87d9a7392a5dad17e23e4438ca6a3",
