@@ -13442,7 +13442,7 @@
   ]
  },
  "Creatures/Other/3 Stars/Supreme_Jeh'Oul.psd": {
-  "blob": "2e257de629da7c9dc1d3a0646b8a813d42b32f45",
+  "blob": "3a9517870a47894b995ca72dbc335718f58ea374",
   "links": [
    {
     "drawn": null,
@@ -13455,6 +13455,12 @@
     "name": "Supreme_Jeh'Oul - Calamitas.psb",
     "path": "MDW/Linked/Supreme_Jeh'Oul - Calamitas.psb",
     "size": 5274910
+   },
+   {
+    "drawn": "1a5d4edc0c56d2ecd961c3e94e54fe0e9a2972ba",
+    "name": "Supreme_Jeh'Oul - Wings_of_vi_enemigos_supreme_jehoul.webp",
+    "path": "MDW/Linked/Supreme_Jeh'Oul - Wings_of_vi_enemigos_supreme_jehoul.webp",
+    "size": 8700
    },
    {
     "drawn": null,
@@ -30947,6 +30953,9 @@
   "MDW/Linked/Supreme_Jeh'Oul - Layer 1.psb": {
    "4959dc39fb8b5c65f55da8d1e6c05322d0010936": 4244428
   },
+  "MDW/Linked/Supreme_Jeh'Oul - Wings_of_vi_enemigos_supreme_jehoul.webp": {
+   "1a5d4edc0c56d2ecd961c3e94e54fe0e9a2972ba": 8700
+  },
   "MDW/Linked/Sweetheart - Layer 3.psb": {
    "351cdbd75dbb0ec100f76e55899577ee29e48058": 2930290
   },
@@ -32032,6 +32041,7 @@
   "19329d59f6443b096141eba7ebc93f0c2a7fd533": "56a3227b8f80ce8828dc040fc66815ce672ba44d",
   "1941d8a633ca7dcd5c5c508e5fbb588d5e2ef445": "c663ec524e4072d603123c3baa137e4fb2e38c44",
   "1a5087c563d0fdc09a3b6cd5dd8c815508f0a13a": "45a0dc762ca9ecb91a95f51b5acbf1bdda3f1062",
+  "1a5d4edc0c56d2ecd961c3e94e54fe0e9a2972ba": "87e6a2e7e72166fa33a00a9d25136406ec9a1e0e",
   "1aefe94ac65be7e3c67cf94b31cfbffd5a23f56e": "d8c600da62e8289ae8fd91651219322400bac336",
   "1af6eaf348271a8bc9a287b931abb6e136bd8ace": "fe8d3f31c045df9e1d5f7f4cdc4752d2f801a362",
   "1afe9077dc3d219a556e403ee124d558b7e21faf": "e7ab43d6decba8052ec3c0e1915444ec21ec3c64",
