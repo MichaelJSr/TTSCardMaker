@@ -11491,28 +11491,22 @@
   ]
  },
  "Creatures/Mario/4 Stars/Macho_Grubba.psd": {
-  "blob": "730c01de180ea1d2fe827012d926fb9f609a056f",
+  "blob": "f25aa29ea46c343a64e8ba63f8339fcf4b2709aa",
   "links": [
    {
-    "drawn": "8a04208f7b0c14e0399dc565359546aa5b031c0a",
+    "drawn": null,
     "name": "Gold_Fuzzy - il_680x540.2058992065_jl7h.png",
     "path": "MDW/Linked/Gold_Fuzzy - il_680x540.2058992065_jl7h.png",
     "size": 874682
    },
    {
-    "drawn": "13152703396a8f214e625c673e582db74ac72d66",
-    "name": "Macho_Grubba - image.png",
-    "path": "MDW/Linked/Macho_Grubba - image.png",
-    "size": 212078
+    "drawn": null,
+    "name": "Gold_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Gold_Star_PMTTYDNS_icon.png",
+    "size": 5811
    },
    {
-    "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
-    "name": "Ruby_Star.png",
-    "path": "Types/Stars/Ruby_Star.png",
-    "size": 4718
-   },
-   {
-    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+    "drawn": null,
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
