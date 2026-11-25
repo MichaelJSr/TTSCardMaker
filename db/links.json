@@ -13442,40 +13442,40 @@
   ]
  },
  "Creatures/Other/3 Stars/Supreme_Jeh'Oul.psd": {
-  "blob": "a2ae18d6ad5360613366c2577dd1d46a461ec5e0",
+  "blob": "2e257de629da7c9dc1d3a0646b8a813d42b32f45",
   "links": [
    {
-    "drawn": "4959dc39fb8b5c65f55da8d1e6c05322d0010936",
+    "drawn": null,
     "name": "Supreme_Jeh'Oul - Layer 1.psb",
     "path": "MDW/Linked/Supreme_Jeh'Oul - Layer 1.psb",
     "size": 4244428
    },
    {
-    "drawn": "d859a726bfa14fd7aa31091e3cecd01f360ece64",
+    "drawn": null,
     "name": "Supreme_Jeh'Oul - Calamitas.psb",
     "path": "MDW/Linked/Supreme_Jeh'Oul - Calamitas.psb",
     "size": 5274910
    },
    {
-    "drawn": "3fa89b94381b4636b7e9d5b167e6afff4db68de1",
+    "drawn": null,
     "name": "Greed.png",
     "path": "Types/Stars/Greed.png",
     "size": 887
    },
    {
-    "drawn": "3fa89b94381b4636b7e9d5b167e6afff4db68de1",
+    "drawn": null,
     "name": "Greed.png",
     "path": "Types/Stars/Greed.png",
     "size": 887
    },
    {
-    "drawn": "3fa89b94381b4636b7e9d5b167e6afff4db68de1",
+    "drawn": null,
     "name": "Greed.png",
     "path": "Types/Stars/Greed.png",
     "size": 887
    },
    {
-    "drawn": "9842d409283e819405890ffd7f7e3bc7775145fd",
+    "drawn": null,
     "name": "darkmatter.png",
     "path": "Types/darkmatter.png",
     "size": 220675
