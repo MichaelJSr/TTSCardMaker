@@ -1,0 +1,194 @@
+# Workshop: main's TTS save onto its Steam Workshop item (vars.WORKSHOP_ITEM_ID) after every Card sync run (its save
+# commits are GITHUB_TOKEN pushes: they start no push run), as the very file TTS uploads (.github/scripts/workshop.py)
+# by TTS's own legacy update (.github/workshop/steam.mjs), with the card changelog's changes as the note. Main's save
+# always wins (owner 2026-11-26): the item is checked at least once a day, so a hand upload from TTS is replaced too.
+# A run waits 10 minutes and a newer run cancels a waiting one: a burst of pushes uploads once, main's head after the
+# wait. Environment `workshop` (main only): STEAM_REFRESH_TOKEN (mint.mjs on the Mac) and, to renew it unattended,
+# WORKSHOP_SECRETS_TOKEN (a GitHub token that may write this environment's secrets). Failures and token warnings ping
+# the owner in the standards channel, each distinct alert once a day. The cache workshop-<item>-last-* holds the last
+# file the item was seen serving; workshop-alerted-* the last ping.
+name: Workshop
+run-name: ${{ github.event_name == 'workflow_dispatch' && format('Workshop ({0})', inputs.mode) || 'Workshop' }}
+
+on:
+  workflow_run:
+    workflows: ["Card sync"]
+    types: [completed]       # any conclusion: a lane can push the save and fail later
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "upload: main's save onto the item now; check: log in and read the item; build: the file only (artifact)"
+        type: choice
+        options: [upload, check, build]
+        default: upload
+
+permissions:
+  contents: read
+
+env:
+  SAVE: TTS/Impossibility Simulator.json
+  FILE: workshop-out/WorkshopUpload
+  ITEM: ${{ vars.WORKSHOP_ITEM_ID }}
+  OWNER_DISCORD: "247149441734279169"
+
+jobs:
+  build:
+    if: vars.WORKSHOP_ITEM_ID != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      seen: ${{ steps.gate.outputs.seen }}
+      first_today: ${{ steps.gate.outputs.first_today }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/
+            /TTS/Impossibility Simulator.json
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - run: python -m pip install -q --no-deps -r .github/scripts/workshop-requirements.txt
+
+      - id: build
+        run: python .github/scripts/workshop.py "$SAVE" "$FILE"
+
+      # The newest record (a key that never exists, then the newest of the prefix): "<sha1> <UTC day>"
+      - uses: actions/cache/restore@v6
+        with:
+          path: workshop-last
+          key: workshop-${{ vars.WORKSHOP_ITEM_ID }}-last-none
+          restore-keys: workshop-${{ vars.WORKSHOP_ITEM_ID }}-last-
+
+      # An automatic run goes on unless the item served this very file earlier today; a dispatched one always does
+      - id: gate
+        env:
+          SHA1: ${{ steps.build.outputs.sha1 }}
+        run: |
+          read -r sha day < workshop-last 2> /dev/null || true
+          today=$(date -u +%F)
+          seen=false
+          if [ "$GITHUB_EVENT_NAME" = workflow_run ] && [ "${sha:-}" = "$SHA1" ] && [ "${day:-}" = "$today" ]; then seen=true; fi
+          echo "seen=$seen" >> "$GITHUB_OUTPUT"
+          echo "first_today=$([ "${day:-}" = "$today" ] && echo false || echo true)" >> "$GITHUB_OUTPUT"
+          echo "last seen: ${sha:-none} ${day:-}; this file: $SHA1; skip: $seen"
+
+      - if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v7
+        with:
+          name: workshop-file
+          path: ${{ env.FILE }}
+          retention-days: 7
+
+  # A newer automatic run cancels this one while it waits: one upload per burst
+  wait:
+    needs: build
+    if: github.event_name == 'workflow_run' && needs.build.outputs.seen != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: workshop-wait
+      cancel-in-progress: true
+    steps:
+      - run: sleep 600
+
+  steam:
+    needs: [build, wait]
+    if: >-
+      !cancelled() && needs.build.result == 'success' && needs.build.outputs.seen != 'true'
+      && (github.event_name == 'workflow_dispatch' && inputs.mode != 'build' || needs.wait.result == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: workshop
+    concurrency:
+      group: workshop
+      cancel-in-progress: false
+    outputs:
+      alert: ${{ steps.steam.outputs.alert }}
+    steps:
+      - uses: actions/checkout@v7            # main's head after the wait
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/
+            /.github/workshop/
+            /TTS/Impossibility Simulator.json
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Packages
+        run: |
+          python -m pip install -q --no-deps -r .github/scripts/workshop-requirements.txt
+          npm ci --prefix .github/workshop --ignore-scripts --no-audit --no-fund
+
+      - id: build
+        run: python .github/scripts/workshop.py "$SAVE" "$FILE"
+
+      - id: steam
+        timeout-minutes: 12      # a hang fails the step (an alert), where a job timeout would only cancel
+        env:
+          STEAM_REFRESH_TOKEN: ${{ secrets.STEAM_REFRESH_TOKEN }}
+          WORKSHOP_SECRETS_TOKEN: ${{ secrets.WORKSHOP_SECRETS_TOKEN }}
+          FIRST_TODAY: ${{ needs.build.outputs.first_today }}
+          MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'upload' }}
+        run: |
+          cd .github/workshop
+          if [ "$MODE" = check ]; then
+            node steam.mjs check --item "$ITEM"
+          else
+            node steam.mjs upload --item "$ITEM" --file "$GITHUB_WORKSPACE/$FILE" --name WorkshopUpload_ci
+          fi
+
+      - if: steps.steam.outputs.result == 'updated' || steps.steam.outputs.result == 'unchanged'
+        run: echo "${{ steps.build.outputs.sha1 }} $(date -u +%F)" > workshop-last
+
+      - if: steps.steam.outputs.result == 'updated' || steps.steam.outputs.result == 'unchanged'
+        uses: actions/cache/save@v6
+        with:
+          path: workshop-last
+          key: workshop-${{ vars.WORKSHOP_ITEM_ID }}-last-${{ github.run_id }}-${{ github.run_attempt }}
+
+  alert:
+    needs: [build, wait, steam]
+    if: always() && (needs.build.result == 'failure' || needs.steam.result == 'failure' || needs.steam.outputs.alert != '')
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/cache/restore@v6
+        with:
+          path: workshop-alerted
+          key: workshop-alerted-none
+          restore-keys: workshop-alerted-
+
+      # Each distinct alert once a UTC day: a failure that keeps happening pings once, not on every Card sync run
+      - id: post
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
+          TEXT: ${{ needs.steam.outputs.alert || 'the run failed' }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          line="$(date -u +%F) $(printf '%s' "$TEXT" | sha1sum | cut -c1-16)"
+          if grep -qxF "$line" workshop-alerted 2> /dev/null; then echo "already pinged today: $TEXT"; exit 0; fi
+          jq -n --arg t "<@$OWNER_DISCORD> Workshop: $TEXT ($RUN)" --arg id "$OWNER_DISCORD" \
+            '{content: $t, allowed_mentions: {users: [$id]}}' |
+            curl -sS --fail -X POST -H 'Content-Type: application/json' --data @- "$WEBHOOK" > /dev/null
+          { grep -s "^$(date -u +%F) " workshop-alerted || true; echo "$line"; } > alerted.new && mv alerted.new workshop-alerted
+          echo "posted=true" >> "$GITHUB_OUTPUT"
+
+      - if: steps.post.outputs.posted == 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: workshop-alerted
+          key: workshop-alerted-${{ github.run_id }}-${{ github.run_attempt }}

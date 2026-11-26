@@ -1,0 +1,18 @@
+{
+  "name": "workshop",
+  "private": true,
+  "description": "Uploads main's TTS save to its Steam Workshop item (workshop.yml); mint.mjs makes the login token",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "qrcode-terminal": "0.12.0",
+    "steam-session": "1.9.4",
+    "steam-user": "5.3.0"
+  },
+  "overrides": {
+    "protobufjs": "7.6.6",
+    "adm-zip": "0.6.1"
+  }
+}
