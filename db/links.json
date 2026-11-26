@@ -18763,22 +18763,22 @@
   ]
  },
  "Items/Counter/3 Stars/You_are_going_DOWN_you_Sputnik!.psd": {
-  "blob": "fa15cc2d284df1eede40b05b96ec0e0d14c5b2cc",
+  "blob": "0dbbee3a7f98e36ed6f38f69d702260d62fdf2f2",
   "links": [
    {
-    "drawn": "6f3a59365f190a9b66bcdd17d82d33b08b87f964",
+    "drawn": null,
     "name": "You_are_going_DOWN_you_Sputnik! - You_are_going_DOWN_you_Sputnik_pic.png",
     "path": "MDW/Linked/You_are_going_DOWN_you_Sputnik! - You_are_going_DOWN_you_Sputnik_pic.png",
     "size": 790956
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "23bf9264064724f83faf67776362102cbfaaa57f",
+    "drawn": null,
     "name": "Counter.png",
     "path": "Types/Counter.png",
     "size": 58570
