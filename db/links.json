@@ -3566,22 +3566,22 @@
   ]
  },
  "Auxiliary/Minions/PoD01Red_Bloon.psd": {
-  "blob": "ed402d2fdf59fceb7ee641c925b2aa8a03d77b70",
+  "blob": "cec4b4fe57b94e6e685f853a8a6e764c9414b5cb",
   "links": [
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3589,34 +3589,22 @@
   ]
  },
  "Auxiliary/Minions/PoD02Black_Bloon.psd": {
-  "blob": "b54b42c217413c6d3061383511cfa466b6c636d7",
+  "blob": "c65b83321c408361ac04138ead888b3fd419bdcc",
   "links": [
    {
-    "drawn": "619c8b52cccdd8010c759f3c9fd58f1ff8999a8e",
-    "name": "PoD02Black_Bloon - Layer 2 (2).png",
-    "path": "MDW/Linked/PoD02Black_Bloon - Layer 2 (2).png",
-    "size": 2030321
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3624,34 +3612,22 @@
   ]
  },
  "Auxiliary/Minions/PoD03White_Bloon.psd": {
-  "blob": "c9c97af16953e47e22b2a7ff30086ed29bf23958",
+  "blob": "af8fd9788628f19277b6e10a3c99a80b262dbdd6",
   "links": [
    {
-    "drawn": "378f75b1f39ce71b2badeab1466bea30a88d07f9",
-    "name": "PoD03White_Bloon - White_Bloon (1).png",
-    "path": "MDW/Linked/PoD03White_Bloon - White_Bloon (1).png",
-    "size": 123898
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3659,40 +3635,22 @@
   ]
  },
  "Auxiliary/Minions/PoD04Zebra_Bloon.psd": {
-  "blob": "0a71def3c33eb493473cbeef32188a710034e150",
+  "blob": "053d94d14fcf04656dcbee04c95b0036e9c82c24",
   "links": [
    {
-    "drawn": "24a5fcc08d1ada21b43688d630a73bacc60f5ceb",
-    "name": "PoD04Zebra_Bloon - 128100 (1).png",
-    "path": "MDW/Linked/PoD04Zebra_Bloon - 128100 (1).png",
-    "size": 297232
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3700,58 +3658,40 @@
   ]
  },
  "Auxiliary/Minions/PoD05Lead_Bloon.psd": {
-  "blob": "9cfe8a8d61b397c60f13f91a10ecc8b87bcae573",
+  "blob": "7b9ad4090b336890e224fd7fe182b971eb8eb1d0",
   "links": [
    {
-    "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
-    "name": "PoD05Lead_Bloon - 128133.png",
-    "path": "MDW/Linked/PoD05Lead_Bloon - 128133.png",
-    "size": 21386
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
    },
    {
-    "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
+    "drawn": null,
     "name": "PoD05Lead_Bloon - 128133.png",
     "path": "MDW/Linked/PoD05Lead_Bloon - 128133.png",
     "size": 21386
    },
    {
-    "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
+    "drawn": null,
     "name": "PoD05Lead_Bloon - 128133.png",
     "path": "MDW/Linked/PoD05Lead_Bloon - 128133.png",
     "size": 21386
    },
    {
-    "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
+    "drawn": null,
     "name": "PoD05Lead_Bloon - 128133.png",
     "path": "MDW/Linked/PoD05Lead_Bloon - 128133.png",
     "size": 21386
@@ -3759,40 +3699,22 @@
   ]
  },
  "Auxiliary/Minions/PoD06Rainbow_Bloon.psd": {
-  "blob": "aaf047f91ceb7864830d0af8870317b8ed23d91d",
+  "blob": "7d1a66ce57ec6655d7e3087e0cf022664f38d9d0",
   "links": [
    {
-    "drawn": "daad93a47ba57cd9ac16806b74f4ec115cf11a03",
-    "name": "PoD06Rainbow_Bloon - 128131.png",
-    "path": "MDW/Linked/PoD06Rainbow_Bloon - 128131.png",
-    "size": 21355
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3800,40 +3722,22 @@
   ]
  },
  "Auxiliary/Minions/PoD07Ceramic_Bloon.psd": {
-  "blob": "a4723c0151992e91d0ccc2c1b347a31bb943e9fc",
+  "blob": "86da79bc27c7b3747aebc2ad2d7966be0770dcd2",
   "links": [
    {
-    "drawn": "76d2882abcf37cdf4f8fd1ab1c4eeae9a3fd2092",
-    "name": "PoD07Ceramic_Bloon - 128098 (1).png",
-    "path": "MDW/Linked/PoD07Ceramic_Bloon - 128098 (1).png",
-    "size": 441928
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3841,46 +3745,22 @@
   ]
  },
  "Auxiliary/Minions/PoD08MOAB.psd": {
-  "blob": "1703ad21570f5f308585091283b0757845e60ecd",
+  "blob": "74cac9f03e363d603ce310e0a02cd485bb1c092d",
   "links": [
    {
-    "drawn": "ffef364caac1bf8a7ff5d399b72561b3bf28ea74",
-    "name": "PoD08MOAB - ech2.png",
-    "path": "MDW/Linked/PoD08MOAB - ech2.png",
-    "size": 156351
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3888,52 +3768,22 @@
   ]
  },
  "Auxiliary/Minions/PoD09DDT.psd": {
-  "blob": "6a8121b900c738b34356a4cf2d2016f20e8620f7",
+  "blob": "1ee7978fab5c552d35458465e2a82e2b96dd1b2b",
   "links": [
    {
-    "drawn": "9024a31e2e47e1b585945d66dcafe4cbebcab2cf",
-    "name": "PoD09DDT - ech2.png",
-    "path": "MDW/Linked/PoD09DDT - ech2.png",
-    "size": 102053
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3941,52 +3791,22 @@
   ]
  },
  "Auxiliary/Minions/PoD10BFB.psd": {
-  "blob": "5bc4b9e0aab141baf2418919d79f0e48ab41a87b",
+  "blob": "63f00d2a01a66d1e57b9b93771fd99e38e19225b",
   "links": [
    {
-    "drawn": "bdd34572f1257682d78347293e7e30cf735e5899",
-    "name": "PoD10BFB - ech2.png",
-    "path": "MDW/Linked/PoD10BFB - ech2.png",
-    "size": 173418
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -3994,52 +3814,22 @@
   ]
  },
  "Auxiliary/Minions/PoD11ZOMG.psd": {
-  "blob": "0df81eb95045c30c7c01ee8f3067efd2b1cdfb57",
+  "blob": "8db1783ee3b7eeaabc67c2aa54afa17fe89dae6e",
   "links": [
    {
-    "drawn": "fbe1f6d3603e28979e23542ab60c354e47b89254",
-    "name": "PoD11ZOMG - ech2.png",
-    "path": "MDW/Linked/PoD11ZOMG - ech2.png",
-    "size": 187703
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -4047,52 +3837,22 @@
   ]
  },
  "Auxiliary/Minions/PoD12BAD.psd": {
-  "blob": "96cd3b446754950cdbb485da7387f0d4226f46a0",
+  "blob": "fd75fe6bcb7a0c50cb2a270db0cc9adcafb1dd73",
   "links": [
    {
-    "drawn": "751025d5bd0727241e8e5ab0345dbb5f25804204",
-    "name": "PoD12BAD - ech2.png",
-    "path": "MDW/Linked/PoD12BAD - ech2.png",
-    "size": 174835
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -6075,19 +5835,13 @@
   ]
  },
  "Creatures/BTD/4 Stars/Avatar_of_Wrath.psd": {
-  "blob": "406d8ab81915cc4b87f8cc54fe9bf20bb3a40bc2",
+  "blob": "24b6baf2ca2ce928df0f45ccb1a52ed7ada5316a",
   "links": [
    {
     "drawn": null,
     "name": "Avatar_Of_Wrath - Background.jpg",
     "path": "MDW/Linked/Avatar_Of_Wrath - Background.jpg",
     "size": 36317
-   },
-   {
-    "drawn": null,
-    "name": "Avatar_Of_Wrath - Dante.png",
-    "path": "MDW/Linked/Avatar_Of_Wrath - Dante.png",
-    "size": 304227
    },
    {
     "drawn": null,
@@ -6128,37 +5882,13 @@
   ]
  },
  "Creatures/BTD/5 Stars/Prince_of_Darkness.psd": {
-  "blob": "c1182947e53a6635856bf721f0b9b28851e912af",
+  "blob": "e033a88fd1d32088d880fee8a03ba118f65f56e5",
   "links": [
    {
     "drawn": null,
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": null,
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": null,
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": null,
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": null,
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
    },
    {
     "drawn": null,
@@ -31933,6 +31663,23 @@
   "Types/water.png": {
    "99d8299f475b915a691170c03c5a2c0fe0110589": 121376
   }
+ },
+ "pacman.psd": {
+  "blob": "d1b040a8904d4b85e4fb77b83a9c45139a09af5a",
+  "links": [
+   {
+    "drawn": null,
+    "name": "cain.jpeg",
+    "path": "MDW/Linked/cain.jpeg",
+    "size": 165470
+   },
+   {
+    "drawn": null,
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   }
+  ]
  },
  "pixels": {
   "00706ce56218b2fa4299430929102e1f54920fda": "189e9fe521d22f4c236cee15b2edf3811298fec4",

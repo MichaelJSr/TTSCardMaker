@@ -1,22 +1,32 @@
 {
  "builder": {
-  "commit": "05cd8ff94a3167a6d78819d02f5ed529f866c863",
+  "commit": "63511740bad7366cba08f9258166ff7f1b43c590",
   "details_version": 15,
   "parser_version": 7
  },
- "built_at": "2026-11-26T08:43:32Z",
- "card_commit": "b6b3b05bda1a19fe68d6dceb3e31aa0698ee501f",
+ "built_at": "2026-11-27T03:01:00Z",
+ "card_commit": "76c1be773ad0f7045fc437ce02778fa637e62ae0",
  "card_repo": "MichaelJSr/TTSCardMaker",
  "files": {
   "old_stats.json": "6e54fe994b58ad14c2d1454bed557989dc370c6f1853f08dcc1a956e43d703ac",
-  "psd_details.json": "d49fd9b904451eac9d11387f1277b246753e27692fba3ca0e72484879719d77c",
+  "psd_details.json": "082b00bdddc062d74b84f8ecf7ae495b0b5422601f6ef51442c9762ab3f604ed",
   "rulebook.json": "06566d67c0caa81a536cfe81067af41e79103e5ca51f7979e807069a1289822c",
-  "stats.json": "d677242ef5646f3dceb0113c0a1cb523a50fe77f9dcd0d6c38e1e235b87b0fef"
+  "stats.json": "ff02479d3f209f5af01c565fb3d4e5f2929eb4767e324b5b864fe2b32b375fcc"
  },
  "fonts": {
-  "checked": 770,
+  "checked": 771,
   "errors": [],
-  "missing": {}
+  "missing": {
+   "CrackManFront-Regular": {
+    "pacman.psd": [
+     "Speed",
+     "Attack",
+     "Defense",
+     "Health",
+     "Name"
+    ]
+   }
+  }
  },
  "gates": {},
  "pending": {
@@ -24,8 +34,16 @@
   "full": null,
   "stale": []
  },
- "problems": [],
+ "problems": [
+  {
+   "card": "pacman",
+   "notes": [
+    "UNKNOWN TYPE"
+   ],
+   "path": "pacman.psd"
+  }
+ ],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/45785541477",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/45931640785",
  "schema": 1
 }
