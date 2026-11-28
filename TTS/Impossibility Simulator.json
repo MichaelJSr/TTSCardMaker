@@ -64064,7 +64064,8 @@
         92700,
         112200,
         139000,
-        149500
+        149500,
+        173700
       ],
       "CustomDeck": {
         "741": {
@@ -64141,6 +64142,15 @@
         },
         "1495": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Field/1%20Stars/Pandora's_Gym.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1737": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a79a8e70eae808981c8c6f502c03db9117fb87bc/Field/1%20Stars/Elwynn_Forest.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64663,6 +64673,64 @@
           "CustomDeck": {
             "1495": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Field/1%20Stars/Pandora's_Gym.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "eaa5ba",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -72.8554459,
+            "posY": 1.72389126,
+            "posZ": -3.66966915,
+            "rotX": 0.07861086,
+            "rotY": 89.96798,
+            "rotZ": 359.981384,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Elwynn Forest",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173700,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1737": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a79a8e70eae808981c8c6f502c03db9117fb87bc/Field/1%20Stars/Elwynn_Forest.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -133371,7 +133439,8 @@
         92700,
         112200,
         139000,
-        149500
+        149500,
+        173700
       ],
       "CustomDeck": {
         "741": {
@@ -133448,6 +133517,15 @@
         },
         "1495": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Field/1%20Stars/Pandora's_Gym.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1737": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a79a8e70eae808981c8c6f502c03db9117fb87bc/Field/1%20Stars/Elwynn_Forest.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -133970,6 +134048,64 @@
           "CustomDeck": {
             "1495": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Field/1%20Stars/Pandora's_Gym.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "902489",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -72.8554459,
+            "posY": 1.72389126,
+            "posZ": -3.66966915,
+            "rotX": 0.07861086,
+            "rotY": 89.96798,
+            "rotZ": 359.981384,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Elwynn Forest",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 173700,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1737": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a79a8e70eae808981c8c6f502c03db9117fb87bc/Field/1%20Stars/Elwynn_Forest.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
