@@ -4,14 +4,14 @@
   "details_version": 15,
   "parser_version": 7
  },
- "built_at": "2026-11-28T16:24:45Z",
- "card_commit": "93f0ce274f18ab2bce74712e3c27438df27fec80",
+ "built_at": "2026-11-28T16:26:07Z",
+ "card_commit": "df1d85e7b081d0d5ba727cc8bd9b30eefc634009",
  "card_repo": "MichaelJSr/TTSCardMaker",
  "files": {
   "old_stats.json": "cca3891d162aafdc3c2d27bcef98f58364bcd8765067de80be282140c7036d87",
-  "psd_details.json": "f0edd0f49ceaa509b0e72c3098642d994e469dbba1306863ea09d4f9aee590e1",
+  "psd_details.json": "efe6cf9d1d59f3764d9f574009b86757e6466a9f446d37c243634d641a54533f",
   "rulebook.json": "06566d67c0caa81a536cfe81067af41e79103e5ca51f7979e807069a1289822c",
-  "stats.json": "3cbb971c5bdc1668bbe38e75b53c66fef6a9d3e2eebf154c2d93ff18b52c4553"
+  "stats.json": "a7557462dbe8183ef5e9e60a96c1d0d5558bb3b995e97823d88be1e2763cd1dd"
  },
  "fonts": {
   "checked": 772,

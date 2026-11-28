@@ -11815,38 +11815,6 @@
 ]
 }
 },
-"Creatures/Other/3 Stars/John_Ward.psd": {
-"icc": [
-0.0,
-386739
-],
-"text": {
-"417": [
-"5901e69fe620",
-"gamma"
-],
-"418": [
-"2987204928a6",
-"gamma"
-],
-"419": [
-"1c54e2945f8d",
-"gamma"
-],
-"420": [
-"c38be2086f96",
-"gamma"
-],
-"421": [
-"0234025e3348",
-"gamma"
-],
-"422": [
-"8fc6d8387bdd",
-"gamma"
-]
-}
-},
 "Creatures/Other/3 Stars/King_Harkinian.psd": {
 "icc": [
 0.0,
@@ -12167,6 +12135,38 @@
 ],
 "422": [
 "88fba0e37b32",
+"gamma"
+]
+}
+},
+"Creatures/Other/4 Stars/John_Ward.psd": {
+"icc": [
+0.0,
+386739
+],
+"text": {
+"417": [
+"5901e69fe620",
+"gamma"
+],
+"418": [
+"2987204928a6",
+"gamma"
+],
+"419": [
+"1c54e2945f8d",
+"gamma"
+],
+"420": [
+"c38be2086f96",
+"gamma"
+],
+"421": [
+"0234025e3348",
+"gamma"
+],
+"422": [
+"8fc6d8387bdd",
 "gamma"
 ]
 }
@@ -15849,18 +15849,6 @@
 ]
 }
 },
-"Items/Equip/1 Stars/Steady_Body.psd": {
-"text": {
-"320": [
-"3d62a36a7267",
-"gamma"
-],
-"327": [
-"2aa2683cbc5a",
-"gamma"
-]
-}
-},
 "Items/Equip/2 Stars/Basic_Shield.psd": {
 "text": {
 "10": [
@@ -16029,6 +16017,18 @@
 ],
 "327": [
 "7fec5b249d07",
+"gamma"
+]
+}
+},
+"Items/Equip/2 Stars/Steady_Body.psd": {
+"text": {
+"320": [
+"3d62a36a7267",
+"gamma"
+],
+"327": [
+"2aa2683cbc5a",
 "gamma"
 ]
 }

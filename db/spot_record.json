@@ -2695,28 +2695,6 @@
 ]
 }
 },
-"Items/Equip/1 Stars/Steady_Body.psd": {
-"938": {
-"content": "566faf42-9563-5c7a-bf54-be7088dc8b9c",
-"core": [
-14,
-43,
-187,
-198
-],
-"link": "Types/Equip.png",
-"trnf": [
-14.0,
-40.866,
-206.404,
-40.866,
-206.404,
-204.403,
-14.0,
-204.403
-]
-}
-},
 "Items/Equip/2 Stars/Basic_Shield.psd": {
 "229": {
 "content": "0329be31-0bc4-564f-9e4f-5a4fc78b25c0",
@@ -2978,6 +2956,28 @@
 199.651,
 25.0,
 199.651
+]
+}
+},
+"Items/Equip/2 Stars/Steady_Body.psd": {
+"938": {
+"content": "566faf42-9563-5c7a-bf54-be7088dc8b9c",
+"core": [
+14,
+43,
+187,
+198
+],
+"link": "Types/Equip.png",
+"trnf": [
+14.0,
+40.866,
+206.404,
+40.866,
+206.404,
+204.403,
+14.0,
+204.403
 ]
 }
 },
