@@ -3110,34 +3110,34 @@
   ]
  },
  "Auxiliary/Minions/Masher.psd": {
-  "blob": "07ecc675597cbd7a706f3a16355db3f777742bdc",
+  "blob": "0ce5df6e092559489f2921dcab58d21cbefcf44c",
   "links": [
    {
-    "drawn": "064525ab45098812e04a1f85f3b4f8edfd4d3b0a",
+    "drawn": null,
     "name": "Masher - Masher-0.webp",
     "path": "MDW/Linked/Masher - Masher-0.webp",
     "size": 42040
    },
    {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "drawn": null,
     "name": "Warpstar.png",
     "path": "Types/Stars/Warpstar.png",
     "size": 648064
    },
    {
-    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "drawn": null,
     "name": "machine.png",
     "path": "Types/machine.png",
     "size": 303679
    },
    {
-    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "drawn": null,
     "name": "dark.png",
     "path": "Types/dark.png",
     "size": 25732
    },
    {
-    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "drawn": null,
     "name": "Defensive_Minion.png",
     "path": "Types/Defensive_Minion.png",
     "size": 25788
@@ -18351,22 +18351,16 @@
   ]
  },
  "Items/Attack/3 Stars/Burly_Bomb.psd": {
-  "blob": "eb28853a5b51e4a5ee86ba9308935ccbb9c6e9c5",
+  "blob": "78649a0b04281388d527733f762ff5d18cbd1bd7",
   "links": [
    {
-    "drawn": "e11565540c72fa0a098c3debb37f023738b19605",
-    "name": "Burly_Bomb - 124678 (1).png",
-    "path": "MDW/Linked/Burly_Bomb - 124678 (1).png",
-    "size": 56719
-   },
-   {
-    "drawn": "c659c492806f52480508f989cb55a426afe1aac5",
+    "drawn": null,
     "name": "bFables.png",
     "path": "Types/Stars/bFables.png",
     "size": 368729
    },
    {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "drawn": null,
     "name": "Attack.png",
     "path": "Types/Attack.png",
     "size": 819546
@@ -20639,7 +20633,7 @@
   ]
  },
  "Items/Heal/1 Stars/Potato.psd": {
-  "blob": "8b078fffc3c4d35ba50fc2060f8f0e1dcf484814",
+  "blob": "8b138ea02ea62abe4ec7593758d435db7028d273",
   "links": [
    {
     "drawn": null,
@@ -20737,28 +20731,22 @@
   ]
  },
  "Items/Heal/2 Stars/Cake_Mix.psd": {
-  "blob": "e362f6d57593acfdcf0b8ae4f43044281ad1fcd6",
+  "blob": "7d9d1ca36b2f790220dc0667324bbbea5e70857e",
   "links": [
    {
-    "drawn": "127ac246e772f9b0113d5c83be4db5aa7f20d0d1",
-    "name": "Gold_Star.png",
-    "path": "Types/Stars/Gold_Star.png",
-    "size": 2010
-   },
-   {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "drawn": null,
     "name": "Attack.png",
     "path": "Types/Attack.png",
     "size": 819546
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
    },
    {
-    "drawn": "de1a2108956135e3846fc53d3e99696c13f5c325",
+    "drawn": null,
     "name": "Cake_Mix - HD-wallpaper-cake-colores-food-wall.jpg",
     "path": "MDW/Linked/Cake_Mix - HD-wallpaper-cake-colores-food-wall.jpg",
     "size": 378747
@@ -21404,16 +21392,16 @@
   ]
  },
  "Items/Heal/3 Stars/Squash_Candy.psd": {
-  "blob": "afd75f3abacfcf6b86bf7d277dc044aee2832636",
+  "blob": "d661c52e544350e9810a9bd5f5bc9ad2fade3b7d",
   "links": [
    {
-    "drawn": "c659c492806f52480508f989cb55a426afe1aac5",
+    "drawn": null,
     "name": "bFables.png",
     "path": "Types/Stars/bFables.png",
     "size": 368729
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -28447,40 +28435,34 @@
   ]
  },
  "N.M.E/Whacka_Bump.psd": {
-  "blob": "c7a4ce11594ff98fa2c43f0cd5bc422001bb9e81",
+  "blob": "75cf521fa635006af69e23b5d87f10d158833b5f",
   "links": [
    {
-    "drawn": "5fbba7eab93b89548372e76d019275b245176686",
+    "drawn": null,
     "name": "Whacka_Bump - Whacka_Bump_PMTTYDNS_icon-transformed.webp",
     "path": "MDW/Linked/Whacka_Bump - Whacka_Bump_PMTTYDNS_icon-transformed.webp",
     "size": 34062
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
+    "drawn": null,
+    "name": "Sapphire_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Sapphire_Star_PMTTYDNS_icon.png",
+    "size": 6143
    },
    {
-    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
-    "name": "Sapphire_Starold.png",
-    "path": "Types/Stars/Sapphire_Starold.png",
-    "size": 3871
+    "drawn": null,
+    "name": "Sapphire_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Sapphire_Star_PMTTYDNS_icon.png",
+    "size": 6143
    },
    {
-    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
-    "name": "Sapphire_Starold.png",
-    "path": "Types/Stars/Sapphire_Starold.png",
-    "size": 3871
-   },
-   {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
    },
    {
-    "drawn": "4fb6b1d8b6485fabd2b86fa08d37ff1b69a398f7",
+    "drawn": null,
     "name": "NME.png",
     "path": "Types/NME.png",
     "size": 757779
