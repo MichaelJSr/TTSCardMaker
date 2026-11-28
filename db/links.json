@@ -3110,13 +3110,19 @@
   ]
  },
  "Auxiliary/Minions/Masher.psd": {
-  "blob": "0ce5df6e092559489f2921dcab58d21cbefcf44c",
+  "blob": "58e4493aaf2ef8c8e084d95650a52cf3912b6e64",
   "links": [
    {
     "drawn": null,
     "name": "Masher - Masher-0.webp",
     "path": "MDW/Linked/Masher - Masher-0.webp",
     "size": 42040
+   },
+   {
+    "drawn": "a69c7d7578a39ea2f046521f5dd4521ae5e864ee",
+    "name": "Masher - Masher.psb",
+    "path": "MDW/Linked/Masher - Masher.psb",
+    "size": 3342516
    },
    {
     "drawn": null,
@@ -18351,7 +18357,7 @@
   ]
  },
  "Items/Attack/3 Stars/Burly_Bomb.psd": {
-  "blob": "78649a0b04281388d527733f762ff5d18cbd1bd7",
+  "blob": "6302e3b87a8410e071d5e229ba32a6c42c6c0561",
   "links": [
    {
     "drawn": null,
@@ -20633,7 +20639,7 @@
   ]
  },
  "Items/Heal/1 Stars/Potato.psd": {
-  "blob": "8b138ea02ea62abe4ec7593758d435db7028d273",
+  "blob": "9074bb136827b058e97d88e643f9544c97b53971",
   "links": [
    {
     "drawn": null,
@@ -20731,8 +20737,14 @@
   ]
  },
  "Items/Heal/2 Stars/Cake_Mix.psd": {
-  "blob": "7d9d1ca36b2f790220dc0667324bbbea5e70857e",
+  "blob": "5995e1e9222041aca199430864c163384ec1a477",
   "links": [
+   {
+    "drawn": "0fd436bdb62a6d97cb65248ace445e3db0c24d17",
+    "name": "Gold_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Gold_Star_PMTTYDNS_icon.png",
+    "size": 5811
+   },
    {
     "drawn": null,
     "name": "Attack.png",
@@ -21392,7 +21404,7 @@
   ]
  },
  "Items/Heal/3 Stars/Squash_Candy.psd": {
-  "blob": "d661c52e544350e9810a9bd5f5bc9ad2fade3b7d",
+  "blob": "d37a856de1dee62e795868f9c76ed43830053dc7",
   "links": [
    {
     "drawn": null,
@@ -24506,6 +24518,10 @@
  },
  "MDW/Linked/Markoth - Layer 1.psb": {
   "blob": "d46cadc55326d8babecf318dd13de1564ce282fc",
+  "links": []
+ },
+ "MDW/Linked/Masher - Masher.psb": {
+  "blob": "a69c7d7578a39ea2f046521f5dd4521ae5e864ee",
   "links": []
  },
  "MDW/Linked/Mini_Drill - Layer 3.psb": {
@@ -28435,7 +28451,7 @@
   ]
  },
  "N.M.E/Whacka_Bump.psd": {
-  "blob": "75cf521fa635006af69e23b5d87f10d158833b5f",
+  "blob": "a651af92eb1480de4ba17b2fc4791afa73c2714a",
   "links": [
    {
     "drawn": null,
@@ -29993,6 +30009,9 @@
   },
   "MDW/Linked/Masher - Masher-0.webp": {
    "064525ab45098812e04a1f85f3b4f8edfd4d3b0a": 42040
+  },
+  "MDW/Linked/Masher - Masher.psb": {
+   "a69c7d7578a39ea2f046521f5dd4521ae5e864ee": 3342516
   },
   "MDW/Linked/Massive_Moss_Charger - Massive_Moss_Charger.webp": {
    "79846cdbe4365538fe2b880dec520e414b83e903": 44112
@@ -32587,6 +32606,7 @@
   "a65e489a6c6b1cc702b74cf6d877c679a354cc1b": "1bcb04c7bfce8cdb7e682baf7c7fe4decb34eeba",
   "a663638810efc65215ebce1d3b787a4b462a7fd9": "2e29db31fcdc828f9aac064eba23632b692705fc",
   "a67f40b3331176ddf9793def7419f3472392717a": "48ccf5a16555cc5951b2424309acdb65b5c5aa63",
+  "a69c7d7578a39ea2f046521f5dd4521ae5e864ee": "c0ffdcf66d01c615027168fb1ce0a89c5b1d0542",
   "a6a8833fafe1539cee024a364a3fa78195424355": "73a58c808c93ebc70b20f6d058dc1c9b2d6f9963",
   "a6ca2fdb436d458249957fc855681500825bfe92": "84e1ce8ab6db35fe7a6d8dbd2ce8b63af9b416ef",
   "a6dfaa63017446c87785ab0d7c39298b91eadba0": "320fdff2ccccc1855ecee614f735b62c97a473ae",
