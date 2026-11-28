@@ -4,17 +4,17 @@
   "details_version": 15,
   "parser_version": 7
  },
- "built_at": "2026-11-28T03:03:15Z",
- "card_commit": "11de01bb9c03acd4162350c02ca3a586a5e5d52b",
+ "built_at": "2026-11-28T15:20:54Z",
+ "card_commit": "a79a8e70eae808981c8c6f502c03db9117fb87bc",
  "card_repo": "MichaelJSr/TTSCardMaker",
  "files": {
   "old_stats.json": "6e54fe994b58ad14c2d1454bed557989dc370c6f1853f08dcc1a956e43d703ac",
-  "psd_details.json": "571a246d1aee35213aa7295b05d718e4de556973435859e87c46185d81989393",
+  "psd_details.json": "a841fb20dcb0e86f3045a1f037c69d49f0833f6da871a7ded1ab6968dfe2330a",
   "rulebook.json": "06566d67c0caa81a536cfe81067af41e79103e5ca51f7979e807069a1289822c",
-  "stats.json": "e6d581c7d8fb9a82de078514273f5958d112f7394c2d7da904ccfab1d81127f6"
+  "stats.json": "83b3c1b90501cad9a069f08d6bfd86d1e7abafd431c6a1284200b36cbbb855ae"
  },
  "fonts": {
-  "checked": 771,
+  "checked": 772,
   "errors": [],
   "missing": {
    "CrackManFront-Regular": {
@@ -36,6 +36,6 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/46100949181",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/46159367465",
  "schema": 1
 }
